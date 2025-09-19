@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -12,25 +10,23 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using AddInput = Api.Shared.Services.Grpc.Skedular.Location.V1.AddInput;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
 public class AddLocationButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    ILocationService locationService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
@@ -115,16 +111,18 @@ public class AddLocationButtonHandler(
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var locationId = randomHelper.Generate();
-        var addInput = new AddInput { Id = locationId, OrganizationId = workspace.Organization.Id, Type = LocationType.Private };
+        string name;
+        string about;
+        string timezone;
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(LocationActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(LocationActionTypes.Name, out var block))
             {
-                if (name is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addInput.Name = value.Value.ToSafeString();
+                    name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -143,11 +141,11 @@ public class AddLocationButtonHandler(
 
         if (values.TryGetValue(LocationActionTypes.About, out var aboutBlock))
         {
-            if (aboutBlock.TryGetValue(LocationActionTypes.About, out var about))
+            if (aboutBlock.TryGetValue(LocationActionTypes.About, out var block))
             {
-                if (about is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
-                    addInput.About = value.Value.ToSafeString();
+                    about = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -166,12 +164,12 @@ public class AddLocationButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezoneBlock))
         {
-            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezone))
+            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var block))
             {
-                if (timezone is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption.Value);
-                    addInput.Timezone = value.SelectedOption.Value;
+                    timezone = value.SelectedOption.Value;
                 }
                 else
                 {
@@ -194,8 +192,7 @@ public class AddLocationButtonHandler(
             {
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
-                    var locationEntity =
-                        await repositoryFactory.LocationRepository.UpsertNakedAsync(locationId, cancellationToken);
+                    var locationEntity = await repositoryFactory.LocationRepository.UpsertNakedAsync(locationId, cancellationToken);
                     locationEntity.DailyUpdateChannel = string.IsNullOrWhiteSpace(value.SelectedChannel)
                         ? null
                         : await workspaceChannelService.EnsureChannelResourcesAllExistAsync(
@@ -219,10 +216,15 @@ public class AddLocationButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await locationServiceClient.AddAsync(
-            addInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await locationService.AddAsync(
+            workspaceMember.Id,
+            locationId,
+            name,
+            timezone,
+            about,
+            LocationType.Private,
+            workspace.Organization.Id,
+            cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

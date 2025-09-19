@@ -2,13 +2,16 @@
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
 using Microsoft.Extensions.Caching.Hybrid;
 using Slack.Shared.Mappers;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.Admin_GetInput;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
+using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 using Team = Slack.Shared.Models.Team;
+using TeamEdge = Slack.Shared.Models.TeamEdge;
 
 namespace Slack.Shared.Services.CrossDomains;
 
@@ -17,7 +20,7 @@ public interface ITeamService
     Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken);
     Task<Team> GetAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
 
-    Task<(ICollection<Team>, TeamConnection)> GetPaginatedTeamsAsync(
+    Task<Connection<TeamEdge>> GetPaginatedTeamsAsync(
         string workspaceMemberId,
         string organizationId,
         string? nameContains,
@@ -38,73 +41,73 @@ public class TeamService(
     ILocationService locationService)
     : ITeamService
 {
-    public async Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+    public async Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken)
+    {
+        var team = await hybridCache.GetOrCreateAsync(
             CreateKeyById(teamId),
-            async ct =>
-            {
-                var team = mapper.MapTo(
-                    await teamServiceClient.Admin_GetAsync(
-                        new Admin_GetInput { Id = teamId },
-                        teamConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: ct));
-
-                var customers = await Task.WhenAll(
-                    team.TeamMembers.Select(item => item.Customer.Id).Select(item => customerService.AdminGetAsync(item, ct)));
-
-                foreach (var member in team.TeamMembers)
-                {
-                    var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-                    if (customer is not null)
-                    {
-                        member.Customer = customer;
-                    }
-                }
-
-                if (!string.IsNullOrWhiteSpace(team.PrimaryLocation?.Id))
-                {
-                    team.PrimaryLocation = await locationService.AdminGetAsync(team.PrimaryLocation.Id, ct);
-                }
-
-                return team;
-            },
+            async ct => mapper.MapTo(
+                await teamServiceClient.Admin_GetAsync(
+                    new Admin_GetInput { Id = teamId },
+                    teamConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: ct)),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
 
-    public async Task<Team> GetAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
-            CreateKeyById(teamId),
-            async ct =>
+        var customers = await Task.WhenAll(
+            team.TeamMembers.Select(item => item.Customer.Id).Select(item => customerService.AdminGetAsync(item, cancellationToken)));
+
+        foreach (var member in team.TeamMembers)
+        {
+            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (customer is not null)
             {
-                var team = mapper.MapTo(
-                    await teamServiceClient.GetAsync(
-                        new GetInput { Id = teamId },
-                        teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                        cancellationToken: ct));
+                member.Customer = customer;
+            }
+        }
 
-                var customers = await Task.WhenAll(
-                    team.TeamMembers.Select(item => item.Customer.Id).Select(item => customerService.AdminGetAsync(item, ct)));
+        if (!string.IsNullOrWhiteSpace(team.PrimaryLocation?.Id))
+        {
+            team.PrimaryLocation = await locationService.AdminGetAsync(team.PrimaryLocation.Id, cancellationToken);
+        }
 
-                foreach (var member in team.TeamMembers)
-                {
-                    var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-                    if (customer is not null)
-                    {
-                        member.Customer = customer;
-                    }
-                }
+        return team;
+    }
 
-                if (!string.IsNullOrWhiteSpace(team.PrimaryLocation?.Id))
-                {
-                    team.PrimaryLocation = await locationService.GetAsync(workspaceMemberId, team.PrimaryLocation.Id, ct);
-                }
-
-                return team;
-            },
+    public async Task<Team> GetAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
+    {
+        var team = await hybridCache.GetOrCreateAsync(
+            CreateKeyById(teamId),
+            async ct => mapper.MapTo(
+                await teamServiceClient.GetAsync(
+                    new GetInput { Id = teamId },
+                    teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                    cancellationToken: ct)),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
 
-    public async Task<(ICollection<Team>, TeamConnection)> GetPaginatedTeamsAsync(
+        var customers = await Task.WhenAll(
+            team.TeamMembers
+                .Select(item => item.Customer.Id)
+                .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
+
+        foreach (var member in team.TeamMembers)
+        {
+            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (customer is not null)
+            {
+                member.Customer = customer;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(team.PrimaryLocation?.Id))
+        {
+            team.PrimaryLocation = await locationService.GetAsync(workspaceMemberId, team.PrimaryLocation.Id, cancellationToken);
+        }
+
+        return team;
+    }
+
+    public async Task<Connection<TeamEdge>> GetPaginatedTeamsAsync(
         string workspaceMemberId,
         string organizationId,
         string? nameContains,
@@ -125,21 +128,35 @@ public class TeamService(
 
         getPaginatedTeamsInput.OrderBy.Add(new TeamOrderInput { Direction = OrderDirection.Ascending, Field = TeamOrderField.Name });
 
-        var teamsConnection = await teamServiceClient.GetPaginatedTeamsAsync(
+        var connection = await teamServiceClient.GetPaginatedTeamsAsync(
             getPaginatedTeamsInput,
             teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 
         var customers = await Task.WhenAll(
-            teamsConnection.Edges
+            connection.Edges
                 .SelectMany(item => item.Node.Members.Select(member => member.CustomerId))
                 .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
 
-        var teams = teamsConnection.Edges
-            .Select(item => mapper.MapTo(item.Node))
-            .Select(item =>
+        var locations = await Task.WhenAll(
+            connection.Edges
+                .Where(item => !string.IsNullOrWhiteSpace(item.Node.PrimaryLocationId))
+                .Select(item => item.Node.PrimaryLocationId).Select(item => locationService.GetAsync(workspaceMemberId, item, cancellationToken)));
+
+        var result = new Connection<TeamEdge>
+        {
+            PageInfo = new PageInfo
             {
-                foreach (var member in item.TeamMembers)
+                StartCursor = connection.PageInfo.StartCursor,
+                EndCursor = connection.PageInfo.EndCursor,
+                HasNextPage = connection.PageInfo.HasNextPage,
+                HasPreviousPage = connection.PageInfo.HasPreviousPage
+            },
+            TotalCount = connection.TotalCount,
+            Edges = connection.Edges.Select(item =>
+            {
+                var team = mapper.MapTo(item.Node);
+                foreach (var member in team.TeamMembers)
                 {
                     var matchingCustomer = customers.FirstOrDefault(customer => customer.Id == member.Customer.Id);
                     if (matchingCustomer is not null)
@@ -148,31 +165,25 @@ public class TeamService(
                     }
                 }
 
-                return item;
-            }).ToList();
-
-        var locations = await Task.WhenAll(
-            teams.Where(item => !string.IsNullOrWhiteSpace(item.PrimaryLocation?.Id)).Select(item => item.PrimaryLocation!.Id)
-                .Select(item => locationService.GetAsync(workspaceMemberId, item, cancellationToken)));
-
-        foreach (var team in teams)
-        {
-            if (team.PrimaryLocation is not null)
-            {
-                var matchingPrimaryLocation = locations.FirstOrDefault(location => location.Id == team.PrimaryLocation.Id);
-                if (matchingPrimaryLocation is not null)
+                if (team.PrimaryLocation is not null)
                 {
-                    team.PrimaryLocation = matchingPrimaryLocation;
+                    var matchingPrimaryLocation = locations.FirstOrDefault(location => location.Id == team.PrimaryLocation.Id);
+                    if (matchingPrimaryLocation is not null)
+                    {
+                        team.PrimaryLocation = matchingPrimaryLocation;
+                    }
                 }
-            }
-        }
 
-        await CacheTeamsAsync(teams, cancellationToken);
+                return new TeamEdge(team, item.Cursor);
+            }).ToList()
+        };
 
-        return (teams, teamsConnection);
+        await CacheAsync(result.Edges.Select(item => item.Node).ToList(), cancellationToken);
+
+        return result;
     }
 
-    private async Task CacheTeamsAsync(ICollection<Team> teams, CancellationToken cancellationToken)
+    private async Task CacheAsync(ICollection<Team> teams, CancellationToken cancellationToken)
     {
         foreach (var team in teams)
         {

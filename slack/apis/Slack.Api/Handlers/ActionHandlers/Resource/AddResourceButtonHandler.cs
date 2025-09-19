@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -12,15 +11,13 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
-using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Option = SlackNet.Blocks.Option;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
@@ -29,13 +26,13 @@ public class AddResourceButtonHandler(
     SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    IOrganizationZoneService organizationZoneService,
+    IOrganizationCustomTagService organizationCustomTagService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
@@ -112,8 +109,9 @@ public class AddResourceButtonHandler(
             capacity
         };
 
-        var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
-        if (customTagConnection.Edges.Count != 0)
+        var customTagConnection =
+            await organizationCustomTagService.GetAllCustomTagsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
+        if (customTagConnection.Edges.Any())
         {
             blocks.Add(new InputBlock
             {
@@ -133,8 +131,8 @@ public class AddResourceButtonHandler(
             });
         }
 
-        var zoneConnection = await GetZonesAsync(workspace, workspaceMember, cancellationToken);
-        if (zoneConnection.Edges.Count != 0)
+        var zoneConnection = await organizationZoneService.GetAllZonesAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
+        if (zoneConnection.Edges.Any())
         {
             blocks.Add(new InputBlock
             {
@@ -380,50 +378,4 @@ public class AddResourceButtonHandler(
     }
 
     public Task HandleClose(ViewClosed viewClosed) => Task.CompletedTask;
-
-    private async Task<CustomTagConnection> GetCustomTagsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken)
-    {
-        var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
-        {
-            After = string.Empty,
-            First = ((int?)null).ToNullInt(),
-            Before = string.Empty,
-            Last = ((int?)null).ToNullInt(),
-            Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedCustomTagsInput.OrderBy.AddRange([
-            new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name }
-        ]);
-
-        return await organizationServiceClient.GetPaginatedCustomTagsAsync(
-            getPaginatedCustomTagsInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
-    private async Task<ZoneConnection> GetZonesAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken)
-    {
-        var getPaginatedZonesInput = new GetPaginatedZonesInput
-        {
-            After = string.Empty,
-            First = ((int?)null).ToNullInt(),
-            Before = string.Empty,
-            Last = ((int?)null).ToNullInt(),
-            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name }]);
-
-        return await organizationServiceClient.GetPaginatedZonesAsync(
-            getPaginatedZonesInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
 }

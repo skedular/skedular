@@ -1,9 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Grpc;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -14,14 +11,11 @@ using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using LocationType = Api.Shared.Services.Models.LocationType;
 
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
 public class EditLocationButtonHandler(
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ILocationPermissionsService locationPermissionsService,
@@ -43,8 +37,7 @@ public class EditLocationButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditLocationContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var permissions =
-            await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
+        var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         if (!permissions.CanModify)
         {
             throw new UnauthorizedAccessException();
@@ -52,26 +45,18 @@ public class EditLocationButtonHandler(
 
         var existingLocation = await locationService.GetAsync(workspaceMember.Id, context.LocationId, cancellationToken);
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateInput
-        {
-            Id = context.LocationId,
-            OrganizationId = workspace.Organization.Id,
-            Type = existingLocation.Type switch
-            {
-                LocationType.Private => global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
-                LocationType.Marketplace => global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
-                _ => throw new ArgumentOutOfRangeException()
-            }
-        };
+        string name;
+        string about;
+        string timezone;
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(LocationActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(LocationActionTypes.Name, out var block))
             {
-                if (name is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    updateInput.Name = value.Value.ToSafeString();
+                    name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -90,11 +75,11 @@ public class EditLocationButtonHandler(
 
         if (values.TryGetValue(LocationActionTypes.About, out var aboutBlock))
         {
-            if (aboutBlock.TryGetValue(LocationActionTypes.About, out var about))
+            if (aboutBlock.TryGetValue(LocationActionTypes.About, out var block))
             {
-                if (about is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
-                    updateInput.About = value.Value.ToSafeString();
+                    about = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -113,12 +98,12 @@ public class EditLocationButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezoneBlock))
         {
-            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezone))
+            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var block))
             {
-                if (timezone is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption.Value);
-                    updateInput.Timezone = value.SelectedOption.Value;
+                    timezone = value.SelectedOption.Value;
                 }
                 else
                 {
@@ -171,10 +156,16 @@ public class EditLocationButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await locationServiceClient.UpdateAsync(
-            updateInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await locationService.UpdateAsync(
+            workspaceMember.Id,
+            context.LocationId,
+            name,
+            timezone,
+            about,
+            existingLocation.Type ?? LocationType.Private,
+            workspace.Organization.Id,
+            cancellationToken);
+
 
         await pageNavigator.BackAsync(
             workspace,

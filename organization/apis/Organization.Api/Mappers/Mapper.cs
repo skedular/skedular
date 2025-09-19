@@ -127,6 +127,8 @@ public interface IMapper
 
     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag MapToGrpcResponseTag(Tag src);
     TagEdge MapToGrpcResponseTag(Edge<Tag> src);
+    Tag MapTo(AddTagInput src);
+    Tag MapTo(UpdateTagInput src);
 
     CustomTag MapToGrpcResponseCustomTag(Tag src);
     CustomTagEdge MapToGrpcResponseCustomTag(Edge<Tag> src);
@@ -200,10 +202,8 @@ public interface IMapper
         OrganizationPhysicalAddress dest,
         Shared.Database.Entities.Organization organization);
 
-    Shared.Models.OrganizationPhysicalAddress MapTo(OrganizationPhysicalAddress src);
     Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src);
     Shared.Models.OrganizationPhysicalAddress MapTo(UpdateOrganizationPhysicalAddressInput src);
-    OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src);
     IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src);
     InviteCustomerToJoinOrganizationDetails MapTo(JoinInvitation src);
     Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src);
@@ -709,6 +709,27 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     public TagEdge MapToGrpcResponseTag(Edge<Tag> src) => new() { Cursor = src.Cursor, Node = MapToGrpcResponseTag(src.Node) };
+
+    public Tag MapTo(AddTagInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = src.Type.ToOrganizationTagType(),
+            Color = src.Color.ToSafeString(),
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
+        };
+
+    public Tag MapTo(UpdateTagInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Type = src.Type.ToOrganizationTagType(),
+            Color = src.Color
+        };
 
     public CustomTag MapToGrpcResponseCustomTag(Tag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
@@ -1259,29 +1280,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Models.OrganizationPhysicalAddress MapTo(OrganizationPhysicalAddress src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Coordinates,
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Organization = MapTo(src.Organization, Constants.EmptyUri)
-        };
-
     public Shared.Models.OrganizationPhysicalAddress MapTo(AddOrganizationPhysicalAddressInput src) =>
         new()
         {
@@ -1322,28 +1320,6 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode
-        };
-
-    public OrganizationPhysicalAddressDetails MapTo(Shared.Models.OrganizationPhysicalAddress src) =>
-        new()
-        {
-            Id = src.Id,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Longitude = src.Coordinates?.X,
-            Latitude = src.Coordinates?.Y,
-            FormattedAddress = src.ToFormattedAddress(),
-            MultilinesFormattedAddress = src.ToMultilinesFormattedAddress(),
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Organization = MapTo(src.Organization)!
         };
 
     public IEnumerable<InviteCustomerToJoinOrganizationDetails> MapTo(IEnumerable<JoinInvitation> src) =>

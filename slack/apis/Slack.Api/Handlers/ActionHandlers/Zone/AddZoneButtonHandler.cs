@@ -1,8 +1,5 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -12,23 +9,22 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Zone;
 
 public class AddZoneButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    IOrganizationZoneService organizationZoneService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
@@ -99,16 +95,17 @@ public class AddZoneButtonHandler(
         var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var zoneId = randomHelper.Generate();
-        var addZoneInput = new AddZoneInput { Id = zoneId, OrganizationId = workspace.Organization.Id };
+        string name;
+        string description;
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(ZoneActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(ZoneActionTypes.Name, out var block))
             {
-                if (name is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addZoneInput.Name = value.Value.ToSafeString();
+                    name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -127,11 +124,11 @@ public class AddZoneButtonHandler(
 
         if (values.TryGetValue(ZoneActionTypes.Description, out var descriptionBlock))
         {
-            if (descriptionBlock.TryGetValue(ZoneActionTypes.Description, out var description))
+            if (descriptionBlock.TryGetValue(ZoneActionTypes.Description, out var block))
             {
-                if (description is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
-                    addZoneInput.Description = value.Value.ToSafeString();
+                    description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -148,10 +145,7 @@ public class AddZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await organizationServiceClient.AddZoneAsync(
-            addZoneInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await organizationZoneService.AddAsync(workspaceMember.Id, zoneId, name, description, workspace.Organization.Id, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

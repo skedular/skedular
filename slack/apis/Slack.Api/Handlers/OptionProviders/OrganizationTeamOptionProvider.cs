@@ -17,7 +17,7 @@ public class OrganizationTeamOptionProvider(
         var cancellationToken = CancellationToken.None;
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
-        var (teams, _) = await teamService.GetPaginatedTeamsAsync(
+        var connection = await teamService.GetPaginatedTeamsAsync(
             request.User.Id,
             workspaceEntity.Organization.Id,
             request.Value,
@@ -27,6 +27,12 @@ public class OrganizationTeamOptionProvider(
             null,
             cancellationToken);
 
-        return new BlockOptionsResponse { Options = teams.Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id }).ToList() };
+        return new BlockOptionsResponse
+        {
+            Options = connection.Edges
+                .Select(item => item.Node)
+                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id })
+                .ToList()
+        };
     }
 }

@@ -75,7 +75,7 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace => LocationType.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+                    _ => throw new ArgumentOutOfRangeException()
                 }).ToList(),
                 null),
             request.OrderBy.Select(item =>
@@ -140,7 +140,7 @@ public class LocationGrpcService(
                 {
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private => LocationType.Private,
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace => LocationType.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException(nameof(item), item, null)
+                    _ => throw new ArgumentOutOfRangeException()
                 }).ToList(),
                 null),
             request.OrderBy.Select(item =>

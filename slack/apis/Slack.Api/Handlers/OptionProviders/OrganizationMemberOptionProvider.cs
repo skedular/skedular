@@ -7,14 +7,15 @@ using SlackNet.Interaction;
 
 namespace Slack.Api.Handlers.OptionProviders;
 
-public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFactory, IOrganizationService organizationService) : IBlockOptionProvider
+public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFactory, IOrganizationMemberService organizationMemberService)
+    : IBlockOptionProvider
 {
     public async Task<BlockOptionsResponse> GetOptions(BlockOptionsRequest request)
     {
         var cancellationToken = CancellationToken.None;
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
-        var (members, _) = await organizationService.GetPaginatedMembersAsync(
+        var (members, _) = await organizationMemberService.GetPaginatedMembersAsync(
             request.User.Id,
             workspaceEntity.Organization.Id,
             request.Value,

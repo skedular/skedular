@@ -65,13 +65,12 @@ public class KafkaActivityStarter(IActivityAccessor activityAccessor) : IKafkaAc
     /// <param name="kafkaOperationType"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    private static string GetActivityVerb(KafkaOperationType kafkaOperationType) =>
-        kafkaOperationType switch
-        {
-            KafkaOperationType.Provide => "send",
-            KafkaOperationType.Consume => "receive",
-            _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType, null)
-        };
+    private static string GetActivityVerb(KafkaOperationType kafkaOperationType) => kafkaOperationType switch
+    {
+        KafkaOperationType.Provide => "send",
+        KafkaOperationType.Consume => "receive",
+        _ => throw new ArgumentOutOfRangeException(nameof(kafkaOperationType), kafkaOperationType, null)
+    };
 
     private static IDictionary<string, object?> BuildKafkaTags(string topic, int? partition)
     {

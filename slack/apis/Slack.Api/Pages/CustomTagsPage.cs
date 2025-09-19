@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -10,6 +8,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -18,8 +17,6 @@ using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
 using Icons = Slack.Shared.Constants.Icons;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -38,8 +35,6 @@ public interface ICustomTagsPage
 public class CustomTagsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -49,7 +44,8 @@ public class CustomTagsPage(
     ICommonComponents commonComponents,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
-    ICustomerService customerService) :
+    ICustomerService customerService,
+    IOrganizationCustomTagService organizationCustomTagService) :
     ICustomTagsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -364,16 +360,15 @@ public class CustomTagsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.CustomTags;
 
-        var customTagConnection = await GetPaginatedCustomTagsAsync(
-            workspace,
-            workspaceMember,
+        var customTagConnection = await organizationCustomTagService.GetPaginatedCustomTagsAsync(
+            workspaceMember.Id,
+            workspace.Organization.Id,
+            null,
             after,
             first,
             before,
             last,
-            commonPageContext,
             cancellationToken);
-        var customTags = customTagConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
             workspace,
             workspaceMember,
@@ -381,7 +376,7 @@ public class CustomTagsPage(
             cancellationToken), customTagComponents.GetCustomTagCardsAsync(
             workspace,
             workspaceMember,
-            customTags,
+            customTagConnection.Edges.Select(item => item.Node).ToList(),
             commonPageContext.PageContext,
             cancellationToken));
 
@@ -446,41 +441,11 @@ public class CustomTagsPage(
         ];
     }
 
-    private async Task<CustomTagConnection> GetPaginatedCustomTagsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        CommonPageContext commonPageContext,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.CustomTagsPage);
-        var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedCustomTagsInput.OrderBy.AddRange([
-            new CustomTagOrderInput { Direction = OrderDirection.Ascending, Field = CustomTagOrderField.Name }
-        ]);
-
-        return await organizationServiceClient.GetPaginatedCustomTagsAsync(
-            getPaginatedCustomTagsInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
     private static List<Block> GetCustomTagsSearchCriteriaAndPaginationBlocks(
-        CustomTagConnection customTagConnection,
+        Connection<OrganizationCustomTagEdge> customTagConnection,
         PageContext pageContext)
     {
-        if (customTagConnection.Edges.Count == 0)
+        if (customTagConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No tag found".ToMarkdown() }];
         }
@@ -554,11 +519,7 @@ public class CustomTagsPage(
         EditCustomTagContext context,
         CancellationToken cancellationToken)
     {
-        var customTag = await organizationServiceClient.GetCustomTagAsync(
-            new GetCustomTagInput { Id = context.CustomTagId },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var customTag = await organizationCustomTagService.GetAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
         var name = new InputBlock
         {
             BlockId = CustomTagActionTypes.Name,
@@ -603,11 +564,7 @@ public class CustomTagsPage(
         RemoveCustomTagContext context,
         CancellationToken cancellationToken)
     {
-        var customTag = await organizationServiceClient.GetCustomTagAsync(
-            new GetCustomTagInput { Id = context.CustomTagId },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var customTag = await organizationCustomTagService.GetAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the tag {customTag.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();
@@ -619,8 +576,7 @@ public class CustomTagsPage(
                 Title = "Remove Tag",
                 Close = "No",
                 Submit = "Yes",
-                Blocks =
-                    [confirmationMessage],
+                Blocks = [confirmationMessage],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);

@@ -73,7 +73,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -86,7 +86,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -99,7 +99,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -114,7 +114,7 @@ public class CustomerService(
         var customer = mapper.MapTo(result.Customer);
         if (customer is not null)
         {
-            await CacheCustomerAsync([customer], cancellationToken);
+            await CacheAsync([customer], cancellationToken);
         }
 
         return (result.Exist, customer);
@@ -130,7 +130,7 @@ public class CustomerService(
         var customer = mapper.MapTo(result.Customer);
         if (customer is not null)
         {
-            await CacheCustomerAsync([customer], cancellationToken);
+            await CacheAsync([customer], cancellationToken);
         }
 
         return (result.Exist, customer);
@@ -144,7 +144,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -157,7 +157,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -198,7 +198,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -211,7 +211,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -224,7 +224,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -237,7 +237,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -263,7 +263,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -279,7 +279,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
@@ -295,12 +295,12 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheCustomerAsync([customer], cancellationToken);
+        await CacheAsync([customer], cancellationToken);
 
         return customer;
     }
 
-    private async Task CacheCustomerAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
+    private async Task CacheAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var customer in customers)
         {

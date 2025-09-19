@@ -20,6 +20,9 @@ service OrganizationService {
 
   rpc GetPaginatedTags (GetPaginatedTagsInput) returns (TagConnection);
   rpc GetTag (GetTagInput) returns (Tag);
+  rpc AddTag (AddTagInput) returns (Tag);
+  rpc UpdateTag (UpdateTagInput) returns (Tag);
+  rpc RemoveTag (RemoveTagInput) returns (Tag);
 
   rpc GetPaginatedCustomTags (GetPaginatedCustomTagsInput) returns (CustomTagConnection);
   rpc GetCustomTag (GetCustomTagInput) returns (CustomTag);
@@ -32,6 +35,7 @@ service OrganizationService {
   rpc AddZone (AddZoneInput) returns (Zone);
   rpc UpdateZone (UpdateZoneInput) returns (Zone);
   rpc RemoveZone (RemoveZoneInput) returns (Zone);
+  
   rpc GetBillingDetails (GetBillingDetailsInput) returns (BillingDetails);
   rpc AddBillingDetails (AddBillingDetailsInput) returns (BillingDetails);
   rpc UpdateBillingDetails (UpdateBillingDetailsInput) returns (BillingDetails);
@@ -273,6 +277,7 @@ message GetPaginatedTagsInput {
 message TagWhereInput {
   string organizationId = 1;
   string nameContains = 2;
+  string type = 3;
 }
 
 message TagOrderInput {
@@ -317,6 +322,27 @@ message GetCustomTagInput {
   string id = 1;
 }
 
+message AddTagInput {
+  string id = 1;
+  string organizationId = 2;
+  string name = 3;
+  string description = 4;
+  string color = 5;
+  string type = 6;
+}
+
+message UpdateTagInput {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string color = 4;
+  string type = 6;
+}
+
+message RemoveCustomTagInput {
+  string id = 1;
+}
+
 message AddCustomTagInput {
   string id = 1;
   string organizationId = 2;
@@ -332,7 +358,7 @@ message UpdateCustomTagInput {
   string color = 4;
 }
 
-message RemoveCustomTagInput {
+message RemoveTagInput {
   string id = 1;
 }
 

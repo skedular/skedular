@@ -1,7 +1,7 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -10,6 +10,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -350,7 +351,7 @@ public class TeamsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Teams;
 
-        var (teams, teamConnection) = await teamService.GetPaginatedTeamsAsync(
+        var connection = await teamService.GetPaginatedTeamsAsync(
             workspaceMember.Id,
             workspace.Organization.Id,
             null,
@@ -360,6 +361,7 @@ public class TeamsPage(
             last,
             cancellationToken);
 
+        var teams = connection.Edges.Select(item => item.Node).ToList();
         var teamIds = teams.Select(item => item.Id).ToList();
         var teamsWithChannel = await repositoryFactory.TeamRepository.Query(
                 new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && teamIds.Contains(query.Id) }
@@ -384,7 +386,7 @@ public class TeamsPage(
         [
             GetTitle(),
             asyncBlocks[0],
-            GetTeamsSearchCriteriaAndPaginationBlocks(teamConnection, commonPageContext.PageContext),
+            GetTeamsSearchCriteriaAndPaginationBlocks(connection, commonPageContext.PageContext),
             asyncBlocks[1]
         ];
 
@@ -432,9 +434,9 @@ public class TeamsPage(
         ];
     }
 
-    private static List<Block> GetTeamsSearchCriteriaAndPaginationBlocks(TeamConnection teamConnection, PageContext pageContext)
+    private static List<Block> GetTeamsSearchCriteriaAndPaginationBlocks(Connection<TeamEdge> teamConnection, PageContext pageContext)
     {
-        if (teamConnection.Edges.Count == 0)
+        if (!teamConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No team found".ToMarkdown() }];
         }

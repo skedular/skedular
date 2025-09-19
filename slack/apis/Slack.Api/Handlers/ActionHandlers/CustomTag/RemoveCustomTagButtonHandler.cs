@@ -1,7 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -9,18 +6,16 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.CustomTag;
 
 public class RemoveCustomTagButtonHandler(
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IOrganizationPermissionsService organizationPermissionsService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IViewSubmissionHandler
+    IPageNavigator pageNavigator,
+    IOrganizationCustomTagService organizationCustomTagService) : IViewSubmissionHandler
 {
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
@@ -41,10 +36,7 @@ public class RemoveCustomTagButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        await organizationServiceClient.RemoveCustomTagAsync(
-            new RemoveCustomTagInput { Id = context.CustomTagId },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await organizationCustomTagService.RemoveAsync(workspaceMember.Id, context.CustomTagId, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

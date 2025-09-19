@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -10,6 +8,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -18,8 +17,6 @@ using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
 using Icons = Slack.Shared.Constants.Icons;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -38,8 +35,6 @@ public interface IZonesPage
 public class ZonesPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -49,7 +44,8 @@ public class ZonesPage(
     ICommonComponents commonComponents,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
-    ICustomerService customerService) :
+    ICustomerService customerService,
+    IOrganizationZoneService organizationZoneService) :
     IZonesPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -349,16 +345,15 @@ public class ZonesPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Zones;
 
-        var zoneConnection = await GetPaginatedZonesAsync(
-            workspace,
-            workspaceMember,
+        var zoneConnection = await organizationZoneService.GetPaginatedZonesAsync(
+            workspaceMember.Id,
+            workspace.Organization.Id,
+            null,
             after,
             first,
             before,
             last,
-            commonPageContext,
             cancellationToken);
-        var zones = zoneConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var asyncBlocks = await Task.WhenAll(GetToolbarAsync(
             workspace,
             workspaceMember,
@@ -366,7 +361,7 @@ public class ZonesPage(
             cancellationToken), zoneComponents.GetZoneCardsAsync(
             workspace,
             workspaceMember,
-            zones,
+            zoneConnection.Edges.Select(item => item.Node).ToList(),
             commonPageContext.PageContext,
             cancellationToken));
 
@@ -425,39 +420,9 @@ public class ZonesPage(
         ];
     }
 
-    private async Task<ZoneConnection> GetPaginatedZonesAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        CommonPageContext commonPageContext,
-        CancellationToken cancellationToken)
+    private static List<Block> GetZonesSearchCriteriaAndPaginationBlocks(Connection<OrganizationZoneEdge> zoneConnection, PageContext pageContext)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ZonesPage);
-        var getPaginatedZonesInput = new GetPaginatedZonesInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedZonesInput.OrderBy.AddRange([new ZoneOrderInput { Direction = OrderDirection.Ascending, Field = ZoneOrderField.Name }]);
-
-        return await organizationServiceClient.GetPaginatedZonesAsync(
-            getPaginatedZonesInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
-    private static List<Block> GetZonesSearchCriteriaAndPaginationBlocks(
-        ZoneConnection zoneConnection,
-        PageContext pageContext)
-    {
-        if (zoneConnection.Edges.Count == 0)
+        if (!zoneConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No zone found".ToMarkdown() }];
         }
@@ -530,11 +495,7 @@ public class ZonesPage(
         EditZoneContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await organizationServiceClient.GetZoneAsync(
-            new GetZoneInput { Id = context.ZoneId },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var zone = await organizationZoneService.GetAsync(workspaceMember.Id, context.ZoneId, cancellationToken);
         var name = new InputBlock
         {
             BlockId = ZoneActionTypes.Name,
@@ -576,10 +537,7 @@ public class ZonesPage(
         RemoveZoneContext context,
         CancellationToken cancellationToken)
     {
-        var zone = await organizationServiceClient.GetZoneAsync(
-            new GetZoneInput { Id = context.ZoneId },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        var zone = await organizationZoneService.GetAsync(workspaceMember.Id, context.ZoneId, cancellationToken);
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the zone {zone.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();

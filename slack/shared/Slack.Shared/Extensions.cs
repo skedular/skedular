@@ -81,7 +81,10 @@ public static class Extensions
             .AddSingleton<ILocationService, LocationService>()
             .AddSingleton<ILocationPermissionsService, LocationPermissionsService>()
             .AddSingleton<ITeamService, Services.CrossDomains.TeamService>()
-            .AddSingleton<ITeamPermissionsService, TeamPermissionsService>();
+            .AddSingleton<ITeamPermissionsService, TeamPermissionsService>()
+            .AddSingleton<IOrganizationMemberService, OrganizationMemberService>()
+            .AddSingleton<IOrganizationCustomTagService, OrganizationCustomTagService>()
+            .AddSingleton<IOrganizationZoneService, OrganizationZoneService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

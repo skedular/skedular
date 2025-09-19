@@ -14,7 +14,7 @@ public class OrganizationLocationOptionProvider(IRepositoryFactory repositoryFac
         var cancellationToken = CancellationToken.None;
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
-        var (locations, _) = await locationService.GetPaginatedLocationsAsync(
+        var connection = await locationService.GetPaginatedLocationsAsync(
             request.User.Id,
             workspaceEntity.Organization.Id,
             request.Value,
@@ -26,7 +26,10 @@ public class OrganizationLocationOptionProvider(IRepositoryFactory repositoryFac
 
         return new BlockOptionsResponse
         {
-            Options = locations.Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id }).ToList()
+            Options = connection.Edges
+                .Select(item => item.Node)
+                .Select(item => new Option { Text = item.Name.ToOptionText(), Value = item.Id })
+                .ToList()
         };
     }
 }

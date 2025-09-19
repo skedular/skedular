@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Slack.Api.Components;
@@ -17,7 +16,6 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Button = SlackNet.Blocks.Button;
 using Icons = Slack.Shared.Constants.Icons;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
@@ -43,8 +41,6 @@ public class ResourcesPage(
     SlackConfigurationService slackConfigurationService,
     LocationConfiguration locationConfiguration,
     LocationService.LocationServiceClient locationServiceClient,
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -54,7 +50,9 @@ public class ResourcesPage(
     ICommonComponents commonComponents,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
-    ICustomerService customerService) :
+    ICustomerService customerService,
+    IOrganizationZoneService organizationZoneService,
+    IOrganizationCustomTagService organizationCustomTagService) :
     IResourcesPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -623,8 +621,9 @@ public class ResourcesPage(
             capacity
         };
 
-        var customTagConnection = await GetCustomTagsAsync(workspace, workspaceMember, cancellationToken);
-        if (customTagConnection.Edges.Count != 0)
+        var customTagConnection =
+            await organizationCustomTagService.GetAllCustomTagsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
+        if (customTagConnection.Edges.Any())
         {
             blocks.Add(new InputBlock
             {
@@ -652,8 +651,8 @@ public class ResourcesPage(
             });
         }
 
-        var zoneConnection = await GetZonesAsync(workspace, workspaceMember, cancellationToken);
-        if (zoneConnection.Edges.Count != 0)
+        var zoneConnection = await organizationZoneService.GetAllZonesAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
+        if (zoneConnection.Edges.Any())
         {
             blocks.Add(new InputBlock
             {
@@ -747,56 +746,5 @@ public class ResourcesPage(
         await customerService.RemovePreferredResourceAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
 
         await RenderWithContextAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), hash, cancellationToken);
-    }
-
-    private async Task<CustomTagConnection> GetCustomTagsAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        CancellationToken cancellationToken)
-    {
-        var getPaginatedCustomTagsInput = new GetPaginatedCustomTagsInput
-        {
-            After = string.Empty,
-            First = ((int?)null).ToNullInt(),
-            Before = string.Empty,
-            Last = ((int?)null).ToNullInt(),
-            Where = new CustomTagWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedCustomTagsInput.OrderBy.AddRange([
-            new CustomTagOrderInput
-            {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = CustomTagOrderField.Name
-            }
-        ]);
-
-        return await organizationServiceClient.GetPaginatedCustomTagsAsync(
-            getPaginatedCustomTagsInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
-    private async Task<ZoneConnection> GetZonesAsync(Workspace workspace, WorkspaceMember workspaceMember, CancellationToken cancellationToken)
-    {
-        var getPaginatedZonesInput = new GetPaginatedZonesInput
-        {
-            After = string.Empty,
-            First = ((int?)null).ToNullInt(),
-            Before = string.Empty,
-            Last = ((int?)null).ToNullInt(),
-            Where = new ZoneWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-
-        getPaginatedZonesInput.OrderBy.AddRange([
-            new ZoneOrderInput
-            {
-                Direction = global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending, Field = ZoneOrderField.Name
-            }
-        ]);
-
-        return await organizationServiceClient.GetPaginatedZonesAsync(
-            getPaginatedZonesInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
     }
 }

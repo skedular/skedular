@@ -392,7 +392,7 @@ public class Mapper : IMapper
                         OrganizationMemberRole.Member => Role.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
-                    CustomerId = src.OrganizationMember.Customer.Id.ToSafeString()  
+                    CustomerId = src.OrganizationMember.Customer.Id.ToSafeString()
                 }
         };
 

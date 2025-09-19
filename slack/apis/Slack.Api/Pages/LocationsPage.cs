@@ -1,7 +1,7 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
@@ -20,6 +20,7 @@ using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Button = SlackNet.Blocks.Button;
 using Location = Slack.Shared.Database.Entities.Location;
+using LocationEdge = Slack.Shared.Models.LocationEdge;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -400,7 +401,7 @@ public class LocationsPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Locations;
 
-        var (locations, locationConnection) = await locationService.GetPaginatedLocationsAsync(
+        var connection = await locationService.GetPaginatedLocationsAsync(
             workspaceMember.Id,
             workspace.Organization.Id,
             null,
@@ -410,6 +411,7 @@ public class LocationsPage(
             last,
             cancellationToken);
 
+        var locations = connection.Edges.Select(item => item.Node).ToList();
         var locationIds = locations.Select(item => item.Id).ToList();
         var locationsWithChannel = await repositoryFactory.LocationRepository
             .Query(new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && locationIds.Contains(query.Id) }
@@ -439,7 +441,7 @@ public class LocationsPage(
         [
             GetTitle(),
             asyncBlocks[0],
-            GetLocationsSearchCriteriaAndPaginationBlocks(locationConnection, commonPageContext.PageContext),
+            GetLocationsSearchCriteriaAndPaginationBlocks(connection, commonPageContext.PageContext),
             asyncBlocks[1]
         ];
 
@@ -478,9 +480,7 @@ public class LocationsPage(
         CancellationToken cancellationToken)
     {
         var homeAndBackButtons = commonComponents.GetHomeAndBackButtons(pageContext, workspaceMember.Timezone);
-        var addLocationButton =
-            await locationComponents.GetAddLocationButtonAsync(workspace, workspaceMember, pageContext,
-                cancellationToken);
+        var addLocationButton = await locationComponents.GetAddLocationButtonAsync(workspace, workspaceMember, pageContext, cancellationToken);
         var feedbackButton = commonComponents.GetFeedbackButton(pageContext);
 
         return
@@ -496,11 +496,9 @@ public class LocationsPage(
         ];
     }
 
-    private static List<Block> GetLocationsSearchCriteriaAndPaginationBlocks(
-        LocationConnection locationConnection,
-        PageContext pageContext)
+    private static List<Block> GetLocationsSearchCriteriaAndPaginationBlocks(Connection<LocationEdge> locationConnection, PageContext pageContext)
     {
-        if (locationConnection.Edges.Count == 0)
+        if (!locationConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No location found".ToMarkdown() }];
         }
@@ -598,10 +596,9 @@ public class LocationsPage(
             Element = new ExternalSelectMenu
             {
                 ActionId = OptionLoaderKeys.TimezoneKey,
-                InitialOption =
-                    string.IsNullOrWhiteSpace(location.Timezone)
-                        ? null
-                        : new Option { Text = location.Timezone.ToOptionText(), Value = location.Timezone },
+                InitialOption = string.IsNullOrWhiteSpace(location.Timezone)
+                    ? null
+                    : new Option { Text = location.Timezone.ToOptionText(), Value = location.Timezone },
                 MinQueryLength = 3
             },
             Optional = false
@@ -632,10 +629,7 @@ public class LocationsPage(
                 Title = "Edit Location",
                 Close = "Cancel",
                 Submit = "Save",
-                Blocks =
-                [
-                    name, about, timezone, updateChannel
-                ],
+                Blocks = [name, about, timezone, updateChannel],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);
@@ -660,8 +654,7 @@ public class LocationsPage(
                 Title = "Remove Location",
                 Close = "No",
                 Submit = "Yes",
-                Blocks =
-                    [confirmationMessage],
+                Blocks = [confirmationMessage],
                 PrivateMetadata = context.Serialize()
             },
             cancellationToken);

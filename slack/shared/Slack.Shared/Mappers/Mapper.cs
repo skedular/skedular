@@ -48,6 +48,8 @@ public interface IMapper
     LocationPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions src);
     TeamPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Permissions src);
     Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src);
+    OrganizationZone MapTo(Zone src);
+    Models.OrganizationCustomTag MapTo(CustomTag src);
 }
 
 public class Mapper : IMapper
@@ -346,6 +348,12 @@ public class Mapper : IMapper
             },
             Customer = new Customer { Id = src.CustomerId.ToSafeString() }
         };
+
+    public OrganizationZone MapTo(Zone src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    public Models.OrganizationCustomTag MapTo(CustomTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private Organization MapTo(Database.Entities.Organization src)
     {

@@ -1,7 +1,4 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -9,18 +6,16 @@ using Slack.Shared.Context;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Location;
 
 public class RemoveLocationButtonHandler(
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ILocationPermissionsService locationPermissionsService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IViewSubmissionHandler
+    IPageNavigator pageNavigator,
+    ILocationService locationService) : IViewSubmissionHandler
 {
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
@@ -41,10 +36,7 @@ public class RemoveLocationButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        await locationServiceClient.RemoveAsync(
-            new RemoveInput { Id = context.LocationId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await locationService.RemoveAsync(workspaceMember.Id, context.LocationId, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,
