@@ -283,13 +283,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
-            PrimaryLocation =
-                string.IsNullOrWhiteSpace(src.PrimaryLocation?.Id)
-                    ? null
-                    : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Location
-                    {
-                        Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name.ToSafeString()
-                    },
+            PrimaryLocationId = src.PrimaryLocation?.Id.ToSafeString(),
             Permissions = new Permissions
             {
                 CanView = src.Permissions.CanView,
@@ -385,7 +379,7 @@ public class Mapper : IMapper
                 TeamMemberStatus.Inactive => global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Customer = MapToGrpcResponse(src.Customer),
+            CustomerId = src.Customer.Id.ToSafeString(),
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
                 : new global::Api.Shared.Services.Grpc.Skedular.Team.V1.OrganizationMember
@@ -398,31 +392,9 @@ public class Mapper : IMapper
                         OrganizationMemberRole.Member => Role.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
-                    Customer = MapToGrpcResponse(src.OrganizationMember.Customer)
+                    CustomerId = src.OrganizationMember.Customer.Id.ToSafeString()  
                 }
         };
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer MapToGrpcResponse(Customer src)
-    {
-        var customer = new global::Api.Shared.Services.Grpc.Skedular.Team.V1.Customer
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            PhoneNumber = src.PhoneNumber.ToSafeString()
-        };
-
-        return customer;
-    }
 
     private static TeamMember MapTo(global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember src, Shared.Models.Team team) =>
         new()
@@ -441,10 +413,10 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Customer = new Customer { Id = src.Customer.Id },
+            Customer = new Customer { Id = src.CustomerId },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.Customer.Id } },
+                : new OrganizationMember { Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.CustomerId } },
             Team = team
         };
 

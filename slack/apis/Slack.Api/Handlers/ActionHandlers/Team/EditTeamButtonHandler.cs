@@ -189,8 +189,8 @@ public class EditTeamButtonHandler(
                                         _ => throw new ArgumentOutOfRangeException()
                                     },
                                 Status = TeamMemberStatus.Active,
-                                Customer = new Customer { Id = customerId },
-                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
+                                CustomerId = customerId,
+                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, CustomerId = customerId }
                             };
                         }));
                 }

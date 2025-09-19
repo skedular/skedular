@@ -132,7 +132,7 @@ public class TeamService(
 
         var customers = await Task.WhenAll(
             teamsConnection.Edges
-                .SelectMany(item => item.Node.Members.Select(member => member.Customer.Id))
+                .SelectMany(item => item.Node.Members.Select(member => member.CustomerId))
                 .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
 
         var teams = teamsConnection.Edges

@@ -255,9 +255,7 @@ public class Mapper : IMapper
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
-            PrimaryLocation = src.PrimaryLocation is null
-                ? null
-                : new Location { Id = src.PrimaryLocation.Id, Name = src.PrimaryLocation.Name },
+            PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Location { Id = src.PrimaryLocationId },
             Permissions = new TeamPermissions
             {
                 CanView = src.Permissions.CanView,
@@ -533,27 +531,13 @@ public class Mapper : IMapper
                 TeamMemberStatus.Inactive => Api.Shared.Services.Models.TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Customer = MapTo(src.Customer),
+            Customer = new Customer { Id = src.CustomerId },
             OrganizationMember = src.OrganizationMember is null || string.IsNullOrWhiteSpace(src.OrganizationMember.Id)
                 ? null
-                : new Models.OrganizationMember { Id = src.OrganizationMember.Id, Customer = MapTo(src.OrganizationMember.Customer) },
+                : new Models.OrganizationMember
+                {
+                    Id = src.OrganizationMember.Id, Customer = new Customer { Id = src.OrganizationMember.CustomerId }
+                },
             Team = team
-        };
-
-    private static Customer MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Customer src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString()
         };
 }

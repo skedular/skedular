@@ -55,6 +55,6 @@ public class WorkspaceOnboardingService(
     {
         var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
-        _ = await locationService.AdminAddAsync(location.Id, organization.Id, $"{name.ToSafeString()} Office", cancellationToken);
+        _ = await locationService.AdminAddAsync(location.Id, $"{name.ToSafeString()} Office", organization.Id, cancellationToken);
     }
 }

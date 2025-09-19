@@ -47,8 +47,8 @@ importers:
         specifier: ^11.14.1
         version: 11.14.1(@emotion/react@11.14.0(@types/react@19.1.13)(react@19.1.1))(@types/react@19.1.13)(react@19.1.1)
       '@microsoft/teamsfx':
-        specifier: ^4.0.0
-        version: 4.0.0(@microsoft/agents-activity@0.2.14)(@microsoft/teams-js@2.43.0)
+        specifier: ^4.0.1
+        version: 4.0.1(@microsoft/agents-activity@0.6.22)(@microsoft/teams-js@2.43.0)
       '@mui/icons-material':
         specifier: ^7.3.2
         version: 7.3.2(@mui/material@7.3.2(@emotion/react@11.14.0(@types/react@19.1.13)(react@19.1.1))(@emotion/styled@11.14.1(@emotion/react@11.14.0(@types/react@19.1.13)(react@19.1.1))(@types/react@19.1.13)(react@19.1.1))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@types/react@19.1.13)(react@19.1.1)
@@ -119,8 +119,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       '@workos-inc/authkit-nextjs':
-        specifier: ^2.7.1
-        version: 2.7.1(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^2.8.0
+        version: 2.8.0(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       babel-plugin-react-compiler:
         specifier: 19.1.0-rc.3
         version: 19.1.0-rc.3
@@ -210,8 +210,8 @@ importers:
         specifier: ^3.0.3
         version: 3.0.3
       '@types/node':
-        specifier: ^24.5.1
-        version: 24.5.1
+        specifier: ^24.5.2
+        version: 24.5.2
       '@types/pino':
         specifier: ^7.0.5
         version: 7.0.5
@@ -650,20 +650,29 @@ packages:
   '@jridgewell/trace-mapping@0.3.30':
     resolution: {integrity: sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q==}
 
-  '@microsoft/agents-activity@0.2.14':
-    resolution: {integrity: sha512-Qhvt0E3D2u8ElFrysqdGRn1YZsTtYfQiw66PehJv92LBTwaJWMCEQBbdXPr2ND6UzzK56cUx4jwZeFhWaCAJ9w==}
-    engines: {node: '>=18.0.0'}
+  '@microsoft/agents-activity@0.6.18':
+    resolution: {integrity: sha512-QqatJ4Cz27OYF1ohioQMZXRgnjxO0oIOnMQds0mdv0bcVT5a2neCYu3ye+6ATSH0CpqU/x9bd0zmRnLwxiP6Cw==}
+    engines: {node: '>=20.0.0'}
 
-  '@microsoft/agents-hosting-dialogs@0.2.14':
-    resolution: {integrity: sha512-IGuF18zmpQ9LkS55NkQR9j9WDp4xyiDRJxpYYdtpZPnxwNu1GHbzgva+bJDkScA3t9cYWEMocEKW0V/Dwe9k4g==}
-    engines: {node: '>=18.0.0'}
+  '@microsoft/agents-activity@0.6.22':
+    resolution: {integrity: sha512-EYXuPuAA7tPGOHqXT7DskiOyfvbV+tJPE40cGcMzRuPCZ7TjRIAGSFgh69xn9sFfpiLdVbcF/4tfT5yNznAnLw==}
+    engines: {node: '>=20.0.0'}
 
-  '@microsoft/agents-hosting-teams@0.2.14':
-    resolution: {integrity: sha512-fA2M/u5qtpm+jFi5rLDivzs+knkWxYbRThy/LvYknptELQy3ke/P7eXksKMppahM/Or6aG3QVa1OCR7np9NlVw==}
+  '@microsoft/agents-hosting-dialogs@0.6.22':
+    resolution: {integrity: sha512-SXCCjmFygxmgGr+H3HkqrF8BS2R2WHOvvVPVXhku1KL2YgEZEBZhuTMME/7sS/g9OCeftWMycTTEOmW3J9QLSA==}
+    engines: {node: '>=20.0.0'}
 
-  '@microsoft/agents-hosting@0.2.14':
-    resolution: {integrity: sha512-/Z0j55YCHNzSmxEHGewJu9KcxoVO+G0oSiDa8Xnbm6pU7VaK6FWrIbWYQPpoFkiR/UvTS2IPGuTVswQN0yOWbQ==}
-    engines: {node: '>=18.0.0'}
+  '@microsoft/agents-hosting-extensions-teams@0.6.18':
+    resolution: {integrity: sha512-CwcZL+3qKrQ8aOJwzO4wgxuk3TKG1PCkSm2vRvFxEimVKLb5Of/XFElRXSxOWtYUFq74Z1ELjCeHsHGxaUBpyQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@microsoft/agents-hosting@0.6.18':
+    resolution: {integrity: sha512-bzY4UYpNbFDjfqZuXbpFiDzNjx+YGWiZSzYTARCHI4L3lTRiwvQYfemBhyopAf/BgPdlP9BsYHIXnBqPrcbTBw==}
+    engines: {node: '>=20.0.0'}
+
+  '@microsoft/agents-hosting@0.6.22':
+    resolution: {integrity: sha512-dKKrEwQmzHs/TgzbqWrMhb6gDytWZG/qjl94ImQrp1/VNFowDrgxB2sxgKNF2kh6zu9u+uUrn0+NDTBa1uTNmA==}
+    engines: {node: '>=20.0.0'}
 
   '@microsoft/recognizers-text-choice@1.3.1':
     resolution: {integrity: sha512-HubunMJVq/OetmdvcAmBh5skMlg+yiScm3V2wNyNZIVvLgli4+8nzbg/W/fI9dpaf6wv9ZQ7d2IYvn8swJBo3A==}
@@ -700,11 +709,11 @@ packages:
   '@microsoft/teams-js@2.43.0':
     resolution: {integrity: sha512-yj7G6SqKfftdGMzo4W47iNFOg+cEbryWX0EeUoD/B2CyQPSaQuGCriMJLxsvnrQTlqfIwGhtonlOpO9j7qVVDw==}
 
-  '@microsoft/teamsfx@4.0.0':
-    resolution: {integrity: sha512-x7cZM7HcY6y60bB+ksYAvAtsr79Nwo9uobQYlSR1gCrA861ORAai06iif/bImXvq6Rtb+bMVJ9S6Kxrr2+ev8w==}
+  '@microsoft/teamsfx@4.0.1':
+    resolution: {integrity: sha512-p+MDfcVWsTKG6nYHpTGOxaceDJxtBXnRhHOiYl0SEoYF0OCAvXqTW7eszkVWoFqLkeA+YuVN/Eg/HBdW1cwDaw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      '@microsoft/agents-activity': 0.2.14
+      '@microsoft/agents-activity': ^0.6.1
       '@microsoft/teams-js': ^2.31.1
 
   '@mui/core-downloads-tracker@7.3.2':
@@ -1347,8 +1356,8 @@ packages:
   '@types/node@17.0.45':
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
 
-  '@types/node@24.5.1':
-    resolution: {integrity: sha512-/SQdmUP2xa+1rdx7VwB9yPq8PaKej8TD5cQ+XfKDPWWC+VDJU4rvVVagXqKUzhKjtFoNA8rXDJAkCxQPAe00+Q==}
+  '@types/node@24.5.2':
+    resolution: {integrity: sha512-FYxk1I7wPv3K2XBaoyH2cTnocQEu8AOZ60hPbsyukMPLv5/5qr7V1i8PLHdl6Zf87I+xZXFvPCXYjiTFq+YSDQ==}
 
   '@types/parse-json@4.0.2':
     resolution: {integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw==}
@@ -1613,8 +1622,8 @@ packages:
       vue-router:
         optional: true
 
-  '@workos-inc/authkit-nextjs@2.7.1':
-    resolution: {integrity: sha512-PV+62OSytsHlqFrZRnstKXJWN4PtZlHcSHs/FQx6JjK3UfxUjOtxKXUWIJNO9mByz9oGQfBN22UsgwOeGOoYSg==}
+  '@workos-inc/authkit-nextjs@2.8.0':
+    resolution: {integrity: sha512-zDba4cYvMvd9ukqmZlyTB/ojbdm2Fha8s3XVBpnILwbpCOh5gBRwiOzzMvYlf72syIYk9Q5Ohu6URAPosz627w==}
     peerDependencies:
       next: ^13.5.9 || ^14.2.26 || ^15.2.3
       react: ^18.0 || ^19.0.0
@@ -3842,8 +3851,8 @@ packages:
     resolution: {integrity: sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ==}
     engines: {node: '>= 10'}
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+  zod@3.25.75:
+    resolution: {integrity: sha512-OhpzAmVzabPOL6C3A3gpAifqr9MqihV/Msx3gor2b2kviCgcb+HM9SEOpMWwwNp9MRunWnhtAKUoo0AHhjyPPg==}
 
 snapshots:
 
@@ -4300,14 +4309,25 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@microsoft/agents-activity@0.2.14':
+  '@microsoft/agents-activity@0.6.18':
     dependencies:
+      debug: 4.4.1
       uuid: 11.1.0
-      zod: 3.25.76
+      zod: 3.25.75
+    transitivePeerDependencies:
+      - supports-color
 
-  '@microsoft/agents-hosting-dialogs@0.2.14':
+  '@microsoft/agents-activity@0.6.22':
     dependencies:
-      '@microsoft/agents-hosting': 0.2.14
+      debug: 4.4.1
+      uuid: 11.1.0
+      zod: 3.25.75
+    transitivePeerDependencies:
+      - supports-color
+
+  '@microsoft/agents-hosting-dialogs@0.6.22':
+    dependencies:
+      '@microsoft/agents-hosting': 0.6.22
       '@microsoft/recognizers-text-choice': 1.3.1
       '@microsoft/recognizers-text-date-time': 1.3.2
       '@microsoft/recognizers-text-number': 1.3.1
@@ -4316,23 +4336,38 @@ snapshots:
       dependency-graph: 1.0.0
       globalize: 1.7.0(patch_hash=5287baf5a4f504af1323f4e4a6e989a7af9c9ca3ef3313cf9bf27944660a0c7e)
     transitivePeerDependencies:
+      - debug
       - supports-color
 
-  '@microsoft/agents-hosting-teams@0.2.14':
+  '@microsoft/agents-hosting-extensions-teams@0.6.18':
     dependencies:
-      '@microsoft/agents-hosting': 0.2.14
+      '@microsoft/agents-hosting': 0.6.18
     transitivePeerDependencies:
+      - debug
       - supports-color
 
-  '@microsoft/agents-hosting@0.2.14':
+  '@microsoft/agents-hosting@0.6.18':
     dependencies:
+      '@azure/core-auth': 1.10.0
       '@azure/msal-node': 3.7.2
-      '@microsoft/agents-activity': 0.2.14
-      axios: 1.11.0(debug@4.4.1)
-      debug: 4.4.1
+      '@microsoft/agents-activity': 0.6.18
+      axios: 1.11.0
       jsonwebtoken: 9.0.2
       jwks-rsa: 3.2.0
     transitivePeerDependencies:
+      - debug
+      - supports-color
+
+  '@microsoft/agents-hosting@0.6.22':
+    dependencies:
+      '@azure/core-auth': 1.10.0
+      '@azure/msal-node': 3.7.2
+      '@microsoft/agents-activity': 0.6.22
+      axios: 1.11.0
+      jsonwebtoken: 9.0.2
+      jwks-rsa: 3.2.0
+    transitivePeerDependencies:
+      - debug
       - supports-color
 
   '@microsoft/recognizers-text-choice@1.3.1':
@@ -4385,19 +4420,19 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@microsoft/teamsfx@4.0.0(@microsoft/agents-activity@0.2.14)(@microsoft/teams-js@2.43.0)':
+  '@microsoft/teamsfx@4.0.1(@microsoft/agents-activity@0.6.22)(@microsoft/teams-js@2.43.0)':
     dependencies:
       '@azure/identity': 4.11.1
       '@azure/msal-browser': 3.30.0
       '@azure/msal-node': 2.16.3
-      '@microsoft/agents-activity': 0.2.14
-      '@microsoft/agents-hosting': 0.2.14
-      '@microsoft/agents-hosting-dialogs': 0.2.14
-      '@microsoft/agents-hosting-teams': 0.2.14
+      '@microsoft/agents-activity': 0.6.22
+      '@microsoft/agents-hosting': 0.6.22
+      '@microsoft/agents-hosting-dialogs': 0.6.22
+      '@microsoft/agents-hosting-extensions-teams': 0.6.18
       '@microsoft/teams-js': 2.43.0
       adaptive-expressions: 4.23.2
       adaptivecards-templating: 2.3.1(adaptive-expressions@4.23.2)
-      axios: 1.11.0(debug@4.4.1)
+      axios: 1.11.0
       jwt-decode: 4.0.0
       uuid: 10.0.0
     transitivePeerDependencies:
@@ -4928,20 +4963,20 @@ snapshots:
 
   '@types/accepts@1.3.7':
     dependencies:
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/atob-lite@2.0.2': {}
 
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/btoa-lite@1.0.2': {}
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/content-disposition@0.5.9': {}
 
@@ -4952,7 +4987,7 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/express': 4.17.23
       '@types/keygrip': 1.0.6
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/d3-color@3.1.3': {}
 
@@ -4990,7 +5025,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
@@ -5017,7 +5052,7 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/keygrip@1.0.6': {}
 
@@ -5034,7 +5069,7 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/keygrip': 1.0.6
       '@types/koa-compose': 3.2.8
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/leaflet@1.9.20':
     dependencies:
@@ -5056,7 +5091,7 @@ snapshots:
 
   '@types/node@17.0.45': {}
 
-  '@types/node@24.5.1':
+  '@types/node@24.5.2':
     dependencies:
       undici-types: 7.12.0
 
@@ -5094,12 +5129,12 @@ snapshots:
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
 
   '@types/serve-static@1.15.8':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.5.1
+      '@types/node': 24.5.2
       '@types/send': 0.17.5
 
   '@types/xmldom@0.1.34': {}
@@ -5284,7 +5319,7 @@ snapshots:
       next: 15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
 
-  '@workos-inc/authkit-nextjs@2.7.1(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@workos-inc/authkit-nextjs@2.8.0(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@workos-inc/node': 7.68.0(next@15.5.3(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       iron-session: 8.0.4
@@ -5514,9 +5549,9 @@ snapshots:
 
   axe-core@4.10.3: {}
 
-  axios@1.11.0(debug@4.4.1):
+  axios@1.11.0:
     dependencies:
-      follow-redirects: 1.15.11(debug@4.4.1)
+      follow-redirects: 1.15.11
       form-data: 4.0.4
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6314,9 +6349,7 @@ snapshots:
 
   flatted@3.3.3: {}
 
-  follow-redirects@1.15.11(debug@4.4.1):
-    optionalDependencies:
-      debug: 4.4.1
+  follow-redirects@1.15.11: {}
 
   for-each@0.3.5:
     dependencies:
@@ -7857,4 +7890,4 @@ snapshots:
       compress-commons: 4.1.2
       readable-stream: 3.6.2
 
-  zod@3.25.76: {}
+  zod@3.25.75: {}

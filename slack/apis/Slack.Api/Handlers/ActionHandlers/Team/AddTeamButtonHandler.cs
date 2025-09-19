@@ -232,8 +232,7 @@ public class AddTeamButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var organizationMembersBlock))
         {
-            if (organizationMembersBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
-                    out var organizationMembers))
+            if (organizationMembersBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var organizationMembers))
             {
                 if (organizationMembers is ExternalMultiSelectValue value)
                 {
@@ -256,11 +255,8 @@ public class AddTeamButtonHandler(
                             {
                                 Id = randomHelper.Generate(),
                                 Role = Role.Member,
-                                Customer = new Customer { Id = customerId },
-                                OrganizationMember = new OrganizationMember
-                                {
-                                    Id = organizationMemberId, Customer = new Customer { Id = customerId }
-                                }
+                                CustomerId = customerId,
+                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, CustomerId = customerId }
                             };
                         }));
                 }
@@ -309,16 +305,8 @@ public class AddTeamButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await teamServiceClient.AddAsync(
-            addInput,
-            teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
-        await pageNavigator.BackAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            viewSubmission.Hash, cancellationToken);
+        await teamServiceClient.AddAsync(addInput, teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id), cancellationToken: cancellationToken);
+        await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 
         return ViewSubmissionResponse.Null;
     }
