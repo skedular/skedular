@@ -2,6 +2,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
+using Slack.Shared.Models;
 using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
@@ -55,6 +56,10 @@ public class WorkspaceOnboardingService(
     {
         var location = await repositoryFactory.LocationRepository.UpsertNakedAsync(randomHelper.Generate(), cancellationToken);
 
-        _ = await locationService.AdminAddAsync(location.Id, $"{name.ToSafeString()} Office", organization.Id, cancellationToken);
+        _ = await locationService.AdminAddAsync(
+            new Location
+            {
+                Id = location.Id, Name = $"{name.ToSafeString()} Office", Organization = new Shared.Models.Organization { Id = organization.Id }
+            }, cancellationToken);
     }
 }

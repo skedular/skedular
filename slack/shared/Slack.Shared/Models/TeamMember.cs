@@ -5,7 +5,7 @@ namespace Slack.Shared.Models;
 
 public class TeamMember : ModelBase
 {
-    public TeamMemberRole? Role { get; set; }
+    public TeamMemberRole Role { get; set; }
     public TeamMemberStatus Status { get; set; }
 
     public Team Team { get; set; } = new();

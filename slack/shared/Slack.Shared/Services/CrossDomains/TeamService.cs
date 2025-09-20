@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
@@ -9,9 +10,11 @@ using Slack.Shared.Mappers;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.Admin_GetInput;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Team.V1.OrderDirection;
+using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 using Team = Slack.Shared.Models.Team;
 using TeamEdge = Slack.Shared.Models.TeamEdge;
+using TeamMemberStatus = Api.Shared.Services.Models.TeamMemberStatus;
 
 namespace Slack.Shared.Services.CrossDomains;
 
@@ -19,6 +22,9 @@ public interface ITeamService
 {
     Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken);
     Task<Team> GetAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
+    Task<Team> AddAsync(string workspaceMemberId, Team team, CancellationToken cancellationToken);
+    Task<Team> UpdateAsync(string workspaceMemberId, Team team, CancellationToken cancellationToken);
+    Task RemoveAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
 
     Task<Connection<TeamEdge>> GetPaginatedTeamsAsync(
         string workspaceMemberId,
@@ -105,6 +111,162 @@ public class TeamService(
         }
 
         return team;
+    }
+
+    public async Task<Team> AddAsync(string workspaceMemberId, Team team, CancellationToken cancellationToken)
+    {
+        var addInput = new AddInput
+        {
+            Id = team.Id,
+            Name = team.Name,
+            About = team.About,
+            Timezone = team.Timezone,
+            OrganizationId = team.Organization!.Id,
+            PrimaryLocationId = team.PrimaryLocation?.Id.ToSafeString()
+        };
+
+        addInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
+        {
+            Id = item.Id,
+            CustomerId = item.Customer.Id,
+            Role = item.Role switch
+            {
+                TeamMemberRole.Owner => Role.Owner,
+                TeamMemberRole.Administrator => Role.Administrator,
+                TeamMemberRole.Member => Role.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = item.Status switch
+            {
+                TeamMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            OrganizationMember = new OrganizationMember
+            {
+                Id = item.OrganizationMember!.Id,
+                CustomerId = item.OrganizationMember!.Customer.Id,
+                Role = item.OrganizationMember!.Role switch
+                {
+                    OrganizationMemberRole.Owner => Role.Owner,
+                    OrganizationMemberRole.Administrator => Role.Administrator,
+                    OrganizationMemberRole.Member => Role.Member,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            }
+        }));
+
+        var mappedTeam = mapper.MapTo(
+            await teamServiceClient.AddAsync(
+                addInput,
+                teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken));
+
+        await CacheAsync([mappedTeam], cancellationToken);
+
+        var customers = await Task.WhenAll(
+            mappedTeam.TeamMembers
+                .Select(item => item.Customer.Id)
+                .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
+
+        foreach (var member in mappedTeam.TeamMembers)
+        {
+            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (customer is not null)
+            {
+                member.Customer = customer;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(mappedTeam.PrimaryLocation?.Id))
+        {
+            mappedTeam.PrimaryLocation = await locationService.GetAsync(workspaceMemberId, mappedTeam.PrimaryLocation.Id, cancellationToken);
+        }
+
+        return mappedTeam;
+    }
+
+    public async Task<Team> UpdateAsync(string workspaceMemberId, Team team, CancellationToken cancellationToken)
+    {
+        var updateInput = new UpdateInput
+        {
+            Id = team.Id,
+            Name = team.Name,
+            About = team.About,
+            Timezone = team.Timezone,
+            OrganizationId = team.Organization!.Id,
+            PrimaryLocationId = team.PrimaryLocation?.Id.ToSafeString()
+        };
+
+        updateInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
+        {
+            Id = item.Id,
+            CustomerId = item.Customer.Id,
+            Role = item.Role switch
+            {
+                TeamMemberRole.Owner => Role.Owner,
+                TeamMemberRole.Administrator => Role.Administrator,
+                TeamMemberRole.Member => Role.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Status = item.Status switch
+            {
+                TeamMemberStatus.Active => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Active,
+                TeamMemberStatus.Inactive => Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            OrganizationMember = new OrganizationMember
+            {
+                Id = item.OrganizationMember!.Id,
+                CustomerId = item.OrganizationMember!.Customer.Id,
+                Role = item.OrganizationMember!.Role switch
+                {
+                    OrganizationMemberRole.Owner => Role.Owner,
+                    OrganizationMemberRole.Administrator => Role.Administrator,
+                    OrganizationMemberRole.Member => Role.Member,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
+            }
+        }));
+
+        var mappedTeam = mapper.MapTo(
+            await teamServiceClient.UpdateAsync(
+                updateInput,
+                teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                cancellationToken: cancellationToken));
+
+        var customers = await Task.WhenAll(
+            mappedTeam.TeamMembers
+                .Select(item => item.Customer.Id)
+                .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
+
+        foreach (var member in mappedTeam.TeamMembers)
+        {
+            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (customer is not null)
+            {
+                member.Customer = customer;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(mappedTeam.PrimaryLocation?.Id))
+        {
+            mappedTeam.PrimaryLocation = await locationService.GetAsync(workspaceMemberId, mappedTeam.PrimaryLocation.Id, cancellationToken);
+        }
+
+        return mappedTeam;
+    }
+
+    public async Task RemoveAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
+    {
+        await teamServiceClient.RemoveAsync(
+            new RemoveInput { Id = teamId },
+            teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+            cancellationToken: cancellationToken);
+
+        var key = CreateKeyById(teamId);
+
+        await hybridCache.RemoveAsync(key, cancellationToken);
     }
 
     public async Task<Connection<TeamEdge>> GetPaginatedTeamsAsync(

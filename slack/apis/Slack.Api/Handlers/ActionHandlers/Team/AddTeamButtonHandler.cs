@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -11,26 +9,25 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using AddInput = Api.Shared.Services.Grpc.Skedular.Team.V1.AddInput;
-using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class AddTeamButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    TeamConfiguration teamConfiguration,
-    TeamService.TeamServiceClient teamServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IWorkspaceChannelService workspaceChannelService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    ITeamService teamService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
@@ -132,8 +129,7 @@ public class AddTeamButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var teamId = randomHelper.Generate();
-        var addInput = new AddInput { Id = teamId, OrganizationId = workspace.Organization.Id };
+        var team = new Shared.Models.Team { Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id } };
 
         if (values.TryGetValue(TeamActionTypes.Name, out var nameBlock))
         {
@@ -142,7 +138,7 @@ public class AddTeamButtonHandler(
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addInput.Name = value.Value.ToSafeString();
+                    team.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -165,7 +161,7 @@ public class AddTeamButtonHandler(
             {
                 if (about is PlainTextInputValue value)
                 {
-                    addInput.About = value.Value.ToSafeString();
+                    team.About = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -188,7 +184,7 @@ public class AddTeamButtonHandler(
             {
                 if (timezone is ExternalSelectValue value)
                 {
-                    addInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
+                    team.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -211,9 +207,9 @@ public class AddTeamButtonHandler(
             {
                 if (primaryLocation is ExternalSelectValue value)
                 {
-                    addInput.PrimaryLocationId = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
-                        ? string.Empty
-                        : value.SelectedOption.Value;
+                    team.PrimaryLocation = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? null
+                        : new Shared.Models.Location { Id = value.SelectedOption.Value };
                 }
                 else
                 {
@@ -241,24 +237,23 @@ public class AddTeamButtonHandler(
                         throw new ArgumentException("No members selected.");
                     }
 
-                    addInput.Members.AddRange(
-                        value.SelectedOptions.Select(item =>
+                    team.TeamMembers = value.SelectedOptions.Select(item =>
+                    {
+                        var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
+                        var organizationMemberId = memberCustomerIdPair.First();
+                        var customerId = memberCustomerIdPair.Last();
+
+                        ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
+                        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+
+                        return new TeamMember
                         {
-                            var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
-                            var organizationMemberId = memberCustomerIdPair.First();
-                            var customerId = memberCustomerIdPair.Last();
-
-                            ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
-                            ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
-
-                            return new TeamMember
-                            {
-                                Id = randomHelper.Generate(),
-                                Role = Role.Member,
-                                CustomerId = customerId,
-                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, CustomerId = customerId }
-                            };
-                        }));
+                            Id = randomHelper.Generate(),
+                            Role = TeamMemberRole.Member,
+                            Customer = new Customer { Id = customerId },
+                            OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
+                        };
+                    }).ToList();
                 }
                 else
                 {
@@ -281,7 +276,7 @@ public class AddTeamButtonHandler(
             {
                 if (slackUpdateChannel is ChannelSelectValue value)
                 {
-                    var teamEntity = await repositoryFactory.TeamRepository.UpsertNakedAsync(teamId, cancellationToken);
+                    var teamEntity = await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, cancellationToken);
                     teamEntity.DailyUpdateChannel = string.IsNullOrWhiteSpace(value.SelectedChannel)
                         ? null
                         : await workspaceChannelService.EnsureChannelResourcesAllExistAsync(
@@ -305,7 +300,7 @@ public class AddTeamButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await teamServiceClient.AddAsync(addInput, teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id), cancellationToken: cancellationToken);
+        await teamService.AddAsync(workspaceMember.Id, team, cancellationToken);
         await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 
         return ViewSubmissionResponse.Null;

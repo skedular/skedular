@@ -1,10 +1,7 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Team.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Slack.Api.Mappers;
@@ -12,18 +9,15 @@ using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using TeamMemberStatus = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMemberStatus;
-using TeamService = Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Team;
 
 public class EditTeamButtonHandler(
-    TeamConfiguration teamConfiguration,
-    TeamService.TeamServiceClient teamServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ITeamService teamService,
@@ -52,18 +46,18 @@ public class EditTeamButtonHandler(
             throw new UnauthorizedAccessException();
         }
 
-        var team = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
+        var existingTeam = await teamService.GetAsync(workspaceMember.Id, context.TeamId, cancellationToken);
         var values = viewSubmission.View.State.Values;
-        var updateInput = new UpdateInput { Id = context.TeamId, OrganizationId = workspace.Organization.Id };
+        var team = new Shared.Models.Team { Id = context.TeamId, Organization = new Organization { Id = workspace.Organization.Id } };
 
         if (values.TryGetValue(TeamActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(TeamActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(TeamActionTypes.Name, out var block))
             {
-                if (name is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    updateInput.Name = value.Value.ToSafeString();
+                    team.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -82,11 +76,11 @@ public class EditTeamButtonHandler(
 
         if (values.TryGetValue(TeamActionTypes.About, out var aboutBlock))
         {
-            if (aboutBlock.TryGetValue(TeamActionTypes.About, out var about))
+            if (aboutBlock.TryGetValue(TeamActionTypes.About, out var block))
             {
-                if (about is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
-                    updateInput.About = value.Value.ToSafeString();
+                    team.About = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -105,11 +99,11 @@ public class EditTeamButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezoneBlock))
         {
-            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var timezone))
+            if (timezoneBlock.TryGetValue(OptionLoaderKeys.TimezoneKey, out var block))
             {
-                if (timezone is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
-                    updateInput.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
+                    team.Timezone = string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
                 }
                 else
                 {
@@ -128,12 +122,13 @@ public class EditTeamButtonHandler(
 
         if (values.TryGetValue(TeamActionTypes.PrimaryLocation, out var primaryLocationBlock))
         {
-            if (primaryLocationBlock.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var primaryLocation))
+            if (primaryLocationBlock.TryGetValue(OptionLoaderKeys.OrganizationLocationKey, out var block))
             {
-                if (primaryLocation is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
-                    updateInput.PrimaryLocationId =
-                        string.IsNullOrWhiteSpace(value.SelectedOption?.Value) ? string.Empty : value.SelectedOption.Value;
+                    team.PrimaryLocation = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                        ? null
+                        : new Shared.Models.Location { Id = value.SelectedOption.Value };
                 }
                 else
                 {
@@ -152,17 +147,16 @@ public class EditTeamButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var organizationMembersBlock))
         {
-            if (organizationMembersBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey,
-                    out var organizationMembers))
+            if (organizationMembersBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberAndCustomerPairKey, out var block))
             {
-                if (organizationMembers is ExternalMultiSelectValue value)
+                if (block is ExternalMultiSelectValue value)
                 {
                     if (value.SelectedOptions.Count == 0)
                     {
                         throw new ArgumentException("No members selected.");
                     }
 
-                    updateInput.Members.AddRange(value.SelectedOptions
+                    team.TeamMembers = value.SelectedOptions
                         .Select(item =>
                         {
                             var memberCustomerIdPair = item.Value.Split(Global.OptionLoaderValueSeparator);
@@ -172,7 +166,7 @@ public class EditTeamButtonHandler(
                             ArgumentException.ThrowIfNullOrWhiteSpace(organizationMemberId);
                             ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 
-                            var existingMember = team.TeamMembers.FirstOrDefault(teamMember =>
+                            var existingMember = existingTeam.TeamMembers.FirstOrDefault(teamMember =>
                                 teamMember.OrganizationMember is not null &&
                                 teamMember.OrganizationMember.Customer.Id == customerId);
 
@@ -180,19 +174,19 @@ public class EditTeamButtonHandler(
                             {
                                 Id = existingMember is null ? randomHelper.Generate() : existingMember.Id,
                                 Role = existingMember is null
-                                    ? Role.Member
+                                    ? TeamMemberRole.Member
                                     : existingMember.Role switch
                                     {
-                                        TeamMemberRole.Owner => Role.Owner,
-                                        TeamMemberRole.Administrator => Role.Administrator,
-                                        TeamMemberRole.Member => Role.Member,
+                                        TeamMemberRole.Owner => TeamMemberRole.Owner,
+                                        TeamMemberRole.Administrator => TeamMemberRole.Administrator,
+                                        TeamMemberRole.Member => TeamMemberRole.Member,
                                         _ => throw new ArgumentOutOfRangeException()
                                     },
                                 Status = TeamMemberStatus.Active,
-                                CustomerId = customerId,
-                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, CustomerId = customerId }
+                                Customer = new Customer { Id = customerId },
+                                OrganizationMember = new OrganizationMember { Id = organizationMemberId, Customer = new Customer { Id = customerId } }
                             };
-                        }));
+                        }).ToList();
                 }
                 else
                 {
@@ -211,9 +205,9 @@ public class EditTeamButtonHandler(
 
         if (values.TryGetValue(TeamActionTypes.SlackUpdateChannel, out var slackUpdateChannelBlock))
         {
-            if (slackUpdateChannelBlock.TryGetValue(TeamActionTypes.SlackUpdateChannel, out var slackUpdateChannel))
+            if (slackUpdateChannelBlock.TryGetValue(TeamActionTypes.SlackUpdateChannel, out var block))
             {
-                if (slackUpdateChannel is ChannelSelectValue value)
+                if (block is ChannelSelectValue value)
                 {
                     var teamEntity = await repositoryFactory.TeamRepository.Query(
                             new Specification<Shared.Database.Entities.Team> { Criteria = query => query.Id == context.TeamId }
@@ -245,10 +239,7 @@ public class EditTeamButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await teamServiceClient.UpdateAsync(
-            updateInput,
-            teamConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await teamService.UpdateAsync(workspaceMember.Id, team, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

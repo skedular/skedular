@@ -16,7 +16,7 @@ namespace Slack.Shared.Services.CrossDomains;
 public interface ILocationService
 {
     Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken);
-    Task<Location> AdminAddAsync(string locationId, string name, string organizationId, CancellationToken cancellationToken);
+    Task<Location> AdminAddAsync(Location location, CancellationToken cancellationToken);
     Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
     Task<Location> AddAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken);
     Task<Location> UpdateAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken);
@@ -52,23 +52,23 @@ public class LocationService(
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
 
-    public async Task<Location> AdminAddAsync(string locationId, string name, string organizationId, CancellationToken cancellationToken)
+    public async Task<Location> AdminAddAsync(Location location, CancellationToken cancellationToken)
     {
-        var location = mapper.MapTo(
+        var mappedLocation = mapper.MapTo(
             await locationServiceClient.Admin_AddAsync(
                 new Admin_AddInput
                 {
-                    Id = locationId,
-                    Name = name,
-                    OrganizationId = organizationId,
+                    Id = location.Id,
+                    Name = location.Name,
+                    OrganizationId = location.Organization!.Id,
                     Type = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private
                 },
                 locationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([location], cancellationToken);
+        await CacheAsync([mappedLocation], cancellationToken);
 
-        return location;
+        return mappedLocation;
     }
 
     public async Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
