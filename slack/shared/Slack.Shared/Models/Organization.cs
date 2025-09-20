@@ -22,4 +22,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public WorkspaceChannel? DailyUpdateChannel { get; set; }
     public bool HasFutureBooking { get; set; }
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public OrganizationBillingDetails? BillingDetails { get; set; }
 }

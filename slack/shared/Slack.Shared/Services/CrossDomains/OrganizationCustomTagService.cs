@@ -46,10 +46,12 @@ public class OrganizationCustomTagService(
     IMapper mapper,
     HybridCache hybridCache) : IOrganizationCustomTagService
 {
-    public async Task<OrganizationCustomTag> AddAsync(string workspaceMemberId, OrganizationCustomTag organizationCustomTag,
+    public async Task<OrganizationCustomTag> AddAsync(
+        string workspaceMemberId,
+        OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
-        var customTag = mapper.MapTo(
+        var mappedOrganizationCustomTag = mapper.MapTo(
             await organizationServiceClient.AddCustomTagAsync(
                 new AddCustomTagInput
                 {
@@ -62,15 +64,17 @@ public class OrganizationCustomTagService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([customTag], cancellationToken);
+        await CacheAsync([mappedOrganizationCustomTag], cancellationToken);
 
-        return customTag;
+        return mappedOrganizationCustomTag;
     }
 
-    public async Task<OrganizationCustomTag> UpdateAsync(string workspaceMemberId, OrganizationCustomTag organizationCustomTag,
+    public async Task<OrganizationCustomTag> UpdateAsync(
+        string workspaceMemberId,
+        OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
-        var customTag = mapper.MapTo(
+        var mappedOrganizationCustomTag = mapper.MapTo(
             await organizationServiceClient.UpdateCustomTagAsync(
                 new UpdateCustomTagInput
                 {
@@ -82,9 +86,9 @@ public class OrganizationCustomTagService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([customTag], cancellationToken);
+        await CacheAsync([mappedOrganizationCustomTag], cancellationToken);
 
-        return customTag;
+        return mappedOrganizationCustomTag;
     }
 
     public async Task RemoveAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken)

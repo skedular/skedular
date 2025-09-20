@@ -1,28 +1,25 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using EmailValidation;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
-using AddBillingDetailsInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddBillingDetailsInput;
 
 namespace Slack.Api.Handlers.ActionHandlers.Billing;
 
 public class EditBillingButtonHandler(
-    OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IViewSubmissionHandler
+    IPageNavigator pageNavigator,
+    IOrganizationBillingService organizationBillingService) : IViewSubmissionHandler
 {
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
@@ -38,7 +35,7 @@ public class EditBillingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var setOrganizationBillingInfoInput = new AddBillingDetailsInput { OrganizationId = workspace.Organization.Id };
+        var organizationBillingDetails = new OrganizationBillingDetails { Organization = new Organization { Id = workspace.Organization.Id } };
 
         if (values.TryGetValue(BillingActionTypes.CompanyName, out var companyNameBlock))
         {
@@ -46,7 +43,7 @@ public class EditBillingButtonHandler(
             {
                 if (companyName is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.CompanyName = value.Value.ToSafeString();
+                    organizationBillingDetails.CompanyName = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -75,7 +72,7 @@ public class EditBillingButtonHandler(
                         throw new ArgumentException("no valid email address", value.Value);
                     }
 
-                    setOrganizationBillingInfoInput.Email = value.Value.ToSafeString();
+                    organizationBillingDetails.Email = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -98,7 +95,7 @@ public class EditBillingButtonHandler(
             {
                 if (addressLine1 is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.AddressLine1 = value.Value.ToSafeString();
+                    organizationBillingDetails.AddressLine1 = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -121,7 +118,7 @@ public class EditBillingButtonHandler(
             {
                 if (addressLine2 is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.AddressLine2 = value.Value.ToSafeString();
+                    organizationBillingDetails.AddressLine2 = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -144,7 +141,7 @@ public class EditBillingButtonHandler(
             {
                 if (suburb is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.Suburb = value.Value.ToSafeString();
+                    organizationBillingDetails.Suburb = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -167,7 +164,7 @@ public class EditBillingButtonHandler(
             {
                 if (city is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.City = value.Value.ToSafeString();
+                    organizationBillingDetails.City = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -190,7 +187,7 @@ public class EditBillingButtonHandler(
             {
                 if (province is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.Province = value.Value.ToSafeString();
+                    organizationBillingDetails.Province = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -213,7 +210,7 @@ public class EditBillingButtonHandler(
             {
                 if (zipcode is PlainTextInputValue value)
                 {
-                    setOrganizationBillingInfoInput.Zipcode = value.Value.ToSafeString();
+                    organizationBillingDetails.Zipcode = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -236,7 +233,7 @@ public class EditBillingButtonHandler(
             {
                 if (country is ExternalSelectValue value)
                 {
-                    setOrganizationBillingInfoInput.Country = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
+                    organizationBillingDetails.Country = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
                         ? string.Empty
                         : value.SelectedOption.Value;
                 }
@@ -255,10 +252,7 @@ public class EditBillingButtonHandler(
             throw new InvalidOperationException("country block is missing");
         }
 
-        await organizationServiceClient.AddBillingDetailsAsync(
-            setOrganizationBillingInfoInput,
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await organizationBillingService.AddAsync(workspaceMember.Id, organizationBillingDetails, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

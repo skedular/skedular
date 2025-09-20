@@ -84,7 +84,8 @@ public static class Extensions
             .AddSingleton<ITeamPermissionsService, TeamPermissionsService>()
             .AddSingleton<IOrganizationMemberService, OrganizationMemberService>()
             .AddSingleton<IOrganizationCustomTagService, OrganizationCustomTagService>()
-            .AddSingleton<IOrganizationZoneService, OrganizationZoneService>();
+            .AddSingleton<IOrganizationZoneService, OrganizationZoneService>()
+            .AddSingleton<IOrganizationBillingService, OrganizationBillingService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
         services

@@ -40,7 +40,7 @@ public class OrganizationZoneService(
 {
     public async Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
-        var zone = mapper.MapTo(
+        var mappedOrganizationZone = mapper.MapTo(
             await organizationServiceClient.AddZoneAsync(
                 new AddZoneInput
                 {
@@ -53,14 +53,14 @@ public class OrganizationZoneService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([zone], cancellationToken);
+        await CacheAsync([mappedOrganizationZone], cancellationToken);
 
-        return zone;
+        return mappedOrganizationZone;
     }
 
     public async Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
-        var zone = mapper.MapTo(
+        var mappedOrganizationZone = mapper.MapTo(
             await organizationServiceClient.UpdateZoneAsync(
                 new UpdateZoneInput
                 {
@@ -72,9 +72,9 @@ public class OrganizationZoneService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([zone], cancellationToken);
+        await CacheAsync([mappedOrganizationZone], cancellationToken);
 
-        return zone;
+        return mappedOrganizationZone;
     }
 
     public async Task RemoveAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken)

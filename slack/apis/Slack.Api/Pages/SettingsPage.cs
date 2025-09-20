@@ -1,8 +1,5 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -17,7 +14,6 @@ using SlackNet;
 using SlackNet.AspNetCore;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
 using Workspace = Slack.Shared.Models.Workspace;
@@ -38,15 +34,14 @@ public interface ISettingsPage
 public class SettingsPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    OrganizationConfiguration organizationConfiguration,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     ICommonComponents commonComponents,
     IOrganizationPermissionsService organizationPermissionsService,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IWorkspaceChannelService workspaceChannelService,
-    ICachedOrganizationService cachedOrganizationService) :
+    ICachedOrganizationService cachedOrganizationService,
+    IOrganizationBillingService organizationBillingService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
     ISettingsPage,
@@ -307,19 +302,15 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var billingInfo = await organizationServiceClient.GetBillingDetailsAsync(
-            new GetBillingDetailsInput { OrganizationId = workspace.Organization.Id },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
-        var email = new SectionBlock { Text = $"Email: {billingInfo.Email.ToSafeString()}".ToPlainText() };
-        var addressLine1 = new SectionBlock { Text = $"Address Line 1: {billingInfo.AddressLine1.ToSafeString()}".ToPlainText() };
-        var addressLine2 = new SectionBlock { Text = $"Address Line 2: {billingInfo.AddressLine2.ToSafeString()}".ToPlainText() };
-        var suburb = new SectionBlock { Text = $"Suburb: {billingInfo.Suburb.ToSafeString()}".ToPlainText() };
-        var city = new SectionBlock { Text = $"City: {billingInfo.City.ToSafeString()}".ToPlainText() };
-        var province = new SectionBlock { Text = $"Province: {billingInfo.Province.ToSafeString()}".ToPlainText() };
-        var zipcode = new SectionBlock { Text = $"Zipcode: {billingInfo.Zipcode.ToSafeString()}".ToPlainText() };
-        var country = new SectionBlock { Text = $"Country: {billingInfo.Country.ToSafeString()}".ToPlainText() };
+        var organizationBillingDetails = await organizationBillingService.GetAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
+        var email = new SectionBlock { Text = $"Email: {organizationBillingDetails.Email.ToSafeString()}".ToPlainText() };
+        var addressLine1 = new SectionBlock { Text = $"Address Line 1: {organizationBillingDetails.AddressLine1.ToSafeString()}".ToPlainText() };
+        var addressLine2 = new SectionBlock { Text = $"Address Line 2: {organizationBillingDetails.AddressLine2.ToSafeString()}".ToPlainText() };
+        var suburb = new SectionBlock { Text = $"Suburb: {organizationBillingDetails.Suburb.ToSafeString()}".ToPlainText() };
+        var city = new SectionBlock { Text = $"City: {organizationBillingDetails.City.ToSafeString()}".ToPlainText() };
+        var province = new SectionBlock { Text = $"Province: {organizationBillingDetails.Province.ToSafeString()}".ToPlainText() };
+        var zipcode = new SectionBlock { Text = $"Zipcode: {organizationBillingDetails.Zipcode.ToSafeString()}".ToPlainText() };
+        var country = new SectionBlock { Text = $"Country: {organizationBillingDetails.Country.ToSafeString()}".ToPlainText() };
 
         var slackApiClient = workspace.GetApiClient();
         await slackApiClient.ViewsOpenAsync(
@@ -343,11 +334,7 @@ public class SettingsPage(
         CommonPageContext commonPageContext,
         CancellationToken cancellationToken)
     {
-        var organizationBillingDetails = await organizationServiceClient.GetBillingDetailsAsync(
-            new GetBillingDetailsInput { OrganizationId = workspace.Organization.Id },
-            organizationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var organizationBillingDetails = await organizationBillingService.GetAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
         var companyName = new InputBlock
         {
             BlockId = BillingActionTypes.CompanyName,

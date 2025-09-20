@@ -15,7 +15,7 @@ public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFacto
         var cancellationToken = CancellationToken.None;
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
-        var (members, _) = await organizationMemberService.GetPaginatedMembersAsync(
+        var connection = await organizationMemberService.GetPaginatedMembersAsync(
             request.User.Id,
             workspaceEntity.Organization.Id,
             request.Value,
@@ -27,7 +27,8 @@ public class OrganizationMemberOptionProvider(IRepositoryFactory repositoryFacto
 
         return new BlockOptionsResponse
         {
-            Options = members
+            Options = connection.Edges
+                .Select(item => item.Node)
                 .Select(item => new Option
                 {
                     Text = string.IsNullOrWhiteSpace(item.Customer.DisplayableName) ? "???" : item.Customer.DisplayableName.ToOptionText(),

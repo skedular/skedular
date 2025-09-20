@@ -235,7 +235,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Role = src.Role.ToNullableOrganizationMemberRole();
+        dest.Role = src.Role.ToOrganizationMemberRole();
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;

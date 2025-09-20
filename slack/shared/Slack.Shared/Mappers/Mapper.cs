@@ -2,6 +2,7 @@ using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
+using NetTopologySuite.Geometries;
 using Slack.Shared.Models;
 using SlackNet;
 using Booking = Slack.Shared.Models.Booking;
@@ -50,6 +51,7 @@ public interface IMapper
     Models.OrganizationMember MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember src);
     OrganizationZone MapTo(Zone src);
     Models.OrganizationCustomTag MapTo(CustomTag src);
+    OrganizationBillingDetails MapTo(BillingDetails src);
 }
 
 public class Mapper : IMapper
@@ -354,6 +356,27 @@ public class Mapper : IMapper
 
     public Models.OrganizationCustomTag MapTo(CustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    public OrganizationBillingDetails MapTo(BillingDetails src) =>
+        new()
+        {
+            Id = src.Id,
+            CompanyName = src.CompanyName,
+            Email = src.Email,
+            OsmType = src.OsmType,
+            OsmId = src.OsmId,
+            PlaceId = src.PlaceId,
+            Coordinates = src.Coordinates is null ? null : new Point(new Coordinate(src.Coordinates.Longitude, src.Coordinates.Latitude)),
+            AddressLine1 = src.AddressLine1,
+            AddressLine2 = src.AddressLine2,
+            Suburb = src.Suburb,
+            City = src.City,
+            Province = src.Province,
+            Zipcode = src.Zipcode,
+            Country = src.Country,
+            CountryCode = src.CountryCode,
+            FormattedAddress = src.FormattedAddress
+        };
 
     private Organization MapTo(Database.Entities.Organization src)
     {

@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
@@ -15,14 +14,10 @@ using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
-using OrganizationMember = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
-using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
-using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
+using Organization = Slack.Shared.Models.Organization;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
 namespace Slack.Shared.Services;
@@ -37,15 +32,14 @@ public interface IWorkspaceMemberService
 public class WorkspaceMemberService(
     BookingConfiguration bookingConfiguration,
     LocationConfiguration locationConfiguration,
-    OrganizationConfiguration organizationConfiguration,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
     BookingService.BookingServiceClient bookingServiceClient,
     LocationService.LocationServiceClient locationServiceClient,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    ICustomerService customerService) : IWorkspaceMemberService
+    ICustomerService customerService,
+    IOrganizationMemberService organizationMemberService) : IWorkspaceMemberService
 {
     public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -269,51 +263,42 @@ public class WorkspaceMemberService(
 
             if (organizationMember is null)
             {
-                Role role;
+                OrganizationMemberRole role;
                 if (workspaceMember.IsPrimaryOwner || workspaceMember.IsOwner)
                 {
-                    role = Role.Owner;
+                    role = OrganizationMemberRole.Owner;
                 }
                 else if (workspaceMember.IsAdmin)
                 {
-                    role = Role.Administrator;
+                    role = OrganizationMemberRole.Administrator;
                 }
                 else
                 {
-                    role = Role.Member;
+                    role = OrganizationMemberRole.Member;
                 }
 
                 return new OrganizationMember
                 {
-                    Id = randomHelper.Generate(), CustomerId = customerId, Role = role, IsOrganizationOnboardingDone = true
+                    Id = randomHelper.Generate(),
+                    Customer = new Customer { Id = customerId },
+                    Role = role,
+                    IsOrganizationOnboardingDone = true,
+                    Organization = new Organization { Id = workspace.Organization.Id }
                 };
             }
+
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationMember.Role);
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationMember.Status);
 
             return new OrganizationMember
             {
                 Id = organizationMember.Id,
-                CustomerId = customerId,
-                Role = organizationMember.Role switch
-                {
-                    OrganizationMemberRoleConstants.Owner => Role.Owner,
-                    OrganizationMemberRoleConstants.Administrator => Role.Administrator,
-                    OrganizationMemberRoleConstants.Member => Role.Member,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                Status = organizationMember.Status switch
-                {
-                    OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
-                    OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                IsOrganizationOnboardingDone = true
+                Customer = new Customer { Id = customerId },
+                Role = organizationMember.Role.ToOrganizationMemberRole(),
+                Status = organizationMember.Status.ToOrganizationMemberStatus(),
+                IsOrganizationOnboardingDone = true,
+                Organization = new Organization { Id = workspace.Organization.Id }
             };
-        }).ForEachAsync(async (member, ct) =>
-        {
-            await organizationServiceClient.Admin_AddMemberAsync(
-                new Admin_AddMemberInput { Id = workspace.Organization.Id, Member = member },
-                organizationConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: ct);
-        }, cancellationToken);
+        }).ForEachAsync(async (member, ct) => await organizationMemberService.AdminAddAsync(member, ct), cancellationToken);
     }
 }
