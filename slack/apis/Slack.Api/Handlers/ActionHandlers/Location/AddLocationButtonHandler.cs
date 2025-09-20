@@ -9,6 +9,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -111,9 +112,10 @@ public class AddLocationButtonHandler(
         var context = CommonPageContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var locationId = randomHelper.Generate();
-        string name;
-        string about;
-        string timezone;
+        var location = new Shared.Models.Location
+        {
+            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }, Type = LocationType.Private
+        };
 
         if (values.TryGetValue(LocationActionTypes.Name, out var nameBlock))
         {
@@ -122,7 +124,7 @@ public class AddLocationButtonHandler(
                 if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    name = value.Value.ToSafeString();
+                    location.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -145,7 +147,7 @@ public class AddLocationButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    about = value.Value.ToSafeString();
+                    location.About = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -169,7 +171,7 @@ public class AddLocationButtonHandler(
                 if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption.Value);
-                    timezone = value.SelectedOption.Value;
+                    location.Timezone = value.SelectedOption.Value;
                 }
                 else
                 {
@@ -216,15 +218,7 @@ public class AddLocationButtonHandler(
             throw new InvalidOperationException("slack update channel block is missing");
         }
 
-        await locationService.AddAsync(
-            workspaceMember.Id,
-            locationId,
-            name,
-            timezone,
-            about,
-            LocationType.Private,
-            workspace.Organization.Id,
-            cancellationToken);
+        await locationService.AddAsync(workspaceMember.Id, location, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

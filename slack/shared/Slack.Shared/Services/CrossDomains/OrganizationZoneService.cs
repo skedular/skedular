@@ -13,21 +13,8 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface IOrganizationZoneService
 {
-    Task<OrganizationZone> AddAsync(
-        string workspaceMemberId,
-        string zoneId,
-        string name,
-        string description,
-        string organizationId,
-        CancellationToken cancellationToken);
-
-    Task<OrganizationZone> UpdateAsync(
-        string workspaceMemberId,
-        string zoneId,
-        string name,
-        string description,
-        CancellationToken cancellationToken);
-
+    Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken);
+    Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken);
     Task RemoveAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken);
     Task<OrganizationZone> GetAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken);
 
@@ -51,17 +38,18 @@ public class OrganizationZoneService(
     IMapper mapper,
     HybridCache hybridCache) : IOrganizationZoneService
 {
-    public async Task<OrganizationZone> AddAsync(
-        string workspaceMemberId,
-        string zoneId,
-        string name,
-        string description,
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
         var zone = mapper.MapTo(
             await organizationServiceClient.AddZoneAsync(
-                new AddZoneInput { Id = zoneId, Name = name, Description = description, OrganizationId = organizationId },
+                new AddZoneInput
+                {
+                    Id = organizationZone.Id,
+                    Name = organizationZone.Name,
+                    Description = organizationZone.Description,
+                    Color = organizationZone.Color,
+                    OrganizationId = organizationZone.Organization.Id
+                },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
@@ -70,16 +58,17 @@ public class OrganizationZoneService(
         return zone;
     }
 
-    public async Task<OrganizationZone> UpdateAsync(
-        string workspaceMemberId,
-        string zoneId,
-        string name,
-        string description,
-        CancellationToken cancellationToken)
+    public async Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
         var zone = mapper.MapTo(
             await organizationServiceClient.UpdateZoneAsync(
-                new UpdateZoneInput { Id = zoneId, Name = name, Description = description },
+                new UpdateZoneInput
+                {
+                    Id = organizationZone.Id,
+                    Name = organizationZone.Name,
+                    Description = organizationZone.Description,
+                    Color = organizationZone.Color
+                },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 

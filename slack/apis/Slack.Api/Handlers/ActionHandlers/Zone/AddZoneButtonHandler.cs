@@ -8,6 +8,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -94,9 +95,10 @@ public class AddZoneButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddZoneContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var zoneId = randomHelper.Generate();
-        string name;
-        string description;
+        var organizationZone = new OrganizationZone
+        {
+            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }
+        };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {
@@ -105,7 +107,7 @@ public class AddZoneButtonHandler(
                 if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    name = value.Value.ToSafeString();
+                    organizationZone.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -128,7 +130,7 @@ public class AddZoneButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    description = value.Value.ToSafeString();
+                    organizationZone.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -145,7 +147,7 @@ public class AddZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await organizationZoneService.AddAsync(workspaceMember.Id, zoneId, name, description, workspace.Organization.Id, cancellationToken);
+        await organizationZoneService.AddAsync(workspaceMember.Id, organizationZone, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

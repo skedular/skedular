@@ -5,6 +5,7 @@ using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
@@ -40,8 +41,8 @@ public class EditCustomTagButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        string name;
-        string description;
+        var organizationCustomTag =
+            new OrganizationCustomTag { Id = context.CustomTagId, Organization = new Organization { Id = workspace.Organization.Id } };
 
         if (values.TryGetValue(CustomTagActionTypes.Name, out var nameBlock))
         {
@@ -50,7 +51,7 @@ public class EditCustomTagButtonHandler(
                 if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    name = value.Value.ToSafeString();
+                    organizationCustomTag.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -73,7 +74,7 @@ public class EditCustomTagButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    description = value.Value.ToSafeString();
+                    organizationCustomTag.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -90,7 +91,7 @@ public class EditCustomTagButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await organizationCustomTagService.UpdateAsync(workspaceMember.Id, context.CustomTagId, name, description, cancellationToken);
+        await organizationCustomTagService.UpdateAsync(workspaceMember.Id, organizationCustomTag, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

@@ -8,6 +8,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -94,9 +95,10 @@ public class AddCustomTagButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddCustomTagContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
-        var customTagId = randomHelper.Generate();
-        string name;
-        string description;
+        var organizationCustomTag = new OrganizationCustomTag
+        {
+            Id = randomHelper.Generate(), Organization = new Organization { Id = workspace.Organization.Id }
+        };
 
         if (values.TryGetValue(CustomTagActionTypes.Name, out var nameBlock))
         {
@@ -105,7 +107,7 @@ public class AddCustomTagButtonHandler(
                 if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    name = value.Value.ToSafeString();
+                    organizationCustomTag.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -128,7 +130,7 @@ public class AddCustomTagButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    description = value.Value.ToSafeString();
+                    organizationCustomTag.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -145,7 +147,7 @@ public class AddCustomTagButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await organizationCustomTagService.AddAsync(workspaceMember.Id, customTagId, name, description, workspace.Organization.Id, cancellationToken);
+        await organizationCustomTagService.AddAsync(workspaceMember.Id, organizationCustomTag, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

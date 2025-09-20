@@ -49,7 +49,7 @@ public class WorkspaceOnboardingService(
     }
 
     private async Task CreateOrganizationAsync(string? name, Organization organization, CancellationToken cancellationToken) =>
-        await organizationService.AdminAddAsync(organization.Id, name, cancellationToken);
+        await organizationService.AdminAddAsync(new Shared.Models.Organization { Id = organization.Id, Name = name }, cancellationToken);
 
     private async Task CreateLocationAsync(string? name, Organization organization, CancellationToken cancellationToken)
     {

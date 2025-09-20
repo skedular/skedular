@@ -11,7 +11,7 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface IOrganizationService
 {
-    Task<Organization> AdminAddAsync(string organizationId, string? name, CancellationToken cancellationToken);
+    Task<Organization> AdminAddAsync(Organization organization, CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -22,19 +22,19 @@ public class OrganizationService(
     HybridCache hybridCache)
     : IOrganizationService
 {
-    public async Task<Organization> AdminAddAsync(string organizationId, string? name, CancellationToken cancellationToken)
+    public async Task<Organization> AdminAddAsync(Organization organization, CancellationToken cancellationToken)
     {
         var activeTermsOfUse = await organizationServiceClient.GetActiveOrganizationTermsOfUseAsync(
             new GetActiveOrganizationTermsOfUseInput(),
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
-        var organization = mapper.MapTo(
+        var mappedOrganization = mapper.MapTo(
             await organizationServiceClient.Admin_AddAsync(
                 new Admin_AddInput
                 {
-                    Id = organizationId,
-                    Name = name.ToSafeString(),
+                    Id = organization.Id,
+                    Name = organization.Name.ToSafeString(),
                     AgreedToTermsOfUse = true,
                     TermsOfUseId = activeTermsOfUse.Id,
                     Type = OrganizationType.Private,
@@ -43,9 +43,9 @@ public class OrganizationService(
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([organization], cancellationToken);
+        await CacheAsync([mappedOrganization], cancellationToken);
 
-        return organization;
+        return mappedOrganization;
     }
 
     private async Task CacheAsync(ICollection<Organization> organizations, CancellationToken cancellationToken)

@@ -5,6 +5,7 @@ using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
@@ -40,8 +41,7 @@ public class EditZoneButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        string name;
-        string description;
+        var organizationZone = new OrganizationZone { Id = context.ZoneId, Organization = new Organization { Id = workspace.Organization.Id } };
 
         if (values.TryGetValue(ZoneActionTypes.Name, out var nameBlock))
         {
@@ -50,7 +50,7 @@ public class EditZoneButtonHandler(
                 if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    name = value.Value.ToSafeString();
+                    organizationZone.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -73,7 +73,7 @@ public class EditZoneButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    description = value.Value.ToSafeString();
+                    organizationZone.Description = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -90,7 +90,7 @@ public class EditZoneButtonHandler(
             throw new InvalidOperationException("description block is missing");
         }
 
-        await organizationZoneService.UpdateAsync(workspaceMember.Id, context.ZoneId, name, description, cancellationToken);
+        await organizationZoneService.UpdateAsync(workspaceMember.Id, organizationZone, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

@@ -13,25 +13,19 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface IOrganizationCustomTagService
 {
-    Task<OrganizationCustomTag> AddAsync(
-        string workspaceMemberId,
-        string customTagId,
-        string name,
-        string description,
-        string organizationId,
-        CancellationToken cancellationToken);
+    Task<OrganizationCustomTag> AddAsync(string workspaceMemberId, OrganizationCustomTag organizationCustomTag, CancellationToken cancellationToken);
 
     Task<OrganizationCustomTag> UpdateAsync(
         string workspaceMemberId,
-        string customTagId,
-        string name,
-        string description,
+        OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken);
 
     Task RemoveAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken);
     Task<OrganizationCustomTag> GetAsync(string workspaceMemberId, string customTagId, CancellationToken cancellationToken);
 
-    Task<Connection<OrganizationCustomTagEdge>> GetAllCustomTagsAsync(string workspaceMemberId, string organizationId,
+    Task<Connection<OrganizationCustomTagEdge>> GetAllCustomTagsAsync(
+        string workspaceMemberId,
+        string organizationId,
         CancellationToken cancellationToken);
 
     Task<Connection<OrganizationCustomTagEdge>> GetPaginatedCustomTagsAsync(
@@ -52,17 +46,19 @@ public class OrganizationCustomTagService(
     IMapper mapper,
     HybridCache hybridCache) : IOrganizationCustomTagService
 {
-    public async Task<OrganizationCustomTag> AddAsync(
-        string workspaceMemberId,
-        string customTagId,
-        string name,
-        string description,
-        string organizationId,
+    public async Task<OrganizationCustomTag> AddAsync(string workspaceMemberId, OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
         var customTag = mapper.MapTo(
             await organizationServiceClient.AddCustomTagAsync(
-                new AddCustomTagInput { Id = customTagId, Name = name, Description = description, OrganizationId = organizationId },
+                new AddCustomTagInput
+                {
+                    Id = organizationCustomTag.Id,
+                    Name = organizationCustomTag.Name,
+                    Description = organizationCustomTag.Description,
+                    Color = organizationCustomTag.Color,
+                    OrganizationId = organizationCustomTag.Organization.Id
+                },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
@@ -71,16 +67,18 @@ public class OrganizationCustomTagService(
         return customTag;
     }
 
-    public async Task<OrganizationCustomTag> UpdateAsync(
-        string workspaceMemberId,
-        string customTagId,
-        string name,
-        string description,
+    public async Task<OrganizationCustomTag> UpdateAsync(string workspaceMemberId, OrganizationCustomTag organizationCustomTag,
         CancellationToken cancellationToken)
     {
         var customTag = mapper.MapTo(
             await organizationServiceClient.UpdateCustomTagAsync(
-                new UpdateCustomTagInput { Id = customTagId, Name = name, Description = description },
+                new UpdateCustomTagInput
+                {
+                    Id = organizationCustomTag.Id,
+                    Name = organizationCustomTag.Name,
+                    Description = organizationCustomTag.Description,
+                    Color = organizationCustomTag.Color
+                },
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 

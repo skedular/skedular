@@ -18,27 +18,8 @@ public interface ILocationService
     Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken);
     Task<Location> AdminAddAsync(string locationId, string name, string organizationId, CancellationToken cancellationToken);
     Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
-
-    Task<Location> AddAsync(
-        string workspaceMemberId,
-        string locationId,
-        string name,
-        string about,
-        string timezone,
-        LocationType type,
-        string organizationId,
-        CancellationToken cancellationToken);
-
-    Task<Location> UpdateAsync(
-        string workspaceMemberId,
-        string locationId,
-        string name,
-        string about,
-        string timezone,
-        LocationType type,
-        string organizationId,
-        CancellationToken cancellationToken);
-
+    Task<Location> AddAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken);
+    Task<Location> UpdateAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken);
     Task RemoveAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
 
     Task<Connection<LocationEdge>> GetPaginatedLocationsAsync(
@@ -101,26 +82,18 @@ public class LocationService(
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
 
-    public async Task<Location> AddAsync(
-        string workspaceMemberId,
-        string locationId,
-        string name,
-        string about,
-        string timezone,
-        LocationType type,
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<Location> AddAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken)
     {
-        var location = mapper.MapTo(
+        var mappedLocation = mapper.MapTo(
             await locationServiceClient.AddAsync(
                 new AddInput
                 {
-                    Id = locationId,
-                    Name = name,
-                    About = about,
-                    OrganizationId = organizationId,
-                    Timezone = timezone,
-                    Type = type switch
+                    Id = location.Id,
+                    Name = location.Name,
+                    About = location.About,
+                    OrganizationId = location.Organization!.Id,
+                    Timezone = location.Timezone,
+                    Type = location.Type switch
                     {
                         LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
@@ -130,32 +103,24 @@ public class LocationService(
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([location], cancellationToken);
+        await CacheAsync([mappedLocation], cancellationToken);
 
-        return location;
+        return mappedLocation;
     }
 
 
-    public async Task<Location> UpdateAsync(
-        string workspaceMemberId,
-        string locationId,
-        string name,
-        string about,
-        string timezone,
-        LocationType type,
-        string organizationId,
-        CancellationToken cancellationToken)
+    public async Task<Location> UpdateAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken)
     {
-        var location = mapper.MapTo(
+        var mappedLocation = mapper.MapTo(
             await locationServiceClient.UpdateAsync(
                 new UpdateInput
                 {
-                    Id = locationId,
-                    Name = name,
-                    About = about,
-                    Timezone = timezone,
-                    OrganizationId = organizationId,
-                    Type = type switch
+                    Id = location.Id,
+                    Name = location.Name,
+                    About = location.About,
+                    Timezone = location.Timezone,
+                    OrganizationId = location.Organization!.Id,
+                    Type = location.Type switch
                     {
                         LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
                         LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
@@ -165,9 +130,9 @@ public class LocationService(
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([location], cancellationToken);
+        await CacheAsync([mappedLocation], cancellationToken);
 
-        return location;
+        return mappedLocation;
     }
 
     public async Task RemoveAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
