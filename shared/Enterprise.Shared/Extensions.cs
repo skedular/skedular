@@ -173,7 +173,11 @@ public static class Extensions
                 .AddSingleton<ICookieHelper, CookieHelper>();
         }
 
-        services.AddHybridCache();
+        services.AddHybridCache(options =>
+        {
+            options.MaximumKeyLength = 1024 * 1024;
+            options.MaximumPayloadBytes = 100 * 1024 * 1024;
+        });
 
         services
             .AddKeyedSingleton<JsonSerializerOptions>(
