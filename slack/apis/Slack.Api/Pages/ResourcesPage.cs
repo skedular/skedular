@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Enterprise.Shared.GraphQL.Types;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -10,6 +8,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -18,9 +17,7 @@ using SlackNet.Blocks;
 using SlackNet.Interaction;
 using Button = SlackNet.Blocks.Button;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Workspace = Slack.Shared.Models.Workspace;
 using WorkspaceMember = Slack.Shared.Models.WorkspaceMember;
 
@@ -39,8 +36,6 @@ public interface IResourcesPage
 public class ResourcesPage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
@@ -52,7 +47,8 @@ public class ResourcesPage(
     IBookingsPageContextService bookingsPageContextService,
     ICustomerService customerService,
     IOrganizationZoneService organizationZoneService,
-    IOrganizationCustomTagService organizationCustomTagService) :
+    IOrganizationCustomTagService organizationCustomTagService,
+    ILocationResourceService locationResourceService) :
     IResourcesPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,
@@ -368,15 +364,16 @@ public class ResourcesPage(
 
         commonPageContext.PageContext.CurrentPageType = PageType.Desks;
 
-        var resourceConnection = await GetPaginatedResourcesAsync(
-            workspaceMember,
+        var resourceConnection = await locationResourceService.GetPaginatedResourcesAsync(
+            workspaceMember.Id,
+            commonPageContext.PageContext.ResourcesPage.LocationId,
+            null,
             after,
             first,
             before,
             last,
-            commonPageContext,
             cancellationToken);
-        var resources = resourceConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var resources = resourceConnection.Edges.Select(item => item.Node).ToList();
         var asyncBlocks = await Task.WhenAll(
             GetToolbarAsync(
                 commonPageContext.PageContext.ResourcesPage.LocationId,
@@ -394,7 +391,7 @@ public class ResourcesPage(
         [
             GetTitle(),
             asyncBlocks[0],
-            GetResourcessSearchCriteriaAndPaginationBlocks(resourceConnection, commonPageContext.PageContext),
+            GetResourcesSearchCriteriaAndPaginationBlocks(resourceConnection, commonPageContext.PageContext),
             asyncBlocks[1]
         ];
 
@@ -445,38 +442,9 @@ public class ResourcesPage(
         ];
     }
 
-    private async Task<ResourceConnection> GetPaginatedResourcesAsync(
-        WorkspaceMember workspaceMember,
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        CommonPageContext commonPageContext,
-        CancellationToken cancellationToken)
+    private static List<Block> GetResourcesSearchCriteriaAndPaginationBlocks(Connection<ResourceEdge> resourceConnection, PageContext pageContext)
     {
-        ArgumentNullException.ThrowIfNull(commonPageContext.PageContext.ResourcesPage);
-        var getPaginatedResourcesInput = new GetPaginatedResourcesInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new ResourceWhereInput { LocationId = commonPageContext.PageContext.ResourcesPage.LocationId }
-        };
-
-        getPaginatedResourcesInput.OrderBy.AddRange([
-            new ResourceOrderInput { Direction = OrderDirection.Ascending, Field = ResourceOrderField.ResourceName }
-        ]);
-
-        return await locationServiceClient.GetPaginatedResourcesAsync(
-            getPaginatedResourcesInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
-    private static List<Block> GetResourcessSearchCriteriaAndPaginationBlocks(ResourceConnection resourceConnection, PageContext pageContext)
-    {
-        if (resourceConnection.Edges.Count == 0)
+        if (!resourceConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No resource found".ToMarkdown() }];
         }
@@ -549,11 +517,7 @@ public class ResourcesPage(
         EditResourceContext context,
         CancellationToken cancellationToken)
     {
-        var resource = await locationServiceClient.GetResourceAsync(
-            new GetResourceInput { Id = context.ResourceId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var resource = await locationResourceService.GetAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
         var resourceType = new InputBlock
         {
             BlockId = OptionLoaderKeys.OrganizationResourceTypeKey,
@@ -639,7 +603,9 @@ public class ResourcesPage(
                         Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = customTagConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.OrganizationCustomTags.Select(tag => tag.Id).Contains(item.Id)).Select(item =>
+                        .Where(item => resource.OrganizationCustomTags
+                            .Select(organizationCustomTag => organizationCustomTag.Id).Contains(item.Id))
+                        .Select(item =>
                             new Option
                             {
                                 Text = item.Name.ToOptionText(),
@@ -668,7 +634,9 @@ public class ResourcesPage(
                         Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = zoneConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.OrganizationZones.Select(tag => tag.Id).Contains(item.Id)).Select(item =>
+                        .Where(item => resource.OrganizationZones
+                            .Select(organizationZone => organizationZone.Id).Contains(item.Id))
+                        .Select(item =>
                             new Option
                             {
                                 Text = item.Name.ToOptionText(),
@@ -702,11 +670,7 @@ public class ResourcesPage(
         RemoveResourceContext context,
         CancellationToken cancellationToken)
     {
-        var resource = await locationServiceClient.GetResourceAsync(
-            new GetResourceInput { Id = context.ResourceId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
+        var resource = await locationResourceService.GetAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
         var confirmationMessage = new SectionBlock { Text = $"Are you sure you want to remove the resource {resource.Name.ToSafeString()}?" };
 
         var slackApiClient = workspace.GetApiClient();

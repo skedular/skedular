@@ -1,18 +1,13 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared.Grpc;
 using Slack.Shared.Constants;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 
 namespace Slack.Api.Handlers.OptionProviders;
 
-public class OrganizationResourceTypeOptionProvider(
-    OrganizationConfiguration organizationConfiguration,
-    IRepositoryFactory repositoryFactory,
-    OrganizationService.OrganizationServiceClient organizationServiceClient)
+public class OrganizationResourceTypeOptionProvider(IRepositoryFactory repositoryFactory, IOrganizationService organizationService)
     : IBlockOptionProvider
 {
     public async Task<BlockOptionsResponse> GetOptions(BlockOptionsRequest request)
@@ -20,12 +15,7 @@ public class OrganizationResourceTypeOptionProvider(
         var cancellationToken = CancellationToken.None;
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
-        var getInput = new GetInput { Id = workspaceEntity.Organization.Id };
-
-        var organization = await organizationServiceClient.GetAsync(
-            getInput,
-            organizationConfiguration.ApiKey.CreateMetadata(request.User.Id),
-            cancellationToken: cancellationToken);
+        var organization = await organizationService.GetAsync(request.User.Id, workspaceEntity.Organization.Id, cancellationToken);
 
         return new BlockOptionsResponse
         {

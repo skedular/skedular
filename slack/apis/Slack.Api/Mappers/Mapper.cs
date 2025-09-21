@@ -209,11 +209,11 @@ public class Mapper : IMapper
             Inactive = src.Inactive,
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
-            ResourceType = MapTo(src.ResourceType),
+            ResourceType = new ResourceType { Id = src.ResourceTypeId },
             RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationCustomTags = MapTo(src.OrganizationCustomTags).ToList(),
-            OrganizationZones = MapTo(src.OrganizationZones).ToList(),
-            OrganizationProductTags = MapTo(src.OrganizationProductTags).ToList()
+            OrganizationCustomTags = src.OrganizationCustomTagIds.Select(item => new OrganizationCustomTag { Id = item }).ToList(),
+            OrganizationZones = src.OrganizationZoneIds.Select(item => new OrganizationZone { Id = item }).ToList(),
+            OrganizationProductTags = src.OrganizationProductTagIds.Select(item => new OrganizationProductTag { Id = item }).ToList()
         };
 
     public OrganizationCustomTag MapTo(CustomTag src) =>
@@ -360,26 +360,6 @@ public class Mapper : IMapper
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Customer = customer };
 
     private static IEnumerable<OrganizationCustomTag> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag> src) =>
-        src.Select(MapTo);
-
-    private static OrganizationCustomTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationCustomTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<OrganizationZone> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone> src) =>
-        src.Select(MapTo);
-
-    private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationZone src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static IEnumerable<OrganizationProductTag> MapTo(
-        IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationProductTag> src) =>
-        src.Select(MapTo);
-
-    private static OrganizationProductTag MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrganizationProductTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<OrganizationCustomTag> MapTo(
         IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationCustomTag> src) =>
         src.Select(MapTo);
 
@@ -391,9 +371,6 @@ public class Mapper : IMapper
 
     private static OrganizationZone MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationZone src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceType src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), Type = src.TagType.ToNullableOrganizationTagType() };
 
     private static ResourceType MapTo(global::Api.Shared.Services.Grpc.Skedular.Booking.V1.ResourceType src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };

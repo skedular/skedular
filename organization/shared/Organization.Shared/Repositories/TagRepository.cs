@@ -45,9 +45,9 @@ internal static class TagExtensions
                 item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
         }
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.Type))
+        if (searchCriteria.Types.Count != 0)
         {
-            query = query.Where(item => item.Type == searchCriteria.Type);
+            query = query.Where(item => searchCriteria.Types.Contains(item.Type));
         }
 
         if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))

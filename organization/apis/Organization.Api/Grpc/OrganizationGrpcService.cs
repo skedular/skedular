@@ -247,7 +247,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.OrganizationId, null, request.Where.Type, request.Where.NameContains),
+            new TagSearchCriteria(request.Where.OrganizationId, null, request.Where.Types_, request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -314,7 +314,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.OrganizationId, null, OrganizationTagTypeConstants.Custom, request.Where.NameContains),
+            new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Custom], request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -381,7 +381,7 @@ public class OrganizationGrpcService(
 
         var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
-            new TagSearchCriteria(request.Where.OrganizationId, null, OrganizationTagTypeConstants.Zone, request.Where.NameContains),
+            new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Zone], request.Where.NameContains),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
@@ -466,5 +466,139 @@ public class OrganizationGrpcService(
         var organization = await organizationBillingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken);
 
         return mapper.MapToGrpcResponse(organization.BillingDetails);
+    }
+
+    public override async Task<ProductTagConnection> GetPaginatedProductTags(GetPaginatedProductTagsInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Product], request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    ProductTagOrderField.Name => OrganizationTagOrderField.Name,
+                    ProductTagOrderField.Description => OrganizationTagOrderField.Description,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new TagOrder(direction, field);
+            }).ToList(),
+            context.CancellationToken);
+
+        var connection = new ProductTagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseProductTag));
+        return connection;
+    }
+
+    public override async Task<ProductTag> GetProductTag(GetProductTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<ProductTag> AddProductTag(AddProductTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseProductTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+    }
+
+    public override async Task<ProductTag> UpdateProductTag(UpdateProductTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseProductTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<ProductTag> RemoveProductTag(RemoveProductTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseProductTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<LocationTagConnection> GetPaginatedLocationTags(GetPaginatedLocationTagsInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var (paginatedInfo, edges, totalCount) = await tagService.GetPaginatedTagsAsync(
+            new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
+            new TagSearchCriteria(request.Where.OrganizationId, null, [OrganizationTagTypeConstants.Location], request.Where.NameContains),
+            request.OrderBy.Select(item =>
+            {
+                var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Organization.V1.OrderDirection.Ascending
+                    ? OrderDirection.Ascending
+                    : OrderDirection.Descending;
+                var field = item.Field switch
+                {
+                    LocationTagOrderField.Name => OrganizationTagOrderField.Name,
+                    LocationTagOrderField.Description => OrganizationTagOrderField.Description,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
+                return new TagOrder(direction, field);
+            }).ToList(),
+            context.CancellationToken);
+
+        var connection = new LocationTagConnection
+        {
+            PageInfo = new PageInfo
+            {
+                HasNextPage = paginatedInfo.HasNextPage,
+                HasPreviousPage = paginatedInfo.HasPreviousPage,
+                StartCursor = paginatedInfo.StartCursor.ToSafeString(),
+                EndCursor = paginatedInfo.EndCursor.ToSafeString()
+            },
+            TotalCount = totalCount
+        };
+
+        connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponseLocationTag));
+        return connection;
+    }
+
+    public override async Task<LocationTag> GetLocationTag(GetLocationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseLocationTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+    }
+
+    public override async Task<LocationTag> AddLocationTag(AddLocationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseLocationTag(await tagService.AddAsync(mapper.MapTo(request), false, context.CancellationToken));
+    }
+
+    public override async Task<LocationTag> UpdateLocationTag(UpdateLocationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseLocationTag(await tagService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
+    }
+
+    public override async Task<LocationTag> RemoveLocationTag(RemoveLocationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseLocationTag(await tagService.DeleteAsync(request.Id, context.CancellationToken));
     }
 }

@@ -64,10 +64,10 @@ public class TeamService(
 
         foreach (var member in team.TeamMembers)
         {
-            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-            if (customer is not null)
+            var matchingCustomer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (matchingCustomer is not null)
             {
-                member.Customer = customer;
+                member.Customer = matchingCustomer;
             }
         }
 
@@ -98,10 +98,10 @@ public class TeamService(
 
         foreach (var member in team.TeamMembers)
         {
-            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-            if (customer is not null)
+            var matchingCustomer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (matchingCustomer is not null)
             {
-                member.Customer = customer;
+                member.Customer = matchingCustomer;
             }
         }
 
@@ -171,10 +171,10 @@ public class TeamService(
 
         foreach (var member in mappedTeam.TeamMembers)
         {
-            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-            if (customer is not null)
+            var matchingCustomer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (matchingCustomer is not null)
             {
-                member.Customer = customer;
+                member.Customer = matchingCustomer;
             }
         }
 
@@ -242,10 +242,10 @@ public class TeamService(
 
         foreach (var member in mappedTeam.TeamMembers)
         {
-            var customer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
-            if (customer is not null)
+            var matchingCustomer = customers.FirstOrDefault(item => item.Id == member.Customer.Id);
+            if (matchingCustomer is not null)
             {
-                member.Customer = customer;
+                member.Customer = matchingCustomer;
             }
         }
 

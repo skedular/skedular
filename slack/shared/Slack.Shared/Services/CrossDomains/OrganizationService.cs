@@ -12,6 +12,7 @@ namespace Slack.Shared.Services.CrossDomains;
 public interface IOrganizationService
 {
     Task<Organization> AdminAddAsync(Organization organization, CancellationToken cancellationToken);
+    Task<Organization> GetAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -47,6 +48,17 @@ public class OrganizationService(
 
         return mappedOrganization;
     }
+
+    public async Task<Organization> GetAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyById(organizationId),
+            async ct => mapper.MapTo(
+                await organizationServiceClient.GetAsync(
+                    new GetInput { Id = organizationId },
+                    organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                    cancellationToken: ct)),
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken: cancellationToken);
 
     private async Task CacheAsync(ICollection<Organization> organizations, CancellationToken cancellationToken)
     {

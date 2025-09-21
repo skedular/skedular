@@ -197,8 +197,8 @@ importers:
         specifier: ^13.0.0
         version: 13.0.0
       yup:
-        specifier: ^1.7.0
-        version: 1.7.0
+        specifier: ^1.7.1
+        version: 1.7.1
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.1
@@ -3844,8 +3844,8 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  yup@1.7.0:
-    resolution: {integrity: sha512-VJce62dBd+JQvoc+fCVq+KZfPHr+hXaxCcVgotfwWvlR0Ja3ffYKaJBT8rptPOSKOGJDCUnW2C2JWpud7aRP6Q==}
+  yup@1.7.1:
+    resolution: {integrity: sha512-GKHFX2nXul2/4Dtfxhozv701jLQHdf6J34YDh2cEkpqoo8le5Mg6/LrdseVLrFarmFygZTlfIhHx/QKfb/QWXw==}
 
   zip-stream@4.1.1:
     resolution: {integrity: sha512-9qv4rlDiopXg4E69k+vMHjNN63YFMe9sZMrdlvKnCjlCRWeCBswPPMPUfx+ipsAWq1LXHe70RcbaHdJJpS6hyQ==}
@@ -6972,7 +6972,7 @@ snapshots:
       '@date-io/core': 3.2.0
       '@date-io/date-fns': 3.2.1(date-fns@4.1.0)
       date-fns: 4.1.0
-      yup: 1.7.0
+      yup: 1.7.1
 
   nanoid@3.3.11: {}
 
@@ -7877,7 +7877,7 @@ snapshots:
 
   yocto-queue@0.1.0: {}
 
-  yup@1.7.0:
+  yup@1.7.1:
     dependencies:
       property-expr: 2.0.6
       tiny-case: 1.0.3

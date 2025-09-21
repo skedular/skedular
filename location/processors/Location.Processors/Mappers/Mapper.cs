@@ -120,9 +120,7 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
-            Color = item.Color,
             Organization = organization
         }).ToList();
 
@@ -269,9 +267,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Type = src.Type.ToNullableOrganizationTagType();
-        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }

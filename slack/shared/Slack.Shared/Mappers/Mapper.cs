@@ -18,6 +18,7 @@ using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
+using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
 using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
 using Resource = Slack.Shared.Models.Resource;
@@ -52,6 +53,10 @@ public interface IMapper
     OrganizationZone MapTo(Zone src);
     Models.OrganizationCustomTag MapTo(CustomTag src);
     OrganizationBillingDetails MapTo(BillingDetails src);
+    Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src);
+    OrganizationProductTag MapTo(ProductTag src);
+    OrganizationLocationTag MapTo(LocationTag src);
+    OrganizationTag MapTo(Tag src);
 }
 
 public class Mapper : IMapper
@@ -230,7 +235,9 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
-            HasFutureBooking = src.HasFutureBooking
+            HasFutureBooking = src.HasFutureBooking,
+            Tags = MapToOrganizationCustomTag(src.Tags).ToList(),
+            ResourceTypes = MapTo(src.ResourceTypes).ToList()
         };
 
     public Location MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Location src) =>
@@ -357,6 +364,22 @@ public class Mapper : IMapper
     public Models.OrganizationCustomTag MapTo(CustomTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
+    public OrganizationProductTag MapTo(ProductTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    public OrganizationLocationTag MapTo(LocationTag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    public OrganizationTag MapTo(Tag src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Description = src.Description.ToSafeString(),
+            Color = src.Color.ToSafeString(),
+            Type = src.TagType.ToSafeString().ToOrganizationTagType()
+        };
+
     public OrganizationBillingDetails MapTo(BillingDetails src) =>
         new()
         {
@@ -377,6 +400,33 @@ public class Mapper : IMapper
             CountryCode = src.CountryCode,
             FormattedAddress = src.FormattedAddress
         };
+
+    public Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name.ToSafeString(),
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color.ToSafeString(),
+            Capacity = src.Capacity,
+            ResourceType = new ResourceType { Id = src.ResourceTypeId },
+            OrganizationCustomTags = src.OrganizationCustomTagIds.Select(item => new Models.OrganizationCustomTag { Id = item }).ToList(),
+            OrganizationZones = src.OrganizationZoneIds.Select(item => new OrganizationZone { Id = item }).ToList(),
+            OrganizationProductTags = src.OrganizationProductTagIds.Select(item => new OrganizationProductTag { Id = item }).ToList()
+        };
+
+    private static IEnumerable<Models.OrganizationCustomTag> MapToOrganizationCustomTag(IEnumerable<Tag> src) =>
+        src.Select(MapToOrganizationCustomTag);
+
+    private static Models.OrganizationCustomTag MapToOrganizationCustomTag(Tag src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
+
+    private static IEnumerable<OrganizationResourceType> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType> src) =>
+        src.Select(MapToResourceType);
+
+    private static OrganizationResourceType MapToResourceType(Api.Shared.Services.Grpc.Skedular.Organization.V1.ResourceType src) =>
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private Organization MapTo(Database.Entities.Organization src)
     {
@@ -524,23 +574,8 @@ public class Mapper : IMapper
     private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity src) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
 
-    private static IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) =>
+    private IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) =>
         src.Select(MapTo);
-
-    private static Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Inactive = src.Inactive,
-            RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color.ToSafeString(),
-            Capacity = src.Capacity,
-            ResourceType = MapTo(src.ResourceType)
-        };
-
-    private static ResourceType MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.ResourceType src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<TeamMember> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Team.V1.TeamMember> src, Team team) =>
         src.Select(item => MapTo(item, team));

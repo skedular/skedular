@@ -494,9 +494,9 @@ public class Mapper : IMapper
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
-        location.CustomTags.AddRange(MapToGrpcResponseOrganizationCustomTags(src.CustomTags));
-        location.Zones.AddRange(MapToGrpcResponseOrganizationZones(src.Zones));
-        location.LocationTags.AddRange(MapToGrpcResponseOrganizationLocationTags(src.Tags.Where(item => item.Type == OrganizationTagType.Location)));
+        location.CustomTagIds.AddRange(src.CustomTags.Select(item => item.Id));
+        location.ZoneIds.AddRange(src.Zones.Select(item => item.Id));
+        location.LocationTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id));
 
         return location;
     }
@@ -567,15 +567,12 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapToGrpcResponse(src.AvailableHours),
-            ResourceType = MapToGrpcResponse(src.Tags.First(item =>
-                OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
+            ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id
         };
 
-        resource.OrganizationCustomTags.AddRange(
-            MapToGrpcResponseOrganizationCustomTags(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)));
-        resource.OrganizationZones.AddRange(MapToGrpcResponseOrganizationZones(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)));
-        resource.OrganizationProductTags.AddRange(
-            MapToGrpcResponseOrganizationProductTags(src.Tags.Where(item => item.Type == OrganizationTagType.Product)));
+        resource.OrganizationCustomTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id));
+        resource.OrganizationZoneIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id));
+        resource.OrganizationProductTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Product).Select(item => item.Id));
 
         return resource;
     }
@@ -802,22 +799,8 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color
+            Type = src.Type.ToNullableOrganizationTagType()
         };
-
-    private static OrganizationCustomTag MapToGrpcResponseOrganizationCustomTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static OrganizationZone MapToGrpcResponseOrganizationZone(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static OrganizationProductTag MapToGrpcResponseOrganizationProductTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static OrganizationLocationTag MapToGrpcResponseOrganizationLocationTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<OrganizationTag> MapTo(
         IEnumerable<Shared.Database.Entities.OrganizationTag> src,
@@ -828,18 +811,6 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, location));
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
-
-    private static IEnumerable<OrganizationCustomTag> MapToGrpcResponseOrganizationCustomTags(IEnumerable<OrganizationTag> src) =>
-        src.Select(MapToGrpcResponseOrganizationCustomTag);
-
-    private static IEnumerable<OrganizationZone> MapToGrpcResponseOrganizationZones(IEnumerable<OrganizationTag> src) =>
-        src.Select(MapToGrpcResponseOrganizationZone);
-
-    private static IEnumerable<OrganizationProductTag> MapToGrpcResponseOrganizationProductTags(IEnumerable<OrganizationTag> src) =>
-        src.Select(MapToGrpcResponseOrganizationProductTag);
-
-    private static IEnumerable<OrganizationLocationTag> MapToGrpcResponseOrganizationLocationTags(IEnumerable<OrganizationTag> src) =>
-        src.Select(MapToGrpcResponseOrganizationLocationTag);
 
     private IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> MapToGrpcResponse(IEnumerable<Shared.Models.Resource> src) =>
         src.Select(MapToGrpcResponse);
@@ -918,9 +889,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
-            Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color
+            Type = src.Type.ToNullableOrganizationTagType()
         };
 
         if (organization is not null)
@@ -1056,9 +1025,6 @@ public class Mapper : IMapper
     {
         Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty
     };
-
-    private static ResourceType MapToGrpcResponse(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString(), TagType = src.Type.ToNullableOrganizationTagType() };
 
     private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>
         src is null ? null : new global::Api.Shared.Services.Models.CdnImageFile(MapTo(src.Original), MapTo(src.Thumbnail));

@@ -1,29 +1,25 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Resource;
 
 public class EditResourceButtonHandler(
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     ILocationPermissionsService locationPermissionsService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IViewSubmissionHandler
+    IPageNavigator pageNavigator,
+    ILocationResourceService locationResourceService) : IViewSubmissionHandler
 {
     public async Task<ViewSubmissionResponse> Handle(ViewSubmission viewSubmission)
     {
@@ -45,13 +41,7 @@ public class EditResourceButtonHandler(
         }
 
         var values = viewSubmission.View.State.Values;
-        var resource = await locationServiceClient.GetResourceAsync(
-            new GetResourceInput { Id = context.ResourceId },
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-
-        var updateInput = new UpdateResourceInput { Id = context.ResourceId };
-        updateInput.TagIds.AddRange(resource.OrganizationProductTags.Select(item => item.Id));
+        var resource = await locationResourceService.GetAsync(workspaceMember.Id, context.ResourceId, cancellationToken);
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
         {
@@ -60,7 +50,7 @@ public class EditResourceButtonHandler(
                 if (location is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    updateInput.TagIds.Add(value.SelectedOption?.Value);
+                    resource.ResourceType = new ResourceType { Id = value.SelectedOption!.Value };
                 }
                 else
                 {
@@ -84,7 +74,7 @@ public class EditResourceButtonHandler(
                 if (name is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    updateInput.Name = value.Value.ToSafeString();
+                    resource.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -107,7 +97,7 @@ public class EditResourceButtonHandler(
             {
                 if (deactivated is CheckboxGroupValue value)
                 {
-                    updateInput.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
+                    resource.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
                 }
                 else
                 {
@@ -130,7 +120,7 @@ public class EditResourceButtonHandler(
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    updateInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
+                    resource.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
                 }
                 else
                 {
@@ -159,7 +149,7 @@ public class EditResourceButtonHandler(
                     {
                         if (capacityValue > 0)
                         {
-                            updateInput.Capacity = capacityValue;
+                            resource.Capacity = capacityValue;
                         }
                         else
                         {
@@ -192,7 +182,7 @@ public class EditResourceButtonHandler(
             {
                 if (customTags is StaticMultiSelectValue value)
                 {
-                    updateInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    resource.OrganizationCustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag { Id = item.Value }).ToList();
                 }
                 else
                 {
@@ -211,7 +201,7 @@ public class EditResourceButtonHandler(
             {
                 if (zones is StaticMultiSelectValue value)
                 {
-                    updateInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    resource.OrganizationZones = value.SelectedOptions.Select(item => new OrganizationZone { Id = item.Value }).ToList();
                 }
                 else
                 {
@@ -224,10 +214,7 @@ public class EditResourceButtonHandler(
             }
         }
 
-        await locationServiceClient.UpdateResourceAsync(
-            updateInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await locationResourceService.UpdateAsync(workspaceMember.Id, resource, cancellationToken);
 
         await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 

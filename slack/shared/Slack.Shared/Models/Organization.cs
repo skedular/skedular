@@ -14,6 +14,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public bool HasAttachedPaymentMethod { get; set; }
     public OrganizationType Type { get; set; }
     public ICollection<OrganizationCustomTag> Tags { get; set; } = [];
+    public ICollection<OrganizationResourceType> ResourceTypes { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
     public ICollection<Team> Teams { get; set; } = [];
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }

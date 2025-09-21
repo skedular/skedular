@@ -351,10 +351,8 @@ public class LocationService(
         var mappedLocation = mapper.MapTo(location);
 
         mappedLocation.CustomTags = mappedLocation.Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag => new Shared.Models.OrganizationTag
-            {
-                Id = customTag.Id, Name = customTag.Name, Type = OrganizationTagType.Custom, Color = customTag.Color
-            }))
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag =>
+                new Shared.Models.OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Custom }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
             .ToList();
@@ -362,7 +360,7 @@ public class LocationService(
         mappedLocation.Zones = mappedLocation.Resources
             .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new Shared.Models.OrganizationTag
             {
-                Id = zone.Id, Name = zone.Name, Type = OrganizationTagType.Zone, Color = zone.Color
+                Id = zone.Id, Type = OrganizationTagType.Zone
             }))
             .GroupBy(item => item.Id)
             .Select(group => group.First())

@@ -1,19 +1,12 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
-using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Shared;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
-using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
-using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
-using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
-using Role = Api.Shared.Services.Grpc.Skedular.Organization.V1.Role;
+using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
@@ -29,13 +22,11 @@ public interface IWorkspaceMemberService
 
 public class WorkspaceMemberService(
     IRepositoryFactory repositoryFactory,
-    LocationConfiguration locationConfiguration,
-    OrganizationConfiguration organizationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
     IRandomHelper randomHelper,
-    ICustomerService customerService) : IWorkspaceMemberService
+    ICustomerService customerService,
+    ILocationService locationService,
+    IOrganizationMemberService organizationMemberService) : IWorkspaceMemberService
 {
     public async Task<(WorkspaceMember, string)> EnsureCustomerResourcesAllExistAsync(
         Workspace workspace,
@@ -100,22 +91,7 @@ public class WorkspaceMemberService(
         }
         else
         {
-            var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
-            {
-                First = ((int?)null).ToNullInt(),
-                Last = ((int?)null).ToNullInt(),
-                Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
-            };
-
-            getPaginatedLocationsInput.OrderBy.AddRange([
-                new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
-            ]);
-
-            var getLocationsResponse = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
-                getPaginatedLocationsInput,
-                locationConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-
+            var locations = await locationService.AdminGetAllLocationsAsync(workspace.Organization.Id, cancellationToken);
             customerExistenceResult = await customerService.AdminAnyCustomerExistByEmailAsync(workspaceMember.Email, cancellationToken);
             if (customerExistenceResult.Exists)
             {
@@ -130,11 +106,11 @@ public class WorkspaceMemberService(
                         cancellationToken);
                 }
 
-                if (getLocationsResponse.TotalCount == 1)
+                if (locations.Count == 1)
                 {
                     _ = await customerService.AdminAddPreferredLocationAsync(
                         customerExistenceResult.Customer.Id,
-                        getLocationsResponse.Edges.First().Node.Id,
+                        locations.First().Id,
                         cancellationToken);
                 }
             }
@@ -145,7 +121,7 @@ public class WorkspaceMemberService(
                     workspaceMember,
                     customerId,
                     workspace.Organization.Id,
-                    getLocationsResponse.TotalCount == 1 ? [getLocationsResponse.Edges.First().Node.Id] : [],
+                    locations.Count == 1 ? [locations.First().Id] : [],
                     cancellationToken);
             }
         }
@@ -164,27 +140,24 @@ public class WorkspaceMemberService(
             return;
         }
 
-        Role role;
+        OrganizationMemberRole role;
         if (workspaceMember.IsPrimaryOwner || workspaceMember.IsOwner)
         {
-            role = Role.Owner;
+            role = OrganizationMemberRole.Owner;
         }
         else if (workspaceMember.IsAdmin)
         {
-            role = Role.Administrator;
+            role = OrganizationMemberRole.Administrator;
         }
         else
         {
-            role = Role.Member;
+            role = OrganizationMemberRole.Member;
         }
 
-        await organizationServiceClient.Admin_AddMemberAsync(
-            new Admin_AddMemberInput
+        await organizationMemberService.AdminAddAsync(
+            new OrganizationMember
             {
-                Id = workspace.Organization.Id,
-                Member = new OrganizationMember { Id = randomHelper.Generate(), CustomerId = customerId, Role = role }
-            },
-            organizationConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
+                Id = randomHelper.Generate(), Customer = new Customer { Id = customerId }, Role = role, Status = OrganizationMemberStatus.Active
+            }, cancellationToken);
     }
 }

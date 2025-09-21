@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
@@ -14,9 +13,6 @@ using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
-using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 using Organization = Slack.Shared.Models.Organization;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
@@ -31,15 +27,14 @@ public interface IWorkspaceMemberService
 
 public class WorkspaceMemberService(
     BookingConfiguration bookingConfiguration,
-    LocationConfiguration locationConfiguration,
+    BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    BookingService.BookingServiceClient bookingServiceClient,
-    LocationService.LocationServiceClient locationServiceClient,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     ICustomerService customerService,
-    IOrganizationMemberService organizationMemberService) : IWorkspaceMemberService
+    IOrganizationMemberService organizationMemberService,
+    ILocationService locationService) : IWorkspaceMemberService
 {
     public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -131,10 +126,7 @@ public class WorkspaceMemberService(
         };
         getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
         getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput
-            {
-                Direction = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending, Field = BookingOrderField.From
-            }
+            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
         ]);
         var bookingConnection = await bookingServiceClient.GetPaginatedBookingsAsync(
             getPaginatedBookingsInput,
@@ -170,20 +162,7 @@ public class WorkspaceMemberService(
 
     private async Task SyncCustomersAndOrganizationMembersAsync(Database.Entities.Workspace workspace, CancellationToken cancellationToken)
     {
-        var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
-        {
-            First = ((int?)null).ToNullInt(),
-            Last = ((int?)null).ToNullInt(),
-            Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
-        };
-        getPaginatedLocationsInput.OrderBy.AddRange([
-            new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
-        ]);
-        var getLocationsResponse = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
-            getPaginatedLocationsInput,
-            locationConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
-
+        var locations = await locationService.AdminGetAllLocationsAsync(workspace.Organization.Id, cancellationToken);
         var customerIdsWorkspaceMembersPair = new List<(string, WorkspaceMember)>();
 
         foreach (var workspaceMember in workspace.WorkspaceMembers)
@@ -204,11 +183,11 @@ public class WorkspaceMemberService(
                         cancellationToken);
                 }
 
-                if (getLocationsResponse.TotalCount == 1)
+                if (locations.Count == 1)
                 {
                     _ = await customerService.AdminAddPreferredLocationAsync(
                         customerExistenceResult.Customer.Id,
-                        getLocationsResponse.Edges.First().Node.Id,
+                        locations.First().Id,
                         cancellationToken);
                 }
 
@@ -232,11 +211,11 @@ public class WorkspaceMemberService(
                         cancellationToken);
                 }
 
-                if (getLocationsResponse.TotalCount == 1)
+                if (locations.Count == 1)
                 {
                     _ = await customerService.AdminAddPreferredLocationAsync(
                         customerExistenceResult.Customer.Id,
-                        getLocationsResponse.Edges.First().Node.Id,
+                        locations.First().Id,
                         cancellationToken);
                 }
 
@@ -250,7 +229,7 @@ public class WorkspaceMemberService(
                 workspaceMember,
                 customerId,
                 workspace.Organization.Id,
-                getLocationsResponse.TotalCount == 1 ? [getLocationsResponse.Edges.First().Node.Id] : [],
+                locations.Count == 1 ? [locations.First().Id] : [],
                 cancellationToken);
         }
 

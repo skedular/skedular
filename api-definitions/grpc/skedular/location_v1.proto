@@ -105,9 +105,9 @@ message Location {
   repeated Resource resources = 6;
   bool hasFutureBooking = 7;
   Permissions permissions = 8;
-  repeated OrganizationCustomTag customTags = 9;
-  repeated OrganizationZone zones = 10;
-  repeated OrganizationLocationTag locationTags = 11;
+  repeated string customTagIds = 9;
+  repeated string zoneIds = 10;
+  repeated string locationTagIds = 11;
   OpeningHours openingHours = 12;
   CdnImageFile primaryFeatureImage = 13;
   LocationType type = 14;
@@ -158,30 +158,6 @@ enum LocationOrderField {
   LocationOrderField_Timezone = 2;
 }
 
-message OrganizationCustomTag {
-  string id = 1;
-  string name = 2;
-  string color = 3;
-}
-
-message OrganizationZone {
-  string id = 1;
-  string name = 2;
-  string color = 3;
-}
-
-message OrganizationProductTag {
-  string id = 1;
-  string name = 2;
-  string color = 3;
-}
-
-message OrganizationLocationTag {
-  string id = 1;
-  string name = 2;
-  string color = 3;
-}
-
 message GetPermissionsInput {
   string id = 1;
 }
@@ -219,25 +195,18 @@ message RemoveInput {
   string id = 1;
 }
 
-message ResourceType {
-  string id = 1;
-  string name = 2;
-  string tagType = 3;
-  string color = 4;
-}
-
 message Resource {
   string id = 1;
   string name = 2;
   bool inactive = 3;
   bool requireBookingApproval = 4;
-  repeated OrganizationCustomTag organizationCustomTags = 5;
-  repeated OrganizationZone organizationZones = 6;
-  repeated OrganizationProductTag organizationProductTags = 7;
+  repeated string organizationCustomTagIds = 5;
+  repeated string organizationZoneIds = 6;
+  repeated string organizationProductTagIds = 7;
   string color = 8;
   bool isAvailableHoursOverridden = 9;
   OpeningHours availableHours = 10;
-  ResourceType resourceType = 11;
+  string resourceTypeId = 11;
   int32 capacity = 12;
 }
 

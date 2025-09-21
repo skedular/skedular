@@ -120,7 +120,7 @@ public class OrganizationDetails : Node
             new TagSearchCriteria(
                 organization.Id,
                 organization.UniqueAlphanumericName,
-                OrganizationTagTypeConstants.Custom,
+                [OrganizationTagTypeConstants.Custom],
                 where?.NameContains),
             orderBy,
             tagService,
@@ -147,7 +147,7 @@ public class OrganizationDetails : Node
             new TagSearchCriteria(
                 organization.Id,
                 organization.UniqueAlphanumericName,
-                OrganizationTagTypeConstants.Zone,
+                [OrganizationTagTypeConstants.Zone],
                 where?.NameContains),
             orderBy,
             tagService,
@@ -174,7 +174,7 @@ public class OrganizationDetails : Node
             new TagSearchCriteria(
                 organization.Id,
                 organization.UniqueAlphanumericName,
-                OrganizationTagTypeConstants.Product,
+                [OrganizationTagTypeConstants.Product],
                 where?.NameContains),
             orderBy,
             tagService,
@@ -201,7 +201,7 @@ public class OrganizationDetails : Node
             new TagSearchCriteria(
                 organization.Id,
                 organization.UniqueAlphanumericName,
-                OrganizationTagTypeConstants.Location,
+                [OrganizationTagTypeConstants.Location],
                 where?.NameContains),
             orderBy,
             tagService,

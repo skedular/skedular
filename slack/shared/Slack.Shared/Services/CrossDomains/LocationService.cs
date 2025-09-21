@@ -15,6 +15,7 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface ILocationService
 {
+    Task<ICollection<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken);
     Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken);
     Task<Location> AdminAddAsync(Location location, CancellationToken cancellationToken);
     Task<Location> GetAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
@@ -41,6 +42,31 @@ public class LocationService(
     HybridCache hybridCache)
     : ILocationService
 {
+    public async Task<ICollection<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken)
+    {
+        var getPaginatedLocationsInput = new GetPaginatedLocationsInput
+        {
+            First = ((int?)null).ToNullInt(),
+            After = string.Empty,
+            Before = string.Empty,
+            Last = ((int?)null).ToNullInt(),
+            Where = new LocationWhereInput { OrganizationId = organizationId }
+        };
+
+        getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name });
+
+        var connection = await locationServiceClient.GetPaginatedLocationsAsync(
+            getPaginatedLocationsInput,
+            locationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        var locations = connection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+
+        await CacheAsync(locations, cancellationToken);
+
+        return locations;
+    }
+
     public async Task<Location> AdminGetAsync(string locationId, CancellationToken cancellationToken) =>
         await hybridCache.GetOrCreateAsync(
             CreateKeyById(locationId),
@@ -107,7 +133,6 @@ public class LocationService(
 
         return mappedLocation;
     }
-
 
     public async Task<Location> UpdateAsync(string workspaceMemberId, Location location, CancellationToken cancellationToken)
     {

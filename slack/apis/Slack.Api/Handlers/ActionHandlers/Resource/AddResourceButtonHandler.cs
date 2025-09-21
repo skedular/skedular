@@ -1,8 +1,5 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -11,12 +8,12 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 using Option = SlackNet.Blocks.Option;
 
 namespace Slack.Api.Handlers.ActionHandlers.Resource;
@@ -24,15 +21,14 @@ namespace Slack.Api.Handlers.ActionHandlers.Resource;
 public class AddResourceButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    LocationConfiguration locationConfiguration,
-    LocationService.LocationServiceClient locationServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
     IPageNavigator pageNavigator,
     IOrganizationZoneService organizationZoneService,
-    IOrganizationCustomTagService organizationCustomTagService)
+    IOrganizationCustomTagService organizationCustomTagService,
+    ILocationResourceService locationResourceService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
@@ -194,16 +190,16 @@ public class AddResourceButtonHandler(
         var context = AddResourceContext.Deserialize(viewSubmission.View.PrivateMetadata);
         var values = viewSubmission.View.State.Values;
         var deskId = randomHelper.Generate();
-        var addInput = new AddResourceInput { Id = deskId, LocationId = context.LocationId };
+        var resource = new Shared.Models.Resource { Id = deskId, Location = new Shared.Models.Location { Id = context.LocationId } };
 
-        if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var locationBlock))
+        if (values.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var resourceTypeBlock))
         {
-            if (locationBlock.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var location))
+            if (resourceTypeBlock.TryGetValue(OptionLoaderKeys.OrganizationResourceTypeKey, out var block))
             {
-                if (location is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    addInput.TagIds.Add(value.SelectedOption?.Value);
+                    resource.ResourceType = new ResourceType { Id = value.SelectedOption!.Value };
                 }
                 else
                 {
@@ -222,12 +218,12 @@ public class AddResourceButtonHandler(
 
         if (values.TryGetValue(ResourceActionTypes.Name, out var nameBlock))
         {
-            if (nameBlock.TryGetValue(ResourceActionTypes.Name, out var name))
+            if (nameBlock.TryGetValue(ResourceActionTypes.Name, out var block))
             {
-                if (name is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
-                    addInput.Name = value.Value.ToSafeString();
+                    resource.Name = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -242,11 +238,11 @@ public class AddResourceButtonHandler(
 
         if (values.TryGetValue(ResourceActionTypes.Inactive, out var deactivatedBlock))
         {
-            if (deactivatedBlock.TryGetValue(ResourceActionTypes.Inactive, out var deactivated))
+            if (deactivatedBlock.TryGetValue(ResourceActionTypes.Inactive, out var block))
             {
-                if (deactivated is CheckboxGroupValue value)
+                if (block is CheckboxGroupValue value)
                 {
-                    addInput.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
+                    resource.Inactive = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.Inactive);
                 }
                 else
                 {
@@ -269,7 +265,7 @@ public class AddResourceButtonHandler(
             {
                 if (requireBookingApproval is CheckboxGroupValue value)
                 {
-                    addInput.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
+                    resource.RequireBookingApproval = value.SelectedOptions.Any(item => item.Value == ResourceActionTypes.RequireBookingApproval);
                 }
                 else
                 {
@@ -288,9 +284,9 @@ public class AddResourceButtonHandler(
 
         if (values.TryGetValue(ResourceActionTypes.Capacity, out var capacityBlock))
         {
-            if (capacityBlock.TryGetValue(ResourceActionTypes.Capacity, out var capacity))
+            if (capacityBlock.TryGetValue(ResourceActionTypes.Capacity, out var block))
             {
-                if (capacity is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.Value);
 
@@ -298,7 +294,7 @@ public class AddResourceButtonHandler(
                     {
                         if (capacityValue > 0)
                         {
-                            addInput.Capacity = capacityValue;
+                            resource.Capacity = capacityValue;
                         }
                         else
                         {
@@ -327,11 +323,11 @@ public class AddResourceButtonHandler(
 
         if (values.TryGetValue(CustomTagActionTypes.CustomTags, out var customTagsBlock))
         {
-            if (customTagsBlock.TryGetValue(CustomTagActionTypes.CustomTags, out var customTags))
+            if (customTagsBlock.TryGetValue(CustomTagActionTypes.CustomTags, out var block))
             {
-                if (customTags is StaticMultiSelectValue value)
+                if (block is StaticMultiSelectValue value)
                 {
-                    addInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    resource.OrganizationCustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag { Id = item.Value }).ToList();
                 }
                 else
                 {
@@ -346,11 +342,11 @@ public class AddResourceButtonHandler(
 
         if (values.TryGetValue(ZoneActionTypes.Zones, out var zonesBlock))
         {
-            if (zonesBlock.TryGetValue(ZoneActionTypes.Zones, out var zones))
+            if (zonesBlock.TryGetValue(ZoneActionTypes.Zones, out var block))
             {
-                if (zones is StaticMultiSelectValue value)
+                if (block is StaticMultiSelectValue value)
                 {
-                    addInput.TagIds.AddRange(value.SelectedOptions.Select(item => item.Value).ToList());
+                    resource.OrganizationZones = value.SelectedOptions.Select(item => new OrganizationZone { Id = item.Value }).ToList();
                 }
                 else
                 {
@@ -363,10 +359,7 @@ public class AddResourceButtonHandler(
             }
         }
 
-        await locationServiceClient.AddResourceAsync(
-            addInput,
-            locationConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await locationResourceService.AddAsync(workspaceMember.Id, resource, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,
