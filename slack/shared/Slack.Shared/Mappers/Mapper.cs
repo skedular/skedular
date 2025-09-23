@@ -315,7 +315,6 @@ public class Mapper : IMapper
                         : new Organization { Id = src.DefaultOrganizationId.ToSafeString() },
                 PreferredLocations = src.PreferredLocationIds.Select(item => new Location { Id = item }).ToList(),
                 PreferredResources = src.PreferredResourceIds.Select(item => new Resource { Id = item }).ToList(),
-                PreferredTeams = src.PreferredTeamIds.Select(item => new Team { Id = item }).ToList(),
                 PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
             };
 

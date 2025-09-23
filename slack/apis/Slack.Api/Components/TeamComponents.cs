@@ -22,7 +22,7 @@ public interface ITeamComponents
         CancellationToken cancellationToken);
 }
 
-public class TeamComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService) : ITeamComponents
+public class TeamComponents(IOrganizationPermissionsService organizationPermissionsService) : ITeamComponents
 {
     public async Task<ICollection<IActionElement>> GetAddTeamButtonAsync(
         Workspace workspace,
@@ -51,23 +51,19 @@ public class TeamComponents(ICustomerService customerService, IOrganizationPermi
         PageContext pageContext,
         CancellationToken cancellationToken)
     {
-        var customer = await customerService.GetAsync(workspaceMember.Id, cancellationToken);
         var blocks = new List<Block>();
         foreach (var team in teams)
         {
-            blocks.AddRange(GetTeamCard(team, customer, pageContext));
+            blocks.AddRange(GetTeamCard(team));
             blocks.Add(new DividerBlock());
         }
 
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetTeamCard(Team team, Customer customer, PageContext pageContext)
+    private static List<Block> GetTeamCard(Team team)
     {
-        pageContext = pageContext.Clone();
-
-        var dailyUpdateChannel =
-            team.DailyUpdateChannel is null ? string.Empty : team.DailyUpdateChannel.Name.ToSafeString();
+        var dailyUpdateChannel = team.DailyUpdateChannel is null ? string.Empty : team.DailyUpdateChannel.Name.ToSafeString();
         var primaryLocation = team.PrimaryLocation is null ? "N/A" : team.PrimaryLocation.Name;
         var blocks = new List<Block>
         {
@@ -79,26 +75,6 @@ public class TeamComponents(ICustomerService customerService, IOrganizationPermi
         };
 
         var buttons = new List<IActionElement>();
-
-        if (customer.PreferredTeams.Any(item => item.Id == team.Id))
-        {
-            buttons.Add(new Button
-            {
-                ActionId = TeamActionTypes.RemovePreferredTeam,
-                Text = "Remove preferred team".ToPlainTextWithIcon(Icons.ClearDefault),
-                Value = new RemovePreferredTeamContext(pageContext, team.Id).Serialize()
-            });
-        }
-        else
-        {
-            buttons.Add(new Button
-            {
-                ActionId = TeamActionTypes.AddAsPreferredTeam,
-                Text = "Add as preferred team".ToPlainTextWithIcon(Icons.SetAsDefault),
-                Value = new AddAsPreferredTeamContext(pageContext, team.Id).Serialize()
-            });
-        }
-
         var actionMenu = new StaticSelectMenu
         {
             ActionId = TeamActionTypes.ActionsMenu,

@@ -193,12 +193,6 @@ public class OrganizationSubscriber(
                 .ToList();
             var newResourceIds = customer.PreferredResources.Select(item => item.Id).Distinct().ToList();
 
-            var existingTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-            customer.PreferredTeams = customer.PreferredTeams
-                .Where(team => team.Organization is not null && team.Organization.Id != organizationId)
-                .ToList();
-            var newTeamIds = customer.PreferredTeams.Select(item => item.Id).Distinct().ToList();
-
             customer = repositoryFactory.CustomerRepository.Update(customer);
             customers.Add(customer);
 
@@ -206,9 +200,7 @@ public class OrganizationSubscriber(
                 newLocationIds.Count != existingLocationIds.Count ||
                 newLocationIds.Except(existingLocationIds).Any() ||
                 newResourceIds.Count != existingResourceIds.Count ||
-                newResourceIds.Except(existingResourceIds).Any() ||
-                newTeamIds.Count != existingTeamIds.Count ||
-                newTeamIds.Except(existingTeamIds).Any())
+                newResourceIds.Except(existingResourceIds).Any())
             {
                 await customerPublisher.PublishCustomersAsync([mapper.MapTo(customer)!], cancellationToken);
             }

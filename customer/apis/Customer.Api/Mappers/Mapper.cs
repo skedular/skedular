@@ -18,7 +18,6 @@ using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using PersonalInformationVisibility = Api.Shared.Services.Models.PersonalInformationVisibility;
 using Resource = Customer.Shared.Database.Entities.Resource;
-using Team = Customer.Shared.Models.Team;
 
 namespace Customer.Api.Mappers;
 
@@ -35,7 +34,6 @@ public interface IMapper
         ICollection<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
         ICollection<Resource> preferredResources,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
 
@@ -100,7 +98,6 @@ public class Mapper : IMapper
             IsOnboardingDone = false,
             DefaultOrganization = null,
             PreferredLocations = [],
-            PreferredTeams = [],
             PreferredOrganizationTags = [],
             PreferredResources = [],
             PersonalInformationVisibility = PersonalInformationVisibility.Visible
@@ -139,7 +136,6 @@ public class Mapper : IMapper
             PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
             PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
             PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
-            PreferredTeamIds = src.PreferredTeams.Select(item => item.Id),
             PersonalInformationVisibility = new PersonalInformationVisibilityDetails
             {
                 Type = src.PersonalInformationVisibility, Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName()
@@ -178,7 +174,6 @@ public class Mapper : IMapper
             DefaultOrganization = MapTo(src.DefaultOrganization),
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
             PreferredResources = MapTo(src.PreferredResources).ToList(),
-            PreferredTeams = MapTo(src.PreferredTeams).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
             StripeCustomer = MapTo(src.StripeCustomer),
             StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList(),
@@ -247,9 +242,6 @@ public class Mapper : IMapper
             PreferredLocations = src.PreferredLocations.Select(item =>
                     new Location { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList(),
-            PreferredTeams = src.PreferredTeams.Select(item =>
-                    new Team { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
-                .ToList(),
             PreferredResources = src.PreferredResources
                 .Select(item => new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.Location.Id } })
                 .ToList(),
@@ -305,7 +297,6 @@ public class Mapper : IMapper
             }));
 
         customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
-        customer.PreferredTeamIds.AddRange(src.PreferredTeams.Select(item => item.Id));
         customer.PreferredResourceIds.AddRange(src.PreferredResources.Select(item => item.Id));
         customer.PreferredOrganizationTagIds.AddRange(src.PreferredOrganizationTags.Select(item => item.Id));
 
@@ -481,7 +472,6 @@ public class Mapper : IMapper
         ICollection<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
         ICollection<Resource> preferredResources,
         ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
         new()
@@ -507,7 +497,6 @@ public class Mapper : IMapper
             Identities = identities,
             DefaultOrganization = defaultOrganization,
             PreferredLocations = preferredLocations,
-            PreferredTeams = preferredTeams,
             PreferredResources = preferredResources,
             PreferredOrganizationTags = preferredOrganizationTags,
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
@@ -592,22 +581,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Location = src.Location is null ? null : new Location { Id = src.Location.Id }
-            };
-
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Team? MapTo(Shared.Database.Entities.Team? src) =>
-        src is null
-            ? null
-            : new Team
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Organization = MapTo(src.Organization)
             };
 
     private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);

@@ -16,7 +16,6 @@ using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Database.Entities.Location;
 using OrganizationTag = Customer.Shared.Database.Entities.OrganizationTag;
 using Resource = Customer.Shared.Database.Entities.Resource;
-using Team = Customer.Shared.Database.Entities.Team;
 
 namespace Customer.Api.Services;
 
@@ -187,12 +186,6 @@ public class CustomerService(
             preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, null, cancellationToken));
         }
 
-        var preferredTeams = new List<Team>();
-        foreach (var team in customer.PreferredTeams)
-        {
-            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(team.Id, null, cancellationToken));
-        }
-
         var preferredResources = new List<Resource>();
         foreach (var resource in customer.PreferredResources)
         {
@@ -225,7 +218,6 @@ public class CustomerService(
                 identities,
                 defaultOrganization,
                 preferredLocations,
-                preferredTeams,
                 preferredResources,
                 preferredOrganizationTags);
 

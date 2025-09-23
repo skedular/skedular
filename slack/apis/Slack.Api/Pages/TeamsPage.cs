@@ -111,22 +111,6 @@ public class TeamsPage(
                     request.View.Hash,
                     cancellationToken);
                 break;
-
-            case TeamActionTypes.AddAsPreferredTeam:
-                await AddAdPreferredTeamAsync(workspace,
-                    workspaceMember,
-                    AddAsPreferredTeamContext.Deserialize(action.Value),
-                    request.View.Hash,
-                    cancellationToken);
-                break;
-
-            case TeamActionTypes.RemovePreferredTeam:
-                await RemovePreferredTeamAsync(workspace,
-                    workspaceMember,
-                    RemovePreferredTeamContext.Deserialize(action.Value),
-                    request.View.Hash,
-                    cancellationToken);
-                break;
         }
     }
 
@@ -409,9 +393,7 @@ public class TeamsPage(
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(FirstPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(LastPageTeams)
             .RegisterBlockActionHandler<ButtonAction, TeamsPage>(NextPageTeams)
-            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(PreviousPageTeams)
-            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.AddAsPreferredTeam)
-            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(TeamActionTypes.RemovePreferredTeam);
+            .RegisterBlockActionHandler<ButtonAction, TeamsPage>(PreviousPageTeams);
 
     private static ICollection<Block> GetTitle() => [new SectionBlock { Text = "*Teams*".ToMarkdown() }];
 
@@ -630,40 +612,6 @@ public class TeamsPage(
                 Blocks = [confirmationMessage],
                 PrivateMetadata = context.Serialize()
             },
-            cancellationToken);
-    }
-
-    private async Task AddAdPreferredTeamAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        AddAsPreferredTeamContext context,
-        string? hash,
-        CancellationToken cancellationToken)
-    {
-        await customerService.AddPreferredTeamAsync(workspaceMember.Id, context.TeamId, cancellationToken);
-
-        await RenderWithContextAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            hash,
-            cancellationToken);
-    }
-
-    private async Task RemovePreferredTeamAsync(
-        Workspace workspace,
-        WorkspaceMember workspaceMember,
-        RemovePreferredTeamContext context,
-        string? hash,
-        CancellationToken cancellationToken)
-    {
-        await customerService.RemovePreferredTeamAsync(workspaceMember.Id, context.TeamId, cancellationToken);
-
-        await RenderWithContextAsync(
-            workspace,
-            workspaceMember,
-            new CommonPageContext(context.PageContext),
-            hash,
             cancellationToken);
     }
 }

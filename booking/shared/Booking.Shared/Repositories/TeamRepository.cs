@@ -33,7 +33,6 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .Include(query => query.Organization)
             .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.PreferredByCustomers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Team>> GetByIdsAsync(
@@ -48,7 +47,6 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
             .Include(query => query.Organization)
             .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
-            .Include(query => query.PreferredByCustomers)
             .ToListAsync(cancellationToken);
 
     public Team Update(Team team)

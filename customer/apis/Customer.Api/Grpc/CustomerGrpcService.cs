@@ -19,7 +19,6 @@ public class CustomerGrpcService(
     ICustomerService customerService,
     ICustomerOrganizationSettingsService customerOrganizationSettingsService,
     ICustomerLocationSettingsService customerLocationSettingsService,
-    ICustomerTeamSettingsService customerTeamSettingsService,
     ICustomerFeedbackService customerFeedbackService,
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerResourceSettingsService customerResourceSettingsService,
@@ -171,16 +170,6 @@ public class CustomerGrpcService(
             await customerLocationSettingsService.AddCustomerPreferredLocationAsync(request.LocationId, null, false, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredTeam(
-        AddPreferredTeamInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerTeamSettingsService.AddCustomerPreferredTeamAsync(request.TeamId, null, false, context.CancellationToken));
-    }
-
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredLocation(
         RemovePreferredLocationInput request,
         ServerCallContext context)
@@ -189,16 +178,6 @@ public class CustomerGrpcService(
 
         return mapper.MapToGrpcResponse(
             await customerLocationSettingsService.RemoveCustomerPreferredLocationAsync(request.LocationId, null, context.CancellationToken));
-    }
-
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> RemovePreferredTeam(
-        RemovePreferredTeamInput request,
-        ServerCallContext context)
-    {
-        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
-
-        return mapper.MapToGrpcResponse(
-            await customerTeamSettingsService.RemoveCustomerPreferredTeamAsync(request.TeamId, null, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Customer> AddPreferredOrganizationTag(

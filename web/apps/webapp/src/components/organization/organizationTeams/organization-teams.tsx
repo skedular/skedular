@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
-import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
+import { EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
@@ -14,9 +14,7 @@ import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { organizationTeams_addCustomerPreferredTeamMutation } from '@/queries/__generated__/organizationTeams_addCustomerPreferredTeamMutation.graphql';
 import type { organizationTeams_deleteTeamMutation } from '@/queries/__generated__/organizationTeams_deleteTeamMutation.graphql';
-import type { organizationTeams_removeCustomerPreferredTeamMutation } from '@/queries/__generated__/organizationTeams_removeCustomerPreferredTeamMutation.graphql';
 import type { organizationTeams_rootQuery } from '@/queries/__generated__/organizationTeams_rootQuery.graphql';
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';
 import type { organizationTeams_teams_refetchableFragment } from '@/queries/__generated__/organizationTeams_teams_refetchableFragment.graphql';
@@ -53,11 +51,7 @@ const RootQuery = graphql`
   ) {
     me {
       id
-      preferredTeams {
-        id
-      }
     }
-    ...teamCard_query
     ...locationSelector_allLocations_query
     ...organizationTeams_teams_query
   }
@@ -80,7 +74,6 @@ type RowType = {
   id: string;
   team: TeamDetails;
   teammates: ReadonlyArray<CustomerDetails>;
-  preferred: boolean;
 };
 
 const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
@@ -144,32 +137,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
     }
   `);
 
-  const [commitAddCustomerPreferredTeam] = useMutation<organizationTeams_addCustomerPreferredTeamMutation>(graphql`
-    mutation organizationTeams_addCustomerPreferredTeamMutation($input: AddCustomerPreferredTeamInput!) {
-      addCustomerPreferredTeam(input: $input) {
-        customer {
-          id
-          preferredTeams {
-            id
-          }
-        }
-      }
-    }
-  `);
-
-  const [commitRemoveCustomerPreferredTeam] = useMutation<organizationTeams_removeCustomerPreferredTeamMutation>(graphql`
-    mutation organizationTeams_removeCustomerPreferredTeamMutation($input: RemoveCustomerPreferredTeamInput!) {
-      removeCustomerPreferredTeam(input: $input) {
-        customer {
-          id
-          preferredTeams {
-            id
-          }
-        }
-      }
-    }
-  `);
-
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
@@ -181,7 +148,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [teamRemoveConfirmationDialogOpen, setTeamRemoveConfirmationDialogOpen] = useState(false);
-  const [preferredTeams, setPreferredTeams] = useState(rootData.me?.preferredTeams.map(({ id }) => id) ?? []);
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditTeam],
@@ -283,88 +249,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
     });
   };
 
-  const handleSetAsPreferredTeamClicked = (id: string) => {
-    const teamDetails = teams.find((item) => item.id === id);
-    if (!teamDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Setting team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
-
-    commitAddCustomerPreferredTeam({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          teamId: teamDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' has been set as the preferred team.`} />,
-        });
-
-        setPreferredTeams(preferredTeams.concat([teamDetails.id]));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to set team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleRemoveAsPreferredTeamClicked = (id: string) => {
-    const teamDetails = teams.find((item) => item.id === id);
-    if (!teamDetails) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content={`Removing team '${teamDetails.name}' as your preferred team...`} />, infoNotificationOptions);
-
-    commitRemoveCustomerPreferredTeam({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          teamId: teamDetails.id,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Team '${teamDetails.name}' has been removed as your preferred team.`} />,
-        });
-
-        setPreferredTeams(preferredTeams.filter((item) => item !== teamDetails.id));
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove the team '${teamDetails.name}' as your preferred team. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
   const handlLocationChanged = (id?: string) => {
     setLocationIds(id ? [id] : []);
   };
@@ -381,7 +265,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
         .map(({ node }) => node)
         .filter(({ organizationMember }) => !!organizationMember)
         .map(({ organizationMember }) => organizationMember!.customer),
-      preferred: preferredTeams.includes(team.id),
     };
   });
 
@@ -407,28 +290,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
       ),
       display: 'flex',
       minWidth: 300,
-    },
-    {
-      field: 'preferred',
-      headerName: 'Preferred?',
-      editable: false,
-      renderCell: (params) => {
-        const id = params.id as string;
-        if (params.value) {
-          return (
-            <IconButton onClick={() => handleRemoveAsPreferredTeamClicked(id)}>
-              <PreferredIcon />
-            </IconButton>
-          );
-        }
-
-        return (
-          <IconButton onClick={() => handleSetAsPreferredTeamClicked(id)}>
-            <NotPreferredIcon />
-          </IconButton>
-        );
-      },
-      display: 'flex',
     },
     {
       field: 'More Actions',
@@ -475,7 +336,6 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
               {teams.map((team) => (
                 <Grid key={team.id}>
                   <TeamCard
-                    rootDataRelay={rootData}
                     teamDetailsRelay={team}
                     connectionIds={connectionIds}
                     teammates={team.members.edges

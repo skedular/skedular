@@ -21,7 +21,6 @@ public class Customer : ReplicatedEntityBaseWithDeleted, ICustomerPersonalDetail
     public virtual Organization? DefaultOrganization { get; set; }
     public virtual ICollection<Location> PreferredLocations { get; set; } = [];
     public virtual ICollection<Resource> PreferredResources { get; set; } = [];
-    public virtual ICollection<Team> PreferredTeams { get; set; } = [];
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
@@ -71,7 +70,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
-        builder.HasMany(item => item.PreferredTeams).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
 
         builder.HasIndex(item => item.Name);

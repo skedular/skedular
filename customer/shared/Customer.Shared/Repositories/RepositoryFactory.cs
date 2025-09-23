@@ -15,8 +15,6 @@ public interface IRepositoryFactory
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     ILocationRepository LocationRepository { get; }
     IResourceRepository ResourceRepository { get; }
-    ITeamRepository TeamRepository { get; }
-    ITeamMemberRepository TeamMemberRepository { get; }
     IOrganizationTagRepository OrganizationTagRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     IStripeCustomerRepository StripeCustomerRepository { get; }
@@ -38,8 +36,6 @@ public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepo
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         LocationRepository = new LocationRepository(_dbContext, timeProvider);
         ResourceRepository = new ResourceRepository(_dbContext, timeProvider);
-        TeamRepository = new TeamRepository(_dbContext, timeProvider);
-        TeamMemberRepository = new TeamMemberRepository(_dbContext, timeProvider);
         OrganizationTagRepository = new OrganizationTagRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
         StripeCustomerRepository = new StripeCustomerRepository(_dbContext, timeProvider);
@@ -55,8 +51,6 @@ public class RepositoryFactory : RepositoryFactoryBase<CustomerDbContext>, IRepo
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public ILocationRepository LocationRepository { get; }
     public IResourceRepository ResourceRepository { get; }
-    public ITeamRepository TeamRepository { get; }
-    public ITeamMemberRepository TeamMemberRepository { get; }
     public IOrganizationTagRepository OrganizationTagRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
     public IStripeCustomerRepository StripeCustomerRepository { get; }

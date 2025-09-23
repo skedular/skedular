@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<edb3a9f15a3d051463ac77c5e7ddc384>>
+ * @generated SignedSource<<9ccd7946b145f285ac0a8e6e7e931b12>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,11 +30,8 @@ export type organizationTeams_rootQuery$variables = {
 export type organizationTeams_rootQuery$data = {
   readonly me: {
     readonly id: string;
-    readonly preferredTeams: ReadonlyArray<{
-      readonly id: string;
-    }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "organizationTeams_teams_query" | "teamCard_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"locationSelector_allLocations_query" | "organizationTeams_teams_query">;
 };
 export type organizationTeams_rootQuery = {
   response: organizationTeams_rootQuery$data;
@@ -77,19 +74,7 @@ v5 = {
   "name": "me",
   "plural": false,
   "selections": [
-    (v4/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "TeamDetails",
-      "kind": "LinkedField",
-      "name": "preferredTeams",
-      "plural": true,
-      "selections": [
-        (v4/*: any*/)
-      ],
-      "storageKey": null
-    }
+    (v4/*: any*/)
   ],
   "storageKey": null
 },
@@ -156,11 +141,6 @@ return {
     "name": "organizationTeams_rootQuery",
     "selections": [
       (v5/*: any*/),
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "teamCard_query"
-      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -504,16 +484,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9b4c7f476013eb8ef446661893a2cc0",
+    "cacheID": "2f22fc6e106231ba91a1f1b5dd4eaee4",
     "id": null,
     "metadata": {},
     "name": "organizationTeams_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n    preferredTeams {\n      id\n    }\n  }\n  ...teamCard_query\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n\nfragment teamCard_query on Query {\n  me {\n    id\n    preferredTeams {\n      id\n    }\n  }\n}\n"
+    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n  }\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
   }
 };
 })();
 
-(node as any).hash = "644fac7a732e8e0ac481374fa4a365ff";
+(node as any).hash = "3388413fcd17f76dd87a46a7daabf1f0";
 
 export default node;

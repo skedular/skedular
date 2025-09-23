@@ -13,10 +13,8 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public Organization? DefaultOrganization { get; set; }
     public ICollection<Location> PreferredLocations { get; set; } = [];
     public ICollection<Resource> PreferredResources { get; set; } = [];
-    public ICollection<Team> PreferredTeams { get; set; } = [];
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public ICollection<TeamMember> TeamMembers { get; set; } = [];
     public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public StripeCustomer? StripeCustomer { get; set; }
     public CustomerBillingDetails? BillingDetails { get; set; }

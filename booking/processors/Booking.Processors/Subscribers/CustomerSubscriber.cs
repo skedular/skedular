@@ -77,13 +77,7 @@ public class CustomerSubscriber(
         {
             preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, null, cancellationToken));
         }
-
-        var preferredTeams = new List<Team>();
-        foreach (var item in customer.PreferredTeams)
-        {
-            preferredTeams.Add(await repositoryFactory.TeamRepository.UpsertNakedAsync(item.Id, null, cancellationToken));
-        }
-
+        
         var preferredResources = new List<Resource>();
         foreach (var item in customer.PreferredResources)
         {
@@ -110,7 +104,6 @@ public class CustomerSubscriber(
                 existingCustomer.Identities,
                 defaultOrganization,
                 preferredLocations,
-                preferredTeams,
                 preferredResources,
                 preferredOrganizationTags));
 

@@ -34,8 +34,6 @@ public static class TeamActionTypes
 {
     public const string Teams = "Teams";
     public const string AddTeam = "AddTeam";
-    public const string AddAsPreferredTeam = "SetAsPreferredTeam";
-    public const string RemovePreferredTeam = "ClearPreferredTeam";
     public const string EditTeam = "EditTeam";
     public const string RemoveTeam = "RemoveTeam";
     public const string ActionsMenu = "Team_ActionsMenu";

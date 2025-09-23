@@ -135,13 +135,7 @@ public class BookingService(
         if (booking.InvolvedCustomers.Count == 1)
         {
             var (_, customerEntity) = await customerService.GetCustomerAsync(booking.InvolvedCustomers.First().Id, cancellationToken);
-            (organizations, teams, resources) = await TryToSetDefaultValuesAsync(
-                booking,
-                customerEntity,
-                organizations,
-                teams,
-                resources,
-                cancellationToken);
+            (organizations, resources) = await TryToSetDefaultValuesAsync(booking, customerEntity, organizations, resources, cancellationToken);
         }
 
         foreach (var resource in resources)
@@ -753,23 +747,19 @@ public class BookingService(
         return booking;
     }
 
-    private async Task<(ICollection<Organization>, ICollection<Team>, ICollection<Resource>)> TryToSetDefaultValuesAsync(
+    private async Task<(ICollection<Organization>, ICollection<Resource>)> TryToSetDefaultValuesAsync(
         Shared.Models.Booking booking,
         Customer customer,
         ICollection<Organization> organizations,
-        ICollection<Team> teams,
         ICollection<Resource> resources,
         CancellationToken cancellationToken)
     {
-        if (booking.Resources.Count != 0 || (booking.InvolvedOrganizations.Count != 0 && booking.InvolvedTeams.Count != 0) ||
-            (booking.InvolvedOrganizations.Count != 0 && booking.InvolvedOrganizations.Count != 1) ||
-            (booking.InvolvedTeams.Count != 0 && booking.InvolvedTeams.Count != 1))
+        if (booking.Resources.Count != 0)
         {
-            return (organizations, teams, resources);
+            return (organizations, resources);
         }
 
         var organization = booking.InvolvedOrganizations.FirstOrDefault();
-        var team = booking.InvolvedTeams.FirstOrDefault();
         var organizationEntity = organization is null
             ? null
             : await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
@@ -778,44 +768,20 @@ public class BookingService(
                 false,
                 false,
                 cancellationToken);
-        Location? locationEntity = null;
-        Team? teamEntity = null;
+        Location? locationEntity;
 
-        if ((organization is null && team is not null) || (organization is not null && team is not null))
-        {
-        }
-        else if (organization is not null && team is null)
-        {
-            locationEntity =
-                customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
-            teamEntity = customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
-        }
-        else
+        if (organization is null)
         {
             if (customer.DefaultOrganization is null)
             {
-                teamEntity = customer.PreferredTeams.FirstOrDefault();
-                if (team is null)
+                locationEntity = customer.PreferredLocations.FirstOrDefault();
+                if (locationEntity is not null)
                 {
-                    locationEntity = customer.PreferredLocations.FirstOrDefault();
+                    locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
                     if (locationEntity is not null)
                     {
-                        locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
+                        organizationEntity = locationEntity.Organization;
                     }
-                }
-
-                if (team is not null && team.Organization is not null)
-                {
-                    organizationEntity = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                        team.Organization.Id,
-                        team.Organization.UniqueAlphanumericName,
-                        false,
-                        false,
-                        cancellationToken);
-                }
-                else if (locationEntity is not null)
-                {
-                    organizationEntity = locationEntity.Organization;
                 }
             }
             else
@@ -827,25 +793,23 @@ public class BookingService(
                 {
                     locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
                 }
-
-                teamEntity = customer.PreferredTeams.FirstOrDefault(item =>
-                    item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
-                if (team is not null)
-                {
-                    teamEntity = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, false, cancellationToken);
-                }
             }
+        }
+        else
+        {
+            locationEntity =
+                customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
         }
 
         if (locationEntity is null)
         {
-            return (organizationEntity is null ? [] : [organizationEntity], teamEntity is null ? [] : [teamEntity], resources);
+            return (organizationEntity is null ? [] : [organizationEntity], resources);
         }
 
         resources = resources.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == locationEntity.Id).ToList();
         if (resources.Count != 0)
         {
-            return (organizationEntity is null ? [] : [organizationEntity], teamEntity is null ? [] : [teamEntity], resources);
+            return (organizationEntity is null ? [] : [organizationEntity], resources);
         }
 
         var availableResources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
@@ -886,7 +850,7 @@ public class BookingService(
             resources = [resource];
         }
 
-        return (organizationEntity is null ? [] : [organizationEntity], teamEntity is null ? [] : [teamEntity], resources);
+        return (organizationEntity is null ? [] : [organizationEntity], resources);
     }
 
     private async Task<ICollection<Resource>> GetResourcesAsync(

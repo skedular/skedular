@@ -67,7 +67,7 @@ public class AddBookingButtonHandler(
 
         var asyncBlocks = await Task.WhenAll(
             GetOrganizationMemberBlockAsync(context, customer, cancellationToken),
-            GetTeamBlockAsync(workspace, workspaceMember, context, customer, cancellationToken));
+            GetTeamBlockAsync(workspaceMember, context, cancellationToken));
 
         var notes = new InputBlock
         {
@@ -118,13 +118,16 @@ public class AddBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var addInput = new AddInput { Id = randomHelper.Generate(), Type = BookingType.WorkingFromOffice };
+        var addInput = new AddInput
+        {
+            Id = randomHelper.Generate(), Type = BookingType.WorkingFromOffice, OrganizationIds = { workspace.Organization.Id }
+        };
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(DateKey, out var dateBlock))
         {
-            if (dateBlock.TryGetValue(DateKey, out var date))
+            if (dateBlock.TryGetValue(DateKey, out var block))
             {
-                if (date is DatePickerValue value)
+                if (block is DatePickerValue value)
                 {
                     ArgumentNullException.ThrowIfNull(value.SelectedDate);
                     var from = value.SelectedDate.Value.ToDateTimeOffset();
@@ -148,9 +151,9 @@ public class AddBookingButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMemberBlock))
         {
-            if (organizationMemberBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMember))
+            if (organizationMemberBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var block))
             {
-                if (organizationMember is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
                     addInput.CustomerIds.Add(value.SelectedOption.Value);
@@ -172,9 +175,9 @@ public class AddBookingButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var teamBlock))
         {
-            if (teamBlock.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var team))
+            if (teamBlock.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var block))
             {
-                if (team is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     if (!string.IsNullOrWhiteSpace(value.SelectedOption?.Value))
                     {
@@ -198,9 +201,9 @@ public class AddBookingButtonHandler(
 
         if (values.TryGetValue(NotesKey, out var notesBlock))
         {
-            if (notesBlock.TryGetValue(NotesKey, out var notes))
+            if (notesBlock.TryGetValue(NotesKey, out var block))
             {
-                if (notes is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     addInput.Notes = value.Value.ToSafeString();
                 }
@@ -281,17 +284,12 @@ public class AddBookingButtonHandler(
     }
 
     private async Task<ICollection<Block>> GetTeamBlockAsync(
-        Workspace workspace,
         WorkspaceMember workspaceMember,
         AddBookingContext context,
-        Customer customer,
         CancellationToken cancellationToken)
     {
         if (context.TeamId is null)
         {
-            var preferredTeam =
-                customer.PreferredTeams.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == workspace.Organization.Id);
-
             return
             [
                 new InputBlock
@@ -300,11 +298,7 @@ public class AddBookingButtonHandler(
                     Label = "Team".ToPlainText(),
                     Element = new ExternalSelectMenu
                     {
-                        ActionId = OptionLoaderKeys.OrganizationTeamKey,
-                        InitialOption = preferredTeam is null
-                            ? null
-                            : new Option { Text = preferredTeam.Name.ToOptionText(), Value = preferredTeam.Id },
-                        MinQueryLength = 0
+                        ActionId = OptionLoaderKeys.OrganizationTeamKey, InitialOption = null, MinQueryLength = 0
                     },
                     Optional = true
                 }

@@ -51,11 +51,10 @@ message Customer {
   string preferredOrganizationId = 20;
   repeated Resource preferredResources = 21;
   Settings settings = 22;
-  repeated Team preferredTeams = 23;
-  repeated OrganizationTag preferredOrganizationTags = 24;
-  string phoneNumber = 25;
-  CustomerBillingDetails billingDetails = 26;
-  PersonalInformationVisibility personalInformationVisibility = 27;
+  repeated OrganizationTag preferredOrganizationTags = 23;
+  string phoneNumber = 24;
+  CustomerBillingDetails billingDetails = 25;
+  PersonalInformationVisibility personalInformationVisibility = 26;
 }
 
 message Identity {
@@ -70,11 +69,6 @@ message Settings {
 }
 
 message Location {
-  string id = 1;
-  string organizationId = 2;
-}
-
-message Team {
   string id = 1;
   string organizationId = 2;
 }

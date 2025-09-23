@@ -49,7 +49,6 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
                 .ThenInclude(query => query.Identities)
                 .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
                 .Include(query => query.Locations)
-                .Include(query => query.Teams)
                 .Include(query => query.DefaultedByCustomers)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
@@ -65,7 +64,6 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
                 .ThenInclude(query => query.Identities)
                 .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
                 .Include(query => query.Locations)
-                .Include(query => query.Teams)
                 .Include(query => query.DefaultedByCustomers)
                 .FirstOrDefaultAsync(
                     query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,

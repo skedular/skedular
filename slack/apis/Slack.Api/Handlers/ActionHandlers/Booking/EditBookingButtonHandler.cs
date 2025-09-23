@@ -171,9 +171,9 @@ public class EditBookingButtonHandler(
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMemberBlock))
         {
-            if (organizationMemberBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMember))
+            if (organizationMemberBlock.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var block))
             {
-                if (organizationMember is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
                     booking.InvolvedCustomers = [new Customer { Id = value.SelectedOption.Value }];
@@ -195,9 +195,9 @@ public class EditBookingButtonHandler(
 
         if (values.TryGetValue(ResourcesKey, out var locationResourcesBlock))
         {
-            if (locationResourcesBlock.TryGetValue(ResourcesKey, out var locationResources))
+            if (locationResourcesBlock.TryGetValue(ResourcesKey, out var block))
             {
-                if (locationResources is StaticMultiSelectValue value)
+                if (block is StaticMultiSelectValue value)
                 {
                     var getPaginatedLocationsInput = new GetPaginatedLocationsInput
                     {
@@ -223,9 +223,9 @@ public class EditBookingButtonHandler(
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var teamBlock))
         {
-            if (teamBlock.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var team))
+            if (teamBlock.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var block))
             {
-                if (team is ExternalSelectValue value)
+                if (block is ExternalSelectValue value)
                 {
                     booking.InvolvedTeams = string.IsNullOrWhiteSpace(value.SelectedOption?.Value)
                         ? []
@@ -248,9 +248,9 @@ public class EditBookingButtonHandler(
 
         if (values.TryGetValue(NotesKey, out var notesBlock))
         {
-            if (notesBlock.TryGetValue(NotesKey, out var notes))
+            if (notesBlock.TryGetValue(NotesKey, out var block))
             {
-                if (notes is PlainTextInputValue value)
+                if (block is PlainTextInputValue value)
                 {
                     booking.Notes = value.Value.ToSafeString();
                 }

@@ -147,7 +147,6 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
             }
           }
         }
-        ...teamCard_query
         ...organizationUserLeftSideNavigationMenuContent_query
         ...singleChoiceUserPersonalInformationVisibility_query
       }
@@ -587,7 +586,6 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
             {teams.map((team) => (
               <Grid key={team.id}>
                 <TeamCard
-                  rootDataRelay={rootData}
                   teamDetailsRelay={team}
                   connectionIds={teamsConnectionIds}
                   teammates={team.members.edges

@@ -17,10 +17,8 @@ public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
     public virtual Organization? DefaultOrganization { get; set; }
     public virtual ICollection<Location> PreferredLocations { get; set; } = [];
     public virtual ICollection<Resource> PreferredResources { get; set; } = [];
-    public virtual ICollection<Team> PreferredTeams { get; set; } = [];
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
-    public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
     public virtual StripeCustomer? StripeCustomer { get; set; }
     public virtual CustomerBillingDetails? BillingDetails { get; set; }
@@ -77,7 +75,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
-        builder.HasMany(item => item.PreferredTeams).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);
 

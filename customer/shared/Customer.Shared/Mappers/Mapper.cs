@@ -10,7 +10,6 @@ using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Org
 using PaymentMethod = Stripe.PaymentMethod;
 using PersonalInformationVisibility = Api.Shared.Services.Models.PersonalInformationVisibility;
 using Resource = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource;
-using Team = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Team;
 
 namespace Customer.Shared.Mappers;
 
@@ -63,9 +62,6 @@ public class Mapper : IMapper
         customer.PreferredResources.AddRange(
             src.PreferredResources.Select(item =>
                 new Resource { Id = item.Id, LocationId = item.Location is null ? string.Empty : item.Location.Id }));
-        customer.PreferredTeams.AddRange(
-            src.PreferredTeams.Select(item =>
-                new Team { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id }));
         customer.PreferredOrganizationTags.AddRange(
             src.PreferredOrganizationTags.Select(item => new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
         );

@@ -46,8 +46,6 @@ public static class Extensions
             .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<ILocationRepository, LocationRepository>()
             .AddScoped<IResourceRepository, ResourceRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
             .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
             .AddScoped<IStripePaymentIntentRepository, StripePaymentIntentRepository>()

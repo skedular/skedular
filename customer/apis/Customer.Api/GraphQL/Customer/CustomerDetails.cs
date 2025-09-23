@@ -35,7 +35,6 @@ public class CustomerDetails : Node
     [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
     [GraphQLName("defaultOrganizationId")] public string? DefaultOrganizationId { get; set; }
     [GraphQLName("preferredLocationIds")] public IEnumerable<string> PreferredLocationIds { get; set; } = [];
-    [GraphQLName("preferredTeamIds")] public IEnumerable<string> PreferredTeamIds { get; set; } = [];
     [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
     [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
     [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
@@ -77,7 +76,6 @@ public static partial class CustomerDetailsType
     {
         descriptor.Ignore(item => item.DefaultOrganizationId);
         descriptor.Ignore(item => item.PreferredLocationIds);
-        descriptor.Ignore(item => item.PreferredTeamIds);
         descriptor.Ignore(item => item.PreferredZoneIds);
         descriptor.Ignore(item => item.PreferredCustomTagIds);
         descriptor.Ignore(item => item.PreferredResourceIds);
@@ -89,9 +87,6 @@ public static partial class CustomerDetailsType
 
     public static IEnumerable<LocationDetails> GetPreferredLocations([Parent] CustomerDetails item) =>
         item.PreferredLocationIds.Select(id => new LocationDetails(id));
-
-    public static IEnumerable<TeamDetails> GetPreferredTeams([Parent] CustomerDetails item) =>
-        item.PreferredTeamIds.Select(id => new TeamDetails(id));
 
     public static IEnumerable<OrganizationTagDetails> GetPreferredZones([Parent] CustomerDetails item) =>
         item.PreferredZoneIds.Select(id => new OrganizationTagDetails(id));

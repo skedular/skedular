@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.Skedular.Team.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services;
 using Customer.Processors.Subscribers;
 using Customer.Shared;
@@ -37,10 +37,6 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
-                Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
-                TeamSubscriber,
                 Key,
                 Event>(kafkaConfiguration);
 

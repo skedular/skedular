@@ -72,7 +72,6 @@ public interface IMapper
         ICollection<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
         ICollection<Resource> preferredResources,
         ICollection<OrganizationTag> preferredOrganizationTags);
 
@@ -127,9 +126,6 @@ public class Mapper : IMapper
                     .Select(item => new Location { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList(),
             PreferredResources = customer.PreferredResources.Select(item =>
                 new Shared.Models.Resource { Id = item.Id, Location = new Location { Id = item.LocationId } }).ToList(),
-            PreferredTeams =
-                customer.PreferredTeams.Select(item => new Team { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } })
-                    .ToList(),
             PreferredOrganizationTags = customer.PreferredOrganizationTags.Select(item =>
                 new Shared.Models.OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.OrganizationId } }).ToList()
         };
@@ -470,7 +466,6 @@ public class Mapper : IMapper
         ICollection<Identity> identities,
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
-        ICollection<Shared.Database.Entities.Team> preferredTeams,
         ICollection<Resource> preferredResources,
         ICollection<OrganizationTag> preferredOrganizationTags)
     {
@@ -495,7 +490,6 @@ public class Mapper : IMapper
         dest.DefaultOrganization = defaultOrganization;
         dest.PreferredLocations = preferredLocations;
         dest.PreferredResources = preferredResources;
-        dest.PreferredTeams = preferredTeams;
         dest.PreferredOrganizationTags = preferredOrganizationTags;
         return dest;
     }

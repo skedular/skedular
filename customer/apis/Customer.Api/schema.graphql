@@ -39,7 +39,6 @@ type CustomerBillingDetails {
 type CustomerDetails {
   organization: OrganizationDetails
   preferredLocations: [LocationDetails!]!
-  preferredTeams: [TeamDetails!]!
   preferredZones: [OrganizationTagDetails!]!
   preferredCustomTags: [OrganizationTagDetails!]!
   preferredResources: [ResourceDetails!]!
@@ -115,8 +114,6 @@ type Mutation {
   completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPreferredTeam(input: AddCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
   clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
@@ -167,10 +164,6 @@ type SubmitCustomerFeedbackPayload {
   clientMutationId: String
 }
 
-type TeamDetails {
-  id: ID!
-}
-
 type Version {
   major: Int!
   minor: Int!
@@ -195,11 +188,6 @@ input AddCustomerPreferredOrganizationTagInput {
 input AddCustomerPreferredResourceInput {
   clientMutationId: String
   resourceId: String!
-}
-
-input AddCustomerPreferredTeamInput {
-  clientMutationId: String
-  teamId: String!
 }
 
 input AddMyBillingDetailsInput {
@@ -259,11 +247,6 @@ input RemoveCustomerPreferredOrganizationTagInput {
 input RemoveCustomerPreferredResourceInput {
   clientMutationId: String
   resourceId: String!
-}
-
-input RemoveCustomerPreferredTeamInput {
-  clientMutationId: String
-  teamId: String!
 }
 
 input SetCustomerDefaultOrganizationInput {

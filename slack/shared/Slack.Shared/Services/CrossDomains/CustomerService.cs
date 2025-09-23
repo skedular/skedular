@@ -32,8 +32,6 @@ public interface ICustomerService
     Task<Customer> GetByIdAsync(string workspaceMemberId, string customerId, CancellationToken cancellationToken);
     Task<Customer> AddPreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
     Task<Customer> RemovePreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken);
-    Task<Customer> AddPreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
-    Task<Customer> RemovePreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken);
     Task<Customer> AddPreferredOrganizationTagAsync(string workspaceMemberId, string organizationTagId, CancellationToken cancellationToken);
     Task<Customer> RemovePreferredOrganizationTagAsync(string workspaceMemberId, string organizationTagId, CancellationToken cancellationToken);
     Task<Customer> AddPreferredResourceAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken);
@@ -242,32 +240,6 @@ public class CustomerService(
         var customer = mapper.MapTo(
             await customerServiceClient.RemovePreferredLocationAsync(
                 new RemovePreferredLocationInput { LocationId = locationId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                cancellationToken: cancellationToken))!;
-
-        await CacheAsync([customer], cancellationToken);
-
-        return customer;
-    }
-
-    public async Task<Customer> AddPreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
-    {
-        var customer = mapper.MapTo(
-            await customerServiceClient.AddPreferredTeamAsync(
-                new AddPreferredTeamInput { TeamId = teamId },
-                customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                cancellationToken: cancellationToken))!;
-
-        await CacheAsync([customer], cancellationToken);
-
-        return customer;
-    }
-
-    public async Task<Customer> RemovePreferredTeamAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
-    {
-        var customer = mapper.MapTo(
-            await customerServiceClient.RemovePreferredTeamAsync(
-                new RemovePreferredTeamInput { TeamId = teamId },
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 

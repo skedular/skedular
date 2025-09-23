@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0928abb5a0a98635524ce4f55697c7c4>>
+ * @generated SignedSource<<d291387273f18c9563133302870e722a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -82,7 +82,7 @@ export type organizationUser_query$data = {
       readonly totalCount: number;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "singleChoiceUserPersonalInformationVisibility_query" | "teamCard_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"organizationUserLeftSideNavigationMenuContent_query" | "singleChoiceUserPersonalInformationVisibility_query">;
   readonly " $fragmentType": "organizationUser_query";
 };
 export type organizationUser_query$key = {
@@ -544,11 +544,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "teamCard_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "organizationUserLeftSideNavigationMenuContent_query"
     },
     {
@@ -562,6 +557,6 @@ return {
 };
 })();
 
-(node as any).hash = "4a45b66eff4c069e730c8355c2042f13";
+(node as any).hash = "92323dd77a4c3b0db4c74afbec95f8ea";
 
 export default node;

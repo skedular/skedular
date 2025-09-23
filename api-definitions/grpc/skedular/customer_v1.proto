@@ -18,9 +18,7 @@ service CustomerService {
   rpc GetById (GetByIdInput) returns (Customer);
   rpc SubmitFeedback (SubmitFeedbackInput) returns (Feedback);
   rpc AddPreferredLocation (AddPreferredLocationInput) returns (Customer);
-  rpc AddPreferredTeam (AddPreferredTeamInput) returns (Customer);
   rpc RemovePreferredLocation (RemovePreferredLocationInput) returns (Customer);
-  rpc RemovePreferredTeam (RemovePreferredTeamInput) returns (Customer);
   rpc AddPreferredOrganizationTag (AddPreferredOrganizationTagInput) returns (Customer);
   rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
   rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
@@ -87,11 +85,10 @@ message Admin_AddInput {
   string defaultOrganizationId = 18;
   repeated Location preferredLocations = 19;
   repeated Resource preferredResources = 20;
-  repeated Team preferredTeams = 21;
-  repeated OrganizationTag preferredOrganizationTags = 22;
-  string phoneNumber = 23;
-  bool isOnboardingDone = 24;
-  PersonalInformationVisibility personalInformationVisibility = 25;
+  repeated OrganizationTag preferredOrganizationTags = 21;
+  string phoneNumber = 22;
+  bool isOnboardingDone = 23;
+  PersonalInformationVisibility personalInformationVisibility = 24;
 }
 
 message Customer {
@@ -115,12 +112,11 @@ message Customer {
   string defaultOrganizationId = 18;
   repeated string preferredLocationIds = 19;
   repeated string preferredResourceIds = 20;
-  repeated string preferredTeamIds = 21;
-  repeated string preferredOrganizationTagIds = 22;
-  string phoneNumber = 23;
-  bool isOnboardingDone = 24;
-  string displayableName = 25;
-  PersonalInformationVisibility personalInformationVisibility = 26;
+  repeated string preferredOrganizationTagIds = 21;
+  string phoneNumber = 22;
+  bool isOnboardingDone = 23;
+  string displayableName = 24;
+  PersonalInformationVisibility personalInformationVisibility = 25;
 }
 
 message Identity {
@@ -135,11 +131,6 @@ message Organization {
 }
 
 message Location {
-  string id = 1;
-  Organization organization = 3;
-}
-
-message Team {
   string id = 1;
   Organization organization = 3;
 }
@@ -188,16 +179,8 @@ message AddPreferredLocationInput {
   string locationId = 1;
 }
 
-message AddPreferredTeamInput {
-  string teamId = 1;
-}
-
 message RemovePreferredLocationInput {
   string locationId = 1;
-}
-
-message RemovePreferredTeamInput {
-  string teamId = 1;
 }
 
 message OrganizationTag {

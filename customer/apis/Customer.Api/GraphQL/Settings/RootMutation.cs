@@ -47,33 +47,6 @@ public class RootMutation(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<CustomerPayload> AddCustomerPreferredTeamAsync(
-        AddCustomerPreferredTeamInput input,
-        [Service] ICustomerTeamSettingsService customerTeamSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerTeamSettingsService.AddCustomerPreferredTeamAsync(
-            input.TeamId,
-            null,
-            false,
-            cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
-    }
-
-    [UseResolverScope]
-    public async Task<CustomerPayload> RemoveCustomerPreferredTeamAsync(
-        RemoveCustomerPreferredTeamInput input,
-        [Service] ICustomerTeamSettingsService customerTeamSettingsService,
-        CancellationToken cancellationToken)
-    {
-        var customer = await customerTeamSettingsService.RemoveCustomerPreferredTeamAsync(
-            input.TeamId,
-            null,
-            cancellationToken);
-        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
-    }
-
-    [UseResolverScope]
     public async Task<CustomerPayload> SetCustomerDefaultOrganizationAsync(
         SetCustomerDefaultOrganizationInput input,
         [Service] ICustomerOrganizationSettingsService customerOrganizationSettingsService,

@@ -18,8 +18,6 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options, Cust
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
-    public DbSet<Team> Team { get; set; }
-    public DbSet<TeamMember> TeamMember { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<StripeCustomer> StripeCustomer { get; set; }
     public DbSet<StripePaymentIntent> StripePaymentIntent { get; set; }

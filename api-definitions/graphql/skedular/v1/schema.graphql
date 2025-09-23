@@ -250,7 +250,6 @@ type CustomerDetails {
   preferredCustomTags: [OrganizationTagDetails!]!
   preferredLocations: [LocationDetails!]!
   preferredResources: [ResourceDetails!]!
-  preferredTeams: [TeamDetails!]!
   preferredZones: [OrganizationTagDetails!]!
   timezone: String
   title: String
@@ -451,7 +450,6 @@ type Mutation {
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
-  addCustomerPreferredTeam(input: AddCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   addCustomTag(input: AddCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
   addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
@@ -513,7 +511,6 @@ type Mutation {
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
-  removeCustomerPreferredTeam(input: RemoveCustomerPreferredTeamInput!): CustomerPayload! @cost(weight: "10")
   removeOrganizationMembers(input: RemoveOrganizationMembersInput!): OrganizationMembersDetailsPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   removeOrganizationSsoSettings(input: RemoveOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
@@ -1296,11 +1293,6 @@ input AddCustomerPreferredResourceInput {
   resourceId: String!
 }
 
-input AddCustomerPreferredTeamInput {
-  clientMutationId: String
-  teamId: String!
-}
-
 input AddFloorPlanInput {
   clientMutationId: String
   id: String
@@ -2032,11 +2024,6 @@ input RemoveCustomerPreferredOrganizationTagInput {
 input RemoveCustomerPreferredResourceInput {
   clientMutationId: String
   resourceId: String!
-}
-
-input RemoveCustomerPreferredTeamInput {
-  clientMutationId: String
-  teamId: String!
 }
 
 input RemoveOrganizationMembersInput {

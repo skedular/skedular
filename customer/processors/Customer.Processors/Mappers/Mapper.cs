@@ -11,8 +11,6 @@ using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Valu
 using Resource = Customer.Shared.Database.Entities.Resource;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
-using Team = Customer.Shared.Models.Team;
-using TeamMember = Customer.Shared.Database.Entities.TeamMember;
 
 namespace Customer.Processors.Mappers;
 
@@ -20,7 +18,6 @@ public interface IMapper
 {
     Organization MapTo(Event src);
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
-    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Shared.Models.Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -31,7 +28,6 @@ public interface IMapper
 
     Resource MapToEntity(Shared.Models.Resource src, Shared.Database.Entities.Location location);
     Resource MergeToEntity(Shared.Models.Resource src, Resource dest, Shared.Database.Entities.Location location);
-    Shared.Database.Entities.Team MergeToEntity(Team src, Shared.Database.Entities.Team dest, Shared.Database.Entities.Organization organization);
 
     OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
@@ -43,19 +39,6 @@ public interface IMapper
         OrganizationMember dest,
         Shared.Database.Entities.Organization organization,
         Shared.Database.Entities.Customer customer);
-
-    TeamMember MapToEntity(
-        Shared.Models.TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember);
-
-    TeamMember MergeToEntity(
-        Shared.Models.TeamMember src,
-        TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember);
 
     Shared.Database.Entities.OrganizationTag MapToEntity(OrganizationTag src, Shared.Database.Entities.Organization organization);
 
@@ -118,10 +101,7 @@ public class Mapper : IMapper
 
         organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
         {
-            Id = item.Id,
-            EventRaisedAt = eventRaisedAt,
-            Type = item.Type.ToNullableOrganizationTagType(),
-            Organization = organization
+            Id = item.Id, EventRaisedAt = eventRaisedAt, Type = item.Type.ToNullableOrganizationTagType(), Organization = organization
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -155,64 +135,9 @@ public class Mapper : IMapper
         };
 
         location.Resources = locationAfterState.Resources.Select(item =>
-            new Shared.Models.Resource
-            {
-                Id = item.Id,
-                DeletedAt = deletedAt,
-                EventRaisedAt = eventRaisedAt,
-                Location = location
-            }).ToList();
+            new Shared.Models.Resource { Id = item.Id, DeletedAt = deletedAt, EventRaisedAt = eventRaisedAt, Location = location }).ToList();
 
         return location;
-    }
-
-    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
-    {
-        var teamAfterState = src.Data.Team;
-        var deletedAt = teamAfterState.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        var team = new Team
-        {
-            Id = teamAfterState.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Organization = new Organization { Id = teamAfterState.OrganizationId }
-        };
-
-        team.TeamMembers = teamAfterState.Members.Select(item => new Shared.Models.TeamMember
-        {
-            Id = item.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Role = item.Role switch
-            {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Owner => TeamMemberRole.Owner,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Administrator => TeamMemberRole.Administrator,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Member => TeamMemberRole.Member,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Status = item.Status switch
-            {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active => TeamMemberStatus.Active,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Inactive => TeamMemberStatus.Inactive,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            Customer = new Shared.Models.Customer { Id = item.CustomerId },
-            OrganizationMember =
-                string.IsNullOrWhiteSpace(item.OrganizationMember?.OrganizationId) ||
-                string.IsNullOrWhiteSpace(item.OrganizationMember?.OrganizationMemberId)
-                    ? null
-                    : new Shared.Models.OrganizationMember
-                    {
-                        Id = item.OrganizationMember.OrganizationMemberId,
-                        Organization = new Organization { Id = item.OrganizationMember.OrganizationId },
-                        Customer = new Shared.Models.Customer { Id = item.OrganizationMember.CustomerId }
-                    },
-            Team = team
-        }).ToList();
-
-        return team;
     }
 
     public Shared.Models.Customer? MapTo(Shared.Database.Entities.Customer? src) =>
@@ -246,7 +171,6 @@ public class Mapper : IMapper
                 DefaultOrganization = MapTo(src.DefaultOrganization),
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
                 PreferredResources = MapTo(src.PreferredResources).ToList(),
-                PreferredTeams = MapTo(src.PreferredTeams).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
                 PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
             };
@@ -282,17 +206,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MergeToEntity(
-        Team src,
-        Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Organization = organization;
-        return dest;
-    }
-
     public OrganizationMember MapToEntity(
         Shared.Models.OrganizationMember src,
         Shared.Database.Entities.Organization organization,
@@ -311,30 +224,6 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToOrganizationMemberStatus();
         dest.Organization = organization;
         dest.Customer = customer;
-        return dest;
-    }
-
-    public TeamMember MapToEntity(
-        Shared.Models.TeamMember src,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember) =>
-        MergeToEntity(src, new TeamMember(), team, customer, organizationMember);
-
-    public TeamMember MergeToEntity(
-        Shared.Models.TeamMember src,
-        TeamMember dest,
-        Shared.Database.Entities.Team team,
-        Shared.Database.Entities.Customer customer,
-        OrganizationMember? organizationMember)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Role = src.Role.ToNullableTeamMemberRole();
-        dest.Status = src.Status.ToTeamMemberStatus();
-        dest.Team = team;
-        dest.Customer = customer;
-        dest.OrganizationMember = organizationMember;
         return dest;
     }
 
@@ -434,22 +323,6 @@ public class Mapper : IMapper
                 Location = MapTo(src.Location, false)!
             };
 
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
-
-    private static Team? MapTo(Shared.Database.Entities.Team? src) =>
-        src is null
-            ? null
-            : new Team
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Organization = MapTo(src.Organization)
-            };
-
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
@@ -463,7 +336,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToNullableOrganizationTagType(),
+                Type = src.Type.ToNullableOrganizationTagType()
             };
 
     private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>
