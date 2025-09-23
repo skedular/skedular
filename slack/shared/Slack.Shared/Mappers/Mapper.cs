@@ -249,6 +249,7 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
+            Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
             Type = src.Type switch
             {
                 LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
@@ -256,7 +257,7 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Resources = MapTo(src.Resources).ToList(),
-            HasFutureBooking = src.HasFutureBooking
+            HasFutureBooking = src.HasFutureBooking,
         };
 
     public Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
