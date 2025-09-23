@@ -22,7 +22,10 @@ public interface ILocationComponents
         CancellationToken cancellationToken);
 }
 
-public class LocationComponents(ICustomerService customerService, IOrganizationPermissionsService organizationPermissionsService)
+public class LocationComponents(
+    ICustomerService customerService,
+    IOrganizationPermissionsService organizationPermissionsService,
+    ILocationPermissionsService locationPermissionsService)
     : ILocationComponents
 {
     public async Task<ICollection<IActionElement>> GetAddLocationButtonAsync(
@@ -56,19 +59,25 @@ public class LocationComponents(ICustomerService customerService, IOrganizationP
         var blocks = new List<Block>();
         foreach (var location in locations)
         {
-            blocks.AddRange(GetLocationCard(location, customer, pageContext));
+            blocks.AddRange(await GetLocationCardAsync(workspaceMember, location, customer, pageContext, cancellationToken));
             blocks.Add(new DividerBlock());
         }
 
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetLocationCard(Location location, Customer customer, PageContext pageContext)
+    private async Task<List<Block>> GetLocationCardAsync(
+        WorkspaceMember workspaceMember,
+        Location location,
+        Customer customer,
+        PageContext pageContext,
+        CancellationToken cancellationToken)
     {
         pageContext = pageContext.Clone();
 
         var dailyUpdateChannel = location.DailyUpdateChannel is null ? string.Empty : location.DailyUpdateChannel.Name.ToSafeString();
         var resourceCapacity = location.Resources.Count == 0 ? "No resource exists" : location.Resources.Count.ToString();
+        var permissions = await locationPermissionsService.GetPermissionsAsync(workspaceMember.Id, location.Id, cancellationToken);
         var blocks = new List<Block>
         {
             new SectionBlock { Text = $"*Name*: {location.Name.ToSafeString()}".ToMarkdown() },
@@ -112,7 +121,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationP
             ]
         };
 
-        if (location.Permissions.CanModify)
+        if (permissions.CanModify)
         {
             actionMenu.Options.Add(new Option
             {
@@ -120,7 +129,7 @@ public class LocationComponents(ICustomerService customerService, IOrganizationP
             });
         }
 
-        if (location.Permissions.CanDelete)
+        if (permissions.CanDelete)
         {
             actionMenu.Options.Add(new Option
             {

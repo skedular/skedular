@@ -22,7 +22,8 @@ public interface ITeamComponents
         CancellationToken cancellationToken);
 }
 
-public class TeamComponents(IOrganizationPermissionsService organizationPermissionsService) : ITeamComponents
+public class TeamComponents(IOrganizationPermissionsService organizationPermissionsService, ITeamPermissionsService teamPermissionsService)
+    : ITeamComponents
 {
     public async Task<ICollection<IActionElement>> GetAddTeamButtonAsync(
         Workspace workspace,
@@ -54,16 +55,17 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
         var blocks = new List<Block>();
         foreach (var team in teams)
         {
-            blocks.AddRange(GetTeamCard(team));
+            blocks.AddRange(await GetTeamCardAsync(workspaceMember, team, cancellationToken));
             blocks.Add(new DividerBlock());
         }
 
         return blocks.SkipLast(1).ToList();
     }
 
-    private static List<Block> GetTeamCard(Team team)
+    private async Task<List<Block>> GetTeamCardAsync(WorkspaceMember workspaceMember, Team team, CancellationToken cancellationToken)
     {
         var dailyUpdateChannel = team.DailyUpdateChannel is null ? string.Empty : team.DailyUpdateChannel.Name.ToSafeString();
+        var permissions = await teamPermissionsService.GetPermissionsAsync(workspaceMember.Id, team.Id, cancellationToken);
         var primaryLocation = team.PrimaryLocation is null ? "N/A" : team.PrimaryLocation.Name;
         var blocks = new List<Block>
         {
@@ -85,7 +87,7 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
             ]
         };
 
-        if (team.Permissions.CanModify)
+        if (permissions.CanModify)
         {
             actionMenu.Options.Add(new Option
             {
@@ -93,7 +95,7 @@ public class TeamComponents(IOrganizationPermissionsService organizationPermissi
             });
         }
 
-        if (team.Permissions.CanDelete)
+        if (permissions.CanDelete)
         {
             actionMenu.Options.Add(new Option
             {
