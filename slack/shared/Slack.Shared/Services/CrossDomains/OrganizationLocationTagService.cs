@@ -13,6 +13,8 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface IOrganizationLocationTagService
 {
+    Task<OrganizationLocationTag> AdminGetAsync(string locationTagId, CancellationToken cancellationToken);
+
     Task<OrganizationLocationTag> AddAsync(
         string workspaceMemberId,
         OrganizationLocationTag organizationLocationTag,
@@ -49,6 +51,17 @@ public class OrganizationLocationTagService(
     IMapper mapper,
     HybridCache hybridCache) : IOrganizationLocationTagService
 {
+    public async Task<OrganizationLocationTag> AdminGetAsync(string locationTagId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyById(locationTagId),
+            async ct => mapper.MapTo(
+                await organizationServiceClient.Admin_GetLocationTagAsync(
+                    new Admin_GetLocationTagInput { Id = locationTagId },
+                    organizationConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: ct)),
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken: cancellationToken);
+
     public async Task<OrganizationLocationTag> AddAsync(
         string workspaceMemberId,
         OrganizationLocationTag organizationLocationTag,

@@ -43,7 +43,6 @@ public class BookingsPage(
     ICommonComponents commonComponents,
     BookingConfiguration bookingConfiguration,
     BookingService.BookingServiceClient bookingServiceClient,
-    IBookingService bookingService,
     IBookingComponents bookingComponents,
     IBookingsPageContextService bookingsPageContextService,
     IMapper mapper,
@@ -366,7 +365,6 @@ public class BookingsPage(
         var bookingConnection = response.First();
         var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
         var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
 
         ICollection<Block>[] blocks =
         [

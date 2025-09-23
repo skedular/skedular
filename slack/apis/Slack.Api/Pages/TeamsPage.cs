@@ -45,7 +45,7 @@ public class TeamsPage(
     IBookingsPage bookingsPage,
     ITeamComponents teamComponents,
     ITeamPermissionsService teamPermissionsService,
-    IBookingService bookingService,
+    IBookingPermissionsService bookingPermissionsService,
     ITeamService teamService,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
@@ -146,7 +146,7 @@ public class TeamsPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var teamId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions = await bookingService.GetTeamPermissionsAsync(teamId, workspaceMember, cancellationToken);
+            var bookingPermissions = await bookingPermissionsService.GetTeamPermissionsAsync(workspaceMember.Id, teamId, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new UnauthorizedAccessException();

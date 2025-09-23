@@ -11,6 +11,11 @@ service OrganizationService {
   rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
   rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
   rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
+  rpc Admin_GetTag (Admin_GetTagInput) returns (Tag);
+  rpc Admin_GetCustomTag (Admin_GetCustomTagInput) returns (CustomTag);
+  rpc Admin_GetZone (Admin_GetZoneInput) returns (Zone);
+  rpc Admin_GetProductTag (Admin_GetProductTagInput) returns (ProductTag);
+  rpc Admin_GetLocationTag (Admin_GetLocationTagInput) returns (LocationTag);
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc GetActiveOrganizationTermsOfUse (GetActiveOrganizationTermsOfUseInput) returns (TermsOfUse);
@@ -241,6 +246,10 @@ message Permissions {
   bool canViewAnalytics = 6;
 }
 
+message Admin_GetTagInput {
+  string id = 1;
+}
+
 message GetTagInput {
   string id = 1;
 }
@@ -352,6 +361,10 @@ enum CustomTagOrderField {
   CustomTagOrderField_Description = 1;
 }
 
+message Admin_GetCustomTagInput {
+  string id = 1;
+}
+
 message GetCustomTagInput {
   string id = 1;
 }
@@ -415,6 +428,10 @@ message ZoneOrderInput {
 enum ZoneOrderField {
   ZoneOrderField_Name = 0;
   ZoneOrderField_Description = 1;
+}
+
+message Admin_GetZoneInput {
+  string id = 1;
 }
 
 message GetZoneInput {
@@ -682,6 +699,10 @@ enum ProductTagOrderField {
   ProductTagOrderField_Description = 1;
 }
 
+message Admin_GetProductTagInput {
+  string id = 1;
+}
+
 message GetProductTagInput {
   string id = 1;
 }
@@ -745,6 +766,10 @@ message LocationTagOrderInput {
 enum LocationTagOrderField {
   LocationTagOrderField_Name = 0;
   LocationTagOrderField_Description = 1;
+}
+
+message Admin_GetLocationTagInput {
+  string id = 1;
 }
 
 message GetLocationTagInput {

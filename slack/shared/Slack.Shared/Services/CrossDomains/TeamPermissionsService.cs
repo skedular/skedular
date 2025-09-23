@@ -21,8 +21,7 @@ public class TeamPermissionsService(
     HybridCache hybridCache)
     : ITeamPermissionsService
 {
-    public async Task<TeamPermissions> GetPermissionsAsync(string workspaceMemberId, string teamId,
-        CancellationToken cancellationToken) =>
+    public async Task<TeamPermissions> GetPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
         await hybridCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, teamId),
             async ct => mapper.MapTo(

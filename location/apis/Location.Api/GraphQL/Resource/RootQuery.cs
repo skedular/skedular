@@ -11,7 +11,7 @@ public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
     public async Task<ResourceDetails?> ResourceAsync(string id, [Service] IResourceService resourceService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await resourceService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await resourceService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]

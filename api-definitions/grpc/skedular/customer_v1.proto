@@ -112,11 +112,11 @@ message Customer {
   string photoUrl512 = 15;
   string timezone = 16;
   string locale = 17;
-  Organization defaultOrganization = 18;
-  repeated Location preferredLocations = 19;
-  repeated Resource preferredResources = 20;
-  repeated Team preferredTeams = 21;
-  repeated OrganizationTag preferredOrganizationTags = 22;
+  string defaultOrganizationId = 18;
+  repeated string preferredLocationIds = 19;
+  repeated string preferredResourceIds = 20;
+  repeated string preferredTeamIds = 21;
+  repeated string preferredOrganizationTagIds = 22;
   string phoneNumber = 23;
   bool isOnboardingDone = 24;
   string displayableName = 25;
@@ -132,18 +132,15 @@ message Identity {
 message Organization {
   string id = 1;
   string uniqueAlphanumericName = 2;
-  string name = 3;
 }
 
 message Location {
   string id = 1;
-  string name = 2;
   Organization organization = 3;
 }
 
 message Team {
   string id = 1;
-  string name = 2;
   Organization organization = 3;
 }
 
@@ -205,9 +202,6 @@ message RemovePreferredTeamInput {
 
 message OrganizationTag {
   string id = 1;
-  string name = 2;
-  string type = 3;
-  string color = 4;
   Organization organization = 5;
 }
 
@@ -221,7 +215,6 @@ message RemovePreferredOrganizationTagInput {
 
 message Resource {
   string id = 1;
-  string name = 2;
   Location location = 3;
 }
 

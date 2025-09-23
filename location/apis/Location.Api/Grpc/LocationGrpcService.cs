@@ -252,11 +252,18 @@ public class LocationGrpcService(
         return connection;
     }
 
+    public override async Task<Resource> Admin_GetResource(Admin_GetResourceInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, true, context.CancellationToken));
+    }
+
     public override async Task<Resource> GetResource(GetResourceInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await resourceService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Resource> AddResource(AddResourceInput request, ServerCallContext context)

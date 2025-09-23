@@ -287,15 +287,7 @@ public class Mapper : IMapper
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
             IsOnboardingDone = src.IsOnboardingDone,
-            DefaultOrganization =
-                string.IsNullOrWhiteSpace(src.DefaultOrganization?.Id)
-                    ? new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization()
-                    : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization
-                    {
-                        Id = src.DefaultOrganization.Id,
-                        UniqueAlphanumericName = src.DefaultOrganization.UniqueAlphanumericName.ToSafeString(),
-                        Name = src.DefaultOrganization.Name.ToSafeString()
-                    },
+            DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
             DisplayableName = src.DisplayableName.ToSafeString(),
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
@@ -312,45 +304,10 @@ public class Mapper : IMapper
                 Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
 
-        customer.PreferredLocations.AddRange(src.PreferredLocations.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
-        {
-            Id = item.Id,
-            Name = item.Name.ToSafeString(),
-            Organization = item.Organization is null
-                ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
-        }));
-
-        customer.PreferredTeams.AddRange(src.PreferredTeams.Select(item => new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Team
-        {
-            Id = item.Id,
-            Name = item.Name.ToSafeString(),
-            Organization = item.Organization is null
-                ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
-        }));
-
-        customer.PreferredResources.AddRange(src.PreferredResources.Select(item =>
-        {
-            var resource = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Resource { Id = item.Id, Name = item.Name.ToSafeString() };
-
-            if (item.Location is not null)
-            {
-                resource.Location = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Location { Id = item.Location.Id };
-            }
-
-            return resource;
-        }));
-
-        customer.PreferredOrganizationTags.AddRange(src.PreferredOrganizationTags.Select(item =>
-            new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.OrganizationTag
-            {
-                Id = item.Id,
-                Name = item.Name.ToSafeString(),
-                Type = item.Type.ToNullableOrganizationTagType(),
-                Color = item.Color.ToSafeString(),
-                Organization = new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = item.Organization.Id }
-            }));
+        customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
+        customer.PreferredTeamIds.AddRange(src.PreferredTeams.Select(item => item.Id));
+        customer.PreferredResourceIds.AddRange(src.PreferredResources.Select(item => item.Id));
+        customer.PreferredOrganizationTagIds.AddRange(src.PreferredOrganizationTags.Select(item => item.Id));
 
         return customer;
     }
@@ -587,8 +544,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
-                Name = src.Name,
-                LogoUrl = src.LogoUrl,
                 Type = src.Type.ToOrganizationType()
             };
 
@@ -602,7 +557,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Organization = MapTo(src.Organization),
                 Resources = MapTo(src.Resources).ToList()
             };
@@ -620,9 +574,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
-                Color = src.Color,
                 Organization = new Organization { Id = src.Organization.Id }
             };
 
@@ -639,7 +591,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Location = src.Location is null ? null : new Location { Id = src.Location.Id }
             };
 
@@ -656,7 +607,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Organization = MapTo(src.Organization)
             };
 

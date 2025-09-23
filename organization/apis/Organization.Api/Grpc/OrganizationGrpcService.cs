@@ -280,11 +280,18 @@ public class OrganizationGrpcService(
         return connection;
     }
 
+    public override async Task<Tag> Admin_GetTag(Admin_GetTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+    }
+
     public override async Task<Tag> GetTag(GetTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Tag> AddTag(AddTagInput request, ServerCallContext context)
@@ -351,7 +358,14 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+    }
+
+    public override async Task<CustomTag> Admin_GetCustomTag(Admin_GetCustomTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseCustomTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<CustomTag> AddCustomTag(AddCustomTagInput request, ServerCallContext context)
@@ -414,11 +428,18 @@ public class OrganizationGrpcService(
         return connection;
     }
 
+    public override async Task<Zone> Admin_GetZone(Admin_GetZoneInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+    }
+
     public override async Task<Zone> GetZone(GetZoneInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseZone(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<Zone> AddZone(AddZoneInput request, ServerCallContext context)
@@ -511,7 +532,14 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
+    }
+
+    public override async Task<ProductTag> Admin_GetProductTag(Admin_GetProductTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseProductTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
     }
 
     public override async Task<ProductTag> AddProductTag(AddProductTagInput request, ServerCallContext context)
@@ -574,11 +602,18 @@ public class OrganizationGrpcService(
         return connection;
     }
 
+    public override async Task<LocationTag> Admin_GetLocationTag(Admin_GetLocationTagInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        return mapper.MapToGrpcResponseLocationTag(await tagService.GetByIdAsync(request.Id, true, context.CancellationToken));
+    }
+
     public override async Task<LocationTag> GetLocationTag(GetLocationTagInput request, ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponseLocationTag(await tagService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponseLocationTag(await tagService.GetByIdAsync(request.Id, false, context.CancellationToken));
     }
 
     public override async Task<LocationTag> AddLocationTag(AddLocationTagInput request, ServerCallContext context)

@@ -87,8 +87,6 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             UniqueAlphanumericName =
                 string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
-            Name = organizationAfterState.Name,
-            LogoUrl = organizationAfterState.LogoUrl,
             Type = organizationAfterState.Type switch
             {
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
@@ -122,9 +120,7 @@ public class Mapper : IMapper
         {
             Id = item.Id,
             EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
-            Color = item.Color,
             Organization = organization
         }).ToList();
 
@@ -155,7 +151,6 @@ public class Mapper : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = locationAfterState.Name,
             Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
 
@@ -165,7 +160,6 @@ public class Mapper : IMapper
                 Id = item.Id,
                 DeletedAt = deletedAt,
                 EventRaisedAt = eventRaisedAt,
-                Name = item.Name,
                 Location = location
             }).ToList();
 
@@ -183,7 +177,6 @@ public class Mapper : IMapper
             Id = teamAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = teamAfterState.Name,
             Organization = new Organization { Id = teamAfterState.OrganizationId }
         };
 
@@ -263,8 +256,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
-        dest.Name = src.Name;
-        dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
         return dest;
     }
@@ -276,7 +267,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Organization = organization;
         return dest;
     }
@@ -288,7 +278,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Location = location;
         return dest;
     }
@@ -300,7 +289,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Organization = organization;
         return dest;
     }
@@ -360,9 +348,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Type = src.Type.ToNullableOrganizationTagType();
-        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }
@@ -415,8 +401,6 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
-                Name = src.Name,
-                LogoUrl = src.LogoUrl,
                 Type = src.Type.ToOrganizationType()
             };
 
@@ -430,7 +414,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Organization = MapTo(src.Organization),
                 Resources = includeResources ? MapTo(src.Resources).ToList() : []
             };
@@ -448,7 +431,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Location = MapTo(src.Location, false)!
             };
 
@@ -465,7 +447,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Organization = MapTo(src.Organization)
             };
 
@@ -482,9 +463,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
-                Color = src.Color
             };
 
     private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>

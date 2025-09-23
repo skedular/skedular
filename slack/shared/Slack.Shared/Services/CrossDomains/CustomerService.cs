@@ -46,11 +46,16 @@ public class CustomerService(
     Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
     IMapper mapper,
     IRandomHelper randomHelper,
-    HybridCache hybridCache)
+    HybridCache hybridCache,
+    IOrganizationTagService organizationTagService,
+    ILocationService locationService,
+    ILocationResourceService locationResourceService,
+    IOrganizationService organizationService)
     : ICustomerService
 {
-    public async Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+    public async Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken)
+    {
+        var customer = await hybridCache.GetOrCreateAsync(
             CreateKeyById(customerId),
             async ct => mapper.MapTo(
                 await customerServiceClient.Admin_GetAsync(
@@ -59,6 +64,35 @@ public class CustomerService(
                     cancellationToken: ct))!,
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken: cancellationToken);
+
+        var locations =
+            await Task.WhenAll(customer.PreferredLocations.Select(item => locationService.AdminGetAsync(item.Id, cancellationToken)));
+
+        var resources =
+            await Task.WhenAll(customer.PreferredResources.Select(item => locationResourceService.AdminGetAsync(item.Id, cancellationToken)));
+
+        var organizationTags =
+            await Task.WhenAll(customer.PreferredOrganizationTags.Select(item => organizationTagService.AdminGetAsync(item.Id, cancellationToken)));
+
+        if (customer.DefaultOrganization is not null)
+        {
+            customer.DefaultOrganization = await organizationService.AdminGetAsync(customer.DefaultOrganization.Id, cancellationToken);
+        }
+
+        customer.PreferredLocations = customer.PreferredLocations
+            .Select(location => locations.FirstOrDefault(item => item.Id == location.Id) ?? location)
+            .ToList();
+
+        customer.PreferredResources = customer.PreferredResources
+            .Select(resource => resources.FirstOrDefault(item => item.Id == resource.Id) ?? resource)
+            .ToList();
+
+        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags
+            .Select(organizationTag => organizationTags.FirstOrDefault(item => item.Id == organizationTag.Id) ?? organizationTag)
+            .ToList();
+
+        return customer;
+    }
 
     public async Task<Customer> AdminAddAsync(
         WorkspaceMember workspaceMember,

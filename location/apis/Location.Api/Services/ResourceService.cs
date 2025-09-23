@@ -23,7 +23,7 @@ public interface IResourceService
     Task<ICollection<Resource>> DeleteAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Resource>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Resource>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
-    Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Resource> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Resource>>, int)> GetPaginatedResourcesAsync(
         PaginationInputParam paginationInputParam,
@@ -362,19 +362,26 @@ public class ResourceService(
         return updatedResources;
     }
 
-    public async Task<Resource> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<Resource> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        Shared.Database.Entities.Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
+        }
+
         var resource = await cachedResourceService.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await cachedLocationService.GetByIdAsync(resource.Location.Id, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck &&
+            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer!.Id, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.Organization.Id, customer.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck &
+            !await organizationAuthorizationService.CanViewAsync(existingLocation.Organization.Id, customer!.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

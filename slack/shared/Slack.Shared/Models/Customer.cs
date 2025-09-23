@@ -22,11 +22,6 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? PhotoUrl512 { get; set; }
     public string? PhoneNumber { get; set; }
     public bool? IsOnboardingDone { get; set; }
-    public string? DefaultOrganizationId { get; set; }
-    public ICollection<string> PreferredLocationIds { get; set; } = [];
-    public ICollection<string> PreferredResourceIds { get; set; } = [];
-    public ICollection<string> PreferredTeamIds { get; set; } = [];
-    public ICollection<string> PreferredOrganizationTagIds { get; set; } = [];
     public ICollection<Identity> Identities { get; set; } = [];
 
     public Organization? DefaultOrganization { get; set; }

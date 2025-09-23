@@ -57,6 +57,8 @@ public interface IMapper
     OrganizationProductTag MapTo(ProductTag src);
     OrganizationLocationTag MapTo(LocationTag src);
     OrganizationTag MapTo(Tag src);
+    TeamBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
+    OrganizationBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
 }
 
 public class Mapper : IMapper
@@ -307,11 +309,14 @@ public class Mapper : IMapper
                 PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
                 IsOnboardingDone = src.IsOnboardingDone,
                 Identities = MapTo(src.Identities).ToList(),
-                DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
-                PreferredLocationIds = src.PreferredLocations.Select(item => item.Id).ToList(),
-                PreferredResourceIds = src.PreferredResources.Select(item => item.Id).ToList(),
-                PreferredTeamIds = src.PreferredTeams.Select(item => item.Id).ToList(),
-                PreferredOrganizationTagIds = src.PreferredOrganizationTags.Select(item => item.Id).ToList()
+                DefaultOrganization =
+                    string.IsNullOrWhiteSpace(src.DefaultOrganizationId)
+                        ? null
+                        : new Organization { Id = src.DefaultOrganizationId.ToSafeString() },
+                PreferredLocations = src.PreferredLocationIds.Select(item => new Location { Id = item }).ToList(),
+                PreferredResources = src.PreferredResourceIds.Select(item => new Resource { Id = item }).ToList(),
+                PreferredTeams = src.PreferredTeamIds.Select(item => new Team { Id = item }).ToList(),
+                PreferredOrganizationTags = src.PreferredOrganizationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
             };
 
     public OrganizationPermissions MapTo(Permissions src) =>
@@ -378,6 +383,24 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Color = src.Color.ToSafeString(),
             Type = src.TagType.ToSafeString().ToOrganizationTagType()
+        };
+
+    public TeamBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src) =>
+        new()
+        {
+            CanViewBookings = src.CanViewBookings,
+            CanAddBooking = src.CanAddBooking,
+            CanUpdateBooking = src.CanUpdateBooking,
+            CanDeleteBooking = src.CanDeleteBooking
+        };
+
+    public OrganizationBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src) =>
+        new()
+        {
+            CanViewBookings = src.CanViewBookings,
+            CanAddBooking = src.CanAddBooking,
+            CanUpdateBooking = src.CanUpdateBooking,
+            CanDeleteBooking = src.CanDeleteBooking
         };
 
     public OrganizationBillingDetails MapTo(BillingDetails src) =>

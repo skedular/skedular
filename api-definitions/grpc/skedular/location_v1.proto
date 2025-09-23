@@ -9,6 +9,7 @@ service LocationService {
   rpc Admin_Add (Admin_AddInput) returns (Location);
   rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
   rpc Admin_Get (Admin_GetInput) returns (Location);
+  rpc Admin_GetResource (Admin_GetResourceInput) returns (Resource);
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc Get (GetInput) returns (Location);
@@ -244,6 +245,10 @@ message ResourceOrderInput {
 
 enum ResourceOrderField {
   ResourceOrderField_ResourceName = 0;
+}
+
+message Admin_GetResourceInput {
+  string id = 1;
 }
 
 message GetResourceInput {

@@ -16,7 +16,7 @@ namespace Organization.Api.Services;
 
 public interface ITagService
 {
-    Task<Tag> GetByIdAsync(string tagId, CancellationToken cancellationToken);
+    Task<Tag> GetByIdAsync(string tagId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> AddAsync(Tag tag, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Tag> UpdateAsync(Tag tag, CancellationToken cancellationToken);
     Task<Tag> DeleteAsync(string tagId, CancellationToken cancellationToken);
@@ -42,18 +42,23 @@ public class TagService(
     ICachedTagService cachedTagService,
     ICachedOrganizationService cachedOrganizationService) : ITagService
 {
-    public async Task<Tag> GetByIdAsync(string tagId, CancellationToken cancellationToken)
+    public async Task<Tag> GetByIdAsync(string tagId, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        Shared.Database.Entities.Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
+        }
+
         var tag = await cachedTagService.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
         var existingOrganization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
                                        tag.Organization.Id,
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck && !await organizationAuthorizationService.CanViewAsync(existingOrganization, customer!.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

@@ -21,8 +21,7 @@ public class LocationPermissionsService(
     HybridCache hybridCache)
     : ILocationPermissionsService
 {
-    public async Task<LocationPermissions> GetPermissionsAsync(string workspaceMemberId, string locationId,
-        CancellationToken cancellationToken) =>
+    public async Task<LocationPermissions> GetPermissionsAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
         await hybridCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, locationId),
             async ct => mapper.MapTo(

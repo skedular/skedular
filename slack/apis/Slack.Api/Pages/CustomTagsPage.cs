@@ -38,7 +38,7 @@ public class CustomTagsPage(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingsPage bookingsPage,
-    IBookingService bookingService,
+    IBookingPermissionsService bookingPermissionsService,
     IOrganizationPermissionsService organizationPermissionsService,
     ICustomTagComponents customTagComponents,
     ICommonComponents commonComponents,
@@ -148,7 +148,8 @@ public class CustomTagsPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var locationId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+            var bookingPermissions =
+                await bookingPermissionsService.GetOrganizationPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new UnauthorizedAccessException();

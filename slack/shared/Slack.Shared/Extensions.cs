@@ -89,6 +89,7 @@ public static class Extensions
             .AddSingleton<IOrganizationProductTagService, OrganizationProductTagService>()
             .AddSingleton<IOrganizationLocationTagService, OrganizationLocationTagService>()
             .AddSingleton<ILocationResourceService, LocationResourceService>()
+            .AddSingleton<IBookingPermissionsService, BookingPermissionsService>()
             .AddSingleton<IOrganizationBillingService, OrganizationBillingService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>

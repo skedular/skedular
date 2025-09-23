@@ -13,6 +13,8 @@ namespace Slack.Shared.Services.CrossDomains;
 
 public interface IOrganizationProductTagService
 {
+    Task<OrganizationProductTag> AdminGetAsync(string productTagId, CancellationToken cancellationToken);
+
     Task<OrganizationProductTag> AddAsync(
         string workspaceMemberId,
         OrganizationProductTag organizationProductTag,
@@ -49,6 +51,17 @@ public class OrganizationProductTagService(
     IMapper mapper,
     HybridCache hybridCache) : IOrganizationProductTagService
 {
+    public async Task<OrganizationProductTag> AdminGetAsync(string productTagId, CancellationToken cancellationToken) =>
+        await hybridCache.GetOrCreateAsync(
+            CreateKeyById(productTagId),
+            async ct => mapper.MapTo(
+                await organizationServiceClient.Admin_GetProductTagAsync(
+                    new Admin_GetProductTagInput { Id = productTagId },
+                    organizationConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: ct)),
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken: cancellationToken);
+
     public async Task<OrganizationProductTag> AddAsync(
         string workspaceMemberId,
         OrganizationProductTag organizationProductTag,

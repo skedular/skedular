@@ -57,7 +57,7 @@ public class HomePage(
     ICommonComponents commonComponents,
     IBookingComponents bookingComponents,
     ICustomerService customerService,
-    IBookingService bookingService,
+    IBookingPermissionsService bookingPermissionsService,
     TimeProvider timeProvider,
     IBookingsPageContextService bookingsPageContextService) :
     IHomePage,
@@ -225,7 +225,10 @@ public class HomePage(
         {
             case BookingActionTypes.Bookings:
                 {
-                    var permissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+                    var permissions = await bookingPermissionsService.GetOrganizationPermissionsAsync(
+                        workspaceMember.Id,
+                        workspace.Organization.Id,
+                        cancellationToken);
                     if (!permissions.CanViewBookings)
                     {
                         throw new UnauthorizedAccessException();

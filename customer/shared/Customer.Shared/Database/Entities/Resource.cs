@@ -9,8 +9,6 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Resource : ReplicatedEntityBaseWithDeleted
 {
-    public string? Name { get; set; }
-
     public virtual Location? Location { get; set; }
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
 }
@@ -22,10 +20,6 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceNameLength);
-
         builder.HasOne(item => item.Location).WithMany(item => item.Resources);
-
-        builder.HasIndex(item => item.Name);
     }
 }

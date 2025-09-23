@@ -24,7 +24,7 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> CustomTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -37,7 +37,7 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> ZoneAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -50,7 +50,7 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> ProductTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
@@ -63,7 +63,7 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<OrganizationTagDetails?> LocationTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await tagService.GetByIdAsync(id, cancellationToken));
+        mapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
 
     [UseResolverScope]
     [Lookup]

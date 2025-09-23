@@ -48,7 +48,7 @@ public class LocationsPage(
     IResourcesPage resourcesPage,
     ILocationComponents locationComponents,
     ILocationPermissionsService locationPermissionsService,
-    IBookingService bookingService,
+    IBookingPermissionsService bookingPermissionsService,
     IResourcesPageContextService resourcesPageContextService,
     IMapper mapper,
     IBookingsPageContextService bookingsPageContextService,
@@ -155,7 +155,8 @@ public class LocationsPage(
         if (action.SelectedOption.Value.StartsWith(BookingActionTypes.Bookings))
         {
             var locationId = action.SelectedOption.Value[BookingActionTypes.Bookings.Length..];
-            var bookingPermissions = await bookingService.GetOrganizationPermissionsAsync(workspace, workspaceMember, cancellationToken);
+            var bookingPermissions =
+                await bookingPermissionsService.GetOrganizationPermissionsAsync(workspaceMember.Id, workspace.Organization.Id, cancellationToken);
             if (!bookingPermissions.CanViewBookings)
             {
                 throw new UnauthorizedAccessException();

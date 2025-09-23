@@ -109,7 +109,7 @@ public class AzureTenantIntegrations(
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(anyCustomerExistByVerifiableTokenResponse.Customer.DefaultOrganizationId))
                 {
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput
@@ -148,7 +148,7 @@ public class AzureTenantIntegrations(
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: cancellationToken);
 
-                if (string.IsNullOrWhiteSpace(anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganization?.Id))
+                if (string.IsNullOrWhiteSpace(anyCustomerExistByEmailTokenResponse.Customer.DefaultOrganizationId))
                 {
                     await customerServiceClient.Admin_SetDefaultOrganizationAsync(
                         new Admin_SetDefaultOrganizationInput

@@ -21,7 +21,9 @@ public class OrganizationPermissionsService(
     HybridCache hybridCache)
     : IOrganizationPermissionsService
 {
-    public async Task<OrganizationPermissions> GetPermissionsAsync(string workspaceMemberId, string organizationId,
+    public async Task<OrganizationPermissions> GetPermissionsAsync(
+        string workspaceMemberId,
+        string organizationId,
         CancellationToken cancellationToken) =>
         await hybridCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, organizationId),

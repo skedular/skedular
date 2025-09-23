@@ -9,8 +9,6 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Team : ReplicatedEntityBaseWithDeleted
 {
-    public string? Name { get; set; }
-
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
@@ -23,10 +21,6 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
-
         builder.HasOne(item => item.Organization).WithMany(item => item.Teams);
-
-        builder.HasIndex(item => item.Name);
     }
 }
