@@ -1,28 +1,24 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Enterprise.Shared.Grpc;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
 using Slack.Shared.Configurations;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class CancelBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
+    IPageNavigator pageNavigator,
+    IBookingService bookingService) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
@@ -37,10 +33,7 @@ public class CancelBookingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CancelBookingContext.Deserialize(action.Value);
 
-        await bookingServiceClient.DeleteAsync(
-            new DeleteInput { Id = context.BookingId },
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await bookingService.RemoveAsync(workspaceMember.Id, context.BookingId, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

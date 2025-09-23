@@ -8,7 +8,6 @@ using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using OrganizationTag = Booking.Shared.Database.Entities.OrganizationTag;
 using Resource = Booking.Shared.Database.Entities.Resource;
-using Team = Booking.Shared.Database.Entities.Team;
 using Type = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
@@ -77,7 +76,7 @@ public class CustomerSubscriber(
         {
             preferredLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(item.Id, null, cancellationToken));
         }
-        
+
         var preferredResources = new List<Resource>();
         foreach (var item in customer.PreferredResources)
         {

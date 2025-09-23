@@ -21,7 +21,7 @@ public interface IBookingPermissionsService
 public class BookingPermissionsService(
     ApplicationConfiguration applicationConfiguration,
     BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
+    Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
     HybridCache hybridCache) : IBookingPermissionsService
 {

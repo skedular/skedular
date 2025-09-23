@@ -34,7 +34,7 @@ public interface ILocationResourceService
 
 public class LocationResourceService(
     ApplicationConfiguration applicationConfiguration,
-    OrganizationConfiguration locationConfiguration,
+    LocationConfiguration locationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
     IMapper mapper,
     HybridCache hybridCache,

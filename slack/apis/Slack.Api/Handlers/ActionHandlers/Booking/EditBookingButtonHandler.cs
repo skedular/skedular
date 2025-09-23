@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
@@ -15,16 +14,14 @@ using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
-using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
 using Customer = Slack.Shared.Models.Customer;
-using GetInput = Api.Shared.Services.Grpc.Skedular.Booking.V1.GetInput;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
@@ -36,7 +33,8 @@ public class EditBookingButtonHandler(
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    IBookingService bookingService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string ResourcesKey = "Resources";
@@ -54,13 +52,8 @@ public class EditBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(action.Value);
-        var booking = mapper.MapTo(await bookingServiceClient.GetAsync(
-            new GetInput { Id = context.BookingId },
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken));
-
+        var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
         var bookingDate = new SectionBlock { Text = booking.From.ToShortDateWithoutYear().ToPlainTextWithIcon(Icons.Calendar) };
-
         if (booking.InvolvedCustomers.Count != 1)
         {
             // TODO: 20250427 - Morteza: We currently do not support handling multiple customers involved in a single booking in Slack 
@@ -162,12 +155,7 @@ public class EditBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = EditBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var booking = mapper.MapTo(
-            await bookingServiceClient.GetAsync(
-                new GetInput { Id = context.BookingId },
-                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken));
-
+        var booking = await bookingService.GetAsync(workspaceMember.Id, context.BookingId, cancellationToken);
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(OptionLoaderKeys.OrganizationMemberKey, out var organizationMemberBlock))
         {
@@ -199,15 +187,6 @@ public class EditBookingButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    var getPaginatedLocationsInput = new GetPaginatedLocationsInput
-                    {
-                        First = ((int?)null).ToNullInt(),
-                        Last = ((int?)null).ToNullInt(),
-                        Where = new LocationWhereInput { OrganizationId = workspace.Organization.Id }
-                    };
-                    getPaginatedLocationsInput.OrderBy.AddRange([
-                        new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name }
-                    ]);
                     booking.Resources = value.SelectedOptions.Select(item => new Shared.Models.Resource { Id = item.Value }).ToList();
                 }
                 else
@@ -269,13 +248,7 @@ public class EditBookingButtonHandler(
             throw new InvalidOperationException("notes block is missing");
         }
 
-        var updateBooking = mapper.MapTo(booking);
-        updateBooking.Type = BookingType.WorkingFromOffice;
-
-        await bookingServiceClient.UpdateAsync(
-            updateBooking,
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await bookingService.UpdateAsync(workspaceMember.Id, booking, cancellationToken);
 
         await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 

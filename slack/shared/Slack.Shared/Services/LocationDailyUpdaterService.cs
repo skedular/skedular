@@ -12,6 +12,7 @@ using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Icons = Slack.Shared.Constants.Icons;
 using OrderDirection = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection;
 

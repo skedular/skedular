@@ -44,7 +44,7 @@ public class LocationService(
 {
     public async Task<ICollection<Location>> AdminGetAllLocationsAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var getPaginatedLocationsInput = new GetPaginatedLocationsInput
+        var getPaginatedLocationsInput = new Admin_GetPaginatedLocationsInput
         {
             First = ((int?)null).ToNullInt(),
             After = string.Empty,
@@ -55,7 +55,7 @@ public class LocationService(
 
         getPaginatedLocationsInput.OrderBy.Add(new LocationOrderInput { Direction = OrderDirection.Ascending, Field = LocationOrderField.Name });
 
-        var connection = await locationServiceClient.GetPaginatedLocationsAsync(
+        var connection = await locationServiceClient.Admin_GetPaginatedLocationsAsync(
             getPaginatedLocationsInput,
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);

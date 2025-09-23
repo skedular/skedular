@@ -16,6 +16,7 @@ using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
+using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
@@ -121,6 +122,20 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
+            Type = src.Type switch
+            {
+                BookingType.WorkingFromHome => Api.Shared.Services.Models.BookingType.WorkingFromHome,
+                BookingType.WorkingFromOffice => Api.Shared.Services.Models.BookingType.WorkingFromOffice,
+                BookingType.WorkingFromCoworkingSpace => Api.Shared.Services.Models.BookingType.WorkingFromCoworkingSpace,
+                BookingType.SickLeave => Api.Shared.Services.Models.BookingType.SickLeave,
+                BookingType.AnnualLeave => Api.Shared.Services.Models.BookingType.AnnualLeave,
+                BookingType.WellbeingLeave => Api.Shared.Services.Models.BookingType.WellbeingLeave,
+                BookingType.ClientOffice => Api.Shared.Services.Models.BookingType.ClientOffice,
+                BookingType.Vacation => Api.Shared.Services.Models.BookingType.Vacation,
+                BookingType.TravelingForWork => Api.Shared.Services.Models.BookingType.TravelingForWork,
+                BookingType.NonWorkingDay => Api.Shared.Services.Models.BookingType.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Resources = MapTo(src.Resources).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -257,7 +272,7 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             Resources = MapTo(src.Resources).ToList(),
-            HasFutureBooking = src.HasFutureBooking,
+            HasFutureBooking = src.HasFutureBooking
         };
 
     public Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)

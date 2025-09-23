@@ -14,10 +14,14 @@ using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using SlackNet.WebApi;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingType = Api.Shared.Services.Models.BookingType;
+using Customer = Slack.Shared.Models.Customer;
+using Organization = Slack.Shared.Models.Organization;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
@@ -31,7 +35,8 @@ public class InstantAddBookingButtonHandler(
     IBookingComponents bookingComponents,
     IRandomHelper randomHelper,
     IMapper mapper,
-    IPageNavigator pageNavigator) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
+    IPageNavigator pageNavigator,
+    IBookingService bookingService) : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>
 {
     public async Task HandleAsync(ButtonAction action, BlockActionRequest request, CancellationToken cancellationToken)
     {
@@ -86,26 +91,22 @@ public class InstantAddBookingButtonHandler(
             var slackApiClient = workspace.GetApiClient();
             if (bookingConnection.TotalCount == 0)
             {
-                var addInput = new AddInput
-                {
-                    Id = randomHelper.Generate(),
-                    From = context.From.ToTimestamp(),
-                    Until = context.Until.ToTimestamp(),
-                    Type = BookingType.WorkingFromOffice
-                };
-
-                addInput.CustomerIds.Add(customerId);
-                addInput.OrganizationIds.Add(workspace.Organization.Id);
-                if (!string.IsNullOrWhiteSpace(context.TeamId.ToSafeString()))
-                {
-                    addInput.TeamIds.Add(context.TeamId);
-                }
-
-                var booking = mapper.MapTo(
-                    await bookingServiceClient.AddAsync(
-                        addInput,
-                        bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                        cancellationToken: cancellationToken));
+                var booking = await bookingService.AddAsync(
+                    workspaceMember.Id,
+                    new Shared.Models.Booking
+                    {
+                        Id = randomHelper.Generate(),
+                        From = context.From,
+                        Until = context.Until,
+                        Type = BookingType.WorkingFromOffice,
+                        InvolvedCustomers = [new Customer { Id = customerId }],
+                        InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
+                        InvolvedTeams =
+                            string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
+                                ? []
+                                : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                    },
+                    cancellationToken);
 
                 var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
                 var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
@@ -126,25 +127,22 @@ public class InstantAddBookingButtonHandler(
         }
         else
         {
-            var addInput = new AddInput
-            {
-                Id = randomHelper.Generate(),
-                From = context.From.ToTimestamp(),
-                Until = context.Until.ToTimestamp(),
-                Type = BookingType.WorkingFromOffice
-            };
-
-            addInput.CustomerIds.Add(customerId);
-            addInput.OrganizationIds.Add(workspace.Organization.Id);
-            if (!string.IsNullOrWhiteSpace(context.TeamId.ToSafeString()))
-            {
-                addInput.TeamIds.Add(context.TeamId);
-            }
-
-            await bookingServiceClient.AddAsync(
-                addInput,
-                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken);
+            _ = await bookingService.AddAsync(
+                workspaceMember.Id,
+                new Shared.Models.Booking
+                {
+                    Id = randomHelper.Generate(),
+                    From = context.From,
+                    Until = context.Until,
+                    Type = BookingType.WorkingFromOffice,
+                    InvolvedCustomers = [new Customer { Id = customerId }],
+                    InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
+                    InvolvedTeams =
+                        string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
+                            ? []
+                            : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                },
+                cancellationToken);
 
             await pageNavigator.BackAsync(
                 workspace,

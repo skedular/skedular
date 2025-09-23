@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,7 @@ using Slack.Shared.Services;
 using Slack.Shared.Services.Cache;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.AspNetCore;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using CustomerService = Slack.Shared.Services.CrossDomains.CustomerService;
 using LocationService = Slack.Shared.Services.CrossDomains.LocationService;
 using OrganizationService = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService;
@@ -90,6 +90,7 @@ public static class Extensions
             .AddSingleton<IOrganizationLocationTagService, OrganizationLocationTagService>()
             .AddSingleton<ILocationResourceService, LocationResourceService>()
             .AddSingleton<IBookingPermissionsService, BookingPermissionsService>()
+            .AddSingleton<IBookingService, Services.CrossDomains.BookingService>()
             .AddSingleton<IOrganizationBillingService, OrganizationBillingService>();
 
     public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>

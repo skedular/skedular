@@ -1,11 +1,8 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
-using Google.Protobuf.WellKnownTypes;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -19,26 +16,24 @@ using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
-using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 using Option = SlackNet.Blocks.Option;
+using Organization = Slack.Shared.Models.Organization;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class AddBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    BookingConfiguration bookingConfiguration,
     ICustomerService customerService,
     ITeamService teamService,
-    BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
-    IPageNavigator pageNavigator)
+    IPageNavigator pageNavigator,
+    IBookingService bookingService)
     : IAsyncPageRenderingCallbacks, IBlockActionHandler<ButtonAction>, IViewSubmissionHandler
 {
     private const string DateKey = "Date";
@@ -118,10 +113,13 @@ public class AddBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = AddBookingContext.Deserialize(viewSubmission.View.PrivateMetadata);
-        var addInput = new AddInput
+        var booking = new Shared.Models.Booking
         {
-            Id = randomHelper.Generate(), Type = BookingType.WorkingFromOffice, OrganizationIds = { workspace.Organization.Id }
+            Id = randomHelper.Generate(),
+            Type = BookingType.WorkingFromOffice,
+            InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }]
         };
+
         var values = viewSubmission.View.State.Values;
         if (values.TryGetValue(DateKey, out var dateBlock))
         {
@@ -131,8 +129,8 @@ public class AddBookingButtonHandler(
                 {
                     ArgumentNullException.ThrowIfNull(value.SelectedDate);
                     var from = value.SelectedDate.Value.ToDateTimeOffset();
-                    addInput.From = from.ToTimestamp();
-                    addInput.Until = from.EndOfDay().ToTimestamp();
+                    booking.From = from;
+                    booking.Until = from.EndOfDay();
                 }
                 else
                 {
@@ -156,7 +154,7 @@ public class AddBookingButtonHandler(
                 if (block is ExternalSelectValue value)
                 {
                     ArgumentException.ThrowIfNullOrWhiteSpace(value.SelectedOption?.Value);
-                    addInput.CustomerIds.Add(value.SelectedOption.Value);
+                    booking.InvolvedCustomers = [new Customer { Id = value.SelectedOption.Value }];
                 }
                 else
                 {
@@ -170,7 +168,7 @@ public class AddBookingButtonHandler(
         }
         else
         {
-            addInput.CustomerIds.Add(customerId);
+            booking.InvolvedCustomers = [new Customer { Id = customerId }];
         }
 
         if (values.TryGetValue(OptionLoaderKeys.OrganizationTeamKey, out var teamBlock))
@@ -181,7 +179,7 @@ public class AddBookingButtonHandler(
                 {
                     if (!string.IsNullOrWhiteSpace(value.SelectedOption?.Value))
                     {
-                        addInput.TeamIds.Add(value.SelectedOption.Value);
+                        booking.InvolvedTeams = [new Shared.Models.Team { Id = value.SelectedOption.Value }];
                     }
                 }
                 else
@@ -205,7 +203,7 @@ public class AddBookingButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    addInput.Notes = value.Value.ToSafeString();
+                    booking.Notes = value.Value.ToSafeString();
                 }
                 else
                 {
@@ -222,10 +220,7 @@ public class AddBookingButtonHandler(
             throw new InvalidOperationException("notes block is missing");
         }
 
-        await bookingServiceClient.AddAsync(
-            addInput,
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
+        await bookingService.AddAsync(workspaceMember.Id, booking, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

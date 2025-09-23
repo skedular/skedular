@@ -11,6 +11,7 @@ using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
 using Organization = Slack.Shared.Models.Organization;
