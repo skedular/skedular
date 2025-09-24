@@ -1,10 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
-using Google.Protobuf.WellKnownTypes;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -13,12 +9,12 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using SlackNet.WebApi;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 using Organization = Slack.Shared.Models.Organization;
@@ -28,8 +24,6 @@ namespace Slack.Api.Handlers.ActionHandlers.Booking;
 public class InstantAddBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IBookingComponents bookingComponents,
@@ -58,35 +52,32 @@ public class InstantAddBookingButtonHandler(
                 context.CustomerId = customerId;
             }
 
-            var getPaginatedBookingsInput = new GetPaginatedBookingsInput
-            {
-                After = string.Empty,
-                First = 1,
-                Before = string.Empty,
-                Last = ((int?)null).ToNullInt(),
-                Where = new BookingWhereInput
-                {
-                    FromGte = context.From.ToTimestamp(), FromLte = context.Until.ToTimestamp(), IncludeMineOnly = true
-                }
-            };
-            getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-            if (!string.IsNullOrWhiteSpace(context.LocationId))
-            {
-                getPaginatedBookingsInput.Where.LocationIds.Add(context.LocationId);
-            }
-
-            if (!string.IsNullOrWhiteSpace(context.TeamId))
-            {
-                getPaginatedBookingsInput.Where.TeamIds.Add(context.TeamId);
-            }
-
-            getPaginatedBookingsInput.OrderBy.AddRange([
-                new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-            ]);
-            var bookingConnection = await bookingServiceClient.GetPaginatedBookingsAsync(
-                getPaginatedBookingsInput,
-                bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-                cancellationToken: cancellationToken);
+            var bookingConnection = await bookingService.GetPaginatedBookingsAsync(
+                workspaceMember.Id,
+                new BookingSearchCriteria(
+                    null,
+                    context.From,
+                    null,
+                    context.Until,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    [],
+                    true,
+                    null,
+                    [workspace.Organization.Id],
+                    string.IsNullOrWhiteSpace(context.LocationId) ? [] : [context.LocationId],
+                    string.IsNullOrWhiteSpace(context.TeamId) ? [] : [context.TeamId],
+                    []),
+                string.Empty,
+                1,
+                string.Empty,
+                ((int?)null).ToNullInt(),
+                cancellationToken);
 
             var slackApiClient = workspace.GetApiClient();
             if (bookingConnection.TotalCount == 0)
@@ -117,7 +108,7 @@ public class InstantAddBookingButtonHandler(
             else
             {
                 var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
-                var booking = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).First();
+                var booking = bookingConnection.Edges.Select(item => item.Node).First();
                 var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
                 blocks.AddRange(bookingCardBlocks);
 

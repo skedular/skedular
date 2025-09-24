@@ -232,7 +232,7 @@ public class BookingGrpcService(
             context.CancellationToken);
 
         var availableResources = new AvailableResources();
-        availableResources.Resources.AddRange(mapper.MapToGrpcResponse(resources));
+        availableResources.ResourceIds.AddRange(resources.Select(item => item.Id));
 
         return availableResources;
     }

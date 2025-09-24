@@ -1,10 +1,7 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Time;
-using Google.Protobuf.WellKnownTypes;
 using Slack.Api.Components;
 using Slack.Api.Mappers;
 using Slack.Api.Services;
@@ -12,6 +9,7 @@ using Slack.Shared;
 using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
@@ -20,7 +18,7 @@ using SlackNet.Blocks;
 using SlackNet.Events;
 using SlackNet.Interaction;
 using Booking = Slack.Shared.Models.Booking;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using BookingEdge = Slack.Shared.Models.BookingEdge;
 using Button = SlackNet.Blocks.Button;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
@@ -42,8 +40,6 @@ public interface IHomePage
 public class HomePage(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
     IWorkspaceMemberService workspaceMemberService,
     IRepositoryFactory repositoryFactory,
     IHomePageContextService homePageContextService,
@@ -59,7 +55,8 @@ public class HomePage(
     ICustomerService customerService,
     IBookingPermissionsService bookingPermissionsService,
     TimeProvider timeProvider,
-    IBookingsPageContextService bookingsPageContextService) :
+    IBookingsPageContextService bookingsPageContextService,
+    IBookingService bookingService) :
     IHomePage,
     IAsyncPageRenderingCallbacks,
     IEventHandler<AppHomeOpened>,
@@ -588,8 +585,8 @@ public class HomePage(
                 cancellationToken),
             GetMyBookingsAsync(workspace, workspaceMember, from, until, cancellationToken));
         var bookingConnection = response.First();
-        var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
-        var myBookings = response.Last().Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var bookings = bookingConnection.Edges.Select(item => item.Node).ToList();
+        var myBookings = response.Last().Edges.Select(item => item.Node).ToList();
 
         var asyncBlocks = await Task.WhenAll(
             GetBookingCalendarSettingBlocksAsync(workspaceMember, myBookings, commonPageContext.PageContext, cancellationToken),
@@ -623,7 +620,7 @@ public class HomePage(
             cancellationToken);
     }
 
-    private async Task<BookingConnection> GetPaginatedBookingsAsync(
+    private async Task<Connection<BookingEdge>> GetPaginatedBookingsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         string? after,
@@ -633,46 +630,66 @@ public class HomePage(
         DateTimeOffset from,
         DateTimeOffset until,
         bool includeMyBookingsOnly,
-        CancellationToken cancellationToken)
-    {
-        var getPaginatedBookingsInput = new GetPaginatedBookingsInput
-        {
-            After = after.ToSafeString(),
-            First = first.ToNullInt(),
-            Before = before.ToSafeString(),
-            Last = last.ToNullInt(),
-            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = includeMyBookingsOnly }
-        };
-        getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
+        CancellationToken cancellationToken) =>
+        await bookingService.GetPaginatedBookingsAsync(
+            workspaceMember.Id,
+            new BookingSearchCriteria(
+                null,
+                from,
+                null,
+                until,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                includeMyBookingsOnly,
+                null,
+                [workspace.Organization.Id],
+                [],
+                [],
+                []),
+            after,
+            first,
+            before,
+            last,
+            cancellationToken);
 
-        return await bookingServiceClient.GetPaginatedBookingsAsync(
-            getPaginatedBookingsInput,
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
-
-    private async Task<BookingConnection> GetMyBookingsAsync(
+    private async Task<Connection<BookingEdge>> GetMyBookingsAsync(
         Workspace workspace,
         WorkspaceMember workspaceMember,
         DateTimeOffset from,
         DateTimeOffset until,
-        CancellationToken cancellationToken)
-    {
-        var getPaginatedBookingsInput = new GetPaginatedBookingsInput
-        {
-            First = ((int?)null).ToNullInt(),
-            Last = ((int?)null).ToNullInt(),
-            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
-        };
-        getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-        getPaginatedBookingsInput.OrderBy.AddRange([new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }]);
-
-        return await bookingServiceClient.GetPaginatedBookingsAsync(
-            getPaginatedBookingsInput,
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMember.Id),
-            cancellationToken: cancellationToken);
-    }
+        CancellationToken cancellationToken) =>
+        await bookingService.GetPaginatedBookingsAsync(
+            workspaceMember.Id,
+            new BookingSearchCriteria(
+                null,
+                from,
+                null,
+                until,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                true,
+                null,
+                [workspace.Organization.Id],
+                [],
+                [],
+                []),
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            cancellationToken);
 
     private static ICollection<Block> GetTitle() =>
     [
@@ -761,9 +778,9 @@ public class HomePage(
         ];
     }
 
-    private static List<Block> GetBookingsSearchCriteriaAndPaginationBlocks(BookingConnection bookingConnection, PageContext pageContext)
+    private static List<Block> GetBookingsSearchCriteriaAndPaginationBlocks(Connection<BookingEdge> bookingConnection, PageContext pageContext)
     {
-        if (bookingConnection.Edges.Count == 0)
+        if (!bookingConnection.Edges.Any())
         {
             return [new SectionBlock { Text = "No booking found".ToMarkdown() }];
         }

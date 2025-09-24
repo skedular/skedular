@@ -74,7 +74,6 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
     IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src);
-    IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src);
 }
 
 public class Mapper : IMapper
@@ -369,11 +368,11 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
-            PaidByCustomer = MapToGrpcResponse(src.PaidByCustomer),
-            PaidByOrganization = MapToGrpcResponse(src.PaidByOrganization),
-            CreatedByCustomer = MapToGrpcResponse(src.CreatedByCustomer),
-            LastModifiedByCustomer = MapToGrpcResponse(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapToGrpcResponse(src.DeletedByCustomer),
+            PaidByCustomerId = src.PaidByCustomer?.Id.ToSafeString(),
+            PaidByOrganizationId = src.PaidByOrganization?.Id.ToSafeString(),
+            CreatedByCustomerId = src.CreatedByCustomer?.Id.ToSafeString(),
+            LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id.ToSafeString(),
+            DeletedByCustomerId = src.DeletedByCustomer?.Id.ToSafeString(),
             BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
             PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
             BookedOnMarketplace = src.BookedOnMarketplace,
@@ -396,11 +395,11 @@ public class Mapper : IMapper
             };
         }
 
-        booking.InvolvedCustomers.AddRange(MapToGrpcResponse(src.InvolvedCustomers));
-        booking.InvolvedOrganizations.AddRange(MapToGrpcResponse(src.InvolvedOrganizations));
-        booking.InvolvedLocations.AddRange(MapToGrpcResponse(src.InvolvedLocations));
-        booking.InvolvedTeams.AddRange(MapToGrpcResponse(src.InvolvedTeams));
-        booking.Resources.AddRange(MapToGrpcResponse(src.Resources));
+        booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
+        booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
+        booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
+        booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
+        booking.ResourceIds.AddRange(src.Resources.Select(item => item.Resource.Id));
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
         booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
         booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
@@ -500,96 +499,10 @@ public class Mapper : IMapper
     public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
     public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item => MapTo(item, []));
 
-    public IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource> MapToGrpcResponse(IEnumerable<Resource> src) =>
-        src.Select(item => MapToGrpcResponse(item, []));
-
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer> MapToGrpcResponse(IEnumerable<Customer> src) =>
-        src.Select(MapToGrpcResponse)!;
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization> MapToGrpcResponse(
-        IEnumerable<Shared.Models.Organization> src) =>
-        src.Select(MapToGrpcResponse)!;
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location> MapToGrpcResponse(
-        IEnumerable<Shared.Models.Location> src) =>
-        src.Select(MapToGrpcResponse)!;
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team> MapToGrpcResponse(IEnumerable<Shared.Models.Team> src) =>
-        src.Select(MapToGrpcResponse)!;
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer? MapToGrpcResponse(Customer? src)
-    {
-        if (src is null)
-        {
-            return null;
-        }
-
-        var customer = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Customer
-        {
-            Id = src.Id,
-            Designation = src.Designation.ToSafeString(),
-            Title = src.Title.ToSafeString(),
-            Timezone = src.Timezone.ToSafeString(),
-            Locale = src.Locale.ToSafeString(),
-            Name = src.Name.ToSafeString(),
-            GivenName = src.GivenName.ToSafeString(),
-            MiddleName = src.MiddleName.ToSafeString(),
-            FamilyName = src.FamilyName.ToSafeString(),
-            PhotoUrl = src.PhotoUrl.ToSafeString(),
-            PhotoUrl24 = src.PhotoUrl24.ToSafeString(),
-            PhotoUrl32 = src.PhotoUrl32.ToSafeString(),
-            PhotoUrl48 = src.PhotoUrl48.ToSafeString(),
-            PhotoUrl72 = src.PhotoUrl72.ToSafeString(),
-            PhotoUrl192 = src.PhotoUrl192.ToSafeString(),
-            PhotoUrl512 = src.PhotoUrl512.ToSafeString(),
-            PhoneNumber = src.PhoneNumber.ToSafeString()
-        };
-
-        customer.Identities.AddRange(MapToGrpcResponse(src.Identities));
-
-        return customer;
-    }
-
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity> MapToGrpcResponse(IEnumerable<Identity> src) =>
-        src.Select(MapToGrpcResponse);
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Identity MapToGrpcResponse(Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization? MapToGrpcResponse(Shared.Models.Organization? src) =>
-        src is null
-            ? null
-            : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Organization
-            {
-                Id = src.Id,
-                UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
-                Name = src.Name.ToSafeString(),
-                ContactEmail = src.ContactEmail.ToSafeString(),
-                ContactPhone = src.ContactPhone.ToSafeString()
-            };
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location? MapToGrpcResponse(Shared.Models.Location? src) =>
-        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team? MapToGrpcResponse(Shared.Models.Team? src) =>
-        src is null ? null : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Team { Id = src.Id, Name = src.Name.ToSafeString() };
-
-    private static IEnumerable<OrganizationCustomTag> MapToGrpcResponseCustomTags(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.Custom).Select(MapToGrpcResponseCustomTag);
-
-    private static OrganizationCustomTag MapToGrpcResponseCustomTag(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    private static IEnumerable<OrganizationZone> MapToGrpcResponseZones(IEnumerable<OrganizationTag> src) =>
-        src.Where(item => item.Type == OrganizationTagType.Zone).Select(MapToGrpcResponseZone);
-
-    private static OrganizationZone MapToGrpcResponseZone(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
 
     private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 
@@ -651,29 +564,6 @@ public class Mapper : IMapper
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
         new() { ResourceId = src.Id, LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource MapToGrpcResponse(Resource src, IEnumerable<Customer> customers)
-    {
-        var resource = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Color = src.Color.ToSafeString(),
-            Capacity = src.Capacity,
-            ResourceType = MapTo(src.OrganizationTags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type))),
-            Location = src.Location is null
-                ? null
-                : new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Location { Id = src.Location.Id, Name = src.Location.Name.ToSafeString() }
-        };
-
-        resource.OrganizationCustomTags.AddRange(MapToGrpcResponseCustomTags(src.OrganizationTags));
-        resource.OrganizationZones.AddRange(MapToGrpcResponseZones(src.OrganizationTags));
-        resource.Customers.Add(MapToGrpcResponse(customers));
-
-        return resource;
-    }
-
-    private static ResourceType MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString() };
-
     private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
         src.Select(item => MapTo(item.Resource, item.Customers));
 
@@ -691,10 +581,6 @@ public class Mapper : IMapper
             Resource = MapTo(src.Resource)
         };
 
-    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource>
-        MapToGrpcResponse(IEnumerable<ResourceCustomersPair> src) =>
-        src.Select(item => MapToGrpcResponse(item.Resource, item.Customers));
-
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(
         IEnumerable<BookingSchedule> src) =>
         src.Select(MapToGrpcResponse);
@@ -702,8 +588,7 @@ public class Mapper : IMapper
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
 
-    private static IEnumerable<LineItem> MapToGrpcResponse(IEnumerable<ProductVersionLineItem> src) =>
-        src.Select(MapToGrpcResponse);
+    private static IEnumerable<LineItem> MapToGrpcResponse(IEnumerable<ProductVersionLineItem> src) => src.Select(MapToGrpcResponse);
 
     private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
         new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };

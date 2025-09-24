@@ -43,20 +43,18 @@ public class LocationResourceService(
     IOrganizationProductTagService organizationProductTagService,
     IOrganizationTagService organizationTagService) : ILocationResourceService
 {
-    public async Task<Resource> AdminGetAsync(string resourceId, CancellationToken cancellationToken)
-    {
-        var resource = await hybridCache.GetOrCreateAsync(
-            CreateKeyById(resourceId),
-            async ct => mapper.MapTo(
-                await locationServiceClient.Admin_GetResourceAsync(
-                    new Admin_GetResourceInput { Id = resourceId },
-                    locationConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
-            cancellationToken: cancellationToken);
-
-        return await AdminEnrichAsync(resource, cancellationToken);
-    }
+    public async Task<Resource> AdminGetAsync(string resourceId, CancellationToken cancellationToken) =>
+        await AdminEnrichAsync(
+            await hybridCache.GetOrCreateAsync(
+                CreateKeyById(resourceId),
+                async ct => mapper.MapTo(
+                    await locationServiceClient.Admin_GetResourceAsync(
+                        new Admin_GetResourceInput { Id = resourceId },
+                        locationConfiguration.ApiKey.CreateMetadata(),
+                        cancellationToken: ct)),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                cancellationToken: cancellationToken),
+            cancellationToken);
 
     public async Task<Resource> AddAsync(string workspaceMemberId, Resource resource, CancellationToken cancellationToken)
     {
@@ -127,20 +125,19 @@ public class LocationResourceService(
         await hybridCache.RemoveAsync(key, cancellationToken);
     }
 
-    public async Task<Resource> GetAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken)
-    {
-        var resource = await hybridCache.GetOrCreateAsync(
-            CreateKeyById(resourceId),
-            async ct => mapper.MapTo(
-                await locationServiceClient.GetResourceAsync(
-                    new GetResourceInput { Id = resourceId },
-                    locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
-            cancellationToken: cancellationToken);
-
-        return await EnrichAsync(workspaceMemberId, resource, cancellationToken);
-    }
+    public async Task<Resource> GetAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken) =>
+        await EnrichAsync(
+            workspaceMemberId,
+            await hybridCache.GetOrCreateAsync(
+                CreateKeyById(resourceId),
+                async ct => mapper.MapTo(
+                    await locationServiceClient.GetResourceAsync(
+                        new GetResourceInput { Id = resourceId },
+                        locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
+                        cancellationToken: ct)),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                cancellationToken: cancellationToken),
+            cancellationToken);
 
     public async Task<Connection<ResourceEdge>> GetPaginatedResourcesAsync(
         string workspaceMemberId,

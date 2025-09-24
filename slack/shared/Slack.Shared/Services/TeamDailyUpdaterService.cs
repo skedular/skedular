@@ -1,20 +1,15 @@
-using Api.Shared.Clients.Configurations.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
-using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Components;
 using Slack.Shared.Constants;
 using Slack.Shared.Context;
 using Slack.Shared.Mappers;
+using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.WebApi;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Icons = Slack.Shared.Constants.Icons;
-using OrderDirection = Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection;
 
 namespace Slack.Shared.Services;
 
@@ -24,14 +19,13 @@ public interface ITeamDailyUpdaterService
 }
 
 public class TeamDailyUpdaterService(
-    BookingConfiguration bookingConfiguration,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
-    BookingService.BookingServiceClient bookingServiceClient,
     IBookingComponents bookingComponents,
     IWorkspaceMemberService workspaceMemberService,
     TimeProvider timeProvider,
-    ITeamService teamService) : ITeamDailyUpdaterService
+    ITeamService teamService,
+    IBookingService bookingService) : ITeamDailyUpdaterService
 {
     public async Task SendDailyUpdateAsync(string teamId, CancellationToken cancellationToken)
     {
@@ -64,24 +58,32 @@ public class TeamDailyUpdaterService(
         var from = new DateTimeOffset(convertedNow.Year, convertedNow.Month, convertedNow.Day, 0, 0, 0, TimeSpan.Zero)
             .StartOfDay();
         var until = from.EndOfDay();
-        var getPaginatedBookingsInput = new Admin_GetPaginatedBookingsInput
-        {
-            After = string.Empty,
-            First = TeamBookingsPageSize,
-            Before = string.Empty,
-            Last = ((int?)null).ToNullInt(),
-            Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp() }
-        };
-        getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
-        getPaginatedBookingsInput.Where.TeamIds.Add(teamId);
-        getPaginatedBookingsInput.OrderBy.AddRange([
-            new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
-        ]);
-        var bookingConnection = await bookingServiceClient.Admin_GetPaginatedBookingsAsync(
-            getPaginatedBookingsInput,
-            bookingConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
-        var bookings = bookingConnection.Edges.Select(item => mapper.MapTo(item.Node)).ToList();
+        var bookingConnection = await bookingService.Admin_GetPaginatedBookingsAsync(
+            new BookingSearchCriteria(
+                null,
+                from,
+                null,
+                until,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                false,
+                null,
+                [workspace.Organization.Id],
+                [],
+                [teamId],
+                []),
+            string.Empty,
+            TeamBookingsPageSize,
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            cancellationToken);
+        var bookings = bookingConnection.Edges.Select(item => item.Node).ToList();
         var blocks = new List<Block>
         {
             new SectionBlock { Text = "*Who's in today?*".ToMarkdown() },

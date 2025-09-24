@@ -1,8 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
@@ -11,7 +9,6 @@ using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
 using Organization = Slack.Shared.Models.Organization;
@@ -27,15 +24,14 @@ public interface IWorkspaceMemberService
 }
 
 public class WorkspaceMemberService(
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     ICustomerService customerService,
     IOrganizationMemberService organizationMemberService,
-    ILocationService locationService) : IWorkspaceMemberService
+    ILocationService locationService,
+    IBookingService bookingService) : IWorkspaceMemberService
 {
     public async Task ReSyncWorkspaceMembersAsync(string workspaceId, CancellationToken cancellationToken)
     {
@@ -129,10 +125,35 @@ public class WorkspaceMemberService(
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
         ]);
-        var bookingConnection = await bookingServiceClient.GetPaginatedBookingsAsync(
-            getPaginatedBookingsInput,
-            bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberEntity.Id),
-            cancellationToken: cancellationToken);
+
+        var bookingSearchCriteria = new BookingSearchCriteria(
+            null,
+            from,
+            null,
+            until,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [],
+            true,
+            null,
+            [workspace.Organization.Id],
+            [],
+            [],
+            []);
+
+        var bookingConnection = await bookingService.GetPaginatedBookingsAsync(
+            workspaceMemberEntity.Id,
+            bookingSearchCriteria,
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            cancellationToken);
 
         if (bookingConnection.TotalCount != 0)
         {

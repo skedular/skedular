@@ -61,4 +61,8 @@
         <EmbeddedResource Include="EmailTemplates\NewSlackWorkspaceJoined\template.txt"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="Models\CustomerSearch.cs"/>
+    </ItemGroup>
+
 </Project>

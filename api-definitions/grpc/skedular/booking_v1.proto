@@ -137,20 +137,20 @@ message Booking {
   google.protobuf.Timestamp from = 2;
   google.protobuf.Timestamp to = 3;
   string notes = 4;
-  repeated Resource resources = 5;
+  repeated string resourceIds = 5;
   BookingType type = 6;
   PaymentStatus paymentStatus = 7;
   bool isPaymentRequired = 8;
-  repeated Customer involvedCustomers = 9;
-  repeated Organization involvedOrganizations = 10;
-  repeated Location involvedLocations = 11;
-  repeated Team involvedTeams = 12;
+  repeated string involvedCustomerIds = 9;
+  repeated string involvedOrganizationIds = 10;
+  repeated string involvedLocationIds = 11;
+  repeated string involvedTeamIds = 12;
   repeated BookingSchedule Schedules = 13;
-  Customer paidByCustomer = 14;
-  Organization paidByOrganization = 15;
-  Customer createdByCustomer = 16;
-  Customer lastModifiedByCustomer = 17;
-  Customer deletedByCustomer = 18;
+  string paidByCustomerId = 14;
+  string paidByOrganizationId = 15;
+  string createdByCustomerId = 16;
+  string lastModifiedByCustomerId = 17;
+  string deletedByCustomerId = 18;
   repeated LineItem lineItems = 19;
   BookingCheckoutSession bookingCheckoutSession = 20;
   google.protobuf.Timestamp paymentExpiry = 21;
@@ -164,63 +164,6 @@ message Booking {
   string InvoiceUrl = 29;
   string InvoiceNumber = 30;
   repeated string InvoiceEmailList = 31;
-}
-
-message Customer {
-  string id = 1;
-  repeated Identity identities = 2;
-  string designation = 3;
-  string title = 4;
-  string name = 5;
-  string givenName = 6;
-  string middleName = 7;
-  string familyName = 8;
-  string photoUrl = 9;
-  string photoUrl24 = 10;
-  string photoUrl32 = 11;
-  string photoUrl48 = 12;
-  string photoUrl72 = 13;
-  string photoUrl192 = 14;
-  string photoUrl512 = 15;
-  string timezone = 16;
-  string locale = 17;
-  string phoneNumber = 18;
-}
-
-message Identity {
-  string id = 1;
-  string email = 2;
-  bool emailVerified = 3;
-}
-
-message Organization {
-  string id = 1;
-  string uniqueAlphanumericName = 2;
-  string name = 3;
-  string contactEmail = 4;
-  string contactPhone = 5;
-}
-
-message Location {
-  string id = 1;
-  string name = 2;
-}
-
-message Team {
-  string id = 1;
-  string name = 2;
-}
-
-message OrganizationCustomTag {
-  string id = 1;
-  string name = 2;
-  string color = 3;
-}
-
-message OrganizationZone {
-  string id = 1;
-  string name = 2;
-  string color = 3;
 }
 
 message GetOrganizationPermissionsInput {
@@ -255,7 +198,7 @@ message AddInput {
   google.protobuf.Timestamp until = 3;
   string notes = 4;
   BookingType type = 5;
-   repeated string customerIds = 6;
+  repeated string customerIds = 6;
   repeated string organizationIds = 7;
   repeated string teamIds = 8;
   repeated string resourceIds = 9;
@@ -277,18 +220,6 @@ message DeleteInput {
   string id = 1;
 }
 
-message Resource {
-  string id = 1;
-  string name = 2;
-  Location location = 3;
-  repeated OrganizationCustomTag organizationCustomTags = 4;
-  repeated OrganizationZone organizationZones = 5;
-  string color = 6;
-  repeated Customer customers = 7;
-  ResourceType resourceType = 8;
-  int32 capacity = 9;
-}
-
 message GetAvailableResourcesInput {
   string organizationId = 1;
   string locationId = 2;
@@ -301,13 +232,7 @@ message GetAvailableResourcesInput {
 }
 
 message AvailableResources {
-  repeated Resource resources = 1;
-}
-
-message ResourceType {
-  string id = 1;
-  string name = 2;
-  string color = 3;
+  repeated string resourceIds = 1;
 }
 
 message BookingSchedule {

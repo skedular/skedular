@@ -48,8 +48,7 @@ public class TeamsPage(
     IBookingPermissionsService bookingPermissionsService,
     ITeamService teamService,
     IMapper mapper,
-    IBookingsPageContextService bookingsPageContextService,
-    ICustomerService customerService) :
+    IBookingsPageContextService bookingsPageContextService) :
     ITeamsPage,
     IAsyncPageRenderingCallbacks,
     IBlockActionHandler<StaticSelectAction>,

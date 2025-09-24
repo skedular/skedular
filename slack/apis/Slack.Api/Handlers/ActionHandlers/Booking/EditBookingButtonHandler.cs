@@ -1,10 +1,6 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Time;
-using Google.Protobuf.WellKnownTypes;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
 using Slack.Api.Services;
@@ -18,7 +14,6 @@ using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using Customer = Slack.Shared.Models.Customer;
 using Icons = Slack.Shared.Constants.Icons;
 using Option = SlackNet.Blocks.Option;
@@ -28,8 +23,6 @@ namespace Slack.Api.Handlers.ActionHandlers.Booking;
 public class EditBookingButtonHandler(
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient,
     IRepositoryFactory repositoryFactory,
     IWorkspaceMemberService workspaceMemberService,
     IMapper mapper,
@@ -263,19 +256,13 @@ public class EditBookingButtonHandler(
         Shared.Models.Booking booking,
         CancellationToken cancellationToken)
     {
-        var getAvailableResourcesInput = new GetAvailableResourcesInput
-        {
-            OrganizationId = workspace.Organization.Id, From = booking.From.ToDate().ToTimestamp(), Until = booking.Until.ToDate().ToTimestamp()
-        };
-
-        getAvailableResourcesInput.ResourceIdsToInclude.AddRange(booking.Resources.Select(item => item.Id));
-
-        var availableResources = (await bookingServiceClient.GetAvailableResourcesAsync(
-                getAvailableResourcesInput,
-                bookingConfiguration.ApiKey.CreateMetadata(request.User.Id),
-                cancellationToken: cancellationToken)).Resources
-            .Where(item => item.Location is not null)
-            .ToList();
+        var availableResources = await bookingService.GetAvailableResourcesAsync(
+            request.User.Id,
+            workspace.Organization.Id,
+            booking.From.ToDate(),
+            booking.Until.ToDate(),
+            booking.Resources.Select(item => item.Id).ToList(),
+            cancellationToken);
 
         var resourcesOptions = availableResources.Select(item =>
         {
