@@ -13,6 +13,5 @@ public enum TeamMemberOrderField
     Name,
     GivenName,
     MiddleName,
-    FamilyName,
-    PhoneNumber
+    FamilyName
 }

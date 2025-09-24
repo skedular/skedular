@@ -352,7 +352,6 @@ enum TeamMemberOrderField {
   GIVEN_NAME
   MIDDLE_NAME
   FAMILY_NAME
-  PHONE_NUMBER
 }
 
 enum TeamMemberRole {

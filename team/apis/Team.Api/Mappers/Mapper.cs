@@ -109,14 +109,6 @@ public class Mapper : IMapper
                 GivenName = src.GivenName,
                 MiddleName = src.MiddleName,
                 FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber,
                 Identities = MapTo(src.Identities).ToList()
             };
 

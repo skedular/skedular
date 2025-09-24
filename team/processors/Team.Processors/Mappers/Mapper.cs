@@ -81,14 +81,6 @@ public class Mapper : IMapper
             GivenName = customer.GivenName,
             MiddleName = customer.MiddleName,
             FamilyName = customer.FamilyName,
-            PhotoUrl = customer.PhotoUrl,
-            PhotoUrl24 = customer.PhotoUrl24,
-            PhotoUrl32 = customer.PhotoUrl32,
-            PhotoUrl48 = customer.PhotoUrl48,
-            PhotoUrl72 = customer.PhotoUrl72,
-            PhotoUrl192 = customer.PhotoUrl192,
-            PhotoUrl512 = customer.PhotoUrl512,
-            PhoneNumber = customer.PhoneNumber,
             Identities = customer.Identities.Select(item =>
                     new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
@@ -220,14 +212,6 @@ public class Mapper : IMapper
         dest.GivenName = src.GivenName;
         dest.MiddleName = src.MiddleName;
         dest.FamilyName = src.FamilyName;
-        dest.PhotoUrl = src.PhotoUrl;
-        dest.PhotoUrl24 = src.PhotoUrl24;
-        dest.PhotoUrl32 = src.PhotoUrl32;
-        dest.PhotoUrl48 = src.PhotoUrl48;
-        dest.PhotoUrl72 = src.PhotoUrl72;
-        dest.PhotoUrl192 = src.PhotoUrl192;
-        dest.PhotoUrl512 = src.PhotoUrl512;
-        dest.PhoneNumber = src.PhoneNumber;
         dest.Identities = identities;
         return dest;
     }
@@ -427,14 +411,6 @@ public class Mapper : IMapper
                 GivenName = src.GivenName,
                 MiddleName = src.MiddleName,
                 FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber,
                 Identities = MapTo(src.Identities).ToList()
             };
 

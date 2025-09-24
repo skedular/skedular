@@ -67,17 +67,6 @@ public class Mapper : IMapper
             Id = customer.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = customer.Name,
-            GivenName = customer.GivenName,
-            MiddleName = customer.MiddleName,
-            FamilyName = customer.FamilyName,
-            PhotoUrl = customer.PhotoUrl,
-            PhotoUrl24 = customer.PhotoUrl24,
-            PhotoUrl32 = customer.PhotoUrl32,
-            PhotoUrl48 = customer.PhotoUrl48,
-            PhotoUrl72 = customer.PhotoUrl72,
-            PhotoUrl192 = customer.PhotoUrl192,
-            PhotoUrl512 = customer.PhotoUrl512,
             Identities = customer.Identities
                 .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
@@ -181,17 +170,6 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
-        dest.Name = src.Name;
-        dest.GivenName = src.GivenName;
-        dest.MiddleName = src.MiddleName;
-        dest.FamilyName = src.FamilyName;
-        dest.PhotoUrl = src.PhotoUrl;
-        dest.PhotoUrl24 = src.PhotoUrl24;
-        dest.PhotoUrl32 = src.PhotoUrl32;
-        dest.PhotoUrl48 = src.PhotoUrl48;
-        dest.PhotoUrl72 = src.PhotoUrl72;
-        dest.PhotoUrl192 = src.PhotoUrl192;
-        dest.PhotoUrl512 = src.PhotoUrl512;
         dest.Identities = identities;
         return dest;
     }

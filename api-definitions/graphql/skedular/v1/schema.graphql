@@ -2637,7 +2637,6 @@ enum TeamMemberOrderField {
   GIVEN_NAME
   MIDDLE_NAME
   NAME
-  PHONE_NUMBER
   ROLE
   STATUS
 }
