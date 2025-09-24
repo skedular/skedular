@@ -484,7 +484,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
@@ -536,14 +535,13 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name
+                EventRaisedAt = src.EventRaisedAt
             };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name, Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+        new() { Id = src.Id, Type = src.Type.ToNullableOrganizationTagType() };
 
     private static Resource MapTo(Shared.Database.Entities.Resource src) =>
         new()
@@ -553,11 +551,9 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
             Capacity = src.Capacity,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
             OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 

@@ -9,9 +9,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class OrganizationTag : ReplicatedEntityBaseWithDeleted
 {
-    public string? Name { get; set; }
     public string? Type { get; set; }
-    public string? Color { get; set; }
 
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
@@ -28,13 +26,10 @@ public class OrganizationTagConfiguration : IEntityTypeConfiguration<Organizatio
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxTagNameLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxTagTypeLength);
-        builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Tags);
 
-        builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Type);
     }
 }

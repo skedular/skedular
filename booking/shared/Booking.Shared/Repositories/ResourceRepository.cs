@@ -136,7 +136,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Customers)
             .Include(query => query.OrganizationTags)
-            .OrderBy(query => query.Name)
+            .OrderBy(query => query.Id)
             .ToListAsync(cancellationToken);
 
         return resources;

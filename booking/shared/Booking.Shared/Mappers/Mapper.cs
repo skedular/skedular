@@ -314,18 +314,16 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
-            Name = src.Name,
             Capacity = src.Capacity,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
-            Color = src.Color,
             OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name, Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
+        new() { Id = src.Id, Type = src.Type.ToNullableOrganizationTagType() };
 
     private static IEnumerable<Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 
@@ -360,7 +358,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
@@ -375,8 +372,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name
+                EventRaisedAt = src.EventRaisedAt
             };
 
     private IEnumerable<ProductVersion> MapTo(IEnumerable<Database.Entities.ProductVersion> src) =>

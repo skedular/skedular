@@ -189,9 +189,7 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
-            Color = item.Color,
             Organization = organization
         }).ToList();
 
@@ -222,7 +220,6 @@ public class Mapper : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = locationAfterState.Name,
             OpeningHours = MapTo(locationAfterState.OpeningHours),
             Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
@@ -239,10 +236,8 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = item.Name,
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
-            Color = item.Color,
             Capacity = item.Capacity,
             IsAvailableHoursOverridden = item.IsAvailableHoursOverridden,
             AvailableHours = item.AvailableHours is null ? null : MapTo(item.AvailableHours),
@@ -264,7 +259,6 @@ public class Mapper : IMapper
             Id = teamAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = teamAfterState.Name,
             Organization = new Organization { Id = teamAfterState.OrganizationId }
         };
 
@@ -377,7 +371,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
         dest.OrganizationTags = organizationTags;
@@ -391,7 +384,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Organization = organization;
         return dest;
     }
@@ -448,10 +440,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
-        dest.Color = src.Color;
         dest.Capacity = src.Capacity;
         dest.IsAvailableHoursOverridden = src.IsAvailableHoursOverridden;
         dest.AvailableHours = src.AvailableHours;
@@ -513,9 +503,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Type = src.Type.ToNullableOrganizationTagType();
-        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }
