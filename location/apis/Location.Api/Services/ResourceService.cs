@@ -380,7 +380,7 @@ public class ResourceService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!ignoreAuthorizationCheck &
+        if (!ignoreAuthorizationCheck &&
             !await organizationAuthorizationService.CanViewAsync(existingLocation.Organization.Id, customer!.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
