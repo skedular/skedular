@@ -144,7 +144,7 @@ public class BookingService(
                         new GetInput { Id = bookingId },
                         bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                         cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken),
             cancellationToken);
 
@@ -345,7 +345,7 @@ public class BookingService(
             await hybridCache.SetAsync(
                 key,
                 booking,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }

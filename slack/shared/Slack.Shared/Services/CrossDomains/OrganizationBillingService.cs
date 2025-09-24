@@ -98,7 +98,7 @@ public class OrganizationBillingService(
                     new GetBillingDetailsInput { OrganizationId = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     private async Task CacheAsync(ICollection<OrganizationBillingDetails> organizationBillingDetails, CancellationToken cancellationToken)
@@ -111,7 +111,7 @@ public class OrganizationBillingService(
             await hybridCache.SetAsync(
                 key,
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }

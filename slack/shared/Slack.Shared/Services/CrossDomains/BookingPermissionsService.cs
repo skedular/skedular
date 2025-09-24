@@ -36,7 +36,7 @@ public class BookingPermissionsService(
                     new GetOrganizationPermissionsInput { OrganizationId = organizationId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<TeamBookingPermissions> GetTeamPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
@@ -47,7 +47,7 @@ public class BookingPermissionsService(
                     new GetTeamPermissionsInput { TeamId = teamId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     private string CreateOrganizationKeyById(string workspaceMemberId, string organizationId) =>

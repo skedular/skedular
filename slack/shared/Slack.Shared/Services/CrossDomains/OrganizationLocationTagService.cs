@@ -59,7 +59,7 @@ public class OrganizationLocationTagService(
                     new Admin_GetLocationTagInput { Id = locationTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<OrganizationLocationTag> AddAsync(
@@ -127,7 +127,7 @@ public class OrganizationLocationTagService(
                     new GetLocationTagInput { Id = locationTagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<Connection<OrganizationLocationTagEdge>> GetAllLocationTagsAsync(
@@ -174,7 +174,7 @@ public class OrganizationLocationTagService(
 
                 return result;
             },
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
 
@@ -235,7 +235,7 @@ public class OrganizationLocationTagService(
             await hybridCache.SetAsync(
                 key,
                 organizationLocationTag,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }

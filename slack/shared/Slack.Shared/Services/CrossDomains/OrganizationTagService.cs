@@ -46,7 +46,7 @@ public class OrganizationTagService(
                     new Admin_GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<OrganizationTag> AddAsync(
@@ -111,7 +111,7 @@ public class OrganizationTagService(
                     new GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<Connection<OrganizationTagEdge>> GetAllTagsAsync(
@@ -155,7 +155,7 @@ public class OrganizationTagService(
 
                 return result;
             },
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
 
@@ -213,7 +213,7 @@ public class OrganizationTagService(
             await hybridCache.SetAsync(
                 key,
                 organizationTag,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }

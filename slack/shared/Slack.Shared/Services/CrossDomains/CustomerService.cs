@@ -60,7 +60,7 @@ public class CustomerService(
                     new Admin_GetInput { CustomerId = customerId },
                     customerConfiguration.ApiKey.CreateMetadata(),
                     cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
         var locations =
@@ -208,7 +208,7 @@ public class CustomerService(
                     new GetInput(),
                     customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<Customer> GetByIdAsync(string workspaceMemberId, string customerId, CancellationToken cancellationToken) =>
@@ -219,7 +219,7 @@ public class CustomerService(
                     new GetByIdInput { CustomerId = customerId },
                     customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                     cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
 
     public async Task<Customer> AddPreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
@@ -316,7 +316,7 @@ public class CustomerService(
             await hybridCache.SetAsync(
                 key,
                 customer,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
 
             foreach (var identity in customer.Identities)
@@ -327,7 +327,7 @@ public class CustomerService(
                 await hybridCache.SetAsync(
                     key,
                     customer,
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                     cancellationToken: cancellationToken);
             }
         }

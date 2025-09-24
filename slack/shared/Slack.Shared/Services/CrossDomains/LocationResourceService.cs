@@ -52,7 +52,7 @@ public class LocationResourceService(
                         new Admin_GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(),
                         cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken),
             cancellationToken);
 
@@ -135,7 +135,7 @@ public class LocationResourceService(
                         new GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                         cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken),
             cancellationToken);
 
@@ -201,7 +201,7 @@ public class LocationResourceService(
             await hybridCache.SetAsync(
                 key,
                 resource,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(5), LocalCacheExpiration = TimeSpan.FromMinutes(5) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }
