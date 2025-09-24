@@ -371,13 +371,13 @@ public class BookingService(
                 .Select(item => organizationService.AdminGetAsync(item, cancellationToken)));
 
         var locations = await Task.WhenAll(
-            booking.Resources
+            booking.InvolvedLocations
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => locationService.AdminGetAsync(item, cancellationToken)));
 
         var teams = await Task.WhenAll(
-            booking.Resources
+            booking.InvolvedTeams
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => teamService.AdminGetAsync(item, cancellationToken)));
@@ -426,13 +426,13 @@ public class BookingService(
                 .Select(item => organizationService.GetAsync(workspaceMemberId, item, cancellationToken)));
 
         var locations = await Task.WhenAll(
-            booking.Resources
+            booking.InvolvedLocations
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => locationService.GetAsync(workspaceMemberId, item, cancellationToken)));
 
         var teams = await Task.WhenAll(
-            booking.Resources
+            booking.InvolvedTeams
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => teamService.GetAsync(workspaceMemberId, item, cancellationToken)));
