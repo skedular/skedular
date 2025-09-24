@@ -283,7 +283,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone.ToSafeString(),
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
-            PrimaryLocationId = src.PrimaryLocation?.Id.ToSafeString(),
+            PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id.ToSafeString(),
             Permissions = new Permissions
             {
                 CanView = src.Permissions.CanView,

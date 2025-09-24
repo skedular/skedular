@@ -279,7 +279,7 @@ public class Mapper : IMapper
             Locale = src.Locale.ToSafeString(),
             PhoneNumber = src.PhoneNumber.ToSafeString(),
             IsOnboardingDone = src.IsOnboardingDone,
-            DefaultOrganizationId = src.DefaultOrganization?.Id.ToSafeString(),
+            DefaultOrganizationId = src.DefaultOrganization is null ? string.Empty : src.DefaultOrganization.Id.ToSafeString(),
             DisplayableName = src.DisplayableName.ToSafeString(),
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {

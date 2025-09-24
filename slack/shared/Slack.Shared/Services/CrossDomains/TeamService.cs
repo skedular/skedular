@@ -122,7 +122,7 @@ public class TeamService(
             About = team.About,
             Timezone = team.Timezone,
             OrganizationId = team.Organization!.Id,
-            PrimaryLocationId = team.PrimaryLocation?.Id.ToSafeString()
+            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString()
         };
 
         addInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
@@ -195,7 +195,7 @@ public class TeamService(
             About = team.About,
             Timezone = team.Timezone,
             OrganizationId = team.Organization!.Id,
-            PrimaryLocationId = team.PrimaryLocation?.Id.ToSafeString()
+            PrimaryLocationId = team.PrimaryLocation is null ? string.Empty : team.PrimaryLocation.Id.ToSafeString()
         };
 
         updateInput.Members.AddRange(team.TeamMembers.Select(item => new TeamMember
