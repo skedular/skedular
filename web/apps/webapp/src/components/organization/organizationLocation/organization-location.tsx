@@ -18,7 +18,7 @@ import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
-import { locationFeatureImageHeight, locationFeatureImageWidth, MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
+import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
@@ -31,7 +31,7 @@ import { ResourceType } from '@/components/resourceType';
 import { Search } from '@/components/search';
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { Zones } from '@/components/zone';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -1938,10 +1938,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                           {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                             <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                           )}
-                          <ImageFileUploaderWithCropper
-                            defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
-                            onUploadCompleted={handleFeatureImageUploadCompleted}
-                          />
+                          <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                         </StackColumn>
                       </FormFieldLabel>
 

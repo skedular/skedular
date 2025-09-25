@@ -3,13 +3,13 @@ import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { locationFeatureImageHeight, locationFeatureImageWidth, MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
+import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
@@ -579,8 +579,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                       <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                     )}
-                    <ImageFileUploaderWithCropper
-                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                    <ImageFileUploader
                       onUploadCompleted={handleFeatureImageUploadCompleted}
                       helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."
                     />

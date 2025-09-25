@@ -119,8 +119,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       '@workos-inc/authkit-nextjs':
-        specifier: ^2.8.0
-        version: 2.8.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^2.9.0
+        version: 2.9.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       babel-plugin-react-compiler:
         specifier: 19.1.0-rc.3
         version: 19.1.0-rc.3
@@ -182,8 +182,8 @@ importers:
         specifier: ^20.1.1
         version: 20.1.1(react@19.1.1)
       react-svg-credit-card-payment-icons:
-        specifier: ^4.1.0
-        version: 4.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^4.2.1
+        version: 4.2.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react-toastify:
         specifier: ^11.0.5
         version: 11.0.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -1622,8 +1622,8 @@ packages:
       vue-router:
         optional: true
 
-  '@workos-inc/authkit-nextjs@2.8.0':
-    resolution: {integrity: sha512-zDba4cYvMvd9ukqmZlyTB/ojbdm2Fha8s3XVBpnILwbpCOh5gBRwiOzzMvYlf72syIYk9Q5Ohu6URAPosz627w==}
+  '@workos-inc/authkit-nextjs@2.9.0':
+    resolution: {integrity: sha512-ahC82zAT9JpNtSGaHJqXEDvVo/pdmd0hvtuVjU9fNHxxy6CYEhdz2iVN1JE2Jz5BIwrtY+HxVaUpd61nNW+Mbw==}
     peerDependencies:
       next: ^13.5.9 || ^14.2.26 || ^15.2.3
       react: ^18.0 || ^19.0.0
@@ -3324,8 +3324,8 @@ packages:
     peerDependencies:
       react: ^16.9.0 || ^17 || ^18 || ^19
 
-  react-svg-credit-card-payment-icons@4.1.0:
-    resolution: {integrity: sha512-4An+M8o8wX/Yr4uocydRtbPf4f9YqEY8N1wJ9RvopKXdq+PRrj1zAJeNy1+B8XA4htRxfnCM/+zZWVjMYPebCg==}
+  react-svg-credit-card-payment-icons@4.2.1:
+    resolution: {integrity: sha512-s5OK68uykYVHGqa4YjO4GII/2ND2oyhSX2/6DdELGDK360ANybkGwVtO2mf1cJcxNKN4uXCwMYCGbOwKqokLGw==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -5319,7 +5319,7 @@ snapshots:
       next: 15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
 
-  '@workos-inc/authkit-nextjs@2.8.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@workos-inc/authkit-nextjs@2.9.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
       '@workos-inc/node': 7.68.0(next@15.5.4(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.1.0-rc.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))
       iron-session: 8.0.4
@@ -7249,7 +7249,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  react-svg-credit-card-payment-icons@4.1.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
+  react-svg-credit-card-payment-icons@4.2.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)

@@ -3,8 +3,7 @@ import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
-import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
@@ -675,10 +674,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                           <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                         )}
-                        <ImageFileUploaderWithCropper
-                          defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
+                        <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 

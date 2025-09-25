@@ -2,13 +2,13 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { Loading } from '@/components/loading';
-import { locationFeatureImageHeight, locationFeatureImageWidth, SingleChoiceLocationType } from '@/components/location';
+import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
@@ -268,8 +268,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                     {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                       <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                     )}
-                    <ImageFileUploaderWithCropper
-                      defaultAspectRatio={locationFeatureImageWidth / locationFeatureImageHeight}
+                    <ImageFileUploader
                       onUploadCompleted={handleFeatureImageUploadCompleted}
                       helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."
                     />

@@ -21,11 +21,7 @@ public interface IOrganizationOfferingService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task CancelOfferingAsync(
-        string? organizationId,
-        string? organizationUniqueAlphanumericNam,
-        CancellationToken cancellationToken);
-
+    Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken);
     Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken);
     Task RerunAllOfferingsWorkflowsAsync(CancellationToken cancellationToken);
 }
@@ -155,10 +151,7 @@ public class OrganizationOfferingService(
         await transaction.CommitAsync(cancellationToken);
     }
 
-    public async Task CancelOfferingAsync(
-        string? organizationId,
-        string? organizationUniqueAlphanumericNam,
-        CancellationToken cancellationToken) =>
+    public async Task CancelOfferingAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken) =>
         await UpdateOfferingAsync(organizationId, organizationUniqueAlphanumericNam, OfferingCode.FreeTierV1, false, cancellationToken);
 
     public async Task RegenerateAllOfferingsAsync(CancellationToken cancellationToken)

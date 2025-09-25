@@ -4,15 +4,17 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { PaletteModeContext } from '@/libs/providers';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
+import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import React, { memo, useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 type Props = {
   onUploadCompleted: (cdnFile: FileUploadResponse) => void;
+  helperText?: string;
 };
 
-const ImageFileUploader = ({ onUploadCompleted }: Props) => {
+const ImageFileUploader = ({ onUploadCompleted, helperText }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [imageSource, setImageSource] = useState<string>('');
@@ -88,6 +90,7 @@ const ImageFileUploader = ({ onUploadCompleted }: Props) => {
     <>
       <StackColumn>
         <Input inputRef={inputRef} type="file" inputProps={{ accept: 'image/*' }} onChange={onSelectFile} />
+        {helperText && <FormHelperText>{helperText}</FormHelperText>}
       </StackColumn>
 
       <Dialog open={isDialogOpen} fullWidth maxWidth="md">

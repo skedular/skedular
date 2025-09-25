@@ -4,10 +4,9 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
-import { productFeatureImageHeight, productFeatureImageWidth } from '@/components/product';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
@@ -591,10 +590,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                           <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                         )}
-                        <ImageFileUploaderWithCropper
-                          defaultAspectRatio={productFeatureImageWidth / productFeatureImageHeight}
-                          onUploadCompleted={handleFeatureImageUploadCompleted}
-                        />
+                        <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 

@@ -7,8 +7,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { OrganizationMemberSelector } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -206,7 +205,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
                       {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                         <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                       )}
-                      <ImageFileUploaderWithCropper defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                      <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                     </StackColumn>
                   </FormFieldLabel>
 

@@ -20,8 +20,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationTeamMemberButton } from '@/components/organization/addOrganizationTeamMember';
 import { Search } from '@/components/search';
-import { teamFeatureImageHeight, teamFeatureImageWidth } from '@/components/team';
-import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
+import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -945,7 +944,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
                           <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
                         )}
-                        <ImageFileUploaderWithCropper defaultAspectRatio={teamFeatureImageWidth / teamFeatureImageHeight} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                        <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 
