@@ -107,7 +107,7 @@ resource "cloudflare_dns_record" "cloudflare_dns_record_production_www_webapp" {
   count   = local.is_staging ? 0 : 1
   zone_id = module.common.cloudflare_webapp_zone_id
   name    = "www"
-  content = "31.220.100.177"
+  content = "77.237.241.187"
   type    = "A"
   proxied = true
   ttl     = 1
@@ -117,7 +117,7 @@ resource "cloudflare_dns_record" "cloudflare_dns_records_staging" {
   count   = local.is_staging ? length(local.dns_records_staging) : 0
   zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_staging, count.index)
-  content = "31.220.100.177"
+  content = "77.237.241.187"
   type    = "A"
   proxied = false
   ttl     = 600
@@ -127,7 +127,7 @@ resource "cloudflare_dns_record" "cloudflare_dns_records_production" {
   count   = local.is_staging ? 0 : length(local.dns_records_production)
   zone_id = module.common.cloudflare_webapp_zone_id
   name    = element(local.dns_records_production, count.index)
-  content = "31.220.100.177"
+  content = "77.237.241.187"
   type    = "A"
   proxied = false
   ttl     = 600
