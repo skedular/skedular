@@ -28,7 +28,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
 
 internal static class BookingExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(
         this IQueryable<Database.Entities.Booking> originalQuery) =>
         originalQuery
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
@@ -47,6 +47,26 @@ internal static class BookingExtensions
             .Include(query => query.InvolvedLocations)
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedTeams)
+            .Include(query => query.InvolvedResources)
+            .Include(query => query.PaidByCustomer)
+            .Include(query => query.PaidByOrganization)
+            .Include(query => query.CreatedByCustomer)
+            .Include(query => query.LastModifiedByCustomer)
+            .Include(query => query.DeletedByCustomer)
+            .Include(query => query.ProductVersions)
+            .Include(query => query.StripeCheckoutSession);
+
+    internal static IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects(
+        this IQueryable<Database.Entities.Booking> originalQuery) =>
+        originalQuery
+            .Include(query => query.InvolvedCustomers)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.InvolvedOrganizations)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.InvolvedLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedTeams)
+            .Include(query => query.InvolvedResources)
             .Include(query => query.PaidByCustomer)
             .Include(query => query.PaidByOrganization)
             .Include(query => query.CreatedByCustomer)
@@ -225,12 +245,12 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddDependentObjects()
+            .AddSingleBookingDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddDependentObjects()
+            .AddSingleBookingDependentObjects()
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Booking Add(Database.Entities.Booking booking)
@@ -262,7 +282,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         (await DbContext.Booking
             .AddSearchCriteria(searchCriteria, TimeProvider)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddPaginatedBookingsDependentObjects()
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

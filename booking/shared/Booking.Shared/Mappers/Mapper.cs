@@ -239,6 +239,7 @@ public class Mapper : IMapper
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            InvolvedResources = MapTo(src.InvolvedResources).ToList(),
             PaidByCustomer = MapTo(src.PaidByCustomer),
             PaidByOrganization = MapTo(src.PaidByOrganization),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
@@ -306,20 +307,6 @@ public class Mapper : IMapper
     private static Identity MapTo(Database.Entities.Identity src) =>
         new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
-    private static Models.Resource MapTo(Database.Entities.Resource src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Capacity = src.Capacity,
-            Inactive = src.Inactive,
-            RequireBookingApproval = src.RequireBookingApproval,
-            OrganizationTags = MapTo(src.OrganizationTags).ToList()
-        };
-
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Database.Entities.OrganizationTag src) =>
@@ -374,6 +361,22 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt
             };
+
+    private static IEnumerable<Models.Resource> MapTo(IEnumerable<Database.Entities.Resource> src) => src.Select(MapTo);
+
+    private static Models.Resource MapTo(Database.Entities.Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            EventRaisedAt = src.EventRaisedAt,
+            Capacity = src.Capacity,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
+        };
 
     private IEnumerable<ProductVersion> MapTo(IEnumerable<Database.Entities.ProductVersion> src) =>
         src.Select(MapTo);

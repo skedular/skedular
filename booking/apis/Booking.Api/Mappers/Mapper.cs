@@ -99,6 +99,7 @@ public class Mapper : IMapper
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            InvolvedResources = MapTo(src.InvolvedResources).ToList(),
             PaidByCustomer = MapTo(src.PaidByCustomer),
             PaidByOrganization = MapTo(src.PaidByOrganization),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
@@ -157,7 +158,7 @@ public class Mapper : IMapper
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
             PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
             IsPaymentRequired = src.IsPaymentRequired,
-            BookingResources = MapTo(src.Resources),
+            BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => item.Id),
             InvolvedLocationIds = src.InvolvedLocations.Select(item => item.Id),
@@ -316,6 +317,7 @@ public class Mapper : IMapper
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedLocations = involvedLocations;
         dest.InvolvedTeams = involvedTeams;
+        dest.InvolvedResources = resources;
         dest.PaidByCustomer = paidByCustomer;
         dest.PaidByOrganization = paidByOrganization;
         dest.CreatedByCustomer = createdByCustomer;
@@ -399,7 +401,7 @@ public class Mapper : IMapper
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
         booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
-        booking.ResourceIds.AddRange(src.Resources.Select(item => item.Resource.Id));
+        booking.ResourceIds.AddRange(src.InvolvedResources.Select(item => item.Id));
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
         booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
         booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
@@ -560,8 +562,10 @@ public class Mapper : IMapper
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
         new() { ResourceId = src.Id, LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
 
-    private static IEnumerable<BookingResourceDetails> MapTo(IEnumerable<ResourceCustomersPair> src) =>
-        src.Select(item => MapTo(item.Resource, item.Customers));
+    private static BookingResourceDetails MapTo(Resource src) => new() { ResourceId = src.Id, LocationId = src.Location?.Id };
+
+    private static IEnumerable<BookingResourceDetails> MapTo(ICollection<ResourceCustomersPair> src, ICollection<Resource> involvedResources) =>
+        src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));
 
     private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
 

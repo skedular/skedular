@@ -478,8 +478,6 @@ public class BookingService(
             orderByFields,
             cancellationToken);
 
-        await cachedBookingService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
-
         return (paginatedInfo,
             edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item.Node))).ToList(),
             totalCount);

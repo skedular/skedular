@@ -35,6 +35,7 @@ public class Booking : EntityBaseWithDeleted
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Location> InvolvedLocations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual ICollection<Resource> InvolvedResources { get; set; } = [];
     public virtual Customer? PaidByCustomer { get; set; }
     public virtual Organization? PaidByOrganization { get; set; }
     public virtual Customer? CreatedByCustomer { get; set; }
@@ -77,6 +78,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedLocations).WithMany(item => item.InvolvedBookings);
         builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedBookings);
+        builder.HasMany(item => item.InvolvedResources).WithMany(item => item.InvolvedBookings);
 
         builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidBookings);
         builder.HasOne(item => item.PaidByOrganization).WithMany(item => item.PaidBookings);
