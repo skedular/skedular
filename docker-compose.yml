@@ -21,7 +21,7 @@ services:
   postgres:
     image: postgis/postgis:17-master
     platform: linux/amd64
-    command: postgres -c 'max_connections=10000'
+    command: postgres -c 'max_connections=10000' -c 'shared_preload_libraries=pg_stat_statements'
     restart: unless-stopped
     volumes:
       - skedular_postgres_data:/var/lib/postgresql/data
@@ -41,7 +41,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -145,7 +145,7 @@ services:
       KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KEYCLOAK_IMPORT: /opt/keycloak/data/import/realm.json
       KEYCLOAK_IMPORT_STRATEGY: OVERWRITE_EXISTING
-    command: [ "start-dev", "--import-realm" ]
+    command: ["start-dev", "--import-realm"]
     volumes:
       - skedular_keycloak_data:/opt/keycloak/data
       - ./keyckloak.json:/opt/keycloak/data/import/realm.json

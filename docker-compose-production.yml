@@ -18,7 +18,7 @@ services:
 
   postgres17:
     image: postgis/postgis:17-master
-    command: postgres -c 'max_connections=10000'
+    command: postgres -c 'max_connections=10000' -c 'shared_preload_libraries=pg_stat_statements'
     restart: unless-stopped
     volumes:
       - skedular_postgres17_data:/var/lib/postgresql/data
@@ -36,7 +36,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
