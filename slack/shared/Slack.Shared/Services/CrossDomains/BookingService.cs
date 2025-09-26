@@ -175,6 +175,7 @@ public class BookingService(
         addInput.CustomerIds.AddRange(booking.InvolvedCustomers.Select(item => item.Id));
         addInput.OrganizationIds.AddRange(booking.InvolvedOrganizations.Select(item => item.Id));
         addInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
+        addInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
         var mappedBooking = mapper.MapTo(
             await bookingServiceClient.AddAsync(
@@ -214,6 +215,7 @@ public class BookingService(
         updateInput.CustomerIds.AddRange(booking.InvolvedCustomers.Select(item => item.Id));
         updateInput.OrganizationIds.AddRange(booking.InvolvedOrganizations.Select(item => item.Id));
         updateInput.TeamIds.AddRange(booking.InvolvedTeams.Select(item => item.Id));
+        updateInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
         var mappedBooking = mapper.MapTo(
             await bookingServiceClient.UpdateAsync(
