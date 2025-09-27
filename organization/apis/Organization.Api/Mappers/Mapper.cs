@@ -244,7 +244,6 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
@@ -315,7 +314,6 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories
         };
@@ -335,7 +333,6 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToOrganizationType();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
-        dest.IsListable = src.IsListable;
         dest.IndustrySubCategories = industrySubCategories;
         return dest;
     }
@@ -427,7 +424,6 @@ public class Mapper : IMapper
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
             PaymentMethods = MapTo(src.OrganizationStripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
@@ -488,7 +484,6 @@ public class Mapper : IMapper
             Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
@@ -505,7 +500,6 @@ public class Mapper : IMapper
             Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
@@ -528,7 +522,6 @@ public class Mapper : IMapper
             },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
             LogoUrl = src.LogoUrl,
@@ -554,7 +547,6 @@ public class Mapper : IMapper
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
-            IsListable = src.IsListable,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
             Offering = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Offering

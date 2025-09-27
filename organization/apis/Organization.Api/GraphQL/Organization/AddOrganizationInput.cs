@@ -20,7 +20,6 @@ public class AddOrganizationInput
     [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-    [GraphQLName("isListable")] public bool IsListable { get; set; }
 
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUseId")] public string TermsOfUseId { get; set; } = string.Empty;

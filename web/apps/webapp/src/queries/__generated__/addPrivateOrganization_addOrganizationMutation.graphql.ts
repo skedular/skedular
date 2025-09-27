@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bc41f9661c815198509b529efc48bf5d>>
+ * @generated SignedSource<<c5ae846e3b2a668a4058b2e605dab87c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type AddOrganizationInput = {
   contactPhone?: string | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
-  isListable: boolean;
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
@@ -33,7 +32,6 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
     readonly organization: {
       readonly about: string | null | undefined;
       readonly id: string;
-      readonly isListable: boolean;
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -45,7 +43,6 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
     readonly organization: {
       readonly about: string | null | undefined;
       readonly id: string;
-      readonly isListable: boolean;
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -107,13 +104,6 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "isListable",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "name",
             "storageKey": null
           },
@@ -156,16 +146,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "1cc023675ed0e773859e2ff0f3b3f8bf",
+    "cacheID": "5b96db903823e7fade02f04eb978e63e",
     "id": null,
     "metadata": {},
     "name": "addPrivateOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n    }\n  }\n}\n"
+    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5d948e3841a0f0ce699085d5f203752c";
+(node as any).hash = "07d8ca4f2223e5b450ea73e62480c27e";
 
 export default node;

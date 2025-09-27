@@ -102,7 +102,6 @@ message Admin_AddInput {
   OrganizationType type = 11;
   string contactEmail = 12;
   string contactPhone = 13;
-  bool isListable = 14;
 }
 
 enum OrganizationType {

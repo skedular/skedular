@@ -668,7 +668,6 @@ type OrganizationDetails {
   hasTeam: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
-  isListable: Boolean!
   isMyOnboardingDone: Boolean!
   isSsoTokenValid: Boolean! @cost(weight: "10")
   locationSpaceTypes: [OrganizationTagDetails!]!
@@ -1414,7 +1413,6 @@ input AddOrganizationInput {
   contactPhone: String
   id: String
   industrySubCategoryIds: [String!]!
-  isListable: Boolean!
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
@@ -2291,7 +2289,6 @@ input UpdateOrganizationInput {
   contactPhone: String
   id: String
   industrySubCategoryIds: [String!]!
-  isListable: Boolean!
   name: String!
   type: OrganizationType!
   uniqueAlphanumericName: String

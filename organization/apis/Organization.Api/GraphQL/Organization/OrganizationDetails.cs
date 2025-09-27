@@ -39,7 +39,6 @@ public class OrganizationDetails : Node
 
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
-    [GraphQLName("isListable")] public bool IsListable { get; set; }
 
     [GraphQLName("stripeAuthorizeExistingConnectAccountUrl")]
     public string StripeAuthorizeExistingConnectAccountUrl { get; set; } = string.Empty;

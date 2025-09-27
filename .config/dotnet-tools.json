@@ -43,6 +43,13 @@
         "dotnet-gitversion"
       ],
       "rollForward": false
+    },
+    "strawberryshake.tools": {
+      "version": "15.1.10",
+      "commands": [
+        "dotnet-graphql"
+      ],
+      "rollForward": false
     }
   }
 }

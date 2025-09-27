@@ -11,7 +11,6 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
-import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
@@ -57,7 +56,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
         myOrganizations {
           id
           uniqueAlphanumericName
-          isListable
           logoUrl
           name
           canModify
@@ -82,7 +80,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-  const [showAllOrgs, setShowAllOrgs] = useState(false);
 
   let finalOrganizationUniqueAlphanumericName = '';
   if (typeof organizationUniqueAlphanumericName === 'string') {
@@ -211,19 +208,17 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                   );
                 }}
               >
-                {rootData.myOrganizations
-                  .filter((item) => showAllOrgs || item.isListable)
-                  .map((organization) => (
-                    <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
-                      <StackRow>
-                        <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                        <StackColumn spacing={-0.5}>
-                          <LeadIconTypography label={organization.name} />
-                          <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                        </StackColumn>
-                      </StackRow>
-                    </MenuItem>
-                  ))}
+                {rootData.myOrganizations.map((organization) => (
+                  <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
+                    <StackRow>
+                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                      <StackColumn spacing={-0.5}>
+                        <LeadIconTypography label={organization.name} />
+                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                      </StackColumn>
+                    </StackRow>
+                  </MenuItem>
+                ))}
 
                 <Divider />
 
@@ -232,10 +227,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 </MenuItem>
               </Select>
             </FormControl>
-          )}
-
-          {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-            <Checkbox checked={showAllOrgs} size="small" onChange={(event) => setShowAllOrgs(event.target.checked)} />
           )}
 
           {!hideWelcomeMessage && (

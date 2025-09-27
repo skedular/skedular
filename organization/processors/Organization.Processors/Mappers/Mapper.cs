@@ -224,7 +224,6 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()

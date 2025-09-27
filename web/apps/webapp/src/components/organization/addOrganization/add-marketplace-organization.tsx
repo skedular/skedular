@@ -15,7 +15,7 @@ import TodayIcon from '@mui/icons-material/Today';
 import ViewQuiltIcon from '@mui/icons-material/ViewQuilt';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { Checkboxes, makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation } from 'react-relay';
@@ -34,7 +34,6 @@ type Props = {
 
 type OrganizationDetails = {
   uniqueAlphanumericName: string | null;
-  isListable: boolean;
   name: string;
   about: string | null;
   website: string | null;
@@ -43,7 +42,6 @@ type OrganizationDetails = {
 
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
-  isListable: boolean().required(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().nullable(),
@@ -73,7 +71,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
         organization {
           id
           uniqueAlphanumericName
-          isListable
           name
           about
           website
@@ -87,7 +84,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ uniqueAlphanumericName, isListable, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ uniqueAlphanumericName, name, about, website }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -97,7 +94,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           clientMutationId: uuid(),
           id,
           uniqueAlphanumericName,
-          isListable,
           name,
           about,
           website,
@@ -136,7 +132,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           organization: {
             id,
             uniqueAlphanumericName,
-            isListable,
             name,
             about,
             website,
@@ -188,7 +183,6 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           onSubmit={handleOrganizationAddClick}
           initialValues={{
             uniqueAlphanumericName: null,
-            isListable: true,
             name: '',
             about: null,
             website: null,
@@ -207,15 +201,9 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
               </FormFieldLabel>
 
               {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <>
-                  <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
-                    <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
-                  </FormFieldLabel>
-
-                  <FormFieldLabel label="" required={requiredFields.isListable}>
-                    <Checkboxes name="isListable" required={requiredFields.isListable} data={{ label: 'Is listable?', value: true }} />
-                  </FormFieldLabel>
-                </>
+                <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
+                  <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
+                </FormFieldLabel>
               )}
 
               <FormFieldLabel label="About" required={requiredFields.about}>

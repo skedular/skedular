@@ -70,7 +70,6 @@ public class Mapper : IMapper
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
-            IsListable = src.IsListable,
             Offering = new Offering
             {
                 Id = organizationOffering.Id,
@@ -156,7 +155,6 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            IsListable = src.IsListable,
             PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()

@@ -50,8 +50,7 @@ public class OrganizationService(
                     Name = organization.Name.ToSafeString(),
                     AgreedToTermsOfUse = true,
                     TermsOfUseId = activeTermsOfUse.Id,
-                    Type = OrganizationType.Private,
-                    IsListable = true
+                    Type = OrganizationType.Private
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));

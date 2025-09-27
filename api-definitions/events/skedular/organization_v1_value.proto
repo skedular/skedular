@@ -49,8 +49,7 @@ message Organization {
   OrganizationType type = 14;
   string contactEmail = 15;
   string contactPhone = 16;
-  bool isListable = 17;
-  PhysicalAddress physicalAddress = 18;
+  PhysicalAddress physicalAddress = 17;
 }
 
 enum OrganizationType {

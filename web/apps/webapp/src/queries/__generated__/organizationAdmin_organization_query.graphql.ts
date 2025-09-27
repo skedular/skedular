@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc07afccfffe0b6c9d5512ae1f97a2b3>>
+ * @generated SignedSource<<48c70751d2a466de5fc69713fe4154a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,7 +62,6 @@ export type organizationAdmin_organization_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
-    readonly isListable: boolean;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly paymentMethods: ReadonlyArray<{
@@ -301,13 +300,6 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "uniqueAlphanumericName",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isListable",
           "storageKey": null
         },
         (v1/*: any*/),
@@ -628,6 +620,6 @@ return {
 };
 })();
 
-(node as any).hash = "bdfb00e4cb7ef57c153dcf997603c7f8";
+(node as any).hash = "0d19709250c17c79c87b89eeac9eefa4";
 
 export default node;

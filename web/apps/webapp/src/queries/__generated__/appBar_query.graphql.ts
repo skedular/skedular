@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5eef7669331a3a8cb426b470152eecd5>>
+ * @generated SignedSource<<7f8526beddc3145b59f7f44dd4cca77b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,6 @@ export type appBar_query$data = {
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
     readonly id: string;
-    readonly isListable: boolean;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly uniqueAlphanumericName: string | null | undefined;
@@ -135,13 +134,6 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "isListable",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "logoUrl",
           "storageKey": null
         },
@@ -199,6 +191,6 @@ return {
 };
 })();
 
-(node as any).hash = "e599138a124d7e8bc4c7c5e870036883";
+(node as any).hash = "1790e123f4c8cb9c0a88b2b9b5fe4b42";
 
 export default node;

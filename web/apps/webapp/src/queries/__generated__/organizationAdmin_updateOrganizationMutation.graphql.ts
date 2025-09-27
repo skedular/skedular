@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<158aad81115dbb0fd7934ad3f26e93ac>>
+ * @generated SignedSource<<6c9c996d790f011fb5d81af4d3b0f21e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type UpdateOrganizationInput = {
   contactPhone?: string | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
-  isListable: boolean;
   name: string;
   type: OrganizationType;
   uniqueAlphanumericName?: string | null | undefined;
@@ -37,7 +36,6 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
-      readonly isListable: boolean;
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -59,7 +57,6 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly id: string;
         readonly name: string;
       }>;
-      readonly isListable: boolean;
       readonly name: string;
       readonly type: {
         readonly name: string;
@@ -127,13 +124,6 @@ v3 = [
             "args": null,
             "kind": "ScalarField",
             "name": "uniqueAlphanumericName",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isListable",
             "storageKey": null
           },
           (v2/*: any*/),
@@ -222,16 +212,16 @@ return {
     "selections": (v3/*: any*/)
   },
   "params": {
-    "cacheID": "38165fbd6d1cf6a3f2de1501185a31ca",
+    "cacheID": "37f66dc485b93e8e29a7d103f506c90d",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      isListable\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      type {\n        type\n        name\n      }\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ae00edcb4a65e467b0bc011ab29de34f";
+(node as any).hash = "eba4ef63ae28aeda555ed28d15f11760";
 
 export default node;
