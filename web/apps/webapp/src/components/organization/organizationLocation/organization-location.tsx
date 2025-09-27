@@ -61,7 +61,6 @@ import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -1936,7 +1935,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       <FormFieldLabel label="Feature Image">
                         <StackColumn>
                           {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                            <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                            <>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
+                            </>
                           )}
                           <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                         </StackColumn>

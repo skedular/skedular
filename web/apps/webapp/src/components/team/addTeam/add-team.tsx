@@ -17,7 +17,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import Image from 'next/image';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -203,7 +202,10 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
                   <FormFieldLabel label="Feature image">
                     <StackColumn>
                       {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                        <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
+                        </>
                       )}
                       <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                     </StackColumn>

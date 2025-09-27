@@ -15,7 +15,6 @@ import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_ro
 import { Box, Button } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -588,7 +587,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                     <FormFieldLabel label="Feature image">
                       <StackColumn>
                         {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                          <Image src={primaryFeatureImage.original.url} height={primaryFeatureImage.original.height} width={primaryFeatureImage.original.width} alt="" />
+                          <>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
+                          </>
                         )}
                         <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
