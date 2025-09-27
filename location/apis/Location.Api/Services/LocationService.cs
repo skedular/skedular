@@ -117,6 +117,16 @@ public class LocationService(
             location.Id = randomHelper.Generate();
         }
 
+        if (location.ExtraMetadata is not null)
+        {
+            location.ExtraMetadata = location.ExtraMetadata with
+            {
+                RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+            };
+        }
+       
         var locationRef = location;
         var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
             new Specification<OrganizationTag>
@@ -302,6 +312,16 @@ public class LocationService(
             !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
+        }
+
+        if (location.ExtraMetadata is not null)
+        {
+            location.ExtraMetadata = location.ExtraMetadata with
+            {
+                RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+            };
         }
 
         var locationRef = location;
