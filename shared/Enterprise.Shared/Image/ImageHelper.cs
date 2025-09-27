@@ -8,8 +8,9 @@ public interface IImageHelper
     Task<bool> IsImageFileAsync(Stream stream, CancellationToken cancellationToken);
     Task<(bool IsImage, int Width, int Height)> GetImageWidthHeightAsync(Stream stream, CancellationToken cancellationToken);
 
-    Task<(Stream ThumbnailStream, int Width, int Height, string ContentType)>
-        CreateThumbnailAsync(Stream stream, CancellationToken cancellationToken);
+    Task<(Stream ThumbnailStream, int Width, int Height, string ContentType)> CreateThumbnailAsync(
+        Stream stream,
+        CancellationToken cancellationToken);
 }
 
 public class ImageHelper : IImageHelper
@@ -42,7 +43,8 @@ public class ImageHelper : IImageHelper
         }
     }
 
-    public async Task<(Stream ThumbnailStream, int Width, int Height, string ContentType)> CreateThumbnailAsync(Stream stream,
+    public async Task<(Stream ThumbnailStream, int Width, int Height, string ContentType)> CreateThumbnailAsync(
+        Stream stream,
         CancellationToken cancellationToken)
     {
         stream.Position = 0;

@@ -193,12 +193,14 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       <StackColumn>
         <StackRow>
           {image && <Image src={image.url} height={200} width={400} alt="" />}
-          {extraMetadata?.relatedImageLinks?.map((item, index) => (
-            <>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img key={index} src={item} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-            </>
-          ))}
+          {extraMetadata?.relatedImageLinks
+            ?.filter((item) => !!item)
+            .map((item, index) => (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img key={index} src={item} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
+              </>
+            ))}
         </StackRow>
         <GridContainer sx={{ mt: 2 }}>
           <Grid size={{ xs: 12, md: 6 }}>
