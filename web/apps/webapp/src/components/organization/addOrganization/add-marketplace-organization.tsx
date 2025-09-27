@@ -54,6 +54,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const rootData = useFragment<addMarketplaceOrganization_query$key>(
     graphql`
       fragment addMarketplaceOrganization_query on Query {
+        emailsToShowLatestCapabilities
         me {
           emails
         }
@@ -205,7 +206,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                 />
               </FormFieldLabel>
 
-              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+              {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                 <>
                   <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
                     <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />

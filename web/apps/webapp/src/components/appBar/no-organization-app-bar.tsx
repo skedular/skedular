@@ -44,6 +44,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
   const rootData = useFragment<noOrganizationAppBar_query$key>(
     graphql`
       fragment noOrganizationAppBar_query on Query {
+        emailsToShowLatestCapabilities
         me {
           id
           email
@@ -211,7 +212,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
             </FormControl>
           )}
 
-          {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+          {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
             <Checkbox checked={showAllOrgs} size="small" onChange={(event) => setShowAllOrgs(event.target.checked)} />
           )}
 

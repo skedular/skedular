@@ -1008,6 +1008,7 @@ type Query {
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   deskResourceType: OrganizationTagType!
+  emailsToShowLatestCapabilities: [String!]!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
   isAzureTenantInstalled: Boolean! @cost(weight: "10")

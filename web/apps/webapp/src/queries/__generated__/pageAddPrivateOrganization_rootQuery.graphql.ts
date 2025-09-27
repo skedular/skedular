@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ae7e6e1dbb333c71385790d0f0f7ec4>>
+ * @generated SignedSource<<0255e4fe98f6924078a3f528f0291577>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -96,6 +96,13 @@ return {
       {
         "alias": null,
         "args": null,
+        "kind": "ScalarField",
+        "name": "emailsToShowLatestCapabilities",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
         "concreteType": "OrganizationTermsOfUse",
         "kind": "LinkedField",
         "name": "activeOrganizationTermsOfUse",
@@ -115,12 +122,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7e8635f1928c4ca3f3a1c6d1a311a829",
+    "cacheID": "19d3de3819e9faea5ce609e294ac7bac",
     "id": null,
     "metadata": {},
     "name": "pageAddPrivateOrganization_rootQuery",
     "operationKind": "query",
-    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
+    "text": "query pageAddPrivateOrganization_rootQuery {\n  me {\n    id\n    isOnboardingDone\n  }\n  ...addPrivateOrganization_query\n}\n\nfragment addPrivateOrganization_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    emails\n    id\n  }\n  activeOrganizationTermsOfUse {\n    id\n  }\n  ...organizationTermsOfUse_query\n}\n\nfragment organizationTermsOfUse_query on Query {\n  activeOrganizationTermsOfUse {\n    id\n    terms\n  }\n}\n"
   }
 };
 })();

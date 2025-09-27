@@ -52,6 +52,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const rootData = useFragment<addPrivateOrganization_query$key>(
     graphql`
       fragment addPrivateOrganization_query on Query {
+        emailsToShowLatestCapabilities
         me {
           emails
         }
@@ -200,7 +201,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                 />
               </FormFieldLabel>
 
-              {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+              {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                 <>
                   <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
                     <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />

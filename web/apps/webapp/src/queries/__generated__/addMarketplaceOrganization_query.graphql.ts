@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b4f6fee587aa8f424be38c1210106fd8>>
+ * @generated SignedSource<<5f6353f16ac24d8518522922abeb3691>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type addMarketplaceOrganization_query$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
   };
+  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly me: {
     readonly emails: ReadonlyArray<string>;
   };
@@ -31,6 +32,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "addMarketplaceOrganization_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "emailsToShowLatestCapabilities",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -77,6 +85,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1b81b7cd1ddeed1c4d9312b806aeb57e";
+(node as any).hash = "deb8e247f5dcd4c56ae272c17e048bf7";
 
 export default node;

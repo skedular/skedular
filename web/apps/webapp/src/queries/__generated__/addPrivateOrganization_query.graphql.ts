@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29f289468437e72bb5f6151de086bd7f>>
+ * @generated SignedSource<<3ca136d25195d6741a216eac222ae587>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type addPrivateOrganization_query$data = {
   readonly activeOrganizationTermsOfUse: {
     readonly id: string;
   };
+  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly me: {
     readonly emails: ReadonlyArray<string>;
   };
@@ -31,6 +32,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "addPrivateOrganization_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "emailsToShowLatestCapabilities",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -77,6 +85,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "875b17ee98a47b48b837ea870eb12a6b";
+(node as any).hash = "51d94daa96bec19e59fdb2f9d290c963";
 
 export default node;

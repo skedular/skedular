@@ -221,6 +221,7 @@ const OrganizationAdmin = ({
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
+        emailsToShowLatestCapabilities
         me {
           id
           emails
@@ -2319,7 +2320,7 @@ const OrganizationAdmin = ({
                         <TextField name="name" required={requiredOrganizationDetailsFields.name} />
                       </FormFieldLabel>
 
-                      {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                      {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                         <>
                           <FormFieldLabel label="Unique Name" required={requiredOrganizationDetailsFields.uniqueAlphanumericName}>
                             <TextField name="uniqueAlphanumericName" required={requiredOrganizationDetailsFields.uniqueAlphanumericName} />

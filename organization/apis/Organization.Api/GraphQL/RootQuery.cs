@@ -18,4 +18,7 @@ public class RootQuery(IVersionService versionService)
 
     [UseResolverScope]
     public int OpeningHoursMinutesStep() => OpeningHoursDetails.OpeningHoursSlotSizeInMinutes;
+
+    [UseResolverScope]
+    public IEnumerable<string> EmailsToShowLatestCapabilities() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];
 }

@@ -34,6 +34,7 @@ import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
   query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+    emailsToShowLatestCapabilities
     me {
       emails
     }
@@ -307,7 +308,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                   />
                 </FormFieldLabel>
 
-                {rootData.me.emails.some((item) => item.toLocaleLowerCase() === 'morteza.alizadeh@gmail.com' || item.toLocaleLowerCase() === 'leila.alavi78@gmail.com') && (
+                {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
                   <FormFieldLabel label="Type" required={requiredFields.type}>
                     <SingleChoiceLocationType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                   </FormFieldLabel>

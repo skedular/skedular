@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<88257d06a6a9d1ae64a3d836a99c321d>>
+ * @generated SignedSource<<2669d7bd87ff7ae5c1bf4fbf47659bf8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_query$data = {
+  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly me: {
     readonly emails: ReadonlyArray<string>;
     readonly id: string;
@@ -52,6 +53,13 @@ return {
   "metadata": null,
   "name": "organizationAdmin_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "emailsToShowLatestCapabilities",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -137,6 +145,6 @@ return {
 };
 })();
 
-(node as any).hash = "98066c774058eed4dce6f408ad2cef17";
+(node as any).hash = "84a8fd93676f5c244305f27159abadc5";
 
 export default node;

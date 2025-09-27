@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ffaba268c6a26ed8ca9d005c6aa7a8f>>
+ * @generated SignedSource<<86523323959bfeea02387fb26dba6658>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_query$data = {
+  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly location: {
     readonly about: string | null | undefined;
     readonly extraMetadata: {
@@ -250,6 +251,13 @@ return {
   "metadata": null,
   "name": "organizationLocation_query",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "emailsToShowLatestCapabilities",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -767,6 +775,6 @@ return {
 };
 })();
 
-(node as any).hash = "cb20ccdde87de00db65264551c9cf40d";
+(node as any).hash = "4de96082399eaefd47bc7114b2303027";
 
 export default node;
