@@ -58,7 +58,7 @@ public static class Offerings
                 ],
                 UnitPrice = 0,
                 MaxUserCount = 10,
-                MaxLocationCount = 10,
+                MaxLocationCount = 50,
                 MaxTeamCount = 1,
                 UnderPriceLines = ["Completely Free", "Up to 10 Monthly Active Users"]
             }
