@@ -84,6 +84,7 @@ message Admin_AddInput {
   repeated string locationTagIds = 6;
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
+  ExtraMetadata ExtraMetadata = 9;
 }
 
 message LocationConnection {
@@ -112,6 +113,7 @@ message Location {
   OpeningHours openingHours = 12;
   CdnImageFile primaryFeatureImage = 13;
   LocationType type = 14;
+  ExtraMetadata ExtraMetadata = 15;
 }
 
 message Admin_GetInput {
@@ -179,6 +181,7 @@ message AddInput {
   repeated string locationTagIds = 6;
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
+  ExtraMetadata ExtraMetadata = 9;
 }
 
 message UpdateInput {
@@ -317,4 +320,30 @@ message CdnFile {
   string url = 1;
   int32 height = 2;
   int32 width = 3;
+}
+
+message ContactDetails {
+  repeated string contactPeople = 1;
+  repeated string contactEmails = 2;
+  repeated string contactPhones = 3;
+}
+
+message AreaRange {
+  string fromInSqm = 1;
+  string toInSqm = 2;
+}
+
+message PeopleCapacity {
+  string from = 1;
+  string to = 2;
+}
+
+message ExtraMetadata {
+  ContactDetails contactDetails = 1;
+  AreaRange areaRange = 2;
+  PeopleCapacity peopleCapacity = 3;
+  string website = 4;
+  repeated string RelatedImageLinks = 5;
+  repeated string RelatedVideoLinks = 6;
+  repeated string OtherLinks = 7;
 }

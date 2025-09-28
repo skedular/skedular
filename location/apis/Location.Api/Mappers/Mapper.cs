@@ -8,6 +8,7 @@ using Location.Api.GraphQL.FloorPlan;
 using Location.Api.GraphQL.Location;
 using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
+using Location.Shared.Models;
 using NetTopologySuite.Geometries;
 using Customer = Location.Shared.Models.Customer;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
@@ -22,8 +23,10 @@ using Permissions = Api.Shared.Services.Grpc.Skedular.Location.V1.Permissions;
 using DailyRoomCountRecording = Location.Shared.Models.DailyRoomCountRecording;
 using LocationRoomsOccupancyPercentage = Location.Shared.Models.LocationRoomsOccupancyPercentage;
 using AddResourceInput = Location.Api.GraphQL.Resource.AddResourceInput;
+using AreaRange = Api.Shared.Services.Models.AreaRange;
 using CdnFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnFile;
 using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnImageFile;
+using ContactDetails = Api.Shared.Services.Models.ContactDetails;
 using FloorPlan = Location.Shared.Models.FloorPlan;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -34,6 +37,7 @@ using VariedDateOpeningHours = Api.Shared.Services.Grpc.Skedular.Location.V1.Var
 using WeekOpeningHours = Api.Shared.Services.Models.WeekOpeningHours;
 using LocationPhysicalAddress = Location.Shared.Database.Entities.LocationPhysicalAddress;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
+using PeopleCapacity = Api.Shared.Services.Models.PeopleCapacity;
 
 namespace Location.Api.Mappers;
 
@@ -452,7 +456,8 @@ public class Mapper : IMapper
             },
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
@@ -479,7 +484,8 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
-            HasFutureBooking = src.HasFutureBooking
+            HasFutureBooking = src.HasFutureBooking,
+            ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
@@ -505,7 +511,8 @@ public class Mapper : IMapper
             },
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 
     public Shared.Models.Location MapTo(UpdateInput src) =>
@@ -1138,4 +1145,98 @@ public class Mapper : IMapper
                 Country = src.Country,
                 CountryCode = src.CountryCode
             };
+
+    private static LocationExtraMetadata? MapTo(ExtraMetadata? src) =>
+        src is null
+            ? null
+            : new LocationExtraMetadata(
+                MapTo(src.ContactDetails),
+                MapTo(src.AreaRange),
+                MapTo(src.PeopleCapacity),
+                src.Website,
+                src.RelatedImageLinks,
+                src.RelatedVideoLinks,
+                src.OtherLinks);
+
+    private static ContactDetails? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails? src) =>
+        src is null ? null : new ContactDetails(src.ContactPeople, src.ContactEmails, src.ContactPhones);
+
+    private static AreaRange? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange? src) =>
+        src is null ? null : new AreaRange(src.FromInSqm, src.ToInSqm);
+
+    private static PeopleCapacity? MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity? src) =>
+        src is null ? null : new PeopleCapacity(src.From, src.To);
+
+    private static ExtraMetadata? MapTo(LocationExtraMetadata? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var extraMetadata = new ExtraMetadata
+        {
+            ContactDetails = MapTo(src.ContactDetails),
+            AreaRange = MapTo(src.AreaRange),
+            PeopleCapacity = MapTo(src.PeopleCapacity),
+            Website = src.Website.ToSafeString()
+        };
+
+        if (src.RelatedImageLinks is not null)
+        {
+            extraMetadata.RelatedImageLinks.AddRange(src.RelatedImageLinks);
+        }
+
+        if (src.RelatedVideoLinks is not null)
+        {
+            extraMetadata.RelatedVideoLinks.AddRange(src.RelatedVideoLinks);
+        }
+
+        if (src.OtherLinks is not null)
+        {
+            extraMetadata.OtherLinks.AddRange(src.OtherLinks);
+        }
+
+        return extraMetadata;
+    }
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails? MapTo(ContactDetails? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var contactDetails = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails();
+
+        if (src.ContactPeople is not null)
+        {
+            contactDetails.ContactPeople.AddRange(src.ContactPeople);
+        }
+
+        if (src.ContactEmails is not null)
+        {
+            contactDetails.ContactEmails.AddRange(src.ContactEmails);
+        }
+
+        if (src.ContactPhones is not null)
+        {
+            contactDetails.ContactPhones.AddRange(src.ContactPhones);
+        }
+
+        return contactDetails;
+    }
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange? MapTo(AreaRange? src) =>
+        src is null
+            ? null
+            : new global::Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange
+            {
+                FromInSqm = src.FromInSqm.ToSafeString(), ToInSqm = src.ToInSqm.ToSafeString()
+            };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity? MapTo(PeopleCapacity? src) =>
+        src is null
+            ? null
+            : new global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity { From = src.From.ToSafeString(), To = src.To.ToSafeString() };
 }
