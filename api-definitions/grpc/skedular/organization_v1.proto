@@ -160,10 +160,12 @@ message Offering {
 
 message Admin_GetInput {
   string id = 1;
+  string uniqueAlphanumericName = 2;
 }
 
 message GetInput {
   string id = 1;
+  string uniqueAlphanumericName = 2;
 }
 
 enum Role {

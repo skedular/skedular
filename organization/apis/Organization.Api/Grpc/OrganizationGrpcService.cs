@@ -55,7 +55,11 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(request.Id, null, true, context.CancellationToken) ??
+        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(
+                               request.Id,
+                               request.UniqueAlphanumericName,
+                               true,
+                               context.CancellationToken) ??
                            throw new OrganizationNotFound();
 
         return mapper.MapToGrpcResponse(organization);
@@ -165,7 +169,11 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(request.Id, null, false, context.CancellationToken) ??
+        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(
+                               request.Id,
+                               request.UniqueAlphanumericName,
+                               false,
+                               context.CancellationToken) ??
                            throw new OrganizationNotFound();
 
         return mapper.MapToGrpcResponse(organization);
