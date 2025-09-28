@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using Enterprise.Shared.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,7 +8,7 @@ using Skedularctl.Services.Sharedspaces;
 
 namespace Skedularctl;
 
-public static class Program
+public class Program
 {
     public static async Task Main(string[] args)
     {
@@ -41,21 +42,24 @@ public static class Program
     }
 
     private static IHost CreateHost(string[] args) =>
-        Host.CreateDefaultBuilder(args).ConfigureServices((_, services) =>
-        {
-            services.AddLogging(builder =>
+        Host
+            .CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((_, configuration) => configuration.BuildConfig<Program>(_.HostingEnvironment.EnvironmentName, args))
+            .ConfigureServices((_, services) =>
             {
-                builder.AddConsole();
-                builder.SetMinimumLevel(LogLevel.Information);
+                services.AddLogging(builder =>
+                {
+                    builder.AddConsole();
+                    builder.SetMinimumLevel(LogLevel.Information);
 
-                builder.Services
-                    .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
-                    .AddSingleton<IPlaywrightProvider, PlaywrightProvider>()
-                    .AddSingleton<ICrawlerService, CrawlerService>()
-                    .AddSingleton<ILocationsCrawler, LocationsCrawler>()
-                    .AddSingleton<ILocationCrawler, LocationCrawler>()
-                    .AddSingleton<IContentEnricherService, ContentEnricherService>()
-                    .AddSingleton(new SharedSpacesConfiguration());
-            });
-        }).Build();
+                    builder.Services
+                        .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
+                        .AddSingleton<IPlaywrightProvider, PlaywrightProvider>()
+                        .AddSingleton<ICrawlerService, CrawlerService>()
+                        .AddSingleton<ILocationsCrawler, LocationsCrawler>()
+                        .AddSingleton<ILocationCrawler, LocationCrawler>()
+                        .AddSingleton<IContentEnricherService, ContentEnricherService>()
+                        .AddSingleton(new SharedSpacesConfiguration());
+                });
+            }).Build();
 }
