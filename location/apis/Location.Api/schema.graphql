@@ -87,6 +87,7 @@ type LocationDetails {
   locationSpaceTypes: [OrganizationTagDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
+  hasFutureBooking: Boolean! @cost(weight: "10")
   name: String!
   about: String
   timezone: String
@@ -94,7 +95,6 @@ type LocationDetails {
   openingHours: OpeningHours!
   deskCapacity: Int!
   roomCapacity: Int!
-  hasFutureBooking: Boolean!
   canModify: Boolean!
   canDelete: Boolean!
   canViewAnalytics: Boolean!
@@ -183,6 +183,7 @@ type OpeningHoursDetails {
 }
 
 type OrganizationDetails {
+  uniqueAlphanumericName: String
   id: ID!
 }
 
@@ -212,7 +213,7 @@ type Query {
   locationById(id: String!): LocationDetails @lookup @internal @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceLocations(after: String first: Int before: String last: Int where: MarketplaceLocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
-  myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
+  myLocations(organizationId: String organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resourceById(id: String!): ResourceDetails @lookup @internal @cost(weight: "10")
   locationVersion: Version!

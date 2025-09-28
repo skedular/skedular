@@ -23,6 +23,7 @@ public interface ITeamService
     Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
+    Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
     Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
@@ -259,6 +260,37 @@ public class TeamService(
         return await EnrichTeamAsync(customer, team, cancellationToken);
     }
 
+    public async Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var team = await cachedTeamService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
+        if (team.Organization.UniqueAlphanumericName == "skedularpubliclocations")
+        {
+            return false;
+        }
+
+        Shared.Database.Entities.Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
+        }
+
+        if (customer is not null && !await teamAuthorizationService.CanViewAsync(team, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var now = timeProvider.GetUtcNow();
+        return await repositoryFactory.BookingRepository
+            .Query(new Specification<Booking>
+            {
+                Criteria = query =>
+                    !query.DeletedAt.HasValue && query.InvolvedTeams.Select(item => item.Id).Contains(team.Id) && query.From >= now
+            })
+            .AnyAsync(cancellationToken);
+    }
+
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
         PaginationInputParam paginationInputParam,
         TeamSearchCriteria searchCriteria,
@@ -433,15 +465,6 @@ public class TeamService(
                     await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken)
             };
         }
-
-        var now = timeProvider.GetUtcNow();
-        mappedTeam.HasFutureBooking = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedTeams.Select(item => item.Id).Contains(team.Id) && query.From >= now
-            })
-            .AnyAsync(cancellationToken);
 
         return mappedTeam;
     }

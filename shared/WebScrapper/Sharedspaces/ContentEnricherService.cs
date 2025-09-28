@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Skedularctl.Services.Sharedspaces;
+namespace WebScrapper.Sharedspaces;
 
 public interface IContentEnricherService
 {

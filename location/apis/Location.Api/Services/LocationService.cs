@@ -27,7 +27,13 @@ public interface ILocationService
     Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationUniqueAlphanumericName, CancellationToken cancellationToken);
+
+    Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        CancellationToken cancellationToken);
+
+    Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
@@ -123,10 +129,10 @@ public class LocationService(
             {
                 RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
                 RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
-                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList()
             };
         }
-       
+
         var locationRef = location;
         var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
             new Specification<OrganizationTag>
@@ -236,6 +242,36 @@ public class LocationService(
         return await EnrichLocationAsync(customer, location, cancellationToken);
     }
 
+    public async Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var location = await cachedLocationService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
+
+        Shared.Database.Entities.Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            var verifiableToken = context.GetVerifiableToken();
+            if (!string.IsNullOrWhiteSpace(verifiableToken) || location.Type.ToLocationType() != LocationType.Marketplace)
+            {
+                customer = await cachedCustomerService.GetAsync(cancellationToken);
+            }
+        }
+
+        if (customer is not null && !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var now = timeProvider.GetUtcNow();
+        return await repositoryFactory.BookingRepository
+            .Query(new Specification<Booking>
+            {
+                Criteria = query => !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(id) && query.From >= now
+            })
+            .AnyAsync(cancellationToken);
+    }
+
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
@@ -260,7 +296,10 @@ public class LocationService(
             orderByFields,
             cancellationToken);
 
-        await cachedLocationService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        if (searchCriteria.OrganizationUniqueAlphanumericName != "skedularpubliclocations")
+        {
+            await cachedLocationService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        }
 
         var mappedLocations = new List<Edge<Shared.Models.Location>>();
         foreach (var edge in edges)
@@ -276,7 +315,9 @@ public class LocationService(
         return (paginatedInfo, mappedLocations, totalCount);
     }
 
-    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(string? organizationUniqueAlphanumericName,
+    public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -285,7 +326,7 @@ public class LocationService(
         if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
             organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               null,
+                               organizationId,
                                organizationUniqueAlphanumericName,
                                false,
                                false,
@@ -320,7 +361,7 @@ public class LocationService(
             {
                 RelatedImageLinks = location.ExtraMetadata.RelatedImageLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
                 RelatedVideoLinks = location.ExtraMetadata.RelatedVideoLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
-                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList(),
+                OtherLinks = location.ExtraMetadata.OtherLinks?.Where(item => !string.IsNullOrWhiteSpace(item)).ToList()
             };
         }
 
@@ -388,25 +429,19 @@ public class LocationService(
 
         if (customer is not null)
         {
-            mappedLocation.Permissions = new Permissions
+            if (location.Organization.UniqueAlphanumericName != "skedularpubliclocations")
             {
-                CanView =
-                    isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
-                CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
-                CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
-                CanViewAnalytics =
-                    await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
-            };
+                mappedLocation.Permissions = new Permissions
+                {
+                    CanView =
+                        isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
+                    CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
+                    CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
+                    CanViewAnalytics =
+                        await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
+                };
+            }
         }
-
-        var now = timeProvider.GetUtcNow();
-        mappedLocation.HasFutureBooking = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(location.Id) && query.From >= now
-            })
-            .AnyAsync(cancellationToken);
 
         return mappedLocation;
     }

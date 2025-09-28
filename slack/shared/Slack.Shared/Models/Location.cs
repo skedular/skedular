@@ -14,5 +14,4 @@ public class Location : ReplicatedModelBaseWithDeleted
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
     public WorkspaceChannel? DailyUpdateChannel { get; set; }
     public LocationPermissions Permissions { get; set; } = new();
-    public bool HasFutureBooking { get; set; }
 }

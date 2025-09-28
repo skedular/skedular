@@ -27,7 +27,7 @@
     "webapp#relay": "turbo run webapp#relay"
   },
   "devDependencies": {
-    "@types/relay-runtime": "^19.0.2",
+    "@types/relay-runtime": "^19.0.3",
     "eslint": "9.36.0",
     "eslint-plugin-turbo": "^2.5.8",
     "global": "^4.4.0",

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Skedularctl.Services;
-using Skedularctl.Services.Sharedspaces;
 
 namespace Skedularctl;
 
@@ -25,17 +24,12 @@ public class Program
         var serviceProvider = host.Services;
 
         await Parser.Default
-            .ParseArguments<ProtobufEventMetadataGenerateOptions, CrawlSharedspacesOptions>(args)
+            .ParseArguments<ProtobufEventMetadataGenerateOptions>(args)
             .MapResult(
-                async (ProtobufEventMetadataGenerateOptions options) =>
+                async options =>
                 {
                     var handler = serviceProvider.GetRequiredService<IProtobufEventMetadataGenerateService>();
                     await handler.HandleAsync(options, cancellationToken);
-                },
-                async (CrawlSharedspacesOptions sharedspacesOptions) =>
-                {
-                    var handler = serviceProvider.GetRequiredService<ICrawlerService>();
-                    await handler.HandleAsync(sharedspacesOptions, cancellationToken);
                 },
                 _ => Task.CompletedTask
             );
@@ -53,13 +47,7 @@ public class Program
                     builder.SetMinimumLevel(LogLevel.Information);
 
                     builder.Services
-                        .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>()
-                        .AddSingleton<IPlaywrightProvider, PlaywrightProvider>()
-                        .AddSingleton<ICrawlerService, CrawlerService>()
-                        .AddSingleton<ILocationsCrawler, LocationsCrawler>()
-                        .AddSingleton<ILocationCrawler, LocationCrawler>()
-                        .AddSingleton<IContentEnricherService, ContentEnricherService>()
-                        .AddSingleton(new SharedSpacesConfiguration());
+                        .AddSingleton<IProtobufEventMetadataGenerateService, ProtobufEventMetadataGenerateService>();
                 });
             }).Build();
 }

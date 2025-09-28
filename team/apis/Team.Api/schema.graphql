@@ -78,6 +78,7 @@ type Mutation {
 }
 
 type OrganizationDetails {
+  uniqueAlphanumericName: String
   id: ID!
 }
 
@@ -106,10 +107,10 @@ type TeamDetails {
   organization: OrganizationDetails!
   primaryLocation: LocationDetails
   members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
+  hasFutureBooking: Boolean! @cost(weight: "10")
   name: String!
   about: String
   timezone: String
-  hasFutureBooking: Boolean!
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!

@@ -18,9 +18,12 @@ public class TeamDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
@@ -59,6 +62,14 @@ public class TeamDetails : Node
             TotalCount = totalCount
         };
     }
+
+    [UseResolverScope]
+    public async Task<bool> HasFutureBookingAsync(
+        [Parent] TeamDetails team,
+        [Service] ITeamService teamService,
+        CancellationToken cancellationToken) =>
+        team.OrganizationUniqueAlphanumericName != "skedularpubliclocations" &&
+        await teamService.HasFutureBookingAsync(team.Id, false, cancellationToken);
 }
 
 [ObjectType<TeamDetails>]
@@ -67,10 +78,11 @@ public static partial class TeamDetailsType
     static partial void Configure(IObjectTypeDescriptor<TeamDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
+        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.PrimaryLocationId);
     }
 
-    public static OrganizationDetails GetOrganization([Parent] TeamDetails item) => new(item.OrganizationId);
+    public static OrganizationDetails GetOrganization([Parent] TeamDetails item) => new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
 
     public static LocationDetails? GetPrimaryLocation([Parent] TeamDetails item) => string.IsNullOrWhiteSpace(item.PrimaryLocationId)
         ? null

@@ -144,8 +144,8 @@ public class Mapper : IMapper
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
-                HasFutureBooking = src.HasFutureBooking,
                 OrganizationId = src.Organization.Id,
+                OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
                 PrimaryLocationId = src.PrimaryLocation?.Id
             };
 
@@ -283,8 +283,7 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations
-            },
-            HasFutureBooking = src.HasFutureBooking
+            }
         };
 
         team.Members.AddRange(MapToGrpcResponse(src.TeamMembers));

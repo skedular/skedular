@@ -123,6 +123,7 @@ type Mutation {
 }
 
 type OrganizationDetails {
+  uniqueAlphanumericName: String
   id: ID!
 }
 

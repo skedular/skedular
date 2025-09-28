@@ -230,10 +230,10 @@ public class Mapper : IMapper
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics,
-                HasFutureBooking = src.HasFutureBooking,
                 DeskCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceDesk)),
                 RoomCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceRoom)),
                 OrganizationId = src.Organization.Id,
+                OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
                 CustomTagIds = src.CustomTags.Select(item => item.Id),
                 ZoneIds = src.Zones.Select(item => item.Id),
                 ResourceTypeIds = src.Organization.Tags
@@ -484,7 +484,6 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
-            HasFutureBooking = src.HasFutureBooking,
             ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 

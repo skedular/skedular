@@ -122,11 +122,12 @@ public class RootQuery(IMapper mapper)
 
     [UseResolverScope]
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
+        string? organizationId,
         string? organizationUniqueAlphanumericName,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationUniqueAlphanumericName, cancellationToken))
+            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken))
             : null;
 }

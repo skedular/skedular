@@ -1,6 +1,7 @@
 using Customer.Api.GraphQL.Payment;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -34,6 +35,10 @@ public class CustomerDetails : Node
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
     [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
     [GraphQLName("defaultOrganizationId")] public string? DefaultOrganizationId { get; set; }
+
+    [GraphQLName("defaultOrganizationUniqueAlphanumericName")]
+    public string? DefaultOrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("preferredLocationIds")] public IEnumerable<string> PreferredLocationIds { get; set; } = [];
     [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
     [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
@@ -75,6 +80,7 @@ public static partial class CustomerDetailsType
     static partial void Configure(IObjectTypeDescriptor<CustomerDetails> descriptor)
     {
         descriptor.Ignore(item => item.DefaultOrganizationId);
+        descriptor.Ignore(item => item.DefaultOrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.PreferredLocationIds);
         descriptor.Ignore(item => item.PreferredZoneIds);
         descriptor.Ignore(item => item.PreferredCustomTagIds);
@@ -83,7 +89,7 @@ public static partial class CustomerDetailsType
 
     public static OrganizationDetails? GetOrganization([Parent] CustomerDetails item) => string.IsNullOrWhiteSpace(item.DefaultOrganizationId)
         ? null
-        : new OrganizationDetails(item.DefaultOrganizationId);
+        : new OrganizationDetails(item.DefaultOrganizationId, item.DefaultOrganizationUniqueAlphanumericName.ToSafeString());
 
     public static IEnumerable<LocationDetails> GetPreferredLocations([Parent] CustomerDetails item) =>
         item.PreferredLocationIds.Select(id => new LocationDetails(id));

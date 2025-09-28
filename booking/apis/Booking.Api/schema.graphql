@@ -109,6 +109,7 @@ type OrganizationBookingPermissions {
 }
 
 type OrganizationDetails {
+  uniqueAlphanumericName: String
   id: ID!
 }
 

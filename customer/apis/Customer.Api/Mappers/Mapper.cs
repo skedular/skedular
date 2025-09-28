@@ -132,6 +132,7 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities),
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganizationId = src.DefaultOrganization?.Id,
+            DefaultOrganizationUniqueAlphanumericName = src.DefaultOrganization?.UniqueAlphanumericName,
             PreferredLocationIds = src.PreferredLocations.Select(item => item.Id),
             PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
             PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),

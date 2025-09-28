@@ -24,7 +24,5 @@ public class Location : ModelBaseWithDeleted
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }
-
-    public bool HasFutureBooking { get; set; }
     public Permissions Permissions { get; set; } = new();
 }

@@ -29,14 +29,7 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1"/>
-        <PackageReference Include="CsvHelper" Version="33.1.0"/>
         <PackageReference Include="DotLiquid" Version="2.3.197"/>
-
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.Playwright" Version="1.55.0"/>
     </ItemGroup>
 
     <ItemGroup>

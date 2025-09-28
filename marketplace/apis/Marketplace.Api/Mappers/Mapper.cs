@@ -203,6 +203,7 @@ public class Mapper : IMapper
             ProductTagIds = src.ProductTags.Select(item => item.Id),
             LocationTagIds = src.LocationTags.Select(item => item.Id),
             OrganizationId = src.Organization.Id,
+            OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
         };
     }

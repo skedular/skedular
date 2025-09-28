@@ -1,4 +1,4 @@
-namespace Skedularctl.Services.Sharedspaces;
+namespace WebScrapper.Sharedspaces;
 
 public class SharedSpacesConfiguration
 {

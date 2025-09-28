@@ -20,12 +20,15 @@ public class LocationDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationTypeDetails Type { get; set; } = new();
     [GraphQLName("openingHours")] public OpeningHours OpeningHours { get; set; } = new();
     [GraphQLName("deskCapacity")] public int DeskCapacity { get; set; }
     [GraphQLName("roomCapacity")] public int RoomCapacity { get; set; }
-    [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
@@ -69,6 +72,11 @@ public class LocationDetails : Node
         [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
+        if (location.OrganizationUniqueAlphanumericName == "skedularpubliclocations")
+        {
+            return Connection<ResourceEdge>.Empty;
+        }
+
         var (paginatedInfo, edges, totalCount) = await resourceService.GetPaginatedResourcesAsync(
             new PaginationInputParam(after, first, before, last),
             new ResourceSearchCriteria(
@@ -95,6 +103,14 @@ public class LocationDetails : Node
             TotalCount = totalCount
         };
     }
+
+    [UseResolverScope]
+    public async Task<bool> HasFutureBookingAsync(
+        [Parent] LocationDetails location,
+        [Service] ILocationService locationService,
+        CancellationToken cancellationToken) =>
+        location.OrganizationUniqueAlphanumericName != "skedularpubliclocations" &&
+        await locationService.HasFutureBookingAsync(location.Id, false, cancellationToken);
 }
 
 [ObjectType<LocationDetails>]
@@ -103,6 +119,7 @@ public static partial class LocationDetailsType
     static partial void Configure(IObjectTypeDescriptor<LocationDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
+        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.CustomTagIds);
         descriptor.Ignore(item => item.ZoneIds);
         descriptor.Ignore(item => item.ResourceTypeIds);
@@ -110,7 +127,8 @@ public static partial class LocationDetailsType
         descriptor.Ignore(item => item.LocationSpaceTypeIds);
     }
 
-    public static OrganizationDetails GetOrganization([Parent] LocationDetails item) => new(item.OrganizationId);
+    public static OrganizationDetails GetOrganization([Parent] LocationDetails item) =>
+        new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
 
     public static IEnumerable<OrganizationTagDetails> GetCustomTags([Parent] LocationDetails item) =>
         item.CustomTagIds.Select(id => new OrganizationTagDetails(id));

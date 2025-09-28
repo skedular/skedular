@@ -84,9 +84,8 @@ const RootQuery = graphql`
           }
         }
       }
-    }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       canModify
+      uniqueAlphanumericName
     }
     ...newLocationButton_query
     ...locationCard_query
@@ -530,20 +529,26 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
       field: 'bookNow',
       headerName: '',
       editable: false,
-      renderCell: (params) => (
-        <NewBookingButton
-          onReloadRequired={onReloadRequired}
-          defaultDate={defaultDate}
-          organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-          defaultLocationId={params.id as string}
-          label="Book Now"
-          hideIcon
-          variant="contained"
-          size="small"
-          sx={{ textTransform: 'none' }}
-          invertDefaultColor={paletteMode === 'dark'}
-        />
-      ),
+      renderCell: (params) => {
+        if (rootData.organization?.uniqueAlphanumericName === 'skedularpubliclocations') {
+          return <></>;
+        }
+
+        return (
+          <NewBookingButton
+            onReloadRequired={onReloadRequired}
+            defaultDate={defaultDate}
+            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+            defaultLocationId={params.id as string}
+            label="Book Now"
+            hideIcon
+            variant="contained"
+            size="small"
+            sx={{ textTransform: 'none' }}
+            invertDefaultColor={paletteMode === 'dark'}
+          />
+        );
+      },
       display: 'flex',
       minWidth: 140,
     },

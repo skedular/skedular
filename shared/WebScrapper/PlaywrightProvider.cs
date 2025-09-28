@@ -1,6 +1,6 @@
 using Microsoft.Playwright;
 
-namespace Skedularctl.Services;
+namespace WebScrapper;
 
 public interface IPlaywrightProvider
 {

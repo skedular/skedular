@@ -271,8 +271,7 @@ public class Mapper : IMapper
                 LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Resources = MapTo(src.Resources).ToList(),
-            HasFutureBooking = src.HasFutureBooking
+            Resources = MapTo(src.Resources).ToList()
         };
 
     public Team MapTo(Api.Shared.Services.Grpc.Skedular.Team.V1.Team src)
@@ -292,8 +291,7 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 CanCancelPeopleExistingInvitations = src.Permissions.CanCancelPeopleExistingInvitations
-            },
-            HasFutureBooking = src.HasFutureBooking
+            }
         };
 
         team.TeamMembers = MapTo(src.Members, team).ToList();

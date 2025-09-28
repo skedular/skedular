@@ -1,7 +1,7 @@
 using Microsoft.Playwright;
-using Location = Skedularctl.Services.Models.Location;
+using Location = WebScrapper.Models.Location;
 
-namespace Skedularctl.Services.Sharedspaces;
+namespace WebScrapper.Sharedspaces;
 
 public interface ILocationCrawler
 {

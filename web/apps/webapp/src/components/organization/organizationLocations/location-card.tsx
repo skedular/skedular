@@ -370,18 +370,20 @@ const LocationCard = ({
                   Floor Plan
                 </Button>
               </Tooltip>
-              <NewBookingButton
-                onReloadRequired={onReloadRequired}
-                defaultDate={defaultDate}
-                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                defaultLocationId={locationDetails.id}
-                label="Book Now"
-                hideIcon
-                variant="contained"
-                size="small"
-                sx={{ textTransform: 'none' }}
-                invertDefaultColor={paletteMode === 'dark'}
-              />
+              {locationDetails.organization?.uniqueAlphanumericName !== 'skedularpubliclocations' && (
+                <NewBookingButton
+                  onReloadRequired={onReloadRequired}
+                  defaultDate={defaultDate}
+                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                  defaultLocationId={locationDetails.id}
+                  label="Book Now"
+                  hideIcon
+                  variant="contained"
+                  size="small"
+                  sx={{ textTransform: 'none' }}
+                  invertDefaultColor={paletteMode === 'dark'}
+                />
+              )}
 
               <Box color={paletteMode === 'dark' ? coal : sandstone}>
                 {isPreferred && (

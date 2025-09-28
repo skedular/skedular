@@ -50,6 +50,10 @@ public class ProductDetails : Node
     public string LatestProductVersionId { get; set; } = string.Empty;
 
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
@@ -60,11 +64,13 @@ public static partial class ProductDetailsType
     static partial void Configure(IObjectTypeDescriptor<ProductDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
+        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.ProductTagIds);
         descriptor.Ignore(item => item.LocationTagIds);
     }
 
-    public static OrganizationDetails GetOrganization([Parent] ProductDetails item) => new(item.OrganizationId);
+    public static OrganizationDetails GetOrganization([Parent] ProductDetails item) =>
+        new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
 
     public static IEnumerable<OrganizationTagDetails> GetProductTags([Parent] ProductDetails item) =>
         item.ProductTagIds.Select(id => new OrganizationTagDetails(id));

@@ -55,10 +55,9 @@ message Team {
   string organizationId = 4;
   string timezone = 5;
   repeated TeamMember members = 6;
-  bool hasFutureBooking = 7;
-  Permissions permissions = 8;
-  string primaryLocationId = 9;
-  CdnImageFile primaryFeatureImage = 10;
+  Permissions permissions = 7;
+  string primaryLocationId = 8;
+  CdnImageFile primaryFeatureImage = 9;
 }
 
 message Admin_GetInput {

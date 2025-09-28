@@ -105,15 +105,14 @@ message Location {
   string organizationId = 4;
   string timezone = 5;
   repeated Resource resources = 6;
-  bool hasFutureBooking = 7;
-  Permissions permissions = 8;
-  repeated string customTagIds = 9;
-  repeated string zoneIds = 10;
-  repeated string locationTagIds = 11;
-  OpeningHours openingHours = 12;
-  CdnImageFile primaryFeatureImage = 13;
-  LocationType type = 14;
-  ExtraMetadata ExtraMetadata = 15;
+  Permissions permissions = 7;
+  repeated string customTagIds = 8;
+  repeated string zoneIds = 9;
+  repeated string locationTagIds = 10;
+  OpeningHours openingHours = 11;
+  CdnImageFile primaryFeatureImage = 12;
+  LocationType type = 13;
+  ExtraMetadata ExtraMetadata = 14;
 }
 
 message Admin_GetInput {

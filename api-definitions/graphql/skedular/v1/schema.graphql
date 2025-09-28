@@ -373,7 +373,7 @@ type LocationDetails {
   customTags: [OrganizationTagDetails!]!
   deskCapacity: Int!
   extraMetadata: LocationExtraMetadata
-  hasFutureBooking: Boolean!
+  hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
   locationSpaceTypes: [OrganizationTagDetails!]!
   locationTags: [OrganizationTagDetails!]!
@@ -1027,7 +1027,7 @@ type Query {
   msTeamsVersion: Version!
   myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
-  myLocations(organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
+  myLocations(organizationId: String organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
   openingHoursMinutesStep: Int!
@@ -1138,7 +1138,7 @@ type TeamDetails {
   canDelete: Boolean!
   canInvitePeople: Boolean!
   canModify: Boolean!
-  hasFutureBooking: Boolean!
+  hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
   members(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   name: String!

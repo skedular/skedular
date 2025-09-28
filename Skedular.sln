@@ -460,6 +460,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nominatim", "nominatim", "{
 		api-definitions\openapi\nominatim\nominatim.openapi_v4.json = api-definitions\openapi\nominatim\nominatim.openapi_v4.json
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebScrapper", "shared\WebScrapper\WebScrapper.csproj", "{5989DF00-DEFD-4406-AFFF-8AB434F5777D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -966,6 +968,10 @@ Global
 		{065C32DB-D713-47F0-8838-566BB57D3946}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{065C32DB-D713-47F0-8838-566BB57D3946}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{065C32DB-D713-47F0-8838-566BB57D3946}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5989DF00-DEFD-4406-AFFF-8AB434F5777D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5989DF00-DEFD-4406-AFFF-8AB434F5777D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5989DF00-DEFD-4406-AFFF-8AB434F5777D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5989DF00-DEFD-4406-AFFF-8AB434F5777D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1143,5 +1149,6 @@ Global
 		{DC72EC7C-1A1D-4E4C-AD83-3A6982B1BA3D} = {260C7A55-E7D6-4167-9D38-578368549C31}
 		{065C32DB-D713-47F0-8838-566BB57D3946} = {3C37F231-E3BF-4C6C-90ED-6EDA6C0CAF64}
 		{38B7CA0A-FA3B-4CA4-939E-E6ED4B3B858B} = {7812FBBA-E237-47AF-99F2-71DF290E9657}
+		{5989DF00-DEFD-4406-AFFF-8AB434F5777D} = {0916AC00-8FE9-4B38-A135-EF9CE225C84B}
 	EndGlobalSection
 EndGlobal

@@ -12,6 +12,5 @@ public class Team : ReplicatedModelBaseWithDeleted
     public DateTimeOffset? SlackChannelDailyUpdateLastSentAt { get; set; }
     public WorkspaceChannel? DailyUpdateChannel { get; set; }
     public TeamPermissions Permissions { get; set; } = new();
-    public bool HasFutureBooking { get; set; }
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
 }

@@ -3,9 +3,9 @@ using CommandLine;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Flurl;
-using Skedularctl.Services.Models;
+using WebScrapper.Models;
 
-namespace Skedularctl.Services.Sharedspaces;
+namespace WebScrapper.Sharedspaces;
 
 [Verb("crawl-sharedspaces")]
 public class CrawlSharedspacesOptions;

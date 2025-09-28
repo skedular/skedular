@@ -1,4 +1,5 @@
 using Booking.Api.GraphQL.Payment;
+using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -19,12 +20,16 @@ public class BookingDetails : Node
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
 
     [GraphQLName("involvedOrganizationIds")]
-    public IEnumerable<string> InvolvedOrganizationIds { get; set; } = [];
+    public IEnumerable<(string Id, string UniqueAlphanumericName)> InvolvedOrganizationIds { get; set; } = [];
 
     [GraphQLName("involvedLocationIds")] public IEnumerable<string> InvolvedLocationIds { get; set; } = [];
     [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
     [GraphQLName("paidByCustomerId")] public string? PaidByCustomerId { get; set; }
     [GraphQLName("paidByOrganizationId")] public string? PaidByOrganizationId { get; set; }
+
+    [GraphQLName("paidByOrganizationUniqueAlphanumericName")]
+    public string? PaidByOrganizationUniqueAlphanumericName { get; set; }
+
     [GraphQLName("createdByCustomerId")] public string? CreatedByCustomerId { get; set; }
     [GraphQLName("paymentMethod")] public PaymentMethodTypeDetails? PaymentMethod { get; set; }
     [GraphQLName("totalAmountExcludeTax")] public decimal? TotalAmountExcludeTax { get; set; }
@@ -75,6 +80,7 @@ public static partial class BookingDetailsType
         descriptor.Ignore(item => item.DeletedByCustomerId);
         descriptor.Ignore(item => item.InvolvedOrganizationIds);
         descriptor.Ignore(item => item.PaidByOrganizationId);
+        descriptor.Ignore(item => item.PaidByOrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.InvolvedLocationIds);
         descriptor.Ignore(item => item.InvolvedTeamIds);
     }
@@ -95,10 +101,12 @@ public static partial class BookingDetailsType
         string.IsNullOrWhiteSpace(item.DeletedByCustomerId) ? null : new CustomerDetails(item.DeletedByCustomerId);
 
     public static IEnumerable<OrganizationDetails> GetInvolvedOrganizations([Parent] BookingDetails item) =>
-        item.InvolvedOrganizationIds.Select(id => new OrganizationDetails(id));
+        item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.UniqueAlphanumericName));
 
     public static OrganizationDetails? GetPaidByOrganization([Parent] BookingDetails item) =>
-        string.IsNullOrWhiteSpace(item.PaidByOrganizationId) ? null : new OrganizationDetails(item.PaidByOrganizationId);
+        string.IsNullOrWhiteSpace(item.PaidByOrganizationId)
+            ? null
+            : new OrganizationDetails(item.PaidByOrganizationId, item.PaidByOrganizationUniqueAlphanumericName.ToSafeString());
 
     public static IEnumerable<LocationDetails> GetInvolvedLocations([Parent] BookingDetails item) =>
         item.InvolvedLocationIds.Select(id => new LocationDetails(id));
