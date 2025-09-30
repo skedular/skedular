@@ -15,7 +15,6 @@ public static class Extensions
             .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
             .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
             .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
-            .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ILocationService, LocationService>()
             .AddScoped<ILocationOpeningHoursService, LocationOpeningHoursService>()
             .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()

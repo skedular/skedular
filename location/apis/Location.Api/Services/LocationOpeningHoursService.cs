@@ -17,7 +17,7 @@ public interface ILocationOpeningHoursService
 public class LocationOpeningHoursService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
@@ -31,7 +31,7 @@ public class LocationOpeningHoursService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
         if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {

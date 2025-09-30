@@ -34,7 +34,6 @@ public interface IFloorPlanService
 public class FloorPlanService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedCustomerService cachedCustomerService,
     IRandomHelper randomHelper,
@@ -44,7 +43,7 @@ public class FloorPlanService(
     public async Task<FloorPlan?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(id, cancellationToken) ?? throw new FloorPlanNotFound();
         var existingLocation = await cachedLocationService.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
@@ -62,7 +61,7 @@ public class FloorPlanService(
         ArgumentNullException.ThrowIfNull(floorPlan.Location);
         ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Location.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(floorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
 
@@ -143,7 +142,7 @@ public class FloorPlanService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(floorPlan.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(floorPlan.Id, cancellationToken) ??
                                 throw new FloorPlanNotFound();
 
@@ -162,7 +161,7 @@ public class FloorPlanService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingFloorPlan = await repositoryFactory.FloorPlanRepository.GetByIdAsync(id, cancellationToken) ?? throw new FloorPlanNotFound();
         var existingLocation =
             await repositoryFactory.LocationRepository.GetByIdAsync(existingFloorPlan.Location.Id, cancellationToken) ?? throw new LocationNotFound();
@@ -268,7 +267,7 @@ public class FloorPlanService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
         if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {

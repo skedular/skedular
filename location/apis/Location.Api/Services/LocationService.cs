@@ -15,7 +15,7 @@ using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Microsoft.EntityFrameworkCore;
 using Booking = Location.Shared.Database.Entities.Booking;
-using Customer = Location.Shared.Models.Customer;
+using Customer = Location.Shared.Database.Entities.Customer;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
@@ -48,7 +48,6 @@ public class LocationService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
-    ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
@@ -65,7 +64,7 @@ public class LocationService(
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
 
         Organization organization;
         if (!string.IsNullOrWhiteSpace(location.Organization.Id))
@@ -181,7 +180,7 @@ public class LocationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
 
-        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetNullableAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
                                throw new LocationNotFound();
 
@@ -205,7 +204,7 @@ public class LocationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
         if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
@@ -241,7 +240,7 @@ public class LocationService(
             return null;
         }
 
-        Shared.Database.Entities.Customer? customer = null;
+        Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             var verifiableToken = context.GetVerifiableToken();
@@ -260,7 +259,7 @@ public class LocationService(
 
         var location = await cachedLocationService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
 
-        Shared.Database.Entities.Customer? customer = null;
+        Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             var verifiableToken = context.GetVerifiableToken();
@@ -291,7 +290,7 @@ public class LocationService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        Shared.Database.Entities.Customer? customer = null;
+        Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -426,7 +425,7 @@ public class LocationService(
     }
 
     private async Task<Shared.Models.Location> EnrichLocationAsync(
-        Shared.Database.Entities.Customer? customer,
+        Customer? customer,
         Shared.Database.Entities.Location location,
         CancellationToken cancellationToken)
     {

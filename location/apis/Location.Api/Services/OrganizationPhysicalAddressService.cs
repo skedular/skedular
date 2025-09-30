@@ -6,6 +6,7 @@ using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services.Cache;
 
 namespace Location.Api.Services;
 
@@ -18,7 +19,7 @@ public interface ILocationPhysicalAddressService
 public class LocationPhysicalAddressService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRandomHelper randomHelper,
     IMapper mapper,
@@ -29,10 +30,9 @@ public class LocationPhysicalAddressService(
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Location);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationPhysicalAddress.Location.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingLocation =
-            await repositoryFactory.LocationRepository.GetByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken) ??
-            throw new LocationNotFound();
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken) ??
+                               throw new LocationNotFound();
 
         if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {
@@ -85,7 +85,7 @@ public class LocationPhysicalAddressService(
     {
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocationPhysicalAddress = await repositoryFactory.LocationPhysicalAddressRepository.GetByIdAsync(
             locationPhysicalAddress.Id,
             cancellationToken) ?? throw new LocationPhysicalAddressNotFound();

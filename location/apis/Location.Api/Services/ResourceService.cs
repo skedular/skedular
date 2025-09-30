@@ -11,6 +11,7 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
+using Customer = Location.Shared.Database.Entities.Customer;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
@@ -37,7 +38,6 @@ public class ResourceService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
-    ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IMapper mapper,
@@ -57,7 +57,7 @@ public class ResourceService(
         Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
-            (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
         if (!string.IsNullOrWhiteSpace(resource.Id))
@@ -147,7 +147,7 @@ public class ResourceService(
             ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken) ??
                                throw new ResourceNotFound();
 
@@ -158,7 +158,7 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
@@ -196,7 +196,7 @@ public class ResourceService(
             return [];
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
@@ -251,7 +251,7 @@ public class ResourceService(
             return [];
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
@@ -310,7 +310,7 @@ public class ResourceService(
             return [];
         }
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
@@ -366,7 +366,7 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        Shared.Database.Entities.Customer? customer = null;
+        Customer? customer = null;
         if (!ignoreAuthorizationCheck)
         {
             customer = await cachedCustomerService.GetAsync(cancellationToken);
