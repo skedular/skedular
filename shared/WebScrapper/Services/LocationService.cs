@@ -53,50 +53,72 @@ public class LocationService(
         var importedCount = 0;
         foreach (var rawLocation in rawLocations)
         {
-            if (locations.Any(item => item.ExtraMetadata.OtherLinks.Contains(rawLocation.Url)))
+            var matchingLocation = locations.FirstOrDefault(item => item.ExtraMetadata.OtherLinks.Contains(rawLocation.Url));
+            if (matchingLocation is null)
             {
-                continue;
+                var adminAddInput = new Admin_AddInput
+                {
+                    Id = randomHelper.Generate(),
+                    Name = rawLocation.Title.ToSafeString(),
+                    OrganizationId = organization.Id,
+                    Type = LocationType.Marketplace,
+                    Timezone = "Pacific/Auckland",
+                    About = rawLocation.Description.ToSafeString(),
+                    ExtraMetadata = new ExtraMetadata
+                    {
+                        Website = rawLocation.Websites.ToSafeString(),
+                        ContactDetails = new ContactDetails(),
+                        AreaRange = new AreaRange { FromInSqm = rawLocation.Area.ToSafeString(), ToInSqm = rawLocation.Area.ToSafeString() },
+                        PeopleCapacity = new PeopleCapacity
+                        {
+                            From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString()
+                        }
+                    }
+                };
+
+                adminAddInput.ExtraMetadata.ContactDetails.ContactEmails.AddRange(
+                    rawLocation.Emails.Split(Environment.NewLine)
+                        .Select(item => item.Trim())
+                        .Where(item => !string.IsNullOrWhiteSpace(item)));
+                adminAddInput.ExtraMetadata.ContactDetails.ContactPeople.AddRange(
+                    rawLocation.ContactPerson.Split(Environment.NewLine)
+                        .Select(item => item.Trim())
+                        .Where(item => !string.IsNullOrWhiteSpace(item)));
+                adminAddInput.ExtraMetadata.ContactDetails.ContactPhones.AddRange(
+                    rawLocation.ContactPhone.Split(Environment.NewLine)
+                        .Select(item => item.Trim())
+                        .Where(item => !string.IsNullOrWhiteSpace(item)));
+                adminAddInput.ExtraMetadata.OtherLinks.Add(rawLocation.Url.ToSafeString());
+
+                await locationServiceClient.Admin_AddAsync(
+                    adminAddInput,
+                    locationConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+
+                Console.WriteLine($"Added location {++importedCount} - {rawLocation.Title}");
+            }
+            else
+            {
+                var adminUpdateInput = new Admin_UpdateInput
+                {
+                    Id = matchingLocation.Id,
+                    Name = rawLocation.Title.ToSafeString(),
+                    OrganizationId = organization.Id,
+                    Type = LocationType.Marketplace,
+                    Timezone = "Pacific/Auckland",
+                    About = rawLocation.Description.ToSafeString(),
+                    ExtraMetadata = matchingLocation.ExtraMetadata
+                };
+
+                await locationServiceClient.Admin_UpdateAsync(
+                    adminUpdateInput,
+                    locationConfiguration.ApiKey.CreateMetadata(),
+                    cancellationToken: cancellationToken);
+
+                Console.WriteLine($"Updated location {++importedCount} - {rawLocation.Title}");
             }
 
-            var adminAddInput = new Admin_AddInput
-            {
-                Id = randomHelper.Generate(),
-                Name = rawLocation.Title.ToSafeString(),
-                OrganizationId = organization.Id,
-                Type = LocationType.Marketplace,
-                Timezone = "Pacific/Auckland",
-                About = rawLocation.Description.ToSafeString(),
-                ExtraMetadata = new ExtraMetadata
-                {
-                    Website = rawLocation.Websites.ToSafeString(),
-                    ContactDetails = new ContactDetails(),
-                    AreaRange = new AreaRange { FromInSqm = rawLocation.Area.ToSafeString(), ToInSqm = rawLocation.Area.ToSafeString() },
-                    PeopleCapacity = new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
-                }
-            };
-
-            adminAddInput.ExtraMetadata.ContactDetails.ContactEmails.AddRange(
-                rawLocation.Emails.Split(Environment.NewLine)
-                    .Select(item => item.Trim())
-                    .Where(item => !string.IsNullOrWhiteSpace(item)));
-            adminAddInput.ExtraMetadata.ContactDetails.ContactPeople.AddRange(
-                rawLocation.ContactPerson.Split(Environment.NewLine)
-                    .Select(item => item.Trim())
-                    .Where(item => !string.IsNullOrWhiteSpace(item)));
-            adminAddInput.ExtraMetadata.ContactDetails.ContactPhones.AddRange(
-                rawLocation.ContactPhone.Split(Environment.NewLine)
-                    .Select(item => item.Trim())
-                    .Where(item => !string.IsNullOrWhiteSpace(item)));
-            adminAddInput.ExtraMetadata.OtherLinks.Add(rawLocation.Url.ToSafeString());
-
-            await locationServiceClient.Admin_AddAsync(
-                adminAddInput,
-                locationConfiguration.ApiKey.CreateMetadata(),
-                cancellationToken: cancellationToken);
-
-            Console.WriteLine($"Imported location {++importedCount} - {rawLocation.Title}");
-
-            await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
+            await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
         }
     }
 }

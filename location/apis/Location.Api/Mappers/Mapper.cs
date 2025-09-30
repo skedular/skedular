@@ -476,7 +476,8 @@ public class Mapper : IMapper
             },
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
@@ -548,7 +549,8 @@ public class Mapper : IMapper
             },
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            ExtraMetadata = MapTo(src.ExtraMetadata)
         };
 
     public Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location) =>

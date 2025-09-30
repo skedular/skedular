@@ -97,6 +97,7 @@ message Admin_UpdateInput {
   repeated string locationTagIds = 6;
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
+  ExtraMetadata ExtraMetadata = 9;
 }
 
 message LocationConnection {
@@ -205,6 +206,7 @@ message UpdateInput {
   repeated string locationTagIds = 6;
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
+  ExtraMetadata ExtraMetadata = 9;
 }
 
 message RemoveInput {
