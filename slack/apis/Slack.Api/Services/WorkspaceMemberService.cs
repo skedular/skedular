@@ -5,6 +5,7 @@ using Slack.Api.Mappers;
 using Slack.Shared;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.Cache;
 using Slack.Shared.Services.CrossDomains;
 using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
@@ -25,6 +26,7 @@ public class WorkspaceMemberService(
     IMapper mapper,
     IRandomHelper randomHelper,
     ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     ILocationService locationService,
     IOrganizationMemberService organizationMemberService) : IWorkspaceMemberService
 {
@@ -33,7 +35,7 @@ public class WorkspaceMemberService(
         string workspaceMemberId,
         CancellationToken cancellationToken)
     {
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
+        var customer = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
         var workspaceMember = await EnsureWorkspaceMemberExistAsync(workspace, workspaceMemberId, cancellationToken);
         if (customer is not null)
         {

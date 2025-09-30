@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
+using Slack.Shared.Services.Cache;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 
 namespace Slack.Jobs.Jobs;
@@ -22,6 +23,7 @@ public class UpdateWorkspaceMemberProfileStatusJob(
             try
             {
                 await using var scope = serviceProvider.CreateAsyncScope();
+                var cachedCustomerService = scope.ServiceProvider.GetRequiredService<ICachedCustomerService>();
                 var workspaceMemberService = scope.ServiceProvider.GetRequiredService<IWorkspaceMemberService>();
                 var repositoryFactory = scope.ServiceProvider.GetRequiredService<IRepositoryFactory>();
                 var now = timeProvider.GetUtcNow();
@@ -43,7 +45,7 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                 var workspaceMemberIds = new List<string>();
                 foreach (var workspaceMember in workspaceMembers)
                 {
-                    var customerEntity = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
+                    var customerEntity = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
                     if (customerEntity is null)
                     {
                         continue;

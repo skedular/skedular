@@ -99,7 +99,7 @@ public class TeamDailyUpdaterService(
             foreach (var booking in bookings)
             {
                 var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
-                var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, cancellationToken);
+                var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsUntrackedAsync(customerIds, cancellationToken);
                 if (customerEntities.Count == 0)
                 {
                     continue;

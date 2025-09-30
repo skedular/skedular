@@ -7,6 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services.Cache;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet;
 using Customer = Slack.Shared.Models.Customer;
@@ -29,6 +30,7 @@ public class WorkspaceMemberService(
     IRandomHelper randomHelper,
     TimeProvider timeProvider,
     ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationMemberService organizationMemberService,
     ILocationService locationService,
     IBookingService bookingService) : IWorkspaceMemberService
@@ -96,7 +98,7 @@ public class WorkspaceMemberService(
         workspaceMemberEntity.LastProfileStatusUpdatedAt = now;
         repositoryFactory.WorkspaceMemberRepository.Update(workspaceMemberEntity);
 
-        var customerEntity = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
+        var customerEntity = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
         if (customerEntity is null)
         {
             return;
