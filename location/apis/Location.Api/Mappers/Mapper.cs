@@ -27,6 +27,7 @@ using AreaRange = Api.Shared.Services.Models.AreaRange;
 using CdnFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnFile;
 using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnImageFile;
 using ContactDetails = Api.Shared.Services.Models.ContactDetails;
+using Coordinates = Api.Shared.Services.Grpc.Skedular.Location.V1.Coordinates;
 using FloorPlan = Location.Shared.Models.FloorPlan;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -458,7 +459,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            ExtraMetadata = MapTo(src.ExtraMetadata)
+            ExtraMetadata = MapTo(src.ExtraMetadata),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
     public Shared.Models.Location MapTo(Admin_UpdateInput src) =>
@@ -477,7 +479,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            ExtraMetadata = MapTo(src.ExtraMetadata)
+            ExtraMetadata = MapTo(src.ExtraMetadata),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
@@ -504,7 +507,8 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
-            ExtraMetadata = MapTo(src.ExtraMetadata)
+            ExtraMetadata = MapTo(src.ExtraMetadata),
+            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
@@ -531,7 +535,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            ExtraMetadata = MapTo(src.ExtraMetadata)
+            ExtraMetadata = MapTo(src.ExtraMetadata),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
     public Shared.Models.Location MapTo(UpdateInput src) =>
@@ -550,7 +555,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
-            ExtraMetadata = MapTo(src.ExtraMetadata)
+            ExtraMetadata = MapTo(src.ExtraMetadata),
+            PhysicalAddress = MapTo(src.PhysicalAddress)
         };
 
     public Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location) =>
@@ -1259,4 +1265,46 @@ public class Mapper : IMapper
         src is null
             ? null
             : new global::Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity { From = src.From.ToSafeString(), To = src.To.ToSafeString() };
+
+    private static PhysicalAddress? MapToGrpcResponse(Shared.Models.LocationPhysicalAddress? src) =>
+        src is null
+            ? null
+            : new PhysicalAddress
+            {
+                Id = src.Id,
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y },
+                FormattedAddress = src.FormattedAddress.ToSafeString(),
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString(),
+                CountryCode = src.CountryCode.ToSafeString()
+            };
+
+    private static Shared.Models.LocationPhysicalAddress? MapTo(PhysicalAddress? src) =>
+        src is null
+            ? null
+            : new Shared.Models.LocationPhysicalAddress
+            {
+                Id = src.Id,
+                OsmType = src.OsmType.ToSafeString(),
+                OsmId = src.OsmId.ToSafeString(),
+                PlaceId = src.PlaceId.ToSafeString(),
+                Coordinates = src.Coordinates is null ? null : new Point(new Coordinate(src.Coordinates.Longitude, src.Coordinates.Latitude)),
+                FormattedAddress = src.FormattedAddress.ToSafeString(),
+                AddressLine1 = src.AddressLine1.ToSafeString(),
+                AddressLine2 = src.AddressLine2.ToSafeString(),
+                Suburb = src.Suburb.ToSafeString(),
+                City = src.City.ToSafeString(),
+                Province = src.Province.ToSafeString(),
+                Zipcode = src.Zipcode.ToSafeString(),
+                Country = src.Country.ToSafeString(),
+                CountryCode = src.CountryCode.ToSafeString()
+            };
 }

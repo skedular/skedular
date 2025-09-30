@@ -86,6 +86,7 @@ message Admin_AddInput {
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
+  PhysicalAddress physicalAddress = 10;
 }
 
 message Admin_UpdateInput {
@@ -98,6 +99,7 @@ message Admin_UpdateInput {
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
+  PhysicalAddress physicalAddress = 10;
 }
 
 message LocationConnection {
@@ -126,6 +128,7 @@ message Location {
   CdnImageFile primaryFeatureImage = 12;
   LocationType type = 13;
   ExtraMetadata ExtraMetadata = 14;
+  PhysicalAddress physicalAddress = 15;
 }
 
 message Admin_GetInput {
@@ -195,6 +198,7 @@ message AddInput {
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
+  PhysicalAddress physicalAddress = 10;
 }
 
 message UpdateInput {
@@ -207,6 +211,7 @@ message UpdateInput {
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
+  PhysicalAddress physicalAddress = 10;
 }
 
 message RemoveInput {
@@ -360,4 +365,26 @@ message ExtraMetadata {
   repeated string RelatedImageLinks = 5;
   repeated string RelatedVideoLinks = 6;
   repeated string OtherLinks = 7;
+}
+
+message PhysicalAddress {
+  string id = 1;
+  string addressLine1 = 2;
+  string addressLine2 = 3;
+  string suburb = 4;
+  string city = 5;
+  string province = 6;
+  string zipcode = 7;
+  string country = 8;
+  string countryCode = 9;
+  string formattedAddress = 10;
+  string osmType = 11;
+  string osmId = 12;
+  string placeId = 13;
+  Coordinates coordinates = 14;
+}
+
+message Coordinates {
+  double longitude = 1;
+  double latitude = 2;
 }
