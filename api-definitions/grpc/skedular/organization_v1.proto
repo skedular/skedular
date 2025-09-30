@@ -12,6 +12,7 @@ service OrganizationService {
   rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
   rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
   rpc Admin_GetTag (Admin_GetTagInput) returns (Tag);
+  rpc Admin_GetPaginatedTags (Admin_GetPaginatedTagsInput) returns (TagConnection);
   rpc Admin_GetCustomTag (Admin_GetCustomTagInput) returns (CustomTag);
   rpc Admin_GetZone (Admin_GetZoneInput) returns (Zone);
   rpc Admin_GetProductTag (Admin_GetProductTagInput) returns (ProductTag);
@@ -249,6 +250,15 @@ message Permissions {
 
 message Admin_GetTagInput {
   string id = 1;
+}
+
+message Admin_GetPaginatedTagsInput {
+  string after = 1;
+  int32 first = 2;
+  string before = 3;
+  int32 last = 4;
+  TagWhereInput where = 5;
+  repeated TagOrderInput orderBy = 6;
 }
 
 message GetTagInput {

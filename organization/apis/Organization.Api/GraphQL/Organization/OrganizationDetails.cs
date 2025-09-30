@@ -255,6 +255,7 @@ public class OrganizationDetails : Node
             new PaginationInputParam(after, first, before, last),
             tagSearchCriteria,
             orderBy.ToSafeCollection().Select(item => new TagOrder(item.Direction, item.Field)).ToList(),
+            false,
             cancellationToken);
 
         return new Connection<OrganizationTagEdge>

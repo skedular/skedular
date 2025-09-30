@@ -26,6 +26,7 @@ public interface ITagService
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
         ICollection<TagOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
 
@@ -240,9 +241,14 @@ public class TagService(
         PaginationInputParam paginationInputParam,
         TagSearchCriteria searchCriteria,
         ICollection<TagOrder> orderByFields,
+        bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        Shared.Database.Entities.Customer? customer = null;
+        if (!ignoreAuthorizationCheck)
+        {
+            customer = await cachedCustomerService.GetAsync(cancellationToken);
+        }
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                                searchCriteria.OrganizationId,
@@ -250,7 +256,7 @@ public class TagService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck && !await organizationAuthorizationService.CanViewAsync(organization, customer!.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
