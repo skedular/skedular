@@ -143,10 +143,11 @@ message GetPaginatedLocationsInput {
 
 message LocationWhereInput {
   string organizationId = 1;
-  repeated string locationIds = 2;
-  string nameContains = 3;
-  repeated string tagIds = 4;
-  repeated LocationType types = 5;
+  string organizationUniqueAlphanumericName = 2;
+  repeated string locationIds = 3;
+  string nameContains = 4;
+  repeated string tagIds = 5;
+  repeated LocationType types = 6;
 }
 
 message LocationOrderInput {

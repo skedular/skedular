@@ -45,7 +45,7 @@ public class LocationService(
                 After = string.Empty,
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new LocationWhereInput { OrganizationId = organization.Id }
+                Where = new LocationWhereInput { OrganizationUniqueAlphanumericName = organization.UniqueAlphanumericName }
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken)).Edges.Select(item => item.Node).Where(item => item.ExtraMetadata is not null).ToList();
