@@ -49,6 +49,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="..\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

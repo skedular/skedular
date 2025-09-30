@@ -194,13 +194,13 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(false, true)
+            .AddDependentObjects(true, false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(false, true)
+            .AddDependentObjects(true, false)
             .ToListAsync(cancellationToken);
 
     public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
@@ -223,11 +223,12 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ICollection<Database.Entities.Location>>
-        GetAllUntrackedAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Database.Entities.Location>> GetAllUntrackedAsync(
+        bool includeDeletedResources,
+        CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects(includeDeletedResources, false)
+            .AddDependentObjects(false, includeDeletedResources)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Location Add(Database.Entities.Location location)
