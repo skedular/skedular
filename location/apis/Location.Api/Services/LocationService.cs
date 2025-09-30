@@ -408,6 +408,7 @@ public class LocationService(
             }
             else
             {
+                location.PhysicalAddress.Id = existingLocation.PhysicalAddress.Id;
                 var locationPhysicalAddressEntity = mapper.MergeTo(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
                 repositoryFactory.LocationPhysicalAddressRepository.Update(locationPhysicalAddressEntity);
             }
