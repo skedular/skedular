@@ -398,6 +398,21 @@ public class LocationService(
         // Restoring original opening hours
         existingLocation.OpeningHours = originalOpeningHours;
 
+        if (location.PhysicalAddress is not null)
+        {
+            if (existingLocation.PhysicalAddress is null)
+            {
+                location.PhysicalAddress.Id = randomHelper.Generate();
+                var locationPhysicalAddressEntity = mapper.MapTo(location.PhysicalAddress, existingLocation);
+                repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
+            }
+            else
+            {
+                var locationPhysicalAddressEntity = mapper.MergeTo(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
+                repositoryFactory.LocationPhysicalAddressRepository.Update(locationPhysicalAddressEntity);
+            }
+        }
+
         location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);

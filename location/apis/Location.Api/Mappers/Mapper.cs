@@ -132,10 +132,8 @@ public interface IMapper
         LocationPhysicalAddress dest,
         Shared.Database.Entities.Location location);
 
-    Shared.Models.LocationPhysicalAddress MapTo(LocationPhysicalAddress src);
     Shared.Models.LocationPhysicalAddress MapTo(AddLocationPhysicalAddressInput src);
     Shared.Models.LocationPhysicalAddress MapTo(UpdateLocationPhysicalAddressInput src);
-    LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src);
 }
 
 public class Mapper : IMapper
@@ -730,29 +728,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Models.LocationPhysicalAddress MapTo(LocationPhysicalAddress src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Coordinates = src.Coordinates,
-            FormattedAddress = src.FormattedAddress,
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Location = MapTo(src.Location)
-        };
-
     public Shared.Models.LocationPhysicalAddress MapTo(AddLocationPhysicalAddressInput src) =>
         new()
         {
@@ -790,28 +765,6 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode
-        };
-
-    public LocationPhysicalAddressDetails MapTo(Shared.Models.LocationPhysicalAddress src) =>
-        new()
-        {
-            Id = src.Id,
-            OsmType = src.OsmType,
-            OsmId = src.OsmId,
-            PlaceId = src.PlaceId,
-            Longitude = src.Coordinates?.X,
-            Latitude = src.Coordinates?.Y,
-            FormattedAddress = src.ToFormattedAddress(),
-            MultilinesFormattedAddress = src.ToMultilinesFormattedAddress(),
-            AddressLine1 = src.AddressLine1,
-            AddressLine2 = src.AddressLine2,
-            Suburb = src.Suburb,
-            City = src.City,
-            Province = src.Province,
-            Zipcode = src.Zipcode,
-            Country = src.Country,
-            CountryCode = src.CountryCode,
-            Location = MapTo(src.Location)!
         };
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
