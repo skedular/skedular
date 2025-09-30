@@ -47,9 +47,10 @@ public class LocationService(
                 Last = ((int?)null).ToNullInt(),
                 Where = new LocationWhereInput { OrganizationId = organization.Id }
             },
-            organizationConfiguration.ApiKey.CreateMetadata(),
+            locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken)).Edges.Select(item => item.Node).Where(item => item.ExtraMetadata is not null).ToList();
 
+        var importedCount = 0;
         foreach (var rawLocation in rawLocations)
         {
             if (locations.Any(item => item.ExtraMetadata.OtherLinks.Contains(rawLocation.Url)))
@@ -93,7 +94,9 @@ public class LocationService(
                 locationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
 
-            //await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+            Console.WriteLine($"Imported location {++importedCount} - {rawLocation.Title}");
+
+            await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
         }
     }
 }
