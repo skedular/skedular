@@ -2,6 +2,7 @@ using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Location.Shared.Repositories;
 
@@ -16,8 +17,31 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
+    Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken);
+
     Organization Update(Organization location);
     Organization Remove(Organization location);
+}
+
+internal static class OrganizationExtensions
+{
+    internal static IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(
+        this IQueryable<Organization> originalQuery,
+        bool isTracked,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.OrganizationSsoSettings)
+        .Include(query => query.OrganizationMembers.Where(organizationMember =>
+            includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+        .ThenInclude(query => query.Customer)
+        .ThenInclude(query => query.Identities)
+        .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue));
 }
 
 public class OrganizationRepository(LocationDbContext dbContext, TimeProvider timeProvider)
@@ -34,31 +58,46 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
         string? id,
         string? uniqueAlphanumericName,
         bool includeDeletedOrganizationMembers,
-        bool includeDeletedOrganizationTags, CancellationToken cancellationToken)
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
         {
             return await DbContext.Organization
-                .Include(query => query.OrganizationSsoSettings)
-                .Include(query => query.OrganizationMembers.Where(organizationMember =>
-                    includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
-                .ThenInclude(query => query.Customer)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
-                .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
         if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
         {
             return await DbContext.Organization
-                .Include(query => query.OrganizationSsoSettings)
-                .Include(query => query.OrganizationMembers.Where(organizationMember =>
-                    includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
-                .ThenInclude(query => query.Customer)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
-                .Include(query => query.Locations.Where(location => !location.DeletedAt.HasValue))
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(
                     query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
                     cancellationToken);

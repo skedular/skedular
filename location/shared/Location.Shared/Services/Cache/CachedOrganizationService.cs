@@ -34,8 +34,9 @@ public class CachedOrganizationService(
             {
                 return await hybridCache.GetOrCreateAsync(
                     CreateKeyById(id),
-                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, ct) ??
-                                throw new OrganizationNotFound(),
+                    async ct =>
+                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameUntrackedAsync(id, null, false, false, ct) ??
+                        throw new OrganizationNotFound(),
                     new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                     cancellationToken: cancellationToken);
             }
@@ -45,7 +46,7 @@ public class CachedOrganizationService(
                 return await hybridCache.GetOrCreateAsync(
                     CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
                     async ct =>
-                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameUntrackedAsync(
                             null,
                             uniqueAlphanumericName,
                             false,
@@ -72,7 +73,8 @@ public class CachedOrganizationService(
         {
             await hybridCache.SetAsync(
                 CreateKeyById(id),
-                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, cancellationToken) ??
+                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameUntrackedAsync(id, null, false, false,
+                    cancellationToken) ??
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
@@ -82,7 +84,7 @@ public class CachedOrganizationService(
         {
             await hybridCache.SetAsync(
                 CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
-                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameUntrackedAsync(
                     null,
                     uniqueAlphanumericName,
                     false,
