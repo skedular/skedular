@@ -4,15 +4,15 @@ using Location = WebScrapper.Models.Location;
 
 namespace WebScrapper.Sharedspaces;
 
-public interface ILocationsCrawler
+public interface ILocationsCrawlerService
 {
     Task CrawlAsync(string type, string url, Func<Location, Task> onLocationFound, CancellationToken cancellationToken);
 }
 
-public class LocationsCrawler(
+public class LocationsCrawlerServiceService(
     SharedSpacesConfiguration sharedSpacesConfiguration,
     IPlaywrightProvider playwrightProvider,
-    ILocationCrawler locationCrawler) : ILocationsCrawler
+    ILocationCrawlerService locationCrawlerService) : ILocationsCrawlerService
 {
     public async Task CrawlAsync(string type, string url, Func<Location, Task> onLocationFound, CancellationToken cancellationToken)
     {
@@ -72,10 +72,7 @@ public class LocationsCrawler(
                     var href = await allATags[0].GetAttributeAsync("href");
                     if (!string.IsNullOrWhiteSpace(href))
                     {
-                        var location = await locationCrawler.CrawlAsync(
-                            type,
-                            Url.Combine(sharedSpacesConfiguration.BaseUrl, href),
-                            cancellationToken);
+                        var location = await locationCrawlerService.CrawlAsync(type, Url.Combine(sharedSpacesConfiguration.BaseUrl, href));
                         await onLocationFound(location);
                     }
                 }

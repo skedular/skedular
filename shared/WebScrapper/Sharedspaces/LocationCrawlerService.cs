@@ -1,16 +1,18 @@
 using Microsoft.Playwright;
+using WebScrapper.Services;
 using Location = WebScrapper.Models.Location;
 
 namespace WebScrapper.Sharedspaces;
 
-public interface ILocationCrawler
+public interface ILocationCrawlerService
 {
-    Task<Location> CrawlAsync(string type, string url, CancellationToken cancellationToken);
+    Task<Location> CrawlAsync(string type, string url);
 }
 
-public class LocationCrawler(IPlaywrightProvider playwrightProvider, IContentEnricherService contentEnricherService) : ILocationCrawler
+public class LocationCrawlerServiceService(IPlaywrightProvider playwrightProvider, IContentEnricherService contentEnricherService)
+    : ILocationCrawlerService
 {
-    public async Task<Location> CrawlAsync(string type, string url, CancellationToken cancellationToken)
+    public async Task<Location> CrawlAsync(string type, string url)
     {
         var browser = await playwrightProvider.GetBrowserAsync();
         var page = await browser.NewPageAsync();

@@ -4,8 +4,9 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Flurl;
 using WebScrapper.Models;
+using WebScrapper.Sharedspaces;
 
-namespace WebScrapper.Sharedspaces;
+namespace WebScrapper.Services;
 
 [Verb("crawl-sharedspaces")]
 public class CrawlSharedspacesOptions;
@@ -15,7 +16,7 @@ public interface ICrawlerService
     Task HandleAsync(CrawlSharedspacesOptions options, CancellationToken cancellationToken);
 }
 
-public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration, ILocationsCrawler locationsCrawler) : ICrawlerService
+public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration, ILocationsCrawlerService locationsCrawlerService) : ICrawlerService
 {
     private readonly Dictionary<string, string> _urls = new()
     {
@@ -45,7 +46,7 @@ public class CrawlerService(SharedSpacesConfiguration sharedSpacesConfiguration,
 
         foreach (var url in _urls)
         {
-            await locationsCrawler.CrawlAsync(
+            await locationsCrawlerService.CrawlAsync(
                 url.Key,
                 url.Value,
                 async location =>

@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace WebScrapper.Sharedspaces;
+namespace WebScrapper.Services;
 
 public interface IContentEnricherService
 {
