@@ -33,26 +33,6 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaTo: DateTime!
     $locationsSortingValues: [LocationOrderInput!]
   ) {
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
-      id
-      name
-    }
-    myLocations(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
-      id
-      name
-      organization {
-        id
-        name
-      }
-    }
-    myTeams(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
-      id
-      name
-      organization {
-        id
-        name
-      }
-    }
     ...locationSelector_allLocations_query
     ...teamSelector_allTeams_query
     ...gettingStarted_query
@@ -86,10 +66,6 @@ const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlph
   const handlViewModeChanged = (newViewMode: 'list' | 'grid') => {
     setViewMode(newViewMode);
   };
-
-  if (!rootData.myTeams || !rootData.myLocations) {
-    return <></>;
-  }
 
   if (!organizationUniqueAlphanumericName) {
     return <></>;
