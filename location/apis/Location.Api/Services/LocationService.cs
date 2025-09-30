@@ -290,7 +290,7 @@ public class LocationService(
             }
         }
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.LocationRepository.GetPaginatedLocationsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.LocationRepository.GetPaginatedLocationsUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
@@ -338,7 +338,7 @@ public class LocationService(
             }
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, organization?.Id, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdUntrackedAsync(customer.Id, organization?.Id, cancellationToken);
 
         return locations.Select(mapper.MapTo).ToList();
     }

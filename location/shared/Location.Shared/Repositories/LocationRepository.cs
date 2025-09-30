@@ -15,20 +15,21 @@ namespace Location.Shared.Repositories;
 
 public interface ILocationRepository : IRepository<Database.Entities.Location>
 {
+    Task<Database.Entities.Location?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
+    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Location>> GetAllUntrackedAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Database.Entities.Location Add(Database.Entities.Location location);
     Database.Entities.Location Update(Database.Entities.Location location);
     Database.Entities.Location Remove(Database.Entities.Location location);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int )> GetPaginatedLocationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int )> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
@@ -39,17 +40,18 @@ internal static class LocationExtensions
 {
     internal static IIncludableQueryable<Database.Entities.Location, IEnumerable<OrganizationTag>> AddDependentObjects(
         this IQueryable<Database.Entities.Location> originalQuery,
+        bool isTracked,
         bool includeDeletedResources) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .Include(query => query.PhysicalAddress)
-            .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.FloorPlans.Where(fp => !fp.DeletedAt.HasValue))
-            .ThenInclude(query => query.ResourcePositions)
-            .ThenInclude(query => query.Resource)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Organization)
+        .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+        .Include(query => query.PhysicalAddress)
+        .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
+        .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+        .Include(query => query.FloorPlans.Where(fp => !fp.DeletedAt.HasValue))
+        .ThenInclude(query => query.ResourcePositions)
+        .ThenInclude(query => query.Resource)
+        .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
     internal static IQueryable<Database.Entities.Location> AddSearchCriteria(
         this IQueryable<Database.Entities.Location> query,
@@ -185,15 +187,47 @@ internal static class LocationExtensions
 public class LocationRepository(LocationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<LocationDbContext, Database.Entities.Location>(dbContext, timeProvider), ILocationRepository
 {
+    public async Task<Database.Entities.Location?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .AddDependentObjects(false, false)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public async Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(false)
+            .AddDependentObjects(false, true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects(false)
+            .AddDependentObjects(false, true)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
+        string customerId,
+        string? organizationId,
+        CancellationToken cancellationToken)
+    {
+        var query = DbContext.Location
+            .Where(location => !location.DeletedAt.HasValue && !location.Organization.DeletedAt.HasValue &&
+                               location.Organization.OrganizationMembers.Any(organizationMember =>
+                                   organizationMember.Customer.Id == customerId));
+
+        if (!string.IsNullOrWhiteSpace(organizationId))
+        {
+            query = query.Where(team => !team.Organization.DeletedAt.HasValue && team.Organization.Id == organizationId);
+        }
+
+        return await query
+            .AddDependentObjects(false, false)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<ICollection<Database.Entities.Location>>
+        GetAllUntrackedAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .Where(query => !query.DeletedAt.HasValue)
+            .AddDependentObjects(includeDeletedResources, false)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Location Add(Database.Entities.Location location)
@@ -210,32 +244,6 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Location.Update(location).Entity;
     }
 
-    public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdAsync(
-        string customerId,
-        string? organizationId,
-        CancellationToken cancellationToken)
-    {
-        var query = DbContext.Location
-            .Where(location => !location.DeletedAt.HasValue && !location.Organization.DeletedAt.HasValue &&
-                               location.Organization.OrganizationMembers.Any(organizationMember =>
-                                   organizationMember.Customer.Id == customerId));
-
-        if (!string.IsNullOrWhiteSpace(organizationId))
-        {
-            query = query.Where(team => !team.Organization.DeletedAt.HasValue && team.Organization.Id == organizationId);
-        }
-
-        return await query
-            .AddDependentObjects(false)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
-        await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects(includeDeletedResources)
-            .ToListAsync(cancellationToken);
-
     public Database.Entities.Location Remove(Database.Entities.Location location)
     {
         var now = TimeProvider.GetUtcNow();
@@ -243,7 +251,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         return DbContext.Location.Update(location).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
@@ -251,7 +259,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         (await DbContext.Location
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects(false)
+            .AddDependentObjects(false, false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }
