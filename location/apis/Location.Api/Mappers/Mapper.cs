@@ -84,6 +84,7 @@ public interface IMapper
     Shared.Models.Location MapTo(AddLocationInput src);
     Shared.Models.Location MapTo(UpdateLocationInput src);
     Shared.Models.Location MapTo(Admin_AddInput src);
+    Shared.Models.Location MapTo(Admin_UpdateInput src);
     global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src);
     Shared.Models.Location MapTo(AddInput src);
     Shared.Models.Location MapTo(UpdateInput src);
@@ -458,6 +459,24 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata)
+        };
+
+    public Shared.Models.Location MapTo(Admin_UpdateInput src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            About = src.About,
+            Timezone = src.Timezone,
+            Type = src.Type switch
+            {
+                LocationType.Private => global::Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            Organization = new Shared.Models.Organization { Id = src.OrganizationId },
+            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)

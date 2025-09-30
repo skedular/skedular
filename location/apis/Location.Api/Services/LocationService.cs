@@ -24,7 +24,7 @@ namespace Location.Api.Services;
 public interface ILocationService
 {
     Task<Shared.Models.Location> AddAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
     Task<Shared.Models.Location> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Location?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
@@ -174,16 +174,28 @@ public class LocationService(
         return location;
     }
 
-    public async Task<Shared.Models.Location> UpdateAsync(Shared.Models.Location location, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> UpdateAsync(
+        Shared.Models.Location location,
+        bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(location.Id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var (customer, _) = await customerService.GetNullableAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+
+        if (!ignoreAuthorizationCheck)
         {
-            throw new NoMoreInteractionAllowed();
+            if (customer is null)
+            {
+                throw new CustomerNotFound();
+            }
+
+            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            {
+                throw new NoMoreInteractionAllowed();
+            }
         }
 
         return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);

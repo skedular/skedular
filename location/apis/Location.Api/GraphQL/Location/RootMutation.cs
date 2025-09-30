@@ -27,7 +27,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
+            Location = mapper.MapTo(await locationService.UpdateAsync(mapper.MapTo(input), false, cancellationToken))!
         };
 
     [UseResolverScope]

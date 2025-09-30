@@ -7,6 +7,7 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Location.V1";
 
 service LocationService {
   rpc Admin_Add (Admin_AddInput) returns (Location);
+  rpc Admin_Update (Admin_UpdateInput) returns (Location);
   rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
   rpc Admin_Get (Admin_GetInput) returns (Location);
   rpc Admin_GetResource (Admin_GetResourceInput) returns (Resource);
@@ -85,6 +86,17 @@ message Admin_AddInput {
   CdnImageFile primaryFeatureImage = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
+}
+
+message Admin_UpdateInput {
+  string id = 1;
+  string name = 2;
+  string about = 3;
+  string organizationId = 4;
+  string timezone = 5;
+  repeated string locationTagIds = 6;
+  CdnImageFile primaryFeatureImage = 7;
+  LocationType type = 8;
 }
 
 message LocationConnection {
