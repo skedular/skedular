@@ -500,8 +500,8 @@ namespace Location.Shared.Database.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<OpeningHours>("OpeningHours")
                         .HasColumnType("jsonb");

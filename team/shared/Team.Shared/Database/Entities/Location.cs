@@ -1,4 +1,3 @@
-using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,8 +8,6 @@ namespace Team.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Location : ReplicatedEntityBaseWithDeleted
 {
-    public string? Name { get; set; }
-
     public virtual Organization Organization { get; set; }
     public virtual ICollection<Team> PrimaryLocationForTeams { get; set; } = [];
 }
@@ -22,10 +19,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
-
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
-
-        builder.HasIndex(item => item.Name);
     }
 }

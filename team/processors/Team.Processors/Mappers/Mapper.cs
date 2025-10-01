@@ -182,7 +182,6 @@ public class Mapper : IMapper
             Id = location.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Name = location.Name,
             Organization = new Organization { Id = location.OrganizationId }
         };
     }
@@ -200,7 +199,6 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Name = src.Name;
         dest.Organization = organization;
         return dest;
     }

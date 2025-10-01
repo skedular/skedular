@@ -35,9 +35,8 @@ public static class Constants
     public const int MaxOrganizationIndustryMainCategoryNameLength = 100;
     public const int MaxOrganizationIndustrySubCategoryNameLength = 100;
 
-    public const int MaxLocationNameLength = 200;
+    public const int MaxLocationNameLength = 2000;
     public const int MaxResourceNameLength = 200;
-    public const int MaxDeskNameLength = 200;
 
     public const int MaxTagNameLength = 100;
     public const int MaxTagDescriptionLength = 1000;
@@ -61,7 +60,7 @@ public static class Constants
 
     public const int StripeCustomerIdLength = 200;
 
-    public const int MaxTeamNameLength = 200;
+    public const int MaxTeamNameLength = 2000;
     public const int MaxTenantNameLength = 200;
 
     public const int MaxBookingNotesLength = 1000;
@@ -74,7 +73,6 @@ public static class Constants
     public const int MaxRoleLength = 32;
 
     public const int MaxInvitationStatusLength = 32;
-    public const int MaxNotificationTypeLength = 128;
     public const int MaxBookingTypeLength = 32;
     public const int MaxBookingPaymentStatusLength = 32;
     public const int MaxBookingMethodLength = 32;
@@ -117,7 +115,6 @@ public static class Constants
     public const int MaxStripeProductIdLength = 100;
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
-    public const int MaxStripeCheckoutSessionPaymentStatusLength = 50;
 
     public const int MaxFloorPlanNameLength = 100;
 

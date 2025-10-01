@@ -485,8 +485,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name
+                EventRaisedAt = src.EventRaisedAt
             };
 
     private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>

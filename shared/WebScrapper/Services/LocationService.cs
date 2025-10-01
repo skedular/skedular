@@ -6,10 +6,13 @@ using CommandLine;
 using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
+using Flurl.Http;
+using WebScrapper.Models;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_GetInput;
 using AreaRange = Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange;
 using ContactDetails = Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails;
+using Location = WebScrapper.Models.Location;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using PeopleCapacity = Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity;
 using PhysicalAddress = Api.Shared.Services.Grpc.Skedular.Location.V1.PhysicalAddress;
@@ -99,14 +102,17 @@ public class LocationService(
             var matchingLocation = locations.FirstOrDefault(item => item.ExtraMetadata.OtherLinks.Contains(rawLocation.Url));
             if (matchingLocation is null)
             {
+                var name = await GetSuggestedNameAsync(rawLocation, cancellationToken);
+                var description = await GetSuggestedDescriptionAsync(rawLocation, cancellationToken);
+
                 var adminAddInput = new Admin_AddInput
                 {
                     Id = randomHelper.Generate(),
-                    Name = rawLocation.Title.ToSafeString(),
+                    Name = name.ToSafeString(),
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    About = rawLocation.Description.ToSafeString(),
+                    About = description.ToSafeString(),
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
@@ -125,11 +131,11 @@ public class LocationService(
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminAddInput.ExtraMetadata.ContactDetails.ContactPeople.AddRange(
-                    rawLocation.ContactPhone.Split(Environment.NewLine)
+                    rawLocation.ContactPerson.Split(Environment.NewLine)
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminAddInput.ExtraMetadata.ContactDetails.ContactPhones.AddRange(
-                    rawLocation.ContactPerson.Split(Environment.NewLine)
+                    rawLocation.ContactPhone.Split(Environment.NewLine)
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminAddInput.ExtraMetadata.OtherLinks.Add(rawLocation.Url.ToSafeString());
@@ -143,14 +149,22 @@ public class LocationService(
             }
             else
             {
+                if (matchingLocation.Name != rawLocation.Title || matchingLocation.About != rawLocation.Description)
+                {
+                    continue;
+                }
+
+                var name = await GetSuggestedNameAsync(rawLocation, cancellationToken);
+                var description = await GetSuggestedDescriptionAsync(rawLocation, cancellationToken);
+
                 var adminUpdateInput = new Admin_UpdateInput
                 {
                     Id = matchingLocation.Id,
-                    Name = rawLocation.Title.ToSafeString(),
+                    Name = name.ToSafeString(),
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    About = rawLocation.Description.ToSafeString(),
+                    About = description.ToSafeString(),
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
@@ -169,11 +183,11 @@ public class LocationService(
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminUpdateInput.ExtraMetadata.ContactDetails.ContactPeople.AddRange(
-                    rawLocation.ContactPhone.Split(Environment.NewLine)
+                    rawLocation.ContactPerson.Split(Environment.NewLine)
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminUpdateInput.ExtraMetadata.ContactDetails.ContactPhones.AddRange(
-                    rawLocation.ContactPerson.Split(Environment.NewLine)
+                    rawLocation.ContactPhone.Split(Environment.NewLine)
                         .Select(item => item.Trim())
                         .Where(item => !string.IsNullOrWhiteSpace(item)));
                 adminUpdateInput.ExtraMetadata.OtherLinks.Add(rawLocation.Url.ToSafeString());
@@ -186,5 +200,75 @@ public class LocationService(
                 Console.WriteLine($"Updated location {++importedCount} - {rawLocation.Title}");
             }
         }
+    }
+
+    private static async Task<string> GetSuggestedNameAsync(Location rawLocation, CancellationToken cancellationToken)
+    {
+        var response = await "http://localhost:11434/api/generate"
+            .PostJsonAsync(
+                new
+                {
+                    model = "llama3:70b-instruct-q4_K_M",
+                    prompt = $@"
+                        Come up with a name for this location and make sure it is not trackable to its original content. You sentence response should contains maximum 7 words in total max.
+                        In your response, only include the new description. Something I can straight away copy into my description field. I mean do not include anything else like her eis the rewritten version of what yo asked,
+                        only give me the new description.
+
+                        ---------------------
+                        {rawLocation.Title}
+                        
+
+
+
+                        ---------------------
+                        {rawLocation.Subtitle}
+                        
+
+
+                        ---------------------
+                        {rawLocation.Description}
+                        ",
+                    stream = false
+                },
+                cancellationToken: cancellationToken)
+            .ReceiveJson<OllamaResponse>();
+
+        return response.Response;
+    }
+
+    private static async Task<string> GetSuggestedDescriptionAsync(Location rawLocation, CancellationToken cancellationToken)
+    {
+        var response = await "http://localhost:11434/api/generate"
+            .PostJsonAsync(
+                new
+                {
+                    model = "llama3:70b-instruct-q4_K_M",
+                    prompt = $@"
+                        Rewrite the location description to be more human readable. Make sure it is not trackable to its original content.
+                        It does not have to be long. Also anything related to their cost needs to be removed, things like this cost this much for this number of hours or day. 
+                        I am including its current title, subtitle and description separated by dashes here for your information.
+                        In your response, only include the new description. Something I can straight away copy into my description field. I mean do not include anything else like her eis the rewritten version of what yo asked,
+                        only give me the new description.
+
+                        ---------------------
+                        {rawLocation.Title}
+                        
+
+
+
+                        ---------------------
+                        {rawLocation.Subtitle}
+                        
+
+
+                        ---------------------
+                        {rawLocation.Description}
+                        ",
+                    stream = false
+                },
+                cancellationToken: cancellationToken)
+            .ReceiveJson<OllamaResponse>();
+
+        return response.Response;
     }
 }
