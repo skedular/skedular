@@ -17,6 +17,7 @@ public static class Extensions
             .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<ITeamService, TeamService>()
+            .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<ITeamMemberService, TeamMemberService>()
             .AddScoped<IInvitationService, InvitationService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
