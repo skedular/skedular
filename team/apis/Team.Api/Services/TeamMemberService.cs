@@ -30,7 +30,7 @@ public interface ITeamMemberService
     public Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
         ICollection<TeamMember> members,
         Shared.Database.Entities.Team existingTeam,
-        Customer customer,
+        string customerId,
         Organization? organization,
         CancellationToken cancellationToken);
 
@@ -43,7 +43,6 @@ public class TeamMemberService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
-    ICustomerService customerService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
@@ -75,7 +74,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanModifyAsync(team, customer.Id, cancellationToken))
@@ -118,7 +117,7 @@ public class TeamMemberService(
         TeamMemberStatus status,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var distinctTeamMemberIds = ids.Distinct().ToList();
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByIdsAsync(distinctTeamMemberIds, cancellationToken);
         if (teamMembers.Count != distinctTeamMemberIds.Count)
@@ -165,8 +164,7 @@ public class TeamMemberService(
 
     public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, ICollection<TeamMember> members, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
         {
@@ -184,7 +182,7 @@ public class TeamMemberService(
             throw new NoMoreInteractionAllowed();
         }
 
-        var rebuiltTeamMembers = await BuildMembersAsync(members, existingTeam, customer, organization, cancellationToken);
+        var rebuiltTeamMembers = await BuildMembersAsync(members, existingTeam, customer.Id, organization, cancellationToken);
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(existingTeam.Id, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -221,7 +219,7 @@ public class TeamMemberService(
     public async Task<List<Shared.Database.Entities.TeamMember>> BuildMembersAsync(
         ICollection<TeamMember> members,
         Shared.Database.Entities.Team existingTeam,
-        Customer customer,
+        string customerId,
         Organization? organization,
         CancellationToken cancellationToken)
     {
@@ -241,7 +239,7 @@ public class TeamMemberService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                Role = item.Id == customer.Id ? TeamMemberRoleConstants.Owner : TeamMemberRoleConstants.Member,
+                Role = item.Id == customerId ? TeamMemberRoleConstants.Owner : TeamMemberRoleConstants.Member,
                 Customer = item,
                 Team = existingTeam,
                 Status = TeamMemberStatusConstants.Active
@@ -259,7 +257,7 @@ public class TeamMemberService(
             {
                 Id = randomHelper.Generate(),
                 CreatedAt = now,
-                Role = item.Customer.Id == customer.Id ? TeamMemberRoleConstants.Owner : TeamMemberRoleConstants.Member,
+                Role = item.Customer.Id == customerId ? TeamMemberRoleConstants.Owner : TeamMemberRoleConstants.Member,
                 Customer = item.Customer,
                 Team = existingTeam,
                 OrganizationMember = item,
@@ -272,7 +270,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken) ??
                            throw new TeamNotFound();
@@ -315,7 +313,7 @@ public class TeamMemberService(
 
     public async Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var distinctTeamMemberIds = ids.Distinct().ToList();
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByIdsAsync(distinctTeamMemberIds, cancellationToken);
         if (teamMembers.Count != distinctTeamMemberIds.Count)
@@ -361,7 +359,7 @@ public class TeamMemberService(
 
     public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
         {

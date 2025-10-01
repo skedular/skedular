@@ -11,6 +11,7 @@ public interface ICachedCustomerService
 {
     ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
+    ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
@@ -40,6 +41,17 @@ public class CachedCustomerService(
     {
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
+    }
+
+    public async ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        if (string.IsNullOrWhiteSpace(verifiableToken))
+        {
+            return null;
+        }
 
         return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
     }

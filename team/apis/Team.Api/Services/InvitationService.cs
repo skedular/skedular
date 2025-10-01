@@ -13,7 +13,7 @@ using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
 using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
-using Customer = Team.Shared.Models.Customer;
+using Customer = Team.Shared.Database.Entities.Customer;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 
 namespace Team.Api.Services;
@@ -60,7 +60,7 @@ public class InvitationService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
-        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await customerService.GetAsync(cancellationToken);
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanInvitePeopleAsync(team, customer.Id, cancellationToken))
         {
@@ -108,7 +108,7 @@ public class InvitationService(
                     Email = email,
                     Status = InvitationStatusConstants.Pending,
                     Role = TeamMemberRoleConstants.Member,
-                    CreatedBy = customerEntity,
+                    CreatedBy = customer,
                     Invitee = matchingCustomerByEmail
                 })
                 : repositoryFactory.JoinInvitationRepository.Update(existingJoinInvitation);
@@ -139,7 +139,7 @@ public class InvitationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await customerService.GetAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
 
@@ -156,7 +156,7 @@ public class InvitationService(
                 Role = joinInvitation.Role,
                 Status = TeamMemberStatusConstants.Active,
                 Team = team,
-                Customer = customerEntity
+                Customer = customer
             });
 
             teamOutboxPublisher.PublishTeams([mapper.MapTo(team)], repositoryFactory.UnitOfWork);
@@ -175,7 +175,7 @@ public class InvitationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
 
@@ -196,7 +196,7 @@ public class InvitationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
         var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
@@ -232,12 +232,11 @@ public class InvitationService(
         // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
         searchCriteria = searchCriteria with { InviteeId = customer.Id };
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }

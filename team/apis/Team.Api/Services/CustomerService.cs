@@ -1,26 +1,23 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Context;
-using Team.Api.Mappers;
-using Team.Shared.Models;
+using Team.Shared.Database.Entities;
 using Team.Shared.Repositories;
 
 namespace Team.Api.Services;
 
 public interface ICustomerService
 {
-    Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken);
+    Task<Customer> GetAsync(CancellationToken cancellationToken);
 }
 
-public class CustomerService(IRepositoryFactory repositoryFactory, IMapper mapper, IContext context) : ICustomerService
+public class CustomerService(IRepositoryFactory repositoryFactory, IContext context) : ICustomerService
 {
-    public async Task<(Customer, Shared.Database.Entities.Customer)> GetCustomerAsync(CancellationToken cancellationToken)
+    public async Task<Customer> GetAsync(CancellationToken cancellationToken)
     {
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
-        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
-                       throw new CustomerNotFound();
-
-        return (mapper.MapTo(customer)!, customer);
+        return await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ??
+               throw new CustomerNotFound();
     }
 }

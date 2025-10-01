@@ -11,6 +11,7 @@ public interface ICachedCustomerService
 {
     ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
+    ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
@@ -44,13 +45,24 @@ public class CachedCustomerService(
         return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
     }
 
+    public async ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        if (string.IsNullOrWhiteSpace(verifiableToken))
+        {
+            return null;
+        }
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
+    }
+
     public async ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         try
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.CustomerRepository.GetByIdAsync(id, ct) ?? throw new CustomerNotFound(),
+                async ct => await repositoryFactory.CustomerRepository.GetByIdUntrackedAsync(id, ct) ?? throw new CustomerNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -66,7 +78,7 @@ public class CachedCustomerService(
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound(),
+            await repositoryFactory.CustomerRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new CustomerNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
@@ -80,7 +92,8 @@ public class CachedCustomerService(
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyByVerifiableToken(verifiableToken),
-                async ct => await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, ct) ?? throw new CustomerNotFound(),
+                async ct => await repositoryFactory.CustomerRepository.GetByVerifiableTokenUntrackedAsync(verifiableToken, ct) ??
+                            throw new CustomerNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -96,7 +109,8 @@ public class CachedCustomerService(
 
         await hybridCache.SetAsync(
             CreateKeyByVerifiableToken(verifiableToken),
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound(),
+            await repositoryFactory.CustomerRepository.GetByVerifiableTokenUntrackedAsync(verifiableToken, cancellationToken) ??
+            throw new CustomerNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
