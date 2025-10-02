@@ -337,7 +337,7 @@ public class TeamService(
             }
         }
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamRepository.GetPaginatedTeamsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamRepository.GetPaginatedTeamsUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
@@ -375,7 +375,7 @@ public class TeamService(
             }
         }
 
-        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, organization?.Id, cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdUntrackedAsync(customer.Id, organization?.Id, cancellationToken);
 
         await cachedTeamService.UpdateAsync(teams, cancellationToken);
 

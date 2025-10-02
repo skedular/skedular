@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Team.Shared.Models;
-using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
 
 namespace Team.Api.Services.Authorization;
@@ -22,7 +21,7 @@ public interface ITeamAuthorizationService
 
 public class TeamAuthorizationService(
     ICachedCustomerService cachedCustomerService,
-    IRepositoryFactory repositoryFactory,
+    ICachedTeamService cachedTeamService,
     IOrganizationAuthorizationService organizationAuthorizationService) : ITeamAuthorizationService
 {
     public async ValueTask<bool> CanViewAsync(Shared.Database.Entities.Team team, string customerId, CancellationToken cancellationToken) =>
@@ -46,7 +45,7 @@ public class TeamAuthorizationService(
     public async ValueTask<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
+        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
 
         return new Permissions
         {

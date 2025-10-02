@@ -46,7 +46,8 @@ public class InvitationService(
     IRandomHelper randomHelper,
     ITemporalOutboxPublisher temporalOutboxPublisher,
     ITeamOutboxPublisher teamOutboxPublisher,
-    ICachedCustomerService cachedCustomerService) : IInvitationService
+    ICachedCustomerService cachedCustomerService,
+    ICachedTeamService cachedTeamService) : IInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string teamId,
@@ -199,7 +200,7 @@ public class InvitationService(
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
+        var team = await cachedTeamService.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();

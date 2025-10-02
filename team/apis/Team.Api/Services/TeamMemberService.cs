@@ -43,6 +43,7 @@ public class TeamMemberService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
+    ICachedTeamService cachedTeamService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
@@ -57,7 +58,7 @@ public class TeamMemberService(
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
+        var team = await cachedTeamService.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanViewAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();
@@ -76,7 +77,7 @@ public class TeamMemberService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
+        var team = await cachedTeamService.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
         if (!await teamAuthorizationService.CanModifyAsync(team, customer.Id, cancellationToken))
         {
             throw new UnauthorizedAccessException();

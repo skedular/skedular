@@ -14,7 +14,7 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
 {
     public async Task RepublishTeamAsync(string teamId, CancellationToken cancellationToken)
     {
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken);
+        var team = await repositoryFactory.TeamRepository.GetByIdUntrackedAsync(teamId, cancellationToken);
         if (team is null)
         {
             return;
@@ -25,7 +25,7 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
 
     public async Task RepublishAllTeamsAsync(CancellationToken cancellationToken)
     {
-        var teams = await repositoryFactory.TeamRepository.GetAllAsync(cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetAllUntrackedAsync(cancellationToken);
         await teamPublisher.PublishTeamsAsync(teams.Select(mapper.MapTo), cancellationToken);
     }
 }

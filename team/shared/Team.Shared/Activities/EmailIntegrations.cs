@@ -6,7 +6,7 @@ using Enterprise.Shared.Email;
 using Enterprise.Shared.Grpc;
 using Flurl;
 using Team.Shared.Configurations;
-using Team.Shared.Repositories;
+using Team.Shared.Services.Cache;
 using Temporalio.Activities;
 
 namespace Team.Shared.Activities;
@@ -19,15 +19,15 @@ public class EmailIntegrations(
     ApplicationConfiguration applicationConfiguration,
     EmailConfiguration emailConfiguration,
     CustomerConfiguration customerConfiguration,
-    IRepositoryFactory repositoryFactory,
     IEmailService emailService,
+    ICachedTeamService cachedTeamService,
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
     public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(SendInviteCustomerToJoinTeamNewCustomerInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(args.TeamId, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(args.TeamId, cancellationToken);
         if (team is null)
         {
             return;
@@ -76,7 +76,7 @@ public class EmailIntegrations(
     public async Task SendInviteCustomerToJoinTeamExistingCustomerAsync(SendInviteCustomerToJoinTeamExistingCustomerInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await repositoryFactory.TeamRepository.GetByIdAsync(args.TeamId, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(args.TeamId, cancellationToken);
         if (team is null)
         {
             return;
