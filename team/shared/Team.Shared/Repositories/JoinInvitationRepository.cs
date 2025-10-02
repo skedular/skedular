@@ -15,12 +15,11 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
     Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
     JoinInvitation Remove(JoinInvitation joinInvitation);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinTeamInvitationOrder> orderByFields,
@@ -30,11 +29,12 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 internal static class JoinInvitationExtensions
 {
     internal static IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(
-        this IQueryable<JoinInvitation> originalQuery) =>
-        originalQuery
-            .Include(query => query.Team)
-            .Include(query => query.CreatedBy)
-            .Include(query => query.Invitee);
+        this IQueryable<JoinInvitation> originalQuery,
+        bool isTracked) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Team)
+        .Include(query => query.CreatedBy)
+        .Include(query => query.Invitee);
 
     internal static IQueryable<JoinInvitation> AddSearchCriteria(this IQueryable<JoinInvitation> query, JoinInvitationSearchCriteria searchCriteria)
     {
@@ -110,16 +110,8 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation
-            .Where(query => !query.DeletedAt.HasValue && query.Status == InvitationStatusConstants.Pending &&
-                            emails.Any(email => query.Invitee == null && query.Email != null && EF.Functions.ILike(query.Email, email)))
-            .AddDependentObjects()
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
 
     public JoinInvitation Add(JoinInvitation joinInvitation)
     {
@@ -142,7 +134,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinTeamInvitationOrder> orderByFields,
@@ -150,7 +142,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         (await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }
