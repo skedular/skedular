@@ -21,17 +21,18 @@ internal static class CustomerExtensions
 {
     internal static IIncludableQueryable<Customer, Organization?> AddDependentObjects(
         this IQueryable<Customer> originalQuery,
+        bool isTracked,
         bool includeActiveItemsOnly) =>
-        originalQuery
-            .Include(query => query.Identities)
-            .Include(query => query.DefaultOrganization)
-            .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
-            .ThenInclude(query => query.Location)
-            .ThenInclude(query => query!.Organization);
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Identities)
+        .Include(query => query.DefaultOrganization)
+        .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
+        .ThenInclude(query => query.Location)
+        .ThenInclude(query => query!.Organization);
 }
 
 public class CustomerRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -45,24 +46,28 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
     }
 
     public async Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
-        await DbContext.Customer.AddDependentObjects(includeActiveItemsOnly).FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(true, includeActiveItemsOnly)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Customer?> GetByVerifiableTokenAsync(
         string verifiableToken,
         bool includeActiveItemsOnly,
         CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AddDependentObjects(includeActiveItemsOnly)
+            .AddDependentObjects(true, includeActiveItemsOnly)
             .FirstOrDefaultAsync(query =>
                     !query.DeletedAt.HasValue &&
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<ICollection<Customer>>
-        GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Customer>> GetByIdsAsync(
+        ICollection<string> ids,
+        bool includeActiveItemsOnly,
+        CancellationToken cancellationToken) =>
         await DbContext.Customer
             .Where(query => !query.DeletedAt.HasValue && ids.Contains(query.Id))
-            .AddDependentObjects(includeActiveItemsOnly)
+            .AddDependentObjects(true, includeActiveItemsOnly)
             .ToListAsync(cancellationToken);
 
     public Customer Update(Customer customer)

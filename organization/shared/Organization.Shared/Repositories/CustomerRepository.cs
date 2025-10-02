@@ -19,47 +19,21 @@ public interface ICustomerRepository : IRepository<Customer>
 internal static class CustomerExtensions
 {
     internal static IIncludableQueryable<Customer, Database.Entities.Organization?> AddDependentObjects(
-        this IQueryable<Customer> originalQuery) =>
-        originalQuery
-            .Include(query => query.Identities)
-            .Include(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.JoinInvitationsCreatedBy)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.JoinInvitationsInvitee)
-            .ThenInclude(query => query.Organization);
+        this IQueryable<Customer> originalQuery,
+        bool isTracked) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Identities)
+        .Include(query => query.OrganizationMembers)
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.JoinInvitationsCreatedBy)
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.JoinInvitationsInvitee)
+        .ThenInclude(query => query.Organization);
 }
 
 public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
-    private static readonly Func<OrganizationDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((dbContext, id, cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query => query.Id == id));
-
-    private static readonly Func<OrganizationDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((dbContext, verifiableToken, cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
-
-    private static readonly Func<OrganizationDbContext, string, CancellationToken, Task<Customer?>>
-        s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<OrganizationDbContext, string, CancellationToken, Customer?>((
-                    dbContext,
-                    email,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email))));
-
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -68,14 +42,27 @@ public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider ti
     }
 
     public async Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await s_getByIdQueryAsync(DbContext, id, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<Customer?>
-        GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
-        await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
+    public async Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
 
     public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(
+                query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Any(identity =>
+                        identity.Email != null &&
+                        EF.Functions.ILike(identity.Email, email)),
+                cancellationToken);
 
     public Customer Update(Customer customer)
     {

@@ -25,7 +25,7 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
 
     public async Task RepublishAllCustomersAsync(CancellationToken cancellationToken)
     {
-        var customers = await repositoryFactory.CustomerRepository.GetAllAsync(cancellationToken);
+        var customers = await repositoryFactory.CustomerRepository.GetAllUntrackedAsync(cancellationToken);
         await customerPublisher.PublishCustomersAsync(customers.Select(mapper.MapTo), cancellationToken);
     }
 }

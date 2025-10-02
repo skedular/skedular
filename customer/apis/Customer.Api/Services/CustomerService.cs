@@ -130,7 +130,7 @@ public class CustomerService(
         ICollection<CustomerOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.CustomerRepository.GetPaginatedCustomersAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.CustomerRepository.GetPaginatedCustomersUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,

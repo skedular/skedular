@@ -29,23 +29,6 @@ internal static class CustomerExtensions
 public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<SlackDbContext, Customer>(dbContext, timeProvider), ICustomerRepository
 {
-    private static readonly Func<SlackDbContext, bool, string, CancellationToken, Task<Customer?>>
-        s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<SlackDbContext, bool, string, CancellationToken, Customer?>((dbContext, isTracked, id, cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects(isTracked)
-                    .FirstOrDefault(query => query.Id == id));
-
-    private static readonly Func<SlackDbContext, bool, string, CancellationToken, Task<Customer?>>
-        s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<SlackDbContext, bool, string, CancellationToken, Customer?>((dbContext, isTracked, verifiableToken,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects(isTracked)
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
-
     public override async Task<Customer> UpsertNakedAsync(string id, CancellationToken cancellationToken)
     {
         await base.UpsertNakedAsync(id, cancellationToken);
@@ -54,13 +37,22 @@ public class CustomerRepository(SlackDbContext dbContext, TimeProvider timeProvi
     }
 
     public async Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await s_getByIdQueryAsync(DbContext, true, id, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
-        await s_getByIdQueryAsync(DbContext, false, id, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
-        await s_getByVerifiableTokenQueryAsync(DbContext, false, verifiableToken, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
 
     public async Task<ICollection<Customer>> GetByIdsUntrackedAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Customer

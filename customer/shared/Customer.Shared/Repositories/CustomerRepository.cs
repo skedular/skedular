@@ -14,11 +14,11 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
     Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Customer Add(Database.Entities.Customer customer);
     Database.Entities.Customer Update(Database.Entities.Customer customer);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         CustomerSearchCriteria searchCriteria,
         ICollection<CustomerOrder> orderByFields,
@@ -28,20 +28,21 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 internal static class CustomerExtensions
 {
     internal static IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(
-        this IQueryable<Database.Entities.Customer> originalQuery) =>
-        originalQuery
-            .Include(query => query.Identities)
-            .Include(query => query.BillingDetails)
-            .Include(query => query.StripeCustomer)
-            .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
-            .Include(query => query.DefaultOrganization)
-            .Include(query => query.PreferredLocations)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredOrganizationTags)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.PreferredResources)
-            .ThenInclude(query => query.Location)
-            .ThenInclude(query => query!.Organization);
+        this IQueryable<Database.Entities.Customer> originalQuery,
+        bool isTracked) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Identities)
+        .Include(query => query.BillingDetails)
+        .Include(query => query.StripeCustomer)
+        .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
+        .Include(query => query.DefaultOrganization)
+        .Include(query => query.PreferredLocations)
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.PreferredOrganizationTags)
+        .ThenInclude(query => query.Organization)
+        .Include(query => query.PreferredResources)
+        .ThenInclude(query => query.Location)
+        .ThenInclude(query => query!.Organization);
 
     internal static IQueryable<Database.Entities.Customer> AddSearchCriteria(
         this IQueryable<Database.Entities.Customer> query,
@@ -147,54 +148,32 @@ internal static class CustomerExtensions
 public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<CustomerDbContext, Database.Entities.Customer>(dbContext, timeProvider), ICustomerRepository
 {
-    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
-        s_getByIdQueryAsync =
-            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
-                    dbContext,
-                    id,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query => query.Id == id));
-
-    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
-        s_getByVerifiableTokenQueryAsync =
-            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
-                    dbContext,
-                    verifiableToken,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Select(identity => identity.Id).Contains(verifiableToken)));
-
-    private static readonly Func<CustomerDbContext, string, CancellationToken, Task<Database.Entities.Customer?>>
-        s_getByEmailQueryAsync =
-            EF.CompileAsyncQuery<CustomerDbContext, string, CancellationToken, Database.Entities.Customer?>((
-                    dbContext,
-                    email,
-                    cancellationToken) =>
-                dbContext.Customer
-                    .AddDependentObjects()
-                    .FirstOrDefault(query =>
-                        !query.DeletedAt.HasValue &&
-                        query.Identities.Any(identity =>
-                            identity.Email != null &&
-                            EF.Functions.ILike(identity.Email, email))));
-
     public async Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await s_getByIdQueryAsync(DbContext, id, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
-        await s_getByVerifiableTokenQueryAsync(DbContext, verifiableToken, cancellationToken);
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
 
     public async Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
-        await s_getByEmailQueryAsync(DbContext, email, cancellationToken);
-
-    public async Task<ICollection<Database.Entities.Customer>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AddDependentObjects()
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(
+                query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Any(identity =>
+                        identity.Email != null &&
+                        EF.Functions.ILike(identity.Email, email)),
+                cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(false)
             .Where(query => !query.DeletedAt.HasValue)
             .OrderBy(query => query.Id)
             .ToListAsync(cancellationToken);
@@ -213,8 +192,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
         return DbContext.Customer.Update(customer).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)>
-        GetPaginatedCustomersAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
             PaginationInputParam paginationInputParam,
             CustomerSearchCriteria searchCriteria,
             ICollection<CustomerOrder> orderByFields,
@@ -222,7 +200,7 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
         (await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }
