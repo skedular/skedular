@@ -43,6 +43,7 @@ public class TeamService(
     IRandomHelper randomHelper,
     ICustomerService customerService,
     ICachedCustomerService cachedCustomerService,
+    ICachedOrganizationService cachedOrganizationService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
@@ -309,10 +310,9 @@ public class TeamService(
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
                                    searchCriteria.OrganizationId,
                                    searchCriteria.OrganizationUniqueAlphanumericName,
-                                   false,
                                    cancellationToken) ??
                                throw new OrganizationNotFound();
 
@@ -363,10 +363,9 @@ public class TeamService(
         Organization? organization = null;
         if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
                                organizationId,
                                organizationUniqueAlphanumericName,
-                               false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
             if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customer.Id, cancellationToken))

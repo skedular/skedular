@@ -44,6 +44,7 @@ public class TeamMemberService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     ICachedTeamService cachedTeamService,
+    ICachedOrganizationService cachedOrganizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
@@ -174,7 +175,7 @@ public class TeamMemberService(
 
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                                existingTeam.Organization.Id,
-                               null,
+                               existingTeam.Organization.UniqueAlphanumericName,
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
@@ -280,10 +281,9 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
                                existingTeam.Organization.Id,
-                               null,
-                               false,
+                               existingTeam.Organization.UniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
