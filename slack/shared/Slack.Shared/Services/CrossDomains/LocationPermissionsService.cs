@@ -2,7 +2,7 @@
 using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 
@@ -18,19 +18,20 @@ public class LocationPermissionsService(
     LocationConfiguration locationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache)
+    IMemoryCache memoryCache)
     : ILocationPermissionsService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<LocationPermissions> GetPermissionsAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, locationId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await locationServiceClient.GetPermissionsAsync(
                     new GetPermissionsInput { Id = locationId },
                     locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     private string CreateKeyById(string workspaceMemberId, string locationId) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:crossdomain:locationpermissions-id:{workspaceMemberId}:{locationId}";

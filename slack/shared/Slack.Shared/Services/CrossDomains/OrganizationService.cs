@@ -3,7 +3,7 @@ using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Organization = Slack.Shared.Models.Organization;
 
@@ -21,19 +21,20 @@ public class OrganizationService(
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache)
+    IMemoryCache memoryCache)
     : IOrganizationService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<Organization> AdminGetAsync(string organizationId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.Admin_GetAsync(
                     new Admin_GetInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<Organization> AdminAddAsync(Organization organization, CancellationToken cancellationToken)
     {
@@ -55,34 +56,29 @@ public class OrganizationService(
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedOrganization], cancellationToken);
+        Cache([mappedOrganization]);
 
         return mappedOrganization;
     }
 
     public async Task<Organization> GetAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(organizationId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.GetAsync(
                     new GetInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
-    private async Task CacheAsync(ICollection<Organization> organizations, CancellationToken cancellationToken)
+    private void Cache(ICollection<Organization> organizations)
     {
         foreach (var organization in organizations)
         {
             var key = CreateKeyById(organization.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                organization,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, organization, _cacheEntryOptions);
         }
     }
 

@@ -2,7 +2,7 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 
@@ -18,22 +18,23 @@ public class OrganizationPermissionsService(
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache)
+    IMemoryCache memoryCache)
     : IOrganizationPermissionsService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<OrganizationPermissions> GetPermissionsAsync(
         string workspaceMemberId,
         string organizationId,
         CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(workspaceMemberId, organizationId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.GetPermissionsAsync(
                     new GetPermissionsInput { Id = organizationId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     private string CreateKeyById(string workspaceMemberId, string organizationId) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:crossdomain:organizationpermissions-id:{workspaceMemberId}:{organizationId}";

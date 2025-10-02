@@ -2,7 +2,7 @@
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 
@@ -23,32 +23,32 @@ public class BookingPermissionsService(
     BookingConfiguration bookingConfiguration,
     Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
-    HybridCache hybridCache) : IBookingPermissionsService
+    IMemoryCache memoryCache) : IBookingPermissionsService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<OrganizationBookingPermissions> GetOrganizationPermissionsAsync(
         string workspaceMemberId,
         string organizationId,
         CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateOrganizationKeyById(workspaceMemberId, organizationId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await bookingServiceClient.GetOrganizationPermissionsAsync(
                     new GetOrganizationPermissionsInput { OrganizationId = organizationId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<TeamBookingPermissions> GetTeamPermissionsAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateTeamKeyById(workspaceMemberId, teamId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await bookingServiceClient.GetTeamPermissionsAsync(
                     new GetTeamPermissionsInput { TeamId = teamId },
                     bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     private string CreateOrganizationKeyById(string workspaceMemberId, string organizationId) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:crossdomain:bookingorganizationpermissions-id:{workspaceMemberId}:{organizationId}";

@@ -2,7 +2,7 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Customer = Slack.Shared.Models.Customer;
@@ -44,27 +44,28 @@ public class CustomerService(
     Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService.CustomerServiceClient customerServiceClient,
     IMapper mapper,
     IRandomHelper randomHelper,
-    HybridCache hybridCache,
+    IMemoryCache memoryCache,
     IOrganizationTagService organizationTagService,
     ILocationService locationService,
     ILocationResourceService locationResourceService,
     IOrganizationService organizationService)
     : ICustomerService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<Customer> AdminGetAsync(string customerId, CancellationToken cancellationToken)
     {
-        var customer = await hybridCache.GetOrCreateAsync(
+        var customer = await memoryCache.GetOrCreateAsync(
             CreateKeyById(customerId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await customerServiceClient.Admin_GetAsync(
                     new Admin_GetInput { CustomerId = customerId },
                     customerConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken))!,
+            _cacheEntryOptions);
 
         var locations =
-            await Task.WhenAll(customer.PreferredLocations.Select(item => locationService.AdminGetAsync(item.Id, cancellationToken)));
+            await Task.WhenAll(customer!.PreferredLocations.Select(item => locationService.AdminGetAsync(item.Id, cancellationToken)));
 
         var resources =
             await Task.WhenAll(customer.PreferredResources.Select(item => locationResourceService.AdminGetAsync(item.Id, cancellationToken)));
@@ -105,7 +106,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -118,7 +119,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -131,7 +132,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -146,7 +147,7 @@ public class CustomerService(
         var customer = mapper.MapTo(result.Customer);
         if (customer is not null)
         {
-            await CacheAsync([customer], cancellationToken);
+            Cache([customer]);
         }
 
         return (result.Exist, customer);
@@ -162,7 +163,7 @@ public class CustomerService(
         var customer = mapper.MapTo(result.Customer);
         if (customer is not null)
         {
-            await CacheAsync([customer], cancellationToken);
+            Cache([customer]);
         }
 
         return (result.Exist, customer);
@@ -176,7 +177,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -189,7 +190,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -201,26 +202,24 @@ public class CustomerService(
             cancellationToken: cancellationToken);
 
     public async Task<Customer> GetAsync(string workspaceMemberId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyByVerifiableToken(workspaceMemberId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await customerServiceClient.GetAsync(
                     new GetInput(),
                     customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<Customer> GetByIdAsync(string workspaceMemberId, string customerId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(customerId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await customerServiceClient.GetByIdAsync(
                     new GetByIdInput { CustomerId = customerId },
                     customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct))!,
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<Customer> AddPreferredLocationAsync(string workspaceMemberId, string locationId, CancellationToken cancellationToken)
     {
@@ -230,7 +229,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -243,7 +242,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -269,7 +268,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -285,7 +284,7 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
@@ -301,34 +300,26 @@ public class CustomerService(
                 customerConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken))!;
 
-        await CacheAsync([customer], cancellationToken);
+        Cache([customer]);
 
         return customer;
     }
 
-    private async Task CacheAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
+    private void Cache(ICollection<Customer> customers)
     {
         foreach (var customer in customers)
         {
             var key = CreateKeyById(customer.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                customer,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, customer, _cacheEntryOptions);
 
             foreach (var identity in customer.Identities)
             {
                 key = CreateKeyByVerifiableToken(identity.Id);
 
-                await hybridCache.RemoveAsync(key, cancellationToken);
-                await hybridCache.SetAsync(
-                    key,
-                    customer,
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                    cancellationToken: cancellationToken);
+                memoryCache.Remove(key);
+                memoryCache.Set(key, customer, _cacheEntryOptions);
             }
         }
     }

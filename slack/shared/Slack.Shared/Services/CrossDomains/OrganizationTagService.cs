@@ -4,7 +4,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
@@ -36,18 +36,19 @@ public class OrganizationTagService(
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache) : IOrganizationTagService
+    IMemoryCache memoryCache) : IOrganizationTagService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<OrganizationTag> AdminGetAsync(string tagId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(tagId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.Admin_GetTagAsync(
                     new Admin_GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<OrganizationTag> AddAsync(
         string workspaceMemberId,
@@ -67,7 +68,7 @@ public class OrganizationTagService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedOrganizationTag], cancellationToken);
+        Cache([mappedOrganizationTag]);
 
         return mappedOrganizationTag;
     }
@@ -86,7 +87,7 @@ public class OrganizationTagService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedOrganizationTag], cancellationToken);
+        Cache([mappedOrganizationTag]);
 
         return mappedOrganizationTag;
     }
@@ -100,27 +101,26 @@ public class OrganizationTagService(
 
         var key = CreateKeyById(tagId);
 
-        await hybridCache.RemoveAsync(key, cancellationToken);
+        memoryCache.Remove(key);
     }
 
     public async Task<OrganizationTag> GetAsync(string workspaceMemberId, string tagId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(tagId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.GetTagAsync(
                     new GetTagInput { Id = tagId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<Connection<OrganizationTagEdge>> GetAllTagsAsync(
         string workspaceMemberId,
         string organizationId,
         CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyAllByOrganizationId(organizationId),
-            async ct =>
+            async _ =>
             {
                 var getPaginatedTagsInput = new GetPaginatedTagsInput
                 {
@@ -136,7 +136,7 @@ public class OrganizationTagService(
                 var connection = await organizationServiceClient.GetPaginatedTagsAsync(
                     getPaginatedTagsInput,
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct);
+                    cancellationToken: cancellationToken);
 
                 var result = new Connection<OrganizationTagEdge>
                 {
@@ -151,12 +151,11 @@ public class OrganizationTagService(
                     Edges = connection.Edges.Select(item => new OrganizationTagEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
                 };
 
-                await CacheAsync(result.Edges.Select(item => item.Node).ToList(), ct);
+                Cache(result.Edges.Select(item => item.Node).ToList());
 
                 return result;
             },
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+            _cacheEntryOptions))!;
 
 
     public async Task<Connection<OrganizationTagEdge>> GetPaginatedTagsAsync(
@@ -198,23 +197,19 @@ public class OrganizationTagService(
             Edges = connection.Edges.Select(item => new OrganizationTagEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
         };
 
-        await CacheAsync(result.Edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(result.Edges.Select(item => item.Node).ToList());
 
         return result;
     }
 
-    private async Task CacheAsync(ICollection<OrganizationTag> organizationTags, CancellationToken cancellationToken)
+    private void Cache(ICollection<OrganizationTag> organizationTags)
     {
         foreach (var organizationTag in organizationTags)
         {
             var key = CreateKeyById(organizationTag.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                organizationTag,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, organizationTag, _cacheEntryOptions);
         }
     }
 

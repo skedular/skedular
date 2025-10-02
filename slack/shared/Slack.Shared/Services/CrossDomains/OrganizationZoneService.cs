@@ -4,7 +4,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
@@ -18,7 +18,6 @@ public interface IOrganizationZoneService
     Task<OrganizationZone> UpdateAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken);
     Task RemoveAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken);
     Task<OrganizationZone> GetAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken);
-
     Task<Connection<OrganizationZoneEdge>> GetAllZonesAsync(string workspaceMemberId, string organizationId, CancellationToken cancellationToken);
 
     Task<Connection<OrganizationZoneEdge>> GetPaginatedZonesAsync(
@@ -37,18 +36,19 @@ public class OrganizationZoneService(
     OrganizationConfiguration organizationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationService.OrganizationServiceClient organizationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache) : IOrganizationZoneService
+    IMemoryCache memoryCache) : IOrganizationZoneService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<OrganizationZone> AdminGetAsync(string zoneId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.Admin_GetZoneAsync(
                     new Admin_GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<OrganizationZone> AddAsync(string workspaceMemberId, OrganizationZone organizationZone, CancellationToken cancellationToken)
     {
@@ -65,7 +65,7 @@ public class OrganizationZoneService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedOrganizationZone], cancellationToken);
+        Cache([mappedOrganizationZone]);
 
         return mappedOrganizationZone;
     }
@@ -84,7 +84,7 @@ public class OrganizationZoneService(
                 organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedOrganizationZone], cancellationToken);
+        Cache([mappedOrganizationZone]);
 
         return mappedOrganizationZone;
     }
@@ -98,27 +98,26 @@ public class OrganizationZoneService(
 
         var key = CreateKeyById(zoneId);
 
-        await hybridCache.RemoveAsync(key, cancellationToken);
+        memoryCache.Remove(key);
     }
 
     public async Task<OrganizationZone> GetAsync(string workspaceMemberId, string zoneId, CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyById(zoneId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await organizationServiceClient.GetZoneAsync(
                     new GetZoneInput { Id = zoneId },
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions))!;
 
     public async Task<Connection<OrganizationZoneEdge>> GetAllZonesAsync(
         string workspaceMemberId,
         string organizationId,
         CancellationToken cancellationToken) =>
-        await hybridCache.GetOrCreateAsync(
+        (await memoryCache.GetOrCreateAsync(
             CreateKeyAllByOrganizationId(organizationId),
-            async ct =>
+            async _ =>
             {
                 var getPaginatedZonesInput = new GetPaginatedZonesInput
                 {
@@ -134,7 +133,7 @@ public class OrganizationZoneService(
                 var connection = await organizationServiceClient.GetPaginatedZonesAsync(
                     getPaginatedZonesInput,
                     organizationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct);
+                    cancellationToken: cancellationToken);
 
                 var result = new Connection<OrganizationZoneEdge>
                 {
@@ -149,12 +148,11 @@ public class OrganizationZoneService(
                     Edges = connection.Edges.Select(item => new OrganizationZoneEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
                 };
 
-                await CacheAsync(result.Edges.Select(item => item.Node).ToList(), ct);
+                Cache(result.Edges.Select(item => item.Node).ToList());
 
                 return result;
             },
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+            _cacheEntryOptions))!;
 
 
     public async Task<Connection<OrganizationZoneEdge>> GetPaginatedZonesAsync(
@@ -196,23 +194,19 @@ public class OrganizationZoneService(
             Edges = connection.Edges.Select(item => new OrganizationZoneEdge(mapper.MapTo(item.Node), item.Cursor)).ToList()
         };
 
-        await CacheAsync(result.Edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(result.Edges.Select(item => item.Node).ToList());
 
         return result;
     }
 
-    private async Task CacheAsync(ICollection<OrganizationZone> organizationZones, CancellationToken cancellationToken)
+    private void Cache(ICollection<OrganizationZone> organizationZones)
     {
         foreach (var organizationZone in organizationZones)
         {
             var key = CreateKeyById(organizationZone.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                organizationZone,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, organizationZone, _cacheEntryOptions);
         }
     }
 

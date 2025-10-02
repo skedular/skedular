@@ -5,7 +5,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.Admin_GetInput;
 using GetInput = Api.Shared.Services.Grpc.Skedular.Team.V1.GetInput;
@@ -42,25 +42,26 @@ public class TeamService(
     TeamConfiguration teamConfiguration,
     Api.Shared.Services.Grpc.Skedular.Team.V1.TeamService.TeamServiceClient teamServiceClient,
     IMapper mapper,
-    HybridCache hybridCache,
+    IMemoryCache memoryCache,
     ICustomerService customerService,
     ILocationService locationService)
     : ITeamService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<Team> AdminGetAsync(string teamId, CancellationToken cancellationToken)
     {
-        var team = await hybridCache.GetOrCreateAsync(
+        var team = await memoryCache.GetOrCreateAsync(
             CreateKeyById(teamId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await teamServiceClient.Admin_GetAsync(
                     new Admin_GetInput { Id = teamId },
                     teamConfiguration.ApiKey.CreateMetadata(),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions);
 
         var customers = await Task.WhenAll(
-            team.TeamMembers.Select(item => item.Customer.Id).Select(item => customerService.AdminGetAsync(item, cancellationToken)));
+            team!.TeamMembers.Select(item => item.Customer.Id).Select(item => customerService.AdminGetAsync(item, cancellationToken)));
 
         foreach (var member in team.TeamMembers)
         {
@@ -81,18 +82,17 @@ public class TeamService(
 
     public async Task<Team> GetAsync(string workspaceMemberId, string teamId, CancellationToken cancellationToken)
     {
-        var team = await hybridCache.GetOrCreateAsync(
+        var team = await memoryCache.GetOrCreateAsync(
             CreateKeyById(teamId),
-            async ct => mapper.MapTo(
+            async _ => mapper.MapTo(
                 await teamServiceClient.GetAsync(
                     new GetInput { Id = teamId },
                     teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                    cancellationToken: ct)),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken)),
+            _cacheEntryOptions);
 
         var customers = await Task.WhenAll(
-            team.TeamMembers
+            team!.TeamMembers
                 .Select(item => item.Customer.Id)
                 .Select(item => customerService.GetByIdAsync(workspaceMemberId, item, cancellationToken)));
 
@@ -162,7 +162,7 @@ public class TeamService(
                 teamConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedTeam], cancellationToken);
+        Cache([mappedTeam]);
 
         var customers = await Task.WhenAll(
             mappedTeam.TeamMembers
@@ -266,7 +266,7 @@ public class TeamService(
 
         var key = CreateKeyById(teamId);
 
-        await hybridCache.RemoveAsync(key, cancellationToken);
+        memoryCache.Remove(key);
     }
 
     public async Task<Connection<TeamEdge>> GetPaginatedTeamsAsync(
@@ -340,23 +340,19 @@ public class TeamService(
             }).ToList()
         };
 
-        await CacheAsync(result.Edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(result.Edges.Select(item => item.Node).ToList());
 
         return result;
     }
 
-    private async Task CacheAsync(ICollection<Team> teams, CancellationToken cancellationToken)
+    private void Cache(ICollection<Team> teams)
     {
         foreach (var team in teams)
         {
             var key = CreateKeyById(team.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                team,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, team, _cacheEntryOptions);
         }
     }
 

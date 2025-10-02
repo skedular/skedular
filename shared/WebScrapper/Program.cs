@@ -45,7 +45,8 @@ public class Program
     private static IHost CreateHost(string[] args) =>
         Host
             .CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((_, configuration) => configuration.BuildConfig<Program>(_.HostingEnvironment.EnvironmentName, args))
+            .ConfigureAppConfiguration((hostBuilderContext, configuration) =>
+                configuration.BuildConfig<Program>(hostBuilderContext.HostingEnvironment.EnvironmentName, args))
             .ConfigureServices((hostBuilderContext, services) =>
             {
                 services.AddLogging(builder =>

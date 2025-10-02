@@ -87,7 +87,6 @@ public static class Extensions
             .AddSingleton<IOrganizationCustomTagService, OrganizationCustomTagService>()
             .AddSingleton<IOrganizationZoneService, OrganizationZoneService>()
             .AddSingleton<IOrganizationProductTagService, OrganizationProductTagService>()
-            .AddSingleton<IOrganizationLocationTagService, OrganizationLocationTagService>()
             .AddSingleton<ILocationResourceService, LocationResourceService>()
             .AddSingleton<IBookingPermissionsService, BookingPermissionsService>()
             .AddSingleton<IBookingService, Services.CrossDomains.BookingService>()

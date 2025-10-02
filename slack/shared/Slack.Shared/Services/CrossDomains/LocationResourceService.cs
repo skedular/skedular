@@ -4,7 +4,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 using Resource = Slack.Shared.Models.Resource;
@@ -37,23 +37,24 @@ public class LocationResourceService(
     LocationConfiguration locationConfiguration,
     Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService.LocationServiceClient locationServiceClient,
     IMapper mapper,
-    HybridCache hybridCache,
+    IMemoryCache memoryCache,
     IOrganizationCustomTagService organizationCustomTagService,
     IOrganizationZoneService organizationZoneService,
     IOrganizationProductTagService organizationProductTagService,
     IOrganizationTagService organizationTagService) : ILocationResourceService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<Resource> AdminGetAsync(string resourceId, CancellationToken cancellationToken) =>
         await AdminEnrichAsync(
-            await hybridCache.GetOrCreateAsync(
+            (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
-                async ct => mapper.MapTo(
+                async _ => mapper.MapTo(
                     await locationServiceClient.Admin_GetResourceAsync(
                         new Admin_GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(),
-                        cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken),
+                        cancellationToken: cancellationToken)),
+                _cacheEntryOptions))!,
             cancellationToken);
 
     public async Task<Resource> AddAsync(string workspaceMemberId, Resource resource, CancellationToken cancellationToken)
@@ -80,7 +81,7 @@ public class LocationResourceService(
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedResource], cancellationToken);
+        Cache([mappedResource]);
 
         return await EnrichAsync(workspaceMemberId, mappedResource, cancellationToken);
     }
@@ -108,7 +109,7 @@ public class LocationResourceService(
                 locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedResource], cancellationToken);
+        Cache([mappedResource]);
 
         return await EnrichAsync(workspaceMemberId, mappedResource, cancellationToken);
     }
@@ -122,21 +123,20 @@ public class LocationResourceService(
 
         var key = CreateKeyById(resourceId);
 
-        await hybridCache.RemoveAsync(key, cancellationToken);
+        memoryCache.Remove(key);
     }
 
     public async Task<Resource> GetAsync(string workspaceMemberId, string resourceId, CancellationToken cancellationToken) =>
         await EnrichAsync(
             workspaceMemberId,
-            await hybridCache.GetOrCreateAsync(
+            (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(resourceId),
-                async ct => mapper.MapTo(
+                async _ => mapper.MapTo(
                     await locationServiceClient.GetResourceAsync(
                         new GetResourceInput { Id = resourceId },
                         locationConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                        cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken),
+                        cancellationToken: cancellationToken)),
+                _cacheEntryOptions))!,
             cancellationToken);
 
     public async Task<Connection<ResourceEdge>> GetPaginatedResourcesAsync(
@@ -169,7 +169,7 @@ public class LocationResourceService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new ResourceEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        await CacheAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(edges.Select(item => item.Node).ToList());
 
         var enrichedEdges = new List<ResourceEdge>();
         foreach (var item in edges)
@@ -191,18 +191,14 @@ public class LocationResourceService(
         };
     }
 
-    private async Task CacheAsync(ICollection<Resource> resources, CancellationToken cancellationToken)
+    private void Cache(ICollection<Resource> resources)
     {
         foreach (var resource in resources)
         {
             var key = CreateKeyById(resource.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                resource,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, resource, _cacheEntryOptions);
         }
     }
 

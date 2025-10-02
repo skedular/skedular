@@ -6,7 +6,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Caching.Memory;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using Booking = Slack.Shared.Models.Booking;
@@ -56,7 +56,7 @@ public class BookingService(
     BookingConfiguration bookingConfiguration,
     Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService.BookingServiceClient bookingServiceClient,
     IMapper mapper,
-    HybridCache hybridCache,
+    IMemoryCache memoryCache,
     IOrganizationService organizationService,
     ICustomerService customerService,
     ILocationService locationService,
@@ -64,6 +64,8 @@ public class BookingService(
     ILocationResourceService locationResourceService)
     : IBookingService
 {
+    private readonly MemoryCacheEntryOptions _cacheEntryOptions = new() { SlidingExpiration = TimeSpan.FromSeconds(30) };
+
     public async Task<Connection<BookingEdge>> Admin_GetPaginatedBookingsAsync(
         BookingSearchCriteria bookingSearchCriteria,
         string? after,
@@ -110,7 +112,7 @@ public class BookingService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new BookingEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        await CacheAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(edges.Select(item => item.Node).ToList());
 
         var enrichedEdges = new List<BookingEdge>();
         foreach (var item in edges)
@@ -137,15 +139,14 @@ public class BookingService(
     public async Task<Booking> GetAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken) =>
         await EnrichAsync(
             workspaceMemberId,
-            await hybridCache.GetOrCreateAsync(
+            (await memoryCache.GetOrCreateAsync(
                 CreateKeyById(bookingId),
-                async ct => mapper.MapTo(
+                async _ => mapper.MapTo(
                     await bookingServiceClient.GetAsync(
                         new GetInput { Id = bookingId },
                         bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
-                        cancellationToken: ct)),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken),
+                        cancellationToken: cancellationToken)),
+                _cacheEntryOptions))!,
             cancellationToken);
 
     public async Task<Booking> AddAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken)
@@ -183,7 +184,7 @@ public class BookingService(
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedBooking], cancellationToken);
+        Cache([mappedBooking]);
 
         return await EnrichAsync(workspaceMemberId, mappedBooking, cancellationToken);
     }
@@ -223,7 +224,7 @@ public class BookingService(
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
 
-        await CacheAsync([mappedBooking], cancellationToken);
+        Cache([mappedBooking]);
 
         return await EnrichAsync(workspaceMemberId, mappedBooking, cancellationToken);
     }
@@ -237,7 +238,7 @@ public class BookingService(
 
         var key = CreateKeyById(bookingId);
 
-        await hybridCache.RemoveAsync(key, cancellationToken);
+        memoryCache.Remove(key);
     }
 
     public async Task<Connection<BookingEdge>> GetPaginatedBookingsAsync(
@@ -287,7 +288,7 @@ public class BookingService(
             cancellationToken: cancellationToken);
         var edges = connection.Edges.Select(item => new BookingEdge(mapper.MapTo(item.Node), item.Cursor)).ToList();
 
-        await CacheAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        Cache(edges.Select(item => item.Node).ToList());
 
         var enrichedEdges = new List<BookingEdge>();
         foreach (var item in edges)
@@ -337,18 +338,14 @@ public class BookingService(
                 .Select(item => locationResourceService.GetAsync(workspaceMemberId, item, cancellationToken)));
     }
 
-    private async Task CacheAsync(ICollection<Booking> bookings, CancellationToken cancellationToken)
+    private void Cache(ICollection<Booking> bookings)
     {
         foreach (var booking in bookings)
         {
             var key = CreateKeyById(booking.Id);
 
-            await hybridCache.RemoveAsync(key, cancellationToken);
-            await hybridCache.SetAsync(
-                key,
-                booking,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromSeconds(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
+            memoryCache.Remove(key);
+            memoryCache.Set(key, booking, _cacheEntryOptions);
         }
     }
 
