@@ -10,10 +10,21 @@ public static class EnvironmentHelper
         }
 
         foreach (var parts in (await File.ReadAllLinesAsync(envFilePath, cancellationToken))
-                 .Select(line => line.Split("=", StringSplitOptions.RemoveEmptyEntries))
+                 .Select(line =>
+                 {
+                     var idx = line.IndexOf("=", StringComparison.InvariantCultureIgnoreCase);
+                     return idx == -1 ? Array.Empty<string>() : [line[..idx], line[(idx + 1)..]];
+                 })
                  .Where(parts => parts.Length == 2))
         {
-            Environment.SetEnvironmentVariable(parts[0], parts[1]);
+            if (parts.Last().StartsWith('"') && parts.Last().EndsWith('"'))
+            {
+                Environment.SetEnvironmentVariable(parts.First(), parts.Last().Trim('"'));
+            }
+            else
+            {
+                Environment.SetEnvironmentVariable(parts.First(), parts.Last());
+            }
         }
     }
 }
