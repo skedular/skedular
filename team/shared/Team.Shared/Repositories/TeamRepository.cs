@@ -15,7 +15,9 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
     Task<Database.Entities.Team?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Team>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(string customerId, string? organizationId,
+    Task<ICollection<Database.Entities.Team>> GetByCustomerIdUntrackedAsync(
+        string customerId, 
+        string? organizationId,
         CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Team>> GetAllUntrackedAsync(CancellationToken cancellationToken);

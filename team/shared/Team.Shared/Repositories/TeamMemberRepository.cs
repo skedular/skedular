@@ -21,40 +21,30 @@ public interface ITeamMemberRepository : IRepository<TeamMember>
     TeamMember Remove(TeamMember teamMember);
     void RemoveRange(ICollection<TeamMember> teamMembers);
 
-    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedTeamMembersAsync(
+    Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)> GetPaginatedTeamMembersUntrackedAsync(
         PaginationInputParam paginationInputParam,
         TeamMemberSearchCriteria searchCriteria,
         ICollection<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken);
 
-    Task<ICollection<TeamMember>> GetByTeamIdAsync(
-        string teamId,
-        CancellationToken cancellationToken);
-
-    Task<TeamMember?> GetByTeamIdAndCustomerIdAsync(
-        string teamId,
-        string customerId,
-        CancellationToken cancellationToken);
-
-    Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(
-        string teamId,
-        string organizationMemberId,
-        CancellationToken cancellationToken);
+    Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken);
+    Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(string teamId, string organizationMemberId, CancellationToken cancellationToken);
 }
 
 internal static class TeamMemberExtensions
 {
     internal static IIncludableQueryable<TeamMember, ICollection<Identity>> AddDependentObjects(
-        this IQueryable<TeamMember> originalQuery) =>
-        originalQuery
-            .Include(query => query.Team)
-            .Include(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query!.Organization)
-            .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query!.Customer)
-            .ThenInclude(query => query.Identities);
+        this IQueryable<TeamMember> originalQuery,
+        bool isTracked) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Team)
+        .Include(query => query.Customer)
+        .ThenInclude(query => query.Identities)
+        .Include(query => query.OrganizationMember)
+        .ThenInclude(query => query!.Organization)
+        .Include(query => query.OrganizationMember)
+        .ThenInclude(query => query!.Customer)
+        .ThenInclude(query => query.Identities);
 
     internal static IQueryable<TeamMember> AddSearchCriteria(
         this IQueryable<TeamMember> query,
@@ -140,10 +130,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
 {
     public async Task<TeamMember?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
-            .Include(query => query.Team)
-            .Include(query => query.Customer)
-            .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query!.Customer)
+            .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<TeamMember>> GetByIdsAsync(
@@ -151,10 +138,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => ids.Contains(query.Id))
-            .Include(query => query.Team)
-            .Include(query => query.Customer)
-            .Include(query => query.OrganizationMember)
-            .ThenInclude(query => query!.Customer)
+            .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
     public TeamMember Add(TeamMember teamMember)
@@ -193,7 +177,7 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<TeamMember>>, int)>
-        GetPaginatedTeamMembersAsync(
+        GetPaginatedTeamMembersUntrackedAsync(
             PaginationInputParam paginationInputParam,
             TeamMemberSearchCriteria searchCriteria,
             ICollection<TeamMemberOrder> orderByFields,
@@ -201,27 +185,15 @@ public class TeamMemberRepository(TeamDbContext dbContext, TimeProvider timeProv
         (await DbContext.TeamMember
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 
-    public async Task<ICollection<TeamMember>> GetByTeamIdAsync(
-        string teamId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => query.Team.Id == teamId)
-            .Include(query => query.Customer)
+            .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
-
-    public async Task<TeamMember?> GetByTeamIdAndCustomerIdAsync(
-        string teamId,
-        string customerId,
-        CancellationToken cancellationToken) =>
-        await DbContext.TeamMember
-            .Include(query => query.Customer)
-            .FirstOrDefaultAsync(
-                query => query.Team.Id == teamId && query.Customer.Id == customerId,
-                cancellationToken);
 
     public async Task<TeamMember?> GetByTeamIdAndOrganizationMemberIdAsync(
         string teamId,

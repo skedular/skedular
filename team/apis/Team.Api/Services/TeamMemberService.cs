@@ -65,7 +65,7 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamMemberRepository.GetPaginatedTeamMembersAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.TeamMemberRepository.GetPaginatedTeamMembersUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
