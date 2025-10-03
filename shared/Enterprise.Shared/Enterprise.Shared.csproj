@@ -113,7 +113,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11"/>
         <PackageReference Include="StackExchange.Redis" Version="2.9.25"/>
         <PackageReference Include="Stripe.net" Version="49.0.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.5"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0"/>
         <PackageReference Include="System.Reactive" Version="6.0.2"/>
         <PackageReference Include="WorkOS.net" Version="2.9.0"/>
