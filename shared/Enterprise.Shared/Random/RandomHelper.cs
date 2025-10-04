@@ -19,7 +19,7 @@ public class RandomHelper : IRandomHelper
     public string Generate() => GenerateGuid().ToString();
     public IReadOnlyCollection<string> GenerateMany(int count) => GenerateManyGuids(count).Select(item => item.ToString()).ToList();
 
-    public string GenerateAlphanumericNumeric(int size = 21) => Nanoid.Generate("0123456789abcdefghijklmnopqrstuvwxyz", size);
+    public string GenerateAlphanumericNumeric(int size = 21) => $"a{Nanoid.Generate("0123456789abcdefghijklmnopqrstuvwxyz", size - 1)}";
 
     public IReadOnlyCollection<string> GenerateManyGenerateAlphanumericNumeric(int count, int size = 21) =>
         Enumerable.Range(0, count).Select(_ => GenerateAlphanumericNumeric(size)).ToList();
