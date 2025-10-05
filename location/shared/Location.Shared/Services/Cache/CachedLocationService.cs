@@ -22,7 +22,7 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, ct) ?? throw new TeamNotFound(),
+                async ct => await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, ct) ?? throw new LocationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -38,7 +38,7 @@ public class CachedLocationService(ApplicationConfiguration applicationConfigura
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new TeamNotFound(),
+            await repositoryFactory.LocationRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new LocationNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }

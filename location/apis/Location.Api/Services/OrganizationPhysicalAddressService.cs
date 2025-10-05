@@ -77,7 +77,7 @@ public class LocationPhysicalAddressService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedLocationService.UpdateByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken);
+        await cachedLocationService.UpdateByIdAsync(existingLocation.Id, cancellationToken);
 
         return mappedLocation;
     }
@@ -122,7 +122,7 @@ public class LocationPhysicalAddressService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedLocationService.UpdateByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken);
+        await cachedLocationService.UpdateByIdAsync(existingLocation.Id, cancellationToken);
 
         return mappedLocation;
     }
