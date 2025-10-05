@@ -44,7 +44,6 @@ internal static class LocationExtensions
         bool includeDeletedResources) =>
         (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
         .Include(query => query.Organization)
-        .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
         .Include(query => query.PhysicalAddress)
         .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))
         .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))

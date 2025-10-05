@@ -51,6 +51,7 @@
     "final-form": "^5.0.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
+    "leaflet.markercluster": "^1.5.3",
     "logrocket": "^10.1.0",
     "logrocket-react": "^6.0.3",
     "mui-rff": "^8.2.3",
