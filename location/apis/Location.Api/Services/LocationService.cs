@@ -307,11 +307,6 @@ public class LocationService(
             orderByFields,
             cancellationToken);
 
-        if (searchCriteria.OrganizationUniqueAlphanumericName != "skedularpubliclocations")
-        {
-            await cachedLocationService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
-        }
-
         var mappedLocations = new List<Edge<Shared.Models.Location>>();
         foreach (var edge in edges)
         {
