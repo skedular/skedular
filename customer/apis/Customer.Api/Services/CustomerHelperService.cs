@@ -49,14 +49,16 @@ public class CustomerHelperService(
     {
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var customerEntity = repositoryFactory.CustomerRepository.Update(existingCustomer);
-        var customer = mapper.MapTo(customerEntity);
+        existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
+        var customer = mapper.MapTo(existingCustomer);
         customerOutboxPublisher.PublishCustomers([customer], repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedCustomerService.UpdateAsync([customerEntity], cancellationToken);
+        existingCustomer = (await repositoryFactory.CustomerRepository.GetByIdUntrackedAsync(customer.Id, cancellationToken))!;
+
+        await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
 
         return customer;
     }

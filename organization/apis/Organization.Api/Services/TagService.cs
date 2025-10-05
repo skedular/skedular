@@ -267,8 +267,6 @@ public class TagService(
             orderByFields,
             cancellationToken);
 
-        await cachedTagService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
-
         return (paginatedInfo,
             mapper.MapTo(
                     edges,

@@ -343,8 +343,6 @@ public class TeamService(
             orderByFields,
             cancellationToken);
 
-        await cachedTeamService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
-
         var mappedTeams = new List<Edge<Shared.Models.Team>>();
         foreach (var edge in edges)
         {

@@ -69,7 +69,7 @@ public class CustomerSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        await cachedCustomerService.UpdateAsync([existingCustomer], cancellationToken);
+        await cachedCustomerService.RemoveAsync([existingCustomer], cancellationToken);
     }
 
     private async Task HandleCustomerDeletedEventAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)

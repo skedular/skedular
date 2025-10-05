@@ -402,14 +402,11 @@ public class ResourceService(
             throw new UnauthorizedAccessException();
         }
 
-        var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.ResourceRepository.GetPaginatedResourcesAsync(
-                paginationInputParam,
-                searchCriteria,
-                orderByFields,
-                cancellationToken);
-
-        await cachedResourceService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.ResourceRepository.GetPaginatedResourcesAsync(
+            paginationInputParam,
+            searchCriteria,
+            orderByFields,
+            cancellationToken);
 
         return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
     }

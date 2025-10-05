@@ -72,7 +72,8 @@ public class OrganizationMemberService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo,
+        return (
+            paginatedInfo,
             mapper.MapTo(
                     edges,
                     mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id)))

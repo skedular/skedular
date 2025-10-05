@@ -108,7 +108,7 @@ public class OrganizationSubscriber(
             existingOrganization.UniqueAlphanumericName,
             cancellationToken);
 
-        await cachedCustomerService.UpdateAsync(customers, cancellationToken);
+        await cachedCustomerService.RemoveAsync(customers, cancellationToken);
     }
 
     private async Task<Organization> RebuildOrganizationMembersAsync(

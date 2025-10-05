@@ -12,8 +12,11 @@ namespace Customer.Shared.Repositories;
 public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 {
     Task<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Database.Entities.Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<Database.Entities.Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
+    Task<Database.Entities.Customer?> GetByEmailUntrackedAsync(string email, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Customer Add(Database.Entities.Customer customer);
     Database.Entities.Customer Update(Database.Entities.Customer customer);
@@ -153,6 +156,11 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<Database.Entities.Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public async Task<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(true)
@@ -160,15 +168,29 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
+    public async Task<Database.Entities.Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(false)
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
     public async Task<Database.Entities.Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(
+                query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
+                cancellationToken);
+
+    public async Task<Database.Entities.Customer?> GetByEmailUntrackedAsync(string email, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(
                 query =>
                     !query.DeletedAt.HasValue &&
-                    query.Identities.Any(identity =>
-                        identity.Email != null &&
-                        EF.Functions.ILike(identity.Email, email)),
+                    query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
                 cancellationToken);
 
     public async Task<ICollection<Database.Entities.Customer>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
@@ -193,10 +215,10 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Customer>>, int)> GetPaginatedCustomersUntrackedAsync(
-            PaginationInputParam paginationInputParam,
-            CustomerSearchCriteria searchCriteria,
-            ICollection<CustomerOrder> orderByFields,
-            CancellationToken cancellationToken) =>
+        PaginationInputParam paginationInputParam,
+        CustomerSearchCriteria searchCriteria,
+        ICollection<CustomerOrder> orderByFields,
+        CancellationToken cancellationToken) =>
         (await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)

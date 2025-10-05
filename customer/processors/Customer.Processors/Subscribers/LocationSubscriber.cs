@@ -122,7 +122,7 @@ public class LocationSubscriber(
                 customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
             _ = repositoryFactory.CustomerRepository.Update(customer);
 
-            await cachedCustomerService.UpdateAsync([customer], cancellationToken);
+            await cachedCustomerService.RemoveAsync([customer], cancellationToken);
         }
     }
 }
