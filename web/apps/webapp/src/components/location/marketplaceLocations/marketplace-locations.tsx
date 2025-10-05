@@ -10,6 +10,8 @@ import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
+import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
+import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
 import { graphql, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
 import MarketplaceLocationPopupCard from './marketplace-location-popup-card';
@@ -19,6 +21,8 @@ let MapContainer: typeof import('react-leaflet').MapContainer;
 let Marker: typeof import('react-leaflet').Marker;
 let TileLayer: typeof import('react-leaflet').TileLayer;
 let Popup: typeof import('react-leaflet').Popup;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let MarkerClusterGroup: any;
 
 type Props = {
   rootDataRelay: marketplaceLocations_locations_query$key;
@@ -66,12 +70,14 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
       // core libraries
       const leaflet = await import('leaflet');
       const rl = await import('react-leaflet');
+      const rlCluster = await import('react-leaflet-cluster');
 
       L = leaflet;
       MapContainer = rl.MapContainer;
       Marker = rl.Marker;
       TileLayer = rl.TileLayer;
       Popup = rl.Popup;
+      MarkerClusterGroup = rlCluster && (rlCluster.default ?? rlCluster);
 
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: '/leaflet/images/marker-icon-2x.png',
@@ -204,15 +210,17 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     <Box sx={{ height: isMobile ? '40vh' : '90vh', width: '100%', position: 'relative' }}>
       <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {locations
-          .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
-          .map((item) => (
-            <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-              <Popup>
-                <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-              </Popup>
-            </Marker>
-          ))}
+        <MarkerClusterGroup chunkedLoading>
+          {locations
+            .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
+            .map((item) => (
+              <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
+                <Popup>
+                  <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                </Popup>
+              </Marker>
+            ))}
+        </MarkerClusterGroup>
 
         <MapInitBoundsTracker />
         <MapCenterTracker />
