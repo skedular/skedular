@@ -23,7 +23,8 @@ public class LocationPhysicalAddressService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IRandomHelper randomHelper,
     IMapper mapper,
-    ILocationOutboxPublisher locationOutboxPublisher) : ILocationPhysicalAddressService
+    ILocationOutboxPublisher locationOutboxPublisher,
+    ICachedLocationService cachedLocationService) : ILocationPhysicalAddressService
 {
     public async Task<Shared.Models.Location> AddAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken)
     {
@@ -76,12 +77,12 @@ public class LocationPhysicalAddressService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        await cachedLocationService.UpdateByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken);
+
         return mappedLocation;
     }
 
-    public async Task<Shared.Models.Location> UpdateAsync(
-        LocationPhysicalAddress locationPhysicalAddress,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> UpdateAsync(LocationPhysicalAddress locationPhysicalAddress, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Id);
 
@@ -120,6 +121,8 @@ public class LocationPhysicalAddressService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedLocationService.UpdateByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken);
 
         return mappedLocation;
     }
