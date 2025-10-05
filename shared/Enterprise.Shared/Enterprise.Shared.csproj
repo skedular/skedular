@@ -27,8 +27,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Confluent.Kafka" Version="9.5.0"/>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.0"/>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="9.5.1"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.1"/>
 
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
@@ -62,7 +62,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="9.9.0"/>
-        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.0"/>
+        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="9.5.1"/>
         <PackageReference Include="Microsoft.Graph" Version="5.93.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.14.1"/>
 
@@ -115,7 +115,7 @@
         <PackageReference Include="Stripe.net" Version="49.0.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0"/>
-        <PackageReference Include="System.Reactive" Version="6.0.2"/>
+        <PackageReference Include="System.Reactive" Version="6.1.0"/>
         <PackageReference Include="WorkOS.net" Version="2.9.0"/>
         <PackageReference Include="YamlDotNet" Version="16.3.0"/>
 
