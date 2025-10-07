@@ -16,7 +16,7 @@ ENV DOTNET_ROLL_FORWARD=LatestMajor
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/gateway_v1.yaml \
+  /Input:/openapi/skedular/gateway_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Gateway.V1 \
   /Classname:GatewayClient \
   /Output:/output/Skedular/Gateway/V1/Gateway.g.cs \
@@ -36,7 +36,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/booking_v1.yaml \
+  /Input:/openapi/skedular/booking_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Booking.V1 \
   /Classname:BookingClient \
   /Output:/output/Skedular/Booking/V1/Booking.g.cs \
@@ -56,7 +56,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/customer_v1.yaml \
+  /Input:/openapi/skedular/customer_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Customer.V1 \
   /Classname:CustomerClient \
   /Output:/output/Skedular/Customer/V1/Customer.g.cs \
@@ -76,7 +76,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/location_v1.yaml \
+  /Input:/openapi/skedular/location_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Location.V1 \
   /Classname:LocationClient \
   /Output:/output/Skedular/Location/V1/Location.g.cs \
@@ -96,7 +96,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/marketplace_v1.yaml \
+  /Input:/openapi/skedular/marketplace_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1 \
   /Classname:MarketplaceClient \
   /Output:/output/Skedular/Marketplace/V1/Marketplace.g.cs \
@@ -116,7 +116,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/msteams_v1.yaml \
+  /Input:/openapi/skedular/msteams_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1 \
   /Classname:MsTeamsClient \
   /Output:/output/Skedular/MsTeams/V1/MsTeams.g.cs \
@@ -136,7 +136,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/organization_v1.yaml \
+  /Input:/openapi/skedular/organization_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Organization.V1 \
   /Classname:OrganizationClient \
   /Output:/output/Skedular/Organization/V1/Organization.g.cs \
@@ -156,7 +156,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/slack_v1.yaml \
+  /Input:/openapi/skedular/slack_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Slack.V1 \
   /Classname:SlackClient \
   /Output:/output/Skedular/Slack/V1/Slack.g.cs \
@@ -176,7 +176,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/team_v1.yaml \
+  /Input:/openapi/skedular/team_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Team.V1 \
   /Classname:TeamClient \
   /Output:/output/Skedular/Team/V1/Team.g.cs \
@@ -196,7 +196,7 @@ RUN nswag \
 
 RUN nswag \
   openapi2csclient \
-  /Input:/openapi/skedular/core_v1.yaml \
+  /Input:/openapi/skedular/core_v1.json \
   /Namespace:Api.Shared.Clients.OpenApi.Skedular.Core.V1 \
   /Classname:CoreClient \
   /Output:/output/Skedular/Core/V1/Core.g.cs \
