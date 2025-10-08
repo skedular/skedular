@@ -6,7 +6,8 @@ locals {
   public_website_domain      = local.is_production ? local.public_website_domain_root : "${var.environment}.${local.public_website_domain_root}"
   webapp_domain              = local.is_production ? "${local.webapp_domain_root}" : "${var.environment}.${local.webapp_domain_root}"
   api_domain                 = local.is_production ? "api.${local.webapp_domain_root}" : "api${var.environment}.${local.webapp_domain_root}"
-  eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog.${var.environment}.${local.webapp_domain_root}"
+  eventcatalog_webapp_domain = local.is_production ? "eventcatalog.${local.webapp_domain_root}" : "eventcatalog${var.environment}.${local.webapp_domain_root}"
+  help_webapp_domain         = local.is_production ? "help.${local.webapp_domain_root}" : "help${var.environment}.${local.webapp_domain_root}"
   cloudflarecdn              = local.is_production ? "cloudflarecdn" : "cloudflarecdn${var.environment}"
   awscdn                     = local.is_production ? "awscdn" : "awscdn${var.environment}"
 }
@@ -89,6 +90,10 @@ output "webapp_domain_name" {
 
 output "eventcatalog_webapp_domain_name" {
   value = local.eventcatalog_webapp_domain
+}
+
+output "help_webapp_domain_name" {
+  value = local.help_webapp_domain
 }
 
 output "gcp_project_id" {
