@@ -144,3 +144,14 @@ module "booking" {
   organization_name = module.common.organization_name
   environment       = var.environment
 }
+
+module "core" {
+  source = "../modules/core"
+
+  providers = {
+    aws = aws
+  }
+
+  organization_name = module.common.organization_name
+  environment       = var.environment
+}
