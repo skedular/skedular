@@ -69,6 +69,22 @@
     },
     "webapp#relay": {
       "dependsOn": ["^relay"]
+    },
+    "webapphelp#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "dist/**", "build/**", "!.next/cache/**"]
+    },
+    "webapphelp#start": {
+      "dependsOn": ["^start"]
+    },
+    "webapphelp#lint": {
+      "dependsOn": ["^lint"]
+    },
+    "webapphelp#lint-fix": {
+      "dependsOn": ["^lint-fix"]
+    },
+    "webapphelp#format": {
+      "dependsOn": ["^format"]
     }
   },
   "remoteCache": {

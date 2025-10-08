@@ -1,0 +1,32 @@
+{
+  "name": "webapphelp",
+  "version": "0.1.0",
+  "description": "Skedular Web App Help",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env PORT=15001 next dev --turbopack",
+    "build": "next build",
+    "start": "cross-env PORT=15001 next start",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix",
+    "format": "prettier --write --single-quote true --trailing-comma all --print-width 180 ./src && pnpm lint-fix"
+  },
+  "dependencies": {
+    "next": "15.5.4",
+    "nextra": "^4.6.0",
+    "nextra-theme-docs": "^4.6.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@types/node": "^24.7.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^15.5.4",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3"
+  }
+}

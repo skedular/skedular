@@ -88,7 +88,7 @@ const RootLayout = ({ children }: PropsWithChildren) => {
 
 const ThemedRootLayout = ({ children }: PropsWithChildren) => {
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <title>Skedular</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="description" content="The premier solution for modern workspace management " />

@@ -24,7 +24,12 @@
     "webapp#lint": "turbo run webapp#lint",
     "webapp#lint-fix": "turbo run webapp#lint-fix",
     "webapp#format": "turbo run webapp#format",
-    "webapp#relay": "turbo run webapp#relay"
+    "webapp#relay": "turbo run webapp#relay",
+    "webapphelp#build": "turbo run webapphelp#build",
+    "webapphelp#start": "turbo run webapphelp#start",
+    "webapphelp#lint": "turbo run webapphelp#lint",
+    "webapphelp#lint-fix": "turbo run webapphelp#lint-fix",
+    "webapphelp#format": "turbo run webapphelp#format"
   },
   "devDependencies": {
     "@types/relay-runtime": "^19.0.3",
