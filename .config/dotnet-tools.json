@@ -3,7 +3,7 @@
   "isRoot": true,
   "tools": {
     "jetbrains.resharper.globaltools": {
-      "version": "2025.2.0.1",
+      "version": "2025.2.3",
       "commands": [
         "jb"
       ],
@@ -31,7 +31,7 @@
       "rollForward": false
     },
     "hotchocolate.fusion.commandline": {
-      "version": "15.1.10",
+      "version": "15.1.11",
       "commands": [
         "fusion"
       ],
@@ -45,7 +45,7 @@
       "rollForward": false
     },
     "strawberryshake.tools": {
-      "version": "15.1.10",
+      "version": "15.1.11",
       "commands": [
         "dotnet-graphql"
       ],
