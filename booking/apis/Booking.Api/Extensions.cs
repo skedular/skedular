@@ -18,7 +18,6 @@ public static class Extensions
             .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
             .AddScoped<IBookingPaymentService, BookingPaymentService>()
             .AddScoped<IBookingService, BookingService>()
-            .AddScoped<ICustomerService, CustomerService>()
             .AddScoped<IResourceService, ResourceService>()
             .AddScoped<IWorkaroundService, WorkaroundService>();
 

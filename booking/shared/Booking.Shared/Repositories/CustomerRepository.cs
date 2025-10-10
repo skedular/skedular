@@ -11,7 +11,9 @@ public interface ICustomerRepository : IRepository<Customer>
 {
     Task<Customer> UpsertNakedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetByIdUntrackedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
@@ -50,12 +52,28 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
             .AddDependentObjects(true, includeActiveItemsOnly)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<Customer?> GetByIdUntrackedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(false, includeActiveItemsOnly)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public async Task<Customer?> GetByVerifiableTokenAsync(
         string verifiableToken,
         bool includeActiveItemsOnly,
         CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(true, includeActiveItemsOnly)
+            .FirstOrDefaultAsync(query =>
+                    !query.DeletedAt.HasValue &&
+                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<Customer?> GetByVerifiableTokenUntrackedAsync(
+        string verifiableToken,
+        bool includeActiveItemsOnly,
+        CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AddDependentObjects(false, includeActiveItemsOnly)
             .FirstOrDefaultAsync(query =>
                     !query.DeletedAt.HasValue &&
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),

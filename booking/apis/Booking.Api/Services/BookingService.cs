@@ -10,6 +10,7 @@ using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
 using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
@@ -44,13 +45,13 @@ public class BookingService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     ICachedCustomerService cachedCustomerService,
-    ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxPublisher temporalOutboxPublisher,
     IMapper mapper,
+    IContext context,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService) : IBookingService
@@ -67,13 +68,17 @@ public class BookingService(
             throw new ArgumentException(nameof(booking.LineItems));
         }
 
-        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
         if (!string.IsNullOrWhiteSpace(booking.Id))
         {
             var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
             if (existingBooking is not null)
             {
-                return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
+                return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
             }
         }
         else
@@ -81,8 +86,8 @@ public class BookingService(
             booking.Id = randomHelper.Generate();
         }
 
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer, false, cancellationToken);
+        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
+        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -134,7 +139,9 @@ public class BookingService(
 
         if (booking.InvolvedCustomers.Count == 1)
         {
-            var (_, customerEntity) = await customerService.GetCustomerAsync(booking.InvolvedCustomers.First().Id, cancellationToken);
+            var customerEntity =
+                await repositoryFactory.CustomerRepository.GetByIdAsync(booking.InvolvedCustomers.First().Id, true, cancellationToken) ??
+                throw new CustomerNotFound();
             (organizations, resources) = await TryToSetDefaultValuesAsync(booking, customerEntity, organizations, resources, cancellationToken);
         }
 
@@ -167,9 +174,9 @@ public class BookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            booking.IsPaymentRequired ? callingCustomerEntity : null,
+            booking.IsPaymentRequired ? customer : null,
             null,
-            callingCustomerEntity,
+            customer,
             null,
             null,
             productVersions,
@@ -217,17 +224,25 @@ public class BookingService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
 
-        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
 
-        return await UpdateInternalAsync(booking, existingBooking, customer, callingCustomerEntity, cancellationToken);
+        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var (customer, callingCustomerEntity) = await customerService.GetCustomerAsync(cancellationToken);
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
+                       throw new CustomerNotFound();
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
@@ -265,7 +280,7 @@ public class BookingService(
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 
-        existingBooking.DeletedByCustomer = callingCustomerEntity;
+        existingBooking.DeletedByCustomer = customer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(
             repositoryFactory.BookingRepository.Remove(existingBooking),
@@ -485,7 +500,7 @@ public class BookingService(
 
     private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
         Shared.Models.Booking booking,
-        Shared.Models.Customer customer,
+        string customerId,
         bool existing,
         CancellationToken cancellationToken)
     {
@@ -523,19 +538,19 @@ public class BookingService(
                 item.Id == organization.Id || item.UniqueAlphanumericName == organization.UniqueAlphanumericName);
             if (existing)
             {
-                if (!await organizationAuthorizationService.CanUpdateBookingAsync(organizationEntity.Id, customer.Id, cancellationToken))
+                if (!await organizationAuthorizationService.CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
             }
             else
             {
-                if (!await organizationAuthorizationService.CanAddBookingAsync(organizationEntity.Id, customer.Id, cancellationToken))
+                if (!await organizationAuthorizationService.CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
 
-                if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customer.Id, cancellationToken))
+                if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customerId, cancellationToken))
                 {
                     throw new NoMoreInteractionAllowed();
                 }
@@ -549,7 +564,7 @@ public class BookingService(
 
     private async Task<ICollection<Team>> GetTeamAndValidatePermissionsAsync(
         Shared.Models.Booking booking,
-        Shared.Models.Customer customer,
+        string customerId,
         bool existing,
         CancellationToken cancellationToken)
     {
@@ -571,14 +586,14 @@ public class BookingService(
             var teamEntity = teamEntities.First(item => item.Id == team.Id);
             if (existing)
             {
-                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customer.Id, cancellationToken))
+                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
             }
             else
             {
-                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customer.Id, cancellationToken))
+                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -657,12 +672,11 @@ public class BookingService(
     private async Task<Shared.Models.Booking> UpdateInternalAsync(
         Shared.Models.Booking booking,
         Shared.Database.Entities.Booking existingBooking,
-        Shared.Models.Customer customer,
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer, true, cancellationToken);
+        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
+        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)

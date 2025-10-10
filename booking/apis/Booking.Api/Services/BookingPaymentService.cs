@@ -5,6 +5,7 @@ using Booking.Api.Services.Authorization;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows.Payment;
 using Enterprise.Shared.Database;
 
@@ -20,7 +21,7 @@ public interface IBookingPaymentService
 public class BookingPaymentService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    ICustomerService customerService,
+    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxPublisher temporalOutboxPublisher,
@@ -43,7 +44,7 @@ public class BookingPaymentService(
         bool releaseResources,
         CancellationToken cancellationToken)
     {
-        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         if (!existingBooking.BookedOnMarketplace)
         {
