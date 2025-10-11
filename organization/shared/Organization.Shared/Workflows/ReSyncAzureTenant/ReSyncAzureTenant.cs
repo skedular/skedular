@@ -14,7 +14,7 @@ public class ReSyncAzureTenant
     {
         if (args.ReSyncTime.HasValue)
         {
-            var delayDuration = args.ReSyncTime.Value - TimeProvider.System.GetUtcNow();
+            var delayDuration = args.ReSyncTime.Value - Workflow.UtcNow;
             if (delayDuration > TimeSpan.Zero)
             {
                 await Workflow.DelayAsync(delayDuration, Workflow.CancellationToken);

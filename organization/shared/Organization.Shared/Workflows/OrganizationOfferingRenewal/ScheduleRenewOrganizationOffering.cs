@@ -18,7 +18,7 @@ public class ScheduleRenewOrganizationOffering
     {
         _state = new OrganizationOfferingState(false);
 
-        var delayDuration = args.RenewalDate - TimeProvider.System.GetUtcNow();
+        var delayDuration = args.RenewalDate - Workflow.UtcNow;
         if (delayDuration > TimeSpan.Zero && await Workflow.WaitConditionAsync(() => _state.IsCancelled, delayDuration))
         {
             return;

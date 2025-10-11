@@ -14,7 +14,7 @@ public class GenerateOrganizationDailyAnalytics
     {
         if (args.GenerationTime.HasValue)
         {
-            var delayDuration = args.GenerationTime.Value - TimeProvider.System.GetUtcNow();
+            var delayDuration = args.GenerationTime.Value - Workflow.UtcNow;
             if (delayDuration > TimeSpan.Zero)
             {
                 await Workflow.DelayAsync(delayDuration, Workflow.CancellationToken);

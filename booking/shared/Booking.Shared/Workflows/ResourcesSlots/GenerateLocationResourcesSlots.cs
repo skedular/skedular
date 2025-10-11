@@ -14,7 +14,7 @@ public class GenerateLocationResourcesSlots
     {
         if (args.RegenerateTime.HasValue)
         {
-            var delayDuration = args.RegenerateTime.Value - TimeProvider.System.GetUtcNow();
+            var delayDuration = args.RegenerateTime.Value - Workflow.UtcNow;
             if (delayDuration > TimeSpan.Zero)
             {
                 await Workflow.DelayAsync(delayDuration, Workflow.CancellationToken);

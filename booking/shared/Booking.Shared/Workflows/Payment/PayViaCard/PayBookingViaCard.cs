@@ -152,7 +152,7 @@ public class PayBookingViaCard
 
     private static TimeSpan GetDelayDuration(PayBookingViaCardInput args)
     {
-        var delayDuration = args.ExpiryDate - TimeProvider.System.GetUtcNow();
+        var delayDuration = args.ExpiryDate - Workflow.UtcNow;
         if (delayDuration <= TimeSpan.Zero)
         {
             throw new ApplicationFailureException($"Failed to complete booking {args.BookingId} paid via card");
