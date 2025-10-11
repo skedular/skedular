@@ -124,7 +124,8 @@
         "tags": [
           "v1",
           "location",
-          "analytics"
+          "analytics",
+          "workaround"
         ],
         "summary": "regenerate all locations daily analytics",
         "operationId": "regenerateAllDailyAnalytics",
@@ -150,7 +151,8 @@
         "tags": [
           "v1",
           "location",
-          "analytics"
+          "analytics",
+          "workaround"
         ],
         "summary": "regenerate location daily analytics",
         "operationId": "regenerateDailyAnalytics",

@@ -162,7 +162,7 @@ public class LocationService(
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
         temporalOutboxPublisher.StartWorkflowLocationDailyAnalytics(
-            new GenerateLocationDailyAnalyticsInput(organization.Id, timeProvider.GetUtcNow().AddDays(1)),
+            new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
