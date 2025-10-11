@@ -224,7 +224,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
             $"organization-sso-settings-{metadataUrl}",
             async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
                 var metadata = await metadataUrl.GetStringAsync(cancellationToken: cancellationToken);
                 var document = XDocument.Parse(metadata);

@@ -17,11 +17,13 @@ public class CognitoTokenService : ICognitoTokenService
     private readonly Cognito _cognitoConfiguration;
     private readonly IContext _context;
     private readonly IMemoryCache _memoryCache;
+    private readonly TimeProvider _timeProvider;
 
     public CognitoTokenService(
         IdentityProvidersConfiguration identityProvidersConfiguration,
         IContext context,
-        IMemoryCache memoryCache)
+        IMemoryCache memoryCache,
+        TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.Cognito);
         _cognitoConfiguration = identityProvidersConfiguration.Cognito;
@@ -33,6 +35,7 @@ public class CognitoTokenService : ICognitoTokenService
 
         _context = context;
         _memoryCache = memoryCache;
+        _timeProvider = timeProvider;
     }
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
@@ -41,7 +44,7 @@ public class CognitoTokenService : ICognitoTokenService
         {
             var jws = await _memoryCache.GetOrCreateAsync<Jws>("cognito-public-keys", async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(15);
+                cacheEntry.AbsoluteExpiration = _timeProvider.GetUtcNow().AddMinutes(15);
 
                 return await _cognitoConfiguration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
             });

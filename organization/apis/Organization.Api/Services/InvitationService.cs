@@ -4,7 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Activities;
@@ -88,12 +87,10 @@ public class InvitationService(
             return [];
         }
 
-        var pendingInvitations = await repositoryFactory.JoinInvitationRepository
-            .Query(new Specification<Shared.Database.Entities.JoinInvitation>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Status == InvitationStatusConstants.Pending
-            }).ToListAsync(cancellationToken);
+        var pendingInvitations = await repositoryFactory.JoinInvitationRepository.GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+            organizationId,
+            organizationUniqueAlphanumericName,
+            InvitationStatus.Pending, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -253,7 +250,7 @@ public class InvitationService(
         searchCriteria = searchCriteria with { InviteeId = customer.Id };
 
         var (paginatedInfo, edges, totalCount) =
-            await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsAsync(
+            await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsUntrackedAsync(
                 paginationInputParam,
                 searchCriteria,
                 orderByFields,

@@ -16,14 +16,15 @@ public interface IOrganizationTermsOfUseService
 public class OrganizationTermsOfUseService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
-    IMemoryCache memoryCache)
+    IMemoryCache memoryCache,
+    TimeProvider timeProvider)
     : IOrganizationTermsOfUseService
 {
     public async Task<TermsOfUse> GetActiveTermsOfUseAsync(CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync("organization-active-term-of-use",
             async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
                 var termsOfUse = await repositoryFactory.TermsOfUseRepository
                     .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })

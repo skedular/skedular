@@ -21,6 +21,7 @@ public class WorkOSTokenService : IWorkOSTokenService
     private readonly IContext _context;
     private readonly IMemoryCache _memoryCache;
     private readonly IServiceProvider _serviceProvider;
+    private readonly TimeProvider _timeProvider;
     private readonly WorkOSClient _workOsClient;
 
     public WorkOSTokenService(
@@ -28,7 +29,8 @@ public class WorkOSTokenService : IWorkOSTokenService
         IContext context,
         IMemoryCache memoryCache,
         WorkOSClient workOsClient,
-        IServiceProvider serviceProvider)
+        IServiceProvider serviceProvider,
+        TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.WorkOS);
         _configuration = identityProvidersConfiguration.WorkOS;
@@ -37,6 +39,7 @@ public class WorkOSTokenService : IWorkOSTokenService
         _memoryCache = memoryCache;
         _workOsClient = workOsClient;
         _serviceProvider = serviceProvider;
+        _timeProvider = timeProvider;
     }
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
@@ -45,7 +48,7 @@ public class WorkOSTokenService : IWorkOSTokenService
         {
             var jws = await _memoryCache.GetOrCreateAsync<Jws>("workos-public-keys", async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(15);
+                cacheEntry.AbsoluteExpiration = _timeProvider.GetUtcNow().AddMinutes(15);
 
                 return await _configuration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
             });

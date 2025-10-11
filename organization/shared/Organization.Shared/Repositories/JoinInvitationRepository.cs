@@ -15,12 +15,18 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
     Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(ICollection<string> emails, CancellationToken cancellationToken);
+
+    Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        InvitationStatus status,
+        CancellationToken cancellationToken);
+
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
     JoinInvitation Remove(JoinInvitation joinInvitation);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinOrganizationInvitationOrder> orderByFields,
@@ -30,11 +36,12 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 internal static class JoinInvitationExtensions
 {
     internal static IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(
-        this IQueryable<JoinInvitation> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .Include(query => query.CreatedBy)
-            .Include(query => query.Invitee);
+        this IQueryable<JoinInvitation> originalQuery,
+        bool isTracked) =>
+        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+        .Include(query => query.Organization)
+        .Include(query => query.CreatedBy)
+        .Include(query => query.Invitee);
 
     internal static IQueryable<JoinInvitation> AddSearchCriteria(this IQueryable<JoinInvitation> query, JoinInvitationSearchCriteria searchCriteria)
     {
@@ -105,18 +112,34 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetPendingByEmailAsync(
-        ICollection<string> emails,
-        CancellationToken cancellationToken) => await DbContext.JoinInvitation
-        .Where(query => !query.DeletedAt.HasValue &&
-                        query.Status == InvitationStatusConstants.Pending && emails.Any(email =>
-                            query.Invitee == null && query.Email != null && EF.Functions.ILike(query.Email, email)))
-        .AddDependentObjects()
-        .OrderBy(query => query.Id)
-        .ToListAsync(cancellationToken);
+    public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        InvitationStatus status,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(organizationId))
+        {
+            return await DbContext.JoinInvitation
+                .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId && query.Status == status.ToInvitationStatus())
+                .AddDependentObjects(true)
+                .ToListAsync(cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        {
+            return await DbContext.JoinInvitation
+                .Where(query => !query.DeletedAt.HasValue && query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericName &&
+                                query.Status == status.ToInvitationStatus())
+                .AddDependentObjects(true)
+                .ToListAsync(cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
 
     public JoinInvitation Add(JoinInvitation joinInvitation)
     {
@@ -139,7 +162,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinOrganizationInvitationOrder> orderByFields,
@@ -147,7 +170,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         (await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

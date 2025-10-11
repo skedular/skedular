@@ -12,14 +12,14 @@ public interface IIndustryMainCategoryService
     Task<ICollection<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken);
 }
 
-public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, IMapper mapper, IMemoryCache memoryCache)
+public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, IMapper mapper, IMemoryCache memoryCache, TimeProvider timeProvider)
     : IIndustryMainCategoryService
 {
     public async Task<ICollection<IndustryMainCategory>> GetAllAsync(CancellationToken cancellationToken) =>
         (await memoryCache.GetOrCreateAsync("organization-industry-main-categories",
             async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
                 var industryMainCategories = await repositoryFactory.IndustryMainCategoryRepository
                     .Query(new Specification<Shared.Database.Entities.IndustryMainCategory> { Criteria = query => !query.DeletedAt.HasValue }

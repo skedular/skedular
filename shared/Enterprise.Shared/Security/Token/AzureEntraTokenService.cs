@@ -15,7 +15,8 @@ public interface IAzureEntraTokenService : ITokenService;
 public class AzureEntraTokenService(
     AzureEntraConfiguration azureEntraConfiguration,
     IMemoryCache memoryCache,
-    IContext context)
+    IContext context,
+    TimeProvider timeProvider)
     : IAzureEntraTokenService
 {
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
@@ -34,7 +35,7 @@ public class AzureEntraTokenService(
                 $"openid-configuration-msteams-{tenantId}",
                 async cacheEntry =>
                 {
-                    cacheEntry.SlidingExpiration = TimeSpan.FromMinutes(15);
+                    cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
 
                     var documentRetriever = new HttpDocumentRetriever { RequireHttps = true };
                     var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(

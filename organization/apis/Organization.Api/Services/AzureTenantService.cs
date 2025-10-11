@@ -31,7 +31,8 @@ public class AzureTenantService(
     AzureEntraConfiguration azureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     IAzureTenantOnboardingService azureTenantOnboardingService,
-    ITemporalOutboxPublisher temporalOutboxPublisher) : IAzureTenantService
+    ITemporalOutboxPublisher temporalOutboxPublisher,
+    TimeProvider timeProvider) : IAzureTenantService
 {
     private static readonly string[] s_userProfilePermissions = ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
 
@@ -47,8 +48,7 @@ public class AzureTenantService(
         "Teamwork.Migrate.All" // Send chatMessage in Channel
     ];
 
-    private static readonly string[] s_allPermissions =
-        s_userProfilePermissions.Concat(s_teamPermissions).Concat(s_channelPermissions).ToArray();
+    private static readonly string[] s_allPermissions = s_userProfilePermissions.Concat(s_teamPermissions).Concat(s_channelPermissions).ToArray();
 
     public async Task<bool> DoesTenantExistAsync(CancellationToken cancellationToken)
     {
@@ -72,7 +72,7 @@ public class AzureTenantService(
             key,
             async cacheEntry =>
             {
-                cacheEntry.SlidingExpiration = TimeSpan.FromHours(1);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddHours(1);
 
                 return await repositoryFactory.AzureTenantRepository.Query(
                         new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })

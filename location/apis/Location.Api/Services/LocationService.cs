@@ -14,7 +14,6 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Microsoft.EntityFrameworkCore;
-using Booking = Location.Shared.Database.Entities.Booking;
 using Customer = Location.Shared.Database.Entities.Customer;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
@@ -275,13 +274,7 @@ public class LocationService(
             throw new UnauthorizedAccessException();
         }
 
-        var now = timeProvider.GetUtcNow();
-        return await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(id) && query.From >= now
-            })
-            .AnyAsync(cancellationToken);
+        return await repositoryFactory.BookingRepository.AnyBookingExistsUntrackedAsync(location.Id, timeProvider.GetUtcNow(), cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(

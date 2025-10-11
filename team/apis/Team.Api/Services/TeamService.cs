@@ -3,14 +3,12 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services.Cache;
-using Booking = Team.Shared.Database.Entities.Booking;
 using Customer = Team.Shared.Database.Entities.Customer;
 using Location = Team.Shared.Database.Entities.Location;
 using Organization = Team.Shared.Database.Entities.Organization;
@@ -271,14 +269,7 @@ public class TeamService(
             throw new UnauthorizedAccessException();
         }
 
-        var now = timeProvider.GetUtcNow();
-        return await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedTeams.Select(item => item.Id).Contains(team.Id) && query.From >= now
-            })
-            .AnyAsync(cancellationToken);
+        return await repositoryFactory.BookingRepository.AnyBookingExistsUntrackedAsync(team.Id, timeProvider.GetUtcNow(), cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(

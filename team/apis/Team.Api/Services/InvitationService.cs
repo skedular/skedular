@@ -4,7 +4,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Team.Api.Mappers;
 using Team.Api.Services.Authorization;
 using Team.Shared.Activities;
@@ -20,11 +19,7 @@ namespace Team.Api.Services;
 
 public interface IInvitationService
 {
-    Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
-        string teamId,
-        ICollection<string> emails,
-        CancellationToken cancellationToken);
-
+    Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(string teamId, ICollection<string> emails, CancellationToken cancellationToken);
     Task<JoinInvitation> AcceptInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> RejectInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
@@ -82,11 +77,8 @@ public class InvitationService(
             return [];
         }
 
-        var pendingInvitations = await repositoryFactory.JoinInvitationRepository
-            .Query(new Specification<Shared.Database.Entities.JoinInvitation>
-            {
-                Criteria = query => !query.DeletedAt.HasValue && query.Team.Id == teamId && query.Status == InvitationStatusConstants.Pending
-            }).ToListAsync(cancellationToken);
+        var pendingInvitations =
+            await repositoryFactory.JoinInvitationRepository.GetByTeamIdAsync(teamId, InvitationStatus.Pending, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

@@ -9,6 +9,7 @@ public interface IBookingRepository : IRepository<Booking>
 {
     Task<Booking> UpsertNakedAsync(string id, CancellationToken cancellationToken);
     Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<bool> AnyBookingExistsUntrackedAsync(string locationId, DateTimeOffset from, CancellationToken cancellationToken);
     Booking Update(Booking booking);
     Booking Remove(Booking booking);
 }
@@ -27,6 +28,13 @@ public class BookingRepository(LocationDbContext dbContext, TimeProvider timePro
         await DbContext.Booking
             .Include(query => query.InvolvedLocations)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<bool> AnyBookingExistsUntrackedAsync(string locationId, DateTimeOffset from, CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .AsNoTracking()
+            .AnyAsync(
+                query => !query.DeletedAt.HasValue && query.InvolvedLocations.Select(item => item.Id).Contains(locationId) && query.From >= from,
+                cancellationToken);
 
     public Booking Update(Booking booking)
     {

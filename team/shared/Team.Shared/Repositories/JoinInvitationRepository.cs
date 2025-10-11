@@ -15,6 +15,7 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
     Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
     JoinInvitation Remove(JoinInvitation joinInvitation);
@@ -112,6 +113,12 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         await DbContext.JoinInvitation
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
+            .Where(query => !query.DeletedAt.HasValue && query.Team.Id == teamId && query.Status == status.ToInvitationStatus())
+            .AddDependentObjects(true)
+            .ToListAsync(cancellationToken);
 
     public JoinInvitation Add(JoinInvitation joinInvitation)
     {
