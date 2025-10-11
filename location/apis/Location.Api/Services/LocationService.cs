@@ -386,8 +386,14 @@ public class LocationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var originalOpeningHours = existingLocation.OpeningHours;
+        var uniqueClaimCode = existingLocation.UniqueClaimCode;
 
         existingLocation = mapper.MergeTo(location, existingLocation, organizationTags);
+
+        if (string.IsNullOrWhiteSpace(location.UniqueClaimCode))
+        {
+            existingLocation.UniqueClaimCode = uniqueClaimCode;
+        }
 
         // Restoring original opening hours
         existingLocation.OpeningHours = originalOpeningHours;

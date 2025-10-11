@@ -154,7 +154,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
-            Tags = MapTo(src.OrganizationTags).ToList()
+            Tags = MapTo(src.OrganizationTags).ToList(),
+            UniqueClaimCode = src.UniqueClaimCode
         };
 
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
@@ -194,7 +195,8 @@ public class Mapper : IMapper
             PrimaryFeatureImage = src.PrimaryFeatureImage,
             OpeningHours = src.OpeningHours,
             Organization = organization,
-            OrganizationTags = organizationTags
+            OrganizationTags = organizationTags,
+            UniqueClaimCode = src.UniqueClaimCode
         };
 
     public Shared.Database.Entities.Location MergeTo(
@@ -211,6 +213,7 @@ public class Mapper : IMapper
         dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
         dest.OpeningHours = src.OpeningHours;
         dest.OrganizationTags = organizationTags;
+        dest.UniqueClaimCode = src.UniqueClaimCode;
         return dest;
     }
 
@@ -458,7 +461,8 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
     public Shared.Models.Location MapTo(Admin_UpdateInput src) =>
@@ -478,7 +482,8 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Location.V1.Location MapToGrpcResponse(Shared.Models.Location src)
@@ -506,7 +511,8 @@ public class Mapper : IMapper
                 CanViewAnalytics = src.Permissions.CanViewAnalytics
             },
             ExtraMetadata = MapTo(src.ExtraMetadata),
-            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)
+            PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress),
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
@@ -534,7 +540,8 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
     public Shared.Models.Location MapTo(UpdateInput src) =>
@@ -554,7 +561,8 @@ public class Mapper : IMapper
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
         };
 
     public Shared.Models.Resource MapTo(Resource src, Shared.Models.Location location) =>

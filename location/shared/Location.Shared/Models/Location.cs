@@ -12,6 +12,7 @@ public class Location : ModelBaseWithDeleted
     public OpeningHours? OpeningHours { get; set; }
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public LocationExtraMetadata? ExtraMetadata { get; set; }
+    public string? UniqueClaimCode { get; set; }
 
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];

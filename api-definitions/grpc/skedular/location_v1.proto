@@ -87,6 +87,7 @@ message Admin_AddInput {
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
+  string uniqueClaimCode = 11;
 }
 
 message Admin_UpdateInput {
@@ -100,6 +101,7 @@ message Admin_UpdateInput {
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
+  string uniqueClaimCode = 11;
 }
 
 message LocationConnection {
@@ -129,6 +131,7 @@ message Location {
   LocationType type = 13;
   ExtraMetadata ExtraMetadata = 14;
   PhysicalAddress physicalAddress = 15;
+  string uniqueClaimCode = 16;
 }
 
 message Admin_GetInput {
@@ -199,6 +202,7 @@ message AddInput {
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
+  string uniqueClaimCode = 11;
 }
 
 message UpdateInput {
@@ -212,6 +216,7 @@ message UpdateInput {
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
+  string uniqueClaimCode = 11;
 }
 
 message RemoveInput {
