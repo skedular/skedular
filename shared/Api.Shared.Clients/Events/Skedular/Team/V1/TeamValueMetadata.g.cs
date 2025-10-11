@@ -44,7 +44,7 @@ public partial class Event : IMetadataEvent
             DomainSource = domainSource,
             AppSource = appSource,
             Type = type,
-            Time = Timestamp.FromDateTimeOffset(Workflow.UtcNow),
+            Time = Timestamp.FromDateTimeOffset(TimeProvider.System.GetUtcNow()),
             CorrelationId = string.IsNullOrWhiteSpace(correlationId) ? Guid.CreateVersion7().ToString() : correlationId,
     };
 
