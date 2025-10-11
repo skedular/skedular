@@ -55,6 +55,6 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Timezone);
         builder.HasIndex(item => item.Type);
-        builder.HasIndex(item => item.UniqueClaimCode);
+        builder.HasIndex(item => item.UniqueClaimCode).IsUnique();
     }
 }
