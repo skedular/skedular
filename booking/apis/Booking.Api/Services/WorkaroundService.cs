@@ -51,6 +51,11 @@ public class WorkaroundService(
             return;
         }
 
+        if (location.Organization?.UniqueAlphanumericName == "skedularpubliclocations")
+        {
+            return;
+        }
+
         await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
             new GenerateLocationResourcesSlotsInput(location.Id, null),
             cancellationToken);
@@ -60,7 +65,9 @@ public class WorkaroundService(
     {
         var locations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken);
 
-        foreach (var location in locations.Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted()))
+        foreach (var location in locations
+                     .Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted())
+                     .Where(item => item.Organization?.UniqueAlphanumericName != "skedularpubliclocations"))
         {
             await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
                 new GenerateLocationResourcesSlotsInput(location.Id, null),

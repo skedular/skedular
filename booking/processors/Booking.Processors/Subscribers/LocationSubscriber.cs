@@ -90,18 +90,24 @@ public class LocationSubscriber(
 
         if (locationOpeningHoursChanged)
         {
-            // Regenerate all
-            await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
-                new GenerateLocationResourcesSlotsInput(existingLocation.Id, null),
-                cancellationToken);
+            if (existingLocation.Organization?.UniqueAlphanumericName != "skedularpubliclocations")
+            {
+                // Regenerate all
+                await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
+                    new GenerateLocationResourcesSlotsInput(existingLocation.Id, null),
+                    cancellationToken);
+            }
         }
         else
         {
-            // Regenerate those changed
-            await temporalService.StartWorkflowGenerateResourcesSlotsAsync(
-                existingLocation.Id,
-                new GenerateResourcesSlotsInput(resourceIdsToRegenerateBookingSlots),
-                cancellationToken);
+            if (existingLocation.Organization?.UniqueAlphanumericName != "skedularpubliclocations")
+            {
+                // Regenerate those changed
+                await temporalService.StartWorkflowGenerateResourcesSlotsAsync(
+                    existingLocation.Id,
+                    new GenerateResourcesSlotsInput(resourceIdsToRegenerateBookingSlots),
+                    cancellationToken);
+            }
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
