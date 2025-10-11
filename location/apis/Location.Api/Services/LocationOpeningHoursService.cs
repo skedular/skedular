@@ -11,7 +11,7 @@ namespace Location.Api.Services;
 
 public interface ILocationOpeningHoursService
 {
-    Task<Shared.Models.Location> UpdateOpeningHoursAsync(string id, WeekOpeningHours weekOpeningHours, CancellationToken cancellationToken);
+    Task<Shared.Models.Location> UpdateOpeningHoursAsync(string id, WeekOpeningHours openingHours, CancellationToken cancellationToken);
 }
 
 public class LocationOpeningHoursService(
@@ -24,10 +24,7 @@ public class LocationOpeningHoursService(
     IMapper mapper,
     ICachedLocationService cachedLocationService) : ILocationOpeningHoursService
 {
-    public async Task<Shared.Models.Location> UpdateOpeningHoursAsync(
-        string id,
-        WeekOpeningHours weekOpeningHours,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Location> UpdateOpeningHoursAsync(string id, WeekOpeningHours openingHours, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -46,8 +43,8 @@ public class LocationOpeningHoursService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingLocation.OpeningHours = existingLocation.OpeningHours is null
-            ? new OpeningHours(weekOpeningHours, [], [])
-            : existingLocation.OpeningHours with { WeekOpeningHours = weekOpeningHours };
+            ? new OpeningHours(openingHours, [], [])
+            : existingLocation.OpeningHours with { WeekOpeningHours = openingHours };
 
         var location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 

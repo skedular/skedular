@@ -211,10 +211,6 @@ public class TeamService(
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingTeam.Organization.Id, customer.Id, cancellationToken))
-        {
-            throw new NoMoreInteractionAllowed();
-        }
 
         if (!await teamAuthorizationService.CanDeleteAsync(existingTeam, customer.Id, cancellationToken))
         {

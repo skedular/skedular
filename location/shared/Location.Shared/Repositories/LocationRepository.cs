@@ -28,6 +28,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
     Database.Entities.Location Add(Database.Entities.Location location);
     Database.Entities.Location Update(Database.Entities.Location location);
     Database.Entities.Location Remove(Database.Entities.Location location);
+    Task<Database.Entities.Location?> GetByUniqueClaimCodeAsync(string uniqueClaimCode, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int )> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
@@ -250,6 +251,11 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         location.DeletedAt = now;
         return DbContext.Location.Update(location).Entity;
     }
+
+    public async Task<Database.Entities.Location?> GetByUniqueClaimCodeAsync(string uniqueClaimCode, CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .AddDependentObjects(true, false)
+            .FirstOrDefaultAsync(query => query.UniqueClaimCode == uniqueClaimCode, cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,

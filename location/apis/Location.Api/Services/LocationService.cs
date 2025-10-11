@@ -147,6 +147,11 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
+        if (organization.UniqueAlphanumericName == "skedularpubliclocations" && string.IsNullOrWhiteSpace(location.UniqueClaimCode))
+        {
+            locationEntity.UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
+        }
+
         locationEntity.OpeningHours = location.OpeningHours ?? OpeningHours.Default;
         locationEntity = repositoryFactory.LocationRepository.Add(locationEntity);
 
@@ -206,10 +211,6 @@ public class LocationService(
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
-        {
-            throw new NoMoreInteractionAllowed();
-        }
 
         if (!await organizationAuthorizationService.CanDeleteAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
         {

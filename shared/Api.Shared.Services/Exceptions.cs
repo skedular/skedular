@@ -16,6 +16,8 @@ public class OrganizationJoinInvitationNotFound() : Exception("Organization join
 
 public class LocationNotFound() : Exception("Location not found");
 
+public class LocationUniqueClaimCodeNotFound() : Exception("Location unique claim code not found");
+
 public class FloorPlanNotFound() : Exception("Floor plan not found");
 
 public class TeamNotFound() : Exception("Team not found");

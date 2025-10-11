@@ -158,6 +158,7 @@ type Mutation {
   updateLocation(input: UpdateLocationInput!): LocationPayload! @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload! @cost(weight: "10")
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload! @cost(weight: "10")
+  claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload! @cost(weight: "10")
   addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
@@ -363,6 +364,14 @@ input CdnFileInput {
 input CdnImageFileInput {
   original: CdnFileInput
   thumbnail: CdnFileInput
+}
+
+input ClaimLocationOwnershipInput {
+  clientMutationId: String
+  id: String
+  uniqueClaimCode: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input ContactDetailsInput {
