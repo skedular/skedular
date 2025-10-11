@@ -121,7 +121,8 @@ public class LocationService(
                         PeopleCapacity =
                             new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
                     },
-                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() }
+                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() },
+                    UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10)
                 };
 
                 adminAddInput.LocationTagIds.Add(tagId);
@@ -173,7 +174,8 @@ public class LocationService(
                         PeopleCapacity =
                             new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
                     },
-                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() }
+                    PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() },
+                    UniqueClaimCode = matchingLocation.UniqueClaimCode.ToSafeString()
                 };
 
                 adminUpdateInput.LocationTagIds.Add(tagId);
