@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32c496effb4551dc971ac8980f0de9a4>>
+ * @generated SignedSource<<8fb742df24ff0d12524cd9c241347273>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,6 +39,7 @@ export type locationCard_LocationDetails$data = {
   readonly resources: {
     readonly totalCount: number;
   };
+  readonly uniqueClaimCode: string | null | undefined;
   readonly zones: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly id: string;
@@ -236,6 +237,13 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "uniqueClaimCode",
+      "storageKey": null
     }
   ],
   "type": "LocationDetails",
@@ -243,6 +251,6 @@ return {
 };
 })();
 
-(node as any).hash = "93bf96ba8dee4799d7d2495b81ece76c";
+(node as any).hash = "212f54b474e1abfcae97d4ef29eeb75a";
 
 export default node;

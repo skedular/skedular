@@ -126,6 +126,7 @@ const LocationCard = ({
         organization {
           uniqueAlphanumericName
         }
+        uniqueClaimCode
       }
     `,
     locationDetailsRelay,
@@ -365,6 +366,7 @@ const LocationCard = ({
                 <LeadIconTypography label={locationDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
               <PushToRight />
+              {locationDetails.uniqueClaimCode && <LeadIconTypography label={locationDetails.uniqueClaimCode} invertDefaultColor />}
               <Tooltip title="View floor plan and book resources">
                 <Button variant="outlined" size="small" startIcon={<FloorPlanIcon />} onClick={handleViewFloorPlanClick} sx={{ textTransform: 'none', mr: 1 }}>
                   Floor Plan
