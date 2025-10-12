@@ -25,6 +25,11 @@ variable "google_tag_manager_container_id" {
   description = "Google Tag Manager container id"
 }
 
+variable "google_map_api_key" {
+  type        = string
+  description = "Google Map API Key"
+}
+
 variable "workos_api_key" {
   type        = string
   description = "WorkOS API Key"

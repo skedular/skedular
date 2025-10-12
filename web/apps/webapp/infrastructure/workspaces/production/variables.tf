@@ -26,6 +26,11 @@ variable "gcp_web_credentials_client_secret" {
   default     = ""
 }
 
+variable "google_map_api_key" {
+  type        = string
+  description = "Google Map API Key"
+}
+
 variable "workos_api_key" {
   type        = string
   description = "WorkOS API Key"

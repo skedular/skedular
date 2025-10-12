@@ -127,6 +127,11 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
+      key    = "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY"
+      value  = var.google_map_api_key
+      target = ["development", "preview", "production"]
+    },
+    {
       key    = "NEXT_PUBLIC_API_ENDPOINT"
       value  = "https://${module.shared_common.api_domain_name}"
       target = ["development", "preview", "production"]
