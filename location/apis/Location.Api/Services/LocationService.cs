@@ -14,6 +14,7 @@ using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Microsoft.EntityFrameworkCore;
+using Constants = Api.Shared.Services.Constants;
 using Customer = Location.Shared.Database.Entities.Customer;
 using Organization = Location.Shared.Database.Entities.Organization;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
@@ -146,7 +147,8 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
-        if (organization.UniqueAlphanumericName == "skedularpubliclocations" && string.IsNullOrWhiteSpace(location.UniqueClaimCode))
+        if (organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName &&
+            string.IsNullOrWhiteSpace(location.UniqueClaimCode))
         {
             locationEntity.UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
         }
@@ -451,7 +453,7 @@ public class LocationService(
 
         if (customer is not null)
         {
-            if (location.Organization.UniqueAlphanumericName != "skedularpubliclocations")
+            if (location.Organization.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
             {
                 mappedLocation.Permissions = new Permissions
                 {

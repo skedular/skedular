@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Location.Api.Mappers;
 using Location.Shared.Publishers;
@@ -42,7 +43,8 @@ public class WorkaroundService(
     {
         var locations = await repositoryFactory.LocationRepository.GetAllUntrackedAsync(false, cancellationToken);
 
-        foreach (var location in locations.Where(item => item.Organization?.UniqueAlphanumericName != "skedularpubliclocations"))
+        foreach (var location in locations.Where(item =>
+                     item.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName))
         {
             await temporalService.StartWorkflowGenerateLocationDailyAnalyticsAsync(
                 new GenerateLocationDailyAnalyticsInput(location.Id, null),
@@ -58,7 +60,7 @@ public class WorkaroundService(
             return;
         }
 
-        if (location.Organization?.UniqueAlphanumericName == "skedularpubliclocations")
+        if (location.Organization?.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
             return;
         }

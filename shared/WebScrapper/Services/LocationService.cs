@@ -11,6 +11,7 @@ using WebScrapper.Models;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Location.V1.Admin_AddInput;
 using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_GetInput;
 using AreaRange = Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange;
+using Constants = Api.Shared.Services.Constants;
 using ContactDetails = Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails;
 using Location = WebScrapper.Models.Location;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
@@ -43,7 +44,7 @@ public class LocationService(
         var rawLocations = csvLocationFileReaderService.ReadLocations();
 
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { UniqueAlphanumericName = "skedularpubliclocations" },
+            new Admin_GetInput { UniqueAlphanumericName = Constants.SkedularPublicLocationsUniqueAlphanumericName },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 

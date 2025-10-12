@@ -56,7 +56,8 @@ public class LocationOwnershipService(
             throw new UnauthorizedAccessException();
         }
 
-        var ownedBySkedularPublicLocationsOrganization = existingOrganization.UniqueAlphanumericName == "skedularpubliclocations";
+        var ownedBySkedularPublicLocationsOrganization =
+            existingOrganization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName;
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Booking.Api.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
@@ -51,7 +52,7 @@ public class WorkaroundService(
             return;
         }
 
-        if (location.Organization?.UniqueAlphanumericName == "skedularpubliclocations")
+        if (location.Organization?.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
             return;
         }
@@ -67,7 +68,7 @@ public class WorkaroundService(
 
         foreach (var location in locations
                      .Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted())
-                     .Where(item => item.Organization?.UniqueAlphanumericName != "skedularpubliclocations"))
+                     .Where(item => item.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName))
         {
             await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
                 new GenerateLocationResourcesSlotsInput(location.Id, null),

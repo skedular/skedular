@@ -1,5 +1,6 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -90,7 +91,7 @@ public class LocationSubscriber(
 
         if (locationOpeningHoursChanged)
         {
-            if (existingLocation.Organization?.UniqueAlphanumericName != "skedularpubliclocations")
+            if (existingLocation.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
             {
                 // Regenerate all
                 await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
@@ -100,7 +101,7 @@ public class LocationSubscriber(
         }
         else
         {
-            if (existingLocation.Organization?.UniqueAlphanumericName != "skedularpubliclocations")
+            if (existingLocation.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
             {
                 // Regenerate those changed
                 await temporalService.StartWorkflowGenerateResourcesSlotsAsync(

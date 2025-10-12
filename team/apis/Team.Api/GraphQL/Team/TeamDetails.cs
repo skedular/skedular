@@ -9,6 +9,7 @@ using Team.Api.GraphQL.Member;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Team.Api.GraphQL.Team;
 
@@ -68,7 +69,7 @@ public class TeamDetails : Node
         [Parent] TeamDetails team,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        team.OrganizationUniqueAlphanumericName != "skedularpubliclocations" &&
+        team.OrganizationUniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName &&
         await teamService.HasFutureBookingAsync(team.Id, false, cancellationToken);
 }
 

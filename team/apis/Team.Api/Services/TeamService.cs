@@ -253,7 +253,7 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var team = await cachedTeamService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (team.Organization.UniqueAlphanumericName == "skedularpubliclocations")
+        if (team.Organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
             return false;
         }

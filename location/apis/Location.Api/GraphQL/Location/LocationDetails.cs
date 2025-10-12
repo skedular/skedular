@@ -11,6 +11,7 @@ using Location.Api.GraphQL.Resource;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Shared.Models;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Location.Api.GraphQL.Location;
 
@@ -72,7 +73,7 @@ public class LocationDetails : Node
         [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        if (location.OrganizationUniqueAlphanumericName == "skedularpubliclocations")
+        if (location.OrganizationUniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
             return Connection<ResourceEdge>.Empty;
         }
@@ -109,7 +110,7 @@ public class LocationDetails : Node
         [Parent] LocationDetails location,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
-        location.OrganizationUniqueAlphanumericName != "skedularpubliclocations" &&
+        location.OrganizationUniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName &&
         await locationService.HasFutureBookingAsync(location.Id, false, cancellationToken);
 }
 
