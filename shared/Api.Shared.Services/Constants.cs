@@ -44,8 +44,8 @@ public static class Constants
     public const int MaxColorValueLength = 32;
 
     public const int MaxOsmTypeLength = 20;
-    public const int MaxOsmIdLength = 100;
-    public const int MaxPlaceIdLength = 100;
+    public const int MaxOsmIdLength = 1000;
+    public const int MaxPlaceIdLength = 1000;
 
     public const int MaxFormattedAddressLength = 1000;
     public const int MaxAddressLineLength = 200;

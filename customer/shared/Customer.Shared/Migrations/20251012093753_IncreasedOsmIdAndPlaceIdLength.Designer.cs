@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Customer.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -11,12 +12,14 @@ using Temporalio.Client;
 
 #nullable disable
 
-namespace Customer.Shared.Database.Migrations
+namespace Customer.Shared.Migrations
 {
     [DbContext(typeof(CustomerDbContext))]
-    partial class CustomerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251012093753_IncreasedOsmIdAndPlaceIdLength")]
+    partial class IncreasedOsmIdAndPlaceIdLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
