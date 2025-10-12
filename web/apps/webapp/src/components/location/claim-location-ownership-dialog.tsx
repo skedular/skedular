@@ -79,7 +79,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
         input: {
           clientMutationId: uuid(),
           id,
-          uniqueClaimCode: uniqueClaimCode.toLocaleLowerCase(),
+          uniqueClaimCode: uniqueClaimCode.toLocaleUpperCase(),
           organizationUniqueAlphanumericName,
         },
       },

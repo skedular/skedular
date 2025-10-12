@@ -150,7 +150,7 @@ public class LocationService(
         if (organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName &&
             string.IsNullOrWhiteSpace(location.UniqueClaimCode))
         {
-            locationEntity.UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
+            locationEntity.UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant();
         }
 
         locationEntity.OpeningHours = location.OpeningHours ?? OpeningHours.Default;

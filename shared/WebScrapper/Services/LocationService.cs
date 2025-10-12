@@ -123,7 +123,7 @@ public class LocationService(
                             new PeopleCapacity { From = rawLocation.People.ToSafeString(), To = rawLocation.People.ToSafeString() }
                     },
                     PhysicalAddress = new PhysicalAddress { AddressLine1 = rawLocation.Address.ToSafeString() },
-                    UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant()
+                    UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant()
                 };
 
                 adminAddInput.LocationTagIds.Add(tagId);
