@@ -5,6 +5,7 @@ import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/i
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
+import { ClaimLocationOwnershipButton } from '@/components/location';
 import { NewLocationButton } from '@/components/location/addLocation';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -609,6 +610,9 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
           {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />}
+          {rootData.organization?.canModify && (
+            <ClaimLocationOwnershipButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} />
+          )}
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Locations" />

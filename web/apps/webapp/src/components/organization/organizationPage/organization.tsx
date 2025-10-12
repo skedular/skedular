@@ -3,16 +3,20 @@ import { MyBookings } from '@/components/booking/myBookings';
 import { GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
+import { getOrganizationLocationsBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
+import { ClaimLocationOwnershipButton } from '@/components/location';
 import { LocationSelector } from '@/components/location/locationSelector';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
 import { Dayjs } from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { PreloadedQuery, graphql, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -33,6 +37,9 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaTo: DateTime!
     $locationsSortingValues: [LocationOrderInput!]
   ) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+      canModify
+    }
     ...locationSelector_allLocations_query
     ...teamSelector_allTeams_query
     ...gettingStarted_query
@@ -43,12 +50,14 @@ const RootQuery = graphql`
 
 const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, defaultStartWeek }: Props) => {
   const rootData = usePreloadedQuery<organization_rootQuery>(RootQuery, queryReference);
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const [today] = useState(startOfDay());
   const [startWeek, setStartWeek] = useState(defaultStartWeek);
   const [endWeek, setEndWeek] = useState(endOfWeek(defaultStartWeek).add(-1, 'milliseconds'));
   const [locationIds, setLocationIds] = useState<string[]>([]);
   const [teamIds, setTeamIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
+  const router = useRouter();
 
   const handleWeehChanged = (date: Dayjs) => {
     setStartWeek(date);
@@ -67,6 +76,10 @@ const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlph
     setViewMode(newViewMode);
   };
 
+  const handleClaimLocationOwnershipClicked = () => {
+    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+  };
+
   if (!organizationUniqueAlphanumericName) {
     return <></>;
   }
@@ -80,6 +93,9 @@ const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlph
         <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
         <PushToRight />
         <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+        {rootData.organization?.canModify && (
+          <ClaimLocationOwnershipButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} onClaimClicked={handleClaimLocationOwnershipClicked} />
+        )}
       </GridContainer>
       <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
       <MyBookings
