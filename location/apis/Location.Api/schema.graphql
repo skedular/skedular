@@ -101,6 +101,7 @@ type LocationDetails {
   physicalAddress: LocationPhysicalAddressDetails
   primaryFeatureImage: CdnImageFile
   extraMetadata: LocationExtraMetadata
+  uniqueClaimCode: String
   id: ID!
 }
 

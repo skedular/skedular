@@ -387,6 +387,7 @@ type LocationDetails {
   roomCapacity: Int!
   timezone: String
   type: LocationTypeDetails!
+  uniqueClaimCode: String
   zones: [OrganizationTagDetails!]!
 }
 

@@ -464,6 +464,11 @@ public class LocationService(
                     CanViewAnalytics =
                         await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
                 };
+
+                if (!mappedLocation.Permissions.CanModify)
+                {
+                    mappedLocation.UniqueClaimCode = null;
+                }
             }
         }
 

@@ -246,7 +246,8 @@ public class Mapper : IMapper
                 LocationTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id),
                 LocationSpaceTypeIds = src.Tags
                     .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type))
-                    .Select(item => item.Id)
+                    .Select(item => item.Id),
+                UniqueClaimCode = src.UniqueClaimCode
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>

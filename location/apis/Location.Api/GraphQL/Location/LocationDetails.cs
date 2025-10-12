@@ -41,6 +41,7 @@ public class LocationDetails : Node
     [GraphQLName("locationSpaceTypeIds")] public IEnumerable<string> LocationSpaceTypeIds { get; set; } = [];
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
+    [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
