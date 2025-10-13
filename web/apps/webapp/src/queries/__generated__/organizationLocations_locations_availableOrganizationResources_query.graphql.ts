@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b2198e8dcebc596ee19b409e703b6755>>
+ * @generated SignedSource<<8cd4fdc6b547615eb13227b51308903e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,6 +35,8 @@ export type organizationLocations_locations_availableOrganizationResources_query
         };
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
+          readonly latitude: number | null | undefined;
+          readonly longitude: number | null | undefined;
         } | null | undefined;
         readonly resources: {
           readonly totalCount: number;
@@ -259,6 +261,20 @@ return {
                       "kind": "ScalarField",
                       "name": "formattedAddress",
                       "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "longitude",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "latitude",
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
@@ -416,6 +432,6 @@ return {
 };
 })();
 
-(node as any).hash = "a72e6a75a37a09759a520e28dcc8f470";
+(node as any).hash = "de83da3c414757dc53d86c30cee92c68";
 
 export default node;

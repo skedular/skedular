@@ -1,6 +1,15 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { DefaultDialogTitle, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, TwoButtonsDialogActions } from '@/components/commons';
+import {
+  DefaultDialogTitle,
+  FormFieldLabel,
+  GridContainer,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  TwoButtonsDialogActions,
+} from '@/components/commons';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
@@ -32,6 +41,7 @@ import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
+import Switch from '@mui/material/Switch';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -167,6 +177,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               }
               physicalAddress {
                 formattedAddress
+                longitude
+                latitude
               }
               hasFutureBooking
               canModify
@@ -246,6 +258,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
+  const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
@@ -253,7 +266,14 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings],
   ];
 
-  const locations = useMemo(() => rootDataRefetchable.locations.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.locations]);
+  const locations = useMemo(
+    () =>
+      rootDataRefetchable.locations.edges
+        .map((edge) => edge.node)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .filter((item) => !filterThoseWithCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude),
+    [rootDataRefetchable.locations, filterThoseWithCoordites],
+  );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
   const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
 
@@ -597,6 +617,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     },
   ];
 
+  const handleFilterThoseWithCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterThoseWithCoordites(event.target.checked);
+  };
+
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organization) {
     return <></>;
   }
@@ -615,6 +639,11 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           )}
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+          {organizationUniqueAlphanumericName === 'skedularpubliclocations' && (
+            <FormFieldLabel label="Filter those with no address">
+              <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+            </FormFieldLabel>
+          )}
           <SectionIconTypography label="Locations" />
           <Divider />
           <Box sx={{ paddingBottom: defaultPadding }} />
