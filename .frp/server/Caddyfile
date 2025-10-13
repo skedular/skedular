@@ -48,6 +48,10 @@ mapp.skedular.app {
 	reverse_proxy localhost:7000
 }
 
+napp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
 apistaging.skedular.app {
 	reverse_proxy localhost:49000
 }
