@@ -451,25 +451,36 @@ public class LocationService(
             .Select(group => group.First())
             .ToList();
 
-        if (customer is not null)
+        if (customer is null || location.Organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
-            if (location.Organization.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
-            {
-                mappedLocation.Permissions = new Permissions
-                {
-                    CanView =
-                        isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
-                    CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
-                    CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
-                    CanViewAnalytics =
-                        await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
-                };
+            return mappedLocation;
+        }
 
-                if (!mappedLocation.Permissions.CanModify)
-                {
-                    mappedLocation.UniqueClaimCode = null;
-                }
-            }
+        mappedLocation.Permissions = new Permissions
+        {
+            CanView =
+                isMarketplace || await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
+            CanModify = await organizationAuthorizationService.CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
+            CanDelete = await organizationAuthorizationService.CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
+            CanViewAnalytics =
+                await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
+        };
+
+        if (!mappedLocation.Permissions.CanModify)
+        {
+            mappedLocation.UniqueClaimCode = null;
+        }
+
+        if (mappedLocation.ExtraMetadata?.OtherLinks is not null && !customer.Identities.Any(item =>
+                !string.IsNullOrWhiteSpace(item.Email) &&
+                (item.Email.Contains("morteza.alizadeh@gmail.com", StringComparison.InvariantCultureIgnoreCase) ||
+                 item.Email.Contains("leila.alavi78@gmail.com", StringComparison.InvariantCultureIgnoreCase))))
+        {
+            mappedLocation.ExtraMetadata = mappedLocation.ExtraMetadata with
+            {
+                OtherLinks = mappedLocation.ExtraMetadata.OtherLinks.Where(item =>
+                    item.Contains("sharedspace.co.nz", StringComparison.InvariantCultureIgnoreCase)).ToList()
+            };
         }
 
         return mappedLocation;

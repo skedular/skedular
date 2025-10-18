@@ -42,6 +42,7 @@ import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Switch from '@mui/material/Switch';
+import TextField from '@mui/material/TextField';
 import Box from '@mui/system/Box';
 import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
@@ -186,6 +187,11 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               organization {
                 uniqueAlphanumericName
               }
+              extraMetadata {
+                contactDetails {
+                  contactPhones
+                }
+              }
               ...locationCard_LocationDetails
             }
           }
@@ -259,6 +265,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
   const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
+  const [phoneStartWith, setPhoneStartWith] = useState('');
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocation],
@@ -270,9 +277,18 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     () =>
       rootDataRefetchable.locations.edges
         .map((edge) => edge.node)
-        .sort((a, b) => a.name.localeCompare(b.name))
-        .filter((item) => !filterThoseWithCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude),
-    [rootDataRefetchable.locations, filterThoseWithCoordites],
+        .filter((item) => !filterThoseWithCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude)
+        .filter(
+          (item) =>
+            !phoneStartWith ||
+            item.extraMetadata?.contactDetails?.contactPhones?.some((phone) => {
+              const sanitizedFilter = phoneStartWith.replace(/[^\d+]/g, '');
+              const sanitizedPhone = (phone ?? '').replace(/[^\d+]/g, '');
+
+              return sanitizedPhone.startsWith(sanitizedFilter);
+            }),
+        ),
+    [rootDataRefetchable.locations, filterThoseWithCoordites, phoneStartWith],
   );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
   const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
@@ -621,6 +637,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     setFilterThoseWithCoordites(event.target.checked);
   };
 
+  const handlePhoneFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPhoneStartWith(event.target.value);
+  };
+
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organization) {
     return <></>;
   }
@@ -640,9 +660,15 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           {organizationUniqueAlphanumericName === 'skedularpubliclocations' && (
-            <FormFieldLabel label="Filter those with no address">
-              <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
-            </FormFieldLabel>
+            <>
+              <FormFieldLabel label="Filter those with no address">
+                <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Phone starts with">
+                <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
+              </FormFieldLabel>
+            </>
           )}
           <SectionIconTypography label="Locations" />
           <Divider />

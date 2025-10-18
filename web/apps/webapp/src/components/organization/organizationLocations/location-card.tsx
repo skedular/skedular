@@ -1,6 +1,9 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { ContactEmails } from '@/components/contactEmail';
+import { ContactPeople } from '@/components/contactPeople';
+import { ContactPhones } from '@/components/contactPhone';
 import { EllipseMenuIcon, FloorPlanIcon, LocationIcon, NotPreferredIcon, PreferredIcon, ResourceIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationFloorPlansLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -125,6 +128,13 @@ const LocationCard = ({
         canDelete
         organization {
           uniqueAlphanumericName
+        }
+        extraMetadata {
+          contactDetails {
+            contactPeople
+            contactEmails
+            contactPhones
+          }
         }
         uniqueClaimCode
       }
@@ -352,6 +362,9 @@ const LocationCard = ({
 
   const resourcesCount = locationDetails.resources.totalCount;
   const zones = locationDetails.zones.map(({ id, name, color }) => ({ id, name, color }));
+  const contactPeople = locationDetails.extraMetadata?.contactDetails?.contactPeople ?? [];
+  const contactEmails = locationDetails.extraMetadata?.contactDetails?.contactEmails ?? [];
+  const contactPhones = locationDetails.extraMetadata?.contactDetails?.contactPhones ?? [];
 
   return (
     <>
@@ -425,8 +438,28 @@ const LocationCard = ({
           <Divider />
 
           <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
-
           <Divider />
+
+          {contactPeople.length !== 0 && (
+            <>
+              <ContactPeople contactPeople={contactPeople} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
+              <Divider />
+            </>
+          )}
+
+          {contactEmails.length !== 0 && (
+            <>
+              <ContactEmails contactEmails={contactEmails} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
+              <Divider />
+            </>
+          )}
+
+          {contactPhones.length !== 0 && (
+            <>
+              <ContactPhones contactPhones={contactPhones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
+              <Divider />
+            </>
+          )}
 
           <StackRow sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }}>
             <StackColumn>

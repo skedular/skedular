@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39207212a2c1adaceba5c82eedaa592d>>
+ * @generated SignedSource<<db216d3c24b5210a26c99dea08308f2b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -325,6 +325,49 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "LocationExtraMetadata",
+                    "kind": "LinkedField",
+                    "name": "extraMetadata",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ContactDetails",
+                        "kind": "LinkedField",
+                        "name": "contactDetails",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "contactPhones",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "contactPeople",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "contactEmails",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "concreteType": "CdnImageFile",
                     "kind": "LinkedField",
                     "name": "primaryFeatureImage",
@@ -490,16 +533,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e77eac48a151b5747372d56f779d7b42",
+    "cacheID": "1acf83ae4c0d312c0731ad9ab9d582fa",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_locations_availableOrganizationResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationUniqueAlphanumericName: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  uniqueClaimCode\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n"
+    "text": "query organizationLocations_locations_availableOrganizationResources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagIds: [String!]\n  $fromTodayDate: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $organizationUniqueAlphanumericName: String\n  $untilTodayDate: DateTime!\n  $zoneIds: [String!]\n) {\n  ...organizationLocations_locations_availableOrganizationResources_query_1G22uz\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  extraMetadata {\n    contactDetails {\n      contactPeople\n      contactEmails\n      contactPhones\n    }\n  }\n  uniqueClaimCode\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query_1G22uz on Query {\n  locations(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "de83da3c414757dc53d86c30cee92c68";
+(node as any).hash = "2ae9201ca040a62997e91e98b45ca5fb";
 
 export default node;

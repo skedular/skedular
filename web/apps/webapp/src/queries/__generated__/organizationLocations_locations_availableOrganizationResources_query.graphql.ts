@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cd4fdc6b547615eb13227b51308903e>>
+ * @generated SignedSource<<e4bd48c032da3c38c5da16f22d6ad87c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,11 @@ export type organizationLocations_locations_availableOrganizationResources_query
           readonly id: string;
           readonly name: string;
         }>;
+        readonly extraMetadata: {
+          readonly contactDetails: {
+            readonly contactPhones: ReadonlyArray<string> | null | undefined;
+          } | null | undefined;
+        } | null | undefined;
         readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly name: string;
@@ -319,6 +324,35 @@ return {
                   "storageKey": null
                 },
                 {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "LocationExtraMetadata",
+                  "kind": "LinkedField",
+                  "name": "extraMetadata",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "ContactDetails",
+                      "kind": "LinkedField",
+                      "name": "contactDetails",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "contactPhones",
+                          "storageKey": null
+                        }
+                      ],
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
                   "args": null,
                   "kind": "FragmentSpread",
                   "name": "locationCard_LocationDetails"
@@ -432,6 +466,6 @@ return {
 };
 })();
 
-(node as any).hash = "de83da3c414757dc53d86c30cee92c68";
+(node as any).hash = "2ae9201ca040a62997e91e98b45ca5fb";
 
 export default node;

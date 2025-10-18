@@ -34,7 +34,7 @@ const Zones = ({ sx, zones, hideIcon, hideNAText }: Props) => {
         )}
         {visibleItems.map((zone) => (
           <Grid key={zone.id}>
-            <Zone key={zone.id} zone={zone} />
+            <Zone zone={zone} />
           </Grid>
         ))}
         {extraItems.length > 0 && (

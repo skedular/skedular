@@ -34,7 +34,7 @@ const LocationTags = ({ sx, locationTags, hideIcon, hideNAText }: Props) => {
         )}
         {visibleItems.map((locationTag) => (
           <Grid key={locationTag.id}>
-            <LocationTag key={locationTag.id} locationTag={locationTag} />
+            <LocationTag locationTag={locationTag} />
           </Grid>
         ))}
         {extraItems.length > 0 && (

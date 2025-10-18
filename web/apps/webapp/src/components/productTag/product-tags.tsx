@@ -34,7 +34,7 @@ const ProductTags = ({ sx, productTags, hideIcon, hideNAText }: Props) => {
         )}
         {visibleItems.map((productTag) => (
           <Grid key={productTag.id}>
-            <ProductTag key={productTag.id} productTag={productTag} />
+            <ProductTag productTag={productTag} />
           </Grid>
         ))}
         {extraItems.length > 0 && (

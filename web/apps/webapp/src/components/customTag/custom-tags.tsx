@@ -34,7 +34,7 @@ const CustomTags = ({ sx, customTags, hideIcon, hideNAText }: Props) => {
         )}
         {visibleItems.map((customTag) => (
           <Grid key={customTag.id}>
-            <CustomTag key={customTag.id} customTag={customTag} />
+            <CustomTag customTag={customTag} />
           </Grid>
         ))}
         {extraItems.length > 0 && (

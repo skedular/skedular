@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8fb742df24ff0d12524cd9c241347273>>
+ * @generated SignedSource<<dfcfaef6a54826b7197dc7769e8437af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,13 @@ export type locationCard_LocationDetails$data = {
     readonly id: string;
     readonly name: string;
   }>;
+  readonly extraMetadata: {
+    readonly contactDetails: {
+      readonly contactEmails: ReadonlyArray<string> | null | undefined;
+      readonly contactPeople: ReadonlyArray<string> | null | undefined;
+      readonly contactPhones: ReadonlyArray<string> | null | undefined;
+    } | null | undefined;
+  } | null | undefined;
   readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
@@ -241,6 +248,49 @@ return {
     {
       "alias": null,
       "args": null,
+      "concreteType": "LocationExtraMetadata",
+      "kind": "LinkedField",
+      "name": "extraMetadata",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ContactDetails",
+          "kind": "LinkedField",
+          "name": "contactDetails",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "contactPeople",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "contactEmails",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "contactPhones",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
       "name": "uniqueClaimCode",
       "storageKey": null
@@ -251,6 +301,6 @@ return {
 };
 })();
 
-(node as any).hash = "212f54b474e1abfcae97d4ef29eeb75a";
+(node as any).hash = "4dd6eed4d21edcf43e28346cc39537b8";
 
 export default node;

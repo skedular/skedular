@@ -155,7 +155,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings],
   ];
 
-  const teams = useMemo(() => rootDataRefetchable.teams.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataRefetchable.teams]);
+  const teams = useMemo(() => rootDataRefetchable.teams.edges.map((edge) => edge.node), [rootDataRefetchable.teams]);
   const teamDetails = useMemo(() => teams.find((item) => item.id === selectedTeamId), [selectedTeamId, teams]);
 
   const handleRefetch = useCallback(

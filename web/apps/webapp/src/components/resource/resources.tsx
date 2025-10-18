@@ -34,7 +34,7 @@ const Resources = ({ sx, resources, hideIcon, hideNAText }: Props) => {
         )}
         {visibleItems.map((resource) => (
           <Grid key={resource.id}>
-            <Resource key={resource.id} resource={resource} />
+            <Resource resource={resource} />
           </Grid>
         ))}
         {extraItems.length > 0 && (

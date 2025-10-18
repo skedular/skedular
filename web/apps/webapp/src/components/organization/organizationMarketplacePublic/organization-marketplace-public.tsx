@@ -40,7 +40,7 @@ const RootQuery = graphql`
 
 const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationMarketplacePublic_rootQuery>(RootQuery, queryReference);
-  const products = useMemo(() => rootData.products.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootData.products]);
+  const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
 
   if (!rootData.products) {
     return <></>;

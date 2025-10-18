@@ -224,6 +224,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
                 <MenuItem value={createOrganizationId}>
                   <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+                  mailto:
                 </MenuItem>
               </Select>
             </FormControl>

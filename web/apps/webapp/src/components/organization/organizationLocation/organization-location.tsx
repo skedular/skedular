@@ -868,7 +868,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const resourcesConnectionIds = useMemo(() => (rootDataResources.location ? [rootDataResources.location.resources.__id] : []), [rootDataResources.location]);
   const resourceDetails = useMemo(() => resources.find((item) => item.id === selectedResourceId), [selectedResourceId, resources]);
 
-  const floorPlans = useMemo(() => rootDataFloorPlans.floorPlans.edges.map((edge) => edge.node).sort((a, b) => a.name.localeCompare(b.name)), [rootDataFloorPlans.floorPlans]);
+  const floorPlans = useMemo(() => rootDataFloorPlans.floorPlans.edges.map((edge) => edge.node), [rootDataFloorPlans.floorPlans]);
   const floorPlansConnectionIds = useMemo(() => [rootDataFloorPlans.floorPlans.__id], [rootDataFloorPlans.floorPlans]);
 
   const validatePhysicalAddress = makeValidate(physicalAddressSchema);
