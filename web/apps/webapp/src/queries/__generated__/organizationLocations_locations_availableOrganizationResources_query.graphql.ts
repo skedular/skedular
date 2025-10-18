@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4bd48c032da3c38c5da16f22d6ad87c>>
+ * @generated SignedSource<<5e0bcd11779c8312a7b11c5880199b1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
         }>;
         readonly extraMetadata: {
           readonly contactDetails: {
+            readonly contactEmails: ReadonlyArray<string> | null | undefined;
             readonly contactPhones: ReadonlyArray<string> | null | undefined;
           } | null | undefined;
         } | null | undefined;
@@ -343,6 +344,13 @@ return {
                           "alias": null,
                           "args": null,
                           "kind": "ScalarField",
+                          "name": "contactEmails",
+                          "storageKey": null
+                        },
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
                           "name": "contactPhones",
                           "storageKey": null
                         }
@@ -466,6 +474,6 @@ return {
 };
 })();
 
-(node as any).hash = "2ae9201ca040a62997e91e98b45ca5fb";
+(node as any).hash = "f1e51710857cc4d1890ce9c4576feb13";
 
 export default node;

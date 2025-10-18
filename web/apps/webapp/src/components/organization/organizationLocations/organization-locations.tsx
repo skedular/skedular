@@ -189,6 +189,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               }
               extraMetadata {
                 contactDetails {
+                  contactEmails
                   contactPhones
                 }
               }
@@ -265,6 +266,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
   const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
+  const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
+  const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
   const [phoneStartWith, setPhoneStartWith] = useState('');
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
@@ -278,6 +281,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
       rootDataRefetchable.locations.edges
         .map((edge) => edge.node)
         .filter((item) => !filterThoseWithCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude)
+        .filter((item) => !filterThoseWithEmails || item.extraMetadata?.contactDetails?.contactEmails?.length !== 0)
+        .filter((item) => !filterThoseWithPhones || item.extraMetadata?.contactDetails?.contactPhones?.length !== 0)
         .filter(
           (item) =>
             !phoneStartWith ||
@@ -288,7 +293,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               return sanitizedPhone.startsWith(sanitizedFilter);
             }),
         ),
-    [rootDataRefetchable.locations, filterThoseWithCoordites, phoneStartWith],
+    [rootDataRefetchable.locations, filterThoseWithCoordites, filterThoseWithEmails, filterThoseWithPhones, phoneStartWith],
   );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
   const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
@@ -637,6 +642,14 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     setFilterThoseWithCoordites(event.target.checked);
   };
 
+  const handleFilterThoseWithEmailsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterThoseWithEmails(event.target.checked);
+  };
+
+  const handleFilterThoseWithPhonesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterThoseWithPhones(event.target.checked);
+  };
+
   const handlePhoneFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneStartWith(event.target.value);
   };
@@ -661,8 +674,16 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           {organizationUniqueAlphanumericName === 'skedularpubliclocations' && (
             <>
-              <FormFieldLabel label="Filter those with no address">
+              <FormFieldLabel label="Filter those without address">
                 <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Filter those with emails">
+                <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Filter those with phones">
+                <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
               </FormFieldLabel>
 
               <FormFieldLabel label="Phone starts with">
