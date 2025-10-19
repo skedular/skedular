@@ -1,8 +1,8 @@
-'use client';
+import { getSignInUrl } from '@workos-inc/authkit-nextjs';
+import { redirect } from 'next/navigation';
 
-import Page from '@/rootPages/signin/page';
-import { memo } from 'react';
+export const GET = async () => {
+  const signInUrl = await getSignInUrl();
 
-const RootPage = () => <Page />;
-
-export default memo(RootPage);
+  return redirect(signInUrl);
+};

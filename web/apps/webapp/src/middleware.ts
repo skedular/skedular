@@ -10,16 +10,5 @@ export default authkitMiddleware({
 });
 
 export const config = {
-  matcher: [
-    '/:slug*',
-    '/welcome',
-    '/bookings',
-    '/notifications',
-    '/billing-and-payment',
-    '/settings',
-    '/organizations',
-    '/organizations/:path*',
-    '/notifications',
-    '/notifications/:path*',
-  ],
+  matcher: ['/welcome', '/bookings', '/notifications', '/billing-and-payment', '/settings', '/organizations', '/organizations/:path*', '/notifications', '/notifications/:path*'],
 };

@@ -1,8 +1,8 @@
-'use client';
+import { getSignUpUrl } from '@workos-inc/authkit-nextjs';
+import { redirect } from 'next/navigation';
 
-import Page from '@/rootPages/signup/page';
-import { memo } from 'react';
+export const GET = async () => {
+  const signUpUrl = await getSignUpUrl();
 
-const RootPage = () => <Page />;
-
-export default memo(RootPage);
+  return redirect(signUpUrl);
+};
