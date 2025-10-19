@@ -1,5 +1,4 @@
 import { AppBar } from '@/components/appBar';
-import { getSignInUrlAction } from '@/components/authActions';
 import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
 import { LogoutIcon, SsoSigninIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getWelcomeLink } from '@/components/links';
@@ -222,10 +221,8 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { user, loading } = useAuth();
-  const [signInUrl, setSignInUrl] = useState('');
   const router = useRouter();
   const { organizationUniqueAlphanumericName } = useParams();
-  const inMsTeams = useContext(InMsTeamsContext);
 
   let finalOrganizationUniqueAlphanumericName = '';
   if (typeof organizationUniqueAlphanumericName === 'string') {
@@ -239,29 +236,6 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   }
 
   useEffect(() => {
-    if (inMsTeams) {
-      return;
-    }
-
-    async function loadSignInUrl() {
-      setSignInUrl(await getSignInUrlAction());
-    }
-
-    loadSignInUrl();
-  }, [inMsTeams]);
-
-  useEffect(() => {
-    if (!inMsTeams) {
-      if (loading || !signInUrl) {
-        return;
-      }
-
-      if (!user && signInUrl) {
-        router.push(signInUrl);
-        return;
-      }
-    }
-
     loadQuery(
       {
         organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
@@ -271,7 +245,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, loading, user, router, signInUrl, inMsTeams]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, loading, user, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

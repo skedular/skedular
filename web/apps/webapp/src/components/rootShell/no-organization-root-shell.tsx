@@ -1,5 +1,4 @@
 import { NoOrganizationAppBar } from '@/components/appBar';
-import { getSignInUrlAction } from '@/components/authActions';
 import { SmallHeadingIconTypography } from '@/components/commons';
 import { LogoutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getRootLink, getWelcomeLink } from '@/components/links';
@@ -185,41 +184,16 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const { user, loading } = useAuth();
-  const [signInUrl, setSignInUrl] = useState('');
   const router = useRouter();
-  const inMsTeams = useContext(InMsTeamsContext);
 
   useEffect(() => {
-    if (inMsTeams) {
-      return;
-    }
-
-    async function loadSignInUrl() {
-      setSignInUrl(await getSignInUrlAction());
-    }
-
-    loadSignInUrl();
-  }, [inMsTeams]);
-
-  useEffect(() => {
-    if (!inMsTeams) {
-      if (loading || !signInUrl) {
-        return;
-      }
-
-      if (!user && signInUrl) {
-        router.push(signInUrl);
-        return;
-      }
-    }
-
     loadQuery(
       {},
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, loading, user, router, signInUrl, inMsTeams]);
+  }, [loadQuery, triggerReloadId, loading, user, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

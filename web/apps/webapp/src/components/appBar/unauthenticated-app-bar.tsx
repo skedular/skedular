@@ -1,4 +1,3 @@
-import { getSignInUrlAction, getSignUpUrlAction } from '@/components/authActions';
 import { BodyIconTypography, PushToRight } from '@/components/commons';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -8,9 +7,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
-import { memo, useContext, useEffect, useState } from 'react';
+import { memo, useContext } from 'react';
 
 type Props = {
   showBreadcrumps?: boolean;
@@ -20,9 +18,6 @@ type Props = {
 const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
-  const [signInUrl, setSignInUrl] = useState('');
-  const [signUpUrl, setSignUpUrl] = useState('');
-  const router = useRouter();
 
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
@@ -33,33 +28,12 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const width = (originalWidth * widthPercentage) / 100;
   const height = (originalHeight * heightPercentage) / 100;
 
-  useEffect(() => {
-    async function loadSignInUrl() {
-      setSignInUrl(await getSignInUrlAction());
-    }
-
-    async function loadSignUpUrl() {
-      setSignUpUrl(await getSignUpUrlAction());
-    }
-
-    loadSignInUrl();
-    loadSignUpUrl();
-  }, []);
-
   const handleDarkThemeClicked = () => {
     updatePaletteMode('dark');
   };
 
   const handleLightThemeClicked = () => {
     updatePaletteMode('light');
-  };
-
-  const handleSignIn = () => {
-    router.push(signInUrl);
-  };
-
-  const handleSignUp = () => {
-    router.push(signUpUrl);
   };
 
   return (
@@ -87,14 +61,14 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
           </IconButton>
         )}
 
-        <IconButton onClick={handleSignIn}>
-          <Button variant="contained" fullWidth sx={{ textTransform: 'none' }}>
+        <IconButton component="a" href="/signin">
+          <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }}>
             <BodyIconTypography label="Sign In" />
           </Button>
         </IconButton>
 
-        <IconButton onClick={handleSignUp}>
-          <Button variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
+        <IconButton component="a" href="/signup">
+          <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
             <BodyIconTypography label="Sign Up" invertDefaultColor={paletteMode === 'dark'} />
           </Button>
         </IconButton>
