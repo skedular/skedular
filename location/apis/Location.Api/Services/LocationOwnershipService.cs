@@ -40,20 +40,27 @@ public class LocationOwnershipService(
         ArgumentException.ThrowIfNullOrWhiteSpace(uniqueClaimCode);
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByUniqueClaimCodeAsync(
-            uniqueClaimCode.ToLowerInvariant(),
+            uniqueClaimCode.ToUpperInvariant(),
             cancellationToken) ?? throw new LocationUniqueClaimCodeNotFound();
 
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                                       organizationId,
-                                       organizationUniqueAlphanumericName,
-                                       false,
-                                       false,
-                                       cancellationToken) ??
-                                   throw new LocationUniqueClaimCodeNotFound();
+            organizationId,
+            organizationUniqueAlphanumericName,
+            false,
+            false,
+            cancellationToken);
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.Id, customer.Id, cancellationToken))
+        if (existingOrganization is null)
         {
-            throw new UnauthorizedAccessException();
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
+            existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
+        }
+        else
+        {
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var ownedBySkedularPublicLocationsOrganization =

@@ -50,9 +50,11 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
 
-  const handleAdded = (id: string) => {
+  const handleAdded = (id: string, uniqueAlphanumericName: string) => {
     if (rootData.me.isOnboardingDone) {
-      router.push(getOrganizationLocationAddPrivateLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+      router.push(
+        getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName) }),
+      );
       onReloadRequired();
 
       return;
@@ -69,13 +71,17 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
         }
 
-        router.push(getOrganizationLocationAddPrivateLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+        router.push(
+          getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName) }),
+        );
         onReloadRequired();
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
-        router.push(getOrganizationLocationAddPrivateLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+        router.push(
+          getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName) }),
+        );
         onReloadRequired();
       },
       optimisticResponse: {

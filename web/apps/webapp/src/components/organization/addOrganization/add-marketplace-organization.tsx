@@ -26,7 +26,7 @@ import { boolean, object, string } from 'yup';
 type Props = {
   rootDataRelay: addMarketplaceOrganization_query$key;
   onReloadRequired: () => void;
-  onAdded: (id: string) => void;
+  onAdded: (id: string, uniqueAlphanumericName: string) => void;
   onCancel?: () => void;
   cancelLabel?: string;
   createLabel?: string;
@@ -118,7 +118,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           render: <NotificationContent content={`Organization ${name} added.`} />,
         });
 
-        onAdded(response.addOrganization.organization.uniqueAlphanumericName!);
+        onAdded(response.addOrganization.organization.id, response.addOrganization.organization.uniqueAlphanumericName!);
         onReloadRequired();
       },
       onError: (error) => {

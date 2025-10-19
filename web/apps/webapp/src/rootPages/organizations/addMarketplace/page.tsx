@@ -61,20 +61,13 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const searchParams = useSearchParams();
   const locationUniqueClaimCode = searchParams.get('locationUniqueClaimCode');
 
-  const handleAdded = (id: string) => {
-    if (rootData.me.isOnboardingDone) {
-      router.push(getOrganizationLocationAddMarketplaceLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
-      onReloadRequired();
-
-      return;
-    }
-
+  const handleAdded = (id: string, uniqueAlphanumericName: string) => {
     if (locationUniqueClaimCode) {
       commitClaimLocationOwnership({
         variables: {
           input: {
             clientMutationId: uuid(),
-            organizationUniqueAlphanumericName: id,
+            organizationId: id,
             uniqueClaimCode: locationUniqueClaimCode.toLocaleUpperCase(),
           },
         },
@@ -86,12 +79,22 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             );
           }
 
-          router.push(getOrganizationLocationsBaseLink(integratedPlatrform, id));
+          router.push(getOrganizationLocationsBaseLink(integratedPlatrform, uniqueAlphanumericName));
           onReloadRequired();
         },
         onError: (error) => {
           themedToast(<NotificationContent content={`Failed to claim location with unique code ${locationUniqueClaimCode}. Error: ${error.message}.`} />, errorNotificationOptions);
 
+          if (rootData.me.isOnboardingDone) {
+            router.push(
+              getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+                redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+              }),
+            );
+            onReloadRequired();
+
+            return;
+          }
           commitCompleteOnboarding({
             variables: {
               input: {
@@ -103,13 +106,21 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
                 themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
               }
 
-              router.push(getOrganizationLocationAddMarketplaceLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+              router.push(
+                getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+                }),
+              );
               onReloadRequired();
             },
             onError: (error) => {
               themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
-              router.push(getOrganizationLocationAddMarketplaceLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+              router.push(
+                getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+                }),
+              );
               onReloadRequired();
             },
             optimisticResponse: {
@@ -125,6 +136,17 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         },
       });
     } else {
+      if (rootData.me.isOnboardingDone) {
+        router.push(
+          getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+            redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+          }),
+        );
+        onReloadRequired();
+
+        return;
+      }
+
       commitCompleteOnboarding({
         variables: {
           input: {
@@ -136,13 +158,21 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
           }
 
-          router.push(getOrganizationLocationAddMarketplaceLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+          router.push(
+            getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+            }),
+          );
           onReloadRequired();
         },
         onError: (error) => {
           themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
-          router.push(getOrganizationLocationAddMarketplaceLink(integratedPlatrform, id, { redirectUrl: getOrganizationBaseLink(integratedPlatrform, id) }));
+          router.push(
+            getOrganizationLocationAddMarketplaceLink(integratedPlatrform, uniqueAlphanumericName, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+            }),
+          );
           onReloadRequired();
         },
         optimisticResponse: {
