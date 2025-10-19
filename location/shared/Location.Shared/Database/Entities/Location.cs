@@ -19,6 +19,10 @@ public class Location : EntityBaseWithDeleted
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public LocationExtraMetadata? ExtraMetadata { get; set; }
     public string? UniqueClaimCode { get; set; }
+    public bool ContactedViaEmail { get; set; }
+    public bool ContactedViaSms { get; set; }
+    public bool ContactedViaCall { get; set; }
+    public bool ContactedViaWhatsapp { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -48,6 +52,10 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
         builder.Property(item => item.ExtraMetadata).HasColumnType("jsonb");
         builder.Property(item => item.UniqueClaimCode).HasMaxLength(Enterprise.Shared.Constants.MaxUniqueIdLength);
+        builder.Property(item => item.ContactedViaEmail).HasDefaultValue(false);
+        builder.Property(item => item.ContactedViaSms).HasDefaultValue(false);
+        builder.Property(item => item.ContactedViaCall).HasDefaultValue(false);
+        builder.Property(item => item.ContactedViaWhatsapp).HasDefaultValue(false);
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);
@@ -56,5 +64,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.HasIndex(item => item.Timezone);
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.UniqueClaimCode).IsUnique();
+        builder.HasIndex(item => item.ContactedViaEmail);
+        builder.HasIndex(item => item.ContactedViaCall);
+        builder.HasIndex(item => item.ContactedViaWhatsapp);
+        builder.HasIndex(item => item.ContactedViaSms);
     }
 }

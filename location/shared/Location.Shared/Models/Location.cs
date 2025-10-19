@@ -13,6 +13,10 @@ public class Location : ModelBaseWithDeleted
     public CdnImageFile? PrimaryFeatureImage { get; set; }
     public LocationExtraMetadata? ExtraMetadata { get; set; }
     public string? UniqueClaimCode { get; set; }
+    public bool ContactedViaEmail { get; set; }
+    public bool ContactedViaSms { get; set; }
+    public bool ContactedViaCall { get; set; }
+    public bool ContactedViaWhatsapp { get; set; }
 
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];

@@ -155,7 +155,11 @@ public class Mapper : IMapper
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
             Tags = MapTo(src.OrganizationTags).ToList(),
-            UniqueClaimCode = src.UniqueClaimCode
+            UniqueClaimCode = src.UniqueClaimCode,
+            ContactedViaEmail = src.ContactedViaEmail,
+            ContactedViaSms = src.ContactedViaSms,
+            ContactedViaCall = src.ContactedViaCall,
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp
         };
 
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
@@ -196,7 +200,11 @@ public class Mapper : IMapper
             OpeningHours = src.OpeningHours,
             Organization = organization,
             OrganizationTags = organizationTags,
-            UniqueClaimCode = src.UniqueClaimCode
+            UniqueClaimCode = src.UniqueClaimCode,
+            ContactedViaEmail = src.ContactedViaEmail,
+            ContactedViaSms = src.ContactedViaSms,
+            ContactedViaCall = src.ContactedViaCall,
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp
         };
 
     public Shared.Database.Entities.Location MergeTo(
@@ -214,6 +222,10 @@ public class Mapper : IMapper
         dest.OpeningHours = src.OpeningHours;
         dest.OrganizationTags = organizationTags;
         dest.UniqueClaimCode = src.UniqueClaimCode;
+        dest.ContactedViaEmail = src.ContactedViaEmail;
+        dest.ContactedViaSms = src.ContactedViaSms;
+        dest.ContactedViaCall = src.ContactedViaCall;
+        dest.ContactedViaWhatsapp = src.ContactedViaWhatsapp;
         return dest;
     }
 
@@ -247,7 +259,11 @@ public class Mapper : IMapper
                 LocationSpaceTypeIds = src.Tags
                     .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type))
                     .Select(item => item.Id),
-                UniqueClaimCode = src.UniqueClaimCode
+                UniqueClaimCode = src.UniqueClaimCode,
+                ContactedViaEmail = src.ContactedViaEmail,
+                ContactedViaSms = src.ContactedViaSms,
+                ContactedViaCall = src.ContactedViaCall,
+                ContactedViaWhatsapp = src.ContactedViaWhatsapp
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -504,16 +520,21 @@ public class Mapper : IMapper
             PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
-            Permissions = new Permissions
-            {
-                CanView = src.Permissions.CanView,
-                CanModify = src.Permissions.CanModify,
-                CanDelete = src.Permissions.CanDelete,
-                CanViewAnalytics = src.Permissions.CanViewAnalytics
-            },
+            Permissions =
+                new Permissions
+                {
+                    CanView = src.Permissions.CanView,
+                    CanModify = src.Permissions.CanModify,
+                    CanDelete = src.Permissions.CanDelete,
+                    CanViewAnalytics = src.Permissions.CanViewAnalytics
+                },
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress),
-            UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
+            UniqueClaimCode = src.UniqueClaimCode.ToSafeString(),
+            ContactedViaEmail = src.ContactedViaEmail,
+            ContactedViaSms = src.ContactedViaSms,
+            ContactedViaCall = src.ContactedViaCall,
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp
         };
 
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));

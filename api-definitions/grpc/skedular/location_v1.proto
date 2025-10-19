@@ -132,6 +132,10 @@ message Location {
   ExtraMetadata ExtraMetadata = 14;
   PhysicalAddress physicalAddress = 15;
   string uniqueClaimCode = 16;
+  bool contactedViaEmail = 17;
+  bool contactedViaSms = 18;
+  bool contactedViaCall = 19;
+  bool contactedViaWhatsapp = 20;
 }
 
 message Admin_GetInput {

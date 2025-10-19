@@ -383,6 +383,10 @@ public class LocationService(
 
         var originalOpeningHours = existingLocation.OpeningHours;
         var uniqueClaimCode = existingLocation.UniqueClaimCode;
+        var contactedViaEmail = existingLocation.ContactedViaEmail;
+        var contactedViaSms = existingLocation.ContactedViaSms;
+        var contactedViaCall = existingLocation.ContactedViaCall;
+        var contactedViaWhatsapp = existingLocation.ContactedViaWhatsapp;
 
         existingLocation = mapper.MergeTo(location, existingLocation, organizationTags);
 
@@ -390,6 +394,11 @@ public class LocationService(
         {
             existingLocation.UniqueClaimCode = uniqueClaimCode;
         }
+
+        existingLocation.ContactedViaEmail = contactedViaEmail;
+        existingLocation.ContactedViaSms = contactedViaSms;
+        existingLocation.ContactedViaCall = contactedViaCall;
+        existingLocation.ContactedViaWhatsapp = contactedViaWhatsapp;
 
         // Restoring original opening hours
         existingLocation.OpeningHours = originalOpeningHours;

@@ -42,6 +42,10 @@ public class LocationDetails : Node
     [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
+    [GraphQLName("contactedViaEmail")] public bool ContactedViaEmail { get; set; }
+    [GraphQLName("contactedViaSms")] public bool ContactedViaSms { get; set; }
+    [GraphQLName("contactedViaCall")] public bool ContactedViaCall { get; set; }
+    [GraphQLName("contactedViaWhatsapp")] public bool ContactedViaWhatsapp { get; set; }
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]

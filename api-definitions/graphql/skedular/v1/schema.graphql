@@ -370,6 +370,10 @@ type LocationDetails {
   canDelete: Boolean!
   canModify: Boolean!
   canViewAnalytics: Boolean!
+  contactedViaCall: Boolean!
+  contactedViaEmail: Boolean!
+  contactedViaSms: Boolean!
+  contactedViaWhatsapp: Boolean!
   customTags: [OrganizationTagDetails!]!
   deskCapacity: Int!
   extraMetadata: LocationExtraMetadata
@@ -523,6 +527,10 @@ type Mutation {
   setOrganizationBankAccountAsDefault(input: SetOrganizationBankAccountAsDefaultInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   setOrganizationStripeConnectAccountAsDefault(input: SetOrganizationStripeConnectAccountAsDefaultInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
+  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload! @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
@@ -2128,6 +2136,26 @@ input TeamWhereInput {
   organizationId: String
   organizationUniqueAlphanumericName: String
   primaryLocationIds: [String!]
+}
+
+input ToggleContactedViaCallInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaEmailInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaSmsInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaWhatsappInput {
+  clientMutationId: String
+  locationId: String!
 }
 
 input UpdateBookingInput {

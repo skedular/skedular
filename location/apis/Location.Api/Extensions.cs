@@ -23,7 +23,8 @@ public static class Extensions
             .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
             .AddScoped<IWorkaroundService, WorkaroundService>()
             .AddScoped<IFloorPlanService, FloorPlanService>()
-            .AddScoped<ILocationPhysicalAddressService, LocationPhysicalAddressService>();
+            .AddScoped<ILocationPhysicalAddressService, LocationPhysicalAddressService>()
+            .AddScoped<ILocationContactedViaService, LocationContactedViaService>();
 
     public static IServiceCollection AddJobs(this IServiceCollection services) =>
         services;

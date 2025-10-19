@@ -102,6 +102,10 @@ type LocationDetails {
   primaryFeatureImage: CdnImageFile
   extraMetadata: LocationExtraMetadata
   uniqueClaimCode: String
+  contactedViaEmail: Boolean!
+  contactedViaSms: Boolean!
+  contactedViaCall: Boolean!
+  contactedViaWhatsapp: Boolean!
   id: ID!
 }
 
@@ -151,6 +155,10 @@ type LocationTypeDetails {
 }
 
 type Mutation {
+  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload! @cost(weight: "10")
+  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload! @cost(weight: "10")
   addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
@@ -504,6 +512,26 @@ input ResourceWhereInput {
   zoneIds: [String!]
   productTagIds: [String!]
   floorPlanId: String
+}
+
+input ToggleContactedViaCallInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaEmailInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaSmsInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaWhatsappInput {
+  clientMutationId: String
+  locationId: String!
 }
 
 input UpdateFloorPlanInput {
