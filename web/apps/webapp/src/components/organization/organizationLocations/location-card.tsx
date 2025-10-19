@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
+import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { ContactEmails } from '@/components/contactEmail';
 import { ContactPeople } from '@/components/contactPeople';
 import { ContactPhones } from '@/components/contactPhone';
@@ -18,6 +18,10 @@ import type { locationCard_deleteLocationMutation } from '@/queries/__generated_
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
 import type { locationCard_query$key } from '@/queries/__generated__/locationCard_query.graphql';
 import type { locationCard_removeCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_removeCustomerPreferredLocationMutation.graphql';
+import type { locationCard_toggleContactedViaCallMutation } from '@/queries/__generated__/locationCard_toggleContactedViaCallMutation.graphql';
+import type { locationCard_toggleContactedViaEmailMutation } from '@/queries/__generated__/locationCard_toggleContactedViaEmailMutation.graphql';
+import type { locationCard_toggleContactedViaSmsMutation } from '@/queries/__generated__/locationCard_toggleContactedViaSmsMutation.graphql';
+import type { locationCard_toggleContactedViaWhatsappMutation } from '@/queries/__generated__/locationCard_toggleContactedViaWhatsappMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -31,6 +35,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
+import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
@@ -137,6 +142,10 @@ const LocationCard = ({
           }
         }
         uniqueClaimCode
+        contactedViaEmail
+        contactedViaCall
+        contactedViaSms
+        contactedViaWhatsapp
       }
     `,
     locationDetailsRelay,
@@ -178,6 +187,50 @@ const LocationCard = ({
     }
   `);
 
+  const [commitToggleContactedViaEmail] = useMutation<locationCard_toggleContactedViaEmailMutation>(graphql`
+    mutation locationCard_toggleContactedViaEmailMutation($input: ToggleContactedViaEmailInput!) {
+      toggleContactedViaEmail(input: $input) {
+        location {
+          id
+          contactedViaEmail
+        }
+      }
+    }
+  `);
+
+  const [commitToggleContactedViaCall] = useMutation<locationCard_toggleContactedViaCallMutation>(graphql`
+    mutation locationCard_toggleContactedViaCallMutation($input: ToggleContactedViaCallInput!) {
+      toggleContactedViaCall(input: $input) {
+        location {
+          id
+          contactedViaCall
+        }
+      }
+    }
+  `);
+
+  const [commitToggleContactedViaSms] = useMutation<locationCard_toggleContactedViaSmsMutation>(graphql`
+    mutation locationCard_toggleContactedViaSmsMutation($input: ToggleContactedViaSmsInput!) {
+      toggleContactedViaSms(input: $input) {
+        location {
+          id
+          contactedViaSms
+        }
+      }
+    }
+  `);
+
+  const [commitToggleContactedViaWhatsapp] = useMutation<locationCard_toggleContactedViaWhatsappMutation>(graphql`
+    mutation locationCard_toggleContactedViaWhatsappMutation($input: ToggleContactedViaWhatsappInput!) {
+      toggleContactedViaWhatsapp(input: $input) {
+        location {
+          id
+          contactedViaWhatsapp
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -186,6 +239,10 @@ const LocationCard = ({
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const isPreferred = useMemo(() => rootData.me?.preferredLocations.some((item) => item.id === locationDetails.id), [locationDetails.id, rootData.me?.preferredLocations]);
+  const contactedViaEmail = useMemo(() => locationDetails.contactedViaEmail, [locationDetails.contactedViaEmail]);
+  const contactedViaCall = useMemo(() => locationDetails.contactedViaCall, [locationDetails.contactedViaCall]);
+  const contactedViaSms = useMemo(() => locationDetails.contactedViaSms, [locationDetails.contactedViaSms]);
+  const contactedViaWhatsapp = useMemo(() => locationDetails.contactedViaWhatsapp, [locationDetails.contactedViaWhatsapp]);
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
 
   useEffect(() => {
@@ -356,6 +413,142 @@ const LocationCard = ({
     });
   };
 
+  const handleContactedViaEmailChange = () => {
+    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via Email...`} />, infoNotificationOptions);
+
+    commitToggleContactedViaEmail({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via Email toggled.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleContactedViaCallChange = () => {
+    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via call...`} />, infoNotificationOptions);
+
+    commitToggleContactedViaCall({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via call toggled.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleContactedViaSmsChange = () => {
+    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via SMS...`} />, infoNotificationOptions);
+
+    commitToggleContactedViaSms({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via SMS toggled.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
+  const handleContactedViaWhatsappChange = () => {
+    const toastId = themedToast(<NotificationContent content={`Toggling '${locationDetails.name}' contaced via Whatsapp...`} />, infoNotificationOptions);
+
+    commitToggleContactedViaWhatsapp({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          locationId: locationDetails.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Location '${locationDetails.name}' contacted via Whatsapp toggled.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+
   if (!dynamicLoadReady) {
     return <></>;
   }
@@ -434,8 +627,25 @@ const LocationCard = ({
               <LinearProgress value={availablePercentage} variant="determinate" sx={{ width: '100%' }} />
             </StackColumn>
           </StackRow>
-
           <Divider />
+
+          {locationDetails.organization?.uniqueAlphanumericName === 'skedularpubliclocations' && (
+            <>
+              <StackRow>
+                <BodyIconTypography label="Email" />
+                <Switch defaultChecked={contactedViaEmail} onChange={handleContactedViaEmailChange} />
+
+                <BodyIconTypography label="Call" />
+                <Switch defaultChecked={contactedViaCall} onChange={handleContactedViaCallChange} />
+
+                <BodyIconTypography label="Sms" />
+                <Switch defaultChecked={contactedViaSms} onChange={handleContactedViaSmsChange} />
+
+                <BodyIconTypography label="Whatsapp" />
+                <Switch defaultChecked={contactedViaWhatsapp} onChange={handleContactedViaWhatsappChange} />
+              </StackRow>
+            </>
+          )}
 
           <Zones zones={zones} sx={{ paddingTop: 1, paddingBottom: 1, flexWrap: 'nowrap' }} />
           <Divider />

@@ -1,8 +1,8 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
 import {
+  BodyIconTypography,
   DefaultDialogTitle,
-  FormFieldLabel,
   GridContainer,
   PushToRight,
   SectionIconTypography,
@@ -10,6 +10,7 @@ import {
   StackColumn,
   TwoButtonsDialogActions,
 } from '@/components/commons';
+import StackRow from '@/components/commons/stack-row';
 import { EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationSetupBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
@@ -265,7 +266,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
-  const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
+  const [filterThoseWithoutCoordites, setFilterThoseWithoutCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
+  const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(false);
   const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
   const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
   const [phoneStartWith, setPhoneStartWith] = useState('');
@@ -280,7 +282,8 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     () =>
       rootDataRefetchable.locations.edges
         .map((edge) => edge.node)
-        .filter((item) => !filterThoseWithCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude)
+        .filter((item) => !filterThoseWithoutCoordites || !item.physicalAddress?.latitude || !item.physicalAddress?.longitude)
+        .filter((item) => !filterThoseWithCoordites || (item.physicalAddress?.latitude && item.physicalAddress?.longitude))
         .filter((item) => !filterThoseWithEmails || item.extraMetadata?.contactDetails?.contactEmails?.length !== 0)
         .filter((item) => !filterThoseWithPhones || item.extraMetadata?.contactDetails?.contactPhones?.length !== 0)
         .filter(
@@ -293,7 +296,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               return sanitizedPhone.startsWith(sanitizedFilter);
             }),
         ),
-    [rootDataRefetchable.locations, filterThoseWithCoordites, filterThoseWithEmails, filterThoseWithPhones, phoneStartWith],
+    [rootDataRefetchable.locations, filterThoseWithoutCoordites, filterThoseWithCoordites, filterThoseWithEmails, filterThoseWithPhones, phoneStartWith],
   );
   const locationDetails = useMemo(() => locations.find((item) => item.id === selectedLocationId), [selectedLocationId, locations]);
   const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
@@ -638,6 +641,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     },
   ];
 
+  const handleFilterThoseWithoutCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFilterThoseWithoutCoordites(event.target.checked);
+  };
+
   const handleFilterThoseWithCoorditesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterThoseWithCoordites(event.target.checked);
   };
@@ -673,23 +680,22 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           {organizationUniqueAlphanumericName === 'skedularpubliclocations' && (
-            <>
-              <FormFieldLabel label="Filter those without address">
-                <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
-              </FormFieldLabel>
+            <StackRow>
+              <BodyIconTypography label="Filter those without address" />
+              <Switch defaultChecked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
 
-              <FormFieldLabel label="Filter those with emails">
-                <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
-              </FormFieldLabel>
+              <BodyIconTypography label="Filter those with address" />
+              <Switch defaultChecked={filterThoseWithCoordites} onChange={handleFilterThoseWithCoorditesChange} />
 
-              <FormFieldLabel label="Filter those with phones">
-                <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
-              </FormFieldLabel>
+              <BodyIconTypography label="Filter those with emails" />
+              <Switch defaultChecked={filterThoseWithEmails} onChange={handleFilterThoseWithEmailsChange} />
 
-              <FormFieldLabel label="Phone starts with">
-                <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
-              </FormFieldLabel>
-            </>
+              <BodyIconTypography label="Filter those with phones" />
+              <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
+
+              <BodyIconTypography label="Phone starts with" />
+              <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
+            </StackRow>
           )}
           <SectionIconTypography label="Locations" />
           <Divider />

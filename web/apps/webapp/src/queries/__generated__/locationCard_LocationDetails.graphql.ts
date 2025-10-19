@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dfcfaef6a54826b7197dc7769e8437af>>
+ * @generated SignedSource<<c2ea7b5283859941bf3b4423e9f7137e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,10 @@ import { FragmentRefs } from "relay-runtime";
 export type locationCard_LocationDetails$data = {
   readonly canDelete: boolean;
   readonly canModify: boolean;
+  readonly contactedViaCall: boolean;
+  readonly contactedViaEmail: boolean;
+  readonly contactedViaSms: boolean;
+  readonly contactedViaWhatsapp: boolean;
   readonly customTags: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly id: string;
@@ -294,6 +298,34 @@ return {
       "kind": "ScalarField",
       "name": "uniqueClaimCode",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "contactedViaEmail",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "contactedViaCall",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "contactedViaSms",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "contactedViaWhatsapp",
+      "storageKey": null
     }
   ],
   "type": "LocationDetails",
@@ -301,6 +333,6 @@ return {
 };
 })();
 
-(node as any).hash = "4dd6eed4d21edcf43e28346cc39537b8";
+(node as any).hash = "22cd7ba4c5c8453c19a7ac41ef7b6eae";
 
 export default node;
