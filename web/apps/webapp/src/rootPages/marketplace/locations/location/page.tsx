@@ -24,18 +24,13 @@ const RootQuery = graphql`
 
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageMarketplaceLocation_rootQuery>(RootQuery, queryReference);
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const { user, loading } = useAuth();
-
-  useEffect(() => {
-    setIsUserSignedIn(!!user);
-  }, [user]);
 
   if (loading) {
     return <></>;
   }
 
-  if (isUserSignedIn) {
+  if (user) {
     return (
       <NoOrganizationRootShell collapsed={true}>
         <MarketplaceLocation rootDataRelay={rootData} />

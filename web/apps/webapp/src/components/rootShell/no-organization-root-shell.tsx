@@ -183,7 +183,6 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -193,7 +192,7 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, loading, user, router]);
+  }, [loadQuery, triggerReloadId, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

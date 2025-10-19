@@ -220,7 +220,6 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { user, loading } = useAuth();
   const router = useRouter();
   const { organizationUniqueAlphanumericName } = useParams();
 
@@ -245,7 +244,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, loading, user, router]);
+  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
