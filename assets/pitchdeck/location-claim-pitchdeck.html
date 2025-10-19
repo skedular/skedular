@@ -234,6 +234,22 @@
       color: rgba(9, 18, 36, 0.9);
     }
 
+    .support-link {
+      text-align: center;
+      color: var(--muted-text);
+      font-size: 1rem;
+    }
+
+    .support-link a {
+      color: var(--brand-primary);
+      font-weight: 600;
+    }
+
+    .fallback-link {
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
     .contact-list {
       list-style: none;
       display: grid;
@@ -363,14 +379,18 @@
   <main>
     <section class="slide" id="slide-01">
       <div class="pill">Welcome to Skedular</div>
+      <p class="support-link">
+        Explore our public site: <a href="https://getskedular.com" target="_blank" rel="noopener">getskedular.com</a>
+      </p>
       <h1>Kia ora! Your venue is already live. Come say hi!</h1>
       <p>
         We already added your place to Skedular so planners can spot you right away.
         Claim it, add your flavor, and unlock our booking engine for free while you grow. Sweet as.
       </p>
-      <a class="cta" href="https://getskedular.com" target="_blank" rel="noopener">
-        Join Skedular for free <span>&#8594;</span>
+      <a class="cta" href="https://skedular.app/organizations/add-marketplace?locationUniqueClaimCode=XZRE3WR1D9" target="_blank" rel="noopener">
+        Join Skedular for free and claim your location<span>&#8594;</span>
       </a>
+      <p class="fallback-link">If the button doesn't open, copy and paste this link into your browser: https://skedular.app/organizations/add-marketplace?locationUniqueClaimCode=XZRE3WR1D9</p>
     </section>
 
     <section class="slide" id="slide-02">
@@ -408,7 +428,7 @@
     </section>
   </main>
   <footer>
-    Skedular · Get found. Get booked. Stay in control. Chur.
+    Skedular · Get found. Get booked. Stay in control.
   </footer>
 </body>
 </html>
