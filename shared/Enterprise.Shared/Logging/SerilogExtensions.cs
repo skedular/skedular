@@ -24,6 +24,11 @@ public static class SerilogExtensions
                     .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions { Mode = MaskingMode.Globally, MaskValue = "***REDACTED***" })
                     .Filter.ByExcluding(logEvent =>
                     {
+                        if (logEvent.Level is LogEventLevel.Fatal or LogEventLevel.Error or LogEventLevel.Warning)
+                        {
+                            return false;
+                        }
+
                         if (!logEvent.Properties.TryGetValue("SourceContext", out var sourceContextValue) ||
                             sourceContextValue is not ScalarValue { Value: string sourceContext } ||
                             sourceContext != "Microsoft.AspNetCore.Hosting.Diagnostics")
