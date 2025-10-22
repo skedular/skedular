@@ -421,21 +421,6 @@ public class LocationService(
 
         location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
-        if (location.PhysicalAddress is not null)
-        {
-            if (existingLocation.PhysicalAddress is null)
-            {
-                location.PhysicalAddress.Id = randomHelper.Generate();
-                var locationPhysicalAddressEntity = mapper.MapTo(location.PhysicalAddress, existingLocation);
-                repositoryFactory.LocationPhysicalAddressRepository.Add(locationPhysicalAddressEntity);
-            }
-            else
-            {
-                var locationPhysicalAddressEntity = mapper.MergeTo(location.PhysicalAddress, existingLocation.PhysicalAddress, existingLocation);
-                repositoryFactory.LocationPhysicalAddressRepository.Update(locationPhysicalAddressEntity);
-            }
-        }
-
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
