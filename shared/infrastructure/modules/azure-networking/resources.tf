@@ -18,11 +18,11 @@ resource "azurerm_route_table" "this" {
 }
 
 # Creating a DDoS Protection Plan in the specified location.
-resource "azurerm_network_ddos_protection_plan" "this" {
-  location            = azurerm_resource_group.this.location
-  name                = module.naming.network_ddos_protection_plan.name_unique
-  resource_group_name = azurerm_resource_group.this.name
-}
+# resource "azurerm_network_ddos_protection_plan" "this" {
+#   location            = azurerm_resource_group.this.location
+#   name                = module.naming.network_ddos_protection_plan.name_unique
+#   resource_group_name = azurerm_resource_group.this.name
+# }
 
 #Creating a NAT Gateway in the specified location.
 resource "azurerm_nat_gateway" "this" {
@@ -42,7 +42,7 @@ module "avm-res-network-virtualnetwork" {
 }
 
 resource "azurerm_key_vault" "vault" {
-  name                = module.naming.key_vault.name
+  name                = "skedular-${module.naming.key_vault.name}"
   location            = var.region
   resource_group_name = azurerm_resource_group.this.name
   tenant_id           = data.azurerm_client_config.current.tenant_id

@@ -21,6 +21,6 @@ data "azuread_user" "morteza" {
 }
 
 data "azurerm_key_vault" "vault" {
-  name                = module.naming.key_vault.name
+  name                = "skedular-${module.naming.key_vault.name}"
   resource_group_name = var.resource_group
 }

@@ -14,3 +14,9 @@ provider "cloudflare" {
 provider "stripe" {
   api_key = var.stripe_api_key
 }
+
+provider "azurerm" {
+  features {}
+  subscription_id = var.azure_subscription_id
+}
+

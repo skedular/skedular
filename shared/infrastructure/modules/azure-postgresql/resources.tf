@@ -35,26 +35,28 @@ module "postgresql" {
   create_mode            = "Default"
   delegated_subnet_id    = data.azurerm_subnet.database-subnet.id
   storage_mb             = var.storage_mb
-  databases = {
-    my_db1 = {
-      charset   = "UTF8"
-      collation = "en_US.utf8"
-      name      = "my_db1"
-    }
-    my_db2 = {
-      charset   = "UTF8"
-      collation = "en_US.utf8"
-      name      = "my_db2"
-    }
-  }
-  high_availability = {
-    mode                      = "ZoneRedundant"
-    standby_availability_zone = 2
-  }
-  server_version      = 16
+  # databases = {
+  #   my_db1 = {
+  #     charset   = "UTF8"
+  #     collation = "en_US.utf8"
+  #     name      = "my_db1"
+  #   }
+  #   my_db2 = {
+  #     charset   = "UTF8"
+  #     collation = "en_US.utf8"
+  #     name      = "my_db2"
+  #   }
+  # }
+
+  # high_availability = {
+  #   mode                      = "ZoneRedundant"
+  #   standby_availability_zone = 2
+  # }
+  # zone                = 1
+
+  server_version      = 17
   sku_name            = var.sku_name
   tags                = local.merged_tags
-  zone                = 1
   private_dns_zone_id = module.avm-res-network-privatednszone.resource_id
 }
 

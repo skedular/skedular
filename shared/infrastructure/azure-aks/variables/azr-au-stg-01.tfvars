@@ -1,2 +1,2 @@
-environment = "azr-au-stg-01"
+environment = "staging"
 region      = "Australia East"

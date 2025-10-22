@@ -15,8 +15,8 @@ This document describes the network architecture for Azure deployment using a hu
 | Environment      | VNet CIDR        | Notes                                       |
 |------------------|------------------|----------------------------------------------|
 | azr-au-ops-01    | 10.10.0.0/16     | Operation environment - Centralized management, logging, monitoring |
-| azr-au-prd-01    | 10.20.0.0/16     | Production environment Australia East region - Primary user-facing workloads |
-| azr-au-stg-01    | 10.30.0.0/16     | Staging environment Australia East region - Pre-prod environment for release validation |
+| production    | 10.20.0.0/16     | Production environment Australia East region - Primary user-facing workloads |
+| staging    | 10.30.0.0/16     | Staging environment Australia East region - Pre-prod environment for release validation |
 
 We will start building production and staging environments, and decide on the rest of the environments later.
 
@@ -24,7 +24,7 @@ We will start building production and staging environments, and decide on the re
 
 Subnets are defined per environment and are not bound to specific Availability Zones. The following layout is based on the current locals.tf configuration:
 
-### Example: Production Environment (`azr-au-prd-01`, 10.20.0.0/16)
+### Example: Production Environment (`production`, 10.20.0.0/16)
 
 | Subnet Name        | CIDR Block         | Description                                 |
 |--------------------|-------------------|---------------------------------------------|
@@ -37,7 +37,7 @@ Subnets are defined per environment and are not bound to specific Availability Z
 | cache-subnet       | 10.20.18.0/24     | Redis nodes                                 |
 | bastion-subnet     | 10.20.70.0/27     | Bastion or jumpbox access                   |
 
-### Example: Staging Environment (`azr-au-stg-01`, 10.30.0.0/16)
+### Example: Staging Environment (`staging`, 10.30.0.0/16)
 
 | Subnet Name        | CIDR Block         | Description                                 |
 |--------------------|-------------------|---------------------------------------------|

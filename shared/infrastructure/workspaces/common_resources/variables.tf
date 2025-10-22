@@ -18,3 +18,9 @@ variable "log_retention" {
   type        = number
   default     = 7
 }
+
+variable "azure_region" {
+  description = "Azure region for resource deployment."
+  type        = string
+  default     = null
+}

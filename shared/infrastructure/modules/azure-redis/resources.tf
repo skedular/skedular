@@ -5,7 +5,7 @@ module "naming" {
 }
 
 resource "azurerm_redis_cache" "redis" {
-  name                 = module.naming.redis_cache.name
+  name                 = "skedular-${module.naming.redis_cache.name}"
   location             = var.region
   resource_group_name  = var.resource_group
   capacity             = 1

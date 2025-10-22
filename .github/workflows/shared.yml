@@ -22,7 +22,7 @@ on:
 jobs:
   build:
     name: "Build"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     if: github.event.pull_request.draft == false
     env:
@@ -41,6 +41,13 @@ jobs:
         with:
           role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Configure Azure credentials - staging
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.STAGING_AZURE_SUBSCRIPTION_ID }}
 
       - name: Configure GCP credentials - staging
         if: ${{ false }}
@@ -68,6 +75,13 @@ jobs:
           role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
 
+      - name: Configure Azure credentials
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.PRODUCTION_AZURE_SUBSCRIPTION_ID }}
+
       - name: Configure GCP credentials - production
         if: ${{ false }}
         uses: "google-github-actions/auth@v2"
@@ -91,7 +105,7 @@ jobs:
   staging:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to staging"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
@@ -110,6 +124,13 @@ jobs:
         with:
           role-to-assume: ${{ vars.STAGING_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Configure Azure credentials - staging
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          client-id: ${{ vars.STAGING_AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.STAGING_AZURE_SUBSCRIPTION_ID }}
 
       - name: Configure GCP credentials
         if: ${{ false }}
@@ -131,7 +152,7 @@ jobs:
   production:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: "Deploy to production"
-    runs-on: 
+    runs-on:
       - ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
@@ -150,6 +171,13 @@ jobs:
         with:
           role-to-assume: ${{ vars.PRODUCTION_AWS_GITHUB_ACTIONS_AWS_ASSUME_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Configure Azure credentials
+        uses: azure/login@v2
+        with:
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          client-id: ${{ vars.PRODUCTION_AZURE_CLIENT_ID }}
+          subscription-id: ${{ vars.PRODUCTION_AZURE_SUBSCRIPTION_ID }}
 
       - name: Configure GCP credentials
         if: ${{ false }}

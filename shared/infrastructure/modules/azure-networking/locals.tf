@@ -5,7 +5,7 @@ locals {
       notes     = "Operation environment - Centralized management, logging, monitoring"
       subnets   = []
     }
-    azr-au-prd-01 = {
+    production = {
       vnet_cidr = "10.20.0.0/16"
       notes     = "Production environment Australia East region - Primary user-facing workloads"
       subnets = {
@@ -30,7 +30,7 @@ locals {
         bastion-subnet  = { name = "AzureBastionSubnet", address_prefixes = ["10.20.70.0/27"], default_outbound_access_enabled = false, description = "Bastion or jumpbox access" }
       }
     }
-    azr-au-stg-01 = {
+    staging = {
       vnet_cidr = "10.30.0.0/16"
       notes     = "Staging environment Australia East region - Pre-prod environment for release validation"
       subnets = {
