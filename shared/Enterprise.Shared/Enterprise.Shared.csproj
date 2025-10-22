@@ -33,7 +33,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.7.12"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.7.13"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.1.9"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.12.0"/>
@@ -79,7 +79,7 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.12.0-beta.2"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.12.0-beta.1"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.12.0"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.12.0-beta.3"/>
 

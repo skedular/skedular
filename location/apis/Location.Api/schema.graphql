@@ -463,6 +463,7 @@ input LocationWhereInput {
   zoneIds: [String!]
   types: [LocationType!]
   searchBoundaries: PolygonInput
+  notContactedYet: Boolean
 }
 
 input MarketplaceLocationWhereInput {

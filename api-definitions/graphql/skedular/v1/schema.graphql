@@ -1886,6 +1886,7 @@ input LocationWhereInput {
   customTagIds: [String!]
   locationIds: [String!]
   nameContains: String
+  notContactedYet: Boolean
   organizationUniqueAlphanumericName: String
   searchBoundaries: PolygonInput
   types: [LocationType!]

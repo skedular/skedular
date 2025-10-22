@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e1ce4eef729e06e286fc426dd6a2ced6>>
+ * @generated SignedSource<<16dc3989a64293d627898af0a13ee0ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,6 +30,7 @@ export type organizationLocations_rootQuery$variables = {
   customTagIds?: ReadonlyArray<string> | null | undefined;
   customTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   fromTodayDate: any;
+  locationNotContactedYet: boolean;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   organizationUniqueAlphanumericName: string;
@@ -91,44 +92,49 @@ v2 = {
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "locationsSortingValues"
+  "name": "locationNotContactedYet"
 },
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "locationsSortingValues"
 },
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationMembersSortingValues"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "untilTodayDate"
+  "name": "organizationUniqueAlphanumericName"
 },
 v7 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "zoneIds"
+  "name": "untilTodayDate"
 },
 v8 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "zonesSortingValues"
+  "name": "zoneIds"
 },
 v9 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "zonesSortingValues"
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/)
+v11 = [
+  (v10/*: any*/)
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "CustomerDetails",
@@ -136,7 +142,7 @@ v11 = {
   "name": "me",
   "plural": false,
   "selections": [
-    (v9/*: any*/),
+    (v10/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -144,34 +150,34 @@ v11 = {
       "kind": "LinkedField",
       "name": "preferredLocations",
       "plural": true,
-      "selections": (v10/*: any*/),
+      "selections": (v11/*: any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v12 = [
+v13 = [
   {
     "kind": "Variable",
     "name": "uniqueAlphanumericName",
     "variableName": "organizationUniqueAlphanumericName"
   }
 ],
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v15 = {
+v16 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -183,7 +189,7 @@ v15 = {
     }
   ]
 },
-v16 = {
+v17 = {
   "alias": null,
   "args": [
     {
@@ -197,7 +203,7 @@ v16 = {
   "name": "members",
   "plural": false,
   "selections": [
-    (v13/*: any*/),
+    (v14/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -214,7 +220,7 @@ v16 = {
           "name": "node",
           "plural": false,
           "selections": [
-            (v9/*: any*/),
+            (v10/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -223,8 +229,8 @@ v16 = {
               "name": "customer",
               "plural": false,
               "selections": [
-                (v9/*: any*/),
-                (v14/*: any*/),
+                (v10/*: any*/),
+                (v15/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -262,27 +268,27 @@ v16 = {
       ],
       "storageKey": null
     },
-    (v15/*: any*/)
+    (v16/*: any*/)
   ],
-  "storageKey": null
-},
-v17 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "canModify",
   "storageKey": null
 },
 v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "canModify",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "uniqueAlphanumericName",
   "storageKey": null
 },
-v19 = [
-  (v9/*: any*/),
-  (v14/*: any*/),
+v20 = [
+  (v10/*: any*/),
+  (v15/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -291,8 +297,8 @@ v19 = [
     "storageKey": null
   }
 ],
-v20 = [
-  (v13/*: any*/),
+v21 = [
+  (v14/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -308,30 +314,30 @@ v20 = [
         "kind": "LinkedField",
         "name": "node",
         "plural": false,
-        "selections": (v19/*: any*/),
+        "selections": (v20/*: any*/),
         "storageKey": null
       }
     ],
     "storageKey": null
   },
-  (v15/*: any*/)
+  (v16/*: any*/)
 ],
-v21 = {
+v22 = {
   "kind": "Variable",
   "name": "customTagIds",
   "variableName": "customTagIds"
 },
-v22 = {
+v23 = {
   "kind": "Variable",
   "name": "organizationUniqueAlphanumericName",
   "variableName": "organizationUniqueAlphanumericName"
 },
-v23 = {
+v24 = {
   "kind": "Variable",
   "name": "zoneIds",
   "variableName": "zoneIds"
 },
-v24 = [
+v25 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -339,9 +345,14 @@ v24 = [
   },
   {
     "fields": [
-      (v21/*: any*/),
       (v22/*: any*/),
-      (v23/*: any*/)
+      {
+        "kind": "Variable",
+        "name": "notContactedYet",
+        "variableName": "locationNotContactedYet"
+      },
+      (v23/*: any*/),
+      (v24/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -358,24 +369,25 @@ return {
       (v5/*: any*/),
       (v6/*: any*/),
       (v7/*: any*/),
-      (v8/*: any*/)
+      (v8/*: any*/),
+      (v9/*: any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocations_rootQuery",
     "selections": [
-      (v11/*: any*/),
+      (v12/*: any*/),
       {
         "alias": null,
-        "args": (v12/*: any*/),
+        "args": (v13/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v16/*: any*/),
           (v17/*: any*/),
-          (v18/*: any*/)
+          (v18/*: any*/),
+          (v19/*: any*/)
         ],
         "storageKey": null
       },
@@ -411,32 +423,33 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v5/*: any*/),
-      (v3/*: any*/),
-      (v8/*: any*/),
-      (v1/*: any*/),
-      (v2/*: any*/),
       (v6/*: any*/),
       (v4/*: any*/),
+      (v9/*: any*/),
+      (v1/*: any*/),
+      (v2/*: any*/),
       (v7/*: any*/),
-      (v0/*: any*/)
+      (v5/*: any*/),
+      (v8/*: any*/),
+      (v0/*: any*/),
+      (v3/*: any*/)
     ],
     "kind": "Operation",
     "name": "organizationLocations_rootQuery",
     "selections": [
-      (v11/*: any*/),
+      (v12/*: any*/),
       {
         "alias": null,
-        "args": (v12/*: any*/),
+        "args": (v13/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v16/*: any*/),
           (v17/*: any*/),
           (v18/*: any*/),
-          (v9/*: any*/),
+          (v19/*: any*/),
+          (v10/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -468,7 +481,7 @@ return {
             "kind": "LinkedField",
             "name": "customTags",
             "plural": false,
-            "selections": (v20/*: any*/),
+            "selections": (v21/*: any*/),
             "storageKey": null
           },
           {
@@ -484,7 +497,7 @@ return {
             "kind": "LinkedField",
             "name": "zones",
             "plural": false,
-            "selections": (v20/*: any*/),
+            "selections": (v21/*: any*/),
             "storageKey": null
           }
         ],
@@ -492,13 +505,13 @@ return {
       },
       {
         "alias": null,
-        "args": (v24/*: any*/),
+        "args": (v25/*: any*/),
         "concreteType": "ConnectionOfLocationEdge",
         "kind": "LinkedField",
         "name": "locations",
         "plural": false,
         "selections": [
-          (v13/*: any*/),
+          (v14/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -515,8 +528,8 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
-                  (v14/*: any*/),
+                  (v10/*: any*/),
+                  (v15/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -524,7 +537,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v19/*: any*/),
+                    "selections": (v20/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -534,7 +547,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v19/*: any*/),
+                    "selections": (v20/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -545,7 +558,7 @@ return {
                     "name": "resources",
                     "plural": false,
                     "selections": [
-                      (v13/*: any*/)
+                      (v14/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -578,7 +591,7 @@ return {
                         "name": "latitude",
                         "storageKey": null
                       },
-                      (v9/*: any*/),
+                      (v10/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -596,7 +609,7 @@ return {
                     "name": "hasFutureBooking",
                     "storageKey": null
                   },
-                  (v17/*: any*/),
+                  (v18/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -612,8 +625,8 @@ return {
                     "name": "organization",
                     "plural": false,
                     "selections": [
-                      (v18/*: any*/),
-                      (v9/*: any*/)
+                      (v19/*: any*/),
+                      (v10/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -783,13 +796,13 @@ return {
             ],
             "storageKey": null
           },
-          (v15/*: any*/)
+          (v16/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v24/*: any*/),
+        "args": (v25/*: any*/),
         "filters": [
           "where",
           "orderBy"
@@ -804,19 +817,19 @@ return {
         "args": [
           {
             "fields": [
-              (v21/*: any*/),
+              (v22/*: any*/),
               {
                 "kind": "Variable",
                 "name": "from",
                 "variableName": "fromTodayDate"
               },
-              (v22/*: any*/),
+              (v23/*: any*/),
               {
                 "kind": "Variable",
                 "name": "until",
                 "variableName": "untilTodayDate"
               },
-              (v23/*: any*/)
+              (v24/*: any*/)
             ],
             "kind": "ObjectValue",
             "name": "where"
@@ -834,7 +847,7 @@ return {
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
-            "selections": (v10/*: any*/),
+            "selections": (v11/*: any*/),
             "storageKey": null
           }
         ],
@@ -843,16 +856,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8f28f6a53c6a6685bda2a206eb625717",
+    "cacheID": "6de30fe85fd94d1597808f72bfdfb8d8",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_rootQuery",
     "operationKind": "query",
-    "text": "query organizationLocations_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $fromTodayDate: DateTime!\n  $untilTodayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n) {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    canModify\n    uniqueAlphanumericName\n    id\n  }\n  ...newLocationButton_query\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationResources_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  extraMetadata {\n    contactDetails {\n      contactPeople\n      contactEmails\n      contactPhones\n    }\n  }\n  uniqueClaimCode\n  contactedViaEmail\n  contactedViaCall\n  contactedViaSms\n  contactedViaWhatsapp\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n}\n\nfragment newLocationButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationLocations_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $fromTodayDate: DateTime!\n  $untilTodayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n  $locationNotContactedYet: Boolean!\n) {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    canModify\n    uniqueAlphanumericName\n    id\n  }\n  ...newLocationButton_query\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationResources_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  extraMetadata {\n    contactDetails {\n      contactPeople\n      contactEmails\n      contactPhones\n    }\n  }\n  uniqueClaimCode\n  contactedViaEmail\n  contactedViaCall\n  contactedViaSms\n  contactedViaWhatsapp\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n}\n\nfragment newLocationButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "be31e58a6a1508b2d286644017c9f467";
+(node as any).hash = "e856e27b47d75bef81145a1a41e96a9d";
 
 export default node;

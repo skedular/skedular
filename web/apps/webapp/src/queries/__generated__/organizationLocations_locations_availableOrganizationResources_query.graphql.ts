@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e0bcd11779c8312a7b11c5880199b1b>>
+ * @generated SignedSource<<3ea3d9612fe82cc7fb31a3286f58158e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -139,6 +139,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "locationNotContactedYet"
+    },
+    {
+      "kind": "RootArgument",
       "name": "locationsSortingValues"
     },
     {
@@ -190,6 +194,11 @@ return {
         {
           "fields": [
             (v1/*: any*/),
+            {
+              "kind": "Variable",
+              "name": "notContactedYet",
+              "variableName": "locationNotContactedYet"
+            },
             (v2/*: any*/),
             (v3/*: any*/)
           ],
@@ -474,6 +483,6 @@ return {
 };
 })();
 
-(node as any).hash = "f1e51710857cc4d1890ce9c4576feb13";
+(node as any).hash = "f6c96309109560b6665b1f423e571d1e";
 
 export default node;

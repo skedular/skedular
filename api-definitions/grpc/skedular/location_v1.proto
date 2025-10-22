@@ -171,6 +171,7 @@ message LocationWhereInput {
   string nameContains = 4;
   repeated string tagIds = 5;
   repeated LocationType types = 6;
+  bool notContactedYet = 7;
 }
 
 message LocationOrderInput {

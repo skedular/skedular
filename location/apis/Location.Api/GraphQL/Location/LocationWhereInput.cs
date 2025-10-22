@@ -15,4 +15,5 @@ public class LocationWhereInput
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("types")] public IEnumerable<LocationType>? Types { get; set; }
     [GraphQLName("searchBoundaries")] public Polygon? SearchBoundaries { get; set; }
+    [GraphQLName("notContactedYet")] public bool? NotContactedYet { get; set; }
 }

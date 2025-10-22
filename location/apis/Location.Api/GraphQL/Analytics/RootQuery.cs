@@ -31,7 +31,8 @@ public class RootQuery(IMapper mapper)
                 where is null ? [] : where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).ToList(),
                 null,
                 where is null ? [] : where.Types.ToSafeCollection(),
-                where?.SearchBoundaries),
+                where?.SearchBoundaries,
+                where?.NotContactedYet),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

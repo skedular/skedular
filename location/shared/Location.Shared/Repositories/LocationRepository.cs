@@ -137,6 +137,11 @@ internal static class LocationExtensions
                 envelopePolygon.Contains(item.PhysicalAddress.Coordinates));
         }
 
+        if (searchCriteria.NotContactedYet is not null && searchCriteria.NotContactedYet.Value)
+        {
+            query = query.Where(item => !item.ContactedViaEmail && !item.ContactedViaCall && !item.ContactedViaSms && !item.ContactedViaWhatsapp);
+        }
+
         return query;
     }
 

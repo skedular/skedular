@@ -56,7 +56,8 @@ public class RootQuery(IMapper mapper)
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
                 null,
                 where.Types.ToSafeCollection(),
-                where.SearchBoundaries),
+                where.SearchBoundaries,
+                where.NotContactedYet),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
@@ -101,7 +102,8 @@ public class RootQuery(IMapper mapper)
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
                 null,
                 [LocationType.Marketplace],
-                where.SearchBoundaries),
+                where.SearchBoundaries,
+                null),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             true,
             cancellationToken);

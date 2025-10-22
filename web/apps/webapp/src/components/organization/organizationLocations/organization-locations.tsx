@@ -72,6 +72,7 @@ const RootQuery = graphql`
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
     $zoneIds: [String!]
     $customTagIds: [String!]
+    $locationNotContactedYet: Boolean!
   ) {
     me {
       id
@@ -155,7 +156,12 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         locations(
           first: $count
           after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds }
+          where: {
+            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+            zoneIds: $zoneIds
+            customTagIds: $customTagIds
+            notContactedYet: $locationNotContactedYet
+          }
           orderBy: $locationsSortingValues
         ) @connection(key: "organizationLocations_locations") {
           __id
@@ -270,6 +276,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(false);
   const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
   const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
+  const [locationNotContactedYet, setLocationNotContactedYet] = useState(false);
   const [phoneStartWith, setPhoneStartWith] = useState('');
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
@@ -302,12 +309,13 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const organizationMembers = useMemo(() => (rootData.organization ? rootData.organization.members.edges.map((edge) => edge.node) : []), [rootData.organization]);
 
   const handleRefetch = useCallback(
-    (customTagIds: string[], zoneIds: string[]) => {
+    (customTagIds: string[], zoneIds: string[], locationNotContactedYet: boolean) => {
       startTransition(() => {
         refetch(
           {
             customTagIds,
             zoneIds,
+            locationNotContactedYet,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -318,7 +326,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     [refetch],
   );
 
-  useEffect(() => handleRefetch(customTagIds, zoneIds), [handleRefetch, customTagIds, zoneIds]);
+  useEffect(() => handleRefetch(customTagIds, zoneIds, locationNotContactedYet), [handleRefetch, customTagIds, zoneIds, locationNotContactedYet]);
 
   const handleMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
     setMoreActionsAnchorEl(null);
@@ -657,6 +665,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
     setFilterThoseWithPhones(event.target.checked);
   };
 
+  const handleLocationNotContactedYetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLocationNotContactedYet(event.target.checked);
+  };
+
   const handlePhoneFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneStartWith(event.target.value);
   };
@@ -692,6 +704,9 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
 
               <BodyIconTypography label="Filter those with phones" />
               <Switch defaultChecked={filterThoseWithPhones} onChange={handleFilterThoseWithPhonesChange} />
+
+              <BodyIconTypography label="Filter those not contacted yet" />
+              <Switch defaultChecked={locationNotContactedYet} onChange={handleLocationNotContactedYetChange} />
 
               <BodyIconTypography label="Phone starts with" />
               <TextField defaultValue={phoneStartWith} onChange={handlePhoneFilterChange} />
@@ -813,6 +828,7 @@ const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: 
             field: 'NAME',
           },
         ],
+        locationNotContactedYet: false,
       },
       {
         fetchPolicy: 'store-and-network',
