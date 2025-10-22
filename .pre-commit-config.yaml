@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.99.5 # Use the latest stable version
+    hooks:
+      - id: terraform_fmt
+        args:
+          - --hook-config=--parallelism-ci-cpu-cores=2
+      # Temporarily commentiong out - due to a networking issues
+      # - id: terraform_validate
+      #   args:
+      #     - --hook-config=--parallelism-ci-cpu-cores=2
+      # - id: terraform_tflint

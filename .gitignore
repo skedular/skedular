@@ -784,6 +784,7 @@ MigrationBackup/
 **/.terraform.*
 *.terraform.lock.hcl
 **/.terraform.lock.hcl
+**/tfplan
 
 # .tfstate files
 #*.tfstate
