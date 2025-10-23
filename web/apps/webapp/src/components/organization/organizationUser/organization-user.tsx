@@ -225,7 +225,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
   const teamsConnectionIds = useMemo(() => [rootData.customerTeams.__id], [rootData.customerTeams]);
   const member = useMemo(
     () => (rootData.organization?.members && rootData.organization.members.edges.length > 0 ? rootData.organization.members.edges[0]?.node : null),
-    [rootData.organization?.members],
+    [rootData.organization],
   );
 
   useEffect(() => {

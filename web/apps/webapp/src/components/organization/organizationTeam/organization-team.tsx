@@ -330,7 +330,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
               return name1.localeCompare(name2);
             })
         : [],
-    [rootDataTeamMembers.team?.members],
+    [rootDataTeamMembers.team],
   );
 
   const handleRefetchTeamMembers = useCallback(
@@ -346,7 +346,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         );
       });
     },
-    [refetchTeamMembers],
+    [startTransition, refetchTeamMembers],
   );
 
   const handleSearchTextChange = (str: string) => {

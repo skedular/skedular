@@ -264,7 +264,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
         );
       });
     },
-    [refetchOrganizationUsers],
+    [startTransition, refetchOrganizationUsers],
   );
 
   const handlTeamChanged = (id?: string) => {

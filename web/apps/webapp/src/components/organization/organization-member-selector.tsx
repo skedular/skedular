@@ -68,7 +68,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootData.organization?.members ? rootData.organization.members.edges.map(({ node }) => node) : []),
-    [rootData.organization?.members],
+    [rootData.organization],
   );
 
   const handleRefetch = useCallback(
@@ -85,7 +85,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
         );
       });
     },
-    [refetch, organizationUniqueAlphanumericName],
+    [startTransition, refetch, organizationUniqueAlphanumericName],
   );
 
   const handleSearchTextChange = (str: string) => {

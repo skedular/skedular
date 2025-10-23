@@ -15,7 +15,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
+import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
@@ -75,30 +75,19 @@ const NoOrganizationRootShell = ({
   const rootLink = getRootLink(integratedPlatrform);
   const welcomeLink = getWelcomeLink(integratedPlatrform);
   const installMsTeamsLink = getInstallMsTeamsLink();
-  const areCustomerRecordsSync = useCallback(
-    () =>
-      rootData?.bookingCustomerRecordSynced &&
-      rootData?.locationCustomerRecordSynced &&
-      rootData?.marketplaceCustomerRecordSynced &&
-      rootData?.msTeamsCustomerRecordSynced &&
-      rootData?.organizationCustomerRecordSynced &&
-      rootData?.slackCustomerRecordSynced &&
-      rootData?.teamCustomerRecordSynced &&
-      rootData?.coreCustomerRecordSynced,
-    [
-      rootData?.bookingCustomerRecordSynced,
-      rootData?.locationCustomerRecordSynced,
-      rootData?.marketplaceCustomerRecordSynced,
-      rootData?.msTeamsCustomerRecordSynced,
-      rootData?.organizationCustomerRecordSynced,
-      rootData?.slackCustomerRecordSynced,
-      rootData?.teamCustomerRecordSynced,
-      rootData?.coreCustomerRecordSynced,
-    ],
+  const areCustomerRecordsSync = !!(
+    rootData?.bookingCustomerRecordSynced &&
+    rootData?.locationCustomerRecordSynced &&
+    rootData?.marketplaceCustomerRecordSynced &&
+    rootData?.msTeamsCustomerRecordSynced &&
+    rootData?.organizationCustomerRecordSynced &&
+    rootData?.slackCustomerRecordSynced &&
+    rootData?.teamCustomerRecordSynced &&
+    rootData?.coreCustomerRecordSynced
   );
 
   useEffect(() => {
-    if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync())) {
+    if (reloadCount === maxRetryAttemptsToReload || (rootData.me && areCustomerRecordsSync)) {
       return;
     }
 
@@ -144,7 +133,7 @@ const NoOrganizationRootShell = ({
     );
   }
 
-  if (!areCustomerRecordsSync()) {
+  if (!areCustomerRecordsSync) {
     return <Loading message="Kindly hold on as we proceed to activate your account..." />;
   }
 

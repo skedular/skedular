@@ -302,8 +302,7 @@ const NewBookingDialog = ({
   const [from, setFrom] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [allDay, setAllDay] = useState<boolean>(true);
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>([toOpeningHoursFromTime('00:00'), toOpeningHoursFromTime('00:00')]);
-  const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
-  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
+  // date/time validation message is derived from inputs (computed later)
   const [customerId, setCustomerId] = useState<string | undefined>();
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
@@ -311,12 +310,7 @@ const NewBookingDialog = ({
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_OFFICE');
   const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds ?? []);
 
-  // Update resourceIds when defaultResourceIds changes
-  useEffect(() => {
-    if (defaultResourceIds && defaultResourceIds.length > 0) {
-      setResourceIds(defaultResourceIds);
-    }
-  }, [defaultResourceIds]);
+  // Note: `resourceIds` is initialized from `defaultResourceIds` and thereafter controlled by the form.
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
@@ -326,18 +320,7 @@ const NewBookingDialog = ({
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
-  const resources = useMemo<ResourceDetails[]>(
-    () =>
-      timeRangeValid
-        ? rootDataAvailableResources.availableResources.map(({ resource: { id, name, customTags, zones } }) => ({
-            id,
-            name,
-            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
-          }))
-        : [],
-    [rootDataAvailableResources.availableResources, timeRangeValid],
-  );
+  // resources will be derived after validating the time range (see dateRange below)
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -352,7 +335,7 @@ const NewBookingDialog = ({
         );
       });
     },
-    [refetchOrganizationMembers],
+    [startTransition, refetchOrganizationMembers],
   );
 
   const handleRefetchTeams = useCallback(
@@ -369,7 +352,7 @@ const NewBookingDialog = ({
         );
       });
     },
-    [refetchTeams],
+    [startTransition, refetchTeams],
   );
 
   const handleRefetchAvailableResources = useCallback(
@@ -387,30 +370,25 @@ const NewBookingDialog = ({
         );
       });
     },
-    [refetchAvailableResources],
+    [startTransition, refetchAvailableResources],
   );
 
-  const getDateRange = useCallback((allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
+  // Pure validation helper: returns validity, computed from/until (UTC Dayjs) and an error message (if any).
+  const getDateRange = (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
     const allDayFrom = dayjs(date).utc();
     const allDayUntil = dayjs(date).utc().add(1, 'day');
-    const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
+    const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil, errorMessage: 'Time required when not booking full day.' };
 
     if (allDay) {
-      setDateTimeErrorMessage('');
-
-      return { valid: true, from: allDayFrom, until: allDayUntil };
+      return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
     }
 
     if (!timeFrom || !timeUntil) {
-      setDateTimeErrorMessage('Time required when not booking full day.');
-
       return invalidResult;
     }
 
     if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-      setDateTimeErrorMessage('');
-
-      return { valid: true, from: allDayFrom, until: allDayUntil };
+      return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
     }
 
     const utcDate = dayjs(date).utc();
@@ -418,30 +396,45 @@ const NewBookingDialog = ({
     const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
 
     if (from.isAfter(until)) {
-      setDateTimeErrorMessage('Time values are incorrect.');
-
-      return invalidResult;
+      return { ...invalidResult, errorMessage: 'Time values are incorrect.' };
     }
-
-    setDateTimeErrorMessage('');
 
     return {
       valid: true,
       from,
       until,
+      errorMessage: '',
     };
-  }, []);
+  };
 
-  useEffect(() => {
+  // Derive the validated date range from current inputs. Memoized so we only recompute when inputs change.
+  const dateRange = useMemo(() => {
     const [timeFrom, timeUntil] = timeRange;
-    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
-    if (range.valid) {
-      setTimeRangeValid(true);
-      handleRefetchAvailableResources(range, locationId);
-    } else {
-      setTimeRangeValid(false);
+    return getDateRange(allDay, from, { timeFrom, timeUntil });
+  }, [allDay, from, timeRange]);
+
+  // Trigger refetch when the derived dateRange is valid. Error message is derived directly from dateRange.
+  useEffect(() => {
+    if (dateRange.valid) {
+      handleRefetchAvailableResources(dateRange, locationId);
     }
-  }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
+  }, [handleRefetchAvailableResources, dateRange, locationId]);
+
+  const timeRangeValidDerived = dateRange.valid;
+  const dateTimeErrorMessageDerived = dateRange.errorMessage || '';
+
+  const resources = useMemo<ResourceDetails[]>(
+    () =>
+      timeRangeValidDerived
+        ? rootDataAvailableResources.availableResources.map(({ resource: { id, name, customTags, zones } }) => ({
+            id,
+            name,
+            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
+          }))
+        : [],
+    [rootDataAvailableResources.availableResources, timeRangeValidDerived],
+  );
 
   const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, type }: BookingDetails) => {
     const id = uuid();
@@ -568,10 +561,9 @@ const NewBookingDialog = ({
     const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
     if (range.valid) {
-      setTimeRangeValid(true);
       handleRefetchAvailableResources(range, locationId);
     } else {
-      setTimeRangeValid(false);
+      // invalid range: resources will be empty because validity is derived
     }
   };
 
@@ -664,7 +656,7 @@ const NewBookingDialog = ({
                 </FormFieldLabel>
 
                 <FormFieldLabel useWiderSpace>
-                  <ErrorTypography errorMessage={dateTimeErrorMessage} />
+                  <ErrorTypography errorMessage={dateTimeErrorMessageDerived} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Notes" useWiderSpace>

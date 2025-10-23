@@ -2,46 +2,37 @@ import { optOutCookieName } from '@/libs/cookie-consent';
 import { getCookie, hasCookie } from 'cookies-next';
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 type Props = {
   ignoreOptOutCookie: boolean;
   forceOverride: boolean;
-  logRocketAppId: string | undefined;
+  logRocketAppId?: string;
 };
 
 const LogRocketProvider = ({ ignoreOptOutCookie, forceOverride, logRocketAppId }: Props) => {
-  const [shouldUseAnalytics, setShouldUseAnalytics] = useState(false);
-
-  useEffect(() => {
-    if (forceOverride) {
-      setShouldUseAnalytics(true);
-
-      return;
-    }
-
-    if (ignoreOptOutCookie) {
-      setShouldUseAnalytics(true);
-
-      return;
+  const shouldUseAnalytics = useMemo(() => {
+    if (forceOverride || ignoreOptOutCookie) {
+      return true;
     }
 
     if (hasCookie(optOutCookieName)) {
-      setShouldUseAnalytics(getCookie(optOutCookieName) === 'no');
-    } else {
-      setShouldUseAnalytics(true);
+      return getCookie(optOutCookieName) === 'no';
     }
+
+    return true;
   }, [ignoreOptOutCookie, forceOverride]);
 
   useEffect(() => {
-    // only initialize when in the browser
-    if (shouldUseAnalytics && typeof window !== 'undefined' && logRocketAppId) {
-      LogRocket.init(logRocketAppId);
-      setupLogRocketReact(LogRocket);
+    if (!shouldUseAnalytics || typeof window === 'undefined' || !logRocketAppId) {
+      return;
     }
+
+    LogRocket.init(logRocketAppId);
+    setupLogRocketReact(LogRocket);
   }, [shouldUseAnalytics, logRocketAppId]);
 
-  return <></>;
+  return null;
 };
 
 export default LogRocketProvider;

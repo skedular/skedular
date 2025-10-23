@@ -929,7 +929,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         );
       });
     },
-    [refetchResources],
+    [startTransition, refetchResources],
   );
 
   const handleLocationDetailUpdateClick = ({

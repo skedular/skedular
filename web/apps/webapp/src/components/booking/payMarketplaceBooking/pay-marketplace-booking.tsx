@@ -214,7 +214,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         },
       );
     });
-  }, [refetch]);
+  }, [startTransition, refetch]);
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -49,7 +49,7 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
         );
       });
     },
-    [refetch, organizationUniqueAlphanumericName],
+    [startTransition, refetch, organizationUniqueAlphanumericName],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {

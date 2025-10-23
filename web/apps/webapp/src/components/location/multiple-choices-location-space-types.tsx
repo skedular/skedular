@@ -35,7 +35,7 @@ const MultipleChoicesLocationSpaceTypes = ({ rootDataRelay, name, required }: Pr
 
   const locationSpaceTypes = useMemo<LocationSpaceTypeDetails[]>(
     () => (rootData.organization?.locationSpaceTypes ? rootData.organization.locationSpaceTypes.map((item) => item) : []),
-    [rootData.organization?.locationSpaceTypes],
+    [rootData.organization],
   );
   const filter = createFilterOptions<LocationSpaceTypeDetails>();
 

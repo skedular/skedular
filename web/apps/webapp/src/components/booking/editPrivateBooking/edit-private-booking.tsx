@@ -83,6 +83,13 @@ type ResourceDetails = {
   zones: ZoneDetails[];
 };
 
+type DateRangeValidationResult = {
+  valid: boolean;
+  from: Dayjs;
+  until: Dayjs;
+  errorMessage: string;
+};
+
 type BookingDetails = {
   date: Dayjs;
   allDay: boolean;
@@ -319,6 +326,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
+  const booking = rootData.booking;
   const [, startTransition] = useTransition();
   const [peopleNameSearchText, setPeopleNameSearchText] = useState<string>('');
   const validate = makeValidate(bookingSchema);
@@ -329,8 +337,6 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
-  const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
-  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [customerId, setCustomerId] = useState<string | undefined>(
     rootData.booking?.involvedCustomers && rootData.booking?.involvedCustomers.length > 0 ? rootData.booking?.involvedCustomers[0].id : undefined,
   );
@@ -343,43 +349,12 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();
   const filterResource = createFilterOptions<ResourceDetails>();
-
   const customers = useMemo<OrganizationMemberDetails[]>(
     () => (rootDataOrganizationMembers.organization?.members ? rootDataOrganizationMembers.organization.members.edges.map(({ node }) => node) : []),
-    [rootDataOrganizationMembers.organization?.members],
+    [rootDataOrganizationMembers.organization],
   );
   const teams = useMemo<TeamDetails[]>(() => (rootDataTeams.customerTeams ? rootDataTeams.customerTeams.edges.map(({ node }) => node) : []), [rootDataTeams.customerTeams]);
   const locations = useMemo<LocationDetails[]>(() => rootData.locations.edges.map(({ node }) => node), [rootData.locations]);
-
-  const resources = useMemo<ResourceDetails[]>(() => {
-    if (!timeRangeValid || !rootDataAvailableResources.availableResources) {
-      return [];
-    }
-
-    const availableResources = rootDataAvailableResources.availableResources
-      .map(({ resource }) => resource)
-      .map(({ id, name, customTags, zones }) => ({
-        id,
-        name,
-        customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
-        zones: zones.map(({ id, name, color }) => ({ id, name, color })),
-      }));
-
-    if (from && rootData.booking?.from) {
-      return availableResources.concat(
-        rootData.booking.bookingResources
-          .filter((item) => !availableResources.some((resource) => resource.id === item.resource.id))
-          .map(({ resource: { id, name, customTags, zones } }) => ({
-            id,
-            name,
-            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
-            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
-          })),
-      );
-    }
-
-    return availableResources;
-  }, [rootDataAvailableResources.availableResources, from, timeRangeValid, rootData.booking?.from, rootData.booking?.bookingResources]);
 
   const handleRefetchOrganizationMembers = useCallback(
     (peopleNameSearchText: string) => {
@@ -394,7 +369,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         );
       });
     },
-    [refetchOrganizationMembers],
+    [startTransition, refetchOrganizationMembers],
   );
 
   const handleRefetchTeams = useCallback(
@@ -411,7 +386,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         );
       });
     },
-    [refetchTeams],
+    [startTransition, refetchTeams],
   );
 
   const handleRefetchAvailableResources = useCallback(
@@ -429,50 +404,84 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         );
       });
     },
-    [refetchAvailableResources],
+    [startTransition, refetchAvailableResources],
   );
 
-  const getDateRange = useCallback((allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
-    const allDayFrom = dayjs(date).utc();
-    const allDayUntil = dayjs(date).utc().add(1, 'day');
-    const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
+  const getDateRange = useCallback(
+    (allDay: boolean, date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }): DateRangeValidationResult => {
+      const allDayFrom = dayjs(date).utc();
+      const allDayUntil = dayjs(date).utc().add(1, 'day');
+      const invalidResult = (errorMessage: string): DateRangeValidationResult => ({
+        valid: false,
+        from: allDayFrom,
+        until: allDayUntil,
+        errorMessage,
+      });
 
-    if (allDay) {
-      setDateTimeErrorMessage('');
+      if (allDay) {
+        return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
+      }
 
-      return { valid: true, from: allDayFrom, until: allDayUntil };
+      if (!timeFrom || !timeUntil) {
+        return invalidResult('Time required when not booking full day.');
+      }
+
+      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+        return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
+      }
+
+      const utcDate = dayjs(date).utc();
+      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
+      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
+
+      if (!from.isValid() || !until.isValid() || from.isAfter(until)) {
+        return invalidResult('Time values are incorrect.');
+      }
+
+      return {
+        valid: true,
+        from,
+        until,
+        errorMessage: '',
+      };
+    },
+    [],
+  );
+  const dateRangeValidation = useMemo(() => {
+    const [timeFrom, timeUntil] = timeRange;
+
+    return getDateRange(allDay, from, { timeFrom, timeUntil });
+  }, [allDay, from, timeRange, getDateRange]);
+  const { valid: timeRangeValid, errorMessage: dateTimeErrorMessage } = dateRangeValidation;
+  const resources = useMemo<ResourceDetails[]>(() => {
+    if (!timeRangeValid || !rootDataAvailableResources.availableResources) {
+      return [];
     }
 
-    if (!timeFrom || !timeUntil) {
-      setDateTimeErrorMessage('Time required when not booking full day.');
+    const availableResources = rootDataAvailableResources.availableResources
+      .map(({ resource }) => resource)
+      .map(({ id, name, customTags, zones }) => ({
+        id,
+        name,
+        customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+        zones: zones.map(({ id, name, color }) => ({ id, name, color })),
+      }));
 
-      return invalidResult;
+    if (from && booking?.from) {
+      return availableResources.concat(
+        booking.bookingResources
+          .filter((item) => !availableResources.some((resource) => resource.id === item.resource.id))
+          .map(({ resource: { id, name, customTags, zones } }) => ({
+            id,
+            name,
+            customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
+            zones: zones.map(({ id, name, color }) => ({ id, name, color })),
+          })),
+      );
     }
 
-    if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-      setDateTimeErrorMessage('');
-
-      return { valid: true, from: allDayFrom, until: allDayUntil };
-    }
-
-    const utcDate = dayjs(date).utc();
-    const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
-    const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
-
-    if (from.isAfter(until)) {
-      setDateTimeErrorMessage('Time values are incorrect.');
-
-      return invalidResult;
-    }
-
-    setDateTimeErrorMessage('');
-
-    return {
-      valid: true,
-      from,
-      until,
-    };
-  }, []);
+    return availableResources;
+  }, [rootDataAvailableResources.availableResources, timeRangeValid, from, booking]);
 
   useEffect(() => {
     if (!rootData.booking?.involvedCustomers || rootData.booking?.involvedCustomers.length === 0) {
@@ -483,22 +492,18 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   }, [handleRefetchTeams, rootData.booking?.involvedCustomers]);
 
   useEffect(() => {
-    const [timeFrom, timeUntil] = timeRange;
-    const range = getDateRange(allDay, from, { timeFrom, timeUntil });
-    if (range.valid) {
-      setTimeRangeValid(true);
-      handleRefetchAvailableResources(range, locationId);
-    } else {
-      setTimeRangeValid(false);
+    if (!dateRangeValidation.valid) {
+      return;
     }
-  }, [handleRefetchAvailableResources, from, allDay, timeRange, locationId, getDateRange]);
+
+    handleRefetchAvailableResources(dateRangeValidation, locationId);
+  }, [dateRangeValidation, handleRefetchAvailableResources, locationId]);
 
   const handleCloseClick = () => {
     router.back();
   };
 
   const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, type }: BookingDetails) => {
-    const booking = rootData.booking;
     if (!booking) {
       return;
     }
@@ -622,12 +627,11 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
     const [timeFrom, timeUntil] = timeRange;
     const range = getDateRange(allDay, from, { timeFrom, timeUntil });
-    if (range.valid) {
-      setTimeRangeValid(true);
-      handleRefetchAvailableResources(range, locationId);
-    } else {
-      setTimeRangeValid(false);
+    if (!range.valid) {
+      return;
     }
+
+    handleRefetchAvailableResources(range, locationId);
   };
 
   const handlePeopleNameSearchTextChange = (str: string) => {
@@ -638,11 +642,9 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
   const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
-  if (!rootData.booking) {
+  if (!booking) {
     return <></>;
   }
-
-  const booking = rootData.booking;
 
   return (
     <Box sx={{ display: 'flex' }}>

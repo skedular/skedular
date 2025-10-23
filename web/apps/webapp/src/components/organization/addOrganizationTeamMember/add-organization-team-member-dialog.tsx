@@ -126,7 +126,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
         );
       });
     },
-    [refetch],
+    [startTransition, refetch],
   );
 
   const handleSearchTextChange = (str: string) => {

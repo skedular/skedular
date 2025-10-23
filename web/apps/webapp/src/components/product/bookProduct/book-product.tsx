@@ -89,6 +89,13 @@ type BookingDetails = {
   invoiceEmailList: string[];
 };
 
+type DateRangeValidationResult = {
+  valid: boolean;
+  from: Dayjs;
+  until: Dayjs;
+  errorMessage: string;
+};
+
 const bookingSchema = (numberOfResourcesToBook: number) =>
   object({
     date: mixed<Dayjs>()
@@ -273,17 +280,110 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     }
   });
 
-  const [timeRangeValid, setTimeRangeValid] = useState<boolean>(true);
   const [quantity, setQuantity] = useState(1);
   const filterResource = createFilterOptions<ResourceDetails>();
   const [selectedLocationId, setSelectedLocationId] = useState<string>(allId);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
-  const [dateTimeErrorMessage, setDateTimeErrorMessage] = useState('');
   const [notes, setNotes] = useState<string>('');
   const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
+
+  const validate = makeValidate(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
+  const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
+
+  const handleRefetchAvailableResources = useCallback(
+    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
+      startTransition(() => {
+        refetchAvailableResources(
+          {
+            dateFromToGetAvailableResources: dayjs(from).utc().toISOString(),
+            dateUntilToGetAvailableResources: dayjs(until).utc().toISOString(),
+          },
+          {
+            fetchPolicy: 'store-and-network',
+          },
+        );
+      });
+    },
+    [startTransition, refetchAvailableResources],
+  );
+
+  const getDateRange = useCallback(
+    (date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }): DateRangeValidationResult => {
+      const product = rootData.product;
+      const allDayFrom = dayjs(date).utc();
+      const allDayUntil = dayjs(date).utc().add(1, 'day');
+      const invalidResult = (errorMessage: string): DateRangeValidationResult => ({
+        valid: false,
+        from: allDayFrom,
+        until: allDayUntil,
+        errorMessage,
+      });
+
+      if (!product) {
+        return invalidResult('');
+      }
+
+      if (!timeFrom || !timeUntil) {
+        return invalidResult('Time required.');
+      }
+
+      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
+        if (product.maxDurationMinutes && allDayUntil.diff(allDayFrom, 'minutes') > product.maxDurationMinutes) {
+          return invalidResult(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
+        }
+
+        return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
+      }
+
+      const utcDate = dayjs(date).utc();
+      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
+      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
+
+      if (!from.isValid() || !until.isValid() || from.isAfter(until)) {
+        return invalidResult('Time values are incorrect.');
+      }
+
+      const durationInMinutes = until.diff(from, 'minutes');
+      if (product.minDurationMinutes && durationInMinutes < product.minDurationMinutes) {
+        return invalidResult(`You can only book resources for a minimum duration of ${product.minDurationMinutes} minutes for this product.`);
+      }
+
+      if (product.maxDurationMinutes && durationInMinutes > product.maxDurationMinutes) {
+        return invalidResult(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
+      }
+
+      if (rootData.product?.priceUnit.type === 'PER_HOUR' && durationInMinutes % 60 !== 0) {
+        return invalidResult('You can only book resources for a duration that is a multiple of hours for this product.');
+      }
+
+      return {
+        valid: true,
+        from,
+        until,
+        errorMessage: '',
+      };
+    },
+    [rootData.product],
+  );
+
+  const dateRangeValidation = useMemo(() => {
+    const [timeFrom, timeUntil] = timeRange;
+
+    return getDateRange(date, { timeFrom, timeUntil });
+  }, [date, timeRange, getDateRange]);
+
+  const { valid: timeRangeValid, errorMessage: dateTimeErrorMessage } = dateRangeValidation;
+
+  useEffect(() => {
+    if (!dateRangeValidation.valid) {
+      return;
+    }
+
+    handleRefetchAvailableResources(dateRangeValidation);
+  }, [dateRangeValidation, handleRefetchAvailableResources]);
 
   const resources = useMemo<ResourceDetails[]>(
     () =>
@@ -331,105 +431,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   }, [resources, selectedLocationId, selectedCustomTagId, selectedZoneId]);
 
   const [resourceIds, setResourceIds] = useState<string[]>(filteredResources.slice(0, (rootData.product?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.id));
-  const validate = makeValidate(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
-  const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
-
-  const handleRefetchAvailableResources = useCallback(
-    ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
-      startTransition(() => {
-        refetchAvailableResources(
-          {
-            dateFromToGetAvailableResources: dayjs(from).utc().toISOString(),
-            dateUntilToGetAvailableResources: dayjs(until).utc().toISOString(),
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [refetchAvailableResources],
-  );
-
-  const getDateRange = useCallback(
-    (date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }) => {
-      const product = rootData.product;
-      const allDayFrom = dayjs(date).utc();
-      const allDayUntil = dayjs(date).utc().add(1, 'day');
-      const invalidResult = { valid: false, from: allDayFrom, until: allDayUntil };
-
-      if (!product) {
-        return invalidResult;
-      }
-
-      if (!timeFrom || !timeUntil) {
-        setDateTimeErrorMessage('Time required.');
-
-        return invalidResult;
-      }
-
-      if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-        if (product.maxDurationMinutes && allDayUntil.diff(allDayFrom, 'minutes') > product.maxDurationMinutes) {
-          setDateTimeErrorMessage(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
-
-          return invalidResult;
-        }
-
-        setDateTimeErrorMessage('');
-
-        return { valid: true, from: allDayFrom, until: allDayUntil };
-      }
-
-      const utcDate = dayjs(date).utc();
-      const from = utcDate.set('hour', timeFrom.get('hour')).set('minute', timeFrom.get('minute'));
-      const until = utcDate.set('hour', timeUntil.get('hour')).set('minute', timeUntil.get('minute'));
-
-      if (from.isAfter(until)) {
-        setDateTimeErrorMessage('Time values are incorrect.');
-
-        return invalidResult;
-      }
-
-      const durationInMinutes = until.diff(from, 'minutes');
-      if (product.minDurationMinutes && durationInMinutes < product.minDurationMinutes) {
-        setDateTimeErrorMessage(`You can only book resources for a minimum duration of ${product.minDurationMinutes} minutes for this product.`);
-
-        return invalidResult;
-      }
-
-      if (product.maxDurationMinutes && durationInMinutes > product.maxDurationMinutes) {
-        setDateTimeErrorMessage(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
-
-        return invalidResult;
-      }
-
-      setDateTimeErrorMessage('');
-
-      if (rootData.product?.priceUnit.type === 'PER_HOUR' && durationInMinutes % 60 !== 0) {
-        setDateTimeErrorMessage('You can only book resources for a duration that is a multiple of hours for this product.');
-
-        return invalidResult;
-      }
-
-      return {
-        valid: true,
-        from,
-        until,
-      };
-    },
-    [rootData.product],
-  );
-
-  useEffect(() => {
-    const [timeFrom, timeUntil] = timeRange;
-    const range = getDateRange(date, { timeFrom, timeUntil });
-    if (range.valid) {
-      setTimeRangeValid(true);
-      handleRefetchAvailableResources(range);
-    } else {
-      setTimeRangeValid(false);
-    }
-  }, [handleRefetchAvailableResources, date, timeRange, getDateRange]);
 
   const { totalAmountExcludeTax, totalAmount, taxAmount } = useMemo(() => {
     const product = rootData.product;

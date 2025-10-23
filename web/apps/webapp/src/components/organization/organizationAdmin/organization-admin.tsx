@@ -803,7 +803,7 @@ const OrganizationAdmin = ({
         );
       });
     },
-    [refetchZones],
+    [startTransition, refetchZones],
   );
 
   const [customTagNameSearchText, setCustomTagNameSearchText] = useState<string>('');
@@ -836,7 +836,7 @@ const OrganizationAdmin = ({
         );
       });
     },
-    [refetchCustomTags],
+    [startTransition, refetchCustomTags],
   );
 
   useEffect(() => {
@@ -866,7 +866,7 @@ const OrganizationAdmin = ({
         },
       );
     });
-  }, [refetchOrganization]);
+  }, [startTransition, refetchOrganization]);
 
   const handleOrganizationDetailUpdateClick = ({ uniqueAlphanumericName, name, about, website, type, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
     const organization = rootDataOrganization.organization;

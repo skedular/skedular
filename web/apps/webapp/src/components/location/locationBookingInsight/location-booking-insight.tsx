@@ -64,7 +64,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay 
         );
       });
     },
-    [refetch],
+    [startTransition, refetch],
   );
 
   const handleDateRangeChange = (from: Dayjs, until: Dayjs) => {

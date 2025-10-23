@@ -451,7 +451,7 @@ const OrganizationMarketplaceSetup = ({
         );
       });
     },
-    [refetchProducts],
+    [startTransition, refetchProducts],
   );
 
   const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
@@ -483,7 +483,7 @@ const OrganizationMarketplaceSetup = ({
         );
       });
     },
-    [refetchProductTags],
+    [startTransition, refetchProductTags],
   );
 
   const [locationTagNameSearchText, setLocationTagNameSearchText] = useState<string>('');
@@ -518,7 +518,7 @@ const OrganizationMarketplaceSetup = ({
         );
       });
     },
-    [refetchLocationTags],
+    [startTransition, refetchLocationTags],
   );
 
   const [organizationStripeConnectAccountNameSearchText, setOrganizationStripeConnectAccountNameSearchText] = useState<string>('');
@@ -558,7 +558,7 @@ const OrganizationMarketplaceSetup = ({
         );
       });
     },
-    [refetchOrganizationStripeConnectAccounts],
+    [startTransition, refetchOrganizationStripeConnectAccounts],
   );
 
   const [organizationBankAccountNameSearchText, setOrganizationBankAccountNameSearchText] = useState<string>('');
@@ -598,7 +598,7 @@ const OrganizationMarketplaceSetup = ({
         );
       });
     },
-    [refetchOrganizationBankAccounts],
+    [startTransition, refetchOrganizationBankAccounts],
   );
 
   useEffect(() => {

@@ -310,7 +310,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         );
       });
     },
-    [refetchOrganizationMembers],
+    [startTransition, refetchOrganizationMembers],
   );
 
   const handleRefetchTeams = useCallback(
@@ -327,7 +327,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         );
       });
     },
-    [refetchTeams],
+    [startTransition, refetchTeams],
   );
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import { optOutCookieName } from '@/libs/cookie-consent';
 import { sendGTMEvent } from '@next/third-parties/google';
 import { getCookie, hasCookie } from 'cookies-next';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
 type Props = {
   ignoreOptOutCookie: boolean;
@@ -11,27 +11,17 @@ type Props = {
 };
 
 const GoogleAnalyticsProvider = ({ ignoreOptOutCookie, forceOverride, googleTagManagerContainerId }: Props) => {
-  const [shouldUseAnalytics, setShouldUseAnalytics] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (forceOverride) {
-      setShouldUseAnalytics(true);
-
-      return;
-    }
-
-    if (ignoreOptOutCookie) {
-      setShouldUseAnalytics(true);
-
-      return;
+  const shouldUseAnalytics = useMemo(() => {
+    if (forceOverride || ignoreOptOutCookie) {
+      return true;
     }
 
     if (hasCookie(optOutCookieName)) {
-      setShouldUseAnalytics(getCookie(optOutCookieName) === 'no');
-    } else {
-      setShouldUseAnalytics(true);
+      return getCookie(optOutCookieName) === 'no';
     }
+
+    return true;
   }, [ignoreOptOutCookie, forceOverride]);
 
   useEffect(() => {
@@ -43,7 +33,7 @@ const GoogleAnalyticsProvider = ({ ignoreOptOutCookie, forceOverride, googleTagM
     }
   }, [shouldUseAnalytics, pathname, googleTagManagerContainerId]);
 
-  return <></>;
+  return null;
 };
 
 export default GoogleAnalyticsProvider;

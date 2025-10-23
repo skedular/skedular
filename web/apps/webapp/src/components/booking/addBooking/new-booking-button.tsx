@@ -73,9 +73,13 @@ const NewBookingButton = ({
   const [isDialogOpen, setIsDialogOpen] = useState(isInitiallyOpen);
 
   useEffect(() => {
-    if (isInitiallyOpen) {
-      setIsDialogOpen(true);
+    if (!isInitiallyOpen) {
+      return;
     }
+
+    queueMicrotask(() => {
+      setIsDialogOpen(true);
+    });
   }, [isInitiallyOpen]);
 
   const handleButtonClicked = () => {

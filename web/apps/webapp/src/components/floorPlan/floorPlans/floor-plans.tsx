@@ -155,7 +155,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
         );
       });
     },
-    [refetchFloorPlan],
+    [startTransition, refetchFloorPlan],
   );
 
   const handleRefetchBookings = useCallback(
@@ -172,7 +172,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
         );
       });
     },
-    [refetchBookings],
+    [startTransition, refetchBookings],
   );
 
   const handleFloorPlanChanged = (id?: string) => {

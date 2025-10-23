@@ -35,7 +35,7 @@ const SingleChoiceResourceType = ({ rootDataRelay, name, required }: Props) => {
 
   const resourceTypes = useMemo<ResourceTypeDetails[]>(
     () => (rootData.organization?.resourceTypes ? rootData.organization.resourceTypes.map((item) => item) : []),
-    [rootData.organization?.resourceTypes],
+    [rootData.organization],
   );
   const filter = createFilterOptions<ResourceTypeDetails>();
 

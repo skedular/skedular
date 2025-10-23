@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import { Elements } from '@stripe/react-stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { memo, useContext, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { graphql, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
@@ -45,16 +45,18 @@ const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null>>();
   const hasRunRef = useRef(false);
 
-  useEffect(() => {
-    // In development, React StrictMode intentionally double-invokes useEffect to help detect side effects.
-    // This guard prevents the mutation from running twice in dev mode, but has no effect in production.
-    if (process.env.NODE_ENV === 'development') {
-      if (hasRunRef.current) {
-        return;
-      }
+  const handleDialogClose = useCallback(() => {
+    hasRunRef.current = false;
+    setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
+    setClientSecret('');
+    setStripePromise(undefined);
+    onCancel();
+  }, [onCancel]);
 
-      hasRunRef.current = true;
-    }
+  const fetchPaymentMethodIntent = useCallback(() => {
+    setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
+    setClientSecret('');
+    setStripePromise(undefined);
 
     commitAddOrganizationPaymentMethodIntent({
       variables: {
@@ -66,7 +68,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
           themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
-          onCancel();
+          handleDialogClose();
 
           return;
         }
@@ -77,21 +79,40 @@ const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName
       },
       onError: (error) => {
         themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${error.message}.`} />, errorNotificationOptions);
-        onCancel();
+        handleDialogClose();
       },
     });
+  }, [commitAddOrganizationPaymentMethodIntent, handleDialogClose, organizationUniqueAlphanumericName, themedToast]);
 
-    setAddNewPaymentMethodState(AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET);
-  }, [commitAddOrganizationPaymentMethodIntent, onCancel, organizationUniqueAlphanumericName, themedToast]);
+  useEffect(() => {
+    if (!isDialogOpen) {
+      hasRunRef.current = false;
+      return;
+    }
+
+    // In development, React StrictMode intentionally double-invokes useEffect to help detect side effects.
+    // This guard prevents the mutation from running twice in dev mode, but has no effect in production.
+    if (process.env.NODE_ENV === 'development') {
+      if (hasRunRef.current) {
+        return;
+      }
+
+      hasRunRef.current = true;
+    }
+
+    queueMicrotask(() => {
+      fetchPaymentMethodIntent();
+    });
+  }, [fetchPaymentMethodIntent, isDialogOpen]);
 
   return (
-    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={onCancel} fullWidth>
+    <Dialog slots={{ transition: DialogTransition }} open={isDialogOpen} onClose={handleDialogClose} fullWidth>
       <DefaultDialogTitle title="Add Payment Method" />
       <DialogContent sx={{ marginTop: 2 }}>
         {addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_CLIENT_SECRET && <CircularProgress />}
         {addNewPaymentMethodState === AddOrganizationPaymentMethodState.WAITING_FOR_PAYMENT_METHOD_DETAILS && stripePromise && (
           <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <OrganizationPaymentMethodSetupForm onCancel={onCancel} />
+            <OrganizationPaymentMethodSetupForm onCancel={handleDialogClose} />
           </Elements>
         )}
       </DialogContent>
