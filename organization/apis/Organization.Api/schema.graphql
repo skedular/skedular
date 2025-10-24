@@ -463,6 +463,7 @@ type Query {
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
   emailsToShowLatestCapabilities: [String!]!
+  emailsToIgnoreObservability: [String!]!
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
   organizationStripeConnectAccountById(id: String!): OrganizationStripeConnectAccountDetails @lookup @internal @cost(weight: "10")
   organizationStripeConnectAccounts(after: String first: Int before: String last: Int where: OrganizationStripeConnectAccountWhereInput! orderBy: [OrganizationStripeConnectAccountOrderInput!]): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")

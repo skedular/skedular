@@ -21,4 +21,7 @@ public class RootQuery(IVersionService versionService)
 
     [UseResolverScope]
     public IEnumerable<string> EmailsToShowLatestCapabilities() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];
+
+    [UseResolverScope]
+    public IEnumerable<string> EmailsToIgnoreObservability() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];
 }

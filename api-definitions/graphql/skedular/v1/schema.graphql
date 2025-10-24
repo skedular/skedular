@@ -1017,6 +1017,7 @@ type Query {
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   deskResourceType: OrganizationTagType!
+  emailsToIgnoreObservability: [String!]!
   emailsToShowLatestCapabilities: [String!]!
   floorPlan(id: String!): FloorPlanDetails @cost(weight: "10")
   floorPlans(after: String before: String first: Int last: Int orderBy: [FloorPlanOrderInput!] where: FloorPlanWhereInput!): ConnectionOfFloorPlanEdge! @cost(weight: "10")
