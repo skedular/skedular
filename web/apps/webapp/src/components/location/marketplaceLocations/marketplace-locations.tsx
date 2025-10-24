@@ -5,7 +5,7 @@ import type { marketplaceLocations_locations_refetchableFragment } from '@/queri
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { LatLngBounds, LatLngTuple } from 'leaflet';
+import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
@@ -62,8 +62,34 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locations = useMemo(() => rootDataRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataRefetchable.marketplaceLocations]);
   const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
-  const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
+  const [searchBoundaries, setSearchBoundaries] = useState<{
+    southWest: LatLngTuple;
+    northEast: LatLngTuple;
+  } | null>(null);
   const [centerSet, setCenterSet] = useState(false);
+  const [activePopupId, setActivePopupId] = useState<string | null>(null);
+
+  const updateSearchBoundariesFromBounds = useCallback((bounds: LatLngBounds) => {
+    const nextSouthWest = bounds.getSouthWest();
+    const nextNorthEast = bounds.getNorthEast();
+
+    setSearchBoundaries((currentBounds) => {
+      if (
+        currentBounds &&
+        currentBounds.southWest[0] === nextSouthWest.lat &&
+        currentBounds.southWest[1] === nextSouthWest.lng &&
+        currentBounds.northEast[0] === nextNorthEast.lat &&
+        currentBounds.northEast[1] === nextNorthEast.lng
+      ) {
+        return currentBounds;
+      }
+
+      return {
+        southWest: [nextSouthWest.lat, nextSouthWest.lng],
+        northEast: [nextNorthEast.lat, nextNorthEast.lng],
+      };
+    });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -108,19 +134,24 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   }, []);
 
   const handleRefetch = useCallback(
-    (searchBoundaries: LatLngBounds | null) => {
+    (
+      searchBoundaries: {
+        southWest: LatLngTuple;
+        northEast: LatLngTuple;
+      } | null,
+    ) => {
       startTransition(() => {
         refetch(
           {
             searchBoundaries: searchBoundaries
               ? {
                   southWest: {
-                    longitude: searchBoundaries.getSouthWest().lng,
-                    latitude: searchBoundaries.getSouthWest().lat,
+                    longitude: searchBoundaries.southWest[1],
+                    latitude: searchBoundaries.southWest[0],
                   },
                   northEast: {
-                    longitude: searchBoundaries.getNorthEast().lng,
-                    latitude: searchBoundaries.getNorthEast().lat,
+                    longitude: searchBoundaries.northEast[1],
+                    latitude: searchBoundaries.northEast[0],
                   },
                 }
               : null,
@@ -142,28 +173,17 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     return <></>;
   }
 
-  const MapInitBoundsTracker = () => {
+  const MapInitBoundsTracker = ({ popupOpen }: { popupOpen: boolean }) => {
     const map = useMap();
 
     useEffect(() => {
+      if (popupOpen) {
+        return;
+      }
+
       const newBounds = map.getBounds();
-      if (!searchBoundaries) {
-        setSearchBoundaries(map.getBounds());
-
-        return;
-      }
-
-      const oldSW = searchBoundaries.getSouthWest();
-      const oldNE = searchBoundaries.getNorthEast();
-      const newSW = newBounds.getSouthWest();
-      const newNE = newBounds.getNorthEast();
-
-      if (oldSW.lat !== newSW.lat || oldSW.lng !== newSW.lng || oldNE.lat !== newNE.lat || oldNE.lng !== newNE.lng) {
-        setSearchBoundaries(map.getBounds());
-
-        return;
-      }
-    }, [map]);
+      updateSearchBoundariesFromBounds(newBounds);
+    }, [map, popupOpen]);
 
     return null;
   };
@@ -180,28 +200,23 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     return null;
   };
 
-  const MapCenterTracker = () => {
+  const MapCenterTracker = ({ popupOpen }: { popupOpen: boolean }) => {
     const map = useMapEvents({
       moveend: () => {
+        if (popupOpen) {
+          return;
+        }
+
         const newBounds = map.getBounds();
-        if (!searchBoundaries) {
-          setSearchBoundaries(map.getBounds());
-
-          return;
-        }
-
-        const oldSouthWest = searchBoundaries.getSouthWest();
-        const oldNorthEast = searchBoundaries.getNorthEast();
-        const newSouthWest = newBounds.getSouthWest();
-        const newNorthEast = newBounds.getNorthEast();
-
-        if (oldSouthWest.lat !== newSouthWest.lat || oldSouthWest.lng !== newSouthWest.lng || oldNorthEast.lat !== newNorthEast.lat || oldNorthEast.lng !== newNorthEast.lng) {
-          setSearchBoundaries(map.getBounds());
-
-          return;
-        }
+        updateSearchBoundariesFromBounds(newBounds);
       },
     });
+
+    useEffect(() => {
+      if (!popupOpen) {
+        updateSearchBoundariesFromBounds(map.getBounds());
+      }
+    }, [map, popupOpen]);
 
     return null;
   };
@@ -214,16 +229,26 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
           {locations
             .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
             .map((item) => (
-              <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                <Popup>
+              <Marker
+                key={item.id}
+                position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}
+                eventHandlers={{
+                  click: () => setActivePopupId(item.id),
+                  popupopen: () => setActivePopupId(item.id),
+                  popupclose: () => {
+                    setActivePopupId((current) => (current === item.id ? null : current));
+                  },
+                }}
+              >
+                <Popup autoPan={!isMobile} autoPanPadding={[24, 24]}>
                   <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                 </Popup>
               </Marker>
             ))}
         </MarkerClusterGroup>
 
-        <MapInitBoundsTracker />
-        <MapCenterTracker />
+        <MapInitBoundsTracker popupOpen={!!activePopupId} />
+        <MapCenterTracker popupOpen={!!activePopupId} />
         {!centerSet && <MapUpdater center={initialPosition} />}
       </MapContainer>
     </Box>
