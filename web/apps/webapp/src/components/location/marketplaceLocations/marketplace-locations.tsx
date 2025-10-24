@@ -5,6 +5,7 @@ import type { marketplaceLocations_locations_refetchableFragment } from '@/queri
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import type { Theme } from '@mui/material/styles';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
@@ -23,6 +24,23 @@ let TileLayer: typeof import('react-leaflet').TileLayer;
 let Popup: typeof import('react-leaflet').Popup;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let MarkerClusterGroup: any;
+
+const getToolbarHeight = (theme: Theme) => {
+  const minHeight = theme.mixins?.toolbar?.minHeight;
+
+  if (typeof minHeight === 'number') {
+    return minHeight;
+  }
+
+  if (typeof minHeight === 'string') {
+    const parsed = Number.parseInt(minHeight, 10);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+
+  return 56;
+};
 
 type Props = {
   rootDataRelay: marketplaceLocations_locations_query$key;
@@ -59,11 +77,34 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const toolbarHeight = getToolbarHeight(theme);
+  const mapHeight = isMobile ? `calc(100dvh - ${toolbarHeight}px)` : '90vh';
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locations = useMemo(() => rootDataRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataRefetchable.marketplaceLocations]);
   const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
   const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
   const [centerSet, setCenterSet] = useState(false);
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+
+  const selectedLocation = useMemo(() => {
+    if (!selectedLocationId) {
+      return null;
+    }
+
+    return locations.find((location) => location.id === selectedLocationId) ?? null;
+  }, [locations, selectedLocationId]);
+
+  useEffect(() => {
+    if (selectedLocationId && !selectedLocation) {
+      setSelectedLocationId(null);
+    }
+  }, [selectedLocationId, selectedLocation]);
+
+  useEffect(() => {
+    if (!isMobile && selectedLocationId) {
+      setSelectedLocationId(null);
+    }
+  }, [isMobile, selectedLocationId]);
 
   useEffect(() => {
     (async () => {
@@ -207,17 +248,31 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   };
 
   const MapSection = (
-    <Box sx={{ height: isMobile ? '40vh' : '90vh', width: '100%', position: 'relative' }}>
+    <Box sx={{ height: mapHeight, width: '100%', position: 'relative' }}>
       <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MarkerClusterGroup chunkedLoading>
           {locations
             .filter((item) => !!item.physicalAddress && !!item.physicalAddress.latitude && !!item.physicalAddress.longitude)
             .map((item) => (
-              <Marker key={item.id} position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}>
-                <Popup>
-                  <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-                </Popup>
+              <Marker
+                key={item.id}
+                position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}
+                eventHandlers={
+                  isMobile
+                    ? {
+                        click: () => {
+                          setSelectedLocationId(item.id);
+                        },
+                      }
+                    : undefined
+                }
+              >
+                {!isMobile && (
+                  <Popup>
+                    <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                  </Popup>
+                )}
               </Marker>
             ))}
         </MarkerClusterGroup>
@@ -226,20 +281,39 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
         <MapCenterTracker />
         {!centerSet && <MapUpdater center={initialPosition} />}
       </MapContainer>
+      {isMobile && selectedLocation && (
+        <Box
+          sx={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: `calc(${theme.spacing(3)} + env(safe-area-inset-bottom, 0px))`,
+            display: 'flex',
+            justifyContent: 'center',
+            zIndex: 1000,
+            pointerEvents: 'none',
+            pb: theme.spacing(2),
+          }}
+        >
+          <Box
+            sx={{
+              pointerEvents: 'auto',
+              width: '100%',
+              maxWidth: theme.breakpoints.values.sm,
+              px: theme.spacing(2),
+            }}
+          >
+            <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 
   return (
-    <StackColumn sx={{ p: defaultPadding }}>
+    <StackColumn sx={{ p: isMobile ? 0 : defaultPadding }}>
       {isMobile ? (
-        <>
-          {MapSection}
-          {locations.map((item) => (
-            <Box key={item.id} mb={2}>
-              <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
-            </Box>
-          ))}
-        </>
+        MapSection
       ) : (
         <GridContainer>
           <Grid size={{ xs: 12, md: 8 }}>

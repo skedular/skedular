@@ -1,22 +1,25 @@
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
-import { AreaIcon, PersonIcon } from '@/components/icons';
+import { AreaIcon, CloseIcon, PersonIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { coal, sandstone } from '@/libs/theme';
 import type { marketplaceLocationPopupCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationPopupCard_LocationDetails.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
 import NextLink from 'next/link';
-import { memo, useMemo } from 'react';
+import { memo, useContext, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   locationDetailsRelay: marketplaceLocationPopupCard_LocationDetails$key;
   onReloadRequired: () => void;
+  onClose?: () => void;
 };
 
-const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
+const MarketplaceLocationPopupCard = ({ locationDetailsRelay, onClose }: Props) => {
   const locationDetails = useFragment(
     graphql`
       fragment marketplaceLocationPopupCard_LocationDetails on LocationDetails {
@@ -48,6 +51,7 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
   );
 
   const { integratedPlatrform } = useIntegratedPlatrform();
+  const paletteMode = useContext(PaletteModeContext);
   const capacity = useMemo(() => {
     if (!locationDetails.extraMetadata?.peopleCapacity) {
       return '';
@@ -74,7 +78,7 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
 
   return (
     <Card
-      sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none', display: 'block' }}
+      sx={{ width: { xs: '80%', sm: 300 }, textDecoration: 'none', display: 'block' }}
       component={NextLink}
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
@@ -87,6 +91,25 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay }: Props) => {
             {capacity && <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} invertDefaultColor />}
             {areaSize && <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} invertDefaultColor />}
           </StackRow>
+        }
+        action={
+          onClose ? (
+            <IconButton
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onClose?.();
+              }}
+              sx={(theme) => ({
+                color: paletteMode === 'dark' ? coal : sandstone,
+                borderRadius: '50%',
+                border: `1px solid ${theme.palette.divider}`,
+                padding: theme.spacing(0.1),
+              })}
+            >
+              <CloseIcon fontSize="medium" />
+            </IconButton>
+          ) : null
         }
       />
       <CardContent>
