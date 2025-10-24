@@ -18,11 +18,11 @@ type BookingDetails {
   paidByOrganization: OrganizationDetails
   involvedLocations: [LocationDetails!]!
   involvedTeams: [TeamDetails!]!
+  paymentStatus: PaymentStatusDetails! @cost(weight: "10")
   from: DateTime!
   until: DateTime!
   notes: String
   type: BookingTypeDetails!
-  paymentStatus: PaymentStatusDetails!
   bookingResources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
   paymentMethod: PaymentMethodTypeDetails

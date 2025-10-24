@@ -13,6 +13,7 @@ namespace Booking.Api.Services;
 
 public interface IBookingPaymentService
 {
+    Task<PaymentStatus> GetPaymentStatusAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> RejectPaymentAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> MakePaymentNotRequiredAsync(string id, CancellationToken cancellationToken);
@@ -29,6 +30,35 @@ public class BookingPaymentService(
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingPaymentService
 {
+    public async Task<PaymentStatus> GetPaymentStatusAsync(string id, CancellationToken cancellationToken)
+    {
+        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
+        if (!existingBooking.BookedOnMarketplace)
+        {
+            throw new BookingIsNotMarketplaceType();
+        }
+
+        var productVersionIds = existingBooking.ProductVersions.Select(item => item.Id).ToList();
+        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).ToList();
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            organizationIds,
+            null,
+            false,
+            false,
+            cancellationToken);
+        foreach (var organization in organizations)
+        {
+            if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        return existingBooking.PaymentStatus.ToPaymentStatus();
+    }
+
     public async Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
         await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, false, cancellationToken);
 

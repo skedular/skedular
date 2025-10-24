@@ -5,6 +5,7 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
@@ -19,7 +20,8 @@ public class BookingIntegrations(
     IDbTransactionBuilder transactionBuilder,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     IMapper mapper,
-    IBookingOutboxPublisher bookingOutboxPublisher)
+    IBookingOutboxPublisher bookingOutboxPublisher,
+    ICachedBookingService cachedBookingService)
 {
     [Activity]
     public async Task CalculateBookingDifferentAmountsAsync(CalculateBookingDifferentAmountsInput args)
@@ -103,6 +105,8 @@ public class BookingIntegrations(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
     }
 
     [Activity]
@@ -125,5 +129,7 @@ public class BookingIntegrations(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
     }
 }

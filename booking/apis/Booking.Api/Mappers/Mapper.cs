@@ -156,7 +156,6 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
-            PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
             IsPaymentRequired = src.IsPaymentRequired,
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),

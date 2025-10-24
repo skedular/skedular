@@ -50,7 +50,7 @@ type BookingDetails {
   paidByOrganization: OrganizationDetails
   paymentExpiry: DateTime!
   paymentMethod: PaymentMethodTypeDetails
-  paymentStatus: PaymentStatusDetails!
+  paymentStatus: PaymentStatusDetails! @cost(weight: "10")
   taxAmount: Decimal
   taxAmountToDisplay: String!
   taxRatePercentage: Decimal

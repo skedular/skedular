@@ -1,4 +1,6 @@
+using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
+using Booking.Api.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
@@ -14,7 +16,6 @@ public class BookingDetails : Node
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("type")] public BookingTypeDetails Type { get; set; } = new();
-    [GraphQLName("paymentStatus")] public PaymentStatusDetails PaymentStatus { get; set; } = new();
     [GraphQLName("bookingResources")] public IEnumerable<BookingResourceDetails> BookingResources { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemDetails> LineItems { get; set; } = [];
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
@@ -66,6 +67,17 @@ public class BookingDetails : Node
     [GraphQLName("bookedOnMarketplace")] public bool BookedOnMarketplace { get; set; }
 
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
+
+    [UseResolverScope]
+    public async Task<PaymentStatusDetails> PaymentStatusAsync(
+        [Parent] BookingDetails booking,
+        [Service] IBookingPaymentService bookingPaymentService,
+        CancellationToken cancellationToken)
+    {
+        var paymentStatus = await bookingPaymentService.GetPaymentStatusAsync(booking.Id, cancellationToken);
+
+        return new PaymentStatusDetails { Type = paymentStatus, Name = paymentStatus.ToPaymentStatusName() };
+    }
 }
 
 [ObjectType<BookingDetails>]
