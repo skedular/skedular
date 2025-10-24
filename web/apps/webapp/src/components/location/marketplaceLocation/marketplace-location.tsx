@@ -7,7 +7,7 @@ import type { marketplaceLocation_query$key } from '@/queries/__generated__/mark
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
-import type { LatLngTuple } from 'leaflet';
+import { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Image from 'next/image';
 import NextLink from 'next/link';
