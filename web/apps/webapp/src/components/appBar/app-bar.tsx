@@ -43,7 +43,6 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const rootData = useFragment<appBar_query$key>(
     graphql`
       fragment appBar_query on Query {
-        emailsToShowLatestCapabilities
         me {
           id
           emails

@@ -43,7 +43,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
   const rootData = useFragment<noOrganizationAppBar_query$key>(
     graphql`
       fragment noOrganizationAppBar_query on Query {
-        emailsToShowLatestCapabilities
         me {
           id
           email

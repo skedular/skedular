@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f8526beddc3145b59f7f44dd4cca77b>>
+ * @generated SignedSource<<108b6c1b7885fe5843293792946ee886>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type appBar_query$data = {
-  readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly me: {
     readonly email: string | null | undefined;
     readonly emails: ReadonlyArray<string>;
@@ -53,13 +52,6 @@ return {
   "metadata": null,
   "name": "appBar_query",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "emailsToShowLatestCapabilities",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -191,6 +183,6 @@ return {
 };
 })();
 
-(node as any).hash = "1790e123f4c8cb9c0a88b2b9b5fe4b42";
+(node as any).hash = "04d4431c016d112537a4ac94149ea743";
 
 export default node;
