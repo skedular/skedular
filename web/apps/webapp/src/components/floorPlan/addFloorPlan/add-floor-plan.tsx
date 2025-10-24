@@ -350,7 +350,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
                             {[...resourcePositions.entries()].map(([id, position]) => {
                               const resource = resources.find((item) => item.id === id);
                               if (!resource) {
-                                return <></>;
+                                return null;
                               }
 
                               return (

@@ -97,7 +97,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
   const debounceSearchTextChange = useDebounceCallback(handleSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootData.organization?.members) {
-    return <></>;
+    return null;
   }
 
   return (

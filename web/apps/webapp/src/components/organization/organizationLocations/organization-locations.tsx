@@ -584,7 +584,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
       editable: false,
       renderCell: (params) => {
         if (rootData.organization?.uniqueAlphanumericName === 'skedularpubliclocations') {
-          return <></>;
+          return null;
         }
 
         return (
@@ -674,7 +674,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   };
 
   if (!rootDataRefetchable.locations || !rootDataRefetchable.availableResources || !rootData.organization) {
-    return <></>;
+    return null;
   }
 
   return (

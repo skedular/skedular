@@ -180,7 +180,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   }, [searchBoundaries, handleRefetch]);
 
   if (!dynamicLoadReady) {
-    return <></>;
+    return null;
   }
 
   const MapInitBoundsTracker = () => {

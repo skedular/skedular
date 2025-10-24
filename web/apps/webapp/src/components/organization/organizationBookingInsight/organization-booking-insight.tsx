@@ -57,7 +57,7 @@ const OrganizationBookingInsight = ({ rootDataOrganizationAnalyticsRelay, organi
   };
 
   if (!rootDataOrganizationAnalytics.organization) {
-    return <></>;
+    return null;
   }
 
   const dataset =

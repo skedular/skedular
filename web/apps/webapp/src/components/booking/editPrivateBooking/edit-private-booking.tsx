@@ -643,7 +643,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
   const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!booking) {
-    return <></>;
+    return null;
   }
 
   return (

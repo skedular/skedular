@@ -2085,7 +2085,7 @@ const OrganizationAdmin = ({
   };
 
   if (!rootDataOrganization.organization) {
-    return <></>;
+    return null;
   }
 
   const zoneRows: ZoneRowType[] = zones.map((zone) => ({
@@ -2103,7 +2103,7 @@ const OrganizationAdmin = ({
       renderCell: (params) => {
         const zone = zones.find((zone) => zone.id === (params.id as string));
         if (!zone) {
-          return <></>;
+          return null;
         }
 
         return <Zone zone={zone} showFullName />;
@@ -2178,7 +2178,7 @@ const OrganizationAdmin = ({
       renderCell: (params) => {
         const customTag = customTags.find((customTag) => customTag.id === (params.id as string));
         if (!customTag) {
-          return <></>;
+          return null;
         }
 
         return <CustomTag customTag={customTag} showFullName />;

@@ -317,7 +317,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
 
   const floorPlan = rootData.floorPlan;
   if (!floorPlan) {
-    return <></>;
+    return null;
   }
 
   return (
@@ -400,7 +400,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                               {[...resourcePositions.entries()].map(([id, position]) => {
                                 const resource = resources.find((item) => item.id === id);
                                 if (!resource) {
-                                  return <></>;
+                                  return null;
                                 }
 
                                 return (

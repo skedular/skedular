@@ -431,7 +431,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
   ];
 
   if (!rootDataRefetchable.bookings) {
-    return <></>;
+    return null;
   }
 
   return (

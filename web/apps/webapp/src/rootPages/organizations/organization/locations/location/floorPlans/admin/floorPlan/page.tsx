@@ -38,7 +38,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   };
 
   if (!rootData.floorPlan) {
-    return <></>;
+    return null;
   }
 
   const breadcrumbs = (

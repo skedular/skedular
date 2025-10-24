@@ -1725,7 +1725,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   };
 
   if (!rootData.location) {
-    return <></>;
+    return null;
   }
 
   const resourceRows: ResourceRowType[] = resources.map((resource) => ({

@@ -235,7 +235,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
                 {[...resourcePositions.entries()].map(([id, position]) => {
                   const resource = resources.find((item) => item.id === id);
                   if (!resource) {
-                    return <></>;
+                    return null;
                   }
                   const booking = bookings.find((item) => item.bookingResources.some((bookingResource) => bookingResource.resource.id === resource.id));
 

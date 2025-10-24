@@ -314,7 +314,7 @@ const Teams = ({ queryReference, organizationUniqueAlphanumericName }: Props) =>
   ];
 
   if (!rootDataRefetchable.teams) {
-    return <></>;
+    return null;
   }
 
   return (

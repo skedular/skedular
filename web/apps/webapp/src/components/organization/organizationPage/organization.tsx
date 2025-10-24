@@ -81,7 +81,7 @@ const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlph
   };
 
   if (!organizationUniqueAlphanumericName) {
-    return <></>;
+    return null;
   }
 
   return (

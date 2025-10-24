@@ -460,7 +460,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
   };
 
   if (!rootData.booking) {
-    return <></>;
+    return null;
   }
 
   const booking = rootData.booking;

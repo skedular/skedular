@@ -34,7 +34,7 @@ const NewLocationButton = ({ rootDataRelay, organizationUniqueAlphanumericName, 
   const { integratedPlatrform } = useIntegratedPlatrform();
 
   if (!rootData.organization) {
-    return <></>;
+    return null;
   }
 
   return (

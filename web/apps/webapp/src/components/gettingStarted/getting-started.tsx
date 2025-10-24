@@ -109,7 +109,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
   };
 
   if (!rootData.organization || rootData.organization.isMyOnboardingDone) {
-    return <></>;
+    return null;
   }
 
   return (

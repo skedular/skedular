@@ -451,7 +451,7 @@ const OrganizationUser = ({ rootDataRelay, organizationUniqueAlphanumericName, c
 
   const customer = rootData.customer;
   if (!customer) {
-    return <></>;
+    return null;
   }
 
   const isItMe = customer.id === rootData.me?.id;

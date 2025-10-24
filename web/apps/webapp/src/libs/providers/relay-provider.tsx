@@ -13,7 +13,7 @@ const RelayProvider = ({ children, token }: PropsWithChildren<Props>) => {
   const environment = useMemo(() => (inMsTeams && !token ? null : getEnvironment('/api/v1/graphql', token)), [token, inMsTeams]);
 
   if (!environment) {
-    return <></>;
+    return null;
   }
 
   return (

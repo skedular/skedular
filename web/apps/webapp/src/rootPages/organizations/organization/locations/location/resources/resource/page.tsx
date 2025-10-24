@@ -45,7 +45,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
   };
 
   if (!rootData.resource) {
-    return <></>;
+    return null;
   }
 
   const breadcrumbs = (

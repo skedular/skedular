@@ -27,7 +27,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
   const finalColor = invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : color;
 
   if (!startElement && !label && !endElement) {
-    return <></>;
+    return null;
   }
 
   if (!startElement && !endElement) {

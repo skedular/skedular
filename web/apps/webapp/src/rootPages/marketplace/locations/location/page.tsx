@@ -27,7 +27,7 @@ const RootPage = ({ queryReference }: Props) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <></>;
+    return null;
   }
 
   if (user) {

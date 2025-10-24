@@ -138,7 +138,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   };
 
   if (!rootData?.organization) {
-    return <></>;
+    return null;
   }
 
   const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);

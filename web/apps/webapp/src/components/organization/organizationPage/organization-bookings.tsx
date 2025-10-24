@@ -100,11 +100,11 @@ const OrganizationBookings = ({ queryReference, onReloadRequired, organizationUn
   };
 
   if (!rootData.myTeams || !rootData.myLocations) {
-    return <></>;
+    return null;
   }
 
   if (!organizationUniqueAlphanumericName) {
-    return <></>;
+    return null;
   }
 
   return (

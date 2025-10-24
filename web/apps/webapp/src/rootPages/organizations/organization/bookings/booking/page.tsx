@@ -78,7 +78,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
   };
 
   if (!rootData.booking) {
-    return <></>;
+    return null;
   }
 
   const date = dayjs(rootData.booking.from);

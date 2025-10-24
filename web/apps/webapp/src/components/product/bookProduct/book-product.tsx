@@ -629,7 +629,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   };
 
   if (!rootData.product) {
-    return <></>;
+    return null;
   }
 
   const product = rootData.product;

@@ -147,7 +147,7 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
 
   const account = rootData.organizationBankAccount;
   if (!account) {
-    return <></>;
+    return null;
   }
 
   return (

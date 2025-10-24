@@ -145,7 +145,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
 
   const account = rootData.organizationStripeConnectAccount;
   if (!account) {
-    return <></>;
+    return null;
   }
 
   return (

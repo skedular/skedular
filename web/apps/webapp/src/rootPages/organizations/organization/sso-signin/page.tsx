@@ -37,7 +37,7 @@ const RootPage = ({ queryReference }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
 
   if (!rootData.organization) {
-    return <></>;
+    return null;
   }
 
   return (

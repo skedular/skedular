@@ -8,7 +8,7 @@ type Props = {
 
 const ErrorTypography = ({ errorMessage, fontWeight }: Props) => {
   if (!errorMessage) {
-    return <></>;
+    return null;
   }
 
   return (

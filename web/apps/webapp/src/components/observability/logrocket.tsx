@@ -34,7 +34,7 @@ const LogRocketComponent = ({ rootDataRelay }: Props) => {
     });
   }, [rootData]);
 
-  return <></>;
+  return null;
 };
 
 export default memo(LogRocketComponent);

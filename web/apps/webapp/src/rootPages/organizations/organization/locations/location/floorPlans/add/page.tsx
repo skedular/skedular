@@ -47,7 +47,7 @@ const RootPage = ({ queryReference, locationId }: Props) => {
   const handleReloadRequired = () => {};
 
   if (!rootData.location) {
-    return <></>;
+    return null;
   }
 
   const breadcrumbs = (

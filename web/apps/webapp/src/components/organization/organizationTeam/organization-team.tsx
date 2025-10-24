@@ -777,7 +777,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   if (!rootData.team) {
-    return <></>;
+    return null;
   }
 
   const rows: RowType[] = members.map((member) => ({

@@ -18,7 +18,7 @@ const maxItemToDisplay = 2;
 
 const LocationTags = ({ sx, locationTags, hideIcon, hideNAText }: Props) => {
   if (locationTags.length === 0) {
-    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <LocationTagIcon />} sx={sx} />;
+    return hideNAText ? null : <SmallIconTypography label="N/A" startElement={!hideIcon && <LocationTagIcon />} sx={sx} />;
   }
 
   const visibleItems = locationTags.slice(0, maxItemToDisplay);

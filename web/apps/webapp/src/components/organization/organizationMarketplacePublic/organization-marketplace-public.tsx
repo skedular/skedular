@@ -43,7 +43,7 @@ const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organ
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
 
   if (!rootData.products) {
-    return <></>;
+    return null;
   }
 
   return (

@@ -27,7 +27,7 @@ const ExistingStripeConnectAccountButton = ({ rootDataRelay, fullWidth, label, h
   );
 
   if (!rootData.organization) {
-    return <></>;
+    return null;
   }
 
   return (

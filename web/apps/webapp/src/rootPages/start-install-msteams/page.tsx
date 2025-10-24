@@ -29,7 +29,7 @@ const RootPage = ({ queryReference }: Props) => {
     }
   }, [rootData.azureTenantAdminConsentUrl]);
 
-  return <></>;
+  return null;
 };
 
 const MemoRootPage = memo(RootPage);

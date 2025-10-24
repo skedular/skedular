@@ -72,7 +72,7 @@ const LocationBookingInsight = ({ rootDataRelay, rootDataLocationAnalyticsRelay 
   };
 
   if (!rootDataLocationAnalytics.location || !rootData.location) {
-    return <></>;
+    return null;
   }
 
   const dataset =

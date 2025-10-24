@@ -15,7 +15,7 @@ export const SimpleCalendarSlotProps: StaticDatePickerSlotProps = {
 };
 
 const EmptyCalendarToolbar = () => {
-  return <></>;
+  return null;
 };
 
 export default EmptyCalendarToolbar;

@@ -23,7 +23,7 @@ const Observability = ({ rootDataRelay }: Props) => {
   );
 
   if (rootData.me.emails.some((item) => !!rootData.emailsToIgnoreObservability.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase()))) {
-    return <></>;
+    return null;
   }
 
   return <>{process.env.NEXT_PUBLIC_LOGROCKET_APP_ID && <LogRocket rootDataRelay={rootData} />}</>;

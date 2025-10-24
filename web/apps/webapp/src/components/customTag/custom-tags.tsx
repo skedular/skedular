@@ -18,7 +18,7 @@ const maxItemToDisplay = 2;
 
 const CustomTags = ({ sx, customTags, hideIcon, hideNAText }: Props) => {
   if (customTags.length === 0) {
-    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <CustomTagIcon />} sx={sx} />;
+    return hideNAText ? null : <SmallIconTypography label="N/A" startElement={!hideIcon && <CustomTagIcon />} sx={sx} />;
   }
 
   const visibleItems = customTags.slice(0, maxItemToDisplay);

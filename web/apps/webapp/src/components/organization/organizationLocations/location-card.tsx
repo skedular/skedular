@@ -550,7 +550,7 @@ const LocationCard = ({
   };
 
   if (!dynamicLoadReady) {
-    return <></>;
+    return null;
   }
 
   const resourcesCount = locationDetails.resources.totalCount;

@@ -130,7 +130,7 @@ const EditOrganizationProductTagDialog = ({ queryReference, productTagId, isDial
   };
 
   if (!rootData.productTag) {
-    return <></>;
+    return null;
   }
 
   return (

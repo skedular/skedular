@@ -577,7 +577,7 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
   };
 
   if (!rootData.location || !rootData.resource) {
-    return <></>;
+    return null;
   }
 
   const location = rootData.location;

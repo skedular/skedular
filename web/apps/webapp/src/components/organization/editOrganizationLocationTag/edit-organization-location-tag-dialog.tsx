@@ -130,7 +130,7 @@ const EditOrganizationLocationTagDialog = ({ queryReference, locationTagId, isDi
   };
 
   if (!rootData.locationTag) {
-    return <></>;
+    return null;
   }
 
   return (

@@ -14,7 +14,7 @@ type Props = {
 
 const ContactPeople = ({ sx, contactPeople, hideIcon, hideNAText }: Props) => {
   if (contactPeople.length === 0) {
-    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <ContactPeopleIcon />} sx={sx} />;
+    return hideNAText ? null : <SmallIconTypography label="N/A" startElement={!hideIcon && <ContactPeopleIcon />} sx={sx} />;
   }
 
   return (

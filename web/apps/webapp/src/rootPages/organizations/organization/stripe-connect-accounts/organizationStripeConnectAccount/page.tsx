@@ -37,7 +37,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   };
 
   if (!rootData.organizationStripeConnectAccount) {
-    return <></>;
+    return null;
   }
 
   const breadcrumbs = (

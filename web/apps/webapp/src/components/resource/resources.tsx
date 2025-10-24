@@ -18,7 +18,7 @@ const maxItemToDisplay = 2;
 
 const Resources = ({ sx, resources, hideIcon, hideNAText }: Props) => {
   if (Resources.length === 0) {
-    return hideNAText ? <></> : <SmallIconTypography label="N/A" startElement={!hideIcon && <ResourceIcon />} sx={sx} />;
+    return hideNAText ? null : <SmallIconTypography label="N/A" startElement={!hideIcon && <ResourceIcon />} sx={sx} />;
   }
 
   const visibleItems = resources.slice(0, maxItemToDisplay);

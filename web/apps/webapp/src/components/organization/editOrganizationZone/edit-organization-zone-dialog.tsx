@@ -130,7 +130,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
   };
 
   if (!rootData.zone) {
-    return <></>;
+    return null;
   }
 
   return (

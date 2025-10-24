@@ -73,7 +73,7 @@ const LocationDeskOccupancyInsight = ({ rootDataRelay, rootDataLocationAnalytics
   };
 
   if (!rootDataLocationAnalytics.location || !rootData.location) {
-    return <></>;
+    return null;
   }
 
   const dataset =

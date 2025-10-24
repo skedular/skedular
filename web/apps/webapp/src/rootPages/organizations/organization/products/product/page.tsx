@@ -43,7 +43,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
   };
 
   if (!rootData.product) {
-    return <></>;
+    return null;
   }
 
   const breadcrumbs = (

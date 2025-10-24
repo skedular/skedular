@@ -130,7 +130,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
   };
 
   if (!rootData.customTag) {
-    return <></>;
+    return null;
   }
 
   return (

@@ -6,7 +6,7 @@ const UnauthenticatedLogRocket = () => {
     LogRocket.identify('unauthenticated', {});
   }, []);
 
-  return <></>;
+  return null;
 };
 
 export default memo(UnauthenticatedLogRocket);

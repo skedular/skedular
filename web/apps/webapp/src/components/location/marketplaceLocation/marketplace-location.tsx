@@ -165,11 +165,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   }, []);
 
   if (!dynamicLoadReady) {
-    return <></>;
+    return null;
   }
 
   if (!locationDetails) {
-    return <></>;
+    return null;
   }
 
   const image = locationDetails.primaryFeatureImage?.original;

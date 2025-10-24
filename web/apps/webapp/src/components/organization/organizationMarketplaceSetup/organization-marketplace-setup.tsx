@@ -1624,7 +1624,7 @@ const OrganizationMarketplaceSetup = ({
       renderCell: (params) => {
         const productTag = productTags.find((productTag) => productTag.id === (params.id as string));
         if (!productTag) {
-          return <></>;
+          return null;
         }
 
         return <ProductTag productTag={productTag} showFullName />;
@@ -1676,7 +1676,7 @@ const OrganizationMarketplaceSetup = ({
       renderCell: (params) => {
         const locationTag = locationTags.find((locationTag) => locationTag.id === (params.id as string));
         if (!locationTag) {
-          return <></>;
+          return null;
         }
 
         return <LocationTag locationTag={locationTag} showFullName />;

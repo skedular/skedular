@@ -455,7 +455,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const debounceSearchTextChange = useDebounceCallback(handlePeopleNameSearchTextChange, keyboardSearchDebounceTimeout);
 
   if (!rootDataBooking.booking) {
-    return <></>;
+    return null;
   }
 
   const booking = rootDataBooking.booking;

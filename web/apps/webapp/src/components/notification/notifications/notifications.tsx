@@ -384,7 +384,7 @@ const Notifications = ({ queryReference }: Props) => {
         const id = params.id as string;
         const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === id);
         if (!invitation) {
-          return <></>;
+          return null;
         }
 
         return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join organization "${invitation.organization.name}"`} />;
@@ -400,7 +400,7 @@ const Notifications = ({ queryReference }: Props) => {
         const id = params.id as string;
         const invitation = myInvitationsToJoinOrganizations.find((item) => item.id === (params.id as string));
         if (!invitation) {
-          return <></>;
+          return null;
         }
 
         if (invitation.status.type === 'PENDING') {
@@ -437,7 +437,7 @@ const Notifications = ({ queryReference }: Props) => {
         const id = params.id as string;
         const invitation = myInvitationsToJoinTeams.find((item) => item.id === id);
         if (!invitation) {
-          return <></>;
+          return null;
         }
 
         return <SmallIconTypography label={`"${getCustomerFullName(invitation.createdBy)}" has invited you to join team "${invitation.team.name}"`} />;
@@ -453,7 +453,7 @@ const Notifications = ({ queryReference }: Props) => {
         const id = params.id as string;
         const invitation = myInvitationsToJoinTeams.find((item) => item.id === (params.id as string));
         if (!invitation) {
-          return <></>;
+          return null;
         }
 
         if (invitation.status.type === 'PENDING') {

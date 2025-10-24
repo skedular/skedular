@@ -609,7 +609,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   };
 
   if (!rootData.product) {
-    return <></>;
+    return null;
   }
 
   return (
