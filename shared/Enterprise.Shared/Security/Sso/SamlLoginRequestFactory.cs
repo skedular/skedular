@@ -26,12 +26,10 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger, Ti
 
         var compressedSamlRequest = DeflateCompress(Encoding.UTF8.GetBytes(authnRequestXml));
         var samlRequestBase64 = Convert.ToBase64String(compressedSamlRequest);
-        var encodedSamlRequest = Uri.EscapeDataString(samlRequestBase64);
-        var encodedRelayState = Uri.EscapeDataString(redirectUrl);
 
         return loginUrl
-            .SetQueryParam("SAMLRequest", encodedSamlRequest)
-            .SetQueryParam("RelayState", encodedRelayState);
+            .SetQueryParam("SAMLRequest", samlRequestBase64)
+            .SetQueryParam("RelayState", redirectUrl);
     }
 
     private static string BuildAuthnRequestXml(string id, string entityId, string issueInstant)
@@ -61,9 +59,10 @@ public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger, Ti
     private static byte[] DeflateCompress(byte[] data)
     {
         using var output = new MemoryStream();
-        using (var deflateStream = new DeflateStream(output, CompressionMode.Compress))
+        using (var deflateStream = new DeflateStream(output, CompressionMode.Compress, true))
         {
             deflateStream.Write(data, 0, data.Length);
+            deflateStream.Flush();
         }
 
         return output.ToArray();
