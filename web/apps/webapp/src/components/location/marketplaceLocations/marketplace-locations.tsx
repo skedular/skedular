@@ -5,7 +5,7 @@ import type { marketplaceLocations_locations_refetchableFragment } from '@/queri
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { LatLngBounds, LatLngTuple } from 'leaflet';
+import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
