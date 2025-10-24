@@ -98,7 +98,6 @@ public class WorkOSTokenService : IWorkOSTokenService
                     _context.SetPhotoUrl72(userProfile.PhotoUrl);
                     _context.SetPhotoUrl192(userProfile.PhotoUrl);
                     _context.SetPhotoUrl512(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl24(userProfile.PhotoUrl);
                 }
 
                 if (!string.IsNullOrWhiteSpace(userProfile.FirstName) && !string.IsNullOrWhiteSpace(userProfile.LastName))
