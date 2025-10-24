@@ -54,7 +54,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
 
     public string VerifyAndDecodeSamlResponse(string samlResponse)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(nameof(samlResponse));
+        ArgumentException.ThrowIfNullOrWhiteSpace(samlResponse);
 
         if (samlResponse.Contains('%'))
         {

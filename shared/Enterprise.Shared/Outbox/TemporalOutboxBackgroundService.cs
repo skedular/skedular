@@ -18,6 +18,7 @@ public class TemporalOutboxBackgroundService<TDbContext>(
     IDbContextFactory<TDbContext> contextFactory,
     IActivityAccessor activityAccessor,
     ILogger<TemporalOutboxBackgroundService<TDbContext>> logger,
+    TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator,
     IServiceProvider serviceProvider)
     : BackgroundService where TDbContext : DbContext, ITemporalOutboxStore
@@ -58,7 +59,7 @@ public class TemporalOutboxBackgroundService<TDbContext>(
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
             await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
             var retryTime = TimeSpan.FromSeconds(_retryTime.TotalSeconds);
-            var thresholdTime = DateTimeOffset.UtcNow - retryTime;
+            var thresholdTime = timeProvider.GetUtcNow() - retryTime;
             var outboxEvent = await s_getOutboxItemQueryAsync(dbContext, thresholdTime, cancellationToken);
             if (outboxEvent is null)
             {

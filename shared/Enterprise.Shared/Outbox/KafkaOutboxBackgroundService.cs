@@ -22,6 +22,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
     IActivityAccessor activityAccessor,
     KafkaConfiguration kafkaConfiguration,
     ILogger<KafkaOutboxBackgroundService<TDbContext>> logger,
+    TimeProvider timeProvider,
     IActivityPropagator<IDictionary<string, string>> dictionaryActivityPropagator)
     : BackgroundService where TDbContext : DbContext, IKafkaOutboxStore
 {
@@ -62,7 +63,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
             await using var dbContext = await contextFactory.CreateDbContextAsync(cancellationToken);
             await using var transaction = await dbContext.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
             var retryTime = TimeSpan.FromSeconds(_retryTime.TotalSeconds);
-            var thresholdTime = DateTimeOffset.UtcNow - retryTime;
+            var thresholdTime = timeProvider.GetUtcNow() - retryTime;
             var outboxEvent = await s_getOutboxItemQueryAsync(dbContext, thresholdTime, cancellationToken);
             if (outboxEvent is null)
             {
