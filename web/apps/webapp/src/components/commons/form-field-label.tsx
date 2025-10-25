@@ -15,9 +15,25 @@ type Props = {
 };
 
 const FormFieldLabel = ({ children, sx, label, useWiderSpace, fontWeight, required }: PropsWithChildren<Props>) => (
-  <Grid container sx={{ alignItems: 'center', ...sx }}>
-    <Grid size={{ xs: useWiderSpace ? 3 : 1 }}>{label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}</Grid>
-    <Grid size={{ xs: useWiderSpace ? 9 : 11 }}>{children}</Grid>
+  <Grid
+    container
+    columnSpacing={2}
+    rowSpacing={1}
+    sx={{
+      alignItems: { xs: 'flex-start', md: 'center' },
+      ...sx,
+    }}
+  >
+    <Grid
+      size={{ xs: 12, md: useWiderSpace ? 3 : 1 }}
+      sx={{
+        display: 'flex',
+        alignItems: { xs: 'flex-start', md: 'center' },
+      }}
+    >
+      {label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}
+    </Grid>
+    <Grid size={{ xs: 12, md: useWiderSpace ? 9 : 11 }}>{children}</Grid>
   </Grid>
 );
 

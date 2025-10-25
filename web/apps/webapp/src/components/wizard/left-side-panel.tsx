@@ -14,7 +14,7 @@ const LeftSidePanel = ({ children, title, description }: PropsWithChildren<Props
   const paletteMode = useContext(PaletteModeContext);
 
   return (
-    <Grid sx={{ height: '100%', width: '40%' }}>
+    <Grid sx={{ height: '100%', width: '40%', display: { xs: 'none', md: 'block' } }}>
       <Box
         sx={{
           padding: 2,
