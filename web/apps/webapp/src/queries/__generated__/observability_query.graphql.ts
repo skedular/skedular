@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afd542dd1a80585d0e4c8cdef1c00771>>
+ * @generated SignedSource<<57c478dabf3197c62f6bb3ff9b18f15d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,6 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type observability_query$data = {
-  readonly emailsToIgnoreObservability: ReadonlyArray<string>;
-  readonly me: {
-    readonly emails: ReadonlyArray<string>;
-  };
   readonly " $fragmentSpreads": FragmentRefs<"logrocket_query">;
   readonly " $fragmentType": "observability_query";
 };
@@ -30,31 +26,6 @@ const node: ReaderFragment = {
   "name": "observability_query",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "emailsToIgnoreObservability",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "CustomerDetails",
-      "kind": "LinkedField",
-      "name": "me",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "emails",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "logrocket_query"
@@ -64,6 +35,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "627ad27e798618ff5943166be7f56667";
+(node as any).hash = "614fe45254de776571441b157891b87c";
 
 export default node;

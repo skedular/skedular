@@ -12,19 +12,11 @@ const Observability = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<observability_query$key>(
     graphql`
       fragment observability_query on Query {
-        emailsToIgnoreObservability
-        me {
-          emails
-        }
         ...logrocket_query
       }
     `,
     rootDataRelay,
   );
-
-  if (rootData.me.emails.some((item) => !!rootData.emailsToIgnoreObservability.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase()))) {
-    return null;
-  }
 
   return <>{process.env.NEXT_PUBLIC_LOGROCKET_APP_ID && <LogRocket rootDataRelay={rootData} />}</>;
 };
