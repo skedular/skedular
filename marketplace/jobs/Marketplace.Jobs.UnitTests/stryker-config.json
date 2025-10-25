@@ -1,6 +1,12 @@
 ﻿{
   "stryker-config": {
-    "reporters": ["html", "cleartext", "cleartexttree", "dots", "json"],
+    "reporters": [
+      "html",
+      "cleartext",
+      "cleartexttree",
+      "dots",
+      "json"
+    ],
     "additional-timeout": 10000,
     "project": "Marketplace.Jobs.csproj",
     "thresholds": {
@@ -9,8 +15,12 @@
       "break": 100
     },
     "mutation-level": "Complete",
-    "ignore-methods": ["*.Log*"],
-    "ignore-mutations": ["string"],
+    "ignore-methods": [
+      "*.Log*"
+    ],
+    "ignore-mutations": [
+      "string"
+    ],
     "mutate": [
       "!Startup.cs",
       "!Program.cs",
