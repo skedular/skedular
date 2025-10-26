@@ -1,5 +1,6 @@
-import { GridContainer, SectionIconTypography, StackColumn } from '@/components/commons';
+import { GridContainer, PushToRight, SectionIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
+import NewProductButton from '@/components/product/addProduct/new-product-button';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
@@ -35,6 +36,7 @@ const RootQuery = graphql`
         }
       }
     }
+    ...productCard_query
   }
 `;
 
@@ -49,6 +51,10 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
   return (
     <>
       <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+        <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+          <PushToRight />
+          <NewProductButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+        </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
           <SectionIconTypography label="Products" />
           <Divider />
@@ -57,7 +63,12 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
           <GridContainer>
             {products.map((product) => (
               <Grid key={product.id}>
-                <ProductCard rootDataRelay={product} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+                <ProductCard
+                  rootDataRelay={rootData}
+                  productDetailsRelay={product}
+                  onReloadRequired={onReloadRequired}
+                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                />
               </Grid>
             ))}
           </GridContainer>
