@@ -130,7 +130,7 @@ export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (int
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=stripe-connect-accounts-setup`;
 export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=bank-accounts-setup`;
-export const getOrganizationMarketplaceBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/marketplace`;
+export const getOrganizationProductsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products`;
 export const getOrganizationProductBaseLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products/add`;

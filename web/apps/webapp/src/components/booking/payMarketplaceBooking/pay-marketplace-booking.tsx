@@ -5,7 +5,7 @@ import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography, StackRo
 import FormFieldLabel from '@/components/commons/form-field-label';
 import StackColumn from '@/components/commons/stack-column';
 import { PdfIcon } from '@/components/icons';
-import { getOrganizationMarketplaceBaseLink } from '@/components/links';
+import { getOrganizationProductsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -237,7 +237,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
   }, [rootData.booking]);
 
   const handleCloseClick = () => {
-    router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationProductsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
   };
 
   const handleCancelBookingClick = () => {
@@ -277,7 +277,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
           render: <NotificationContent content={`Booking ${bookingDetailsInfo} cancelled.`} />,
         });
 
-        router.push(getOrganizationMarketplaceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+        router.push(getOrganizationProductsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
       },
       onError: (error) => {
         toast.update(toastId, {

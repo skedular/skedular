@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f0b3395e1ee6e3339a94fd295dc9cc3>>
+ * @generated SignedSource<<c6ebe310c31481b50e816188a1c0723f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,11 @@ export type ProductOrderInput = {
   direction: OrderDirection;
   field: ProductOrderField;
 };
-export type organizationMarketplacePublic_rootQuery$variables = {
+export type organizationProducts_rootQuery$variables = {
   organizationUniqueAlphanumericName: string;
   productsSortingValues?: ReadonlyArray<ProductOrderInput> | null | undefined;
 };
-export type organizationMarketplacePublic_rootQuery$data = {
+export type organizationProducts_rootQuery$data = {
   readonly products: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -36,9 +36,9 @@ export type organizationMarketplacePublic_rootQuery$data = {
     readonly totalCount: number;
   };
 };
-export type organizationMarketplacePublic_rootQuery = {
-  response: organizationMarketplacePublic_rootQuery$data;
-  variables: organizationMarketplacePublic_rootQuery$variables;
+export type organizationProducts_rootQuery = {
+  response: organizationProducts_rootQuery$data;
+  variables: organizationProducts_rootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -133,7 +133,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplacePublic_rootQuery",
+    "name": "organizationProducts_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -186,7 +186,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplacePublic_rootQuery",
+    "name": "organizationProducts_rootQuery",
     "selections": [
       {
         "alias": null,
@@ -340,16 +340,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0472afce0b64991dd4afe94a5ff8dde9",
+    "cacheID": "58cfca36d1501d0bca84a8762ced1386",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplacePublic_rootQuery",
+    "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMarketplacePublic_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8722b80b8f412638385da13ec06ae6da";
+(node as any).hash = "aae5920ccc4685eef3bab5ed8c76c799";
 
 export default node;

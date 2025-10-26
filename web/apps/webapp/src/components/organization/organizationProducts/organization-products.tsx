@@ -3,7 +3,7 @@ import { Loading } from '@/components/loading';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
-import type { organizationMarketplacePublic_rootQuery } from '@/queries/__generated__/organizationMarketplacePublic_rootQuery.graphql';
+import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
@@ -14,13 +14,13 @@ import { v7 as uuid } from 'uuid';
 import ProductCard from './product-card';
 
 type Props = {
-  queryReference: PreloadedQuery<organizationMarketplacePublic_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<organizationProducts_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
   organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
-  query organizationMarketplacePublic_rootQuery($organizationUniqueAlphanumericName: String!, $productsSortingValues: [ProductOrderInput!]) {
+  query organizationProducts_rootQuery($organizationUniqueAlphanumericName: String!, $productsSortingValues: [ProductOrderInput!]) {
     products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false }, orderBy: $productsSortingValues) {
       __id
       totalCount
@@ -38,8 +38,8 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
-  const rootData = usePreloadedQuery<organizationMarketplacePublic_rootQuery>(RootQuery, queryReference);
+const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+  const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
 
   if (!rootData.products) {
@@ -67,14 +67,14 @@ const OrganizationMarketplacePublic = ({ queryReference, onReloadRequired, organ
   );
 };
 
-const MemoOrganizationMarketplacePublic = memo(OrganizationMarketplacePublic);
+const MemoOrganizationProducts = memo(OrganizationProducts);
 
 type RelayProps = {
   organizationUniqueAlphanumericName: string;
 };
 
-const OrganizationMarketplacePublicWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
-  const [queryReference, loadQuery] = useQueryLoader<organizationMarketplacePublic_rootQuery>(RootQuery);
+const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
+  const [queryReference, loadQuery] = useQueryLoader<organizationProducts_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 
@@ -107,13 +107,9 @@ const OrganizationMarketplacePublicWithRelay = ({ organizationUniqueAlphanumeric
 
   return (
     <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
-      <MemoOrganizationMarketplacePublic
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-      />
+      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };
 
-export default memo(OrganizationMarketplacePublicWithRelay);
+export default memo(OrganizationProductsWithRelay);

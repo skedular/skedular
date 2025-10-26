@@ -1,4 +1,4 @@
-import { OrganizationMarketplacePublic } from '@/components/organization/organizationMarketplacePublic';
+import { OrganizationProducts } from '@/components/organization/organizationProducts';
 import { RootShell } from '@/components/rootShell';
 import { useParams } from 'next/navigation';
 import { memo } from 'react';
@@ -21,7 +21,7 @@ const RootPage = () => {
 
   return (
     <RootShell>
-      <OrganizationMarketplacePublic organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
+      <OrganizationProducts organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </RootShell>
   );
 };

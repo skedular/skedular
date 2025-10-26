@@ -3,7 +3,6 @@ using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using Flurl;
-using Microsoft.Extensions.Logging;
 
 namespace Enterprise.Shared.Security.Sso;
 
@@ -12,7 +11,7 @@ public interface ISamlLoginRequestFactory
     string GenerateSamlLoginRequest(string id, string redirectUrl, string entityId, string loginUrl);
 }
 
-public class SamlLoginRequestFactory(ILogger<SamlLoginRequestFactory> logger, TimeProvider timeProvider) : ISamlLoginRequestFactory
+public class SamlLoginRequestFactory(TimeProvider timeProvider) : ISamlLoginRequestFactory
 {
     public string GenerateSamlLoginRequest(string id, string redirectUrl, string entityId, string loginUrl)
     {
