@@ -46,13 +46,6 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         return (await GetByIdAsync(id, true, cancellationToken))!;
     }
 
-    public Location Remove(Location location)
-    {
-        var now = TimeProvider.GetUtcNow();
-        location.DeletedAt = now;
-        return DbContext.Location.Update(location).Entity;
-    }
-
     public async Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location
             .AddDependentObjects(includeDeletedResources, true)
@@ -63,6 +56,13 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
             .Where(query => !query.DeletedAt.HasValue && (query.Organization == null || !query.Organization.DeletedAt.HasValue))
             .AddDependentObjects(includeDeletedResources, true)
             .ToListAsync(cancellationToken);
+
+    public Location Remove(Location location)
+    {
+        var now = TimeProvider.GetUtcNow();
+        location.DeletedAt = now;
+        return DbContext.Location.Update(location).Entity;
+    }
 
     public Location Update(Location location)
     {

@@ -2,15 +2,19 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Marketplace.Shared.Database.Entities;
+using NetTopologySuite.Geometries;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = Marketplace.Shared.Models.Customer;
 using Identity = Marketplace.Shared.Database.Entities.Identity;
+using Location = Marketplace.Shared.Models.Location;
+using LocationPhysicalAddress = Marketplace.Shared.Models.LocationPhysicalAddress;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Marketplace.Shared.Models.Organization;
 using OrganizationMember = Marketplace.Shared.Database.Entities.OrganizationMember;
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using OrganizationTag = Marketplace.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Location.V1.Value.PhysicalAddress;
 
 namespace Marketplace.Processors.Mappers;
 
@@ -48,6 +52,22 @@ public interface IMapper
         Shared.Models.OrganizationSsoSetting src,
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
+
+    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
+
+    Shared.Database.Entities.LocationPhysicalAddress MapToEntity(LocationPhysicalAddress src, Shared.Database.Entities.Location location);
+
+    Shared.Database.Entities.LocationPhysicalAddress MergeToEntity(
+        LocationPhysicalAddress src,
+        Shared.Database.Entities.LocationPhysicalAddress dest,
+        Shared.Database.Entities.Location location);
+
+    Shared.Database.Entities.Location MergeToEntity(
+        Location src,
+        Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        Shared.Database.Entities.LocationPhysicalAddress? physicalAddress);
 }
 
 public class Mapper : IMapper
@@ -239,4 +259,64 @@ public class Mapper : IMapper
 
         return dest;
     }
+
+    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
+    {
+        var locationAfterState = src.Data.Location;
+        var deletedAt = locationAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        var location = new Location
+        {
+            Id = locationAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Organization = new Organization { Id = locationAfterState.OrganizationId },
+            PhysicalAddress = MapTo(locationAfterState.PhysicalAddress)
+        };
+
+        location.OrganizationTags = locationAfterState.TagIds
+            .Select(item => new OrganizationTag { Id = item, Organization = location.Organization })
+            .ToList();
+
+        return location;
+    }
+
+    public Shared.Database.Entities.LocationPhysicalAddress MapToEntity(LocationPhysicalAddress src, Shared.Database.Entities.Location location) =>
+        MergeToEntity(src, new Shared.Database.Entities.LocationPhysicalAddress(), location);
+
+    public Shared.Database.Entities.LocationPhysicalAddress MergeToEntity(
+        LocationPhysicalAddress src,
+        Shared.Database.Entities.LocationPhysicalAddress dest,
+        Shared.Database.Entities.Location location)
+    {
+        dest.Id = src.Id;
+        dest.Coordinates = src.Coordinates;
+        dest.Location = location;
+        return dest;
+    }
+
+    public Shared.Database.Entities.Location MergeToEntity(
+        Location src,
+        Shared.Database.Entities.Location dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<Shared.Database.Entities.OrganizationTag> organizationTags,
+        Shared.Database.Entities.LocationPhysicalAddress? physicalAddress)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Organization = organization;
+        dest.OrganizationTags = organizationTags;
+        dest.PhysicalAddress = physicalAddress;
+        return dest;
+    }
+
+    private static LocationPhysicalAddress? MapTo(PhysicalAddress? src) =>
+        src is null
+            ? null
+            : new LocationPhysicalAddress
+            {
+                Id = src.Id,
+                Coordinates = src.Coordinates is null ? null : new Point(new Coordinate(src.Coordinates.Longitude, src.Coordinates.Latitude))
+            };
 }

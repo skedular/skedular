@@ -1,4 +1,3 @@
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Location.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -50,12 +49,5 @@ public class LocationPhysicalAddressRepository(LocationDbContext dbContext, Time
         var now = TimeProvider.GetUtcNow();
         address.DeletedAt = now;
         return DbContext.LocationPhysicalAddress.Update(address).Entity;
-    }
-
-    public void RemoveRange(ICollection<LocationPhysicalAddress> organizationBankAccounts)
-    {
-        var now = TimeProvider.GetUtcNow();
-        organizationBankAccounts.ForEach(organizationBankAccount => organizationBankAccount.DeletedAt = now);
-        DbContext.LocationPhysicalAddress.UpdateRange(organizationBankAccounts);
     }
 }

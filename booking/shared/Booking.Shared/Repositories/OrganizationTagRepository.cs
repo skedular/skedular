@@ -25,6 +25,11 @@ public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider 
         return (await GetByIdAsync(id, cancellationToken))!;
     }
 
+    public async Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.OrganizationTag
+            .Include(query => query.Organization)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
     public OrganizationTag Add(OrganizationTag organizationTag)
     {
         var now = TimeProvider.GetUtcNow();
@@ -45,9 +50,4 @@ public class OrganizationTagRepository(BookingDbContext dbContext, TimeProvider 
         organizationTag.ModifiedAt = now;
         return DbContext.OrganizationTag.Update(organizationTag).Entity;
     }
-
-    public async Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.OrganizationTag
-            .Include(query => query.Organization)
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

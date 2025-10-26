@@ -225,7 +225,8 @@ public class Mapper : IMapper
         };
 
         location.OrganizationTags = locationAfterState.TagIds
-            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization }).ToList();
+            .Select(item => new Shared.Models.OrganizationTag { Id = item, Organization = location.Organization })
+            .ToList();
 
         var resourceOrganizationTags = locationAfterState.Resources
             .SelectMany(item => item.TagIds)
