@@ -874,6 +874,11 @@ type OrganizationTagPayload {
   organizationTag: OrganizationTagDetails!
 }
 
+type OrganizationTagTypeDetails {
+  name: String!
+  tagType: OrganizationTagType!
+}
+
 type OrganizationTagsPayload {
   clientMutationId: String
   organizationTags: [OrganizationTagDetails!]!
@@ -1027,6 +1032,7 @@ type Query {
   locationCustomerRecordSynced: Boolean! @cost(weight: "10")
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput): [LocationAnalytics!]! @cost(weight: "10")
+  locationSpaceTypes: [OrganizationTagTypeDetails!]!
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
@@ -1071,6 +1077,7 @@ type Query {
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
+  resourceTypes: [OrganizationTagTypeDetails!]!
   roomResourceType: OrganizationTagType!
   slackCustomerRecordSynced: Boolean! @cost(weight: "10")
   slackVersion: Version!

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<354ac94ff042228e71d501a28e6f0316>>
+ * @generated SignedSource<<ab684a35f80d1ed19e51f8548cbc3140>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,6 +57,10 @@ return {
     },
     {
       "kind": "RootArgument",
+      "name": "resourceTypeToFilterWith"
+    },
+    {
+      "kind": "RootArgument",
       "name": "searchBoundaries"
     }
   ],
@@ -95,6 +99,11 @@ return {
         },
         {
           "fields": [
+            {
+              "kind": "Variable",
+              "name": "resourceType",
+              "variableName": "resourceTypeToFilterWith"
+            },
             {
               "kind": "Variable",
               "name": "searchBoundaries",
@@ -248,6 +257,6 @@ return {
 };
 })();
 
-(node as any).hash = "9f283c63f82a77ac28786b47bb4537a6";
+(node as any).hash = "e1dfeac9ad6670042aef7ef9825f5116";
 
 export default node;

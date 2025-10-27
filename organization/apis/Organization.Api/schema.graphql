@@ -412,6 +412,11 @@ type OrganizationTagPayload {
   organizationTag: OrganizationTagDetails!
 }
 
+type OrganizationTagTypeDetails {
+  tagType: OrganizationTagType!
+  name: String!
+}
+
 type OrganizationTagsPayload {
   clientMutationId: String
   organizationTags: [OrganizationTagDetails!]!
@@ -462,6 +467,8 @@ type Query {
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
   openingHoursMinutesStep: Int!
+  resourceTypes: [OrganizationTagTypeDetails!]!
+  locationSpaceTypes: [OrganizationTagTypeDetails!]!
   emailsToShowLatestCapabilities: [String!]!
   emailsToIgnoreObservability: [String!]!
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")

@@ -180,4 +180,30 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.LocationSpaceTypeOthers => OrganizationTagTypeConstants.LocationSpaceTypeOthers,
                 _ => throw new ArgumentOutOfRangeException()
             };
+
+    public static string ToOrganizationTagTypeName(this OrganizationTagType src) =>
+        src switch
+        {
+            OrganizationTagType.Custom => "Custom",
+            OrganizationTagType.Zone => "Zone",
+            OrganizationTagType.Product => "Product",
+            OrganizationTagType.Location => "Location",
+
+            OrganizationTagType.ResourceDesk => "Desk",
+            OrganizationTagType.ResourceRoom => "Room",
+            OrganizationTagType.ResourceParking => "Parking",
+            OrganizationTagType.ResourceOthers => "Others",
+
+            OrganizationTagType.LocationSpaceTypeCarParkSpace => "Car Park Space",
+            OrganizationTagType.LocationSpaceTypeEventSpace => "Event Space",
+            OrganizationTagType.LocationSpaceTypeMeetingSpace => "Meeting Space",
+            OrganizationTagType.LocationSpaceTypeOfficeSpace => "Office Space",
+            OrganizationTagType.LocationSpaceTypeRetailSpace => "Retail Space",
+            OrganizationTagType.LocationSpaceTypeStorageSpace => "Storage Space",
+            OrganizationTagType.LocationSpaceTypeStudioSpace => "Studio Space",
+            OrganizationTagType.LocationSpaceTypeCommercialKitchen => "Commercial Kitchen",
+            OrganizationTagType.LocationSpaceTypeShootLocation => "Shoot Location",
+            OrganizationTagType.LocationSpaceTypeOthers => "Others",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

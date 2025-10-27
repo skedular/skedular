@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Version;
 using HotChocolate.Types;
+using Organization.Api.GraphQL.Tag;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
 
 namespace Organization.Api.GraphQL;
@@ -18,6 +19,16 @@ public class RootQuery(IVersionService versionService)
 
     [UseResolverScope]
     public int OpeningHoursMinutesStep() => OpeningHoursDetails.OpeningHoursSlotSizeInMinutes;
+
+    [UseResolverScope]
+    public IEnumerable<OrganizationTagTypeDetails> ResourceTypes() =>
+        OrganizationTagTypeConstants.ResourceTypes.Select(item =>
+            new OrganizationTagTypeDetails { TagType = item, Name = item.ToOrganizationTagTypeName() });
+
+    [UseResolverScope]
+    public IEnumerable<OrganizationTagTypeDetails> LocationSpaceTypes() =>
+        OrganizationTagTypeConstants.LocationSpaceTypes.Select(item =>
+            new OrganizationTagTypeDetails { TagType = item, Name = item.ToOrganizationTagTypeName() });
 
     [UseResolverScope]
     public IEnumerable<string> EmailsToShowLatestCapabilities() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];

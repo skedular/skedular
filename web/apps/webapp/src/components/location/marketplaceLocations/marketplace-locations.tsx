@@ -1,7 +1,9 @@
 import { GridContainer, StackColumn } from '@/components/commons';
+import { ResourceTypeSelector } from '@/components/organization/resourceTypeSelector';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
-import type { marketplaceLocations_locations_refetchableFragment } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
+import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
+import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -13,7 +15,7 @@ import { memo, startTransition, useCallback, useEffect, useMemo, useState } from
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
 import MarketplaceLocationPopupCard from './marketplace-location-popup-card';
 
@@ -43,18 +45,32 @@ const getToolbarHeight = (theme: Theme) => {
 };
 
 type Props = {
-  rootDataRelay: marketplaceLocations_locations_query$key;
+  rootDataRelay: marketplaceLocations_query$key;
+  rootDataLocationsRelay: marketplaceLocations_locations_query$key;
   onReloadRequired: () => void;
 };
 
-const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
-  const [rootDataRefetchable, refetch] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
+const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadRequired }: Props) => {
+  const rootData = useFragment<marketplaceLocations_query$key>(
+    graphql`
+      fragment marketplaceLocations_query on Query {
+        ...resourceTypeSelector_allResourceTypes_query
+      }
+    `,
+    rootDataRelay,
+  );
+
+  const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
     graphql`
       fragment marketplaceLocations_locations_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "marketplaceLocations_locations_refetchableFragment") {
-        marketplaceLocations(first: $count, after: $cursor, where: { searchBoundaries: $searchBoundaries }, orderBy: $locationsSortingValues)
-          @connection(key: "locations_marketplaceLocations") {
+        marketplaceLocations(
+          first: $count
+          after: $cursor
+          where: { searchBoundaries: $searchBoundaries, resourceType: $resourceTypeToFilterWith }
+          orderBy: $locationsSortingValues
+        ) @connection(key: "locations_marketplaceLocations") {
           __id
           totalCount
           edges {
@@ -72,19 +88,20 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
         }
       }
     `,
-    rootDataRelay,
+    rootDataLocationsRelay,
   );
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobileOrTablet = useMediaQuery(theme.breakpoints.down('md'));
   const toolbarHeight = getToolbarHeight(theme);
-  const mapHeight = isMobile ? `calc(100dvh - ${toolbarHeight}px)` : '90vh';
+  const mapHeight = isMobileOrTablet ? `calc(100dvh - ${toolbarHeight}px)` : '90vh';
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
-  const locations = useMemo(() => rootDataRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataRefetchable.marketplaceLocations]);
+  const locations = useMemo(() => rootDataLocationsRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataLocationsRefetchable.marketplaceLocations]);
   const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
   const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
   const [centerSet, setCenterSet] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [resourceType, setResourceType] = useState<string | null | undefined>(null);
 
   const selectedLocation = useMemo(() => {
     if (!selectedLocationId) {
@@ -101,10 +118,10 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   }, [selectedLocationId, selectedLocation]);
 
   useEffect(() => {
-    if (!isMobile && selectedLocationId) {
+    if (!isMobileOrTablet && selectedLocationId) {
       setSelectedLocationId(null);
     }
-  }, [isMobile, selectedLocationId]);
+  }, [isMobileOrTablet, selectedLocationId]);
 
   useEffect(() => {
     (async () => {
@@ -149,9 +166,9 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
   }, []);
 
   const handleRefetch = useCallback(
-    (searchBoundaries: LatLngBounds | null) => {
+    (searchBoundaries: LatLngBounds | null, resourceType: string | null | undefined) => {
       startTransition(() => {
-        refetch(
+        refetchLocations(
           {
             searchBoundaries: searchBoundaries
               ? {
@@ -165,6 +182,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
                   },
                 }
               : null,
+            resourceTypeToFilterWith: resourceType ? (resourceType as OrganizationTagType) : null,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -172,12 +190,12 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
         );
       });
     },
-    [refetch],
+    [refetchLocations],
   );
 
   useEffect(() => {
-    handleRefetch(searchBoundaries);
-  }, [searchBoundaries, handleRefetch]);
+    handleRefetch(searchBoundaries, resourceType);
+  }, [searchBoundaries, resourceType, handleRefetch]);
 
   if (!dynamicLoadReady) {
     return null;
@@ -259,7 +277,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
                 key={item.id}
                 position={[item.physicalAddress!.latitude!, item.physicalAddress!.longitude!]}
                 eventHandlers={
-                  isMobile
+                  isMobileOrTablet
                     ? {
                         click: () => {
                           setSelectedLocationId(item.id);
@@ -268,7 +286,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
                     : undefined
                 }
               >
-                {!isMobile && (
+                {!isMobileOrTablet && (
                   <Popup>
                     <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                   </Popup>
@@ -281,7 +299,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
         <MapCenterTracker />
         {!centerSet && <MapUpdater center={initialPosition} />}
       </MapContainer>
-      {isMobile && selectedLocation && (
+      {isMobileOrTablet && selectedLocation && (
         <Box
           sx={{
             position: 'absolute',
@@ -310,13 +328,25 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
     </Box>
   );
 
+  const handleResourceTypeChanged = (id?: string) => {
+    setResourceType(id);
+  };
+
   return (
-    <StackColumn sx={{ p: isMobile ? 0 : defaultPadding }}>
-      {isMobile ? (
-        MapSection
+    <StackColumn sx={{ p: isMobileOrTablet ? 0 : defaultPadding }}>
+      {isMobileOrTablet ? (
+        <>
+          <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+            <ResourceTypeSelector rootDataRelay={rootData} onChange={handleResourceTypeChanged} />
+          </Box>
+          {MapSection}
+        </>
       ) : (
-        <GridContainer>
-          <Grid size={{ xs: 12, md: 8 }}>
+        <GridContainer spacing={2}>
+          <Grid size={{ xs: 12 }}>
+            <ResourceTypeSelector rootDataRelay={rootData} onChange={handleResourceTypeChanged} />
+          </Grid>
+          <Grid size={{ xs: 12, md: 7 }}>
             <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
               {locations.map((item) => (
                 <Grid key={item.id}>
@@ -325,7 +355,7 @@ const MarketplaceLocations = ({ rootDataRelay, onReloadRequired }: Props) => {
               ))}
             </GridContainer>
           </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>{MapSection}</Grid>
+          <Grid size={{ xs: 12, md: 5 }}>{MapSection}</Grid>
         </GridContainer>
       )}
     </StackColumn>
