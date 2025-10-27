@@ -22,7 +22,7 @@ type Props = {
 
 const RootQuery = graphql`
   query organizationProducts_rootQuery($organizationUniqueAlphanumericName: String!, $productsSortingValues: [ProductOrderInput!]) {
-    products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false }, orderBy: $productsSortingValues) {
+    products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true }, orderBy: $productsSortingValues) {
       __id
       totalCount
       edges {

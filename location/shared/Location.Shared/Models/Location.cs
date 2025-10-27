@@ -30,4 +30,5 @@ public class Location : ModelBaseWithDeleted
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }
     public Permissions Permissions { get; set; } = new();
+    public ICollection<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
 }

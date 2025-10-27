@@ -25,6 +25,7 @@ public interface IRepositoryFactory
     IResourcePositionRepository ResourcePositionRepository { get; }
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
+    IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepositoryFactory
@@ -49,6 +50,7 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         ResourcePositionRepository = new ResourcePositionRepository(_dbContext, timeProvider);
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
+        PrecomputedLocationProductRepository = new PrecomputedLocationProductRepository(_dbContext, timeProvider);
     }
 
     public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
@@ -67,4 +69,5 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     public IResourcePositionRepository ResourcePositionRepository { get; }
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
+    public IPrecomputedLocationProductRepository PrecomputedLocationProductRepository { get; }
 }

@@ -13,6 +13,7 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Microsoft.EntityFrameworkCore;
 using Constants = Api.Shared.Services.Constants;
 using Customer = Location.Shared.Database.Entities.Customer;
@@ -171,6 +172,10 @@ public class LocationService(
             new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
             repositoryFactory.UnitOfWork);
 
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(location.Organization.Id),
+            repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -223,6 +228,10 @@ public class LocationService(
         var deletedLocation = mapper.MapTo(repositoryFactory.LocationRepository.Remove(existingLocation));
 
         locationOutboxPublisher.PublishLocations([deletedLocation], repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -422,6 +431,11 @@ public class LocationService(
         location = mapper.MapTo(repositoryFactory.LocationRepository.Update(existingLocation));
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
+            repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 

@@ -15,4 +15,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<Location> Locations { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public ICollection<Product> Products { get; set; } = [];
+    public ICollection<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
 }

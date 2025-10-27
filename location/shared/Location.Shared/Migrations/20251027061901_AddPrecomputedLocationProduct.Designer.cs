@@ -6,6 +6,7 @@ using Location.Shared.Database;
 using Location.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -13,12 +14,14 @@ using Temporalio.Client;
 
 #nullable disable
 
-namespace Location.Shared.Database.Migrations
+namespace Location.Shared.Migrations
 {
     [DbContext(typeof(LocationDbContext))]
-    partial class LocationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027061901_AddPrecomputedLocationProduct")]
+    partial class AddPrecomputedLocationProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -929,10 +932,6 @@ namespace Location.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("ProductId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
@@ -944,8 +943,6 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("LocationId");
 
                     b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("OrganizationId");
 
                     b.HasIndex("ProductId");
 
@@ -1371,12 +1368,6 @@ namespace Location.Shared.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Location.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("PrecomputedLocationProducts")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Location.Shared.Database.Entities.Product", "Product")
                         .WithMany("PrecomputedLocationProducts")
                         .HasForeignKey("ProductId")
@@ -1384,8 +1375,6 @@ namespace Location.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Location");
-
-                    b.Navigation("Organization");
 
                     b.Navigation("Product");
                 });
@@ -1551,8 +1540,6 @@ namespace Location.Shared.Database.Migrations
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationSsoSettings");
-
-                    b.Navigation("PrecomputedLocationProducts");
 
                     b.Navigation("Products");
 

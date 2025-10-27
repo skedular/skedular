@@ -3,6 +3,8 @@ using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Enterprise.Shared.Kafka.Consume;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
+using Location.Shared.Services;
+using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using IMapper = Location.Processors.Mappers.IMapper;
 using Product = Location.Shared.Models.Product;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
@@ -10,7 +12,11 @@ using Type = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type;
 
 namespace Location.Processors.Subscribers;
 
-public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMapper mapper, IRepositoryFactory repositoryFactory)
+public class MarketplaceSubscriber(
+    ILogger<MarketplaceSubscriber> logger,
+    IMapper mapper,
+    IRepositoryFactory repositoryFactory,
+    ITemporalService temporalService)
     : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -93,6 +99,10 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
             mapper.MergeToEntity(product, existingProduct, organization, untouchedProductVersions.Concat(productVersions).ToList()));
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await temporalService.StartComputeOrganizationLocationsAndProductsRelationshipsAsync(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(organization.Id),
+            cancellationToken);
     }
 
     private async Task HandleProductDeletedEventAsync(Shared.Database.Entities.Product existingProduct, CancellationToken cancellationToken)

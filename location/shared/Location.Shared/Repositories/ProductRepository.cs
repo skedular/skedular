@@ -10,6 +10,7 @@ public interface IProductRepository : IRepository<Product>
 {
     Task<Product> UpsertNakedAsync(string id, Organization organization, CancellationToken cancellationToken);
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
     Product Update(Product product);
     Product Remove(Product product);
 }
@@ -42,6 +43,12 @@ public class ProductRepository(LocationDbContext dbContext, TimeProvider timePro
         await DbContext.Product
             .AddDependentObjects()
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Product>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
+        await DbContext.Product
+            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
+            .AddDependentObjects()
+            .ToListAsync(cancellationToken);
 
     public Product Update(Product product)
     {

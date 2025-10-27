@@ -10,6 +10,7 @@ using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
+using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Microsoft.EntityFrameworkCore;
 using Customer = Location.Shared.Database.Entities.Customer;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
@@ -43,7 +44,8 @@ public class ResourceService(
     IMapper mapper,
     ILocationOutboxPublisher locationOutboxPublisher,
     ICachedResourceService cachedResourceService,
-    ICachedLocationService cachedLocationService) : IResourceService
+    ICachedLocationService cachedLocationService,
+    ITemporalOutboxPublisher temporalOutboxPublisher) : IResourceService
 {
     public async Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
@@ -130,6 +132,10 @@ public class ResourceService(
         var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
         locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
+            repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -180,6 +186,10 @@ public class ResourceService(
         mappedLocation.Resources = mappedLocation.Resources.Where(item => item.Id != id).ToList();
 
         locationOutboxPublisher.PublishLocations([mappedLocation], repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -486,6 +496,10 @@ public class ResourceService(
         resource = mapper.MapTo(repositoryFactory.ResourceRepository.Update(existingResource), mapper.MapTo(existingLocation));
 
         locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+            new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

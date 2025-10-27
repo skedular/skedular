@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9e8b90407f55cd40fd65aebb9a7a62e>>
+ * @generated SignedSource<<aa57297408751eafdd600cb7099bda36>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -66,7 +66,7 @@ v1 = [
       {
         "kind": "Literal",
         "name": "includeInactive",
-        "value": false
+        "value": true
       },
       {
         "items": [
@@ -371,16 +371,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b1ae89a641e578cdc9e48391f8df05ef",
+    "cacheID": "8af99e05a5e4ef61ba619266beab8c69",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ad3b677be7679c4257b78c09553336ed";
+(node as any).hash = "31a1976d69dcd4752eb6961e7b6aff26";
 
 export default node;

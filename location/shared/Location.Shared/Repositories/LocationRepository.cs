@@ -19,10 +19,12 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
     Task<Database.Entities.Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
-    Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
+    Task<ICollection<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken);
+
+    Task<ICollection<Database.Entities.Location>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetAllUntrackedAsync(bool includeDeletedResources, CancellationToken cancellationToken);
@@ -209,7 +211,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddDependentObjects(true, false)
             .ToListAsync(cancellationToken);
 
-    public async Task<IEnumerable<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
+    public async Task<ICollection<Database.Entities.Location>> GetByCustomerIdUntrackedAsync(
         string customerId,
         string? organizationId,
         CancellationToken cancellationToken)
@@ -228,6 +230,14 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
             .AddDependentObjects(false, false)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<ICollection<Database.Entities.Location>> GetByOrganizationIdAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await DbContext.Location
+            .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
+            .AddDependentObjects(true, false)
+            .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location

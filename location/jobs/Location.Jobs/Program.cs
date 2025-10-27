@@ -9,6 +9,7 @@ using Location.Shared;
 using Location.Shared.Activities;
 using Location.Shared.Database;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Temporalio.Extensions.Hosting;
 
 namespace Location.Jobs;
@@ -44,7 +45,9 @@ public class Program
         services
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<GenerateLocationDailyAnalytics>()
-            .AddScopedActivities<LocationDailyAnalytics>();
+            .AddWorkflow<ComputeOrganizationLocationsAndProductsRelationships>()
+            .AddScopedActivities<LocationDailyAnalytics>()
+            .AddScopedActivities<LocationsProductsRelationships>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }
