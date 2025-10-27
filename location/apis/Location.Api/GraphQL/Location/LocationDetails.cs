@@ -46,6 +46,8 @@ public class LocationDetails : Node
     [GraphQLName("contactedViaSms")] public bool ContactedViaSms { get; set; }
     [GraphQLName("contactedViaCall")] public bool ContactedViaCall { get; set; }
     [GraphQLName("contactedViaWhatsapp")] public bool ContactedViaWhatsapp { get; set; }
+    [GraphQLName("productIds")] public IEnumerable<string> ProductIds { get; set; } = [];
+
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
@@ -131,6 +133,7 @@ public static partial class LocationDetailsType
         descriptor.Ignore(item => item.ResourceTypeIds);
         descriptor.Ignore(item => item.LocationTagIds);
         descriptor.Ignore(item => item.LocationSpaceTypeIds);
+        descriptor.Ignore(item => item.ProductIds);
     }
 
     public static OrganizationDetails GetOrganization([Parent] LocationDetails item) =>
@@ -150,4 +153,7 @@ public static partial class LocationDetailsType
 
     public static IEnumerable<OrganizationTagDetails> GetLocationSpaceTypes([Parent] LocationDetails item) =>
         item.LocationSpaceTypeIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
+        item.ProductIds.Select(id => new ProductDetails(id));
 }

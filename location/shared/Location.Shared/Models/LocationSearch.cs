@@ -12,7 +12,8 @@ public record LocationSearchCriteria(
     string? CustomerId,
     ICollection<LocationType> Types,
     Polygon? SearchBoundaries,
-    bool? NotContactedYet);
+    bool? NotContactedYet,
+    OrganizationTagType? ResourceType);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 

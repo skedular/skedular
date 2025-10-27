@@ -11,4 +11,5 @@ public class MarketplaceLocationWhereInput
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
     [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
     [GraphQLName("searchBoundaries")] public Polygon? SearchBoundaries { get; set; }
+    [GraphQLName("resourceType")] public OrganizationTagType? ResourceType { get; set; }
 }

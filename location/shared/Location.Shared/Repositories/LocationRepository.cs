@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
-using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
+using Product = Location.Shared.Database.Entities.Product;
 
 namespace Location.Shared.Repositories;
 
@@ -42,7 +42,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Location, IEnumerable<OrganizationTag>> AddDependentObjects(
+    internal static IIncludableQueryable<Database.Entities.Location, Product> AddDependentObjects(
         this IQueryable<Database.Entities.Location> originalQuery,
         bool isTracked,
         bool includeDeletedResources) =>
@@ -54,7 +54,9 @@ internal static class LocationExtensions
         .Include(query => query.FloorPlans.Where(fp => !fp.DeletedAt.HasValue))
         .ThenInclude(query => query.ResourcePositions)
         .ThenInclude(query => query.Resource)
-        .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+        .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+        .Include(query => query.PrecomputedLocationProducts)
+        .ThenInclude(query => query.Product);
 
     internal static IQueryable<Database.Entities.Location> AddSearchCriteria(
         this IQueryable<Database.Entities.Location> query,
@@ -142,6 +144,14 @@ internal static class LocationExtensions
         if (searchCriteria.NotContactedYet is not null && searchCriteria.NotContactedYet.Value)
         {
             query = query.Where(item => !item.ContactedViaEmail && !item.ContactedViaCall && !item.ContactedViaSms && !item.ContactedViaWhatsapp);
+        }
+
+        if (searchCriteria.ResourceType is not null)
+        {
+            var resourceType = searchCriteria.ResourceType.Value.ToOrganizationTagType();
+
+            query = query.Where(item => item.PrecomputedLocationProducts.Any(precomputedLocationProduct =>
+                precomputedLocationProduct.OrganizationTags.Any(organizationTag => organizationTag.Type == resourceType)));
         }
 
         return query;

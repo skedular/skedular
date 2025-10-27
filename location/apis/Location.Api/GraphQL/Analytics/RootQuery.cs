@@ -32,7 +32,8 @@ public class RootQuery(IMapper mapper)
                 null,
                 where is null ? [] : where.Types.ToSafeCollection(),
                 where?.SearchBoundaries,
-                where?.NotContactedYet),
+                where?.NotContactedYet,
+                where?.ResourceType),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 

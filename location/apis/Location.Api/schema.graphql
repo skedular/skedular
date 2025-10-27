@@ -85,6 +85,7 @@ type LocationDetails {
   resourceTypes: [OrganizationTagDetails!]!
   locationTags: [OrganizationTagDetails!]!
   locationSpaceTypes: [OrganizationTagDetails!]!
+  products: [ProductDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
   hasFutureBooking: Boolean! @cost(weight: "10")
@@ -211,6 +212,10 @@ type PageInfo {
 type PeopleCapacity {
   from: String!
   to: String!
+}
+
+type ProductDetails {
+  id: ID!
 }
 
 type Query {
@@ -464,6 +469,7 @@ input LocationWhereInput {
   types: [LocationType!]
   searchBoundaries: PolygonInput
   notContactedYet: Boolean
+  resourceType: OrganizationTagType
 }
 
 input MarketplaceLocationWhereInput {
@@ -472,6 +478,7 @@ input MarketplaceLocationWhereInput {
   customTagIds: [String!]
   zoneIds: [String!]
   searchBoundaries: PolygonInput
+  resourceType: OrganizationTagType
 }
 
 input OpeningHoursDetailsInput {
@@ -636,6 +643,27 @@ enum LocationType {
 enum OrderDirection {
   ASCENDING
   DESCENDING
+}
+
+enum OrganizationTagType {
+  CUSTOM
+  ZONE
+  PRODUCT
+  LOCATION
+  RESOURCE_DESK
+  RESOURCE_ROOM
+  RESOURCE_PARKING
+  RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_OTHERS
 }
 
 enum ResourceOrderField {

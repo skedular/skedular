@@ -159,7 +159,8 @@ public class Mapper : IMapper
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
             ContactedViaCall = src.ContactedViaCall,
-            ContactedViaWhatsapp = src.ContactedViaWhatsapp
+            ContactedViaWhatsapp = src.ContactedViaWhatsapp,
+            PrecomputedLocationProducts = MapTo(src.PrecomputedLocationProducts).ToList()
         };
 
         location.DailyDeskCountRecordings = MapTo(src.DailyDeskCountRecordings, location).ToList();
@@ -263,7 +264,8 @@ public class Mapper : IMapper
                 ContactedViaEmail = src.ContactedViaEmail,
                 ContactedViaSms = src.ContactedViaSms,
                 ContactedViaCall = src.ContactedViaCall,
-                ContactedViaWhatsapp = src.ContactedViaWhatsapp
+                ContactedViaWhatsapp = src.ContactedViaWhatsapp,
+                ProductIds = src.PrecomputedLocationProducts.Select(item => item.Product.Id)
             };
 
     public Shared.Models.Resource MapTo(Resource src) =>
@@ -1290,4 +1292,13 @@ public class Mapper : IMapper
                 Country = src.Country.ToSafeString(),
                 CountryCode = src.CountryCode.ToSafeString()
             };
+
+    private static IEnumerable<PrecomputedLocationProduct> MapTo(IEnumerable<Shared.Database.Entities.PrecomputedLocationProduct> src) =>
+        src.Select(MapTo);
+
+    private static PrecomputedLocationProduct MapTo(Shared.Database.Entities.PrecomputedLocationProduct src) =>
+        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, Product = MapTo(src.Product) };
+
+    private static Product MapTo(Shared.Database.Entities.Product src) =>
+        new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
 }

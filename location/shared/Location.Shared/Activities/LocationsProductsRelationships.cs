@@ -2,11 +2,15 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.Random;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
+using Location.Shared.Services.Cache;
 using Temporalio.Activities;
 
 namespace Location.Shared.Activities;
 
-public class LocationsProductsRelationships(IRepositoryFactory repositoryFactory, IRandomHelper randomHelper)
+public class LocationsProductsRelationships(
+    IRepositoryFactory repositoryFactory,
+    IRandomHelper randomHelper,
+    ICachedLocationService cachedLocationService)
 {
     [Activity]
     public async Task ComputeLocationAndProductsRelationshipsAsync(string organizationId)
@@ -22,6 +26,7 @@ public class LocationsProductsRelationships(IRepositoryFactory repositoryFactory
             await repositoryFactory.PrecomputedLocationProductRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);
 
         var locations = await repositoryFactory.LocationRepository.GetByOrganizationIdAsync(organizationId, cancellationToken);
+        var locationIds = new List<string>();
 
         foreach (var product in products)
         {
@@ -48,10 +53,17 @@ public class LocationsProductsRelationships(IRepositoryFactory repositoryFactory
                         .Where(item => OrganizationTagTypeConstants.ResourceTypes.Contains(item.Type!.ToOrganizationTagType()))
                         .ToList()
                 });
+
+                locationIds.Add(location.Id);
             }
         }
 
         repositoryFactory.PrecomputedLocationProductRepository.RemoveRange(existingPrecomputedLocationProducts);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        foreach (var locationId in locationIds.Distinct())
+        {
+            await cachedLocationService.RemoveByIdAsync(locationId, cancellationToken);
+        }
     }
 }

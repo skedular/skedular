@@ -386,6 +386,7 @@ type LocationDetails {
   organization: OrganizationDetails!
   physicalAddress: LocationPhysicalAddressDetails
   primaryFeatureImage: CdnImageFile
+  products: [ProductDetails!]!
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput): ConnectionOfResourceEdge! @cost(weight: "10")
   resourceTypes: [OrganizationTagDetails!]!
   roomCapacity: Int!
@@ -1889,6 +1890,7 @@ input LocationWhereInput {
   nameContains: String
   notContactedYet: Boolean
   organizationUniqueAlphanumericName: String
+  resourceType: OrganizationTagType
   searchBoundaries: PolygonInput
   types: [LocationType!]
   zoneIds: [String!]
@@ -1903,6 +1905,7 @@ input MarketplaceLocationWhereInput {
   customTagIds: [String!]
   locationIds: [String!]
   nameContains: String
+  resourceType: OrganizationTagType
   searchBoundaries: PolygonInput
   zoneIds: [String!]
 }

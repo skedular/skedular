@@ -89,7 +89,8 @@ public class LocationGrpcService(
                     _ => throw new ArgumentOutOfRangeException()
                 }).ToList(),
                 null,
-                request.Where.NotContactedYet),
+                request.Where.NotContactedYet,
+                null),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
@@ -155,7 +156,8 @@ public class LocationGrpcService(
                     _ => throw new ArgumentOutOfRangeException()
                 }).ToList(),
                 null,
-                request.Where.NotContactedYet),
+                request.Where.NotContactedYet,
+                null),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
