@@ -14,4 +14,5 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
+    public ICollection<Product> Products { get; set; } = [];
 }

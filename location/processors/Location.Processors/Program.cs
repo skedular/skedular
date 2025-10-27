@@ -40,6 +40,10 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
+                MarketplaceSubscriber,
+                Api.Shared.Clients.Events.Skedular.Marketplace.V1.Key.Key,
+                Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration);

@@ -24,6 +24,8 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     public DbSet<OrganizationTag> OrganizationTag { get; set; }
     public DbSet<Resource> Resource { get; set; }
     public DbSet<ResourcePosition> ResourcePosition { get; set; }
+    public DbSet<Product> Product { get; set; }
+    public DbSet<ProductVersion> ProductVersion { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
     public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }

@@ -12,6 +12,7 @@ using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Location.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
 using Resource = Location.Shared.Database.Entities.Resource;
 
 namespace Location.Processors.Mappers;
@@ -52,6 +53,21 @@ public interface IMapper
         Shared.Models.OrganizationSsoSetting src,
         OrganizationSsoSetting dest,
         Shared.Database.Entities.Organization organization);
+
+    Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src);
+
+    Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<ProductVersion> productVersions);
+
+    ProductVersion MergeToEntity(
+        Shared.Models.ProductVersion src,
+        ProductVersion dest,
+        Shared.Database.Entities.Product product,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags);
 }
 
 public class Mapper : IMapper
@@ -265,7 +281,63 @@ public class Mapper : IMapper
         dest.AppFederationMetadataUrl = src.AppFederationMetadataUrl;
         dest.IsActive = src.IsActive;
         dest.Organization = organization;
-
         return dest;
     }
+
+    public Product MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event src)
+    {
+        var productAfterState = src.Data.Product;
+        var deletedAt = productAfterState.DeletedAt?.ToDateTimeOffset();
+        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
+
+        var product = new Product
+        {
+            Id = productAfterState.Id,
+            DeletedAt = deletedAt,
+            EventRaisedAt = eventRaisedAt,
+            Inactive = productAfterState.Inactive,
+            Organization = new Organization { Id = productAfterState.OrganizationId }
+        };
+
+        product.ProductVersions = new List<Shared.Models.ProductVersion> { MapTo(productAfterState.LatestProductVersion, product) };
+
+        return product;
+    }
+
+    public Shared.Database.Entities.Product MergeToEntity(
+        Product src,
+        Shared.Database.Entities.Product dest,
+        Shared.Database.Entities.Organization organization,
+        ICollection<ProductVersion> productVersions)
+    {
+        dest.Id = src.Id;
+        dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Inactive = src.Inactive;
+        dest.Organization = organization;
+        dest.ProductVersions = productVersions;
+        return dest;
+    }
+
+    public ProductVersion MergeToEntity(
+        Shared.Models.ProductVersion src,
+        ProductVersion dest,
+        Shared.Database.Entities.Product product,
+        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> locationTags)
+    {
+        dest.Id = src.Id;
+        dest.Product = product;
+        dest.ProductTags = productTags;
+        dest.LocationTags = locationTags;
+        return dest;
+    }
+
+    private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+        new()
+        {
+            Id = src.Id,
+            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            Product = product
+        };
 }

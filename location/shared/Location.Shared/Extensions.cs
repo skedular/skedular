@@ -45,7 +45,9 @@ public static class Extensions
             .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
             .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
             .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
-            .AddScoped<IFloorPlanRepository, FloorPlanRepository>();
+            .AddScoped<IFloorPlanRepository, FloorPlanRepository>()
+            .AddScoped<IProductRepository, ProductRepository>()
+            .AddScoped<IProductVersionRepository, ProductVersionRepository>();
 
     public static IServiceCollection AddPublishers(this IServiceCollection services) =>
         services
