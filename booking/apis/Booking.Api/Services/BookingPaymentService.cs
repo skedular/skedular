@@ -36,7 +36,7 @@ public class BookingPaymentService(
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         if (!existingBooking.BookedOnMarketplace)
         {
-            throw new BookingIsNotMarketplaceType();
+            return PaymentStatus.NoPaymentRequired;
         }
 
         var productVersionIds = existingBooking.ProductVersions.Select(item => item.Id).ToList();
@@ -50,7 +50,7 @@ public class BookingPaymentService(
             cancellationToken);
         foreach (var organization in organizations)
         {
-            if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customer.Id, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
