@@ -66,6 +66,7 @@ public class Mapper : IMapper
             {
                 OrganizationType.Private => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Marketplace,
+                OrganizationType.Individual => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
             ContactEmail = src.ContactEmail.ToSafeString(),

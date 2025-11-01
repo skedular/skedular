@@ -71,13 +71,14 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "IjIKC0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVk",
             "ZRgCIAEoASppCgRUeXBlEh0KGVR5cGVfT3JnYW5pemF0aW9uVXBzZXJ0ZWQQ",
             "ABIcChhUeXBlX09yZ2FuaXphdGlvbkRlbGV0ZWQQARIkCiBUeXBlX09yZ2Fu",
-            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBACKlIKEE9yZ2FuaXphdGlvblR5cGUS",
+            "aXphdGlvbk9mZmVyaW5nVXBkYXRlZBACKnMKEE9yZ2FuaXphdGlvblR5cGUS",
             "HAoYT3JnYW5pemF0aW9uVHlwZV9Qcml2YXRlEAASIAocT3JnYW5pemF0aW9u",
-            "VHlwZV9NYXJrZXRwbGFjZRABKj8KBFJvbGUSDgoKUm9sZV9Pd25lchAAEhYK",
-            "ElJvbGVfQWRtaW5pc3RyYXRvchABEg8KC1JvbGVfTWVtYmVyEAIqMAoGU3Rh",
-            "dHVzEhEKDVN0YXR1c19BY3RpdmUQABITCg9TdGF0dXNfSW5hY3RpdmUQAUI7",
-            "qgI4QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6",
-            "YXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "VHlwZV9NYXJrZXRwbGFjZRABEh8KG09yZ2FuaXphdGlvblR5cGVfSW5kaXZp",
+            "ZHVhbBACKj8KBFJvbGUSDgoKUm9sZV9Pd25lchAAEhYKElJvbGVfQWRtaW5p",
+            "c3RyYXRvchABEg8KC1JvbGVfTWVtYmVyEAIqMAoGU3RhdHVzEhEKDVN0YXR1",
+            "c19BY3RpdmUQABITCg9TdGF0dXNfSW5hY3RpdmUQAUI7qgI4QXBpLlNoYXJl",
+            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6YXRpb24uVjEuVmFs",
+            "dWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -108,6 +109,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
   public enum OrganizationType {
     [pbr::OriginalName("OrganizationType_Private")] Private = 0,
     [pbr::OriginalName("OrganizationType_Marketplace")] Marketplace = 1,
+    [pbr::OriginalName("OrganizationType_Individual")] Individual = 2,
   }
 
   public enum Role {

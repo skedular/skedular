@@ -19,7 +19,8 @@ public class RootQuery(IMapper mapper)
     public IEnumerable<OrganizationTypeDetails> OrganizationTypes() =>
     [
         new() { Type = OrganizationType.Private, Name = OrganizationTypeConstants.Private.ToOrganizationTypeName() },
-        new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() }
+        new() { Type = OrganizationType.Marketplace, Name = OrganizationTypeConstants.Marketplace.ToOrganizationTypeName() },
+        new() { Type = OrganizationType.Individual, Name = OrganizationTypeConstants.Individual.ToOrganizationTypeName() }
     ];
 
     [UseResolverScope]

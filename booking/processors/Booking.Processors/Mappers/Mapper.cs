@@ -160,6 +160,7 @@ public class Mapper : IMapper
             {
                 OrganizationType.Private => Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
+                OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };

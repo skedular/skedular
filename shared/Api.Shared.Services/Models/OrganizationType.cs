@@ -3,13 +3,15 @@ namespace Api.Shared.Services.Models;
 public enum OrganizationType
 {
     Private,
-    Marketplace
+    Marketplace,
+    Individual
 }
 
 public static class OrganizationTypeConstants
 {
     public const string Private = "PRIVATE";
     public const string Marketplace = "MARKETPLACE";
+    public const string Individual = "INDIVIDUAL";
 }
 
 public static class OrganizationTypeExtensions
@@ -19,6 +21,7 @@ public static class OrganizationTypeExtensions
         {
             OrganizationTypeConstants.Private => OrganizationType.Private,
             OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
+            OrganizationTypeConstants.Individual => OrganizationType.Individual,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -27,6 +30,7 @@ public static class OrganizationTypeExtensions
         {
             OrganizationType.Private => OrganizationTypeConstants.Private,
             OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
+            OrganizationType.Individual => OrganizationTypeConstants.Individual,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -35,6 +39,7 @@ public static class OrganizationTypeExtensions
         {
             OrganizationType.Private => "Private",
             OrganizationType.Marketplace => "Marketplace",
+            OrganizationType.Individual => "Individual",
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -43,6 +48,7 @@ public static class OrganizationTypeExtensions
         {
             OrganizationTypeConstants.Private => "Private",
             OrganizationTypeConstants.Marketplace => "Marketplace",
+            OrganizationTypeConstants.Individual => "Individual",
             _ => throw new ArgumentOutOfRangeException()
         };
 }

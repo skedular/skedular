@@ -518,6 +518,7 @@ public class Mapper : IMapper
             {
                 OrganizationType.Private => global::Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => global::Api.Shared.Services.Models.OrganizationType.Marketplace,
+                OrganizationType.Individual => global::Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
             ContactEmail = src.ContactEmail,
@@ -543,6 +544,7 @@ public class Mapper : IMapper
             {
                 global::Api.Shared.Services.Models.OrganizationType.Private => OrganizationType.Private,
                 global::Api.Shared.Services.Models.OrganizationType.Marketplace => OrganizationType.Marketplace,
+                global::Api.Shared.Services.Models.OrganizationType.Individual => OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
             ContactEmail = src.ContactEmail.ToSafeString(),

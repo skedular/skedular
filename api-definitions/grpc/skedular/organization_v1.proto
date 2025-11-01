@@ -108,6 +108,7 @@ message Admin_AddInput {
 enum OrganizationType {
   OrganizationType_Private = 0;
   OrganizationType_Marketplace = 1;
+  OrganizationType_Individual = 2;
 }
 
 message Admin_GetOrganizationStripeConnectAccountsResponse {

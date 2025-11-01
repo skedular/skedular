@@ -185,8 +185,8 @@ importers:
         specifier: ^20.1.1
         version: 20.1.1(react@19.2.0)
       react-svg-credit-card-payment-icons:
-        specifier: ^4.2.1
-        version: 4.2.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: ^5.0.0
+        version: 5.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-toastify:
         specifier: ^11.0.5
         version: 11.0.5(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -240,8 +240,8 @@ importers:
         specifier: ^16.0.1
         version: 16.0.1(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint@9.39.0)(typescript@5.9.3)
       graphql:
-        specifier: ^16.11.0
-        version: 16.11.0
+        specifier: ^16.12.0
+        version: 16.12.0
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -3289,8 +3289,8 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  graphql@16.11.0:
-    resolution: {integrity: sha512-mS1lbMsxgQj6hge1XZ6p7GPhbrtFwUFYi3wRzXAC/FmYnyXMTvvI3td3rjmQ2u8ewXueaSvRPWaEcgVVOT9Jnw==}
+  graphql@16.12.0:
+    resolution: {integrity: sha512-DKKrynuQRne0PNpEbzuEdHlYOMksHSUI8Zc9Unei5gTsMNA2/vMpoMz/yKba50pejK56qj98qM0SjYxAKi13gQ==}
     engines: {node: ^12.22.0 || ^14.16.0 || ^16.0.0 || >=17.0.0}
 
   hachure-fill@0.5.2:
@@ -4557,8 +4557,8 @@ packages:
     peerDependencies:
       react: ^16.9.0 || ^17 || ^18 || ^19
 
-  react-svg-credit-card-payment-icons@4.2.1:
-    resolution: {integrity: sha512-s5OK68uykYVHGqa4YjO4GII/2ND2oyhSX2/6DdELGDK360ANybkGwVtO2mf1cJcxNKN4uXCwMYCGbOwKqokLGw==}
+  react-svg-credit-card-payment-icons@5.0.0:
+    resolution: {integrity: sha512-qoq1wMK1eMJTrG4CE9XDUEw0YA9mWpRZLTEzrb0/NjxznVo71HQYXRKXQ4ce5gO9A3KC9uF/j7SZYMbvUmZyGg==}
     peerDependencies:
       react: '>=16'
       react-dom: '>=16'
@@ -8375,7 +8375,7 @@ snapshots:
       eslint: 9.39.0
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint@9.39.0))(eslint@9.39.0)
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint@9.39.0))(eslint@9.39.0))(eslint@9.39.0)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.0)
       eslint-plugin-react: 7.37.5(eslint@9.39.0)
       eslint-plugin-react-hooks: 7.0.0(eslint@9.39.0)
@@ -8428,7 +8428,7 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.11.1
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.0)
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint@9.39.0))(eslint@9.39.0))(eslint@9.39.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -8468,7 +8468,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.0):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.46.2(eslint@9.39.0)(typescript@5.9.3))(eslint@9.39.0))(eslint@9.39.0))(eslint@9.39.0):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -8927,7 +8927,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  graphql@16.11.0: {}
+  graphql@16.12.0: {}
 
   hachure-fill@0.5.2: {}
 
@@ -10637,7 +10637,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  react-svg-credit-card-payment-icons@4.2.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+  react-svg-credit-card-payment-icons@5.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
       react: 19.2.0
       react-dom: 19.2.0(react@19.2.0)
