@@ -184,12 +184,22 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
               }}
               renderValue={(selectedId) => {
                 if (!rootData.myOrganizations) {
-                  return <OrganizationIcon tip="Please select an organization" />;
+                  return (
+                    <>
+                      <BodyIconTypography label="Please select an organization" sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'none' } }} />
+                    </>
+                  );
                 }
 
                 const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
                 if (!selectedItem) {
-                  return <OrganizationIcon tip="Please select an organization" />;
+                  return (
+                    <>
+                      <BodyIconTypography label="Please select an organization" sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'none' } }} />
+                    </>
+                  );
                 }
 
                 return (

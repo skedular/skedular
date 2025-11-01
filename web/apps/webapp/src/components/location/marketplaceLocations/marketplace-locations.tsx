@@ -303,26 +303,18 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
         <Box
           sx={{
             position: 'absolute',
-            left: 0,
-            right: 0,
             bottom: `calc(${theme.spacing(3)} + env(safe-area-inset-bottom, 0px))`,
             display: 'flex',
             justifyContent: 'center',
             zIndex: 1000,
             pointerEvents: 'none',
-            pb: theme.spacing(2),
+            paddingLeft: defaultPadding,
+            paddingRight: defaultPadding,
+            paddingTop: defaultPadding,
+            paddingBottom: 7,
           }}
         >
-          <Box
-            sx={{
-              pointerEvents: 'auto',
-              width: '100%',
-              maxWidth: theme.breakpoints.values.sm,
-              px: theme.spacing(2),
-            }}
-          >
-            <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
-          </Box>
+          <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
         </Box>
       )}
     </Box>

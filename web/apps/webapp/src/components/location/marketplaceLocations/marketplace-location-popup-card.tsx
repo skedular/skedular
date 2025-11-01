@@ -78,7 +78,7 @@ const MarketplaceLocationPopupCard = ({ locationDetailsRelay, onClose }: Props) 
 
   return (
     <Card
-      sx={{ width: { xs: '80%', sm: 300 }, textDecoration: 'none', display: 'block' }}
+      sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none', display: 'block' }}
       component={NextLink}
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
