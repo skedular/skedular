@@ -1,4 +1,6 @@
 import { BodyIconTypography, PushToRight } from '@/components/commons';
+import { HamburgerMenuIcon } from '@/components/icons';
+import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
@@ -6,9 +8,10 @@ import MuiAppBar from '@mui/material/AppBar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/system/Box';
 import Image from 'next/image';
 import type { JSX } from 'react';
-import { memo, useContext } from 'react';
+import { memo, useContext, useState } from 'react';
 
 type Props = {
   showBreadcrumps?: boolean;
@@ -18,6 +21,7 @@ type Props = {
 const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
   const originalWidth = 779;
@@ -34,6 +38,10 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
 
   const handleLightThemeClicked = () => {
     updatePaletteMode('light');
+  };
+
+  const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
+    setMobileDrawerOpen(newOpen);
   };
 
   return (
@@ -61,17 +69,27 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
           </IconButton>
         )}
 
-        <IconButton component="a" href="/signin">
-          <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }}>
-            <BodyIconTypography label="Sign In" />
-          </Button>
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <IconButton component="a" href="/signin">
+            <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }}>
+              <BodyIconTypography label="Sign In" />
+            </Button>
+          </IconButton>
+        </Box>
+
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <IconButton component="a" href="/signup">
+            <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
+              <BodyIconTypography label="Sign Up" invertDefaultColor={paletteMode === 'dark'} />
+            </Button>
+          </IconButton>
+        </Box>
+
+        <IconButton onClick={toggleMobileDrawerOpen(true)} sx={{ display: { xs: 'block', sm: 'none' } }}>
+          <HamburgerMenuIcon />
         </IconButton>
 
-        <IconButton component="a" href="/signup">
-          <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
-            <BodyIconTypography label="Sign Up" invertDefaultColor={paletteMode === 'dark'} />
-          </Button>
-        </IconButton>
+        <UnauthenticatedMobileLeftSideNavigationMenu open={mobileDrawerOpen} toggleDrawer={toggleMobileDrawerOpen} />
       </Toolbar>
     </MuiAppBar>
   );

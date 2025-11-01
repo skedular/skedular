@@ -1,6 +1,6 @@
 import { AppBar } from '@/components/appBar';
 import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
-import { LogoutIcon, SsoSigninIcon } from '@/components/icons';
+import { SignOutIcon, SsoSigninIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
@@ -142,7 +142,7 @@ const RootShell = ({
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
         <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
-        <Button variant="contained" startIcon={<LogoutIcon />} onClick={async () => await handleSignOutClick}>
+        <Button variant="contained" startIcon={<SignOutIcon />} onClick={async () => await handleSignOutClick}>
           Sign out
         </Button>
       </Box>

@@ -57,7 +57,8 @@ export { default as ArrowUpIcon } from '@mui/icons-material/KeyboardArrowUp';
 export { default as ListViewIcon } from '@mui/icons-material/List';
 export { default as ParkingIcon } from '@mui/icons-material/LocalParking';
 export { default as ClosedAllDayIcon } from '@mui/icons-material/Lock';
-export { default as LogoutIcon } from '@mui/icons-material/Logout';
+export { default as SignInIcon } from '@mui/icons-material/Login';
+export { default as SignOutIcon } from '@mui/icons-material/Logout';
 export { default as FloorPlanIcon } from '@mui/icons-material/Map';
 export { default as RoomIcon } from '@mui/icons-material/MeetingRoom';
 export { default as MenuIcon } from '@mui/icons-material/Menu';
@@ -69,7 +70,7 @@ export { default as OtherResourceIcon } from '@mui/icons-material/NotListedLocat
 export { default as ExpandIcon } from '@mui/icons-material/OpenInFull';
 export { default as BillingAndPaymentIcon } from '@mui/icons-material/Payment';
 export { default as CustomerIcon, default as PersonIcon, default as ProfileIcon } from '@mui/icons-material/Person';
-export { default as InviteMemberIcon } from '@mui/icons-material/PersonAdd';
+export { default as InviteMemberIcon, default as SignUpIcon } from '@mui/icons-material/PersonAdd';
 export { default as InvitePeopleIcon } from '@mui/icons-material/PersonAddAlt1';
 export { default as ContactPhoneIcon } from '@mui/icons-material/PhoneEnabled';
 export { default as PdfIcon } from '@mui/icons-material/PictureAsPdf';

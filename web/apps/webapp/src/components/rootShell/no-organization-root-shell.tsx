@@ -1,6 +1,6 @@
 import { NoOrganizationAppBar } from '@/components/appBar';
 import { SmallHeadingIconTypography } from '@/components/commons';
-import { LogoutIcon } from '@/components/icons';
+import { SignOutIcon } from '@/components/icons';
 import { getInstallMsTeamsLink, getRootLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
@@ -126,7 +126,7 @@ const NoOrganizationRootShell = ({
     return (
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
         <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
-        <Button variant="contained" startIcon={<LogoutIcon />} onClick={async () => await handleSignOutClick}>
+        <Button variant="contained" startIcon={<SignOutIcon />} onClick={async () => await handleSignOutClick}>
           Sign out
         </Button>
       </Box>
