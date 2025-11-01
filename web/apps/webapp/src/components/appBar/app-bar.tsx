@@ -1,7 +1,7 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, SettingsIcon, SignOutIcon } from '@/components/icons';
+import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon } from '@/components/icons';
 import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -12,7 +12,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Divider from '@mui/material/Divider';
-import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
@@ -172,61 +171,62 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
           }}
         >
           {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
-            <FormControl sx={{ width: { xs: '100%', sm: 300 } }}>
-              <Select
-                value={selectedOrganizationId}
-                displayEmpty
-                onChange={handleSelectedOrganizationChange}
-                sx={{
-                  '& fieldset': {
-                    border: 0,
-                    borderRight: 0,
-                    borderRadius: 0,
-                  },
-                }}
-                renderValue={(selectedId) => {
-                  if (!rootData.myOrganizations) {
-                    return <BodyIconTypography label="Please select an organization" />;
-                  }
+            <Select
+              value={selectedOrganizationId}
+              displayEmpty
+              onChange={handleSelectedOrganizationChange}
+              sx={{
+                '& fieldset': {
+                  border: 0,
+                  borderRight: 0,
+                  borderRadius: 0,
+                },
+              }}
+              renderValue={(selectedId) => {
+                if (!rootData.myOrganizations) {
+                  return <OrganizationIcon tip="Please select an organization" />;
+                }
 
-                  const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
-                  if (!selectedItem) {
-                    return <BodyIconTypography label="Please select an organization" />;
-                  }
+                const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
+                if (!selectedItem) {
+                  return <OrganizationIcon tip="Please select an organization" />;
+                }
 
-                  return (
-                    <StackRow>
-                      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                        <OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />
-                      </Box>
-                      <StackColumn spacing={-0.5}>
-                        <LeadIconTypography label={selectedItem.name} />
-                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                      </StackColumn>
-                    </StackRow>
-                  );
-                }}
-              >
-                {rootData.myOrganizations.map((organization) => (
-                  <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
-                    <StackRow>
-                      <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
-                      <StackColumn spacing={-0.5}>
-                        <LeadIconTypography label={organization.name} />
-                        <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
-                      </StackColumn>
-                    </StackRow>
-                  </MenuItem>
-                ))}
+                return (
+                  <>
+                    <Box sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <LeadIconTypography
+                        label={selectedItem.name}
+                        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+                        startElement={<OrganizationAvatar name={{ name: selectedItem.name }} photo={{ url: selectedItem.logoUrl }} />}
+                      />
+                    </Box>
 
-                <Divider />
-
-                <MenuItem value={createOrganizationId}>
-                  <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
-                  mailto:
+                    <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <LeadIconTypography label={selectedItem.name} sx={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                    </Box>
+                  </>
+                );
+              }}
+            >
+              {rootData.myOrganizations.map((organization) => (
+                <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
+                  <StackRow>
+                    <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
+                    <StackColumn spacing={-0.5}>
+                      <LeadIconTypography label={organization.name} />
+                      <CaptionIconTypography label="Organization" sx={{ display: { xs: 'none', sm: 'block' } }} />
+                    </StackColumn>
+                  </StackRow>
                 </MenuItem>
-              </Select>
-            </FormControl>
+              ))}
+
+              <Divider />
+
+              <MenuItem value={createOrganizationId}>
+                <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
+              </MenuItem>
+            </Select>
           )}
 
           {!hideWelcomeMessage && (
@@ -239,7 +239,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
           <PushToRight />
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
-          <Divider orientation="vertical" flexItem />
+          <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
             <Link component={NextLink} href={notificationsLink}>
