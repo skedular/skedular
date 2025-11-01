@@ -1,5 +1,6 @@
 import { BodyIconTypography, PushToRight } from '@/components/commons';
 import { HamburgerMenuIcon } from '@/components/icons';
+import { getSignInLink, getSignUpLink } from '@/components/links';
 import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -31,6 +32,9 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
   const heightPercentage = ((maxWidth - 30) * 100) / originalWidth;
   const width = (originalWidth * widthPercentage) / 100;
   const height = (originalHeight * heightPercentage) / 100;
+
+  const signInLink = getSignInLink();
+  const signUpLink = getSignUpLink();
 
   const handleDarkThemeClicked = () => {
     updatePaletteMode('dark');
@@ -70,7 +74,7 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
         )}
 
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <IconButton component="a" href="/signin">
+          <IconButton component="a" href={signInLink}>
             <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }}>
               <BodyIconTypography label="Sign In" />
             </Button>
@@ -78,7 +82,7 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
         </Box>
 
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <IconButton component="a" href="/signup">
+          <IconButton component="a" href={signUpLink}>
             <Button component="span" variant="contained" fullWidth sx={{ textTransform: 'none' }} color="secondary">
               <BodyIconTypography label="Sign Up" invertDefaultColor={paletteMode === 'dark'} />
             </Button>
