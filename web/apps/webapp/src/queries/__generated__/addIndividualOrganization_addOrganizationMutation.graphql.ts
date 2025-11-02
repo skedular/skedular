@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f75b1da074f1c58541d324a6f0cdc54>>
+ * @generated SignedSource<<d81d915b8b2c5379ebd0b8d07bf357ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,10 +24,10 @@ export type AddOrganizationInput = {
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
-export type addPrivateOrganization_addOrganizationMutation$variables = {
+export type addIndividualOrganization_addOrganizationMutation$variables = {
   input: AddOrganizationInput;
 };
-export type addPrivateOrganization_addOrganizationMutation$data = {
+export type addIndividualOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
@@ -38,7 +38,7 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
     };
   };
 };
-export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
+export type addIndividualOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
@@ -49,10 +49,10 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
     };
   };
 };
-export type addPrivateOrganization_addOrganizationMutation = {
-  rawResponse: addPrivateOrganization_addOrganizationMutation$rawResponse;
-  response: addPrivateOrganization_addOrganizationMutation$data;
-  variables: addPrivateOrganization_addOrganizationMutation$variables;
+export type addIndividualOrganization_addOrganizationMutation = {
+  rawResponse: addIndividualOrganization_addOrganizationMutation$rawResponse;
+  response: addIndividualOrganization_addOrganizationMutation$data;
+  variables: addIndividualOrganization_addOrganizationMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -133,7 +133,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "addPrivateOrganization_addOrganizationMutation",
+    "name": "addIndividualOrganization_addOrganizationMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -142,20 +142,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "addPrivateOrganization_addOrganizationMutation",
+    "name": "addIndividualOrganization_addOrganizationMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "5b96db903823e7fade02f04eb978e63e",
+    "cacheID": "b0393bc559313dfcc2e6b1f5ba7ddf88",
     "id": null,
     "metadata": {},
-    "name": "addPrivateOrganization_addOrganizationMutation",
+    "name": "addIndividualOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n    }\n  }\n}\n"
+    "text": "mutation addIndividualOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "07d8ca4f2223e5b450ea73e62480c27e";
+(node as any).hash = "0b1c5b7d44f4aaf1a504dd01f0a49378";
 
 export default node;

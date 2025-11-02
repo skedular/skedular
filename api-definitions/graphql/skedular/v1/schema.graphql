@@ -2643,6 +2643,7 @@ enum OrganizationTagType {
 }
 
 enum OrganizationType {
+  INDIVIDUAL
   MARKETPLACE
   PRIVATE
 }

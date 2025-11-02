@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import { memo, type JSX } from 'react';
 
-export type UserType = 'private' | 'marketplace' | 'individual';
+export type UserType = 'private' | 'marketplace' | 'individual-organization' | 'individual-user';
 
 type Props = {
   icon?: React.ReactNode | JSX.Element;

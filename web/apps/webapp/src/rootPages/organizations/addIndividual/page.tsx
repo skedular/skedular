@@ -1,15 +1,15 @@
-import { getOrganizationBaseLink, getOrganizationLocationAddPrivateLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { getOrganizationBaseLink, getOrganizationLocationAddIndividualLink, getOrganizationLocationsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
-import { AddPrivateOrganization } from '@/components/organization/addOrganization';
+import { AddIndividualOrganization } from '@/components/organization/addOrganization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
-import type { pageAddPrivateOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddPrivateOrganization_claimLocationOwnershipMutation.graphql';
-import type { pageAddPrivateOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddPrivateOrganization_completeOnboardingMutation.graphql';
-import type { pageAddPrivateOrganization_rootQuery } from '@/queries/__generated__/pageAddPrivateOrganization_rootQuery.graphql';
+import type { pageAddIndividualOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddIndividualOrganization_claimLocationOwnershipMutation.graphql';
+import type { pageAddIndividualOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddIndividualOrganization_completeOnboardingMutation.graphql';
+import type { pageAddIndividualOrganization_rootQuery } from '@/queries/__generated__/pageAddIndividualOrganization_rootQuery.graphql';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -18,25 +18,25 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
-  queryReference: PreloadedQuery<pageAddPrivateOrganization_rootQuery, Record<string, unknown>>;
+  queryReference: PreloadedQuery<pageAddIndividualOrganization_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
 };
 
 const RootQuery = graphql`
-  query pageAddPrivateOrganization_rootQuery {
+  query pageAddIndividualOrganization_rootQuery {
     me {
       id
       isOnboardingDone
     }
-    ...addPrivateOrganization_query
+    ...addIndividualOrganization_query
   }
 `;
 
 const RootPage = ({ queryReference, onReloadRequired }: Props) => {
-  const rootData = usePreloadedQuery<pageAddPrivateOrganization_rootQuery>(RootQuery, queryReference);
+  const rootData = usePreloadedQuery<pageAddIndividualOrganization_rootQuery>(RootQuery, queryReference);
 
-  const [commitCompleteOnboarding] = useMutation<pageAddPrivateOrganization_completeOnboardingMutation>(graphql`
-    mutation pageAddPrivateOrganization_completeOnboardingMutation($input: CompleteOrganizationOnboardingInput!) @raw_response_type {
+  const [commitCompleteOnboarding] = useMutation<pageAddIndividualOrganization_completeOnboardingMutation>(graphql`
+    mutation pageAddIndividualOrganization_completeOnboardingMutation($input: CompleteOrganizationOnboardingInput!) @raw_response_type {
       completeOnboarding(input: $input) {
         customer {
           id
@@ -46,8 +46,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     }
   `);
 
-  const [commitClaimLocationOwnership] = useMutation<pageAddPrivateOrganization_claimLocationOwnershipMutation>(graphql`
-    mutation pageAddPrivateOrganization_claimLocationOwnershipMutation($input: ClaimLocationOwnershipInput!) {
+  const [commitClaimLocationOwnership] = useMutation<pageAddIndividualOrganization_claimLocationOwnershipMutation>(graphql`
+    mutation pageAddIndividualOrganization_claimLocationOwnershipMutation($input: ClaimLocationOwnershipInput!) {
       claimLocationOwnership(input: $input) {
         clientMutationId
       }
@@ -87,7 +87,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
           if (rootData.me.isOnboardingDone) {
             router.push(
-              getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+              getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
                 redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
               }),
             );
@@ -107,7 +107,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               }
 
               router.push(
-                getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+                getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
                   redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
                 }),
               );
@@ -117,7 +117,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
               router.push(
-                getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+                getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
                   redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
                 }),
               );
@@ -138,7 +138,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     } else {
       if (rootData.me.isOnboardingDone) {
         router.push(
-          getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+          getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
             redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
           }),
         );
@@ -159,7 +159,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           }
 
           router.push(
-            getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+            getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
               redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
             }),
           );
@@ -169,7 +169,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
           router.push(
-            getOrganizationLocationAddPrivateLink(integratedPlatrform, uniqueAlphanumericName, {
+            getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
               redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
             }),
           );
@@ -193,7 +193,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
   return (
     <NoOrganizationRootShell hideOrganizationSelector>
-      <AddPrivateOrganization
+      <AddIndividualOrganization
         rootDataRelay={rootData}
         onAdded={handleAdded}
         onCancel={handleCancelled}
@@ -208,7 +208,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 const MemoRootPage = memo(RootPage);
 
 const RootPageWithRelay = () => {
-  const [queryReference, loadQuery] = useQueryLoader<pageAddPrivateOrganization_rootQuery>(RootQuery);
+  const [queryReference, loadQuery] = useQueryLoader<pageAddIndividualOrganization_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
 

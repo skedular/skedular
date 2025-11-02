@@ -11,9 +11,9 @@ type Props = {
 
 const FeatureBox = ({ icon, title, subtitle }: Props) => (
   <Card sx={{ backgroundColor: 'rgba(255,255,255,0.1)', color: 'white', padding: 2 }}>
-    <StackRow>
+    <StackRow spacing={2} sx={{ flexWrap: 'nowrap', alignItems: 'flex-start' }}>
       {icon}
-      <StackColumn spacing={0}>
+      <StackColumn spacing={0} sx={{ minWidth: 0 }}>
         <BodyIconTypography fontWeight="bold" label={title} />
         <SmallIconTypography label={subtitle} />
       </StackColumn>

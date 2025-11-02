@@ -5,6 +5,7 @@ import { defaultButtonStyle } from '@/libs/theme';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import BusinessIcon from '@mui/icons-material/Business';
 import CoffeeIcon from '@mui/icons-material/Coffee';
+import CottageIcon from '@mui/icons-material/Cottage';
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
@@ -67,6 +68,11 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
           title="Powerful yet intuitive tools"
           subtitle="Feature-rich tools that remain simple and intuitive for everyone to use."
         />
+        <FeatureBox
+          icon={<CottageIcon sx={{ color: '#FF7043', fontSize: 40 }} />}
+          title="Individual hosting"
+          subtitle="List a spare studio, loft, or backyard office, keep each listing unique, and still manage payouts under one host profile."
+        />
       </LeftSidePanel>
 
       <RightSidePanel description="To get started, please tell us what type of user you are. This will help us customize your experience.">
@@ -88,12 +94,21 @@ const SetupFlow = ({ userTypesToShow, onUserTypeClick, showBackButton }: Props) 
           />
         )}
 
-        {(!userTypesToShow || userTypesToShow.some((item) => item === 'individual')) && (
+        {(!userTypesToShow || userTypesToShow.some((item) => item === 'individual-organization')) && (
+          <UserTypeCard
+            icon={<CottageIcon sx={{ color: '#FF7043', fontSize: 40 }} />}
+            title="Individual Host"
+            subtitle="I’m an individual who wants to list my own space, take bookings, and manage payouts"
+            onClick={() => onUserTypeClick('individual-organization')}
+          />
+        )}
+
+        {(!userTypesToShow || userTypesToShow.some((item) => item === 'individual-user')) && (
           <UserTypeCard
             icon={<PersonIcon sx={{ color: '#03A9F4', fontSize: 40 }} />}
             title="Individual User"
             subtitle="I'm looking for workspace solutions or want to join an organization"
-            onClick={() => onUserTypeClick('individual')}
+            onClick={() => onUserTypeClick('individual-user')}
           />
         )}
         {showBackButton && (

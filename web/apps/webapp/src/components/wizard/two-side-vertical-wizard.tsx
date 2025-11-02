@@ -6,7 +6,7 @@ const TwoSideVerticalWizard = ({ children }: PropsWithChildren) => (
   <GridContainer
     spacing={1}
     sx={{
-      height: (theme) => {
+      minHeight: (theme) => {
         const appBarMinHeight = theme.mixins.toolbar.minHeight?.toString();
 
         return `calc(100vh - ${(appBarMinHeight ? parseInt(appBarMinHeight) : 56) + 10}px)`;

@@ -16,6 +16,7 @@ export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined
 export const getOrganizationSetupLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/setup`;
 export const getOrganizationAddPrivateLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-private`;
 export const getOrganizationAddMarketplaceLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-marketplace`;
+export const getOrganizationAddIndividualLink = (integratedPlatrform: string | undefined) => `${getOrganizationsBaseLink(integratedPlatrform)}/add-individual`;
 export const getOrganizationBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationsBaseLink(integratedPlatrform)}/${id}`;
 
 export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | undefined, id: string, options?: { customerId?: string; locationId?: string; teamId?: string }) => {
@@ -80,6 +81,18 @@ export const getOrganizationLocationAddMarketplaceLink = (integratedPlatrform: s
   return params
     ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace?${params}`
     : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-marketplace`;
+};
+
+export const getOrganizationLocationAddIndividualLink = (integratedPlatrform: string | undefined, id: string, options?: { redirectUrl?: string }) => {
+  let params = '';
+
+  if (options?.redirectUrl) {
+    params += `redirectUrl=${options.redirectUrl}`;
+  }
+
+  return params
+    ? `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual?${params}`
+    : `${getOrganizationBaseLink(integratedPlatrform, id)}/locations/add-individual`;
 };
 
 export const getOrganizationLocationsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/locations`;

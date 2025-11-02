@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c9c996d790f011fb5d81af4d3b0f21e>>
+ * @generated SignedSource<<8a7f24f5e8460dd6cf79d718afac0f29>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type UpdateOrganizationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
