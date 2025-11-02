@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0839d3d8a1b3e823bafe6b4280662f57>>
+ * @generated SignedSource<<8d4d2e96cb2f902bd82152e2cacc9758>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,8 +24,7 @@ export type marketplaceLocationCard_LocationDetails$data = {
   readonly id: string;
   readonly name: string;
   readonly physicalAddress: {
-    readonly city: string | null | undefined;
-    readonly suburb: string | null | undefined;
+    readonly multilinesFormattedAddress: string | null | undefined;
   } | null | undefined;
   readonly primaryFeatureImage: {
     readonly thumbnail: {
@@ -134,14 +133,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "suburb",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "city",
+          "name": "multilinesFormattedAddress",
           "storageKey": null
         }
       ],
@@ -195,6 +187,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9c78df24f7fdc841428f90bc89eb0afb";
+(node as any).hash = "25cdadf8794c121c0da432b348164454";
 
 export default node;

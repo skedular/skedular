@@ -17,7 +17,6 @@ import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
-import MarketplaceLocationPopupCard from './marketplace-location-popup-card';
 
 let L: typeof import('leaflet');
 let MapContainer: typeof import('react-leaflet').MapContainer;
@@ -82,7 +81,6 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
                 latitude
               }
               ...marketplaceLocationCard_LocationDetails
-              ...marketplaceLocationPopupCard_LocationDetails
             }
           }
         }
@@ -288,7 +286,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
               >
                 {!isMobileOrTablet && (
                   <Popup>
-                    <MarketplaceLocationPopupCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                    <MarketplaceLocationCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                   </Popup>
                 )}
               </Marker>
@@ -315,7 +313,7 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
           }}
         >
           <Box sx={{ pointerEvents: 'auto' }}>
-            <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
+            <MarketplaceLocationCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
           </Box>
         </Box>
       )}
