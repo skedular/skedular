@@ -15,6 +15,7 @@ import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
+import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
@@ -97,7 +98,9 @@ const Organization = ({ queryReference, onReloadRequired, organizationUniqueAlph
           <ClaimLocationOwnershipButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} onClaimClicked={handleClaimLocationOwnershipClicked} />
         )}
       </GridContainer>
-      <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+        <GettingStarted rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      </Box>
       <MyBookings
         rootDataRelay={rootData}
         rootDataBookingRelay={rootData}
