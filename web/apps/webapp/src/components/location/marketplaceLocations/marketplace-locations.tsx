@@ -314,7 +314,9 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
             paddingBottom: 7,
           }}
         >
-          <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
+          <Box sx={{ pointerEvents: 'auto' }}>
+            <MarketplaceLocationPopupCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
+          </Box>
         </Box>
       )}
     </Box>
