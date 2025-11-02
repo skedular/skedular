@@ -9,6 +9,7 @@ const barlow = Barlow({ subsets: ['latin'], weight: ['100', '200', '300', '400',
 export const metadata: Metadata = {
   title: 'Skedular',
   description: 'The premier solution for modern workspace management ',
+  icons: '/images/skedular-icon-primary.svg',
 };
 
 export const viewport: Viewport = {
