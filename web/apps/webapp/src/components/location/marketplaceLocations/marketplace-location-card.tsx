@@ -108,7 +108,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
           ) : null
         }
       />
-      <CardContent>
+      <CardContent sx={{ height: onClose ? null : 200 }}>
         <LeadIconTypography label={locationDetails.name} />
         {locationDetails.physicalAddress?.multilinesFormattedAddress && <SmallIconTypography label={locationDetails.physicalAddress?.multilinesFormattedAddress} />}
       </CardContent>
