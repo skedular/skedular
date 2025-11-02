@@ -191,7 +191,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                     </Box>
 
                     <Box sx={{ display: { xs: 'block', sm: 'none' }, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      <LeadIconTypography label={selectedItem.name} sx={{ width: 200, overflow: 'hidden', textOverflow: 'ellipsis' }} />
+                      <LeadIconTypography label={selectedItem.name} sx={{ width: 150, overflow: 'hidden', textOverflow: 'ellipsis' }} />
                     </Box>
                   </>
                 );
