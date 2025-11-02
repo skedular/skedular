@@ -2340,7 +2340,6 @@ input UpdateOrganizationInput {
   id: String
   industrySubCategoryIds: [String!]!
   name: String!
-  type: OrganizationType!
   uniqueAlphanumericName: String
   website: String
 }

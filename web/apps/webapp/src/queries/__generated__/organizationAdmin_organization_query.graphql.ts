@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eec03ca964fc5317abf41d5c9d3728d6>>
+ * @generated SignedSource<<901f0757414777f7e7a14f1f3bffd086>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,6 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_organization_query$data = {
   readonly organization: {
@@ -99,10 +98,6 @@ export type organizationAdmin_organization_query$data = {
       readonly taxId: string;
       readonly taxRatePercentage: any;
     } | null | undefined;
-    readonly type: {
-      readonly name: string;
-      readonly type: OrganizationType;
-    };
     readonly uniqueAlphanumericName: string | null | undefined;
     readonly website: string | null | undefined;
   } | null | undefined;
@@ -315,25 +310,6 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "about",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTypeDetails",
-          "kind": "LinkedField",
-          "name": "type",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            (v1/*: any*/)
-          ],
           "storageKey": null
         },
         {
@@ -620,6 +596,6 @@ return {
 };
 })();
 
-(node as any).hash = "0d19709250c17c79c87b89eeac9eefa4";
+(node as any).hash = "7cbef5e857d95e3343146abef2c54c1b";
 
 export default node;

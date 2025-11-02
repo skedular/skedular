@@ -19,7 +19,7 @@ import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, Pref
 import { getOrganizationBaseLink, getRootLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { OrganizationMultipleChoicesIndustries, SingleChoiceOrganizationType } from '@/components/organization';
+import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
 import { AddOrganizationCustomTagButton } from '@/components/organization/addOrganizationCustomTag';
 import { AddOrganizationPaymentMethodDialog } from '@/components/organization/addOrganizationPaymentMethod';
 import { AddOrganizationZoneButton } from '@/components/organization/addOrganizationZone';
@@ -48,7 +48,7 @@ import type { organizationAdmin_removeOrganizationPaymentMethodMutation } from '
 import type { organizationAdmin_removeOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationSsoSettingsMutation.graphql';
 import type { organizationAdmin_removeOrganizationTaxDetailsMutation } from '@/queries/__generated__/organizationAdmin_removeOrganizationTaxDetailsMutation.graphql';
 import type { organizationAdmin_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationBillingDetailsMutation.graphql';
-import type { organizationAdmin_updateOrganizationMutation, OrganizationType } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
+import type { organizationAdmin_updateOrganizationMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationMutation.graphql';
 import type { organizationAdmin_updateOrganizationOfferingMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationOfferingMutation.graphql';
 import type { organizationAdmin_updateOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationPhysicalAddressMutation.graphql';
 import type { organizationAdmin_updateOrganizationSsoSettingsMutation } from '@/queries/__generated__/organizationAdmin_updateOrganizationSsoSettingsMutation.graphql';
@@ -97,7 +97,6 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
-  type: string;
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
@@ -108,7 +107,6 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
   website: string().url('Website must be a valid Url').nullable(),
-  type: string().required('Type is required'),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
     .email(({ value }) => `${value} is not a valid email`)
@@ -237,7 +235,6 @@ const OrganizationAdmin = ({
           }
         }
         ...organizationMultipleChoicesIndustries_query
-        ...singleChoiceOrganizationType_query
       }
     `,
     rootDataRelay,
@@ -252,10 +249,6 @@ const OrganizationAdmin = ({
           name
           logoUrl
           about
-          type {
-            type
-            name
-          }
           website
           canModify
           industrySubCategories {
@@ -403,10 +396,6 @@ const OrganizationAdmin = ({
           name
           about
           website
-          type {
-            type
-            name
-          }
           industrySubCategories {
             id
             name
@@ -693,8 +682,6 @@ const OrganizationAdmin = ({
   const debounceSetOrganizationAbout = useDebounceCallback(setOrganizationAbout, keyboardTextFieldDebounceTimeout);
   const [organizationWebsite, setOrganizationWebsite] = useState(rootDataOrganization.organization?.website);
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
-  const [organizationType, setOrganizationType] = useState<string>(rootDataOrganization.organization?.type.type ?? '');
-  const debounceSetOrganizationType = useDebounceCallback(setOrganizationType, keyboardTextFieldDebounceTimeout);
   const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(
     rootDataOrganization.organization?.industrySubCategories.map(({ id }) => id) ?? [],
   );
@@ -868,7 +855,7 @@ const OrganizationAdmin = ({
     });
   }, [startTransition, refetchOrganization]);
 
-  const handleOrganizationDetailUpdateClick = ({ uniqueAlphanumericName, name, about, website, type, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({ uniqueAlphanumericName, name, about, website, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -886,7 +873,6 @@ const OrganizationAdmin = ({
           name,
           about,
           website,
-          type: type as OrganizationType,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
           contactPhone,
@@ -921,10 +907,6 @@ const OrganizationAdmin = ({
             name,
             about,
             website,
-            type: {
-              type: type as OrganizationType,
-              name: '',
-            },
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
@@ -2256,7 +2238,6 @@ const OrganizationAdmin = ({
                 name: organizationName,
                 about: organizationAbout,
                 website: organizationWebsite,
-                type: organizationType,
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
                 contactPhone: organizationContactPhone,
@@ -2267,7 +2248,6 @@ const OrganizationAdmin = ({
                 debounceSetOrganizationName(values!.name);
                 debounceSetOrganizationAbout(values!.about);
                 debounceSetOrganizationWebsite(values!.website);
-                debounceSetOrganizationType(values!.type);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
                 debounceSetOrganizationContactPhone(values!.contactPhone);
@@ -2312,10 +2292,6 @@ const OrganizationAdmin = ({
 
                       <FormFieldLabel label="Website">
                         <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Type">
-                        <SingleChoiceOrganizationType rootDataRelay={rootData} name="type" required={requiredOrganizationDetailsFields.type} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Industry">

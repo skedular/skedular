@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62f20918611168856122ba5f71d61683>>
+ * @generated SignedSource<<0c5d07dffc56fea04989121910f96fd1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -64,153 +64,143 @@ v5 = {
   "storageKey": null
 },
 v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v4/*: any*/)
-],
-v7 = [
   (v5/*: any*/),
   (v4/*: any*/)
 ],
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "osmType",
   "storageKey": null
 },
-v9 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "osmId",
   "storageKey": null
 },
-v10 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "placeId",
   "storageKey": null
 },
-v11 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "longitude",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "latitude",
   "storageKey": null
 },
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "formattedAddress",
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "addressLine1",
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "addressLine2",
   "storageKey": null
 },
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "suburb",
   "storageKey": null
 },
-v17 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "city",
   "storageKey": null
 },
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "province",
   "storageKey": null
 },
-v19 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "zipcode",
   "storageKey": null
 },
-v20 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "country",
   "storageKey": null
 },
-v21 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "countryCode",
   "storageKey": null
 },
-v22 = {
+v21 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isEnterprise",
   "storageKey": null
 },
-v23 = {
+v22 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "unitPrice",
   "storageKey": null
 },
-v24 = {
+v23 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "featureSet",
   "storageKey": null
 },
-v25 = {
+v24 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "underPriceLines",
   "storageKey": null
 },
-v26 = {
+v25 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "free",
   "storageKey": null
 },
-v27 = [
+v26 = [
   {
     "fields": [
       {
@@ -223,7 +213,7 @@ v27 = [
     "name": "where"
   }
 ],
-v28 = [
+v27 = [
   {
     "alias": null,
     "args": null,
@@ -321,7 +311,7 @@ v28 = [
     ]
   }
 ],
-v29 = [
+v28 = [
   {
     "kind": "Literal",
     "name": "orderBy",
@@ -344,7 +334,7 @@ v29 = [
     "name": "where"
   }
 ],
-v30 = [
+v29 = [
   (v5/*: any*/)
 ];
 return {
@@ -438,16 +428,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "OrganizationTypeDetails",
-            "kind": "LinkedField",
-            "name": "type",
-            "plural": false,
-            "selections": (v6/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "kind": "ScalarField",
             "name": "website",
             "storageKey": null
@@ -466,7 +446,7 @@ return {
             "kind": "LinkedField",
             "name": "industrySubCategories",
             "plural": true,
-            "selections": (v7/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -492,6 +472,7 @@ return {
             "plural": false,
             "selections": [
               (v5/*: any*/),
+              (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
               (v10/*: any*/),
@@ -504,8 +485,7 @@ return {
               (v17/*: any*/),
               (v18/*: any*/),
               (v19/*: any*/),
-              (v20/*: any*/),
-              (v21/*: any*/)
+              (v20/*: any*/)
             ],
             "storageKey": null
           },
@@ -565,7 +545,7 @@ return {
             "plural": false,
             "selections": [
               (v5/*: any*/),
-              (v22/*: any*/),
+              (v21/*: any*/),
               (v4/*: any*/),
               {
                 "alias": null,
@@ -581,10 +561,10 @@ return {
                 "name": "end",
                 "storageKey": null
               },
+              (v22/*: any*/),
               (v23/*: any*/),
               (v24/*: any*/),
-              (v25/*: any*/),
-              (v26/*: any*/)
+              (v25/*: any*/)
             ],
             "storageKey": null
           },
@@ -596,7 +576,7 @@ return {
             "name": "availableOfferings",
             "plural": true,
             "selections": [
-              (v22/*: any*/),
+              (v21/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -605,10 +585,10 @@ return {
                 "storageKey": null
               },
               (v4/*: any*/),
+              (v22/*: any*/),
               (v23/*: any*/),
               (v24/*: any*/),
-              (v25/*: any*/),
-              (v26/*: any*/)
+              (v25/*: any*/)
             ],
             "storageKey": null
           },
@@ -701,6 +681,7 @@ return {
                 "name": "email",
                 "storageKey": null
               },
+              (v7/*: any*/),
               (v8/*: any*/),
               (v9/*: any*/),
               (v10/*: any*/),
@@ -713,24 +694,23 @@ return {
               (v17/*: any*/),
               (v18/*: any*/),
               (v19/*: any*/),
-              (v20/*: any*/),
-              (v21/*: any*/)
+              (v20/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v27/*: any*/),
+            "args": (v26/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "zones",
             "plural": false,
-            "selections": (v28/*: any*/),
+            "selections": (v27/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v27/*: any*/),
+            "args": (v26/*: any*/),
             "filters": [
               "where"
             ],
@@ -741,17 +721,17 @@ return {
           },
           {
             "alias": null,
-            "args": (v29/*: any*/),
+            "args": (v28/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "customTags",
             "plural": false,
-            "selections": (v28/*: any*/),
+            "selections": (v27/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v29/*: any*/),
+            "args": (v28/*: any*/),
             "filters": [
               "where",
               "orderBy"
@@ -794,7 +774,7 @@ return {
             "kind": "LinkedField",
             "name": "preferredZones",
             "plural": true,
-            "selections": (v30/*: any*/),
+            "selections": (v29/*: any*/),
             "storageKey": null
           },
           {
@@ -804,7 +784,7 @@ return {
             "kind": "LinkedField",
             "name": "preferredCustomTags",
             "plural": true,
-            "selections": (v30/*: any*/),
+            "selections": (v29/*: any*/),
             "storageKey": null
           }
         ],
@@ -825,33 +805,23 @@ return {
             "kind": "LinkedField",
             "name": "subCategories",
             "plural": true,
-            "selections": (v7/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           (v5/*: any*/),
           (v4/*: any*/)
         ],
         "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "OrganizationTypeDetails",
-        "kind": "LinkedField",
-        "name": "organizationTypes",
-        "plural": true,
-        "selections": (v6/*: any*/),
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e8dce52c6de7c7e59ce00e24fa9f176b",
+    "cacheID": "a878d33603b9cb2ad76a0600def43512",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organization_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    uniqueAlphanumericName\n    name\n    logoUrl\n    about\n    type {\n      type\n      name\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n    preferredZones {\n      id\n    }\n    preferredCustomTags {\n      id\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n  ...singleChoiceOrganizationType_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(where: {nameContains: $zoneNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n\nfragment singleChoiceOrganizationType_query on Query {\n  organizationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organization_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    uniqueAlphanumericName\n    name\n    logoUrl\n    about\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n    preferredZones {\n      id\n    }\n    preferredCustomTags {\n      id\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(where: {nameContains: $zoneNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();

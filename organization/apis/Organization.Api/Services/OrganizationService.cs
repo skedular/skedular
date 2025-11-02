@@ -354,6 +354,9 @@ public class OrganizationService(
             ? existingOrganization.UniqueAlphanumericName
             : organization.UniqueAlphanumericName.ToLowerInvariant();
 
+        // Do not allow a changing organization type, the organization type is immutable
+        organization.Type = existingOrganization.Type.ToOrganizationType();
+
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));

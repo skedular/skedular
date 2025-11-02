@@ -497,7 +497,6 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Website = src.Website,
-            Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()

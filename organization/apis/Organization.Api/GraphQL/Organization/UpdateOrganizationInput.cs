@@ -15,7 +15,6 @@ public class UpdateOrganizationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
-    [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 

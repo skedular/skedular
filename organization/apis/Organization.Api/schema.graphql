@@ -898,7 +898,6 @@ input UpdateOrganizationInput {
   name: String!
   about: String
   website: String
-  type: OrganizationType!
   contactEmail: String
   contactPhone: String
   industrySubCategoryIds: [String!]!
