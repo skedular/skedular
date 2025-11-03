@@ -8,9 +8,9 @@ resource "azurerm_redis_cache" "redis" {
   name                 = "skedular-${module.naming.redis_cache.name}"
   location             = var.region
   resource_group_name  = var.resource_group
-  capacity             = 1
+  capacity             = 0
   family               = "C"
-  sku_name             = "Standard"
+  sku_name             = "Basic"
   non_ssl_port_enabled = false
   minimum_tls_version  = "1.2"
 

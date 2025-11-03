@@ -4,8 +4,8 @@ module "azure-postgresql" {
   environment    = var.environment
   region         = var.region
   tags           = local.tags
-  sku_name       = "GP_Standard_D2s_v3"
-  storage_mb     = 32768
+  sku_name       = "GP_Standard_D2ads_v5"
+  storage_mb     = 65536
 }
 
 module "naming" {

@@ -12,7 +12,7 @@ resource "azurerm_eventhub_namespace" "this" {
   sku                      = "Standard"
   capacity                 = 1
   auto_inflate_enabled     = true
-  maximum_throughput_units = 4
+  maximum_throughput_units = 1
   tags                     = local.merged_tags
 }
 

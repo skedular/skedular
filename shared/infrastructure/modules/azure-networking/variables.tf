@@ -27,3 +27,9 @@ variable "secret_permissions" {
   description = "List of secret permissions."
   default     = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
 }
+
+variable "resource_group" {
+  description = "Azure respurce group name."
+  type        = string
+  default     = null
+}

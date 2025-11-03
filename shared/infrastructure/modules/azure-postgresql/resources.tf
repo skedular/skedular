@@ -35,6 +35,7 @@ module "postgresql" {
   create_mode            = "Default"
   delegated_subnet_id    = data.azurerm_subnet.database-subnet.id
   storage_mb             = var.storage_mb
+
   # databases = {
   #   my_db1 = {
   #     charset   = "UTF8"
@@ -48,11 +49,14 @@ module "postgresql" {
   #   }
   # }
 
+  # Explicitly disable HA; module default is ZoneRedundant but we want single-zone deployment.
+  high_availability = null
   # high_availability = {
   #   mode                      = "ZoneRedundant"
   #   standby_availability_zone = 2
   # }
-  # zone                = 1
+
+  zone = 1
 
   server_version      = 17
   sku_name            = var.sku_name

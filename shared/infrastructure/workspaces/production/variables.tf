@@ -23,7 +23,7 @@ variable "gcp_web_credentials_client_secret" {
 variable "azure_subscription_id" {
   description = "Azure subscription ID to deploy resources into."
   type        = string
-  default     = "763dfea3-3b46-43a7-9e56-bacef018b4ba"
+  default     = "edce45e7-5697-4935-bd63-648e9e609083"
 }
 
 variable "azure_region" {
