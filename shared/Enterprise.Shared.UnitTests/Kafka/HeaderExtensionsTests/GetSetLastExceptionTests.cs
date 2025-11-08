@@ -3,7 +3,6 @@ using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
 using FluentAssertions;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
 

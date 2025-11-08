@@ -3,7 +3,6 @@ using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using OpenTelemetry.Context.Propagation;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivityPropagatorTests;
 

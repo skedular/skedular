@@ -3,7 +3,6 @@ using Enterprise.Shared.Telemetry;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivitySourceFacadeTests;
 

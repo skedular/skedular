@@ -5,7 +5,6 @@ using FakeItEasy;
 using FluentAssertions;
 using OpenTelemetry.Context.Propagation;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagationContextGetterTests;
 

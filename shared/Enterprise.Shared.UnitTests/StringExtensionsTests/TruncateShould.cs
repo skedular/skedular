@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.StringExtensionsTests;
 

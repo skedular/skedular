@@ -2,7 +2,6 @@
 using Enterprise.Shared.Kafka;
 using FluentAssertions;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Kafka.Consume.KafkaNamingTests;
 

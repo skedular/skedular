@@ -2,7 +2,6 @@
 using Enterprise.Shared.Telemetry;
 using FluentAssertions;
 using Testing.Shared;
-using Xunit;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivityGetterTests;
 
