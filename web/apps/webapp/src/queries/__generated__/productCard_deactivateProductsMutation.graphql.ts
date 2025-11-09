@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc14eee7e50cc093246a30aada5572e9>>
+ * @generated SignedSource<<f3752648c16fc133910c59540404fa1d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,10 @@ export type DeactivateProductsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMarketplaceSetup_deactivateProductsMutation$variables = {
+export type productCard_deactivateProductsMutation$variables = {
   input: DeactivateProductsInput;
 };
-export type organizationMarketplaceSetup_deactivateProductsMutation$data = {
+export type productCard_deactivateProductsMutation$data = {
   readonly deactivateProducts: {
     readonly products: ReadonlyArray<{
       readonly id: string;
@@ -24,7 +24,7 @@ export type organizationMarketplaceSetup_deactivateProductsMutation$data = {
     }>;
   };
 };
-export type organizationMarketplaceSetup_deactivateProductsMutation$rawResponse = {
+export type productCard_deactivateProductsMutation$rawResponse = {
   readonly deactivateProducts: {
     readonly products: ReadonlyArray<{
       readonly id: string;
@@ -32,10 +32,10 @@ export type organizationMarketplaceSetup_deactivateProductsMutation$rawResponse 
     }>;
   };
 };
-export type organizationMarketplaceSetup_deactivateProductsMutation = {
-  rawResponse: organizationMarketplaceSetup_deactivateProductsMutation$rawResponse;
-  response: organizationMarketplaceSetup_deactivateProductsMutation$data;
-  variables: organizationMarketplaceSetup_deactivateProductsMutation$variables;
+export type productCard_deactivateProductsMutation = {
+  rawResponse: productCard_deactivateProductsMutation$rawResponse;
+  response: productCard_deactivateProductsMutation$data;
+  variables: productCard_deactivateProductsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -95,7 +95,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_deactivateProductsMutation",
+    "name": "productCard_deactivateProductsMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -104,20 +104,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_deactivateProductsMutation",
+    "name": "productCard_deactivateProductsMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "111bd7eb799c22df45f112bac286bfb2",
+    "cacheID": "467423d4a4bc2c38c06708a906431957",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_deactivateProductsMutation",
+    "name": "productCard_deactivateProductsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deactivateProductsMutation(\n  $input: DeactivateProductsInput!\n) {\n  deactivateProducts(input: $input) {\n    products {\n      id\n      inactive\n    }\n  }\n}\n"
+    "text": "mutation productCard_deactivateProductsMutation(\n  $input: DeactivateProductsInput!\n) {\n  deactivateProducts(input: $input) {\n    products {\n      id\n      inactive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5d3f5d8eb0f96d03221696c7c320d30f";
+(node as any).hash = "17c2bcc78e8736343c5a16e1af1a48f8";
 
 export default node;

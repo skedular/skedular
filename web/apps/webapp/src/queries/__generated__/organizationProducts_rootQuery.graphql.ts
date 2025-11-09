@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa57297408751eafdd600cb7099bda36>>
+ * @generated SignedSource<<9d93ce94359f26daaa19521ec5cb5d71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -226,6 +226,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "inactive",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "description",
                     "storageKey": null
                   },
@@ -371,12 +378,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8af99e05a5e4ef61ba619266beab8c69",
+    "cacheID": "c9a0b7e14b7583cf0fa8b335ef62a22b",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  description\n  priceToDisplay\n  priceUnit {\n    name\n  }\n  numberOfResourcesToBook\n  minDurationMinutes\n  maxDurationMinutes\n  requireConsecutiveDays\n  maxBookingSpreadDays\n  organization {\n    id\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  isPriceTaxInclusive\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n}\n"
   }
 };
 })();

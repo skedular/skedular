@@ -23,7 +23,6 @@ type Props = {
 const RootQuery = graphql`
   query pageOrganizationMarketplaceSetup_rootQuery(
     $organizationUniqueAlphanumericName: String!
-    $productNameSearchText: String
     $productTagNameSearchText: String
     $locationTagNameSearchText: String
     $organizationStripeConnectAccountNameSearchText: String
@@ -33,7 +32,6 @@ const RootQuery = graphql`
       name
     }
     ...organizationMarketplaceSetup_query
-    ...organizationMarketplaceSetup_products_query
     ...organizationMarketplaceSetup_productTags_query
     ...organizationMarketplaceSetup_locationTags_query
     ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query
@@ -67,7 +65,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       <OrganizationMarketplaceSetup
         rootDataRelay={rootData}
-        rootDataProductsRelay={rootData}
         rootDataProductTagsRelay={rootData}
         rootDataLocationTagsRelay={rootData}
         rootDataOrganizationStripeConnectAccountsRelay={rootData}

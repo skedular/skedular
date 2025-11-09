@@ -87,8 +87,8 @@ export { default as SetupMarketplaceIcon } from '@mui/icons-material/Storefront'
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';
 export { default as SsoSettingsIcon } from '@mui/icons-material/SyncLock';
 export { default as TodayIcon } from '@mui/icons-material/Today';
-export { default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
-export { default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';
+export { default as InactiveIcon, default as ToggleOffIcon } from '@mui/icons-material/ToggleOff';
+export { default as ActiveIcon, default as ToggleOnIcon } from '@mui/icons-material/ToggleOn';
 export { default as UpgradeIcon } from '@mui/icons-material/Upgrade';
 export { default as ViewIcon } from '@mui/icons-material/Visibility';
 export { default as OpenAllDayIcon } from '@mui/icons-material/WbSunny';

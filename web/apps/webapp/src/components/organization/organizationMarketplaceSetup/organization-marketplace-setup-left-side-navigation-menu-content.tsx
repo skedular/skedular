@@ -1,9 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BankAccountIcon, LocationTagIcon, ProductIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
+import { BankAccountIcon, LocationTagIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
   getOrganizationMarketplaceSetupLocationTagsBaseLink,
-  getOrganizationMarketplaceSetupProductsBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
@@ -70,7 +69,6 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const productsLink = getOrganizationMarketplaceSetupProductsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
 
   return (
     <List
@@ -159,25 +157,6 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <LocationTagIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={productsLink}>
-          <ListItemButton selected={fullPath === productsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === productsLink) }}>
-            {collapsed && (
-              <BodyIconTypography startElement={!hideIcons && <ProductTagIcon color="inherit" />} invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'} />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Product"
-                startElement={!hideIcons && <ProductIcon excludeTooltip color="inherit" />}
-                spacing={3}
-                invertDefaultColor={fullPath === productsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

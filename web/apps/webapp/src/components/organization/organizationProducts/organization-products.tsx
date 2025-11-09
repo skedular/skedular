@@ -42,6 +42,7 @@ const RootQuery = graphql`
 
 const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
+  const connectionIds = useMemo(() => [rootData.products.__id], [rootData.products]);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
 
   if (!rootData.products) {
@@ -49,32 +50,31 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
   }
 
   return (
-    <>
-      <StackColumn sx={{ maxWidth: maxScreenWidth }}>
-        <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-          <PushToRight />
-          <NewProductButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
-        </GridContainer>
-        <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-          <SectionIconTypography label="Products" />
-          <Divider />
-          <Box sx={{ paddingBottom: defaultPadding }} />
+    <StackColumn sx={{ maxWidth: maxScreenWidth }}>
+      <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
+        <PushToRight />
+        <NewProductButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      </GridContainer>
+      <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+        <SectionIconTypography label="Products" />
+        <Divider />
+        <Box sx={{ paddingBottom: defaultPadding }} />
 
-          <GridContainer>
-            {products.map((product) => (
-              <Grid key={product.id}>
-                <ProductCard
-                  rootDataRelay={rootData}
-                  productDetailsRelay={product}
-                  onReloadRequired={onReloadRequired}
-                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                />
-              </Grid>
-            ))}
-          </GridContainer>
-        </StackColumn>
+        <GridContainer>
+          {products.map((product) => (
+            <Grid key={product.id}>
+              <ProductCard
+                rootDataRelay={rootData}
+                productDetailsRelay={product}
+                onReloadRequired={onReloadRequired}
+                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                connectionIds={connectionIds}
+              />
+            </Grid>
+          ))}
+        </GridContainer>
       </StackColumn>
-    </>
+    </StackColumn>
   );
 };
 

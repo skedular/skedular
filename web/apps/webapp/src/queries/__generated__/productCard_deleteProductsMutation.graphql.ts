@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<23c19b8eb2f9d0bcf8029c91913c5a55>>
+ * @generated SignedSource<<fe197495fd6a372507fed0b367b7a838>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,20 +13,20 @@ export type DeleteProductsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMarketplaceSetup_deleteProductsMutation$variables = {
+export type productCard_deleteProductsMutation$variables = {
   connectionIds: ReadonlyArray<string>;
   input: DeleteProductsInput;
 };
-export type organizationMarketplaceSetup_deleteProductsMutation$data = {
+export type productCard_deleteProductsMutation$data = {
   readonly deleteProducts: {
     readonly products: ReadonlyArray<{
       readonly id: string;
     }>;
   };
 };
-export type organizationMarketplaceSetup_deleteProductsMutation = {
-  response: organizationMarketplaceSetup_deleteProductsMutation$data;
-  variables: organizationMarketplaceSetup_deleteProductsMutation$variables;
+export type productCard_deleteProductsMutation = {
+  response: productCard_deleteProductsMutation$data;
+  variables: productCard_deleteProductsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,7 +61,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_deleteProductsMutation",
+    "name": "productCard_deleteProductsMutation",
     "selections": [
       {
         "alias": null,
@@ -94,7 +94,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_deleteProductsMutation",
+    "name": "productCard_deleteProductsMutation",
     "selections": [
       {
         "alias": null,
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "898506d327f9a3e90d53ba1c6030f56e",
+    "cacheID": "d90fb5f293c881b8a93b598a38827aa7",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_deleteProductsMutation",
+    "name": "productCard_deleteProductsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_deleteProductsMutation(\n  $input: DeleteProductsInput!\n) {\n  deleteProducts(input: $input) {\n    products {\n      id\n    }\n  }\n}\n"
+    "text": "mutation productCard_deleteProductsMutation(\n  $input: DeleteProductsInput!\n) {\n  deleteProducts(input: $input) {\n    products {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6ae84f96e5baed04552236ad6ad24734";
+(node as any).hash = "ea625b12b78d9cb6a3f1990402c21283";
 
 export default node;

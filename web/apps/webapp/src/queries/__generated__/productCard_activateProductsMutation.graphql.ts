@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<291ea450f40d65bb971de09147cf36e5>>
+ * @generated SignedSource<<6dbf56dcb9dcd20c387113b493f06ebf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,10 @@ export type ActivateProductsInput = {
   clientMutationId?: string | null | undefined;
   ids: ReadonlyArray<string>;
 };
-export type organizationMarketplaceSetup_activateProductsMutation$variables = {
+export type productCard_activateProductsMutation$variables = {
   input: ActivateProductsInput;
 };
-export type organizationMarketplaceSetup_activateProductsMutation$data = {
+export type productCard_activateProductsMutation$data = {
   readonly activateProducts: {
     readonly products: ReadonlyArray<{
       readonly id: string;
@@ -24,7 +24,7 @@ export type organizationMarketplaceSetup_activateProductsMutation$data = {
     }>;
   };
 };
-export type organizationMarketplaceSetup_activateProductsMutation$rawResponse = {
+export type productCard_activateProductsMutation$rawResponse = {
   readonly activateProducts: {
     readonly products: ReadonlyArray<{
       readonly id: string;
@@ -32,10 +32,10 @@ export type organizationMarketplaceSetup_activateProductsMutation$rawResponse = 
     }>;
   };
 };
-export type organizationMarketplaceSetup_activateProductsMutation = {
-  rawResponse: organizationMarketplaceSetup_activateProductsMutation$rawResponse;
-  response: organizationMarketplaceSetup_activateProductsMutation$data;
-  variables: organizationMarketplaceSetup_activateProductsMutation$variables;
+export type productCard_activateProductsMutation = {
+  rawResponse: productCard_activateProductsMutation$rawResponse;
+  response: productCard_activateProductsMutation$data;
+  variables: productCard_activateProductsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -95,7 +95,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_activateProductsMutation",
+    "name": "productCard_activateProductsMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -104,20 +104,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_activateProductsMutation",
+    "name": "productCard_activateProductsMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "be4d56502b2958c80ae2ee4bdf23becb",
+    "cacheID": "df0e4ae5a871b2d21925d01184e73c25",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_activateProductsMutation",
+    "name": "productCard_activateProductsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_activateProductsMutation(\n  $input: ActivateProductsInput!\n) {\n  activateProducts(input: $input) {\n    products {\n      id\n      inactive\n    }\n  }\n}\n"
+    "text": "mutation productCard_activateProductsMutation(\n  $input: ActivateProductsInput!\n) {\n  activateProducts(input: $input) {\n    products {\n      id\n      inactive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "73faf906f76cfb58fd5482c5467458be";
+(node as any).hash = "cda43e50f7227bcbf7940f4f31300104";
 
 export default node;
