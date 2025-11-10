@@ -90,7 +90,8 @@ public class InvitationService(
         var pendingInvitations = await repositoryFactory.JoinInvitationRepository.GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
             organizationId,
             organizationUniqueAlphanumericName,
-            InvitationStatus.Pending, cancellationToken);
+            InvitationStatus.Pending,
+            cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -98,8 +99,7 @@ public class InvitationService(
 
         foreach (var email in emails)
         {
-            var matchingCustomerByEmail =
-                await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
+            var matchingCustomerByEmail = await repositoryFactory.CustomerRepository.GetByEmailAsync(email, cancellationToken);
             var existingJoinInvitation = pendingInvitations.FirstOrDefault(item =>
                 (item.Email is not null &&
                  string.Equals(item.Email, email, StringComparison.InvariantCultureIgnoreCase)) || (

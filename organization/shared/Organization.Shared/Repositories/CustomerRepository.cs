@@ -55,7 +55,7 @@ public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider ti
 
     public async Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AddDependentObjects(false)
+            .AddDependentObjects(true)
             .FirstOrDefaultAsync(
                 query =>
                     !query.DeletedAt.HasValue &&
