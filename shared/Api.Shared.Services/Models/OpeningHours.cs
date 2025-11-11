@@ -20,8 +20,8 @@ public record OpeningHoursDetails
             return;
         }
 
-        ArgumentNullException.ThrowIfNull(from, nameof(from));
-        ArgumentNullException.ThrowIfNull(until, nameof(until));
+        ArgumentNullException.ThrowIfNull(from);
+        ArgumentNullException.ThrowIfNull(until);
 
         if (from.Value >= until.Value)
         {

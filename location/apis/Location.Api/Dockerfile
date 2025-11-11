@@ -1,6 +1,6 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 ENV NUGET_PACKAGES="/packages"
 
@@ -16,11 +16,7 @@ RUN --mount=type=cache,target=${NUGET_PACKAGES} dotnet publish "Location.Api.csp
 FROM base AS final
 
 RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
-RUN groupadd --gid 2000 skedular && useradd --uid 1000 --gid 2000 skedular
-RUN chown skedular:skedular /app
-USER skedular:skedular
 
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Location.Api.dll"]

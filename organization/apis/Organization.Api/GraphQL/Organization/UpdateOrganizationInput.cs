@@ -1,4 +1,3 @@
-using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Organization.Api.GraphQL.Organization;

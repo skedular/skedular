@@ -7,7 +7,7 @@ Skedular Mono Repository
 ### Prerequisites
 
 - Docker and Docker Compose
-- .NET 9.0 SDK
+- .NET 10.0 SDK
 - Node.js 22.x and pnpm
 - Make (for running Makefile commands)
 
