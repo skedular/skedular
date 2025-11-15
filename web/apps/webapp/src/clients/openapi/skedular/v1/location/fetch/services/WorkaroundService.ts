@@ -37,34 +37,4 @@ export class WorkaroundService {
             url: '/v1/location/republish-all',
         });
     }
-    /**
-     * regenerate all locations daily analytics
-     * @returns any the status of regenerating all locations daily analytics
-     * @returns ProblemDetails unexpected error
-     * @throws ApiError
-     */
-    public regenerateAllDailyAnalytics(): CancelablePromise<any | ProblemDetails> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/v1/location/analytics/regenerate-all-daily-analytics',
-        });
-    }
-    /**
-     * regenerate location daily analytics
-     * @param locationId
-     * @returns any the status of regenerating location daily analytics
-     * @returns ProblemDetails unexpected error
-     * @throws ApiError
-     */
-    public regenerateDailyAnalytics(
-        locationId: string,
-    ): CancelablePromise<any | ProblemDetails> {
-        return this.httpRequest.request({
-            method: 'PUT',
-            url: '/v1/location/analytics/{locationId}/regenerate-daily-analytics',
-            path: {
-                'locationId': locationId,
-            },
-        });
-    }
 }

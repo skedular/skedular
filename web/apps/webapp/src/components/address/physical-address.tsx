@@ -1,9 +1,8 @@
 import { FormFieldLabel } from '@/components/commons';
 import { SingleChoiceCountry } from '@/components/forms';
-import { AddressJsonV2 } from '@/libs/address/nominatim';
 import { TextField } from 'mui-rff';
 import { memo } from 'react';
-import AddressSearch from './address-search';
+import GoogleAddressLookup, { GooglePlaceDetails } from './google-address-lookup';
 
 type Props = {
   addressLine1Name: string;
@@ -40,6 +39,12 @@ export type Address = {
   countryCode?: string;
 };
 
+const getComponentLongName = (components: GooglePlaceDetails['addressComponents'], targetTypes: string[]) =>
+  components.find((component) => targetTypes.some((type) => component.types.includes(type)))?.long_name;
+
+const getComponentShortName = (components: GooglePlaceDetails['addressComponents'], targetTypes: string[]) =>
+  components.find((component) => targetTypes.some((type) => component.types.includes(type)))?.short_name;
+
 const PhysicalAddress = ({
   addressLine1Name,
   addressLine1Required,
@@ -57,29 +62,41 @@ const PhysicalAddress = ({
   countryRequired,
   onSelect,
 }: Props) => {
-  const handleSelect = (address: AddressJsonV2) => {
+  const handleSelect = (place: GooglePlaceDetails) => {
+    const components = place.addressComponents ?? [];
+    const streetNumber = getComponentLongName(components, ['street_number']);
+    const route = getComponentLongName(components, ['route']);
+    const subpremise = getComponentLongName(components, ['subpremise']);
+    const neighbourhood = getComponentLongName(components, ['neighborhood', 'sublocality_level_2']);
+    const suburb = getComponentLongName(components, ['sublocality', 'sublocality_level_1']);
+    const locality = getComponentLongName(components, ['locality', 'postal_town', 'administrative_area_level_2']);
+    const adminAreaLevel1 = getComponentLongName(components, ['administrative_area_level_1']);
+    const postalCode = getComponentLongName(components, ['postal_code']);
+    const country = getComponentLongName(components, ['country']);
+    const countryCode = getComponentShortName(components, ['country']);
+
     onSelect({
-      osmType: address.osm_type,
-      osmId: String(address.osm_id),
-      placeId: String(address.place_id),
-      latitude: parseFloat(address.lat),
-      longitude: parseFloat(address.lon),
-      formattedAddress: address.display_name,
-      addressLine1: [address.address.house_number, [address.address.shop, address.address.road].filter(Boolean).join(', ')].filter(Boolean).join(' '),
-      addressLine2: address.address.neighbourhood,
-      suburb: address.address.suburb,
-      city: [address.address.town, address.address.city, address.address.district, address.address.county].filter(Boolean).join(', '),
-      province: address.address.state ? address.address.state : address.address['ISO3166-2-lvl4'],
-      zipcode: address.address.postcode,
-      country: address.address.country,
-      countryCode: address.address.country_code?.toLocaleUpperCase(),
+      osmType: 'google_place',
+      osmId: place.placeId,
+      placeId: place.placeId,
+      latitude: place.latitude,
+      longitude: place.longitude,
+      formattedAddress: place.formattedAddress ?? '',
+      addressLine1: [streetNumber, route ?? place.name].filter(Boolean).join(' '),
+      addressLine2: subpremise ?? neighbourhood ?? undefined,
+      suburb: suburb ?? neighbourhood ?? undefined,
+      city: locality ?? suburb ?? undefined,
+      province: adminAreaLevel1 ?? undefined,
+      zipcode: postalCode ?? undefined,
+      country: country ?? undefined,
+      countryCode: countryCode ? countryCode.toUpperCase() : undefined,
     });
   };
 
   return (
     <>
       <FormFieldLabel label="">
-        <AddressSearch onSelect={handleSelect} />
+        <GoogleAddressLookup onSelect={handleSelect} />
       </FormFieldLabel>
 
       <FormFieldLabel label="Address line 1">
