@@ -3,7 +3,7 @@ locals {
 }
 
 locals {
-  dns_records_dev = ["kapp", "dapp", "mapp", "napp"]
+  dns_records_dev = ["kapp", "dapp", "mapp", "napp", "papp"]
 }
 
 resource "cloudflare_dns_record" "cloudflare_dns_records_dev_tools" {
