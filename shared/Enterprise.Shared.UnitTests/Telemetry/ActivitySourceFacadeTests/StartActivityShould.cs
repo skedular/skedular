@@ -19,8 +19,7 @@ public class StartActivityShould
         // set up listeners so the source will return activities
         var listener = new ActivityListener { ShouldListenTo = _ => true };
 
-        listener.Sample = (ref ActivityCreationOptions<ActivityContext> _) =>
-            ActivitySamplingResult.AllDataAndRecorded;
+        listener.Sample = (ref _) => ActivitySamplingResult.AllDataAndRecorded;
 
         ActivitySource.AddActivityListener(listener);
 
@@ -42,8 +41,7 @@ public class StartActivityShould
         // set up listeners so the source will return activities
         var listener = new ActivityListener { ShouldListenTo = _ => true };
 
-        listener.Sample = (ref ActivityCreationOptions<ActivityContext> _) =>
-            ActivitySamplingResult.AllDataAndRecorded;
+        listener.Sample = (ref _) => ActivitySamplingResult.AllDataAndRecorded;
 
         ActivitySource.AddActivityListener(listener);
 

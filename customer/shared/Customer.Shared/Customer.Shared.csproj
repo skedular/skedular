@@ -47,5 +47,4 @@
         <EmbeddedResource Include="EmailTemplates\NewCustomerJoined\template.html"/>
         <EmbeddedResource Include="EmailTemplates\NewCustomerJoined\template.txt"/>
     </ItemGroup>
-
 </Project>

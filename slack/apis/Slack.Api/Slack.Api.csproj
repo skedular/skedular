@@ -56,5 +56,4 @@
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
-
 </Project>

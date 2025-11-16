@@ -47,5 +47,4 @@
         <Compile Remove="Database\Migrations\20250831063001_ReplacedLocationContactDetailsWithExtraMetadata.cs"/>
         <Compile Remove="Database\Migrations\20250831063001_ReplacedLocationContactDetailsWithExtraMetadata.Designer.cs"/>
     </ItemGroup>
-
 </Project>

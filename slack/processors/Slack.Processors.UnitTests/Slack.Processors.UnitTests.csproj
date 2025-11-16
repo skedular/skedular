@@ -38,5 +38,4 @@
     <ItemGroup>
         <ProjectReference Include="..\Slack.Processors\Slack.Processors.csproj"/>
     </ItemGroup>
-
 </Project>

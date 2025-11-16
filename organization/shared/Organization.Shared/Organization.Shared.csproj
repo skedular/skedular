@@ -61,5 +61,4 @@
         <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.html"/>
         <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.txt"/>
     </ItemGroup>
-
 </Project>

@@ -35,5 +35,4 @@
     <ItemGroup>
         <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
     </ItemGroup>
-
 </Project>

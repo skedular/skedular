@@ -54,5 +54,4 @@
         <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.html"/>
         <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.txt"/>
     </ItemGroup>
-
 </Project>
