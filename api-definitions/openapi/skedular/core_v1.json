@@ -1,0 +1,356 @@
+{
+  "$schema": "https://spec.openapis.org/oas/3.2/schema/2025-09-17",
+  "openapi": "3.2.0",
+  "info": {
+    "title": "Core API v1",
+    "description": "Core REST API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.skedular.app",
+      "description": "production"
+    },
+    {
+      "url": "https://apistaging.skedular.app",
+      "description": "staging"
+    },
+    {
+      "url": "http://localhost:9000",
+      "description": "local gateway"
+    },
+    {
+      "url": "http://localhost:11000",
+      "description": "local"
+    }
+  ],
+  "paths": {
+    "/v1/core/version": {
+      "get": {
+        "tags": [
+          "v1",
+          "core"
+        ],
+        "summary": "return API version",
+        "operationId": "getVersion",
+        "responses": {
+          "200": {
+            "description": "the version of the API",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Version"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/core/uploadPublicAccessFile": {
+      "post": {
+        "tags": [
+          "v1",
+          "core",
+          "public",
+          "cdn"
+        ],
+        "summary": "Upload file with public access",
+        "operationId": "uploadPublicAccessFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "the response of uploading file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/core/cdn/{filename}": {
+      "get": {
+        "tags": [
+          "v1",
+          "core",
+          "public",
+          "cdn"
+        ],
+        "summary": "Serve static file from local CDN",
+        "description": "Returns a file stored in the local CDN by filename",
+        "operationId": "getPublicCdnFile",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "description": "Name of the file to return",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File successfully returned",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/core/uploadPrivateAccessFile": {
+      "post": {
+        "tags": [
+          "v1",
+          "core",
+          "private"
+        ],
+        "summary": "Upload file with private access",
+        "operationId": "uploadPrivateAccessFile",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "The file to upload"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "the response of uploading file",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/core/private/{filename}": {
+      "get": {
+        "tags": [
+          "v1",
+          "core",
+          "private"
+        ],
+        "summary": "Serve static file from local private storage",
+        "description": "Returns a file stored in the local private storage by filename",
+        "operationId": "getPrivateFile",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "description": "Name of the file to return",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File successfully returned",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {},
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          }
+        }
+      },
+      "Version": {
+        "type": "object",
+        "required": [
+          "major",
+          "minor",
+          "build",
+          "revision"
+        ],
+        "properties": {
+          "major": {
+            "type": "integer",
+            "format": "int32",
+            "description": "major version"
+          },
+          "minor": {
+            "type": "integer",
+            "format": "int32",
+            "description": "minor version"
+          },
+          "build": {
+            "type": "integer",
+            "format": "int32",
+            "description": "build number"
+          },
+          "revision": {
+            "type": "integer",
+            "format": "int32",
+            "description": "revision"
+          }
+        }
+      },
+      "FileUploadResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "original"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "original": {
+            "$ref": "#/components/schemas/File"
+          },
+          "thumbnail": {
+            "$ref": "#/components/schemas/File",
+            "nullable": true
+          }
+        }
+      },
+      "File": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}
