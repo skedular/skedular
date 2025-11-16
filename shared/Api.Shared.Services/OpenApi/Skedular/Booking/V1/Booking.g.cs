@@ -30,7 +30,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
+    [ModelContextProtocol.Server.McpServerToolType]
     public abstract class BookingControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
@@ -38,6 +38,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// </summary>
         /// <returns>the version of the API</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/booking/version")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// </summary>
         /// <returns>the status of booking republishing</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/{bookingId}/republish")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish booking")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string bookingId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -52,6 +56,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// </summary>
         /// <returns>the status of republishing all bookings</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/republish-all")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish all bookings")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -59,6 +65,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// </summary>
         /// <returns>the status of republishing all location resources slots</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/generate-all-resources-slots")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("generate all locations resources slots")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateAllLocationsResourcesSlots(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -66,6 +74,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// </summary>
         /// <returns>the status of republishing locations resources slots</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/resources-slots/{locationId}/generate-all-resources-slots")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("generate location's resources slots")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateLocationResourcesSlots(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -74,6 +84,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Platform Account event</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/platform/account/webhook")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Stripe Platform Account Webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripePlatformAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -82,6 +94,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/stripe/connect/account/webhook")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Stripe Connect Account Webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
@@ -124,24 +138,28 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         /// major version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("major")]
+        [System.ComponentModel.Description("major version")]
         public int Major { get; set; } = default!;
 
         /// <summary>
         /// minor version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("minor")]
+        [System.ComponentModel.Description("minor version")]
         public int Minor { get; set; } = default!;
 
         /// <summary>
         /// build number
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("build")]
+        [System.ComponentModel.Description("build number")]
         public int Build { get; set; } = default!;
 
         /// <summary>
         /// revision
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("revision")]
+        [System.ComponentModel.Description("revision")]
         public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
@@ -158,11 +176,11 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
-#pragma warning restore  649
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
+#pragma warning restore 649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

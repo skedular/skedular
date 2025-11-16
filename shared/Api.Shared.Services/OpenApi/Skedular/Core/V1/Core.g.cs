@@ -30,7 +30,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
+    [ModelContextProtocol.Server.McpServerToolType]
     public abstract class CoreControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
@@ -38,6 +38,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// </summary>
         /// <returns>the version of the API</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/version")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -46,6 +48,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPublicAccessFile")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Upload file with public access")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPublicAccessFile(FileParameter file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -57,6 +61,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// <param name="filename">Name of the file to return</param>
         /// <returns>File successfully returned</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/cdn/{filename}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Serve static file from local CDN   Returns a file stored in the local CDN by filename")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GetPublicCdnFile(string filename, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -65,6 +71,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// <param name="file">The file to upload</param>
         /// <returns>the response of uploading file</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/core/uploadPrivateAccessFile")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Upload file with private access")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<FileUploadResponse>> UploadPrivateAccessFile(FileParameter file, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -76,6 +84,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// <param name="filename">Name of the file to return</param>
         /// <returns>File successfully returned</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/core/private/{filename}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Serve static file from local private storage   Returns a file stored in the local private storage by filename")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GetPrivateFile(string filename, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
@@ -118,24 +128,28 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
         /// major version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("major")]
+        [System.ComponentModel.Description("major version")]
         public int Major { get; set; } = default!;
 
         /// <summary>
         /// minor version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("minor")]
+        [System.ComponentModel.Description("minor version")]
         public int Minor { get; set; } = default!;
 
         /// <summary>
         /// build number
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("build")]
+        [System.ComponentModel.Description("build number")]
         public int Build { get; set; } = default!;
 
         /// <summary>
         /// revision
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("revision")]
+        [System.ComponentModel.Description("revision")]
         public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
@@ -243,11 +257,11 @@ namespace Api.Shared.Services.OpenApi.Skedular.Core.V1
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
-#pragma warning restore  649
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
+#pragma warning restore 649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

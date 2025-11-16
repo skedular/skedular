@@ -30,7 +30,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
+    [ModelContextProtocol.Server.McpServerToolType]
     public abstract class LocationControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
@@ -38,6 +38,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// </summary>
         /// <returns>the version of the API</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/location/version")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// </summary>
         /// <returns>the status of location republishing</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/{locationId}/republish")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish location")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -52,6 +56,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// </summary>
         /// <returns>the status of location republishing</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/republish-all")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish all locations")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -59,6 +65,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// </summary>
         /// <returns>the status of regenerating all locations daily analytics</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/analytics/regenerate-all-daily-analytics")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate all locations daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllDailyAnalytics(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -66,6 +74,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// </summary>
         /// <returns>the status of regenerating location daily analytics</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/location/analytics/{locationId}/regenerate-daily-analytics")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate location daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
@@ -108,24 +118,28 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
         /// major version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("major")]
+        [System.ComponentModel.Description("major version")]
         public int Major { get; set; } = default!;
 
         /// <summary>
         /// minor version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("minor")]
+        [System.ComponentModel.Description("minor version")]
         public int Minor { get; set; } = default!;
 
         /// <summary>
         /// build number
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("build")]
+        [System.ComponentModel.Description("build number")]
         public int Build { get; set; } = default!;
 
         /// <summary>
         /// revision
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("revision")]
+        [System.ComponentModel.Description("revision")]
         public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
@@ -142,11 +156,11 @@ namespace Api.Shared.Services.OpenApi.Skedular.Location.V1
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
-#pragma warning restore  649
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
+#pragma warning restore 649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

@@ -30,7 +30,7 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.6.2.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]
-
+    [ModelContextProtocol.Server.McpServerToolType]
     public abstract class OrganizationControllerBase : Microsoft.AspNetCore.Mvc.Controller
     {
         /// <summary>
@@ -38,6 +38,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the version of the API</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/version")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("return API version")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -45,6 +47,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of organization republishing</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/republish")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish organization")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> Republish(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -52,6 +56,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of organization republishing</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/republish-all")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("republish all organizations")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RepublishAll(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -59,6 +65,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of regenrating all offerings</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/regenerate-all-offerings")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate all offerings")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllOfferings(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -66,6 +74,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of running all offerings workflows</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/rerun-all-offerings-workflows")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("rerun all offerings workflows")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RerunAllOfferingsWorkflows(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -74,12 +84,16 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// <param name="x_API_Key">Bearer access token</param>
         /// <returns>the status of changing organization offering</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/offering/{offeringCode}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("change organization offering")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOffering(string organizationId, string offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// generate an admin consent Url for the given tenant
         /// </summary>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant-admin-consent-url")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("generate an admin consent Url for the given tenant")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AzureTenantAdminConsentUrl(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -87,6 +101,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>onboarding response</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/onboard-azure-tenant")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("OnBoard a tenant")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> OnboardAzureTenant([Microsoft.AspNetCore.Mvc.FromQuery] string tenant, [Microsoft.AspNetCore.Mvc.FromQuery] bool admin_consent, [Microsoft.AspNetCore.Mvc.FromQuery] string state, [Microsoft.AspNetCore.Mvc.FromQuery] string? error, [Microsoft.AspNetCore.Mvc.FromQuery] string? error_description, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -94,6 +110,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>Sso Saml Acs</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/sso/saml/acs")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("sso acs")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> SsoSamlAcs(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -101,6 +119,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the readiness status</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/add-payment-method")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("add payment method")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> AddPaymentMethod([Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent, [Microsoft.AspNetCore.Mvc.FromQuery] string setup_intent_client_secret, [Microsoft.AspNetCore.Mvc.FromQuery] string redirect_status, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -108,6 +128,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>should never be returned</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/organization-stripe-connect-account/refresh-onboarding-url")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("return OrganizationStripeConnectAccount onboarding refresh URL")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RefreshOrganizationStripeConnectAccountOnboarding([Microsoft.AspNetCore.Mvc.FromQuery] string code, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -116,6 +138,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Platform Account event</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/platform/account/webhook")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Stripe Platform Account Webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripePlatformAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -124,6 +148,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// <param name="stripe_Signature">Stripe webhook signature</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
         [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/webhook")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Stripe Connect Account Webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -134,6 +160,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// <param name="state">The value of the state parameter you provided on the initial GET request.</param>
         /// <returns>the status of processing the Stripe Connect Account event</returns>
         [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/stripe/connect/account/oauth/callback")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Stripe Connect Account OAuth Callback")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> StripeConnectAccountOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string scope, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -141,6 +169,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of resyncing all azure tenants</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/resync-all-azure-tenants")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("resync all azure tenants")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAllAzureTenants(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -148,6 +178,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of resyncing azure tenant</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/azure-tenant/{tenantId}/resync")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("resync azure tenant")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ReSyncAzureTenant(string tenantId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -155,6 +187,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of regenerating all organizations daily analytics</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/regenerate-all-daily-analytics")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate all organizations daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateAllDailyAnalytics(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
@@ -162,6 +196,8 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// </summary>
         /// <returns>the status of regenerating organization daily analytics</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/analytics/{organizationId}/regenerate-daily-analytics")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("regenerate organization daily analytics")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RegenerateDailyAnalytics(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
     }
@@ -204,24 +240,28 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// major version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("major")]
+        [System.ComponentModel.Description("major version")]
         public int Major { get; set; } = default!;
 
         /// <summary>
         /// minor version
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("minor")]
+        [System.ComponentModel.Description("minor version")]
         public int Minor { get; set; } = default!;
 
         /// <summary>
         /// build number
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("build")]
+        [System.ComponentModel.Description("build number")]
         public int Build { get; set; } = default!;
 
         /// <summary>
         /// revision
         /// </summary>
         [System.Text.Json.Serialization.JsonPropertyName("revision")]
+        [System.ComponentModel.Description("revision")]
         public int Revision { get; set; } = default!;
 
         private System.Collections.Generic.IDictionary<string, object>? _additionalProperties;
@@ -238,11 +278,11 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
 
 }
 
-#pragma warning restore  108
-#pragma warning restore  114
-#pragma warning restore  472
-#pragma warning restore  612
-#pragma warning restore  649
+#pragma warning restore 108
+#pragma warning restore 114
+#pragma warning restore 472
+#pragma warning restore 612
+#pragma warning restore 649
 #pragma warning restore 1573
 #pragma warning restore 1591
 #pragma warning restore 8073

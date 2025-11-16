@@ -28,15 +28,15 @@ public class Program
         await Parser.Default
             .ParseArguments<ImportOptions, CrawlSharedspacesOptions>(args)
             .MapResult(
-                async (ImportOptions importOptions) =>
+                async (ImportOptions options) =>
                 {
                     var handler = serviceProvider.GetRequiredService<ILocationService>();
-                    await handler.HandleAsync(importOptions, cancellationToken);
+                    await handler.HandleAsync(options, cancellationToken);
                 },
-                async (CrawlSharedspacesOptions sharedspacesOptions) =>
+                async (CrawlSharedspacesOptions options) =>
                 {
                     var handler = serviceProvider.GetRequiredService<ICrawlerService>();
-                    await handler.HandleAsync(sharedspacesOptions, cancellationToken);
+                    await handler.HandleAsync(options, cancellationToken);
                 },
                 _ => Task.CompletedTask
             );

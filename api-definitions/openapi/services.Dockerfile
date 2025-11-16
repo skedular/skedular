@@ -9,10 +9,16 @@ RUN apt-get update -y && \
   apt-get clean
 RUN npm install -y -g nswag@latest
 
+COPY [".git", "shared/.git"]
+COPY ["shared/Enterprise.Shared", "shared/Enterprise.Shared"]
+COPY ["shared/Skedularctl", "shared/Skedularctl"]
+WORKDIR shared/Skedularctl
+RUN --mount=type=cache,target=~/.nuget/packages dotnet restore "Skedularctl.csproj"
+RUN --mount=type=cache,target=~/.nuget/packages dotnet build "Skedularctl.csproj" --no-restore -c Release -o /app/build
+RUN --mount=type=cache,target=~/.nuget/packages dotnet publish "Skedularctl.csproj" -c Release -o /app/publish
+
 RUN mkdir -p /output/V1
 COPY ["api-definitions/openapi", "/openapi"]
-
-ENV DOTNET_ROLL_FORWARD=LatestMajor
 
 RUN nswag \
   openapi2cscontroller \
@@ -53,6 +59,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Booking/V1/Booking.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Booking/V1/Booking.g.cs \
+    --output-file /output/Skedular/Booking/V1/Booking.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -73,6 +82,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Customer/V1/Customer.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Customer/V1/Customer.g.cs \
+    --output-file /output/Skedular/Customer/V1/Customer.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -93,6 +105,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Location/V1/Location.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Location/V1/Location.g.cs \
+    --output-file /output/Skedular/Location/V1/Location.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -113,6 +128,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Marketplace/V1/Marketplace.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Marketplace/V1/Marketplace.g.cs \
+    --output-file /output/Skedular/Marketplace/V1/Marketplace.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -133,6 +151,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/MsTeams/V1/MsTeams.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/MsTeams/V1/MsTeams.g.cs \
+    --output-file /output/Skedular/MsTeams/V1/MsTeams.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -153,6 +174,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Organization/V1/Organization.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Organization/V1/Organization.g.cs \
+    --output-file /output/Skedular/Organization/V1/Organization.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -173,6 +197,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Slack/V1/Slack.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Slack/V1/Slack.g.cs \
+    --output-file /output/Skedular/Slack/V1/Slack.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -193,6 +220,9 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Team/V1/Team.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Team/V1/Team.g.cs \
+    --output-file /output/Skedular/Team/V1/Team.g.cs
 
 RUN nswag \
   openapi2cscontroller \
@@ -213,5 +243,8 @@ RUN nswag \
   /ExcludedTypeNames:FileParameter
 
 RUN sed -i '1iusing FileParameter = Microsoft.AspNetCore.Http.IFormFile;' /output/Skedular/Core/V1/Core.g.cs
+RUN /app/publish/Skedularctl mcp-tool-generate \
+    --input-file /output/Skedular/Core/V1/Core.g.cs \
+    --output-file /output/Skedular/Core/V1/Core.g.cs
 
 RUN find /output -type f -name "*.g.cs" -exec sed -i 's/Microsoft\.AspNetCore\.Mvc\.ActionResult<Microsoft\.AspNetCore\.Mvc\.FileResult>/Microsoft.AspNetCore.Mvc.IActionResult/g' {} +
