@@ -12,10 +12,8 @@ using Organization.Shared.Configurations;
 using Organization.Shared.Database;
 using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.Invitation.ExistingCustomer;
-using Organization.Shared.Workflows.Invitation.NonExistingCustomer;
-using Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
-using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
+using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Extensions.Hosting;
@@ -60,8 +58,6 @@ public class Program
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<ScheduleRenewOrganizationOffering>()
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
-            .AddWorkflow<InviteNonExistingCustomerToJoinOrganization>()
-            .AddWorkflow<InviteExistingCustomerToJoinOrganization>()
             .AddWorkflow<InviteToJoinOrganizationExistingCustomer>()
             .AddWorkflow<InviteToJoinOrganizationNewCustomer>()
             .AddWorkflow<GenerateOrganizationDailyAnalytics>()

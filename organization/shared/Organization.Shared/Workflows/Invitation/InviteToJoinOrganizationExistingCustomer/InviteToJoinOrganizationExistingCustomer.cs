@@ -2,7 +2,7 @@ using Organization.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Organization.Shared.Workflows.InviteToJoinOrganizationExistingCustomer;
+namespace Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 
 public record InviteToJoinOrganizationExistingCustomerInput(string OrganizationId, string InviterCustomerId, string InviteeCustomerId);
 

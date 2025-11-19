@@ -61,4 +61,8 @@
         <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.html"/>
         <EmbeddedResource Include="EmailTemplates\InviteToJoinOrganizationNewCustomer\template.txt"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Workflows\Invitation\"/>
+    </ItemGroup>
 </Project>

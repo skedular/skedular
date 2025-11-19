@@ -11,7 +11,7 @@ using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
-using Organization.Shared.Workflows.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
