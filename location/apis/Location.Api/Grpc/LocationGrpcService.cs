@@ -90,6 +90,7 @@ public class LocationGrpcService(
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
+                null,
                 null),
             request.OrderBy.Select(item =>
             {
@@ -157,6 +158,7 @@ public class LocationGrpcService(
                 }).ToList(),
                 null,
                 request.Where.NotContactedYet,
+                null,
                 null),
             request.OrderBy.Select(item =>
             {

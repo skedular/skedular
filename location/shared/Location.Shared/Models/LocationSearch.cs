@@ -13,7 +13,8 @@ public record LocationSearchCriteria(
     ICollection<LocationType> Types,
     Polygon? SearchBoundaries,
     bool? NotContactedYet,
-    OrganizationTagType? ResourceType);
+    OrganizationTagType? ResourceType,
+    bool? FilterThoseWithUnverifiedOrganization);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 

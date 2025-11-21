@@ -159,6 +159,11 @@ internal static class LocationExtensions
                     precomputedLocationProduct.OrganizationTags.Any(organizationTag => organizationTag.Type == resourceType)));
             }
 
+            if (searchCriteria.FilterThoseWithUnverifiedOrganization is not null && searchCriteria.FilterThoseWithUnverifiedOrganization.Value)
+            {
+                originalQuery = originalQuery.Where(item => item.Organization.IsOwnershipVerified.HasValue && item.Organization.IsOwnershipVerified.Value);
+            }
+
             return originalQuery;
         }
 

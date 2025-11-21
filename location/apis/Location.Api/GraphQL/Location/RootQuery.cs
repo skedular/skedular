@@ -58,7 +58,8 @@ public class RootQuery(IMapper mapper)
                 where.Types.ToSafeCollection(),
                 where.SearchBoundaries,
                 where.NotContactedYet,
-                where.ResourceType),
+                where.ResourceType,
+                null),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
@@ -105,7 +106,8 @@ public class RootQuery(IMapper mapper)
                 [LocationType.Marketplace],
                 where.SearchBoundaries,
                 null,
-                where.ResourceType),
+                where.ResourceType,
+                true),
             orderBy.ToSafeCollection().Select(item => new LocationOrder(item.Direction, item.Field)).ToList(),
             true,
             cancellationToken);
