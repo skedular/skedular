@@ -15,6 +15,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
     public string Type { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<Team> Teams { get; set; } = [];
@@ -37,5 +38,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
 
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
         builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.IsOwnershipVerified);
     }
 }

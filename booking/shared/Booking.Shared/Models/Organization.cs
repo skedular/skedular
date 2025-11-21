@@ -12,6 +12,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public OrganizationType Type { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
     public ICollection<OrganizationTag> Tags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];

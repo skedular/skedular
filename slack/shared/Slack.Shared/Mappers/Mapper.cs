@@ -252,6 +252,7 @@ public class Mapper : IMapper
                 OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            IsOwnershipVerified = src.IsOwnershipVerified,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking,
             Tags = MapToOrganizationCustomTag(src.Tags).ToList(),
@@ -476,6 +477,7 @@ public class Mapper : IMapper
             EventRaisedAt = src.EventRaisedAt,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Type = src.Type.ToOrganizationType(),
+            IsOwnershipVerified = src.IsOwnershipVerified,
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt
         };
 

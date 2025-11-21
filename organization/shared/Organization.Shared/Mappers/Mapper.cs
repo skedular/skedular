@@ -83,7 +83,9 @@ public class Mapper : IMapper
             },
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails),
-            PhysicalAddress = MapTo(src.PhysicalAddress)
+            PhysicalAddress = MapTo(src.PhysicalAddress),
+            HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
+            IsOwnershipVerified = src.IsOwnershipVerified ?? false
         };
 
         organization.AzureTenantIds.AddRange(src.AzureTenants.Select(item => item.Id));
@@ -156,7 +158,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
-            PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
+            IsOwnershipVerified = src.IsOwnershipVerified,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
         };

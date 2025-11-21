@@ -217,6 +217,7 @@ type OrganizationDetails {
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   contactEmail: String
   contactPhone: String
+  isOwnershipVerified: Boolean!
   stripeAuthorizeExistingConnectAccountUrl: String!
   physicalAddress: OrganizationPhysicalAddressDetails
   billingDetails: OrganizationBillingDetails

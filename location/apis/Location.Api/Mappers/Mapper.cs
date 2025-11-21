@@ -838,6 +838,7 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
             Type = src.Type.ToOrganizationType(),
+            IsOwnershipVerified = src.IsOwnershipVerified,
             Tags = MapTo(src.Tags).ToList()
         };
 

@@ -19,7 +19,7 @@ namespace MsTeams.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -462,6 +462,9 @@ namespace MsTeams.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool?>("IsOwnershipVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -481,6 +484,8 @@ namespace MsTeams.Shared.Database.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("IsOwnershipVerified");
 
                     b.HasIndex("ModifiedAt");
 

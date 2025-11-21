@@ -20,7 +20,7 @@ namespace Organization.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -2157,6 +2157,9 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
+                    b.Property<bool?>("IsOwnershipVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
@@ -2168,9 +2171,6 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-
-                    b.Property<DateTimeOffset?>("PaymentMethodEventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("TermsOfUseId")
                         .HasColumnType("character varying(100)");
@@ -2196,11 +2196,11 @@ namespace Organization.Shared.Database.Migrations
 
                     b.HasIndex("DeletedAt");
 
+                    b.HasIndex("IsOwnershipVerified");
+
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("PaymentMethodEventRaisedAt");
 
                     b.HasIndex("TermsOfUseId");
 

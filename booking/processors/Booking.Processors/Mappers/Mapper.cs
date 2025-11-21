@@ -147,6 +147,7 @@ public class Mapper : IMapper
             Name = organizationAfterState.Name,
             ContactEmail = organizationAfterState.ContactEmail,
             ContactPhone = organizationAfterState.ContactPhone,
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified,
             LogoUrl = organizationAfterState.LogoUrl,
             Offering = new Offering
             {
@@ -297,6 +298,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.IsOwnershipVerified = src.IsOwnershipVerified;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();

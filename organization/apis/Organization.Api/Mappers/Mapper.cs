@@ -244,8 +244,8 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsOwnershipVerified = src.IsOwnershipVerified,
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
-            PaymentMethodEventRaisedAt = src.PaymentMethodEventRaisedAt,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
             OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
@@ -314,6 +314,7 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsOwnershipVerified = src.IsOwnershipVerified,
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories
         };
@@ -333,6 +334,7 @@ public class Mapper : IMapper
         dest.Type = src.Type.ToOrganizationType();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.IsOwnershipVerified = src.IsOwnershipVerified;
         dest.IndustrySubCategories = industrySubCategories;
         return dest;
     }
@@ -424,6 +426,7 @@ public class Mapper : IMapper
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            IsOwnershipVerified = src.IsOwnershipVerified ?? false,
             StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
             PaymentMethods = MapTo(src.OrganizationStripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
@@ -548,6 +551,7 @@ public class Mapper : IMapper
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
+            IsOwnershipVerified = src.IsOwnershipVerified ?? false,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
             Offering = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Offering

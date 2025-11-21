@@ -17,6 +17,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string Type { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -49,5 +50,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.IsOwnershipVerified);
     }
 }

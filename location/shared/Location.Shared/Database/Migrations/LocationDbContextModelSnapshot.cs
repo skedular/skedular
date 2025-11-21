@@ -699,6 +699,9 @@ namespace Location.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("EventRaisedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool?>("IsOwnershipVerified")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LogoUrl")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
@@ -729,6 +732,8 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("DeletedAt");
+
+                    b.HasIndex("IsOwnershipVerified");
 
                     b.HasIndex("ModifiedAt");
 

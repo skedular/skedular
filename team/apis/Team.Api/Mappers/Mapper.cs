@@ -423,7 +423,8 @@ public class Mapper : IMapper
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
-            Type = src.Type.ToOrganizationType()
+            Type = src.Type.ToOrganizationType(),
+            IsOwnershipVerified = src.IsOwnershipVerified
         };
 
     private OrganizationMember? MapTo(Shared.Database.Entities.OrganizationMember? src) =>

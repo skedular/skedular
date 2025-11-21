@@ -11,8 +11,9 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
-    public bool HasAttachedPaymentMethod { get; set; }
     public OrganizationType Type { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
+    public bool HasAttachedPaymentMethod { get; set; }
     public ICollection<OrganizationCustomTag> Tags { get; set; } = [];
     public ICollection<OrganizationResourceType> ResourceTypes { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];

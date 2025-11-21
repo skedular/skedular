@@ -12,6 +12,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? UniqueAlphanumericName { get; set; }
     public string Type { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
@@ -31,5 +32,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
 
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
+        builder.HasIndex(item => item.IsOwnershipVerified);
     }
 }

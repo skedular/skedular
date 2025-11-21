@@ -14,9 +14,9 @@ public class Organization : ModelBaseWithDeleted
     public string? LogoUrl { get; set; }
     public OrganizationType Type { get; set; }
     public bool HasAttachedPaymentMethod => OrganizationStripePaymentMethods.Count != 0;
-    public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];

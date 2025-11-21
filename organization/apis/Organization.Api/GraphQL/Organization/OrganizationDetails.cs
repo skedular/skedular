@@ -39,6 +39,7 @@ public class OrganizationDetails : Node
 
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+    [GraphQLName("isOwnershipVerified")] public bool IsOwnershipVerified { get; set; }
 
     [GraphQLName("stripeAuthorizeExistingConnectAccountUrl")]
     public string StripeAuthorizeExistingConnectAccountUrl { get; set; } = string.Empty;

@@ -141,6 +141,7 @@ message Organization {
   repeated StripeConnectAccount stripeConnectAccounts = 23;
   TaxDetails taxDetails = 24;
   PhysicalAddress physicalAddress = 25;
+  bool isOwnershipVerified = 26;
 }
 
 message IndustrySubCategory {

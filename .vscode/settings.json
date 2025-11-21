@@ -4,7 +4,6 @@
     "source.organizeImports": "explicit"
   },
   "git.autorefresh": true,
-  "dotnet.defaultSolution": "disable",
   "files.eol": "\n",
   "files.exclude": {
     "**/*.js.map": true

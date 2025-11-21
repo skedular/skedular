@@ -680,6 +680,7 @@ type OrganizationDetails {
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isMyOnboardingDone: Boolean!
+  isOwnershipVerified: Boolean!
   isSsoTokenValid: Boolean! @cost(weight: "10")
   locationSpaceTypes: [OrganizationTagDetails!]!
   locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")

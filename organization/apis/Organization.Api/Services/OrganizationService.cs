@@ -115,6 +115,8 @@ public class OrganizationService(
             organization.UniqueAlphanumericName = randomHelper.GenerateAlphanumericNumeric(10).ToLowerInvariant();
         }
 
+        organization.IsOwnershipVerified = false;
+
         var termsOfUse = await repositoryFactory.TermsOfUseRepository
             .Query(new Specification<TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue })
             .FirstAsync(cancellationToken);
@@ -223,7 +225,9 @@ public class OrganizationService(
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
         organization.UniqueAlphanumericName = null;
+
         var deletedOrganization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Remove(organization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
@@ -357,8 +361,16 @@ public class OrganizationService(
         // Do not allow a changing organization type, the organization type is immutable
         organization.Type = existingOrganization.Type.ToOrganizationType();
 
+        // Preserve ownership verification status, it has its own service to handle it
+        var isOwnershipVerified = existingOrganization.IsOwnershipVerified;
+
+        existingOrganization = mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities);
+
+        // Restoring the ownership verification status
+        existingOrganization.IsOwnershipVerified = isOwnershipVerified;
+
         organization = mapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(mapper.MergeTo(organization, existingOrganization, industrySubCategoryEntities)),
+            repositoryFactory.OrganizationRepository.Update(existingOrganization),
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
@@ -396,7 +408,6 @@ public class OrganizationService(
 
                 organization.About = null;
                 organization.Website = null;
-                organization.PaymentMethodEventRaisedAt = null;
                 organization.ContactEmail = null;
                 organization.ContactPhone = null;
                 organization.OrganizationMembers = [];

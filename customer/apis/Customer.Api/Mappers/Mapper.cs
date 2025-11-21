@@ -534,7 +534,8 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
-                Type = src.Type.ToOrganizationType()
+                Type = src.Type.ToOrganizationType(),
+                IsOwnershipVerified = src.IsOwnershipVerified
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src) =>

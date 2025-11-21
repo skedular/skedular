@@ -116,7 +116,8 @@ public class Mapper : IMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -260,6 +261,7 @@ public class Mapper : IMapper
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();
+        dest.IsOwnershipVerified = src.IsOwnershipVerified;
         return dest;
     }
 
@@ -336,7 +338,8 @@ public class Mapper : IMapper
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,
-            Type = src.Type.ToOrganizationType()
+            Type = src.Type.ToOrganizationType(),
+            IsOwnershipVerified = src.IsOwnershipVerified
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();

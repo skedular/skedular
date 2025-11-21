@@ -521,6 +521,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
+                IsOwnershipVerified = src.IsOwnershipVerified,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
                 Type = src.Type.ToOrganizationType()

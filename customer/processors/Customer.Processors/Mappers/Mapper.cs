@@ -76,7 +76,8 @@ public class Mapper : IMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            IsOwnershipVerified = organizationAfterState.IsOwnershipVerified
         };
 
         organization.OrganizationMembers = organizationAfterState.Members.Select(item => new Shared.Models.OrganizationMember
@@ -182,6 +183,7 @@ public class Mapper : IMapper
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Type = src.Type.ToOrganizationType();
+        dest.IsOwnershipVerified = src.IsOwnershipVerified;
         return dest;
     }
 
@@ -291,7 +293,8 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
-                Type = src.Type.ToOrganizationType()
+                Type = src.Type.ToOrganizationType(),
+                IsOwnershipVerified = src.IsOwnershipVerified
             };
 
     private static Location? MapTo(Shared.Database.Entities.Location? src, bool includeResources) =>

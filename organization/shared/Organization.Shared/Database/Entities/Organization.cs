@@ -17,9 +17,9 @@ public class Organization : EntityBaseWithDeleted
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public string Type { get; set; }
-    public DateTimeOffset? PaymentMethodEventRaisedAt { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public bool? IsOwnershipVerified { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -66,6 +66,6 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
-        builder.HasIndex(item => item.PaymentMethodEventRaisedAt);
+        builder.HasIndex(item => item.IsOwnershipVerified);
     }
 }
