@@ -29,58 +29,62 @@ public interface IResourceRepository : IRepository<Resource>
 
 internal static class ResourceExtensions
 {
-    internal static IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Resource> originalQuery) =>
-        originalQuery
-            .Include(query => query.Location)
-            .Include(query => query.ResourcePosition)
-            .ThenInclude(query => query!.FloorPlan)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
-
-    internal static IQueryable<Resource> AddSearchCriteria(this IQueryable<Resource> query, ResourceSearchCriteria searchCriteria)
+    extension(IQueryable<Resource> originalQuery)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
+        internal IIncludableQueryable<Resource, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Location)
+                .Include(query => query.ResourcePosition)
+                .ThenInclude(query => query!.FloorPlan)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+        internal IQueryable<Resource> AddSearchCriteria(ResourceSearchCriteria searchCriteria)
         {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
 
-        if (searchCriteria.TagIds.Count != 0)
-        {
-            query = query.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.FloorPlanId))
-        {
-            query = query.Where(item =>
-                item.ResourcePosition == null || (item.ResourcePosition != null && item.ResourcePosition.FloorPlan.Id == searchCriteria.FloorPlanId));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<Resource> AddSortingOrders(this IQueryable<Resource> originalQuery, ICollection<ResourceOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            ResourceOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
             {
-                ResourceOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            if (searchCriteria.TagIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => searchCriteria.TagIds.All(zoneId => item.OrganizationTags.Any(tag => tag.Id == zoneId)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.FloorPlanId))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.ResourcePosition == null ||
+                    (item.ResourcePosition != null && item.ResourcePosition.FloorPlan.Id == searchCriteria.FloorPlanId));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Resource> AddSortingOrders(ICollection<ResourceOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                ResourceOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    ResourceOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

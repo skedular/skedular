@@ -16,13 +16,14 @@ public interface ILocationRepository : IRepository<Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Location, ICollection<Database.Entities.Customer>> AddDependentObjects(
-        this IQueryable<Location> originalQuery,
-        bool includeDeletedLocationMembers) =>
-        originalQuery
-            .Include(query => query.Resources)
-            .Include(query => query.Organization)
-            .Include(query => query.PreferredByCustomers);
+    extension(IQueryable<Location> originalQuery)
+    {
+        internal IIncludableQueryable<Location, ICollection<Database.Entities.Customer>> AddDependentObjects(bool includeDeletedLocationMembers) =>
+            originalQuery
+                .Include(query => query.Resources)
+                .Include(query => query.Organization)
+                .Include(query => query.PreferredByCustomers);
+    }
 }
 
 public class LocationRepository(CustomerDbContext dbContext, TimeProvider timeProvider)

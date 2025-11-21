@@ -18,11 +18,13 @@ public interface IWorkspaceMemberRepository : IRepository<WorkspaceMember>
 
 internal static class WorkspaceMemberExtensions
 {
-    internal static IIncludableQueryable<WorkspaceMember, Organization> AddDependentObjects(
-        this IQueryable<WorkspaceMember> originalQuery) =>
-        originalQuery
-            .Include(query => query.Workspace)
-            .ThenInclude(query => query.Organization);
+    extension(IQueryable<WorkspaceMember> originalQuery)
+    {
+        internal IIncludableQueryable<WorkspaceMember, Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Workspace)
+                .ThenInclude(query => query.Organization);
+    }
 }
 
 public class WorkspaceMemberRepository(SlackDbContext dbContext, TimeProvider timeProvider)

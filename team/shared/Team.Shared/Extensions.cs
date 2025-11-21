@@ -14,56 +14,59 @@ namespace Team.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
-
-    public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<ICachedTeamService, CachedTeamService>();
-
-    public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
-
-    public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-        services
-            .AddScoped<IBookingRepository, BookingRepository>()
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
-            .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
-            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>();
-
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddSingleton<ITeamPublisher, TeamPublisher>();
-
-    public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services
-            .AddSingleton<ITeamOutboxPublisher, TeamOutboxPublisher>()
-            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
-
-    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
-        ArgumentNullException.ThrowIfNull(customerConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
+            services;
 
-        services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+        public IServiceCollection AddDomainSharedMappers() =>
+            services
+                .AddSingleton<IMapper, Mapper>();
 
-        return services
-            .AddSingleton(customerConfiguration);
+        public IServiceCollection AddDomainSharedServices() =>
+            services
+                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+                .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+                .AddScoped<ICachedCustomerService, CachedCustomerService>()
+                .AddScoped<ICachedTeamService, CachedTeamService>();
+
+        public IServiceCollection AddRepositoryFactory() =>
+            services
+                .AddScoped<IRepositoryFactory, RepositoryFactory>();
+
+        public IServiceCollection AddRepositories() =>
+            services
+                .AddScoped<IBookingRepository, BookingRepository>()
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
+                .AddScoped<ITeamRepository, TeamRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
+                .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<ILocationRepository, LocationRepository>();
+
+        public IServiceCollection AddPublishers() =>
+            services
+                .AddSingleton<ITeamPublisher, TeamPublisher>();
+
+        public IServiceCollection AddOutboxPublishers() =>
+            services
+                .AddSingleton<ITeamOutboxPublisher, TeamOutboxPublisher>()
+                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+
+        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        {
+            var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+            ArgumentNullException.ThrowIfNull(customerConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+
+            services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+
+            return services
+                .AddSingleton(customerConfiguration);
+        }
     }
 }

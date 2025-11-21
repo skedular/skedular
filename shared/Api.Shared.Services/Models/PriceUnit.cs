@@ -16,48 +16,54 @@ public static class PriceUnitConstants
 
 public static class PriceUnitExtensions
 {
-    public static PriceUnit ToPriceUnit(this string src) =>
-        src switch
-        {
-            PriceUnitConstants.PerMinute => PriceUnit.PerMinute,
-            PriceUnitConstants.PerHour => PriceUnit.PerHour,
-            PriceUnitConstants.PerUse => PriceUnit.PerUse,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public PriceUnit ToPriceUnit() =>
+            src switch
+            {
+                PriceUnitConstants.PerMinute => PriceUnit.PerMinute,
+                PriceUnitConstants.PerHour => PriceUnit.PerHour,
+                PriceUnitConstants.PerUse => PriceUnit.PerUse,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToPriceUnit(this PriceUnit src) =>
-        src switch
-        {
-            PriceUnit.PerMinute => PriceUnitConstants.PerMinute,
-            PriceUnit.PerHour => PriceUnitConstants.PerHour,
-            PriceUnit.PerUse => PriceUnitConstants.PerUse,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToInvoicePriceUnitName() =>
+            src switch
+            {
+                PriceUnitConstants.PerMinute => "p/m",
+                PriceUnitConstants.PerHour => "p/h",
+                PriceUnitConstants.PerUse => "one-time",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToPriceUnitName(this PriceUnit src) =>
-        src switch
-        {
-            PriceUnit.PerMinute => "Per Minute",
-            PriceUnit.PerHour => "Per Hour",
-            PriceUnit.PerUse => "One-time charge (not based on duration)",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(PriceUnit src)
+    {
+        public string ToPriceUnit() =>
+            src switch
+            {
+                PriceUnit.PerMinute => PriceUnitConstants.PerMinute,
+                PriceUnit.PerHour => PriceUnitConstants.PerHour,
+                PriceUnit.PerUse => PriceUnitConstants.PerUse,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToStripePriceUnitName(this PriceUnit src) =>
-        src switch
-        {
-            PriceUnit.PerMinute => "Minute",
-            PriceUnit.PerHour => "Hour",
-            PriceUnit.PerUse => "One-time",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToPriceUnitName() =>
+            src switch
+            {
+                PriceUnit.PerMinute => "Per Minute",
+                PriceUnit.PerHour => "Per Hour",
+                PriceUnit.PerUse => "One-time charge (not based on duration)",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToInvoicePriceUnitName(this string src) =>
-        src switch
-        {
-            PriceUnitConstants.PerMinute => "p/m",
-            PriceUnitConstants.PerHour => "p/h",
-            PriceUnitConstants.PerUse => "one-time",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToStripePriceUnitName() =>
+            src switch
+            {
+                PriceUnit.PerMinute => "Minute",
+                PriceUnit.PerHour => "Hour",
+                PriceUnit.PerUse => "One-time",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

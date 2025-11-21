@@ -1,6 +1,6 @@
 namespace Api.Shared.Services.Models;
 
-public enum StripePaymentMethodStatus1
+public enum StripePaymentMethodStatus
 {
     Pending,
     Failed,
@@ -16,39 +16,45 @@ public static class StripePaymentMethodStatus1Constants
 
 public static class StripePaymentMethodStatus1Extensions
 {
-    public static StripePaymentMethodStatus1 ToStripePaymentMethodStatus1(this string src) =>
-        src switch
-        {
-            StripePaymentMethodStatus1Constants.Pending => StripePaymentMethodStatus1.Pending,
-            StripePaymentMethodStatus1Constants.Failed => StripePaymentMethodStatus1.Failed,
-            StripePaymentMethodStatus1Constants.Confirmed => StripePaymentMethodStatus1.Confirmed,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public StripePaymentMethodStatus ToStripePaymentMethodStatus() =>
+            src switch
+            {
+                StripePaymentMethodStatus1Constants.Pending => StripePaymentMethodStatus.Pending,
+                StripePaymentMethodStatus1Constants.Failed => StripePaymentMethodStatus.Failed,
+                StripePaymentMethodStatus1Constants.Confirmed => StripePaymentMethodStatus.Confirmed,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToStripePaymentMethodStatus1(this StripePaymentMethodStatus1 src) =>
-        src switch
-        {
-            StripePaymentMethodStatus1.Pending => StripePaymentMethodStatus1Constants.Pending,
-            StripePaymentMethodStatus1.Failed => StripePaymentMethodStatus1Constants.Failed,
-            StripePaymentMethodStatus1.Confirmed => StripePaymentMethodStatus1Constants.Confirmed,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToStripePaymentMethodStatusName() =>
+            src switch
+            {
+                StripePaymentMethodStatus1Constants.Pending => "Pending",
+                StripePaymentMethodStatus1Constants.Failed => "Failed",
+                StripePaymentMethodStatus1Constants.Confirmed => "Confirmed",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToStripePaymentMethodStatus1Name(this StripePaymentMethodStatus1 src) =>
-        src switch
-        {
-            StripePaymentMethodStatus1.Pending => "Pending",
-            StripePaymentMethodStatus1.Failed => "Failed",
-            StripePaymentMethodStatus1.Confirmed => "Confirmed",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(StripePaymentMethodStatus src)
+    {
+        public string ToStripePaymentMethodStatus() =>
+            src switch
+            {
+                StripePaymentMethodStatus.Pending => StripePaymentMethodStatus1Constants.Pending,
+                StripePaymentMethodStatus.Failed => StripePaymentMethodStatus1Constants.Failed,
+                StripePaymentMethodStatus.Confirmed => StripePaymentMethodStatus1Constants.Confirmed,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToStripePaymentMethodStatus1Name(this string src) =>
-        src switch
-        {
-            StripePaymentMethodStatus1Constants.Pending => "Pending",
-            StripePaymentMethodStatus1Constants.Failed => "Failed",
-            StripePaymentMethodStatus1Constants.Confirmed => "Confirmed",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToStripePaymentMethodStatusName() =>
+            src switch
+            {
+                StripePaymentMethodStatus.Pending => "Pending",
+                StripePaymentMethodStatus.Failed => "Failed",
+                StripePaymentMethodStatus.Confirmed => "Confirmed",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

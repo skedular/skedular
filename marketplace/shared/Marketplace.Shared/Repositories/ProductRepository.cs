@@ -31,67 +31,70 @@ public interface IProductRepository : IRepository<Product>
 
 internal static class ProductExtensions
 {
-    internal static IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Product> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-            .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
-
-    internal static IQueryable<Product> AddSearchCriteria(this IQueryable<Product> query, ProductSearchCriteria searchCriteria)
+    extension(IQueryable<Product> originalQuery)
     {
-        query = query.Where(item =>
-            !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
-            (searchCriteria.IncludeInactive || !item.Inactive));
+        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization)
+                .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
+                .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
+                .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
 
-        if (searchCriteria.OrganizationUniqueAlphanumericNames.Count > 0)
+        internal IQueryable<Product> AddSearchCriteria(ProductSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                !item.Organization.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                searchCriteria.OrganizationUniqueAlphanumericNames.Contains(item.Organization.UniqueAlphanumericName));
-        }
+            originalQuery = originalQuery.Where(item =>
+                !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
+                (searchCriteria.IncludeInactive || !item.Inactive));
 
-        if (searchCriteria.ProductIds.Count > 0)
-        {
-            query = query.Where(item => searchCriteria.ProductIds.Contains(item.Id));
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-        {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<Product> AddSortingOrders(this IQueryable<Product> originalQuery, ICollection<ProductOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            ProductOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (searchCriteria.OrganizationUniqueAlphanumericNames.Count > 0)
             {
-                ProductOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item =>
+                    !item.Organization.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                    searchCriteria.OrganizationUniqueAlphanumericNames.Contains(item.Organization.UniqueAlphanumericName));
+            }
+
+            if (searchCriteria.ProductIds.Count > 0)
+            {
+                originalQuery = originalQuery.Where(item => searchCriteria.ProductIds.Contains(item.Id));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Product> AddSortingOrders(ICollection<ProductOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                ProductOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    ProductOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

@@ -14,19 +14,25 @@ public static class OrganizationMemberStatusConstants
 
 public static class OrganizationMemberStatusExtensions
 {
-    public static OrganizationMemberStatus ToOrganizationMemberStatus(this string src) =>
-        src switch
-        {
-            OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
-            OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public OrganizationMemberStatus ToOrganizationMemberStatus() =>
+            src switch
+            {
+                OrganizationMemberStatusConstants.Active => OrganizationMemberStatus.Active,
+                OrganizationMemberStatusConstants.Inactive => OrganizationMemberStatus.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToOrganizationMemberStatus(this OrganizationMemberStatus src) =>
-        src switch
-        {
-            OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
-            OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(OrganizationMemberStatus src)
+    {
+        public string ToOrganizationMemberStatus() =>
+            src switch
+            {
+                OrganizationMemberStatus.Active => OrganizationMemberStatusConstants.Active,
+                OrganizationMemberStatus.Inactive => OrganizationMemberStatusConstants.Inactive,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

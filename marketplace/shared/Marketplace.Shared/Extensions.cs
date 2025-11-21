@@ -9,42 +9,45 @@ namespace Marketplace.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
+            services;
 
-    public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMapper, Mapper>();
+        public IServiceCollection AddDomainSharedMappers() =>
+            services
+                .AddSingleton<IMapper, Mapper>();
 
-    public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<ICachedProductService, CachedProductService>()
-            .AddScoped<ICachedProductVersionService, CachedProductVersionService>();
+        public IServiceCollection AddDomainSharedServices() =>
+            services
+                .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+                .AddScoped<ICachedCustomerService, CachedCustomerService>()
+                .AddScoped<ICachedProductService, CachedProductService>()
+                .AddScoped<ICachedProductVersionService, CachedProductVersionService>();
 
-    public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
+        public IServiceCollection AddRepositoryFactory() =>
+            services
+                .AddScoped<IRepositoryFactory, RepositoryFactory>();
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-        services
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
-            .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
-            .AddScoped<IProductRepository, ProductRepository>()
-            .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>()
-            .AddScoped<ILocationPhysicalAddressRepository, LocationPhysicalAddressRepository>();
+        public IServiceCollection AddRepositories() =>
+            services
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
+                .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
+                .AddScoped<IProductRepository, ProductRepository>()
+                .AddScoped<IProductVersionRepository, ProductVersionRepository>()
+                .AddScoped<ILocationRepository, LocationRepository>()
+                .AddScoped<ILocationPhysicalAddressRepository, LocationPhysicalAddressRepository>();
 
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddScoped<IMarketplacePublisher, MarketplacePublisher>();
+        public IServiceCollection AddPublishers() =>
+            services
+                .AddScoped<IMarketplacePublisher, MarketplacePublisher>();
 
-    public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
+        public IServiceCollection AddOutboxPublishers() =>
+            services
+                .AddSingleton<IMarketplaceOutboxPublisher, MarketplaceOutboxPublisher>();
+    }
 }

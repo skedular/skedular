@@ -72,37 +72,10 @@ public static class OrganizationTagTypeConstants
 
 public static class OrganizationTagTypeExtensions
 {
-    public static OrganizationTagType ToOrganizationTagType(this string src) =>
-        src switch
-        {
-            OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
-            OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
-            OrganizationTagTypeConstants.Product => OrganizationTagType.Product,
-            OrganizationTagTypeConstants.Location => OrganizationTagType.Location,
-
-            OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
-            OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
-            OrganizationTagTypeConstants.ResourceParking => OrganizationTagType.ResourceParking,
-            OrganizationTagTypeConstants.ResourceOthers => OrganizationTagType.ResourceOthers,
-
-            OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace => OrganizationTagType.LocationSpaceTypeCarParkSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeEventSpace => OrganizationTagType.LocationSpaceTypeEventSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeMeetingSpace => OrganizationTagType.LocationSpaceTypeMeetingSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeOfficeSpace => OrganizationTagType.LocationSpaceTypeOfficeSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeRetailSpace => OrganizationTagType.LocationSpaceTypeRetailSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeStorageSpace => OrganizationTagType.LocationSpaceTypeStorageSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeStudioSpace => OrganizationTagType.LocationSpaceTypeStudioSpace,
-            OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen => OrganizationTagType.LocationSpaceTypeCommercialKitchen,
-            OrganizationTagTypeConstants.LocationSpaceTypeShootLocation => OrganizationTagType.LocationSpaceTypeShootLocation,
-            OrganizationTagTypeConstants.LocationSpaceTypeOthers => OrganizationTagType.LocationSpaceTypeOthers,
-
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public static OrganizationTagType? ToNullableOrganizationTagType(this string? src) =>
-        string.IsNullOrWhiteSpace(src)
-            ? null
-            : src switch
+    extension(string src)
+    {
+        public OrganizationTagType ToOrganizationTagType() =>
+            src switch
             {
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
@@ -124,39 +97,46 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen => OrganizationTagType.LocationSpaceTypeCommercialKitchen,
                 OrganizationTagTypeConstants.LocationSpaceTypeShootLocation => OrganizationTagType.LocationSpaceTypeShootLocation,
                 OrganizationTagTypeConstants.LocationSpaceTypeOthers => OrganizationTagType.LocationSpaceTypeOthers,
+
                 _ => throw new ArgumentOutOfRangeException()
             };
+    }
 
-    public static string ToOrganizationTagType(this OrganizationTagType src) =>
-        src switch
-        {
-            OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
-            OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
-            OrganizationTagType.Product => OrganizationTagTypeConstants.Product,
-            OrganizationTagType.Location => OrganizationTagTypeConstants.Location,
+    extension(string? src)
+    {
+        public OrganizationTagType? ToNullableOrganizationTagType() =>
+            string.IsNullOrWhiteSpace(src)
+                ? null
+                : src switch
+                {
+                    OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
+                    OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
+                    OrganizationTagTypeConstants.Product => OrganizationTagType.Product,
+                    OrganizationTagTypeConstants.Location => OrganizationTagType.Location,
 
-            OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
-            OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
-            OrganizationTagType.ResourceParking => OrganizationTagTypeConstants.ResourceParking,
-            OrganizationTagType.ResourceOthers => OrganizationTagTypeConstants.ResourceOthers,
+                    OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
+                    OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
+                    OrganizationTagTypeConstants.ResourceParking => OrganizationTagType.ResourceParking,
+                    OrganizationTagTypeConstants.ResourceOthers => OrganizationTagType.ResourceOthers,
 
-            OrganizationTagType.LocationSpaceTypeCarParkSpace => OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace,
-            OrganizationTagType.LocationSpaceTypeEventSpace => OrganizationTagTypeConstants.LocationSpaceTypeEventSpace,
-            OrganizationTagType.LocationSpaceTypeMeetingSpace => OrganizationTagTypeConstants.LocationSpaceTypeMeetingSpace,
-            OrganizationTagType.LocationSpaceTypeOfficeSpace => OrganizationTagTypeConstants.LocationSpaceTypeOfficeSpace,
-            OrganizationTagType.LocationSpaceTypeRetailSpace => OrganizationTagTypeConstants.LocationSpaceTypeRetailSpace,
-            OrganizationTagType.LocationSpaceTypeStorageSpace => OrganizationTagTypeConstants.LocationSpaceTypeStorageSpace,
-            OrganizationTagType.LocationSpaceTypeStudioSpace => OrganizationTagTypeConstants.LocationSpaceTypeStudioSpace,
-            OrganizationTagType.LocationSpaceTypeCommercialKitchen => OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen,
-            OrganizationTagType.LocationSpaceTypeShootLocation => OrganizationTagTypeConstants.LocationSpaceTypeShootLocation,
-            OrganizationTagType.LocationSpaceTypeOthers => OrganizationTagTypeConstants.LocationSpaceTypeOthers,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+                    OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace => OrganizationTagType.LocationSpaceTypeCarParkSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeEventSpace => OrganizationTagType.LocationSpaceTypeEventSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeMeetingSpace => OrganizationTagType.LocationSpaceTypeMeetingSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeOfficeSpace => OrganizationTagType.LocationSpaceTypeOfficeSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeRetailSpace => OrganizationTagType.LocationSpaceTypeRetailSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeStorageSpace => OrganizationTagType.LocationSpaceTypeStorageSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeStudioSpace => OrganizationTagType.LocationSpaceTypeStudioSpace,
+                    OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen => OrganizationTagType.LocationSpaceTypeCommercialKitchen,
+                    OrganizationTagTypeConstants.LocationSpaceTypeShootLocation => OrganizationTagType.LocationSpaceTypeShootLocation,
+                    OrganizationTagTypeConstants.LocationSpaceTypeOthers => OrganizationTagType.LocationSpaceTypeOthers,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+    }
 
-    public static string ToNullableOrganizationTagType(this OrganizationTagType? src) =>
-        src is null
-            ? string.Empty
-            : src switch
+    extension(OrganizationTagType src)
+    {
+        public string ToOrganizationTagType() =>
+            src switch
             {
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
@@ -181,29 +161,61 @@ public static class OrganizationTagTypeExtensions
                 _ => throw new ArgumentOutOfRangeException()
             };
 
-    public static string ToOrganizationTagTypeName(this OrganizationTagType src) =>
-        src switch
-        {
-            OrganizationTagType.Custom => "Custom",
-            OrganizationTagType.Zone => "Zone",
-            OrganizationTagType.Product => "Product",
-            OrganizationTagType.Location => "Location",
+        public string ToOrganizationTagTypeName() =>
+            src switch
+            {
+                OrganizationTagType.Custom => "Custom",
+                OrganizationTagType.Zone => "Zone",
+                OrganizationTagType.Product => "Product",
+                OrganizationTagType.Location => "Location",
 
-            OrganizationTagType.ResourceDesk => "Desk",
-            OrganizationTagType.ResourceRoom => "Room",
-            OrganizationTagType.ResourceParking => "Parking",
-            OrganizationTagType.ResourceOthers => "Others",
+                OrganizationTagType.ResourceDesk => "Desk",
+                OrganizationTagType.ResourceRoom => "Room",
+                OrganizationTagType.ResourceParking => "Parking",
+                OrganizationTagType.ResourceOthers => "Others",
 
-            OrganizationTagType.LocationSpaceTypeCarParkSpace => "Car Park Space",
-            OrganizationTagType.LocationSpaceTypeEventSpace => "Event Space",
-            OrganizationTagType.LocationSpaceTypeMeetingSpace => "Meeting Space",
-            OrganizationTagType.LocationSpaceTypeOfficeSpace => "Office Space",
-            OrganizationTagType.LocationSpaceTypeRetailSpace => "Retail Space",
-            OrganizationTagType.LocationSpaceTypeStorageSpace => "Storage Space",
-            OrganizationTagType.LocationSpaceTypeStudioSpace => "Studio Space",
-            OrganizationTagType.LocationSpaceTypeCommercialKitchen => "Commercial Kitchen",
-            OrganizationTagType.LocationSpaceTypeShootLocation => "Shoot Location",
-            OrganizationTagType.LocationSpaceTypeOthers => "Others",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+                OrganizationTagType.LocationSpaceTypeCarParkSpace => "Car Park Space",
+                OrganizationTagType.LocationSpaceTypeEventSpace => "Event Space",
+                OrganizationTagType.LocationSpaceTypeMeetingSpace => "Meeting Space",
+                OrganizationTagType.LocationSpaceTypeOfficeSpace => "Office Space",
+                OrganizationTagType.LocationSpaceTypeRetailSpace => "Retail Space",
+                OrganizationTagType.LocationSpaceTypeStorageSpace => "Storage Space",
+                OrganizationTagType.LocationSpaceTypeStudioSpace => "Studio Space",
+                OrganizationTagType.LocationSpaceTypeCommercialKitchen => "Commercial Kitchen",
+                OrganizationTagType.LocationSpaceTypeShootLocation => "Shoot Location",
+                OrganizationTagType.LocationSpaceTypeOthers => "Others",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
+
+    extension(OrganizationTagType? src)
+    {
+        public string ToNullableOrganizationTagType() =>
+            src is null
+                ? string.Empty
+                : src switch
+                {
+                    OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
+                    OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
+                    OrganizationTagType.Product => OrganizationTagTypeConstants.Product,
+                    OrganizationTagType.Location => OrganizationTagTypeConstants.Location,
+
+                    OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
+                    OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
+                    OrganizationTagType.ResourceParking => OrganizationTagTypeConstants.ResourceParking,
+                    OrganizationTagType.ResourceOthers => OrganizationTagTypeConstants.ResourceOthers,
+
+                    OrganizationTagType.LocationSpaceTypeCarParkSpace => OrganizationTagTypeConstants.LocationSpaceTypeCarParkSpace,
+                    OrganizationTagType.LocationSpaceTypeEventSpace => OrganizationTagTypeConstants.LocationSpaceTypeEventSpace,
+                    OrganizationTagType.LocationSpaceTypeMeetingSpace => OrganizationTagTypeConstants.LocationSpaceTypeMeetingSpace,
+                    OrganizationTagType.LocationSpaceTypeOfficeSpace => OrganizationTagTypeConstants.LocationSpaceTypeOfficeSpace,
+                    OrganizationTagType.LocationSpaceTypeRetailSpace => OrganizationTagTypeConstants.LocationSpaceTypeRetailSpace,
+                    OrganizationTagType.LocationSpaceTypeStorageSpace => OrganizationTagTypeConstants.LocationSpaceTypeStorageSpace,
+                    OrganizationTagType.LocationSpaceTypeStudioSpace => OrganizationTagTypeConstants.LocationSpaceTypeStudioSpace,
+                    OrganizationTagType.LocationSpaceTypeCommercialKitchen => OrganizationTagTypeConstants.LocationSpaceTypeCommercialKitchen,
+                    OrganizationTagType.LocationSpaceTypeShootLocation => OrganizationTagTypeConstants.LocationSpaceTypeShootLocation,
+                    OrganizationTagType.LocationSpaceTypeOthers => OrganizationTagTypeConstants.LocationSpaceTypeOthers,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+    }
 }

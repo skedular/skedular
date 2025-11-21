@@ -8,26 +8,35 @@ namespace Enterprise.Shared.Outbox;
 
 public static class Extensions
 {
-    public static IServiceCollection AddKafkaOutboxBackgroundService<TDbContext>(this IServiceCollection services)
-        where TDbContext : DbContext, IKafkaOutboxStore =>
-        services.AddHostedService<KafkaOutboxBackgroundService<TDbContext>>();
+    extension(Type type)
+    {
+        public string ToWorkflowType() => type.FullName!;
+    }
 
-    public static IServiceCollection AddKafkaOutboxService(this IServiceCollection services) =>
-        services
-            .AddSingleton(typeof(IKafkaOutboxEventPublisher<,>), typeof(KafkaOutboxEventPublisher<,>));
+    extension(MethodInfo methodInfo)
+    {
+        public string ToWorkflowSignalType() => $"{methodInfo.DeclaringType}.{methodInfo.Name}";
+    }
 
-    public static IServiceCollection AddTemporalOutboxBackgroundService<TDbContext>(this IServiceCollection services)
-        where TDbContext : DbContext, ITemporalOutboxStore, ITemporalSignalOutboxStore =>
-        services
-            .AddHostedService<TemporalOutboxBackgroundService<TDbContext>>()
-            .AddHostedService<TemporalSignalOutboxBackgroundService<TDbContext>>();
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddKafkaOutboxBackgroundService<TDbContext>()
+            where TDbContext : DbContext, IKafkaOutboxStore =>
+            services.AddHostedService<KafkaOutboxBackgroundService<TDbContext>>();
 
-    public static IServiceCollection AddTemporalOutboxService(this IServiceCollection services) =>
-        services
-            .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<>), typeof(TemporalOutboxWorkflowExecutor<>))
-            .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor), typeof(TemporalSignalOutboxWorkflowExecutor));
+        public IServiceCollection AddKafkaOutboxService() =>
+            services
+                .AddSingleton(typeof(IKafkaOutboxEventPublisher<,>), typeof(KafkaOutboxEventPublisher<,>));
 
-    public static string ToWorkflowType(this Type type) => type.FullName!;
+        public IServiceCollection AddTemporalOutboxBackgroundService<TDbContext>()
+            where TDbContext : DbContext, ITemporalOutboxStore, ITemporalSignalOutboxStore =>
+            services
+                .AddHostedService<TemporalOutboxBackgroundService<TDbContext>>()
+                .AddHostedService<TemporalSignalOutboxBackgroundService<TDbContext>>();
 
-    public static string ToWorkflowSignalType(this MethodInfo methodInfo) => $"{methodInfo.DeclaringType}.{methodInfo.Name}";
+        public IServiceCollection AddTemporalOutboxService() =>
+            services
+                .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<>), typeof(TemporalOutboxWorkflowExecutor<>))
+                .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor), typeof(TemporalSignalOutboxWorkflowExecutor));
+    }
 }

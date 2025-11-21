@@ -26,51 +26,49 @@ public interface IFloorPlanRepository : IRepository<FloorPlan>
 
 internal static class FloorPlanExtensions
 {
-    internal static IIncludableQueryable<FloorPlan, Resource> AddDependentObjects(
-        this IQueryable<FloorPlan> originalQuery) =>
-        originalQuery
-            .Include(query => query.Location)
-            .Include(query => query.ResourcePositions)
-            .ThenInclude(query => query.Resource);
-
-    internal static IQueryable<FloorPlan> AddSearchCriteria(
-        this IQueryable<FloorPlan> query,
-        FloorPlanSearchCriteria searchCriteria)
+    extension(IQueryable<FloorPlan> originalQuery)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue);
+        internal IIncludableQueryable<FloorPlan, Resource> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Location)
+                .Include(query => query.ResourcePositions)
+                .ThenInclude(query => query.Resource);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
+        internal IQueryable<FloorPlan> AddSearchCriteria(FloorPlanSearchCriteria searchCriteria)
         {
-            query = query.Where(item => !item.Location.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
-        }
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
-        return query;
-    }
-
-    internal static IQueryable<FloorPlan> AddSortingOrders(
-        this IQueryable<FloorPlan> originalQuery,
-        ICollection<FloorPlanOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            FloorPlanOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
             {
-                FloorPlanOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item => !item.Location.DeletedAt.HasValue && item.Location.Id == searchCriteria.LocationId);
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<FloorPlan> AddSortingOrders(ICollection<FloorPlanOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                FloorPlanOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    FloorPlanOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

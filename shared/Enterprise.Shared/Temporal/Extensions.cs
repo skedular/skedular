@@ -12,114 +12,120 @@ namespace Enterprise.Shared.Temporal;
 
 public static class Extensions
 {
-    public static ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string deploymentName,
-        string buildId)
+    extension(TemporalClientConnectOptions? temporalClientConnectOptions)
     {
-        var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
-        ArgumentNullException.ThrowIfNull(temporalConfiguration);
-
-        var target = configuration.GetConnectionString("temporal");
-        if (!string.IsNullOrWhiteSpace(target))
+        private TemporalClientConnectOptions ConfigureClient(TemporalConfiguration temporalConfiguration)
         {
-            temporalConfiguration.Connection.Target = target;
-        }
+            ArgumentNullException.ThrowIfNull(temporalConfiguration.Connection);
 
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        ArgumentNullException.ThrowIfNull(applicationConfiguration);
-        if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
-        {
-            temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
-            deploymentName = $"{applicationConfiguration.Environment}.{deploymentName}";
-        }
+            temporalClientConnectOptions ??= new TemporalClientConnectOptions();
+            temporalClientConnectOptions.Namespace = temporalConfiguration.Connection.Namespace;
+            temporalClientConnectOptions.TargetHost = temporalConfiguration.Connection.Target;
 
-        var workerDeploymentOptions =
-            new WorkerDeploymentOptions(new WorkerDeploymentVersion(deploymentName.Replace(".", "-").Replace(":", "-"), buildId), false)
+            if (temporalConfiguration.Connection.Mtls is not null)
             {
-                DefaultVersioningBehavior = VersioningBehavior.Unspecified
-            };
+                temporalClientConnectOptions.Tls = new TlsOptions
+                {
+                    ClientCert = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.CertChainFile),
+                    ClientPrivateKey = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.KeyFile)
+                };
+            }
 
-        return services
-            .AddTemporalOutboxService()
-            .AddSingleton(temporalConfiguration)
-            .AddSingleton<ITemporalHelperService, TemporalHelperService>()
-            .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
-            .Configure<ITemporalClient>(_ => { })
-            .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue, workerDeploymentOptions)
-            .ConfigureOptions(temporalWorkerServiceOptions => temporalWorkerServiceOptions.ConfigureService(temporalConfiguration));
+            return temporalClientConnectOptions;
+        }
     }
 
-    public static IServiceCollection AddTemporalClient(this IServiceCollection services, IConfiguration configuration)
+    extension(TemporalWorkerServiceOptions options)
     {
-        var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
-        ArgumentNullException.ThrowIfNull(temporalConfiguration);
-
-        var target = configuration.GetConnectionString("temporal");
-        if (!string.IsNullOrWhiteSpace(target))
+        private void ConfigureService(TemporalConfiguration temporalConfiguration)
         {
-            temporalConfiguration.Connection.Target = target;
+            options.ClientOptions = options.ClientOptions.ConfigureClient(temporalConfiguration);
+            options.ConfigureWorker(temporalConfiguration);
         }
-
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        ArgumentNullException.ThrowIfNull(applicationConfiguration);
-        if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
-        {
-            temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
-        }
-
-        return services
-            .AddTemporalOutboxService()
-            .AddSingleton(temporalConfiguration)
-            .AddSingleton<ITemporalHelperService, TemporalHelperService>()
-            .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
-            .Configure<ITemporalClient>(_ => { });
     }
 
-    private static TemporalClientConnectOptions ConfigureClient(
-        this TemporalClientConnectOptions? temporalClientConnectOptions,
-        TemporalConfiguration temporalConfiguration)
+    extension(TemporalWorkerOptions options)
     {
-        ArgumentNullException.ThrowIfNull(temporalConfiguration.Connection);
-
-        temporalClientConnectOptions ??= new TemporalClientConnectOptions();
-        temporalClientConnectOptions.Namespace = temporalConfiguration.Connection.Namespace;
-        temporalClientConnectOptions.TargetHost = temporalConfiguration.Connection.Target;
-
-        if (temporalConfiguration.Connection.Mtls is not null)
+        private void ConfigureWorker(TemporalConfiguration temporalConfiguration)
         {
-            temporalClientConnectOptions.Tls = new TlsOptions
+            // rate limits
+            options.MaxTaskQueueActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxTaskQueueActivitiesPerSecond;
+            options.MaxActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxWorkerActivitiesPerSecond;
+
+            // executors
+            options.MaxConcurrentActivities = temporalConfiguration.Worker.Capacity.MaxConcurrentActivityExecutors;
+            options.MaxConcurrentLocalActivities = temporalConfiguration.Worker.Capacity.MaxConcurrentLocalActivityExecutors;
+            options.MaxConcurrentWorkflowTasks = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskExecutors;
+
+            // pollers
+            options.MaxConcurrentWorkflowTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskPollers;
+            options.MaxConcurrentActivityTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentActivityTaskPollers;
+
+            options.MaxCachedWorkflows = temporalConfiguration.Worker.Cache.MaxInstances;
+        }
+    }
+
+    extension(IServiceCollection services)
+    {
+        public ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(IConfiguration configuration, string deploymentName, string buildId)
+        {
+            var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
+            ArgumentNullException.ThrowIfNull(temporalConfiguration);
+
+            var target = configuration.GetConnectionString("temporal");
+            if (!string.IsNullOrWhiteSpace(target))
             {
-                ClientCert = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.CertChainFile),
-                ClientPrivateKey = File.ReadAllBytes(temporalConfiguration.Connection.Mtls.KeyFile)
-            };
+                temporalConfiguration.Connection.Target = target;
+            }
+
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            ArgumentNullException.ThrowIfNull(applicationConfiguration);
+            if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
+            {
+                temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
+                deploymentName = $"{applicationConfiguration.Environment}.{deploymentName}";
+            }
+
+            var workerDeploymentOptions =
+                new WorkerDeploymentOptions(new WorkerDeploymentVersion(deploymentName.Replace(".", "-").Replace(":", "-"), buildId), false)
+                {
+                    DefaultVersioningBehavior = VersioningBehavior.Unspecified
+                };
+
+            return services
+                .AddTemporalOutboxService()
+                .AddSingleton(temporalConfiguration)
+                .AddSingleton<ITemporalHelperService, TemporalHelperService>()
+                .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
+                .Configure<ITemporalClient>(_ => { })
+                .AddHostedTemporalWorker(temporalConfiguration.Worker.TaskQueue, workerDeploymentOptions)
+                .ConfigureOptions(temporalWorkerServiceOptions => temporalWorkerServiceOptions.ConfigureService(temporalConfiguration));
         }
 
-        return temporalClientConnectOptions;
-    }
+        public IServiceCollection AddTemporalClient(IConfiguration configuration)
+        {
+            var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
+            ArgumentNullException.ThrowIfNull(temporalConfiguration);
 
-    private static void ConfigureService(this TemporalWorkerServiceOptions opts, TemporalConfiguration temporalConfiguration)
-    {
-        opts.ClientOptions = opts.ClientOptions.ConfigureClient(temporalConfiguration);
-        opts.ConfigureWorker(temporalConfiguration);
-    }
+            var target = configuration.GetConnectionString("temporal");
+            if (!string.IsNullOrWhiteSpace(target))
+            {
+                temporalConfiguration.Connection.Target = target;
+            }
 
-    private static void ConfigureWorker(this TemporalWorkerOptions temporalWorkerOptions, TemporalConfiguration temporalConfiguration)
-    {
-        // rate limits
-        temporalWorkerOptions.MaxTaskQueueActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxTaskQueueActivitiesPerSecond;
-        temporalWorkerOptions.MaxActivitiesPerSecond = temporalConfiguration.Worker.RateLimits.MaxWorkerActivitiesPerSecond;
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            ArgumentNullException.ThrowIfNull(applicationConfiguration);
+            if (!string.IsNullOrWhiteSpace(applicationConfiguration.Environment))
+            {
+                temporalConfiguration.Worker.TaskQueue = $"{applicationConfiguration.Environment}.{temporalConfiguration.Worker.TaskQueue}";
+            }
 
-        // executors
-        temporalWorkerOptions.MaxConcurrentActivities = temporalConfiguration.Worker.Capacity.MaxConcurrentActivityExecutors;
-        temporalWorkerOptions.MaxConcurrentLocalActivities = temporalConfiguration.Worker.Capacity.MaxConcurrentLocalActivityExecutors;
-        temporalWorkerOptions.MaxConcurrentWorkflowTasks = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskExecutors;
-
-        // pollers
-        temporalWorkerOptions.MaxConcurrentWorkflowTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentWorkflowTaskPollers;
-        temporalWorkerOptions.MaxConcurrentActivityTaskPolls = temporalConfiguration.Worker.Capacity.MaxConcurrentActivityTaskPollers;
-
-        temporalWorkerOptions.MaxCachedWorkflows = temporalConfiguration.Worker.Cache.MaxInstances;
+            return services
+                .AddTemporalOutboxService()
+                .AddSingleton(temporalConfiguration)
+                .AddSingleton<ITemporalHelperService, TemporalHelperService>()
+                .AddTemporalClient(temporalClientConnectOptions => temporalClientConnectOptions.ConfigureClient(temporalConfiguration))
+                .Configure<ITemporalClient>(_ => { });
+        }
     }
 }

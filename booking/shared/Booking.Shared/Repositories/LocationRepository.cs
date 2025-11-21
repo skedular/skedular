@@ -19,21 +19,23 @@ public interface ILocationRepository : IRepository<Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Location> originalQuery,
-        bool includeDeletedResource,
-        bool includeInactiveResource) =>
-        originalQuery
-            .Include(query => query.Resources.Where(resource =>
-                includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.Resources.Where(resource =>
-                includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
-            .Include(query => query.Organization)
-            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .Include(query => query.PreferredByCustomers)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+    extension(IQueryable<Location> originalQuery)
+    {
+        internal IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
+            bool includeDeletedResource,
+            bool includeInactiveResource) =>
+            originalQuery
+                .Include(query => query.Resources.Where(resource =>
+                    includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
+                .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.Resources.Where(resource =>
+                    includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
+                .Include(query => query.Organization)
+                .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+    }
 }
 
 public class LocationRepository(BookingDbContext dbContext, TimeProvider timeProvider)

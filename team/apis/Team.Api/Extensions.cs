@@ -7,31 +7,34 @@ namespace Team.Api;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
-            .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
-            .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
-            .AddScoped<ITeamService, TeamService>()
-            .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<ITeamMemberService, TeamMemberService>()
-            .AddScoped<IInvitationService, InvitationService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>();
-
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
-        ArgumentNullException.ThrowIfNull(teamConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(teamConfiguration.ApiKey);
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-        return services
-            .AddSingleton(teamConfiguration);
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+                .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+                .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
+                .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
+                .AddScoped<ITeamService, TeamService>()
+                .AddScoped<ICustomerService, CustomerService>()
+                .AddScoped<ITeamMemberService, TeamMemberService>()
+                .AddScoped<IInvitationService, InvitationService>()
+                .AddScoped<IWorkaroundService, WorkaroundService>();
+
+        public IServiceCollection AddJobs() =>
+            services;
+
+        public IServiceCollection AddGrpcServices(IConfiguration configuration)
+        {
+            var teamConfiguration = configuration.GetSection(TeamConfiguration.Key).Get<TeamConfiguration>();
+            ArgumentNullException.ThrowIfNull(teamConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(teamConfiguration.ApiKey);
+
+            return services
+                .AddSingleton(teamConfiguration);
+        }
     }
 }

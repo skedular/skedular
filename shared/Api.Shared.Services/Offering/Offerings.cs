@@ -99,36 +99,46 @@ public static class Offerings
         }
     };
 
-    public static bool IsFreeOffering(this OfferingCode offeringCode) =>
-        offeringCode is OfferingCode.FreeTierV1 or OfferingCode.EarlyBirdV1;
+    extension(OfferingCode offeringCode)
+    {
+        public bool IsFreeOffering() =>
+            offeringCode is OfferingCode.FreeTierV1 or OfferingCode.EarlyBirdV1;
 
-    public static bool IsEarlyBirdOffering(this OfferingCode offeringCode) => offeringCode == OfferingCode.EarlyBirdV1;
+        public bool IsEarlyBirdOffering() => offeringCode == OfferingCode.EarlyBirdV1;
+        public bool IsEnterpriseOffering() => offeringCode == OfferingCode.EnterpriseCustomV1;
+        public Offering GetOffering() => OfferingSet[offeringCode];
+    }
 
-    public static bool IsEnterpriseOffering(this OfferingCode offeringCode) => offeringCode == OfferingCode.EnterpriseCustomV1;
+    extension(string code)
+    {
+        public OfferingCode ToOfferingCode() =>
+            code switch
+            {
+                "EARLY_BIRD_V1" => OfferingCode.EarlyBirdV1,
+                "FREE_TIER_V1" => OfferingCode.FreeTierV1,
+                "PAY_AS_YOU_GO_V1" => OfferingCode.PayAsYouGoV1,
+                "ENTERPRISE_CUSTOM_V1" => OfferingCode.EnterpriseCustomV1,
+                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
+            };
+    }
 
-    public static Offering GetOffering(this OfferingCode offeringCode) => OfferingSet[offeringCode];
+    extension(OfferingCode code)
+    {
+        public string ToOfferingCode() =>
+            code switch
+            {
+                OfferingCode.EarlyBirdV1 => "EARLY_BIRD_V1",
+                OfferingCode.FreeTierV1 => "FREE_TIER_V1",
+                OfferingCode.PayAsYouGoV1 => "PAY_AS_YOU_GO_V1",
+                OfferingCode.EnterpriseCustomV1 => "ENTERPRISE_CUSTOM_V1",
+                _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
+            };
+    }
 
-    public static OfferingCode ToOfferingCode(this string code) =>
-        code switch
-        {
-            "EARLY_BIRD_V1" => OfferingCode.EarlyBirdV1,
-            "FREE_TIER_V1" => OfferingCode.FreeTierV1,
-            "PAY_AS_YOU_GO_V1" => OfferingCode.PayAsYouGoV1,
-            "ENTERPRISE_CUSTOM_V1" => OfferingCode.EnterpriseCustomV1,
-            _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
-        };
-
-    public static string ToOfferingCode(this OfferingCode code) =>
-        code switch
-        {
-            OfferingCode.EarlyBirdV1 => "EARLY_BIRD_V1",
-            OfferingCode.FreeTierV1 => "FREE_TIER_V1",
-            OfferingCode.PayAsYouGoV1 => "PAY_AS_YOU_GO_V1",
-            OfferingCode.EnterpriseCustomV1 => "ENTERPRISE_CUSTOM_V1",
-            _ => throw new ArgumentException($"{code} is not valid offering code", nameof(code))
-        };
-
-    public static DateTimeOffset GetOfferingPeriodStart(this DateTimeOffset date) => new(date.Year, date.Month, 1, 0, 0, 0, date.Offset);
-    public static DateTimeOffset GetOfferingPeriodEnd(this DateTimeOffset date) => date.AddMonths(1);
-    public static DateTimeOffset GetNextOfferingPeriodStart(this DateTimeOffset end) => end;
+    extension(DateTimeOffset date)
+    {
+        public DateTimeOffset GetOfferingPeriodStart() => new(date.Year, date.Month, 1, 0, 0, 0, date.Offset);
+        public DateTimeOffset GetOfferingPeriodEnd() => date.AddMonths(1);
+        public DateTimeOffset GetNextOfferingPeriodStart() => date;
+    }
 }

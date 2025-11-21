@@ -4,15 +4,18 @@ namespace Slack.Jobs;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services;
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddMappers() =>
+            services;
 
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddServices() =>
+            services;
 
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<LocationDailyUpdateJob>()
-            .AddHostedService<TeamDailyUpdateJob>()
-            .AddHostedService<UpdateWorkspaceMemberProfileStatusJob>();
+        public IServiceCollection AddJobs() =>
+            services
+                .AddHostedService<LocationDailyUpdateJob>()
+                .AddHostedService<TeamDailyUpdateJob>()
+                .AddHostedService<UpdateWorkspaceMemberProfileStatusJob>();
+    }
 }

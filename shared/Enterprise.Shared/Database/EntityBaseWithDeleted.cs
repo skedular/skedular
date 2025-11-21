@@ -14,34 +14,42 @@ public class ReplicatedEntityBaseWithDeleted : ReplicatedEntityBase
 
 public static class EntityBaseWithDeletedExtension
 {
-    public static void ConfigureEntityBaseWithDeleted<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
-        where T : EntityBaseWithDeleted
+    extension<T>(EntityTypeBuilder<T> builder) where T : EntityBaseWithDeleted
     {
-        builder.ConfigureEntityBase(maxUniqueIdLength);
+        public void ConfigureEntityBaseWithDeleted(int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        {
+            builder.ConfigureEntityBase(maxUniqueIdLength);
 
-        builder.HasIndex(item => item.DeletedAt);
+            builder.HasIndex(item => item.DeletedAt);
+        }
     }
 }
 
 public static class ReplicatedEntityBaseWithDeletedExtension
 {
-    public static void ConfigureReplicatedEntityBaseWithDeleted<T>(
-        this EntityTypeBuilder<T> builder,
-        int maxUniqueIdLength = Constants.MaxUniqueIdLength) where T : ReplicatedEntityBaseWithDeleted
+    extension<T>(EntityTypeBuilder<T> builder) where T : ReplicatedEntityBaseWithDeleted
     {
-        builder.ConfigureReplicatedEntityBase(maxUniqueIdLength);
+        public void ConfigureReplicatedEntityBaseWithDeleted(int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        {
+            builder.ConfigureReplicatedEntityBase(maxUniqueIdLength);
 
-        builder.HasIndex(item => item.DeletedAt);
+            builder.HasIndex(item => item.DeletedAt);
+        }
     }
 }
 
 public static class EntityBaseWithDeletedExtensions
 {
-    public static bool IsNotDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => !entity.IsDeleted();
-    public static bool IsDeleted<TEntity>(this TEntity entity) where TEntity : EntityBaseWithDeleted => entity.DeletedAt.HasValue;
+    extension<TEntity>(TEntity entity) where TEntity : EntityBaseWithDeleted
+    {
+        public bool IsNotDeleted() => !entity.IsDeleted();
+        public bool IsDeleted() => entity.DeletedAt.HasValue;
+    }
 
-    public static bool IsReplicatedNotDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedEntityBaseWithDeleted =>
-        !entity.IsReplicatedDeleted();
+    extension<TEntity>(TEntity entity) where TEntity : ReplicatedEntityBaseWithDeleted
+    {
+        public bool IsReplicatedNotDeleted() => !entity.IsReplicatedDeleted();
 
-    public static bool IsReplicatedDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedEntityBaseWithDeleted => entity.DeletedAt.HasValue;
+        public bool IsReplicatedDeleted() => entity.DeletedAt.HasValue;
+    }
 }

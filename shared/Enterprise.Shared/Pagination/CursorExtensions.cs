@@ -2,6 +2,13 @@ namespace Enterprise.Shared.Pagination;
 
 public static class CursorExtensions
 {
-    public static string ToCursor(this string? val) => val.ToSafeString();
-    public static string FromCursor(this string val) => val;
+    extension(string? val)
+    {
+        public string ToCursor() => val.ToSafeString();
+    }
+
+    extension(string val)
+    {
+        public string FromCursor() => val;
+    }
 }

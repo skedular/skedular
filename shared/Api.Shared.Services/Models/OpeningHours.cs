@@ -94,18 +94,21 @@ public record OpeningHours(
 
 public static class OpeningHoursExtensions
 {
-    public static bool IsEqual(this OpeningHours? openingHours1, OpeningHours? openingHours2)
+    extension(OpeningHours? openingHours1)
     {
-        if (openingHours1 is null && openingHours2 is null)
+        public bool IsEqual(OpeningHours? openingHours2)
         {
+            if (openingHours1 is null && openingHours2 is null)
+            {
+                return true;
+            }
+
+            if (openingHours1 is not null && openingHours2 is not null)
+            {
+                return openingHours1.Equals(openingHours2);
+            }
+
             return true;
         }
-
-        if (openingHours1 is not null && openingHours2 is not null)
-        {
-            return openingHours1.Equals(openingHours2);
-        }
-
-        return true;
     }
 }

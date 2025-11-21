@@ -15,10 +15,12 @@ public interface IOrganizationStripePaymentMethodRepository : IRepository<Organi
 
 internal static class StripePaymentMethodExtensions
 {
-    internal static IIncludableQueryable<OrganizationStripePaymentMethod, Database.Entities.Organization> AddDependentObjects(
-        this IQueryable<OrganizationStripePaymentMethod> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization);
+    extension(IQueryable<OrganizationStripePaymentMethod> originalQuery)
+    {
+        internal IIncludableQueryable<OrganizationStripePaymentMethod, Database.Entities.Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization);
+    }
 }
 
 public class OrganizationStripePaymentMethodRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)

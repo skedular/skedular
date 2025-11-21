@@ -14,19 +14,25 @@ public static class NotificationTypeConstants
 
 public static class NotificationTypeExtensions
 {
-    public static NotificationType ToNotificationType(this string src) =>
-        src switch
-        {
-            NotificationTypeConstants.InvitationToJoinOrganization => NotificationType.InvitationToJoinOrganization,
-            NotificationTypeConstants.InvitationToJoinTeam => NotificationType.InvitationToJoinTeam,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public NotificationType ToNotificationType() =>
+            src switch
+            {
+                NotificationTypeConstants.InvitationToJoinOrganization => NotificationType.InvitationToJoinOrganization,
+                NotificationTypeConstants.InvitationToJoinTeam => NotificationType.InvitationToJoinTeam,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToNotificationType(this NotificationType src) =>
-        src switch
-        {
-            NotificationType.InvitationToJoinOrganization => NotificationTypeConstants.InvitationToJoinOrganization,
-            NotificationType.InvitationToJoinTeam => NotificationTypeConstants.InvitationToJoinTeam,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(NotificationType src)
+    {
+        public string ToNotificationType() =>
+            src switch
+            {
+                NotificationType.InvitationToJoinOrganization => NotificationTypeConstants.InvitationToJoinOrganization,
+                NotificationType.InvitationToJoinTeam => NotificationTypeConstants.InvitationToJoinTeam,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

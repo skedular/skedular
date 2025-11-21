@@ -30,121 +30,119 @@ public interface ICustomerRepository : IRepository<Database.Entities.Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(
-        this IQueryable<Database.Entities.Customer> originalQuery,
-        bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Identities)
-        .Include(query => query.BillingDetails)
-        .Include(query => query.StripeCustomer)
-        .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
-        .Include(query => query.DefaultOrganization)
-        .Include(query => query.PreferredLocations)
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.PreferredOrganizationTags)
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.PreferredResources)
-        .ThenInclude(query => query.Location)
-        .ThenInclude(query => query!.Organization);
-
-    internal static IQueryable<Database.Entities.Customer> AddSearchCriteria(
-        this IQueryable<Database.Entities.Customer> query,
-        CustomerSearchCriteria searchCriteria)
+    extension(IQueryable<Database.Entities.Customer> originalQuery)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue);
+        internal IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Identities)
+            .Include(query => query.BillingDetails)
+            .Include(query => query.StripeCustomer)
+            .Include(query => query.StripePaymentMethods.Where(stripePaymentMethod => !stripePaymentMethod.DeletedAt.HasValue))
+            .Include(query => query.DefaultOrganization)
+            .Include(query => query.PreferredLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.PreferredOrganizationTags)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.PreferredResources)
+            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query!.Organization);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+        internal IQueryable<Database.Entities.Customer> AddSearchCriteria(CustomerSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                (item.Name != null && EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%")) ||
-                (item.GivenName != null &&
-                 EF.Functions.ILike(item.GivenName, $"%{searchCriteria.NameContains}%")) ||
-                (item.MiddleName != null &&
-                 EF.Functions.ILike(item.MiddleName, $"%{searchCriteria.NameContains}%")) ||
-                (item.FamilyName != null &&
-                 EF.Functions.ILike(item.FamilyName, $"%{searchCriteria.NameContains}%")));
-        }
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
-        {
-            query = query.Where(item => item.PreferredLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<Database.Entities.Customer> AddSortingOrders(
-        this IQueryable<Database.Entities.Customer> originalQuery,
-        ICollection<CustomerOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Designation)
-                : originalQuery.OrderByDescending(x => x.Designation),
-            CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Title)
-                : originalQuery.OrderByDescending(x => x.Title),
-            CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.GivenName)
-                : originalQuery.OrderByDescending(x => x.GivenName),
-            CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.MiddleName)
-                : originalQuery.OrderByDescending(x => x.MiddleName),
-            CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.FamilyName)
-                : originalQuery.OrderByDescending(x => x.FamilyName),
-            CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Timezone)
-                : originalQuery.OrderByDescending(x => x.Timezone),
-            CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Locale)
-                : originalQuery.OrderByDescending(x => x.Locale),
-            CustomerOrderField.PhoneNumber => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.PhoneNumber)
-                : originalQuery.OrderByDescending(x => x.PhoneNumber),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
             {
-                CustomerOrderField.Designation => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Designation)
-                    : query.ThenByDescending(x => x.Designation),
-                CustomerOrderField.Title => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Title)
-                    : query.ThenByDescending(x => x.Title),
-                CustomerOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
-                CustomerOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.GivenName)
-                    : query.ThenByDescending(x => x.GivenName),
-                CustomerOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.MiddleName)
-                    : query.ThenByDescending(x => x.MiddleName),
-                CustomerOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.FamilyName)
-                    : query.ThenByDescending(x => x.FamilyName),
-                CustomerOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Timezone)
-                    : query.ThenByDescending(x => x.Timezone),
-                CustomerOrderField.Locale => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Locale)
-                    : query.ThenByDescending(x => x.Locale),
-                CustomerOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.PhoneNumber)
-                    : query.ThenByDescending(x => x.PhoneNumber),
+                originalQuery = originalQuery.Where(item =>
+                    (item.Name != null && EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%")) ||
+                    (item.GivenName != null &&
+                     EF.Functions.ILike(item.GivenName, $"%{searchCriteria.NameContains}%")) ||
+                    (item.MiddleName != null &&
+                     EF.Functions.ILike(item.MiddleName, $"%{searchCriteria.NameContains}%")) ||
+                    (item.FamilyName != null &&
+                     EF.Functions.ILike(item.FamilyName, $"%{searchCriteria.NameContains}%")));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.LocationId))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.PreferredLocations.Select(location => location.Id).Contains(searchCriteria.LocationId));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Database.Entities.Customer> AddSortingOrders(ICollection<CustomerOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Designation)
+                    : originalQuery.OrderByDescending(x => x.Designation),
+                CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Title)
+                    : originalQuery.OrderByDescending(x => x.Title),
+                CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
+                CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.GivenName)
+                    : originalQuery.OrderByDescending(x => x.GivenName),
+                CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.MiddleName)
+                    : originalQuery.OrderByDescending(x => x.MiddleName),
+                CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.FamilyName)
+                    : originalQuery.OrderByDescending(x => x.FamilyName),
+                CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Timezone)
+                    : originalQuery.OrderByDescending(x => x.Timezone),
+                CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Locale)
+                    : originalQuery.OrderByDescending(x => x.Locale),
+                CustomerOrderField.PhoneNumber => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.PhoneNumber)
+                    : originalQuery.OrderByDescending(x => x.PhoneNumber),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    CustomerOrderField.Designation => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Designation)
+                        : query.ThenByDescending(x => x.Designation),
+                    CustomerOrderField.Title => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Title)
+                        : query.ThenByDescending(x => x.Title),
+                    CustomerOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    CustomerOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.GivenName)
+                        : query.ThenByDescending(x => x.GivenName),
+                    CustomerOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.MiddleName)
+                        : query.ThenByDescending(x => x.MiddleName),
+                    CustomerOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.FamilyName)
+                        : query.ThenByDescending(x => x.FamilyName),
+                    CustomerOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Timezone)
+                        : query.ThenByDescending(x => x.Timezone),
+                    CustomerOrderField.Locale => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Locale)
+                        : query.ThenByDescending(x => x.Locale),
+                    CustomerOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.PhoneNumber)
+                        : query.ThenByDescending(x => x.PhoneNumber),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

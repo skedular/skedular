@@ -17,22 +17,26 @@ public class ReplicatedEntityBase : EntityBase
 
 public static class EntityBaseExtension
 {
-    public static void ConfigureEntityBase<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
-        where T : EntityBase
+    extension<T>(EntityTypeBuilder<T> builder) where T : EntityBase
     {
-        builder.HasKey(item => item.Id);
+        public void ConfigureEntityBase(int maxUniqueIdLength = Constants.MaxUniqueIdLength)
+        {
+            builder.HasKey(item => item.Id);
 
-        builder.Property(item => item.EntityFrameworkVersion).IsRowVersion();
-        builder.Property(item => item.Id).HasMaxLength(maxUniqueIdLength);
+            builder.Property(item => item.EntityFrameworkVersion).IsRowVersion();
+            builder.Property(item => item.Id).HasMaxLength(maxUniqueIdLength);
 
-        builder.HasIndex(item => item.CreatedAt);
-        builder.HasIndex(item => item.ModifiedAt);
+            builder.HasIndex(item => item.CreatedAt);
+            builder.HasIndex(item => item.ModifiedAt);
+        }
     }
 }
 
 public static class ReplicatedEntityBaseExtension
 {
-    public static void ConfigureReplicatedEntityBase<T>(this EntityTypeBuilder<T> builder, int maxUniqueIdLength = Constants.MaxUniqueIdLength)
-        where T : ReplicatedEntityBase =>
-        builder.ConfigureEntityBase(maxUniqueIdLength);
+    extension<T>(EntityTypeBuilder<T> builder) where T : ReplicatedEntityBase
+    {
+        public void ConfigureReplicatedEntityBase(int maxUniqueIdLength = Constants.MaxUniqueIdLength) =>
+            builder.ConfigureEntityBase(maxUniqueIdLength);
+    }
 }

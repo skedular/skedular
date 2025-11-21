@@ -18,11 +18,14 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, Organization> AddDependentObjects(this IQueryable<Customer> originalQuery, bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Identities)
-        .Include(query => query.OrganizationMembers)
-        .ThenInclude(query => query.Organization);
+    extension(IQueryable<Customer> originalQuery)
+    {
+        internal IIncludableQueryable<Customer, Organization> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Identities)
+            .Include(query => query.OrganizationMembers)
+            .ThenInclude(query => query.Organization);
+    }
 }
 
 public class CustomerRepository(LocationDbContext dbContext, TimeProvider timeProvider)

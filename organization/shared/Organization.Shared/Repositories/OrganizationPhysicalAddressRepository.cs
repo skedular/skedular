@@ -17,10 +17,12 @@ public interface IOrganizationPhysicalAddressRepository : IRepository<Organizati
 
 internal static class OrganizationPhysicalAddressExtensions
 {
-    internal static IIncludableQueryable<OrganizationPhysicalAddress, Database.Entities.Organization> AddDependentObjects(
-        this IQueryable<OrganizationPhysicalAddress> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization);
+    extension(IQueryable<OrganizationPhysicalAddress> originalQuery)
+    {
+        internal IIncludableQueryable<OrganizationPhysicalAddress, Database.Entities.Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization);
+    }
 }
 
 public class OrganizationPhysicalAddressRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)

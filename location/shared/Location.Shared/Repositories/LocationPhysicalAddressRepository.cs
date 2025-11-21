@@ -16,10 +16,12 @@ public interface ILocationPhysicalAddressRepository : IRepository<LocationPhysic
 
 internal static class LocationPhysicalAddressExtensions
 {
-    internal static IIncludableQueryable<LocationPhysicalAddress, Database.Entities.Location> AddDependentObjects(
-        this IQueryable<LocationPhysicalAddress> originalQuery) =>
-        originalQuery
-            .Include(query => query.Location);
+    extension(IQueryable<LocationPhysicalAddress> originalQuery)
+    {
+        internal IIncludableQueryable<LocationPhysicalAddress, Database.Entities.Location> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Location);
+    }
 }
 
 public class LocationPhysicalAddressRepository(LocationDbContext dbContext, TimeProvider timeProvider)

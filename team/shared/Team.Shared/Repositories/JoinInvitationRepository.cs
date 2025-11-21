@@ -29,74 +29,73 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 
 internal static class JoinInvitationExtensions
 {
-    internal static IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(
-        this IQueryable<JoinInvitation> originalQuery,
-        bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Team)
-        .Include(query => query.CreatedBy)
-        .Include(query => query.Invitee);
-
-    internal static IQueryable<JoinInvitation> AddSearchCriteria(this IQueryable<JoinInvitation> query, JoinInvitationSearchCriteria searchCriteria)
+    extension(IQueryable<JoinInvitation> originalQuery)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue);
+        internal IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Team)
+            .Include(query => query.CreatedBy)
+            .Include(query => query.Invitee);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
+        internal IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
-        }
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
-        {
-            query = query.Where(item =>
-                item.Team.Organization.UniqueAlphanumericName != null &&
-                item.Team.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.TeamId))
-        {
-            query = query.Where(item => item.Team.Id == searchCriteria.TeamId);
-        }
-
-        if (searchCriteria.Status is not null)
-        {
-            query = query.Where(item => item.Status == searchCriteria.Status.Value.ToInvitationStatus());
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<JoinInvitation> AddSortingOrders(
-        this IQueryable<JoinInvitation> originalQuery,
-        ICollection<JoinTeamInvitationOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.CreatedBy).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            JoinTeamInvitationOrderField.CreatedAt => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.CreatedAt)
-                : originalQuery.OrderByDescending(x => x.CreatedAt),
-            JoinTeamInvitationOrderField.Status => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Status)
-                : originalQuery.OrderByDescending(x => x.Status),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
             {
-                JoinTeamInvitationOrderField.CreatedAt => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.CreatedAt)
-                    : query.ThenByDescending(x => x.CreatedAt),
-                JoinTeamInvitationOrderField.Status => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Status)
-                    : query.ThenByDescending(x => x.Status),
+                originalQuery = originalQuery.Where(item =>
+                    item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.Team.Organization.UniqueAlphanumericName != null &&
+                    item.Team.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.TeamId))
+            {
+                originalQuery = originalQuery.Where(item => item.Team.Id == searchCriteria.TeamId);
+            }
+
+            if (searchCriteria.Status is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Status == searchCriteria.Status.Value.ToInvitationStatus());
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<JoinInvitation> AddSortingOrders(ICollection<JoinTeamInvitationOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.CreatedBy).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                JoinTeamInvitationOrderField.CreatedAt => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.CreatedAt)
+                    : originalQuery.OrderByDescending(x => x.CreatedAt),
+                JoinTeamInvitationOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Status)
+                    : originalQuery.OrderByDescending(x => x.Status),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    JoinTeamInvitationOrderField.CreatedAt => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.CreatedAt)
+                        : query.ThenByDescending(x => x.CreatedAt),
+                    JoinTeamInvitationOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Status)
+                        : query.ThenByDescending(x => x.Status),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

@@ -28,13 +28,16 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects(this IQueryable<Organization> originalQuery) =>
-        originalQuery
-            .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities);
+    extension(IQueryable<Organization> originalQuery)
+    {
+        internal IIncludableQueryable<Organization, IEnumerable<Identity>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities);
+    }
 }
 
 public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)

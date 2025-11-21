@@ -29,107 +29,105 @@ public interface IOrganizationMemberRepository : IRepository<OrganizationMember>
 
 internal static class OrganizationMemberExtensions
 {
-    internal static IIncludableQueryable<OrganizationMember, ICollection<Identity>> AddDependentObjects(
-        this IQueryable<OrganizationMember> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .Include(query => query.Customer)
-            .ThenInclude(query => query.Identities);
-
-    internal static IQueryable<OrganizationMember> AddSearchCriteria(
-        this IQueryable<OrganizationMember> query,
-        OrganizationMemberSearchCriteria searchCriteria)
+    extension(IQueryable<OrganizationMember> originalQuery)
     {
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
-        {
-            query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
-        }
+        internal IIncludableQueryable<OrganizationMember, ICollection<Identity>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization)
+                .Include(query => query.Customer)
+                .ThenInclude(query => query.Identities);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        internal IQueryable<OrganizationMember> AddSearchCriteria(OrganizationMemberSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-        {
-            query = query.Where(item =>
-                (item.Customer.Name != null &&
-                 EF.Functions.ILike(item.Customer.Name, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.GivenName != null &&
-                 EF.Functions.ILike(item.Customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.MiddleName != null &&
-                 EF.Functions.ILike(item.Customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
-                (item.Customer.FamilyName != null &&
-                 EF.Functions.ILike(item.Customer.FamilyName, $"%{searchCriteria.NameContains}%")));
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
-        {
-            query = query.Where(item => item.Customer.Id == searchCriteria.CustomerId);
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<OrganizationMember> AddSortingOrders(
-        this IQueryable<OrganizationMember> originalQuery,
-        ICollection<OrganizationMemberOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Customer.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            OrganizationMemberOrderField.Role => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Role)
-                : originalQuery.OrderByDescending(x => x.Role),
-            OrganizationMemberOrderField.Status => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Status)
-                : originalQuery.OrderByDescending(x => x.Status),
-            OrganizationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.Name)
-                : originalQuery.OrderByDescending(x => x.Customer.Name),
-            OrganizationMemberOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.GivenName)
-                : originalQuery.OrderByDescending(x => x.Customer.GivenName),
-            OrganizationMemberOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.MiddleName)
-                : originalQuery.OrderByDescending(x => x.Customer.MiddleName),
-            OrganizationMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Customer.FamilyName)
-                : originalQuery.OrderByDescending(x => x.Customer.FamilyName),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
-                OrganizationMemberOrderField.Role => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Role)
-                    : query.ThenByDescending(x => x.Role),
-                OrganizationMemberOrderField.Status => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Status)
-                    : query.ThenByDescending(x => x.Status),
-                OrganizationMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.Name)
-                    : query.ThenByDescending(x => x.Customer.Name),
-                OrganizationMemberOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.GivenName)
-                    : query.ThenByDescending(x => x.Customer.GivenName),
-                OrganizationMemberOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.MiddleName)
-                    : query.ThenByDescending(x => x.Customer.MiddleName),
-                OrganizationMemberOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.FamilyName)
-                    : query.ThenByDescending(x => x.Customer.FamilyName),
-                OrganizationMemberOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Customer.PhoneNumber)
-                    : query.ThenByDescending(x => x.Customer.PhoneNumber),
+                originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    (item.Customer.Name != null &&
+                     EF.Functions.ILike(item.Customer.Name, $"%{searchCriteria.NameContains}%")) ||
+                    (item.Customer.GivenName != null &&
+                     EF.Functions.ILike(item.Customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
+                    (item.Customer.MiddleName != null &&
+                     EF.Functions.ILike(item.Customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
+                    (item.Customer.FamilyName != null &&
+                     EF.Functions.ILike(item.Customer.FamilyName, $"%{searchCriteria.NameContains}%")));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+            {
+                originalQuery = originalQuery.Where(item => item.Customer.Id == searchCriteria.CustomerId);
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<OrganizationMember> AddSortingOrders(ICollection<OrganizationMemberOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Customer.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                OrganizationMemberOrderField.Role => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Role)
+                    : originalQuery.OrderByDescending(x => x.Role),
+                OrganizationMemberOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Status)
+                    : originalQuery.OrderByDescending(x => x.Status),
+                OrganizationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Customer.Name)
+                    : originalQuery.OrderByDescending(x => x.Customer.Name),
+                OrganizationMemberOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Customer.GivenName)
+                    : originalQuery.OrderByDescending(x => x.Customer.GivenName),
+                OrganizationMemberOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Customer.MiddleName)
+                    : originalQuery.OrderByDescending(x => x.Customer.MiddleName),
+                OrganizationMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Customer.FamilyName)
+                    : originalQuery.OrderByDescending(x => x.Customer.FamilyName),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    OrganizationMemberOrderField.Role => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Role)
+                        : query.ThenByDescending(x => x.Role),
+                    OrganizationMemberOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Status)
+                        : query.ThenByDescending(x => x.Status),
+                    OrganizationMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Customer.Name)
+                        : query.ThenByDescending(x => x.Customer.Name),
+                    OrganizationMemberOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Customer.GivenName)
+                        : query.ThenByDescending(x => x.Customer.GivenName),
+                    OrganizationMemberOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Customer.MiddleName)
+                        : query.ThenByDescending(x => x.Customer.MiddleName),
+                    OrganizationMemberOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Customer.FamilyName)
+                        : query.ThenByDescending(x => x.Customer.FamilyName),
+                    OrganizationMemberOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Customer.PhoneNumber)
+                        : query.ThenByDescending(x => x.Customer.PhoneNumber),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

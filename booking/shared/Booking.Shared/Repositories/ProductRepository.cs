@@ -18,16 +18,19 @@ public interface IProductRepository : IRepository<Product>
 
 internal static class ProductExtensions
 {
-    internal static IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Product> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-            .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
+    extension(IQueryable<Product> originalQuery)
+    {
+        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization)
+                .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
+                .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
+                .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
+    }
 }
 
 public class ProductRepository(BookingDbContext dbContext, TimeProvider timeProvider)

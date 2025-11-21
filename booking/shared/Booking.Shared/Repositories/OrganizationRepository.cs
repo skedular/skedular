@@ -38,20 +38,23 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, IEnumerable<Customer>> AddDependentObjects(
-        this IQueryable<Organization> originalQuery,
-        bool includeDeletedOrganizationMembers,
-        bool includeDeletedOrganizationTags) =>
-        originalQuery
-            .Include(query => query.OrganizationSsoSettings)
-            .Include(query =>
-                query.OrganizationMembers.Where(organizationMember => includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
-            .Include(query => query.Locations)
-            .Include(query => query.Teams)
-            .Include(query => query.DefaultedByCustomers);
+    extension(IQueryable<Organization> originalQuery)
+    {
+        internal IIncludableQueryable<Organization, IEnumerable<Customer>> AddDependentObjects(
+            bool includeDeletedOrganizationMembers,
+            bool includeDeletedOrganizationTags) =>
+            originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query =>
+                    query.OrganizationMembers.Where(organizationMember =>
+                        includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
+                .Include(query => query.Locations)
+                .Include(query => query.Teams)
+                .Include(query => query.DefaultedByCustomers);
+    }
 }
 
 public class OrganizationRepository(BookingDbContext dbContext, TimeProvider timeProvider)

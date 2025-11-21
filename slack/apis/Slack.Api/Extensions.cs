@@ -15,54 +15,57 @@ namespace Slack.Api;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<IHomePageContextService, HomePageContextService>()
-            .AddScoped<IBookingsPageContextService, BookingsPageContextService>()
-            .AddScoped<ILocationsPageContextService, LocationsPageContextService>()
-            .AddScoped<ITeamsPageContextService, TeamsPageContextService>()
-            .AddScoped<IResourcesPageContextService, ResourcesPageContextService>()
-            .AddScoped<IWorkspaceService, WorkspaceService>()
-            .AddScoped<IWorkspaceOnboardingService, WorkspaceOnboardingService>()
-            .AddScoped<IWorkspaceMemberService, WorkspaceMemberService>()
-            .AddScoped<IWorkspaceChannelService, WorkspaceChannelService>();
-
-    public static IServiceCollection AddPages(this IServiceCollection services) =>
-        services
-            .AddScoped<IPageNavigator, PageNavigator>()
-            .AddScoped<ICommonComponents, CommonComponents>()
-            .AddScoped<IBookingComponents, BookingComponents>()
-            .AddScoped<ILocationComponents, LocationComponents>()
-            .AddScoped<ICustomTagComponents, CustomTagComponents>()
-            .AddScoped<IZoneComponents, ZoneComponents>()
-            .AddScoped<IResourceComponents, ResourceComponents>()
-            .AddScoped<ITeamComponents, TeamComponents>()
-            .AddScoped<IHomePage, HomePage>()
-            .AddScoped<IBookingsPage, BookingsPage>()
-            .AddScoped<ILocationsPage, LocationsPage>()
-            .AddScoped<ICustomTagsPage, CustomTagsPage>()
-            .AddScoped<ITeamsPage, TeamsPage>()
-            .AddScoped<IZonesPage, ZonesPage>()
-            .AddScoped<IResourcesPage, ResourcesPage>()
-            .AddScoped<ISettingsPage, SettingsPage>()
-            .AddScoped<IBillingPage, BillingPage>();
-
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddSingleton<AsyncPageRenderingService>()
-            .AddHostedService(sp => sp.GetRequiredService<AsyncPageRenderingService>());
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
-        ArgumentNullException.ThrowIfNull(slackConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ApiKey);
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-        return services
-            .AddSingleton(slackConfiguration);
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<IWorkaroundService, WorkaroundService>()
+                .AddScoped<IHomePageContextService, HomePageContextService>()
+                .AddScoped<IBookingsPageContextService, BookingsPageContextService>()
+                .AddScoped<ILocationsPageContextService, LocationsPageContextService>()
+                .AddScoped<ITeamsPageContextService, TeamsPageContextService>()
+                .AddScoped<IResourcesPageContextService, ResourcesPageContextService>()
+                .AddScoped<IWorkspaceService, WorkspaceService>()
+                .AddScoped<IWorkspaceOnboardingService, WorkspaceOnboardingService>()
+                .AddScoped<IWorkspaceMemberService, WorkspaceMemberService>()
+                .AddScoped<IWorkspaceChannelService, WorkspaceChannelService>();
+
+        public IServiceCollection AddPages() =>
+            services
+                .AddScoped<IPageNavigator, PageNavigator>()
+                .AddScoped<ICommonComponents, CommonComponents>()
+                .AddScoped<IBookingComponents, BookingComponents>()
+                .AddScoped<ILocationComponents, LocationComponents>()
+                .AddScoped<ICustomTagComponents, CustomTagComponents>()
+                .AddScoped<IZoneComponents, ZoneComponents>()
+                .AddScoped<IResourceComponents, ResourceComponents>()
+                .AddScoped<ITeamComponents, TeamComponents>()
+                .AddScoped<IHomePage, HomePage>()
+                .AddScoped<IBookingsPage, BookingsPage>()
+                .AddScoped<ILocationsPage, LocationsPage>()
+                .AddScoped<ICustomTagsPage, CustomTagsPage>()
+                .AddScoped<ITeamsPage, TeamsPage>()
+                .AddScoped<IZonesPage, ZonesPage>()
+                .AddScoped<IResourcesPage, ResourcesPage>()
+                .AddScoped<ISettingsPage, SettingsPage>()
+                .AddScoped<IBillingPage, BillingPage>();
+
+        public IServiceCollection AddJobs() =>
+            services
+                .AddSingleton<AsyncPageRenderingService>()
+                .AddHostedService(sp => sp.GetRequiredService<AsyncPageRenderingService>());
+
+        public IServiceCollection AddGrpcServices(IConfiguration configuration)
+        {
+            var slackConfiguration = configuration.GetSection(SlackConfiguration.Key).Get<SlackConfiguration>();
+            ArgumentNullException.ThrowIfNull(slackConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(slackConfiguration.ApiKey);
+
+            return services
+                .AddSingleton(slackConfiguration);
+        }
     }
 }

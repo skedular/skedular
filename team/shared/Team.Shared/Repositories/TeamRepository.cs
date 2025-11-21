@@ -34,91 +34,89 @@ public interface ITeamRepository : IRepository<Database.Entities.Team>
 
 internal static class TeamExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(
-        this IQueryable<Database.Entities.Team> originalQuery,
-        bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.PrimaryLocation)
-        .Include(query => query.Organization)
-        .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-        .ThenInclude(query => query.Customer)
-        .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
-        .ThenInclude(query => query.Customer)
-        .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
-        .ThenInclude(query => query.OrganizationMember)
-        .ThenInclude(query => query!.Organization)
-        .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-        .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
-        .ThenInclude(query => query.OrganizationMember)
-        .ThenInclude(query => query!.Customer);
-
-    internal static IQueryable<Database.Entities.Team> AddSearchCriteria(
-        this IQueryable<Database.Entities.Team> query,
-        TeamSearchCriteria searchCriteria)
+    extension(IQueryable<Database.Entities.Team> originalQuery)
     {
-        query = query.Where(item => !item.DeletedAt.HasValue);
+        internal IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.PrimaryLocation)
+            .Include(query => query.Organization)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationMember)
+            .ThenInclude(query => query!.Organization)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.TeamMembers.Where(teamMember => !teamMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationMember)
+            .ThenInclude(query => query!.Customer);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        internal IQueryable<Database.Entities.Team> AddSearchCriteria(TeamSearchCriteria searchCriteria)
         {
-            query = query.Where(item => item.Organization.Id == searchCriteria.OrganizationId);
-        }
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
-        {
-            query = query.Where(item =>
-                item.Organization.UniqueAlphanumericName != null &&
-                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
-        {
-            query = query.Where(item =>
-                item.TeamMembers.Any(teamMember => !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == searchCriteria.CustomerId));
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-        {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
-
-        if (searchCriteria.PrimaryLocationIds.Count != 0)
-        {
-            query = query.Where(item => item.PrimaryLocation != null && searchCriteria.PrimaryLocationIds.Contains(item.PrimaryLocation.Id));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<Database.Entities.Team> AddSortingOrders(
-        this IQueryable<Database.Entities.Team> originalQuery,
-        ICollection<TeamOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            TeamOrderField.About => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.About)
-                : originalQuery.OrderByDescending(x => x.About),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
-                TeamOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
-                TeamOrderField.About => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.About)
-                    : query.ThenByDescending(x => x.About),
+                originalQuery = originalQuery.Where(item => item.Organization.Id == searchCriteria.OrganizationId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.Organization.UniqueAlphanumericName != null &&
+                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.TeamMembers.Any(teamMember => !teamMember.DeletedAt.HasValue && teamMember.Customer.Id == searchCriteria.CustomerId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            if (searchCriteria.PrimaryLocationIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.PrimaryLocation != null && searchCriteria.PrimaryLocationIds.Contains(item.PrimaryLocation.Id));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Database.Entities.Team> AddSortingOrders(ICollection<TeamOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
+                TeamOrderField.About => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.About)
+                    : originalQuery.OrderByDescending(x => x.About),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    TeamOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    TeamOrderField.About => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.About)
+                        : query.ThenByDescending(x => x.About),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

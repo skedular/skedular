@@ -12,175 +12,170 @@ namespace Enterprise.Shared.Database;
 
 public static class Extensions
 {
-    public static IServiceCollection WithPooledDbContext<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false)
-        where TDbContext : DbContext
+    extension(IServiceCollection services)
     {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
-
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
-
-        return services.AddDbContextPool<TDbContext>(options =>
+        public IServiceCollection WithPooledDbContext<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
         {
-            if (environment.IsDevelopment())
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
+
+            return services.AddDbContextPool<TDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging();
-            }
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
 
-            options
-                .AddInterceptors(new SelectForUpdateCommandInterceptor())
-                .UseNpgsql(
-                    dataSource,
-                    npgsqlOptions =>
-                    {
-                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                QuerySplittingBehavior.SplitQuery);
-                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-
-                        if (isPostgisEnabled)
+                options
+                    .AddInterceptors(new SelectForUpdateCommandInterceptor())
+                    .UseNpgsql(
+                        dataSource,
+                        npgsqlOptions =>
                         {
-                            npgsqlOptions.UseNetTopologySuite();
-                        }
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
+                            npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                    QuerySplittingBehavior.SplitQuery);
+                            npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
 
-    public static IServiceCollection WithDbContext<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+                            if (isPostgisEnabled)
+                            {
+                                npgsqlOptions.UseNetTopologySuite();
+                            }
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
 
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
-
-        return services.AddDbContext<TDbContext>(options =>
+        public IServiceCollection WithDbContext<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
         {
-            if (environment.IsDevelopment())
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
+
+            return services.AddDbContext<TDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging();
-            }
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
 
-            options
-                .UseNpgsql(
-                    dataSource,
-                    npgsqlOptions =>
-                    {
-                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                QuerySplittingBehavior.SplitQuery);
-                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-
-                        if (isPostgisEnabled)
+                options
+                    .UseNpgsql(
+                        dataSource,
+                        npgsqlOptions =>
                         {
-                            npgsqlOptions.UseNetTopologySuite();
-                        }
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
+                            npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                    QuerySplittingBehavior.SplitQuery);
+                            npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
 
-    public static IServiceCollection WithPooledDbContextFactory<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+                            if (isPostgisEnabled)
+                            {
+                                npgsqlOptions.UseNetTopologySuite();
+                            }
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
 
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
-
-        return services.AddPooledDbContextFactory<TDbContext>(options =>
+        public IServiceCollection WithPooledDbContextFactory<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
         {
-            if (environment.IsDevelopment())
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
+
+            return services.AddPooledDbContextFactory<TDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging();
-            }
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
 
-            options
-                .AddInterceptors(new SelectForUpdateCommandInterceptor())
-                .UseNpgsql(
-                    dataSource,
-                    npgsqlOptions =>
-                    {
-                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                QuerySplittingBehavior.SplitQuery);
-                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-
-                        if (isPostgisEnabled)
+                options
+                    .AddInterceptors(new SelectForUpdateCommandInterceptor())
+                    .UseNpgsql(
+                        dataSource,
+                        npgsqlOptions =>
                         {
-                            npgsqlOptions.UseNetTopologySuite();
-                        }
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
+                            npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                    QuerySplittingBehavior.SplitQuery);
+                            npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
 
-    public static IServiceCollection WithDbContextFactory<TDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        IHostEnvironment environment,
-        string connectionName,
-        bool isPostgisEnabled = false)
-        where TDbContext : DbContext
-    {
-        var connectionString = configuration.GetConnectionString(connectionName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+                            if (isPostgisEnabled)
+                            {
+                                npgsqlOptions.UseNetTopologySuite();
+                            }
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
 
-        var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-        var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
-
-        return services.AddDbContextFactory<TDbContext>(options =>
+        public IServiceCollection WithDbContextFactory<TDbContext>(IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionName,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
         {
-            if (environment.IsDevelopment())
+            var connectionString = configuration.GetConnectionString(connectionName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
+
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
+
+            return services.AddDbContextFactory<TDbContext>(options =>
             {
-                options.EnableSensitiveDataLogging();
-            }
+                if (environment.IsDevelopment())
+                {
+                    options.EnableSensitiveDataLogging();
+                }
 
-            options
-                .UseNpgsql(
-                    dataSource,
-                    npgsqlOptions =>
-                    {
-                        npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
-                                                                QuerySplittingBehavior.SplitQuery);
-                        npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
-
-                        if (isPostgisEnabled)
+                options
+                    .UseNpgsql(
+                        dataSource,
+                        npgsqlOptions =>
                         {
-                            npgsqlOptions.UseNetTopologySuite();
-                        }
-                    })
-                .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
-        });
-    }
+                            npgsqlOptions.UseQuerySplittingBehavior(applicationConfiguration?.QuerySplittingBehavior ??
+                                                                    QuerySplittingBehavior.SplitQuery);
+                            npgsqlOptions.MigrationsAssembly(typeof(TDbContext).GetTypeInfo().Assembly.GetName().Name);
 
-    private static NpgsqlDataSource GetDatasource(this IServiceCollection services, bool isPooled, bool isPostgisEnabled, string connectionString)
-    {
-        services
-            .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
-            .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
-            .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
+                            if (isPostgisEnabled)
+                            {
+                                npgsqlOptions.UseNetTopologySuite();
+                            }
+                        })
+                    .ConfigureWarnings(warnings => warnings.Log(RelationalEventId.PendingModelChangesWarning));
+            });
+        }
 
-        var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
+        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString)
+        {
+            services
+                .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
+                .AddSingleton<IDbTransactionBuilder, DbTransactionBuilder>()
+                .AddSingleton<IDatabaseMigrationService, DatabaseMigrationService>();
 
-        services.AddDatabaseHealthCheck(dataSource);
+            var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
 
-        return dataSource;
+            services.AddDatabaseHealthCheck(dataSource);
+
+            return dataSource;
+        }
     }
 }

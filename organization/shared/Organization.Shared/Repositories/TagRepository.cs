@@ -28,72 +28,73 @@ public interface ITagRepository : IRepository<Tag>
 
 internal static class TagExtensions
 {
-    internal static IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects(this IQueryable<Tag> originalQuery) =>
-        originalQuery.Include(query => query.Organization);
-
-    internal static IQueryable<Tag> AddSearchCriteria(this IQueryable<Tag> query, TagSearchCriteria searchCriteria)
+    extension(IQueryable<Tag> originalQuery)
     {
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
-        {
-            query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
-        }
+        internal IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects() =>
+            originalQuery.Include(query => query.Organization);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        internal IQueryable<Tag> AddSearchCriteria(TagSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
-
-        if (searchCriteria.Types.Count != 0)
-        {
-            query = query.Where(item => searchCriteria.Types.Contains(item.Type));
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-        {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<Tag> AddSortingOrders(
-        this IQueryable<Tag> originalQuery,
-        ICollection<TagOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            OrganizationTagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            OrganizationTagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Description)
-                : originalQuery.OrderByDescending(x => x.Description),
-            OrganizationTagOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Type)
-                : originalQuery.OrderByDescending(x => x.Type),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
-                OrganizationTagOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
-                OrganizationTagOrderField.Description => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Description)
-                    : query.ThenByDescending(x => x.Description),
-                OrganizationTagOrderField.Type => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Type)
-                    : query.ThenByDescending(x => x.Type),
+                originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (searchCriteria.Types.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => searchCriteria.Types.Contains(item.Type));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Tag> AddSortingOrders(ICollection<TagOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                OrganizationTagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
+                OrganizationTagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Description)
+                    : originalQuery.OrderByDescending(x => x.Description),
+                OrganizationTagOrderField.Type => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Type)
+                    : originalQuery.OrderByDescending(x => x.Type),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    OrganizationTagOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    OrganizationTagOrderField.Description => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Description)
+                        : query.ThenByDescending(x => x.Description),
+                    OrganizationTagOrderField.Type => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Type)
+                        : query.ThenByDescending(x => x.Type),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

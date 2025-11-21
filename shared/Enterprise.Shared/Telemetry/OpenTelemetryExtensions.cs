@@ -19,127 +19,130 @@ namespace Enterprise.Shared.Telemetry;
 
 public static class OpenTelemetryExtensions
 {
-    public static IServiceCollection ConfigureOpenTelemetry(this IServiceCollection services, IConfiguration configuration, string appName)
+    /// <param name="services"></param>
+    extension(IServiceCollection services)
     {
-        var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
-        ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
+        public IServiceCollection ConfigureOpenTelemetry(IConfiguration configuration, string appName)
+        {
+            var openTelemetryConfiguration = configuration.GetSection(OpenTelemetryConfiguration.Key).Get<OpenTelemetryConfiguration>();
+            ArgumentNullException.ThrowIfNull(openTelemetryConfiguration);
 
-        services
-            .AddSingleton(openTelemetryConfiguration)
-            .AddSingleton<IActivityAccessor, ActivityAccessor>()
-            .AddSingleton<TextMapPropagator, StandardTextMapPropagator>()
-            .AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>()
-            .AddSingleton<IActivityGetter, ActivityGetter>()
-            .AddSingleton<IPropagationContextGetter, PropagationContextGetter>()
-            .AddSingleton<IKafkaActivityStarter, KafkaActivityStarter>()
-            .AddSingleton(typeof(IActivityPropagator<>), typeof(ActivityPropagator<>))
-            .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
-            .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
-            .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
-
-        var telemetryBuilder =
             services
-                .AddOpenTelemetry()
-                .WithLogging()
-                .WithMetrics(metrics =>
-                    {
-                        metrics
-                            .AddAspNetCoreInstrumentation()
-                            .AddHttpClientInstrumentation()
-                            .AddRuntimeInstrumentation()
-                            .AddNpgsqlInstrumentation();
+                .AddSingleton(openTelemetryConfiguration)
+                .AddSingleton<IActivityAccessor, ActivityAccessor>()
+                .AddSingleton<TextMapPropagator, StandardTextMapPropagator>()
+                .AddSingleton<IOpenTelemetryInstrumentation, OpenTelemetryInstrumentation>()
+                .AddSingleton<IActivityGetter, ActivityGetter>()
+                .AddSingleton<IPropagationContextGetter, PropagationContextGetter>()
+                .AddSingleton<IKafkaActivityStarter, KafkaActivityStarter>()
+                .AddSingleton(typeof(IActivityPropagator<>), typeof(ActivityPropagator<>))
+                .AddSingleton<IPropagatorFunctionProvider<Headers>, HeaderPropagatorFunctions>()
+                .AddSingleton<IPropagatorFunctionProvider<IDictionary<string, string>>, StringDictionaryPropagatorFunctions>()
+                .AddSingleton<IPropagatorFunctionProvider<IPropagatorEntity>, PropagatorEntityFunctions>();
 
-                        if (openTelemetryConfiguration.MetricsIngestEnabled)
+            var telemetryBuilder =
+                services
+                    .AddOpenTelemetry()
+                    .WithLogging()
+                    .WithMetrics(metrics =>
                         {
-                            metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
+                            metrics
+                                .AddAspNetCoreInstrumentation()
+                                .AddHttpClientInstrumentation()
+                                .AddRuntimeInstrumentation()
+                                .AddNpgsqlInstrumentation();
+
+                            if (openTelemetryConfiguration.MetricsIngestEnabled)
+                            {
+                                metrics.AddMeter(openTelemetryConfiguration.MeterProviderName, MeterProviderNaming.MeterProviderVersion);
+                            }
+
+                            if (openTelemetryConfiguration.ConsoleEnabled)
+                            {
+                                metrics.AddConsoleExporter();
+                            }
                         }
+                    )
+                    .WithTracing(tracing =>
+                    {
+                        // Service
+                        tracing.SetResourceBuilder(
+                            ResourceBuilder.CreateDefault()
+                                .AddService(appName)
+                                .AddTelemetrySdk()
+                                .AddEnvironmentVariableDetector());
+
+                        // Instrumentation
+                        tracing.AddAspNetCoreInstrumentation(options =>
+                        {
+                            options.Filter = context =>
+                                !context.Request.Path.StartsWithSegments(HealthCheck.Constants.ReadinessPath)
+                                && !context.Request.Path.StartsWithSegments(HealthCheck.Constants.LivenessPath);
+                        });
+
+                        tracing
+                            .AddSqlClientInstrumentation()
+                            .AddHttpClientInstrumentation()
+                            .AddNpgsql()
+                            .AddHotChocolateInstrumentation();
+
+                        if (openTelemetryConfiguration.EntityFrameworkEnabled)
+                        {
+                            tracing.AddEntityFrameworkCoreInstrumentation(options =>
+                            {
+                                options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
+                                {
+                                    activity.DisplayName = $"{command.CommandType} main";
+                                    activity.SetTag("db.type", command.CommandType);
+                                    activity.SetTag("db.text", command.CommandText);
+                                    activity.SetTag(
+                                        "db.parameters",
+                                        string.Join(",",
+                                            command.Parameters.OfType<DbParameter>()
+                                                .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
+                                };
+                            });
+                        }
+
+                        services
+                            .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
+                            .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
+                            .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
+                            .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
 
                         if (openTelemetryConfiguration.ConsoleEnabled)
                         {
-                            metrics.AddConsoleExporter();
+                            tracing.AddConsoleExporter();
                         }
-                    }
-                )
-                .WithTracing(tracing =>
-                {
-                    // Service
-                    tracing.SetResourceBuilder(
-                        ResourceBuilder.CreateDefault()
-                            .AddService(appName)
-                            .AddTelemetrySdk()
-                            .AddEnvironmentVariableDetector());
 
-                    // Instrumentation
-                    tracing.AddAspNetCoreInstrumentation(options =>
-                    {
-                        options.Filter = context =>
-                            !context.Request.Path.StartsWithSegments(HealthCheck.Constants.ReadinessPath)
-                            && !context.Request.Path.StartsWithSegments(HealthCheck.Constants.LivenessPath);
+                        if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.ZipkinEndpoint))
+                        {
+                            tracing.AddZipkinExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.ZipkinEndpoint));
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.JaegerEndpoint))
+                        {
+                            tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.JaegerEndpoint));
+                        }
                     });
 
-                    tracing
-                        .AddSqlClientInstrumentation()
-                        .AddHttpClientInstrumentation()
-                        .AddNpgsql()
-                        .AddHotChocolateInstrumentation();
+            if (!string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
+            {
+                telemetryBuilder.UseOtlpExporter();
+            }
 
-                    if (openTelemetryConfiguration.EntityFrameworkEnabled)
-                    {
-                        tracing.AddEntityFrameworkCoreInstrumentation(options =>
-                        {
-                            options.EnrichWithIDbCommand = delegate(Activity activity, IDbCommand command)
-                            {
-                                activity.DisplayName = $"{command.CommandType} main";
-                                activity.SetTag("db.type", command.CommandType);
-                                activity.SetTag("db.text", command.CommandText);
-                                activity.SetTag(
-                                    "db.parameters",
-                                    string.Join(",",
-                                        command.Parameters.OfType<DbParameter>()
-                                            .Select(parameter => $"{parameter.ParameterName}={parameter.Value}")));
-                            };
-                        });
-                    }
-
-                    services
-                        .AddActivitySource(TelemetryKeys.IncomingActivitySourceName)
-                        .AddActivitySource(TelemetryKeys.ConsumerActivitySourceName)
-                        .AddActivitySource(TelemetryKeys.ProducerActivitySourceName)
-                        .AddActivitySource(Outbox.Telemetry.TelemetryKeys.KafkaActivitySourceName);
-
-                    if (openTelemetryConfiguration.ConsoleEnabled)
-                    {
-                        tracing.AddConsoleExporter();
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.ZipkinEndpoint))
-                    {
-                        tracing.AddZipkinExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.ZipkinEndpoint));
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.JaegerEndpoint))
-                    {
-                        tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.JaegerEndpoint));
-                    }
-                });
-
-        if (!string.IsNullOrWhiteSpace(configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
-        {
-            telemetryBuilder.UseOtlpExporter();
+            return services;
         }
 
-        return services;
+        /// <summary>
+        ///     Adds an activity source using the provided name. The activity source is added to the telemetry source list
+        ///     automatically
+        /// </summary>
+        /// <param name="activitySourceName"></param>
+        /// <returns></returns>
+        private IServiceCollection AddActivitySource(string activitySourceName) =>
+            services
+                .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(activitySourceName))
+                .ConfigureOpenTelemetryTracerProvider(builder => builder.AddSource(activitySourceName));
     }
-
-    /// <summary>
-    ///     Adds an activity source using the provided name. The activity source is added to the telemetry source list
-    ///     automatically
-    /// </summary>
-    /// <param name="services"></param>
-    /// <param name="activitySourceName"></param>
-    /// <returns></returns>
-    private static IServiceCollection AddActivitySource(this IServiceCollection services, string activitySourceName) =>
-        services
-            .AddSingleton<IActivitySource>(_ => new ActivitySourceFacade(activitySourceName))
-            .ConfigureOpenTelemetryTracerProvider(builder => builder.AddSource(activitySourceName));
 }

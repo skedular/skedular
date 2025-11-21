@@ -12,11 +12,15 @@ public class ReplicatedModelBaseWithDeleted : ReplicatedModelBase
 
 public static class ModelBaseWithDeletedExtensions
 {
-    public static bool IsNotDeleted<TEntity>(this TEntity entity) where TEntity : ModelBaseWithDeleted => !entity.IsDeleted();
-    public static bool IsDeleted<TEntity>(this TEntity entity) where TEntity : ModelBaseWithDeleted => entity.DeletedAt.HasValue;
+    extension<TEntity>(TEntity entity) where TEntity : ModelBaseWithDeleted
+    {
+        public bool IsNotDeleted() => !entity.IsDeleted();
+        public bool IsDeleted() => entity.DeletedAt.HasValue;
+    }
 
-    public static bool IsReplicatedNotDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedModelBaseWithDeleted =>
-        !entity.IsReplicatedDeleted();
-
-    public static bool IsReplicatedDeleted<TEntity>(this TEntity entity) where TEntity : ReplicatedModelBaseWithDeleted => entity.DeletedAt.HasValue;
+    extension<TEntity>(TEntity entity) where TEntity : ReplicatedModelBaseWithDeleted
+    {
+        public bool IsReplicatedNotDeleted() => !entity.IsReplicatedDeleted();
+        public bool IsReplicatedDeleted() => entity.DeletedAt.HasValue;
+    }
 }

@@ -16,13 +16,15 @@ public interface IAzureTenantRepository : IRepository<AzureTenant>
 
 internal static class AzureTenantExtensions
 {
-    internal static IIncludableQueryable<AzureTenant, ICollection<AzureTenantMember>> AddDependentObjects(
-        this IQueryable<AzureTenant> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization)
-            .ThenInclude(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Customer)
-            .Include(query => query.AzureTenantMembers);
+    extension(IQueryable<AzureTenant> originalQuery)
+    {
+        internal IIncludableQueryable<AzureTenant, ICollection<AzureTenantMember>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization)
+                .ThenInclude(query => query.OrganizationMembers)
+                .ThenInclude(query => query.Customer)
+                .Include(query => query.AzureTenantMembers);
+    }
 }
 
 public class AzureTenantRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)

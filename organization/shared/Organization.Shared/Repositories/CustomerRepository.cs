@@ -18,17 +18,18 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, Database.Entities.Organization?> AddDependentObjects(
-        this IQueryable<Customer> originalQuery,
-        bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Identities)
-        .Include(query => query.OrganizationMembers)
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.JoinInvitationsCreatedBy)
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.JoinInvitationsInvitee)
-        .ThenInclude(query => query.Organization);
+    extension(IQueryable<Customer> originalQuery)
+    {
+        internal IIncludableQueryable<Customer, Database.Entities.Organization?> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Identities)
+            .Include(query => query.OrganizationMembers)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.JoinInvitationsCreatedBy)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.JoinInvitationsInvitee)
+            .ThenInclude(query => query.Organization);
+    }
 }
 
 public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)

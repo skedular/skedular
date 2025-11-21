@@ -6,24 +6,27 @@ namespace Core.Api;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<IFileUploaderService, FileUploaderService>();
-
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
-        ArgumentNullException.ThrowIfNull(coreConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-        return services
-            .AddSingleton(coreConfiguration);
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<ICustomerService, CustomerService>()
+                .AddScoped<IFileUploaderService, FileUploaderService>();
+
+        public IServiceCollection AddJobs() =>
+            services;
+
+        public IServiceCollection AddGrpcServices(IConfiguration configuration)
+        {
+            var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
+            ArgumentNullException.ThrowIfNull(coreConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(coreConfiguration.ApiKey);
+
+            return services
+                .AddSingleton(coreConfiguration);
+        }
     }
 }

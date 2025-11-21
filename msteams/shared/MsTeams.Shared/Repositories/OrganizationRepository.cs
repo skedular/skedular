@@ -21,12 +21,14 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, Customer?> AddDependentObjects(
-        this IQueryable<Organization> originalQuery) =>
-        originalQuery
-            .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Customer);
+    extension(IQueryable<Organization> originalQuery)
+    {
+        internal IIncludableQueryable<Organization, Customer?> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.OrganizationMembers)
+                .ThenInclude(query => query.Customer);
+    }
 }
 
 public class OrganizationRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)

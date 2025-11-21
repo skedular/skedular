@@ -29,72 +29,70 @@ public interface IOrganizationStripeConnectAccountRepository : IRepository<Organ
 
 internal static class OrganizationStripeConnectAccountExtensions
 {
-    internal static IIncludableQueryable<OrganizationStripeConnectAccount, Database.Entities.Organization> AddDependentObjects(
-        this IQueryable<OrganizationStripeConnectAccount> originalQuery) =>
-        originalQuery
-            .Include(query => query.OrganizationStripeConnectAccountAuthorization)
-            .Include(query => query.Organization);
-
-    internal static IQueryable<OrganizationStripeConnectAccount> AddSearchCriteria(
-        this IQueryable<OrganizationStripeConnectAccount> query,
-        OrganizationStripeConnectAccountSearchCriteria searchCriteria)
+    extension(IQueryable<OrganizationStripeConnectAccount> originalQuery)
     {
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
-        {
-            query = query.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
-        }
-        else if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
-        {
-            query = query.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
+        internal IIncludableQueryable<OrganizationStripeConnectAccount, Database.Entities.Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.OrganizationStripeConnectAccountAuthorization)
+                .Include(query => query.Organization);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+        internal IQueryable<OrganizationStripeConnectAccount> AddSearchCriteria(OrganizationStripeConnectAccountSearchCriteria searchCriteria)
         {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
-
-        if (searchCriteria.OnboardingCompleted is not null)
-        {
-            query = searchCriteria.OnboardingCompleted.Value
-                ? query.Where(item =>
-                    item.DetailsSubmitted && item.OrganizationStripeConnectAccountAuthorization != null &&
-                    item.OrganizationStripeConnectAccountAuthorization.IsAuthorized &&
-                    item.ChargesEnabled && item.PayoutsEnabled)
-                : query.Where(item =>
-                    !item.DetailsSubmitted || item.OrganizationStripeConnectAccountAuthorization == null ||
-                    !item.OrganizationStripeConnectAccountAuthorization.IsAuthorized || !item.ChargesEnabled || !item.PayoutsEnabled);
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<OrganizationStripeConnectAccount> AddSortingOrders(
-        this IQueryable<OrganizationStripeConnectAccount> originalQuery,
-        ICollection<OrganizationStripeConnectAccountOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            OrganizationStripeConnectAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
-                OrganizationStripeConnectAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item =>
+                    !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+            }
+            else if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            if (searchCriteria.OnboardingCompleted is not null)
+            {
+                originalQuery = searchCriteria.OnboardingCompleted.Value
+                    ? originalQuery.Where(item =>
+                        item.DetailsSubmitted && item.OrganizationStripeConnectAccountAuthorization != null &&
+                        item.OrganizationStripeConnectAccountAuthorization.IsAuthorized &&
+                        item.ChargesEnabled && item.PayoutsEnabled)
+                    : originalQuery.Where(item =>
+                        !item.DetailsSubmitted || item.OrganizationStripeConnectAccountAuthorization == null ||
+                        !item.OrganizationStripeConnectAccountAuthorization.IsAuthorized || !item.ChargesEnabled || !item.PayoutsEnabled);
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<OrganizationStripeConnectAccount> AddSortingOrders(ICollection<OrganizationStripeConnectAccountOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                OrganizationStripeConnectAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    OrganizationStripeConnectAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

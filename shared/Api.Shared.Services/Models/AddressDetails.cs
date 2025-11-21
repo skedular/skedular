@@ -14,29 +14,32 @@ public interface IAddressDetails
 
 public static class AddressDetailsExtensions
 {
-    public static string ToMultilinesFormattedAddress<T>(this T src) where T : IAddressDetails =>
-        new List<string?>
-            {
-                src.AddressLine1,
-                src.AddressLine2,
-                src.Suburb,
-                src.City,
-                src.Province,
-                src.Zipcode,
-                src.Country
-            }.Where(item => !string.IsNullOrWhiteSpace(item))
-            .Aggregate(string.Empty, (current, item) => $"{current}{Environment.NewLine}{item}").Trim();
+    extension<T>(T src) where T : IAddressDetails
+    {
+        public string ToMultilinesFormattedAddress() =>
+            new List<string?>
+                {
+                    src.AddressLine1,
+                    src.AddressLine2,
+                    src.Suburb,
+                    src.City,
+                    src.Province,
+                    src.Zipcode,
+                    src.Country
+                }.Where(item => !string.IsNullOrWhiteSpace(item))
+                .Aggregate(string.Empty, (current, item) => $"{current}{Environment.NewLine}{item}").Trim();
 
-    public static string ToFormattedAddress<T>(this T src) where T : IAddressDetails =>
-        new List<string?>
-            {
-                src.AddressLine1,
-                src.AddressLine2,
-                src.Suburb,
-                src.City,
-                src.Province,
-                src.Zipcode,
-                src.Country
-            }.Where(item => !string.IsNullOrWhiteSpace(item))
-            .Aggregate(string.Empty, (current, item) => $"{current}, {item}").Trim().Trim(',');
+        public string ToFormattedAddress() =>
+            new List<string?>
+                {
+                    src.AddressLine1,
+                    src.AddressLine2,
+                    src.Suburb,
+                    src.City,
+                    src.Province,
+                    src.Zipcode,
+                    src.Country
+                }.Where(item => !string.IsNullOrWhiteSpace(item))
+                .Aggregate(string.Empty, (current, item) => $"{current}, {item}").Trim().Trim(',');
+    }
 }

@@ -9,23 +9,26 @@ namespace WebScrapper;
 
 public static class Extensions
 {
-    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
-        ArgumentNullException.ThrowIfNull(locationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        {
+            var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+            ArgumentNullException.ThrowIfNull(locationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
-        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
-        ArgumentNullException.ThrowIfNull(organizationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
+            var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+            ArgumentNullException.ThrowIfNull(organizationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(organizationConfiguration.GrpcUrl);
 
-        services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
-        services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
+            services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
+            services.AddGrpcClient<OrganizationService.OrganizationServiceClient>(GrpcClients.ConfigureOrganization);
 
-        return services
-            .AddSingleton(locationConfiguration)
-            .AddSingleton(organizationConfiguration);
+            return services
+                .AddSingleton(locationConfiguration)
+                .AddSingleton(organizationConfiguration);
+        }
     }
 }

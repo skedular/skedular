@@ -54,44 +54,41 @@ public enum IconPosition
 
 public static class IconExtensions
 {
-    public static string ToOptionText(this string? text)
+    extension(string? text)
     {
-        var str = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
+        public string ToOptionText()
+        {
+            var str = string.IsNullOrWhiteSpace(text) ? string.Empty : text;
 
-        return str.Truncate(Commons.MaxOptionTextLength);
-    }
+            return str.Truncate(Commons.MaxOptionTextLength);
+        }
 
-    public static PlainText ToPlainText(this string? text, int? maxLength = Commons.MaxOptionTextLength) =>
-        new(maxLength is null ? text.Truncate(Commons.MaxOptionTextLength) : text.Truncate(maxLength.Value));
+        public PlainText ToPlainText(int? maxLength = Commons.MaxOptionTextLength) =>
+            new(maxLength is null ? text.Truncate(Commons.MaxOptionTextLength) : text.Truncate(maxLength.Value));
 
-    public static Markdown ToMarkdown(this string? text, int? maxLength = Commons.MaxOptionTextLength) =>
-        new(maxLength is null ? text.Truncate(Commons.MaxOptionTextLength) : text.Truncate(maxLength.Value));
+        public Markdown ToMarkdown(int? maxLength = Commons.MaxOptionTextLength) =>
+            new(maxLength is null ? text.Truncate(Commons.MaxOptionTextLength) : text.Truncate(maxLength.Value));
 
-    public static PlainText ToOptionPlainTextWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
-        text.ToPlainTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
+        public PlainText ToOptionPlainTextWithIcon(string icon, IconPosition iconPosition = IconPosition.Start) =>
+            text.ToPlainTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
-    public static PlainText ToPlainTextWithIcon(
-        this string? text,
-        string icon,
-        int? maxLength = null,
-        IconPosition iconPosition = IconPosition.Start) =>
-        new(text.ToTextWithIcon(icon, maxLength, iconPosition));
+        public PlainText ToPlainTextWithIcon(string icon, int? maxLength = null, IconPosition iconPosition = IconPosition.Start) =>
+            new(text.ToTextWithIcon(icon, maxLength, iconPosition));
 
-    public static Markdown ToOptionMarkdownWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
-        text.ToMarkdownWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
+        public Markdown ToOptionMarkdownWithIcon(string icon, IconPosition iconPosition = IconPosition.Start) =>
+            text.ToMarkdownWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
-    public static Markdown ToMarkdownWithIcon(
-        this string? text,
-        string icon, int? maxLength = null,
-        IconPosition iconPosition = IconPosition.Start) =>
-        new(text.ToTextWithIcon(icon, maxLength, iconPosition));
+        public Markdown ToMarkdownWithIcon(string icon, int? maxLength = null,
+            IconPosition iconPosition = IconPosition.Start) =>
+            new(text.ToTextWithIcon(icon, maxLength, iconPosition));
 
-    public static string ToOptionTextWithIcon(this string? text, string icon, IconPosition iconPosition = IconPosition.Start) =>
-        text.ToTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
+        public string ToOptionTextWithIcon(string icon, IconPosition iconPosition = IconPosition.Start) =>
+            text.ToTextWithIcon(icon, Commons.MaxOptionTextLength, iconPosition);
 
-    public static string ToTextWithIcon(this string? text, string icon, int? maxLength = null, IconPosition iconPosition = IconPosition.Start)
-    {
-        var str = iconPosition == IconPosition.Start ? $"{icon} {text}" : $"{text} {icon}";
-        return maxLength is null ? str : str.Truncate(maxLength.Value);
+        public string ToTextWithIcon(string icon, int? maxLength = null, IconPosition iconPosition = IconPosition.Start)
+        {
+            var str = iconPosition == IconPosition.Start ? $"{icon} {text}" : $"{text} {icon}";
+            return maxLength is null ? str : str.Truncate(maxLength.Value);
+        }
     }
 }

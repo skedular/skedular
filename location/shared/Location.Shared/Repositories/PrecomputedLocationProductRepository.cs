@@ -15,17 +15,18 @@ public interface IPrecomputedLocationProductRepository : IRepository<Precomputed
 
 internal static class PrecomputedLocationProductExtensions
 {
-    internal static IIncludableQueryable<PrecomputedLocationProduct, Product> AddDependentObjects(
-        this IQueryable<PrecomputedLocationProduct> originalQuery,
-        bool isTracked) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Organization)
-        .Include(query => query.Location)
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.Location)
-        .ThenInclude(query => query.PhysicalAddress)
-        .Include(query => query.OrganizationTags)
-        .Include(query => query.Product);
+    extension(IQueryable<PrecomputedLocationProduct> originalQuery)
+    {
+        internal IIncludableQueryable<PrecomputedLocationProduct, Product> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Organization)
+            .Include(query => query.Location)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.Location)
+            .ThenInclude(query => query.PhysicalAddress)
+            .Include(query => query.OrganizationTags)
+            .Include(query => query.Product);
+    }
 }
 
 public class PrecomputedLocationProductRepository(LocationDbContext dbContext, TimeProvider timeProvider)

@@ -5,11 +5,14 @@ namespace Slack.Infrastructure;
 
 public static class Extensions
 {
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IMigrationService, MigrationService>();
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<IMigrationService, MigrationService>();
 
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services
-            .AddHostedService<InfrastructureMigrationJob>();
+        public IServiceCollection AddJobs() =>
+            services
+                .AddHostedService<InfrastructureMigrationJob>();
+    }
 }

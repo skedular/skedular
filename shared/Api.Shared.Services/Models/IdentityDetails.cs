@@ -8,22 +8,28 @@ public interface IIdentityDetails
 
 public static class IdentityDetailsExtensions
 {
-    public static ICollection<string> ToEmails(this IEnumerable<string?> src) =>
-        src
-            .Where(item => !string.IsNullOrWhiteSpace(item))
-            .Select(item => item!.ToLowerInvariant())
-            .Distinct()
-            .ToList();
-
-    public static ICollection<string> ToEmails<T>(this IEnumerable<T> src) where T : IIdentityDetails =>
-        src.Select(item => item.Email).ToEmails();
-
-    public static string ToStringEmails<T>(this IEnumerable<T> src) where T : IIdentityDetails => string.Join(',', src.ToEmails());
-    public static string? ToFirstEmail<T>(this IEnumerable<T> src) where T : IIdentityDetails => src.ToEmails().FirstOrDefault();
-
-    public static string? ToSingleEmail<T>(this IEnumerable<T> src) where T : IIdentityDetails
+    extension(IEnumerable<string?> src)
     {
-        var emails = src.ToEmails();
-        return emails.Count == 1 ? emails.First() : null;
+        public ICollection<string> ToEmails() =>
+            src
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .Select(item => item!.ToLowerInvariant())
+                .Distinct()
+                .ToList();
+    }
+
+    extension<T>(IEnumerable<T> src) where T : IIdentityDetails
+    {
+        public ICollection<string> ToEmails() =>
+            src.Select(item => item.Email).ToEmails();
+
+        public string ToStringEmails() => string.Join(',', src.ToEmails());
+        public string? ToFirstEmail() => src.ToEmails().FirstOrDefault();
+
+        public string? ToSingleEmail()
+        {
+            var emails = src.ToEmails();
+            return emails.Count == 1 ? emails.First() : null;
+        }
     }
 }

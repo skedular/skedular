@@ -7,34 +7,37 @@ namespace Location.Api;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
-            .AddScoped<ILocationService, LocationService>()
-            .AddScoped<ILocationOwnershipService, LocationOwnershipService>()
-            .AddScoped<ILocationOpeningHoursService, LocationOpeningHoursService>()
-            .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()
-            .AddScoped<IResourceService, ResourceService>()
-            .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<IFloorPlanService, FloorPlanService>()
-            .AddScoped<ILocationPhysicalAddressService, LocationPhysicalAddressService>()
-            .AddScoped<ILocationContactedViaService, LocationContactedViaService>();
-
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
-        ArgumentNullException.ThrowIfNull(locationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-        return services.AddSingleton(locationConfiguration);
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
+                .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+                .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+                .AddScoped<ILocationService, LocationService>()
+                .AddScoped<ILocationOwnershipService, LocationOwnershipService>()
+                .AddScoped<ILocationOpeningHoursService, LocationOpeningHoursService>()
+                .AddScoped<IResourceAvailableHoursService, ResourceAvailableHoursService>()
+                .AddScoped<IResourceService, ResourceService>()
+                .AddScoped<ILocationAnalyticsService, LocationAnalyticsService>()
+                .AddScoped<IWorkaroundService, WorkaroundService>()
+                .AddScoped<IFloorPlanService, FloorPlanService>()
+                .AddScoped<ILocationPhysicalAddressService, LocationPhysicalAddressService>()
+                .AddScoped<ILocationContactedViaService, LocationContactedViaService>();
+
+        public IServiceCollection AddJobs() =>
+            services;
+
+        public IServiceCollection AddGrpcServices(IConfiguration configuration)
+        {
+            var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+            ArgumentNullException.ThrowIfNull(locationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+
+            return services.AddSingleton(locationConfiguration);
+        }
     }
 }

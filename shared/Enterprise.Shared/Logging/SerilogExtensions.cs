@@ -9,45 +9,51 @@ namespace Enterprise.Shared.Logging;
 
 public static class SerilogExtensions
 {
-    public static IHostBuilder UseSerilogCustom(this IHostBuilder hostBuilder, string? appName) =>
-        hostBuilder.UseSerilog((hostingContext, _, loggerConfiguration) =>
-            {
-                if (hostingContext.HostingEnvironment.IsDevelopment())
+    extension(IHostBuilder hostBuilder)
+    {
+        public IHostBuilder UseSerilogCustom(string? appName) =>
+            hostBuilder.UseSerilog((hostingContext, _, loggerConfiguration) =>
                 {
-                    loggerConfiguration.WriteTo.Console();
-                }
-
-                loggerConfiguration
-                    .Enrich.WithProperty("ApplicationContext", appName)
-                    .Enrich.WithSpan()
-                    .Enrich.FromLogContext()
-                    .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions { Mode = MaskingMode.Globally, MaskValue = "***REDACTED***" })
-                    .Filter.ByExcluding(logEvent =>
+                    if (hostingContext.HostingEnvironment.IsDevelopment())
                     {
-                        if (logEvent.Level is LogEventLevel.Fatal or LogEventLevel.Error or LogEventLevel.Warning)
-                        {
-                            return false;
-                        }
+                        loggerConfiguration.WriteTo.Console();
+                    }
 
-                        if (!logEvent.Properties.TryGetValue("SourceContext", out var sourceContextValue) ||
-                            sourceContextValue is not ScalarValue { Value: string sourceContext } ||
-                            sourceContext != "Microsoft.AspNetCore.Hosting.Diagnostics")
+                    loggerConfiguration
+                        .Enrich.WithProperty("ApplicationContext", appName)
+                        .Enrich.WithSpan()
+                        .Enrich.FromLogContext()
+                        .Enrich.WithSensitiveDataMasking(new SensitiveDataEnricherOptions
                         {
-                            return false;
-                        }
-
-                        if (!logEvent.Properties.TryGetValue("RequestPath", out var requestPathValue) ||
-                            requestPathValue is not ScalarValue { Value: string requestPath })
+                            Mode = MaskingMode.Globally, MaskValue = "***REDACTED***"
+                        })
+                        .Filter.ByExcluding(logEvent =>
                         {
-                            return false;
-                        }
+                            if (logEvent.Level is LogEventLevel.Fatal or LogEventLevel.Error or LogEventLevel.Warning)
+                            {
+                                return false;
+                            }
 
-                        return requestPath.Equals(HealthCheck.Constants.ReadinessPath, StringComparison.InvariantCultureIgnoreCase) ||
-                               requestPath.Equals(HealthCheck.Constants.LivenessPath, StringComparison.InvariantCultureIgnoreCase);
-                    })
-                    .ReadFrom.Configuration(hostingContext.Configuration)
-                    .WriteTo.Console(new RenderedCompactJsonFormatter());
-            },
-            false,
-            true);
+                            if (!logEvent.Properties.TryGetValue("SourceContext", out var sourceContextValue) ||
+                                sourceContextValue is not ScalarValue { Value: string sourceContext } ||
+                                sourceContext != "Microsoft.AspNetCore.Hosting.Diagnostics")
+                            {
+                                return false;
+                            }
+
+                            if (!logEvent.Properties.TryGetValue("RequestPath", out var requestPathValue) ||
+                                requestPathValue is not ScalarValue { Value: string requestPath })
+                            {
+                                return false;
+                            }
+
+                            return requestPath.Equals(HealthCheck.Constants.ReadinessPath, StringComparison.InvariantCultureIgnoreCase) ||
+                                   requestPath.Equals(HealthCheck.Constants.LivenessPath, StringComparison.InvariantCultureIgnoreCase);
+                        })
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .WriteTo.Console(new RenderedCompactJsonFormatter());
+                },
+                false,
+                true);
+    }
 }

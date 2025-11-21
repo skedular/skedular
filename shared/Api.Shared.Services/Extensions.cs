@@ -4,6 +4,9 @@ namespace Api.Shared.Services;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRootLevelSharedServices(this IServiceCollection services) =>
-        services;
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddRootLevelSharedServices() =>
+            services;
+    }
 }

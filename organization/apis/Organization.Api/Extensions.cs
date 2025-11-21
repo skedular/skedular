@@ -7,44 +7,47 @@ namespace Organization.Api;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
-
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
-            .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
-            .AddScoped<IWorkaroundService, WorkaroundService>()
-            .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
-            .AddScoped<IAzureTenantService, AzureTenantService>()
-            .AddScoped<ICustomerService, CustomerService>()
-            .AddScoped<IOrganizationTermsOfUseService, OrganizationTermsOfUseService>()
-            .AddScoped<IIndustryMainCategoryService, IndustryMainCategoryService>()
-            .AddScoped<IOrganizationService, OrganizationService>()
-            .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
-            .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
-            .AddScoped<IOrganizationAnalyticsService, OrganizationAnalyticsService>()
-            .AddScoped<IInvitationService, InvitationService>()
-            .AddScoped<ITagService, TagService>()
-            .AddScoped<IOrganizationSsoService, OrganizationSsoService>()
-            .AddScoped<IPaymentService, PaymentService>()
-            .AddScoped<IStripeCustomerService, StripeCustomerService>()
-            .AddScoped<IOrganizationBillingService, OrganizationBillingService>()
-            .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
-            .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
-            .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>()
-            .AddScoped<IOrganizationPhysicalAddressService, OrganizationPhysicalAddressService>();
-
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
-
-    public static IServiceCollection AddGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
-        ArgumentNullException.ThrowIfNull(organizationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-        return services
-            .AddSingleton(organizationConfiguration);
+        public IServiceCollection AddServices() =>
+            services
+                .AddScoped<IOrganizationAuthorizationService, OrganizationAuthorizationService>()
+                .AddScoped<IOrganizationSsoAuthorizationService, OrganizationSsoAuthorizationService>()
+                .AddScoped<IWorkaroundService, WorkaroundService>()
+                .AddScoped<IAzureTenantOnboardingService, AzureTenantOnboardingService>()
+                .AddScoped<IAzureTenantService, AzureTenantService>()
+                .AddScoped<ICustomerService, CustomerService>()
+                .AddScoped<IOrganizationTermsOfUseService, OrganizationTermsOfUseService>()
+                .AddScoped<IIndustryMainCategoryService, IndustryMainCategoryService>()
+                .AddScoped<IOrganizationService, OrganizationService>()
+                .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
+                .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
+                .AddScoped<IOrganizationAnalyticsService, OrganizationAnalyticsService>()
+                .AddScoped<IInvitationService, InvitationService>()
+                .AddScoped<ITagService, TagService>()
+                .AddScoped<IOrganizationSsoService, OrganizationSsoService>()
+                .AddScoped<IPaymentService, PaymentService>()
+                .AddScoped<IStripeCustomerService, StripeCustomerService>()
+                .AddScoped<IOrganizationBillingService, OrganizationBillingService>()
+                .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
+                .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
+                .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>()
+                .AddScoped<IOrganizationPhysicalAddressService, OrganizationPhysicalAddressService>();
+
+        public IServiceCollection AddJobs() =>
+            services;
+
+        public IServiceCollection AddGrpcServices(IConfiguration configuration)
+        {
+            var organizationConfiguration = configuration.GetSection(OrganizationConfiguration.Key).Get<OrganizationConfiguration>();
+            ArgumentNullException.ThrowIfNull(organizationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(organizationConfiguration.ApiKey);
+
+            return services
+                .AddSingleton(organizationConfiguration);
+        }
     }
 }

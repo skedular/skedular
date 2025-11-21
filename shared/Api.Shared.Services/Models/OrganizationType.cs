@@ -16,39 +16,45 @@ public static class OrganizationTypeConstants
 
 public static class OrganizationTypeExtensions
 {
-    public static OrganizationType ToOrganizationType(this string src) =>
-        src switch
-        {
-            OrganizationTypeConstants.Private => OrganizationType.Private,
-            OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
-            OrganizationTypeConstants.Individual => OrganizationType.Individual,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(OrganizationType src)
+    {
+        public string ToOrganizationType() =>
+            src switch
+            {
+                OrganizationType.Private => OrganizationTypeConstants.Private,
+                OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
+                OrganizationType.Individual => OrganizationTypeConstants.Individual,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToOrganizationType(this OrganizationType src) =>
-        src switch
-        {
-            OrganizationType.Private => OrganizationTypeConstants.Private,
-            OrganizationType.Marketplace => OrganizationTypeConstants.Marketplace,
-            OrganizationType.Individual => OrganizationTypeConstants.Individual,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToOrganizationTypeName() =>
+            src switch
+            {
+                OrganizationType.Private => "Private",
+                OrganizationType.Marketplace => "Marketplace",
+                OrganizationType.Individual => "Individual",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToOrganizationTypeName(this OrganizationType src) =>
-        src switch
-        {
-            OrganizationType.Private => "Private",
-            OrganizationType.Marketplace => "Marketplace",
-            OrganizationType.Individual => "Individual",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public string ToOrganizationTypeName() =>
+            src switch
+            {
+                OrganizationTypeConstants.Private => "Private",
+                OrganizationTypeConstants.Marketplace => "Marketplace",
+                OrganizationTypeConstants.Individual => "Individual",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToOrganizationTypeName(this string src) =>
-        src switch
-        {
-            OrganizationTypeConstants.Private => "Private",
-            OrganizationTypeConstants.Marketplace => "Marketplace",
-            OrganizationTypeConstants.Individual => "Individual",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public OrganizationType ToOrganizationType() =>
+            src switch
+            {
+                OrganizationTypeConstants.Private => OrganizationType.Private,
+                OrganizationTypeConstants.Marketplace => OrganizationType.Marketplace,
+                OrganizationTypeConstants.Individual => OrganizationType.Individual,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

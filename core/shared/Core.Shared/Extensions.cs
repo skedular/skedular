@@ -8,35 +8,38 @@ namespace Core.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
+            services;
 
-    public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMapper, Mapper>();
+        public IServiceCollection AddDomainSharedMappers() =>
+            services
+                .AddSingleton<IMapper, Mapper>();
 
-    public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>();
+        public IServiceCollection AddDomainSharedServices() =>
+            services
+                .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+                .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
-    public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
+        public IServiceCollection AddRepositoryFactory() =>
+            services
+                .AddScoped<IRepositoryFactory, RepositoryFactory>();
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-        services
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<ICdnFileRepository, CdnFileRepository>()
-            .AddScoped<IPrivateFileRepository, PrivateFileRepository>()
-            .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>();
+        public IServiceCollection AddRepositories() =>
+            services
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<ICdnFileRepository, CdnFileRepository>()
+                .AddScoped<IPrivateFileRepository, PrivateFileRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>();
 
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddPublishers() =>
+            services;
 
-    public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddOutboxPublishers() =>
+            services;
+    }
 }

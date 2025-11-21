@@ -39,105 +39,104 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Database.Entities.Organization, ICollection<Team>> AddDependentObjects(
-        this IQueryable<Database.Entities.Organization> originalQuery,
-        bool includeAllOfferings)
+    extension(IQueryable<Database.Entities.Organization> originalQuery)
     {
-        var updatedQuery = originalQuery
-            .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.OrganizationTaxDetails)
-            .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
-            .ThenInclude(query => query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
-            .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.TermsOfUse)
-            .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.PhysicalAddress)
-            .Include(query => query.BillingDetails)
-            .Include(query => query.OrganizationStripeCustomer)
-            .Include(query =>
-                query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod => !organizationStripePaymentMethod.DeletedAt.HasValue))
-            .Include(query =>
-                query.OrganizationStripeConnectAccounts.Where(organizationStripeConnectAccount =>
-                    !organizationStripeConnectAccount.DeletedAt.HasValue))
-            .ThenInclude(query => query.OrganizationStripeConnectAccountAuthorization)
-            .Include(query => query.OrganizationBankAccounts.Where(organizationBankAccount => !organizationBankAccount.DeletedAt.HasValue));
-
-        return includeAllOfferings
-            ? updatedQuery
-                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
-                .ThenInclude(query => query.OrganizationOfferingActiveMembers)
-                .ThenInclude(query => query.OrganizationMember)
-                .ThenInclude(query => query.Customer)
-                .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
-                .ThenInclude(query => query.OrganizationStripePaymentIntent)
-                .ThenInclude(query => query!.OrganizationStripePaymentMethod)
-                .Include(query => query.IndustrySubCategories)
-                .ThenInclude(query => query.IndustryMainCategory)
-                .Include(query => query.Locations)
-                .Include(query => query.Teams)
-            : updatedQuery
-                .Include(query => query.OrganizationOfferings
-                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
-                    .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
-                .ThenInclude(query => query.OrganizationOfferingActiveMembers)
-                .ThenInclude(query => query.OrganizationMember)
-                .ThenInclude(query => query.Customer)
-                .Include(query => query.OrganizationOfferings
-                    .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
-                    .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
-                .ThenInclude(query => query.OrganizationStripePaymentIntent)
-                .ThenInclude(query => query!.OrganizationStripePaymentMethod)
-                .Include(query => query.IndustrySubCategories)
-                .ThenInclude(query => query.IndustryMainCategory)
-                .Include(query => query.Locations)
-                .Include(query => query.Teams);
-    }
-
-    internal static IQueryable<Database.Entities.Organization> AddSearchCriteria(
-        this IQueryable<Database.Entities.Organization> query,
-        OrganizationSearchCriteria searchCriteria)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.CustomerId);
-
-        query = query.Where(item => !item.DeletedAt.HasValue);
-        query = query
-            .Where(item => item.OrganizationMembers
-                .Any(organizationMember => !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId));
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+        internal IIncludableQueryable<Database.Entities.Organization, ICollection<Team>> AddDependentObjects(bool includeAllOfferings)
         {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            var updatedQuery = originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.OrganizationTaxDetails)
+                .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
+                .ThenInclude(query => query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
+                .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+                .ThenInclude(query => query.Customer)
+                .ThenInclude(query => query.Identities)
+                .Include(query => query.TermsOfUse)
+                .Include(query => query.Tags.Where(tag => !tag.DeletedAt.HasValue))
+                .Include(query => query.PhysicalAddress)
+                .Include(query => query.BillingDetails)
+                .Include(query => query.OrganizationStripeCustomer)
+                .Include(query =>
+                    query.OrganizationStripePaymentMethods.Where(organizationStripePaymentMethod =>
+                        !organizationStripePaymentMethod.DeletedAt.HasValue))
+                .Include(query =>
+                    query.OrganizationStripeConnectAccounts.Where(organizationStripeConnectAccount =>
+                        !organizationStripeConnectAccount.DeletedAt.HasValue))
+                .ThenInclude(query => query.OrganizationStripeConnectAccountAuthorization)
+                .Include(query => query.OrganizationBankAccounts.Where(organizationBankAccount => !organizationBankAccount.DeletedAt.HasValue));
+
+            return includeAllOfferings
+                ? updatedQuery
+                    .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
+                    .ThenInclude(query => query.OrganizationOfferingActiveMembers)
+                    .ThenInclude(query => query.OrganizationMember)
+                    .ThenInclude(query => query.Customer)
+                    .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
+                    .ThenInclude(query => query.OrganizationStripePaymentIntent)
+                    .ThenInclude(query => query!.OrganizationStripePaymentMethod)
+                    .Include(query => query.IndustrySubCategories)
+                    .ThenInclude(query => query.IndustryMainCategory)
+                    .Include(query => query.Locations)
+                    .Include(query => query.Teams)
+                : updatedQuery
+                    .Include(query => query.OrganizationOfferings
+                        .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                        .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
+                    .ThenInclude(query => query.OrganizationOfferingActiveMembers)
+                    .ThenInclude(query => query.OrganizationMember)
+                    .ThenInclude(query => query.Customer)
+                    .Include(query => query.OrganizationOfferings
+                        .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
+                        .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
+                    .ThenInclude(query => query.OrganizationStripePaymentIntent)
+                    .ThenInclude(query => query!.OrganizationStripePaymentMethod)
+                    .Include(query => query.IndustrySubCategories)
+                    .ThenInclude(query => query.IndustryMainCategory)
+                    .Include(query => query.Locations)
+                    .Include(query => query.Teams);
         }
 
-        return query;
-    }
-
-    internal static IQueryable<Database.Entities.Organization> AddSortingOrders(
-        this IQueryable<Database.Entities.Organization> originalQuery,
-        ICollection<OrganizationOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
+        internal IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
         {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
+            ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.CustomerId);
 
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            OrganizationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
+            originalQuery = originalQuery
+                .Where(item => item.OrganizationMembers
+                    .Any(organizationMember =>
+                        !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == searchCriteria.CustomerId));
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
             {
-                OrganizationOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<Database.Entities.Organization> AddSortingOrders(ICollection<OrganizationOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                OrganizationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    OrganizationOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

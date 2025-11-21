@@ -22,14 +22,16 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, WorkspaceChannel?> AddDependentObjects(
-        this IQueryable<Organization> originalQuery) =>
-        originalQuery
-            .Include(query => query.OrganizationSsoSettings)
-            .Include(query => query.Workspaces)
-            .Include(query => query.OrganizationMembers)
-            .ThenInclude(query => query.Customer)
-            .Include(query => query.DailyUpdateChannel);
+    extension(IQueryable<Organization> originalQuery)
+    {
+        internal IIncludableQueryable<Organization, WorkspaceChannel?> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.OrganizationSsoSettings)
+                .Include(query => query.Workspaces)
+                .Include(query => query.OrganizationMembers)
+                .ThenInclude(query => query.Customer)
+                .Include(query => query.DailyUpdateChannel);
+    }
 }
 
 public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeProvider)

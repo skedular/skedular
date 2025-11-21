@@ -4,6 +4,8 @@ namespace Slack.Shared.Models;
 
 public static class CustomerExtensions
 {
-    public static TimeZoneInfo GetTimezone(this Database.Entities.Customer customer) =>
-        customer.Timezone.ToTimezoneInfo();
+    extension(Database.Entities.Customer customer)
+    {
+        public TimeZoneInfo GetTimezone() => customer.Timezone.ToTimezoneInfo();
+    }
 }

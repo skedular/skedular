@@ -28,59 +28,57 @@ public interface IOrganizationBankAccountRepository : IRepository<OrganizationBa
 
 internal static class OrganizationBankAccountExtensions
 {
-    internal static IIncludableQueryable<OrganizationBankAccount, Database.Entities.Organization> AddDependentObjects(
-        this IQueryable<OrganizationBankAccount> originalQuery) =>
-        originalQuery
-            .Include(query => query.Organization);
-
-    internal static IQueryable<OrganizationBankAccount> AddSearchCriteria(
-        this IQueryable<OrganizationBankAccount> query,
-        OrganizationBankAccountSearchCriteria searchCriteria)
+    extension(IQueryable<OrganizationBankAccount> originalQuery)
     {
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
-        {
-            query = query.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
-        }
+        internal IIncludableQueryable<OrganizationBankAccount, Database.Entities.Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Organization);
 
-        if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        internal IQueryable<OrganizationBankAccount> AddSearchCriteria(OrganizationBankAccountSearchCriteria searchCriteria)
         {
-            query = query.Where(item =>
-                !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
-        }
-
-        if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-        {
-            query = query.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-        }
-
-        return query;
-    }
-
-    internal static IQueryable<OrganizationBankAccount> AddSortingOrders(
-        this IQueryable<OrganizationBankAccount> originalQuery,
-        ICollection<OrganizationBankAccountOrder> orderByFields)
-    {
-        if (orderByFields.Count == 0)
-        {
-            return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-        }
-
-        var orderByField = orderByFields.First();
-        return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-        {
-            OrganizationBankAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                ? originalQuery.OrderBy(x => x.Name)
-                : originalQuery.OrderByDescending(x => x.Name),
-            _ => throw new ArgumentOutOfRangeException()
-        }, (query, orderField) =>
-            orderField.Field switch
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
-                OrganizationBankAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                    ? query.ThenBy(x => x.Name)
-                    : query.ThenByDescending(x => x.Name),
+                originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
+                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
+            }
+
+            return originalQuery;
+        }
+
+        internal IQueryable<OrganizationBankAccount> AddSortingOrders(ICollection<OrganizationBankAccountOrder> orderByFields)
+        {
+            if (orderByFields.Count == 0)
+            {
+                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
+            }
+
+            var orderByField = orderByFields.First();
+            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
+            {
+                OrganizationBankAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Name)
+                    : originalQuery.OrderByDescending(x => x.Name),
                 _ => throw new ArgumentOutOfRangeException()
-            }).ThenBy(query => query.Id);
+            }, (query, orderField) =>
+                orderField.Field switch
+                {
+                    OrganizationBankAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Name)
+                        : query.ThenByDescending(x => x.Name),
+                    _ => throw new ArgumentOutOfRangeException()
+                }).ThenBy(query => query.Id);
+        }
     }
 }
 

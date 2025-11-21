@@ -14,43 +14,49 @@ public static class CurrencyConstants
 
 public static class CurrencyExtensions
 {
-    public static Currency ToCurrency(this string src) =>
-        src switch
-        {
-            CurrencyConstants.Nzd => Currency.Nzd,
-            CurrencyConstants.Usd => Currency.Usd,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(Currency src)
+    {
+        public string ToCurrency() =>
+            src switch
+            {
+                Currency.Nzd => CurrencyConstants.Nzd,
+                Currency.Usd => CurrencyConstants.Usd,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToCurrency(this Currency src) =>
-        src switch
-        {
-            Currency.Nzd => CurrencyConstants.Nzd,
-            Currency.Usd => CurrencyConstants.Usd,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToCurrencyName() =>
+            src switch
+            {
+                Currency.Nzd => "NZD - $",
+                Currency.Usd => "USD - $",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToCurrencyName(this Currency src) =>
-        src switch
-        {
-            Currency.Nzd => "NZD - $",
-            Currency.Usd => "USD - $",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public string ToCurrencyName() =>
+            src switch
+            {
+                CurrencyConstants.Nzd => "NZD - $",
+                CurrencyConstants.Usd => "USD - $",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToCurrencyName(this string src) =>
-        src switch
-        {
-            CurrencyConstants.Nzd => "NZD - $",
-            CurrencyConstants.Usd => "USD - $",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToInvoiceCurrencyName() =>
+            src switch
+            {
+                CurrencyConstants.Nzd => "NZD",
+                CurrencyConstants.Usd => "USD",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToInvoiceCurrencyName(this string src) =>
-        src switch
-        {
-            CurrencyConstants.Nzd => "NZD",
-            CurrencyConstants.Usd => "USD",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public Currency ToCurrency() =>
+            src switch
+            {
+                CurrencyConstants.Nzd => Currency.Nzd,
+                CurrencyConstants.Usd => Currency.Usd,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

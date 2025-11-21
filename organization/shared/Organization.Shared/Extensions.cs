@@ -16,91 +16,95 @@ namespace Organization.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var organizationConfigurationService = configuration.GetSection(OrganizationConfigurationService.Key).Get<OrganizationConfigurationService>();
-        ArgumentNullException.ThrowIfNull(organizationConfigurationService);
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration)
+        {
+            var organizationConfigurationService =
+                configuration.GetSection(OrganizationConfigurationService.Key).Get<OrganizationConfigurationService>();
+            ArgumentNullException.ThrowIfNull(organizationConfigurationService);
 
-        return services.AddSingleton(organizationConfigurationService);
-    }
+            return services.AddSingleton(organizationConfigurationService);
+        }
 
-    public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMapper, Mapper>();
+        public IServiceCollection AddDomainSharedMappers() =>
+            services
+                .AddSingleton<IMapper, Mapper>();
 
-    public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
-            .AddSingleton<ITemporalService, TemporalService>()
-            .AddSingleton<IGraphService, GraphService>()
-            .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
-            .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>()
-            .AddScoped<ICachedTagService, CachedTagService>();
+        public IServiceCollection AddDomainSharedServices() =>
+            services
+                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+                .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
+                .AddSingleton<ITemporalService, TemporalService>()
+                .AddSingleton<IGraphService, GraphService>()
+                .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
+                .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
+                .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+                .AddScoped<ICachedCustomerService, CachedCustomerService>()
+                .AddScoped<ICachedTagService, CachedTagService>();
 
-    public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
+        public IServiceCollection AddRepositoryFactory() =>
+            services
+                .AddScoped<IRepositoryFactory, RepositoryFactory>();
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationPhysicalAddressRepository, OrganizationPhysicalAddressRepository>()
-            .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
-            .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
-            .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>()
-            .AddScoped<IBookingRepository, BookingRepository>()
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .AddScoped<IDailyMemberCountRecordingRepository, DailyMemberCountRecordingRepository>()
-            .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<IIndustryMainCategoryRepository, IndustryMainCategoryRepository>()
-            .AddScoped<IIndustrySubCategoryRepository, IndustrySubCategoryRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>()
-            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<IOrganizationOfferingActiveMemberRepository, OrganizationOfferingActiveMemberRepository>()
-            .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
-            .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>()
-            .AddScoped<ITermsOfUseRepository, TermsOfUseRepository>()
-            .AddScoped<ITagRepository, TagRepository>()
-            .AddScoped<IOrganizationStripeCustomerRepository, OrganizationOrganizationStripeCustomerRepository>()
-            .AddScoped<IOrganizationStripePaymentIntentRepository, OrganizationOrganizationStripePaymentIntentRepository>()
-            .AddScoped<IOrganizationStripePaymentMethodRepository, OrganizationStripePaymentMethodRepository>()
-            .AddScoped<IOrganizationBillingDetailsRepository, OrganizationOrganizationBillingDetailsRepository>()
-            .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
-            .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
-            .AddScoped<IOrganizationStripeConnectAccountAuthorizationRepository, OrganizationStripeConnectAccountAuthorizationRepository>()
-            .AddScoped<IOrganizationBankAccountRepository, OrganizationBankAccountRepository>()
-            .AddScoped<IOrganizationTaxDetailsRepository, OrganizationTaxDetailsRepository>();
+        public IServiceCollection AddRepositories() =>
+            services
+                .AddScoped<IOrganizationPhysicalAddressRepository, OrganizationPhysicalAddressRepository>()
+                .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
+                .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
+                .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>()
+                .AddScoped<IBookingRepository, BookingRepository>()
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<IDailyMemberCountRecordingRepository, DailyMemberCountRecordingRepository>()
+                .AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<IIndustryMainCategoryRepository, IndustryMainCategoryRepository>()
+                .AddScoped<IIndustrySubCategoryRepository, IndustrySubCategoryRepository>()
+                .AddScoped<ILocationRepository, LocationRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<IOrganizationOfferingActiveMemberRepository, OrganizationOfferingActiveMemberRepository>()
+                .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<ITeamRepository, TeamRepository>()
+                .AddScoped<ITermsOfUseRepository, TermsOfUseRepository>()
+                .AddScoped<ITagRepository, TagRepository>()
+                .AddScoped<IOrganizationStripeCustomerRepository, OrganizationOrganizationStripeCustomerRepository>()
+                .AddScoped<IOrganizationStripePaymentIntentRepository, OrganizationOrganizationStripePaymentIntentRepository>()
+                .AddScoped<IOrganizationStripePaymentMethodRepository, OrganizationStripePaymentMethodRepository>()
+                .AddScoped<IOrganizationBillingDetailsRepository, OrganizationOrganizationBillingDetailsRepository>()
+                .AddScoped<IOrganizationStripeConnectAccountRefreshCodeRepository, OrganizationStripeConnectAccountRefreshCodeRepository>()
+                .AddScoped<IOrganizationStripeConnectAccountRepository, OrganizationStripeConnectAccountRepository>()
+                .AddScoped<IOrganizationStripeConnectAccountAuthorizationRepository, OrganizationStripeConnectAccountAuthorizationRepository>()
+                .AddScoped<IOrganizationBankAccountRepository, OrganizationBankAccountRepository>()
+                .AddScoped<IOrganizationTaxDetailsRepository, OrganizationTaxDetailsRepository>();
 
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services
-            .AddScoped<IOrganizationInternalPublisher, OrganizationInternalPublisher>()
-            .AddScoped<IOrganizationPublisher, OrganizationPublisher>();
+        public IServiceCollection AddPublishers() =>
+            services
+                .AddScoped<IOrganizationInternalPublisher, OrganizationInternalPublisher>()
+                .AddScoped<IOrganizationPublisher, OrganizationPublisher>();
 
-    public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
-            .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+        public IServiceCollection AddOutboxPublishers() =>
+            services
+                .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
+                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
 
-    public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
-    {
-        var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
-        ArgumentNullException.ThrowIfNull(customerConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
+        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        {
+            var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
+            ArgumentNullException.ThrowIfNull(customerConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(customerConfiguration.GrpcUrl);
 
-        var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
-        ArgumentNullException.ThrowIfNull(locationConfiguration);
-        ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
-        ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
+            var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
+            ArgumentNullException.ThrowIfNull(locationConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
-        services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
-        services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
+            services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
+            services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
 
-        return services
-            .AddSingleton(customerConfiguration)
-            .AddSingleton(locationConfiguration);
+            return services
+                .AddSingleton(customerConfiguration)
+                .AddSingleton(locationConfiguration);
+        }
     }
 }

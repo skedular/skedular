@@ -10,41 +10,44 @@ namespace MsTeams.Shared;
 
 public static class Extensions
 {
-    public static IServiceCollection AddDomainSharedConfigurations(this IServiceCollection services, IConfiguration configuration) =>
-        services;
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
+            services;
 
-    public static IServiceCollection AddDomainSharedMappers(this IServiceCollection services) =>
-        services
-            .AddSingleton<IMapper, Mapper>()
-            .AddSingleton<ITemporalService, TemporalService>();
+        public IServiceCollection AddDomainSharedMappers() =>
+            services
+                .AddSingleton<IMapper, Mapper>()
+                .AddSingleton<ITemporalService, TemporalService>();
 
-    public static IServiceCollection AddDomainSharedServices(this IServiceCollection services) =>
-        services
-            .AddSingleton<IGraphService, GraphService>()
-            .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-            .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
-            .AddScoped<ICachedCustomerService, CachedCustomerService>();
+        public IServiceCollection AddDomainSharedServices() =>
+            services
+                .AddSingleton<IGraphService, GraphService>()
+                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+                .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
+                .AddScoped<ICachedCustomerService, CachedCustomerService>();
 
-    public static IServiceCollection AddRepositoryFactory(this IServiceCollection services) =>
-        services
-            .AddScoped<IRepositoryFactory, RepositoryFactory>();
+        public IServiceCollection AddRepositoryFactory() =>
+            services
+                .AddScoped<IRepositoryFactory, RepositoryFactory>();
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services) =>
-        services
-            .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
-            .AddScoped<IAzureTenantTeamChannelRepository, AzureTenantTeamChannelRepository>()
-            .AddScoped<IAzureTenantTeamRepository, AzureTenantTeamRepository>()
-            .AddScoped<ICustomerRepository, CustomerRepository>()
-            .AddScoped<IIdentityRepository, IdentityRepository>()
-            .AddScoped<ILocationRepository, LocationRepository>()
-            .AddScoped<IOrganizationRepository, OrganizationRepository>()
-            .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-            .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
-            .AddScoped<ITeamRepository, TeamRepository>();
+        public IServiceCollection AddRepositories() =>
+            services
+                .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
+                .AddScoped<IAzureTenantTeamChannelRepository, AzureTenantTeamChannelRepository>()
+                .AddScoped<IAzureTenantTeamRepository, AzureTenantTeamRepository>()
+                .AddScoped<ICustomerRepository, CustomerRepository>()
+                .AddScoped<IIdentityRepository, IdentityRepository>()
+                .AddScoped<ILocationRepository, LocationRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
+                .AddScoped<ITeamRepository, TeamRepository>();
 
-    public static IServiceCollection AddPublishers(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddPublishers() =>
+            services;
 
-    public static IServiceCollection AddOutboxPublishers(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddOutboxPublishers() =>
+            services;
+    }
 }

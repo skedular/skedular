@@ -16,32 +16,41 @@ public static class TeamMemberRoleConstants
 
 public static class TeamMemberRoleExtensions
 {
-    public static TeamMemberRole ToTeamMemberRole(this string src) =>
-        src switch
-        {
-            TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
-            TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
-            TeamMemberRoleConstants.Member => TeamMemberRole.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public TeamMemberRole ToTeamMemberRole() =>
+            src switch
+            {
+                TeamMemberRoleConstants.Owner => TeamMemberRole.Owner,
+                TeamMemberRoleConstants.Administrator => TeamMemberRole.Administrator,
+                TeamMemberRoleConstants.Member => TeamMemberRole.Member,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToTeamMemberRole(this TeamMemberRole src) =>
-        src switch
-        {
-            TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
-            TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
-            TeamMemberRole.Member => TeamMemberRoleConstants.Member,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-
-    public static string ToNullableTeamMemberRole(this TeamMemberRole? src) =>
-        src is null
-            ? string.Empty
-            : src switch
+    extension(TeamMemberRole src)
+    {
+        public string ToTeamMemberRole() =>
+            src switch
             {
                 TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
                 TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
                 TeamMemberRole.Member => TeamMemberRoleConstants.Member,
                 _ => throw new ArgumentOutOfRangeException()
             };
+    }
+
+    extension(TeamMemberRole? src)
+    {
+        public string ToNullableTeamMemberRole() =>
+            src is null
+                ? string.Empty
+                : src switch
+                {
+                    TeamMemberRole.Owner => TeamMemberRoleConstants.Owner,
+                    TeamMemberRole.Administrator => TeamMemberRoleConstants.Administrator,
+                    TeamMemberRole.Member => TeamMemberRoleConstants.Member,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+    }
 }

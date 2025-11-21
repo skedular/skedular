@@ -21,20 +21,20 @@ public interface ICustomerRepository : IRepository<Customer>
 
 internal static class CustomerExtensions
 {
-    internal static IIncludableQueryable<Customer, Organization?> AddDependentObjects(
-        this IQueryable<Customer> originalQuery,
-        bool isTracked,
-        bool includeActiveItemsOnly) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.Identities)
-        .Include(query => query.DefaultOrganization)
-        .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
-        .ThenInclude(query => query.Organization)
-        .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
-        .ThenInclude(query => query.Location)
-        .ThenInclude(query => query!.Organization);
+    extension(IQueryable<Customer> originalQuery)
+    {
+        internal IIncludableQueryable<Customer, Organization?> AddDependentObjects(bool isTracked, bool includeActiveItemsOnly) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Identities)
+            .Include(query => query.DefaultOrganization)
+            .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.PreferredOrganizationTags.Where(tag => !includeActiveItemsOnly || !tag.DeletedAt.HasValue))
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.PreferredResources.Where(desk => !includeActiveItemsOnly || (!desk.DeletedAt.HasValue && !desk.Inactive)))
+            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query!.Organization);
+    }
 }
 
 public class CustomerRepository(BookingDbContext dbContext, TimeProvider timeProvider)

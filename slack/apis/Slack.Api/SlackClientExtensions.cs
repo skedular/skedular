@@ -7,34 +7,36 @@ namespace Slack.Api;
 
 public static class SlackClientExtensions
 {
-    public static async Task<ViewResponse> ViewsOpenAsync(
-        this ISlackApiClient slackApiClient,
-        string triggerId,
-        ViewDefinition viewDefinition,
-        CancellationToken cancellationToken) =>
-        await slackApiClient.Views.Open(triggerId, viewDefinition, cancellationToken);
-
-    public static async Task ViewsPublishAsync(
-        this ISlackApiClient slackApiClient,
-        string userId,
-        HomeViewDefinition viewDefinition,
-        string? hash,
-        CancellationToken cancellationToken)
+    extension(ISlackApiClient slackApiClient)
     {
-        try
+        public async Task<ViewResponse> ViewsOpenAsync(string triggerId,
+            ViewDefinition viewDefinition,
+            CancellationToken cancellationToken) =>
+            await slackApiClient.Views.Open(triggerId, viewDefinition, cancellationToken);
+
+        public async Task ViewsPublishAsync(string userId,
+            HomeViewDefinition viewDefinition,
+            string? hash,
+            CancellationToken cancellationToken)
         {
-            await slackApiClient.Views.PublishAsync(userId, viewDefinition, hash, cancellationToken);
-        }
-        catch (SlackException)
-        {
-            await slackApiClient.Views.PublishAsync(userId, viewDefinition, null, cancellationToken);
+            try
+            {
+                await slackApiClient.Views.PublishAsync(userId, viewDefinition, hash, cancellationToken);
+            }
+            catch (SlackException)
+            {
+                await slackApiClient.Views.PublishAsync(userId, viewDefinition, null, cancellationToken);
+            }
         }
     }
 
-    public static DayOfWeek ToDayOfWeek(this WorkspaceMember workspaceMember) =>
-        workspaceMember.Locale switch
-        {
-            "en-US" => DayOfWeek.Sunday,
-            _ => DayOfWeek.Monday
-        };
+    extension(WorkspaceMember workspaceMember)
+    {
+        public DayOfWeek ToDayOfWeek() =>
+            workspaceMember.Locale switch
+            {
+                "en-US" => DayOfWeek.Sunday,
+                _ => DayOfWeek.Monday
+            };
+    }
 }

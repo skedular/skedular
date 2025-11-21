@@ -16,11 +16,14 @@ public interface ILocationRepository : IRepository<Location>
 
 internal static class LocationExtensions
 {
-    internal static IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(this IQueryable<Location> originalQuery) =>
-        originalQuery
-            .Include(query => query.PhysicalAddress)
-            .Include(query => query.Organization)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+    extension(IQueryable<Location> originalQuery)
+    {
+        internal IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.PhysicalAddress)
+                .Include(query => query.Organization)
+                .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
+    }
 }
 
 public class LocationRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)

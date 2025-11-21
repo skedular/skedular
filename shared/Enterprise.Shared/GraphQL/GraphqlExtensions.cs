@@ -10,50 +10,54 @@ namespace Enterprise.Shared.GraphQL;
 
 public static class GraphqlExtensions
 {
-    public static IServiceCollection AddGraphql(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        Action<IRequestExecutorBuilder> configure)
+    extension(IServiceCollection services)
     {
-        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
-        ArgumentNullException.ThrowIfNull(graphqlConfig);
+        public IServiceCollection AddGraphql(IConfiguration configuration,
+            Action<IRequestExecutorBuilder> configure)
+        {
+            var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
+            ArgumentNullException.ThrowIfNull(graphqlConfig);
 
-        var builder = services
-            .AddErrorFilter<GraphqlErrorFilter>()
-            .AddGraphQLServer()
-            .InitializeOnStartup()
-            .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
-            .AddCustomGraphqlInstrumentation();
+            var builder = services
+                .AddErrorFilter<GraphqlErrorFilter>()
+                .AddGraphQLServer()
+                .InitializeOnStartup()
+                .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
+                .AddCustomGraphqlInstrumentation();
 
-        configure(builder);
+            configure(builder);
 
-        builder.InitializeOnStartup();
+            builder.InitializeOnStartup();
 
-        return services;
+            return services;
+        }
     }
 
-    public static void MapGraphqlEndpoints(this IEndpointRouteBuilder endpoints, IConfiguration configuration)
+    extension(IEndpointRouteBuilder endpoints)
     {
-        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
-        if (graphqlConfig is null)
+        public void MapGraphqlEndpoints(IConfiguration configuration)
         {
-            return;
-        }
-
-        var pathString = graphqlConfig.Path;
-        if (string.IsNullOrWhiteSpace(pathString))
-        {
-            return;
-        }
-
-        endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions
-        {
-            Tool =
+            var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
+            if (graphqlConfig is null)
             {
-                IncludeCookies = graphqlConfig.IncludeCookies,
-                Enable = graphqlConfig.NitroEnabled,
-                DisableTelemetry = graphqlConfig.DisableTelemetry
+                return;
             }
-        });
+
+            var pathString = graphqlConfig.Path;
+            if (string.IsNullOrWhiteSpace(pathString))
+            {
+                return;
+            }
+
+            endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions
+            {
+                Tool =
+                {
+                    IncludeCookies = graphqlConfig.IncludeCookies,
+                    Enable = graphqlConfig.NitroEnabled,
+                    DisableTelemetry = graphqlConfig.DisableTelemetry
+                }
+            });
+        }
     }
 }

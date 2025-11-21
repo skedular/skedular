@@ -16,11 +16,13 @@ public interface IStripePaymentMethodRepository : IRepository<StripePaymentMetho
 
 internal static class StripePaymentMethodExtensions
 {
-    internal static IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects(
-        this IQueryable<StripePaymentMethod> originalQuery) =>
-        originalQuery
-            .Include(query => query.Customer)
-            .ThenInclude(query => query.Identities);
+    extension(IQueryable<StripePaymentMethod> originalQuery)
+    {
+        internal IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.Customer)
+                .ThenInclude(query => query.Identities);
+    }
 }
 
 public class StripePaymentMethodRepository(CustomerDbContext dbContext, TimeProvider timeProvider)

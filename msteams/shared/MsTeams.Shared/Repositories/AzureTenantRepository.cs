@@ -17,12 +17,14 @@ public interface IAzureTenantRepository : IRepository<AzureTenant>
 
 internal static class AzureTenantExtensions
 {
-    internal static IIncludableQueryable<AzureTenant, Organization> AddDependentObjects(
-        this IQueryable<AzureTenant> originalQuery) =>
-        originalQuery
-            .Include(query => query.AzureTenantTeams)
-            .ThenInclude(query => query.AzureTenantTeamChannels)
-            .Include(query => query.Organization);
+    extension(IQueryable<AzureTenant> originalQuery)
+    {
+        internal IIncludableQueryable<AzureTenant, Organization> AddDependentObjects() =>
+            originalQuery
+                .Include(query => query.AzureTenantTeams)
+                .ThenInclude(query => query.AzureTenantTeamChannels)
+                .Include(query => query.Organization);
+    }
 }
 
 public class AzureTenantRepository(MsTeamsDbContext dbContext, TimeProvider timeProvider)

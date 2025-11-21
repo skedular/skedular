@@ -30,18 +30,19 @@ public interface IOrganizationRepository : IRepository<Organization>
 
 internal static class OrganizationExtensions
 {
-    internal static IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(
-        this IQueryable<Organization> originalQuery,
-        bool isTracked,
-        bool includeDeletedOrganizationMembers,
-        bool includeDeletedOrganizationTags) =>
-        (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-        .Include(query => query.OrganizationSsoSettings)
-        .Include(query => query.OrganizationMembers.Where(organizationMember =>
-            includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
-        .ThenInclude(query => query.Customer)
-        .ThenInclude(query => query.Identities)
-        .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue));
+    extension(IQueryable<Organization> originalQuery)
+    {
+        internal IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked,
+            bool includeDeletedOrganizationMembers,
+            bool includeDeletedOrganizationTags) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.OrganizationSsoSettings)
+            .Include(query => query.OrganizationMembers.Where(organizationMember =>
+                includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue));
+    }
 }
 
 public class OrganizationRepository(LocationDbContext dbContext, TimeProvider timeProvider)

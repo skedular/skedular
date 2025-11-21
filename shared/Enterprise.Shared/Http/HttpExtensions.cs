@@ -4,9 +4,15 @@ namespace Enterprise.Shared.Http;
 
 public static class HttpExtensions
 {
-    public static CancellationToken GetCancellationToken(this HttpContext? httpContext) =>
-        httpContext?.RequestAborted ?? CancellationToken.None;
+    extension(HttpContext? httpContext)
+    {
+        public CancellationToken GetCancellationToken() =>
+            httpContext?.RequestAborted ?? CancellationToken.None;
+    }
 
-    public static CancellationToken GetCancellationToken(this IHttpContextAccessor httpContextAccessor) =>
-        httpContextAccessor.HttpContext.GetCancellationToken();
+    extension(IHttpContextAccessor httpContextAccessor)
+    {
+        public CancellationToken GetCancellationToken() =>
+            httpContextAccessor.HttpContext.GetCancellationToken();
+    }
 }

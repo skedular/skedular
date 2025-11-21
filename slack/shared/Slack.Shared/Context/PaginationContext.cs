@@ -14,14 +14,17 @@ public class PaginationContext
 
 public static class PaginationContextExtensions
 {
-    public static bool IsEmpty(this PaginationContext? paginationContext) =>
-        paginationContext is not null &&
-        paginationContext.After is null &&
-        paginationContext.First is null &&
-        paginationContext.Before is null &&
-        paginationContext.Last is null &&
-        paginationContext.CurrentAfter is null &&
-        paginationContext.CurrentFirst is null &&
-        paginationContext.CurrentBefore is null &&
-        paginationContext.CurrentLast is null;
+    extension(PaginationContext? paginationContext)
+    {
+        public bool IsEmpty() =>
+            paginationContext is not null &&
+            paginationContext.After is null &&
+            paginationContext.First is null &&
+            paginationContext.Before is null &&
+            paginationContext.Last is null &&
+            paginationContext.CurrentAfter is null &&
+            paginationContext.CurrentFirst is null &&
+            paginationContext.CurrentBefore is null &&
+            paginationContext.CurrentLast is null;
+    }
 }

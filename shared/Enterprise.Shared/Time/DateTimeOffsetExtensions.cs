@@ -2,51 +2,46 @@ namespace Enterprise.Shared.Time;
 
 public static class DateTimeOffsetExtensions
 {
-    public static DateTimeOffset TrimAllAfterSeconds(this DateTimeOffset value) =>
-        new(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Offset);
-
-    public static DateTimeOffset ToDateTimeOffset(this DateTime value) => new(value.Ticks, TimeSpan.Zero);
-
-    public static DateTime ToDateTime(this DateTimeOffset value) => value.DateTime;
-
-    public static DateTimeOffset StartOfDay(this DateTimeOffset value) => value.ToDate();
-
-    public static DateTimeOffset EndOfDay(this DateTimeOffset value) => value.StartOfDay().AddDays(1);
-
-    public static DateTimeOffset EndOfYesterday(this DateTimeOffset value) => value.StartOfDay().AddTicks(-1);
-
-    public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset) => dateTimeOffset.ToDate(dateTimeOffset.Offset);
-
-    public static DateTimeOffset ToDate(this DateTimeOffset dateTimeOffset, TimeSpan offset) =>
-        new(dateTimeOffset.Year, dateTimeOffset.Month, dateTimeOffset.Day, 0, 0, 0, offset);
-
-    public static DateTimeOffset StartOfWeek(this DateTimeOffset dateTimeOffset, DayOfWeek startOfWeek = DayOfWeek.Monday)
+    extension(DateTime value)
     {
-        var diff = (7 + (dateTimeOffset.DayOfWeek - startOfWeek)) % 7;
-        return new DateTimeOffset(dateTimeOffset.AddDays(-1 * diff).Date, dateTimeOffset.Offset);
+        public DateTimeOffset ToDateTimeOffset() => new(value.Ticks, TimeSpan.Zero);
     }
 
-    public static string ToShortDateWithoutYear(this DateTimeOffset value) => value.ToString("dd MMMM");
-
-    public static string ToShortDate(this DateTimeOffset value) => value.ToString("dd MMMM yyyy");
-
-    public static string ToShortTime(this DateTimeOffset value) => value.ToString("HH:mm");
-
-    public static TimeZoneInfo ToTimezoneInfo(this string? timezone)
+    extension(DateTimeOffset value)
     {
-        try
+        public DateTimeOffset TrimAllAfterSeconds() => new(value.Year, value.Month, value.Day, value.Hour, value.Minute, value.Second, value.Offset);
+        public DateTime ToDateTime() => value.DateTime;
+        public DateTimeOffset StartOfDay() => value.ToDate();
+        public DateTimeOffset EndOfDay() => value.StartOfDay().AddDays(1);
+        public DateTimeOffset EndOfYesterday() => value.StartOfDay().AddTicks(-1);
+        public DateTimeOffset ToDate() => value.ToDate(value.Offset);
+        public DateTimeOffset ToDate(TimeSpan offset) => new(value.Year, value.Month, value.Day, 0, 0, 0, offset);
+
+        public DateTimeOffset StartOfWeek(DayOfWeek startOfWeek = DayOfWeek.Monday)
         {
-            return string.IsNullOrWhiteSpace(timezone) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(timezone);
+            var diff = (7 + (value.DayOfWeek - startOfWeek)) % 7;
+            return new DateTimeOffset(value.AddDays(-1 * diff).Date, value.Offset);
         }
-        catch (TimeZoneNotFoundException)
-        {
-            return TimeZoneInfo.Utc;
-        }
+
+        public string ToShortDateWithoutYear() => value.ToString("dd MMMM");
+        public string ToShortDate() => value.ToString("dd MMMM yyyy");
+        public string ToShortTime() => value.ToString("HH:mm");
+        public bool IsMatchingHour(string? timezone, int hour) => value.IsMatchingHour(timezone.ToTimezoneInfo(), hour);
+        public bool IsMatchingHour(TimeZoneInfo timezoneInfo, int hour) => TimeZoneInfo.ConvertTime(value, timezoneInfo).Hour == hour;
     }
 
-    public static bool IsMatchingHour(this DateTimeOffset value, string? timezone, int hour) =>
-        value.IsMatchingHour(timezone.ToTimezoneInfo(), hour);
-
-    public static bool IsMatchingHour(this DateTimeOffset value, TimeZoneInfo timezoneInfo, int hour) =>
-        TimeZoneInfo.ConvertTime(value, timezoneInfo).Hour == hour;
+    extension(string? timezone)
+    {
+        public TimeZoneInfo ToTimezoneInfo()
+        {
+            try
+            {
+                return string.IsNullOrWhiteSpace(timezone) ? TimeZoneInfo.Utc : TimeZoneInfo.FindSystemTimeZoneById(timezone);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return TimeZoneInfo.Utc;
+            }
+        }
+    }
 }

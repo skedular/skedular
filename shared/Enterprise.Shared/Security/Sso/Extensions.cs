@@ -5,15 +5,21 @@ namespace Enterprise.Shared.Security.Sso;
 
 public static class Extensions
 {
-    public static IServiceCollection AddSso(this IServiceCollection services) =>
-        services
-            .AddSingleton<ISamlAssertionConsumerService, SamlAssertionConsumerService>()
-            .AddSingleton<ISamlLoginRequestFactory, SamlLoginRequestFactory>();
-
-    public static WebApplication UseSso(this WebApplication app)
+    extension(IServiceCollection services)
     {
-        app.UseMiddleware<SsoContextEnricherMiddleware>();
+        public IServiceCollection AddSso() =>
+            services
+                .AddSingleton<ISamlAssertionConsumerService, SamlAssertionConsumerService>()
+                .AddSingleton<ISamlLoginRequestFactory, SamlLoginRequestFactory>();
+    }
 
-        return app;
+    extension(WebApplication app)
+    {
+        public WebApplication UseSso()
+        {
+            app.UseMiddleware<SsoContextEnricherMiddleware>();
+
+            return app;
+        }
     }
 }

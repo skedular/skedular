@@ -4,12 +4,15 @@ namespace Core.Processors;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMappers(this IServiceCollection services) =>
-        services.AddSingleton<IMapper, Mapper>();
+    extension(IServiceCollection services)
+    {
+        public IServiceCollection AddMappers() =>
+            services.AddSingleton<IMapper, Mapper>();
 
-    public static IServiceCollection AddServices(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddServices() =>
+            services;
 
-    public static IServiceCollection AddJobs(this IServiceCollection services) =>
-        services;
+        public IServiceCollection AddJobs() =>
+            services;
+    }
 }

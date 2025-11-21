@@ -14,35 +14,41 @@ public static class LocationTypeConstants
 
 public static class LocationTypeExtensions
 {
-    public static LocationType ToLocationType(this string src) =>
-        src switch
-        {
-            LocationTypeConstants.Private => LocationType.Private,
-            LocationTypeConstants.Marketplace => LocationType.Marketplace,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(LocationType src)
+    {
+        public string ToLocationType() =>
+            src switch
+            {
+                LocationType.Private => LocationTypeConstants.Private,
+                LocationType.Marketplace => LocationTypeConstants.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToLocationType(this LocationType src) =>
-        src switch
-        {
-            LocationType.Private => LocationTypeConstants.Private,
-            LocationType.Marketplace => LocationTypeConstants.Marketplace,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public string ToLocationTypeName() =>
+            src switch
+            {
+                LocationType.Private => "Private",
+                LocationType.Marketplace => "Marketplace",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 
-    public static string ToLocationTypeName(this LocationType src) =>
-        src switch
-        {
-            LocationType.Private => "Private",
-            LocationType.Marketplace => "Marketplace",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+    extension(string src)
+    {
+        public string ToLocationTypeName() =>
+            src switch
+            {
+                LocationTypeConstants.Private => "Private",
+                LocationTypeConstants.Marketplace => "Marketplace",
+                _ => throw new ArgumentOutOfRangeException()
+            };
 
-    public static string ToLocationTypeName(this string src) =>
-        src switch
-        {
-            LocationTypeConstants.Private => "Private",
-            LocationTypeConstants.Marketplace => "Marketplace",
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        public LocationType ToLocationType() =>
+            src switch
+            {
+                LocationTypeConstants.Private => LocationType.Private,
+                LocationTypeConstants.Marketplace => LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+    }
 }

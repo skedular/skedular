@@ -14,5 +14,8 @@ public class ReplicatedModelBase : ModelBase
 
 public static class ModelBaseExtensions
 {
-    public static bool IsNotModified<TEntity>(this TEntity entity) where TEntity : ModelBase => !entity.ModifiedAt.HasValue;
+    extension<TEntity>(TEntity entity) where TEntity : ModelBase
+    {
+        public bool IsNotModified() => !entity.ModifiedAt.HasValue;
+    }
 }
