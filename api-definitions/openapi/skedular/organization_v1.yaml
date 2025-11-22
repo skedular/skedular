@@ -150,11 +150,43 @@ paths:
           schema:
             type: string
           required: true
-          description: Bearer access token
+          description: API Key
 
       responses:
         "200":
           description: the status of changing organization offering
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
+  /v1/organization/{organizationId}/ownership/verify:
+    put:
+      tags:
+        - v1
+        - organization
+        - ownership
+      summary: verify organization ownership
+      operationId: verifyOrganizationOwnership
+      parameters:
+        - in: path
+          name: organizationId
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API Key
+
+      responses:
+        "200":
+          description: the status of verifying organization ownership
 
         default:
           description: unexpected error

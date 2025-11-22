@@ -13,6 +13,7 @@ import { OfferingService } from './services/OfferingService';
 import { OnboardingService } from './services/OnboardingService';
 import { OrganizationService } from './services/OrganizationService';
 import { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
+import { OwnershipService } from './services/OwnershipService';
 import { PaymentMethodService } from './services/PaymentMethodService';
 import { PlatformService } from './services/PlatformService';
 import { SamlService } from './services/SamlService';
@@ -31,6 +32,7 @@ export class SkedularOrganizationV1Client {
     public readonly onboarding: OnboardingService;
     public readonly organization: OrganizationService;
     public readonly organizationStripeConnectAccounts: OrganizationStripeConnectAccountsService;
+    public readonly ownership: OwnershipService;
     public readonly paymentMethod: PaymentMethodService;
     public readonly platform: PlatformService;
     public readonly saml: SamlService;
@@ -60,6 +62,7 @@ export class SkedularOrganizationV1Client {
         this.onboarding = new OnboardingService(this.request);
         this.organization = new OrganizationService(this.request);
         this.organizationStripeConnectAccounts = new OrganizationStripeConnectAccountsService(this.request);
+        this.ownership = new OwnershipService(this.request);
         this.paymentMethod = new PaymentMethodService(this.request);
         this.platform = new PlatformService(this.request);
         this.saml = new SamlService(this.request);

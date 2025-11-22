@@ -81,12 +81,22 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         /// <summary>
         /// change organization offering
         /// </summary>
-        /// <param name="x_API_Key">Bearer access token</param>
+        /// <param name="x_API_Key">API Key</param>
         /// <returns>the status of changing organization offering</returns>
         [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/offering/{offeringCode}")]
         [ModelContextProtocol.Server.McpServerTool]
         [System.ComponentModel.Description("change organization offering")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ChangeOrganizationOffering(string organizationId, string offeringCode, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// verify organization ownership
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the status of verifying organization ownership</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/organization/{organizationId}/ownership/verify")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("verify organization ownership")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> VerifyOrganizationOwnership(string organizationId, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
         /// generate an admin consent Url for the given tenant

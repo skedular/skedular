@@ -78,7 +78,7 @@ export class OrganizationService {
      * change organization offering
      * @param organizationId
      * @param offeringCode
-     * @param xApiKey Bearer access token
+     * @param xApiKey API Key
      * @returns any the status of changing organization offering
      * @returns ProblemDetails unexpected error
      * @throws ApiError
@@ -94,6 +94,29 @@ export class OrganizationService {
             path: {
                 'organizationId': organizationId,
                 'offeringCode': offeringCode,
+            },
+            headers: {
+                'X-API-Key': xApiKey,
+            },
+        });
+    }
+    /**
+     * verify organization ownership
+     * @param organizationId
+     * @param xApiKey API Key
+     * @returns any the status of verifying organization ownership
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public verifyOrganizationOwnership(
+        organizationId: string,
+        xApiKey: string,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/organization/{organizationId}/ownership/verify',
+            path: {
+                'organizationId': organizationId,
             },
             headers: {
                 'X-API-Key': xApiKey,

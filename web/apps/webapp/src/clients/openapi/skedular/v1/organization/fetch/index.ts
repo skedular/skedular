@@ -24,6 +24,7 @@ export { OfferingService } from './services/OfferingService';
 export { OnboardingService } from './services/OnboardingService';
 export { OrganizationService } from './services/OrganizationService';
 export { OrganizationStripeConnectAccountsService } from './services/OrganizationStripeConnectAccountsService';
+export { OwnershipService } from './services/OwnershipService';
 export { PaymentMethodService } from './services/PaymentMethodService';
 export { PlatformService } from './services/PlatformService';
 export { SamlService } from './services/SamlService';

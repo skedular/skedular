@@ -35,7 +35,7 @@ export class OfferingService {
      * change organization offering
      * @param organizationId
      * @param offeringCode
-     * @param xApiKey Bearer access token
+     * @param xApiKey API Key
      * @returns any the status of changing organization offering
      * @returns ProblemDetails unexpected error
      * @throws ApiError

@@ -24,6 +24,7 @@ public class OrganizationController(
     IOrganizationInternalPublisher organizationInternalPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IOrganizationOfferingService organizationOfferingService,
+    IOrganizationOwnershipService organizationOwnershipService,
     TimeProvider timeProvider,
     ILogger<OrganizationController> logger) : OrganizationControllerBase
 {
@@ -80,6 +81,22 @@ public class OrganizationController(
         }
 
         await organizationOfferingService.UpdateOfferingAsync(organizationId, null, offeringCode.ToOfferingCode(), true, cancellationToken);
+
+        return Ok();
+    }
+
+    public override async Task<IActionResult> VerifyOrganizationOwnership(
+        string organizationId,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != organizationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await organizationOwnershipService.VerifyAsync(organizationId, null, cancellationToken);
 
         return Ok();
     }
