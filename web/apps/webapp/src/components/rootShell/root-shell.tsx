@@ -60,6 +60,10 @@ const RootQuery = graphql`
       logoUrl
       name
       isSsoTokenValid
+      isOwnershipVerified
+      type {
+        type
+      }
     }
     ...appBar_query
     ...leftSideNavigationMenu_query
@@ -188,6 +192,15 @@ const RootShell = ({
               </CardContent>
             </Card>
           )}
+          {rootData.me.isOnboardingDone &&
+            !rootData.organization?.isOwnershipVerified &&
+            (rootData.organization?.type.type === 'MARKETPLACE' || rootData.organization?.type.type === 'INDIVIDUAL') && (
+              <Card sx={{ textAlign: 'left', backgroundColor: paletteMode === 'dark' ? emerald : coal }}>
+                <CardContent>
+                  <LeadIconTypography label="We need to verify ownership for your organization. We'll get back to you within 24 hours." invertDefaultColor />
+                </CardContent>
+              </Card>
+            )}
           {rootData.me.isOnboardingDone && rootData.organization?.isSsoTokenValid && <>{children}</>}
         </Box>
       </Box>
