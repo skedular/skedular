@@ -46,6 +46,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Set required environment variable
       shell: bash
       run: |
@@ -76,14 +79,16 @@ runs:
           type=sha,format=long
 
     - name: Build and run Unit Tests
-      shell: bash
-      run: |
-        docker build \
-           --pull \
-           --target test \
-          --tag ${{ env.unittest_container_tag }} \
-          --file ${{ inputs.dockerFilePath }} \
-          ${{ inputs.dockerBuildContextPath }}
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ inputs.dockerBuildContextPath }}
+        file: ${{ inputs.dockerFilePath }}
+        target: test
+        pull: true
+        load: true
+        tags: ${{ env.unittest_container_tag }}
+        cache-from: type=gha,scope=${{ github.workflow }}-test
+        cache-to: type=gha,scope=${{ github.workflow }}-test,mode=max
 
     - name: Run interation tests
       if: ${{ inputs.runIntegrationTests == 'true' }}
@@ -100,14 +105,16 @@ runs:
         docker cp ${{ env.unittest_extract_container_name }}:/coverage/reports/. "./coverage/reports/"
 
     - name: Build final image
-      shell: bash
-      run: |
-        docker build \
-          --pull \
-          --target final \
-          --tag ${{ env.image_name }}:${{ github.sha }} \
-          --file ${{ inputs.dockerFilePath }} \
-          ${{ inputs.dockerBuildContextPath }}
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ inputs.dockerBuildContextPath }}
+        file: ${{ inputs.dockerFilePath }}
+        target: final
+        pull: true
+        load: true
+        tags: ${{ env.image_name }}:${{ github.sha }}
+        cache-from: type=gha,scope=${{ github.workflow }}-final
+        cache-to: type=gha,scope=${{ github.workflow }}-final,mode=max
 
     # - name: Run Trivy vulnerability scanner
     #   if: ${{ inputs.scanForSecurityVulnerabilities == 'true' }}
@@ -155,3 +162,5 @@ runs:
         target: final
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha,scope=${{ github.workflow }}-final
+        cache-to: type=gha,scope=${{ github.workflow }}-final,mode=max

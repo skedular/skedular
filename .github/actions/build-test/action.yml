@@ -19,6 +19,9 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
     - name: Set required environment variable
       shell: bash
       run: |
@@ -26,14 +29,16 @@ runs:
         echo "unittest_extract_container_name=$(uuidgen)" >> $GITHUB_ENV
 
     - name: Build and run Unit Tests
-      shell: bash
-      run: |
-        docker build \
-           --pull \
-           --target test \
-          --tag ${{ env.unittest_container_tag }} \
-          --file ${{ inputs.dockerFilePath }} \
-          ${{ inputs.dockerBuildContextPath }}
+      uses: docker/build-push-action@v6
+      with:
+        context: ${{ inputs.dockerBuildContextPath }}
+        file: ${{ inputs.dockerFilePath }}
+        target: test
+        pull: true
+        load: true
+        tags: ${{ env.unittest_container_tag }}
+        cache-from: type=gha,scope=${{ github.workflow }}-test
+        cache-to: type=gha,scope=${{ github.workflow }}-test,mode=max
 
     - name: Run interation tests
       if: ${{ inputs.runIntegrationTests == 'true' }}
