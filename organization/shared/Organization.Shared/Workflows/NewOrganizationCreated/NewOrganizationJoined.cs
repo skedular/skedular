@@ -1,19 +1,19 @@
-using Team.Shared.Activities;
+using Organization.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
+namespace Organization.Shared.Workflows.NewOrganizationCreated;
 
-public record InviteToJoinTeamNewCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerEmail);
+public record NewOrganizationJoinedInput(string? OrganizationId, string? OrganizationUniqueAlphanumericName);
 
 [Workflow]
-public class InviteToJoinTeamNewCustomer
+public class NewOrganizationJoined
 {
     [WorkflowRun]
-    public async Task ExecuteAsync(InviteToJoinTeamNewCustomerInput args) =>
+    public async Task ExecuteAsync(NewOrganizationJoinedInput args) =>
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
-                activity.SendInviteCustomerToJoinTeamNewCustomerAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerEmail),
+                activity.SendNewOrganizationJoinedEmailAsync(args.OrganizationId, args.OrganizationUniqueAlphanumericName),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

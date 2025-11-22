@@ -1,0 +1,12 @@
+Hi,
+
+New Organization has joined Skedular.
+
+Organization ID:
+{{ORGANIZATION_ID}}
+
+Organization Name:
+{{ORGANIZATION_NAME}}
+
+—
+Powered by Skedular

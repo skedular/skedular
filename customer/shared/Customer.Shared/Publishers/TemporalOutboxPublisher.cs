@@ -19,11 +19,10 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalOutboxWorkflowExecutor<SubmitCustomerFeedback> temporalOutboxSubmitCustomerFeedbackWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<NewCustomerJoined> temporalOutboxNewCustomerJoinedWorkflowExecutor) : ITemporalOutboxPublisher
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxPublisher
 {
     public void StartWorkflowSubmitCustomerFeedback(SubmitCustomerFeedbackInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxSubmitCustomerFeedbackWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<SubmitCustomerFeedback, SubmitCustomerFeedbackInput>(
             args,
             new WorkflowOptions
             {
@@ -35,7 +34,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowNewCustomerJoined(NewCustomerJoinedInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxNewCustomerJoinedWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<NewCustomerJoined, NewCustomerJoinedInput>(
             args,
             new WorkflowOptions
             {

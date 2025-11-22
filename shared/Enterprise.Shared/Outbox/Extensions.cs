@@ -36,7 +36,7 @@ public static class Extensions
 
         public IServiceCollection AddTemporalOutboxService() =>
             services
-                .AddSingleton(typeof(ITemporalOutboxWorkflowExecutor<>), typeof(TemporalOutboxWorkflowExecutor<>))
-                .AddSingleton(typeof(ITemporalSignalOutboxWorkflowExecutor), typeof(TemporalSignalOutboxWorkflowExecutor));
+                .AddSingleton<ITemporalOutboxWorkflowExecutor, TemporalOutboxWorkflowExecutor>()
+                .AddSingleton<ITemporalSignalOutboxWorkflowExecutor, TemporalSignalOutboxWorkflowExecutor>();
     }
 }

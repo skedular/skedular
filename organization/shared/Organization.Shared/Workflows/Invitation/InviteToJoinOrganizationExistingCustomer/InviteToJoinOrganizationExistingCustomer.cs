@@ -12,10 +12,10 @@ public class InviteToJoinOrganizationExistingCustomer
     [WorkflowRun]
     public async Task ExecuteAsync(InviteToJoinOrganizationExistingCustomerInput args) =>
         await Workflow.ExecuteActivityAsync(
-            (EmailIntegrations activity) =>
-                activity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(
-                    new SendInviteCustomerToJoinOrganizationExistingCustomerInput(args.OrganizationId, args.InviterCustomerId,
-                        args.InviteeCustomerId)),
+            (EmailIntegrations activity) => activity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(
+                args.OrganizationId,
+                args.InviterCustomerId,
+                args.InviteeCustomerId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

@@ -18,11 +18,10 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalOutboxWorkflowExecutor<NewSlackWorkspaceJoined> temporalOutboxNewSlackWorkspaceJoinedWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<ReSyncSlackWorkspace> temporalOutboxReSyncSlackWorkspaceInputWorkflowExecutor) : ITemporalOutboxPublisher
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxPublisher
 {
     public void StartWorkflowNewSlackWorkspaceJoined(NewSlackWorkspaceJoinedInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxNewSlackWorkspaceJoinedWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<NewSlackWorkspaceJoined, NewSlackWorkspaceJoinedInput>(
             args,
             new WorkflowOptions
             {
@@ -34,7 +33,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowReSyncSlackWorkspace(ReSyncSlackWorkspaceInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxReSyncSlackWorkspaceInputWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<ReSyncSlackWorkspace, ReSyncSlackWorkspaceInput>(
             args,
             new WorkflowOptions
             {

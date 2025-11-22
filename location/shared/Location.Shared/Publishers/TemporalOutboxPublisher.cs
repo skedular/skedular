@@ -22,13 +22,11 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalOutboxWorkflowExecutor<GenerateLocationDailyAnalytics> temporalOutboxLocationDailyAnalyticsExecutor,
-    ITemporalOutboxWorkflowExecutor<ComputeOrganizationLocationsAndProductsRelationships>
-        temporalOutboxComputeOrganizationLocationsAndProductsRelationshipsExecutor)
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowLocationDailyAnalytics(GenerateLocationDailyAnalyticsInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxLocationDailyAnalyticsExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<GenerateLocationDailyAnalytics, GenerateLocationDailyAnalyticsInput>(
             args,
             new WorkflowOptions
             {
@@ -42,14 +40,15 @@ public class TemporalOutboxPublisher(
     public void StartComputeOrganizationLocationsAndProductsRelationships(
         ComputeOrganizationLocationsAndProductsRelationshipsInput args,
         IUnitOfWork unitOfWork) =>
-        temporalOutboxComputeOrganizationLocationsAndProductsRelationshipsExecutor.Execute(
-            args,
-            new WorkflowOptions
-            {
-                Id = temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{args.OrganizationId}"),
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
-            },
-            unitOfWork);
+        temporalOutboxWorkflowExecutor
+            .Execute<ComputeOrganizationLocationsAndProductsRelationships, ComputeOrganizationLocationsAndProductsRelationshipsInput>(
+                args,
+                new WorkflowOptions
+                {
+                    Id = temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{args.OrganizationId}"),
+                    TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                    RetryPolicy = null,
+                    IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
+                },
+                unitOfWork);
 }

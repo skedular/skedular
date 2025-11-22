@@ -11,10 +11,6 @@ using Temporalio.Activities;
 
 namespace Team.Shared.Activities;
 
-public record SendInviteCustomerToJoinTeamNewCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerEmail);
-
-public record SendInviteCustomerToJoinTeamExistingCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerId);
-
 public class EmailIntegrations(
     ApplicationConfiguration applicationConfiguration,
     EmailConfiguration emailConfiguration,
@@ -24,17 +20,17 @@ public class EmailIntegrations(
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
-    public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(SendInviteCustomerToJoinTeamNewCustomerInput args)
+    public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(string teamId, string inviterCustomerId, string inviteeCustomerEmail)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await cachedTeamService.GetByIdAsync(args.TeamId, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             return;
         }
 
         var inviterCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviterCustomerId },
+            new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -64,8 +60,8 @@ public class EmailIntegrations(
             "Team Invitation - Skedular",
             text,
             html,
-            $"Skedular {emailConfiguration.InviteToJoinTeamNewCustomerEmailSender}",
-            [args.InviteeCustomerEmail],
+            emailConfiguration.InviteToJoinTeamNewCustomerEmailSender,
+            [inviteeCustomerEmail],
             [],
             [],
             [],
@@ -73,22 +69,22 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendInviteCustomerToJoinTeamExistingCustomerAsync(SendInviteCustomerToJoinTeamExistingCustomerInput args)
+    public async Task SendInviteCustomerToJoinTeamExistingCustomerAsync(string teamId, string inviterCustomerId, string inviteeCustomerId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await cachedTeamService.GetByIdAsync(args.TeamId, cancellationToken);
+        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
         if (team is null)
         {
             return;
         }
 
         var inviterCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviterCustomerId },
+            new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
         var inviteeCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviteeCustomerId },
+            new Admin_GetInput { CustomerId = inviteeCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -118,7 +114,7 @@ public class EmailIntegrations(
             "Team Invitation - Skedular",
             text,
             html,
-            $"Skedular {emailConfiguration.InviteToJoinTeamNewCustomerEmailSender}",
+            emailConfiguration.InviteToJoinTeamNewCustomerEmailSender,
             inviteeCustomer.Identities.Select(item => item.Email).ToEmails(),
             [],
             [],

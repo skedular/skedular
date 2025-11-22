@@ -2,7 +2,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
-using Team.Shared.Activities;
 using Team.Shared.Workflows;
 using Team.Shared.Workflows.InviteToJoinTeamExistingCustomer;
 using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
@@ -13,18 +12,17 @@ namespace Team.Shared.Publishers;
 
 public interface ITemporalOutboxPublisher
 {
-    void StartWorkflowInviteToJoinTeamExistingCustomer(SendInviteCustomerToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowInviteToJoinTeamExistingCustomer(InviteToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoinTeamNewCustomer(InviteToJoinTeamNewCustomerInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalOutboxWorkflowExecutor<InviteToJoinTeamExistingCustomer> temporalOutboxInviteToJoinTeamExistingCustomerExecutor,
-    ITemporalOutboxWorkflowExecutor<InviteToJoinTeamNewCustomer> temporalOutboxInviteToJoinTeamNewCustomerWorkflowExecutor) : ITemporalOutboxPublisher
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxPublisher
 {
-    public void StartWorkflowInviteToJoinTeamExistingCustomer(SendInviteCustomerToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinTeamExistingCustomerExecutor.Execute(
+    public void StartWorkflowInviteToJoinTeamExistingCustomer(InviteToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<InviteToJoinTeamExistingCustomer, InviteToJoinTeamExistingCustomerInput>(
             args,
             new WorkflowOptions
             {
@@ -36,7 +34,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowInviteToJoinTeamNewCustomer(InviteToJoinTeamNewCustomerInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinTeamNewCustomerWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<InviteToJoinTeamNewCustomer, InviteToJoinTeamNewCustomerInput>(
             args,
             new WorkflowOptions
             {

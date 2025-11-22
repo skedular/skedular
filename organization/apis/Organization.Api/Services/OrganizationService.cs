@@ -14,6 +14,7 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
+using Organization.Shared.Workflows.NewOrganizationCreated;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;
@@ -185,6 +186,10 @@ public class OrganizationService(
 
         temporalOutboxPublisher.StartWorkflowOrganizationDailyAnalytics(
             new GenerateOrganizationDailyAnalyticsInput(organization.Id, timeProvider.GetUtcNow().AddDays(1)),
+            repositoryFactory.UnitOfWork);
+
+        temporalOutboxPublisher.StartWorkflowNewOrganizationJoined(
+            new NewOrganizationJoinedInput(organization.Id, organization.UniqueAlphanumericName),
             repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -14,6 +14,7 @@ using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.NewOrganizationCreated;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Extensions.Hosting;
@@ -62,6 +63,7 @@ public class Program
             .AddWorkflow<InviteToJoinOrganizationNewCustomer>()
             .AddWorkflow<GenerateOrganizationDailyAnalytics>()
             .AddWorkflow<ReSyncAzureTenant>()
+            .AddWorkflow<NewOrganizationJoined>()
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<EmailIntegrations>()

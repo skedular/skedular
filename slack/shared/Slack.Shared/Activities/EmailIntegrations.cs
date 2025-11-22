@@ -43,10 +43,10 @@ public class EmailIntegrations(EmailConfiguration emailConfiguration, IRepositor
             .Replace("{{WORKSPACE_NAME}}", workspace.Name);
 
         await emailService.SendRawEmailAsync(
-            "New customer has joined Skedular",
+            "New Slack Workspace has joined Skedular",
             text,
             html,
-            $"Skedular {emailConfiguration.NewSlackWorkspaceJoinedEmailSender}",
+            emailConfiguration.NewSlackWorkspaceJoinedEmailSender,
             emailConfiguration.NewSlackWorkspaceJoinedEmailReceivers,
             [],
             [],

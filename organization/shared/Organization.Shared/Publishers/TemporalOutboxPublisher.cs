@@ -3,11 +3,11 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
-using Organization.Shared.Activities;
 using Organization.Shared.Workflows;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.NewOrganizationCreated;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Api.Enums.V1;
@@ -18,30 +18,23 @@ namespace Organization.Shared.Publishers;
 public interface ITemporalOutboxPublisher
 {
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
-
-    void StartWorkflowInviteToJoinOrganizationExistingCustomer(
-        SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
-        IUnitOfWork unitOfWork);
-
+    void StartWorkflowInviteToJoinOrganizationExistingCustomer(InviteToJoinOrganizationExistingCustomerInput args, IUnitOfWork unitOfWork);
     void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork);
     void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<ScheduleRenewOrganizationOffering> temporalOutboxRenewOrganizationOfferingExecutor,
-    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationExistingCustomer> temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor,
-    ITemporalOutboxWorkflowExecutor<InviteToJoinOrganizationNewCustomer> temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<ReSyncAzureTenant> temporalOutboxReSyncAzureTenantExecutor,
-    ITemporalOutboxWorkflowExecutor<GenerateOrganizationDailyAnalytics> temporalOutboxOrganizationDailyAnalyticsExecutor)
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxRenewOrganizationOfferingExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<ScheduleRenewOrganizationOffering, ScheduleRenewOrganizationOfferingInput>(
             args,
             new WorkflowOptions
             {
@@ -52,10 +45,8 @@ public class TemporalOutboxPublisher(
             },
             unitOfWork);
 
-    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(
-        SendInviteCustomerToJoinOrganizationExistingCustomerInput args,
-        IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinOrganizationExistingCustomerExecutor.Execute(
+    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(InviteToJoinOrganizationExistingCustomerInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<InviteToJoinOrganizationExistingCustomer, InviteToJoinOrganizationExistingCustomerInput>(
             args,
             new WorkflowOptions
             {
@@ -68,7 +59,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxOrganizationDailyAnalyticsExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<GenerateOrganizationDailyAnalytics, GenerateOrganizationDailyAnalyticsInput>(
             args,
             new WorkflowOptions
             {
@@ -80,7 +71,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxReSyncAzureTenantExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<ReSyncAzureTenant, ReSyncAzureTenantInput>(
             args,
             new WorkflowOptions
             {
@@ -92,12 +83,25 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxInviteToJoinOrganizationNewCustomerWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<InviteToJoinOrganizationNewCustomer, InviteToJoinOrganizationNewCustomerInput>(
             args,
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId(
                     $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerEmail}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<NewOrganizationJoined, NewOrganizationJoinedInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId(
+                    $"{Constants.NewOrganizationJoinedPrefix}-{args.OrganizationId ?? string.Empty}-{args.OrganizationUniqueAlphanumericName ?? string.Empty}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

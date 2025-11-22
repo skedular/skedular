@@ -13,8 +13,7 @@ public class InviteToJoinTeamExistingCustomer
     public async Task ExecuteAsync(InviteToJoinTeamExistingCustomerInput args) =>
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
-                activity.SendInviteCustomerToJoinTeamExistingCustomerAsync(
-                    new SendInviteCustomerToJoinTeamExistingCustomerInput(args.TeamId, args.InviterCustomerId, args.InviteeCustomerId)),
+                activity.SendInviteCustomerToJoinTeamExistingCustomerAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

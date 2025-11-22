@@ -24,13 +24,12 @@ public interface ITemporalOutboxPublisher
 public class TemporalOutboxPublisher(
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<PayBookingViaCard> temporalOutboxPayBookingViaCardWorkflowExecutor,
-    ITemporalOutboxWorkflowExecutor<PayBookingViaBankTransfer> temporalOutboxPayBookingViaBankTransferWorkflowExecutor)
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor)
     : ITemporalOutboxPublisher
 {
     public void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxPayBookingViaCardWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<PayBookingViaCard, PayBookingViaCardInput>(
             args,
             new WorkflowOptions
             {
@@ -42,7 +41,7 @@ public class TemporalOutboxPublisher(
             unitOfWork);
 
     public void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxPayBookingViaBankTransferWorkflowExecutor.Execute(
+        temporalOutboxWorkflowExecutor.Execute<PayBookingViaBankTransfer, PayBookingViaBankTransferInput>(
             args,
             new WorkflowOptions
             {

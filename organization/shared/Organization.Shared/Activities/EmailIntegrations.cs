@@ -11,10 +11,6 @@ using Temporalio.Activities;
 
 namespace Organization.Shared.Activities;
 
-public record SendInviteCustomerToJoinOrganizationNewCustomerInput(string OrganizationId, string InviterCustomerId, string InviteeCustomerEmail);
-
-public record SendInviteCustomerToJoinOrganizationExistingCustomerInput(string OrganizationId, string InviterCustomerId, string InviteeCustomerId);
-
 public class EmailIntegrations(
     ApplicationConfiguration applicationConfiguration,
     EmailConfiguration emailConfiguration,
@@ -24,18 +20,21 @@ public class EmailIntegrations(
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(SendInviteCustomerToJoinOrganizationNewCustomerInput args)
+    public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerEmail)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(args.OrganizationId, null, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
         if (organization is null)
         {
             return;
         }
 
         var inviterCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviterCustomerId },
+            new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -67,8 +66,8 @@ public class EmailIntegrations(
             "Organization Invitation - Skedular",
             text,
             html,
-            $"Skedular {emailConfiguration.InviteToJoinOrganizationNewCustomerEmailSender}",
-            [args.InviteeCustomerEmail],
+            emailConfiguration.InviteToJoinOrganizationNewCustomerEmailSender,
+            [inviteeCustomerEmail],
             [],
             [],
             [],
@@ -76,11 +75,14 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(SendInviteCustomerToJoinOrganizationExistingCustomerInput args)
+    public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(
+        string organizationId,
+        string inviterCustomerId,
+        string inviteeCustomerId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-            args.OrganizationId,
+            organizationId,
             null,
             cancellationToken);
         if (organization is null)
@@ -89,12 +91,12 @@ public class EmailIntegrations(
         }
 
         var inviterCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviterCustomerId },
+            new Admin_GetInput { CustomerId = inviterCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
         var inviteeCustomer = await customerServiceClient.Admin_GetAsync(
-            new Admin_GetInput { CustomerId = args.InviteeCustomerId },
+            new Admin_GetInput { CustomerId = inviteeCustomerId },
             customerConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -126,8 +128,58 @@ public class EmailIntegrations(
             "Organization Invitation - Skedular",
             text,
             html,
-            $"Skedular {emailConfiguration.InviteToJoinOrganizationNewCustomerEmailSender}",
+            emailConfiguration.InviteToJoinOrganizationNewCustomerEmailSender,
             inviteeCustomer.Identities.Select(item => item.Email).ToEmails(),
+            [],
+            [],
+            [],
+            cancellationToken);
+    }
+
+    [Activity]
+    public async Task SendNewOrganizationJoinedEmailAsync(string? organizationId, string? organizationUniqueAlphanumericName)
+    {
+        if (!emailConfiguration.EnableNewOrganizationJoinedEmail)
+        {
+            return;
+        }
+
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organizationId,
+            organizationUniqueAlphanumericName,
+            cancellationToken);
+        if (organization is null)
+        {
+            return;
+        }
+
+        await using var htmlTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Organization.Shared.EmailTemplates.NewOrganizationJoined.template.html");
+        ArgumentNullException.ThrowIfNull(htmlTemplateStream);
+        using var htmlReader = new StreamReader(htmlTemplateStream);
+        var html = await htmlReader.ReadToEndAsync(cancellationToken);
+
+        await using var textTemplateStream =
+            typeof(EmailIntegrations).Assembly.GetManifestResourceStream("Organization.Shared.EmailTemplates.NewOrganizationJoined.template.txt");
+        ArgumentNullException.ThrowIfNull(textTemplateStream);
+        using var textReader = new StreamReader(textTemplateStream);
+        var text = await textReader.ReadToEndAsync(cancellationToken);
+
+        html = html
+            .Replace("{{ORGANIZATION_ID}}", organization.Id)
+            .Replace("{{ORGANIZATION_NAME}}", organization.Name);
+
+        text = text
+            .Replace("{{ORGANIZATION_ID}}", organization.Id)
+            .Replace("{{ORGANIZATION_NAME}}", organization.Name);
+
+        await emailService.SendRawEmailAsync(
+            "New organization has joined Skedular",
+            text,
+            html,
+            emailConfiguration.NewOrganizationJoinedEmailSender,
+            emailConfiguration.NewOrganizationJoinedEmailReceivers,
             [],
             [],
             [],
