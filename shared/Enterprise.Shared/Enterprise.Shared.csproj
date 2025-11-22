@@ -32,8 +32,8 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.12"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.4"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.13.1"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.5"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.12.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.12.0"/>
@@ -54,20 +54,20 @@
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="9.0.10"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="9.0.10"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0"/>
         <PackageReference Include="Microsoft.Graph" Version="5.97.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.1.0"/>
 
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4"/>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4"/>
-        <PackageReference Include="Npgsql.OpenTelemetry" Version="9.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0"/>
+        <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.0"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.14.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.14.0"/>
@@ -88,7 +88,7 @@
         <PackageReference Include="Serilog.Enrichers.Span" Version="3.1.0"/>
         <PackageReference Include="Serilog.Expressions" Version="5.0.0"/>
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2"/>
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0"/>
         <PackageReference Include="Serilog.Filters.Expressions" Version="2.1.0"/>
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
@@ -105,7 +105,7 @@
         <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.4.0-preview.3"/>
         <PackageReference Include="Nanoid" Version="3.1.0"/>
         <PackageReference Include="NetTopologySuite.IO.GeoJSON4STJ" Version="4.0.0"/>
-        <PackageReference Include="NSwag.AspNetCore" Version="14.6.2"/>
+        <PackageReference Include="NSwag.AspNetCore" Version="14.6.3"/>
         <PackageReference Include="OpenAI" Version="2.7.0"/>
         <PackageReference Include="Polly" Version="8.6.4"/>
         <PackageReference Include="QuestPDF" Version="2025.7.4"/>
@@ -124,7 +124,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.10">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
