@@ -7,7 +7,7 @@ using Organization.Shared.Workflows;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
-using Organization.Shared.Workflows.NewOrganizationCreated;
+using Organization.Shared.Workflows.NewOrganizationJoined;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Api.Enums.V1;

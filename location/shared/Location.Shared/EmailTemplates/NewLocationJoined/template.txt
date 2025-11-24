@@ -1,0 +1,12 @@
+Hi,
+
+New Location has joined Skedular.
+
+Location ID:
+{{LOCATION_ID}}
+
+Location Name:
+{{LOCATION_NAME}}
+
+—
+Powered by Skedular

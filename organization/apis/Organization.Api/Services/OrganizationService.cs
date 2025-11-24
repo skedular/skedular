@@ -14,7 +14,7 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.NewOrganizationCreated;
+using Organization.Shared.Workflows.NewOrganizationJoined;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Booking = Organization.Shared.Database.Entities.Booking;
 using Customer = Organization.Shared.Models.Customer;

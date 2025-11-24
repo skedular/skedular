@@ -4,6 +4,7 @@ using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.NewOrganizationJoined;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Client;
@@ -19,6 +20,7 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
     private static readonly string s_inviteToJoinOrganizationNewCustomer = typeof(InviteToJoinOrganizationNewCustomer).ToWorkflowType();
     private static readonly string s_generateOrganizationDailyAnalytics = typeof(GenerateOrganizationDailyAnalytics).ToWorkflowType();
     private static readonly string s_reSyncAzureTenant = typeof(ReSyncAzureTenant).ToWorkflowType();
+    private static readonly string s_newOrganizationJoined = typeof(NewOrganizationJoined).ToWorkflowType();
 
     public async Task StartWorkflowAsync(
         string workflowType,
@@ -116,6 +118,20 @@ public class TemporalOutboxExecutorService(ITemporalClient temporalClient) : ITe
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync((ReSyncAzureTenant workflow) => workflow.ExecuteAsync(input), workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_newOrganizationJoined)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<NewOrganizationJoinedInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync((NewOrganizationJoined workflow) => workflow.ExecuteAsync(input), workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {

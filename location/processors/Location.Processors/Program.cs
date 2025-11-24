@@ -9,6 +9,7 @@ using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Temporal;
 using Location.Processors.Subscribers;
 using Location.Shared;
+using Location.Shared.Configurations;
 using Location.Shared.Database;
 
 namespace Location.Processors;
@@ -23,6 +24,10 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
+
+        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+        ArgumentNullException.ThrowIfNull(emailConfiguration);
+        services.AddSingleton(emailConfiguration);
 
         var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);

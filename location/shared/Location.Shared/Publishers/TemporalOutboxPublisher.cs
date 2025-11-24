@@ -4,6 +4,7 @@ using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows.NewLocationJoined;
 using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -17,6 +18,8 @@ public interface ITemporalOutboxPublisher
     void StartComputeOrganizationLocationsAndProductsRelationships(
         ComputeOrganizationLocationsAndProductsRelationshipsInput args,
         IUnitOfWork unitOfWork);
+
+    void StartWorkflowNewLocationJoined(NewLocationJoinedInput args, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
@@ -51,4 +54,16 @@ public class TemporalOutboxPublisher(
                     IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
                 },
                 unitOfWork);
+
+    public void StartWorkflowNewLocationJoined(NewLocationJoinedInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<NewLocationJoined, NewLocationJoinedInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.NewLocationJoinedPrefix}-{args.LocationId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
 }

@@ -2,7 +2,7 @@ using Organization.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Organization.Shared.Workflows.NewOrganizationCreated;
+namespace Organization.Shared.Workflows.NewOrganizationJoined;
 
 public record NewOrganizationJoinedInput(string? OrganizationId, string? OrganizationUniqueAlphanumericName);
 

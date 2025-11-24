@@ -13,6 +13,7 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows.NewLocationJoined;
 using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Microsoft.EntityFrameworkCore;
 using Constants = Api.Shared.Services.Constants;
@@ -175,6 +176,11 @@ public class LocationService(
         temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(location.Organization.Id),
             repositoryFactory.UnitOfWork);
+
+        if (organization.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        {
+            temporalOutboxPublisher.StartWorkflowNewLocationJoined(new NewLocationJoinedInput(location.Id), repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
