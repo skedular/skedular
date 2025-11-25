@@ -43,7 +43,6 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays ?? -1,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
@@ -51,9 +50,13 @@ public class Mapper : IMapper
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
         productVersion.LocationTagIds.AddRange(src.LocationTags.Select(item => item.Id));
         productVersion.AcceptedBookingPaymentMethods.AddRange(src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()));
+        productVersion.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return productVersion;
     }
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo)!;
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

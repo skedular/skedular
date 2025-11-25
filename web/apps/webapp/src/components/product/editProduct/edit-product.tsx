@@ -1,6 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
+import { DeleteIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
@@ -11,7 +12,9 @@ import type { editProduct_query$key } from '@/queries/__generated__/editProduct_
 import type { Currency, editProduct_updateProductMutation, PaymentMethod, PriceUnit } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useState } from 'react';
@@ -288,7 +291,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           acceptedBookingPaymentMethods {
             type
           }
-          primaryFeatureImage {
+          featureImages {
             original {
               url
               height
@@ -354,7 +357,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           }
           maxAllowedResourcesLockTimePaidViaCard
           maxAllowedResourcesLockTimePaidViaBankTransfer
-          primaryFeatureImage {
+          featureImages {
             original {
               url
               height
@@ -447,25 +450,28 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   const [isPriceTaxInclusive, setIsPriceTaxInclusive] = useState(rootData.product ? rootData.product.isPriceTaxInclusive : true);
   const debounceSetIsPriceTaxInclusive = useDebounceCallback(setIsPriceTaxInclusive, keyboardTextFieldDebounceTimeout);
 
-  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(
-    rootData.product?.primaryFeatureImage && rootData.product?.primaryFeatureImage.original
-      ? {
-          id: '',
-          original: {
-            url: rootData.product?.primaryFeatureImage.original.url,
-            height: rootData.product?.primaryFeatureImage.original.height,
-            width: rootData.product?.primaryFeatureImage.original.width,
-          },
-          thumbnail: rootData.product?.primaryFeatureImage.thumbnail
-            ? {
-                url: rootData.product?.primaryFeatureImage.thumbnail.url,
-                height: rootData.product?.primaryFeatureImage.thumbnail.height,
-                width: rootData.product?.primaryFeatureImage.thumbnail.width,
-              }
-            : null,
-        }
-      : null,
+  const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
+    rootData.product
+      ? rootData.product.featureImages
+          .filter((item) => !!item.original)
+          .map((item) => ({
+            id: '',
+            original: {
+              url: item.original!.url,
+              height: item.original!.height,
+              width: item.original!.width,
+            },
+            thumbnail: item.thumbnail
+              ? {
+                  url: item.thumbnail.url,
+                  height: item.thumbnail.height,
+                  width: item.thumbnail.width,
+                }
+              : null,
+          }))
+      : [],
   );
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
 
   const handleProductDetailUpdateClick = ({
     name,
@@ -498,16 +504,10 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
     const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
     const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
     const toastId = themedToast(<NotificationContent content={`Updating product '${product.name}'...`} />, infoNotificationOptions);
-    const finalPrimaryFeatureImage = primaryFeatureImage
-      ? {
-          original: primaryFeatureImage.original
-            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
-            : null,
-          thumbnail: primaryFeatureImage.thumbnail
-            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
-            : null,
-        }
-      : null;
+    const finalFeatureImages = featureImages.map((image) => ({
+      original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+      thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+    }));
     const maxAllowedResourcesLockTimePaidViaCard = maxAllowedResourcesLockTimePaidViaCardStr
       ? Number(maxAllowedResourcesLockTimePaidViaCardStr)
       : rootData.defaultMaxAllowedResourcesLockTimePaidViaCard;
@@ -535,7 +535,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
-          primaryFeatureImage: finalPrimaryFeatureImage,
+          featureImages: finalFeatureImages,
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
           acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
@@ -590,7 +590,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
-            primaryFeatureImage: finalPrimaryFeatureImage,
+            featureImages: finalFeatureImages,
             maxAllowedResourcesLockTimePaidViaCard,
             maxAllowedResourcesLockTimePaidViaBankTransfer,
             acceptedBookingPaymentMethods: [],
@@ -605,7 +605,25 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImage(response);
+    setFeatureImages((prev) => [response, ...prev]);
+    setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
+  };
+
+  const handleRemoveFeatureImage = (image: FileUploadResponse) => {
+    setFeatureImages((prev) => {
+      const next = prev.filter((item) => item.original?.url !== image.original?.url);
+
+      if (primaryFeatureImage?.original?.url === image.original?.url) {
+        setPrimaryFeatureImage(next[0] ?? null);
+      }
+
+      return next;
+    });
+  };
+
+  const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
+    setPrimaryFeatureImage(image);
+    setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
   };
 
   if (!rootData.product) {
@@ -668,14 +686,47 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                    <FormFieldLabel label="Feature Image">
+                    <FormFieldLabel label="Feature Images">
                       <StackColumn>
-                        {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                          <>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-                          </>
-                        )}
+                        <Box
+                          sx={{
+                            display: 'grid',
+                            gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                            gap: 2,
+                          }}
+                        >
+                          {featureImages.map((image, index) => (
+                            <Box
+                              key={index}
+                              sx={{
+                                position: 'relative',
+                                borderRadius: 2,
+                                overflow: 'hidden',
+                                border: 1,
+                                borderColor: 'divider',
+                                backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                              }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                  <DeleteIcon fontSize="small" />
+                                </IconButton>
+                              </StackRow>
+                              <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                  <Chip size="small" color="success" label="Cover image" />
+                                ) : (
+                                  <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                    Make cover
+                                  </Button>
+                                )}
+                              </StackRow>
+                            </Box>
+                          ))}
+                        </Box>
+
                         <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>

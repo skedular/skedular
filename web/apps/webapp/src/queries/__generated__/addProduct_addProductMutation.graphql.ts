@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<715cda97a60cb37dc9cfa2b8b9874587>>
+ * @generated SignedSource<<852e1b531a7ec4979594b8a1f50a5223>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type AddProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
+  featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
   isPriceTaxInclusive: boolean;
   locationTagIds: ReadonlyArray<string>;
@@ -32,7 +33,6 @@ export type AddProductInput = {
   organizationUniqueAlphanumericName?: string | null | undefined;
   price: string;
   priceUnit: PriceUnit;
-  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   productTagIds: ReadonlyArray<string>;
   recurrenceWindowDays: number;
   requireConsecutiveDays: boolean;
@@ -61,6 +61,18 @@ export type addProduct_addProductMutation$data = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly isPriceTaxInclusive: boolean;
@@ -81,18 +93,6 @@ export type addProduct_addProductMutation$data = {
         readonly name: string;
         readonly type: PriceUnit;
       };
-      readonly primaryFeatureImage: {
-        readonly original: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-        readonly thumbnail: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-      } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -115,6 +115,18 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly type: Currency;
       };
       readonly description: string | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly inactive: boolean;
       readonly isPriceTaxInclusive: boolean;
@@ -135,18 +147,6 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly name: string;
         readonly type: PriceUnit;
       };
-      readonly primaryFeatureImage: {
-        readonly original: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-        readonly thumbnail: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-      } | null | undefined;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -396,8 +396,8 @@ v7 = [
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -454,16 +454,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "40372cb6164cdbf864ed32266bd6989c",
+    "cacheID": "63cb5b0dd1af743a463e5bcb745ccb59",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c81ef1942707831aa624fc6774c20ba";
+(node as any).hash = "aa967d30c0bc720631ba04c313ce9ff6";
 
 export default node;

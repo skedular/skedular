@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2949844bb12d5061239788cf7ef5f080>>
+ * @generated SignedSource<<e56106d53d014480f92aaf92561fb8f6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,6 +35,18 @@ export type organizationLocation_query$data = {
       readonly relatedVideoLinks: ReadonlyArray<string> | null | undefined;
       readonly website: string | null | undefined;
     } | null | undefined;
+    readonly featureImages: ReadonlyArray<{
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    }>;
     readonly id: string;
     readonly locationSpaceTypes: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -109,18 +121,6 @@ export type organizationLocation_query$data = {
       readonly province: string | null | undefined;
       readonly suburb: string | null | undefined;
       readonly zipcode: string;
-    } | null | undefined;
-    readonly primaryFeatureImage: {
-      readonly original: {
-        readonly height: number | null | undefined;
-        readonly url: string;
-        readonly width: number | null | undefined;
-      } | null | undefined;
-      readonly thumbnail: {
-        readonly height: number | null | undefined;
-        readonly url: string;
-        readonly width: number | null | undefined;
-      } | null | undefined;
     } | null | undefined;
     readonly timezone: string | null | undefined;
     readonly type: {
@@ -481,8 +481,8 @@ return {
           "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
-          "name": "primaryFeatureImage",
-          "plural": false,
+          "name": "featureImages",
+          "plural": true,
           "selections": [
             {
               "alias": null,
@@ -775,6 +775,6 @@ return {
 };
 })();
 
-(node as any).hash = "4de96082399eaefd47bc7114b2303027";
+(node as any).hash = "30189b44834a4d41984ceb30707ff9d1";
 
 export default node;

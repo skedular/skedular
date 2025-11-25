@@ -25,7 +25,6 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id
         };
@@ -57,8 +56,13 @@ public class Mapper : IMapper
                 }
         }));
 
+        team.FeatureImages.AddRange(MapTo(src.FeatureImages));
+
         return team;
     }
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo)!;
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c8d161277811d30bc18980fc49685b86>>
+ * @generated SignedSource<<66f454c1cc7594eec0f2b16e33c173bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,12 +13,12 @@ export type AddTeamInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
+  featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
   name: string;
   organizationId?: string | null | undefined;
   organizationMemberIds: ReadonlyArray<string>;
   organizationUniqueAlphanumericName?: string | null | undefined;
-  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
@@ -38,9 +38,7 @@ export type addTeam_addTeamMutation$data = {
   readonly addTeam: {
     readonly team: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -51,7 +49,9 @@ export type addTeam_addTeamMutation$data = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly name: string;
       readonly timezone: string | null | undefined;
     };
   };
@@ -60,9 +60,7 @@ export type addTeam_addTeamMutation$rawResponse = {
   readonly addTeam: {
     readonly team: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -73,7 +71,9 @@ export type addTeam_addTeamMutation$rawResponse = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly name: string;
       readonly timezone: string | null | undefined;
     };
   };
@@ -171,8 +171,8 @@ v2 = [
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -222,16 +222,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "bf7ed9d0160da759b79dfcf742e55ac0",
+    "cacheID": "78a95b8a1ce3c14d8f669b73d6f74c15",
     "id": null,
     "metadata": {},
     "name": "addTeam_addTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addTeam_addTeamMutation(\n  $input: AddTeamInput!\n) {\n  addTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "03d4ad8184797fcddd39a14f965de6b2";
+(node as any).hash = "605536afc9b695b7c2a18b316dc607ca";
 
 export default node;

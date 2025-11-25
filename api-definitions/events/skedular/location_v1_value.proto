@@ -41,7 +41,7 @@ message Location {
   repeated string tagIds = 8;
   OpeningHours openingHours = 9;
   PhysicalAddress physicalAddress = 10;
-  CdnImageFile primaryFeatureImage = 11;
+  repeated CdnImageFile featureImages = 11;
   LocationType type = 12;
 }
 

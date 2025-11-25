@@ -83,7 +83,7 @@ message Admin_AddInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  CdnImageFile primaryFeatureImage = 7;
+  repeated CdnImageFile featureImages = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
@@ -97,7 +97,7 @@ message Admin_UpdateInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  CdnImageFile primaryFeatureImage = 7;
+  repeated CdnImageFile featureImages = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
@@ -127,7 +127,7 @@ message Location {
   repeated string zoneIds = 9;
   repeated string locationTagIds = 10;
   OpeningHours openingHours = 11;
-  CdnImageFile primaryFeatureImage = 12;
+  repeated CdnImageFile featureImages = 12;
   LocationType type = 13;
   ExtraMetadata ExtraMetadata = 14;
   PhysicalAddress physicalAddress = 15;
@@ -203,7 +203,7 @@ message AddInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  CdnImageFile primaryFeatureImage = 7;
+  repeated CdnImageFile featureImages = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;
@@ -217,7 +217,7 @@ message UpdateInput {
   string organizationId = 4;
   string timezone = 5;
   repeated string locationTagIds = 6;
-  CdnImageFile primaryFeatureImage = 7;
+  repeated CdnImageFile featureImages = 7;
   LocationType type = 8;
   ExtraMetadata ExtraMetadata = 9;
   PhysicalAddress physicalAddress = 10;

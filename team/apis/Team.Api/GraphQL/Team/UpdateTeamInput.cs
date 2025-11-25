@@ -12,5 +12,5 @@ public class UpdateTeamInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
-    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
 }

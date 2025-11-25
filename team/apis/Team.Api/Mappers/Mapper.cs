@@ -84,7 +84,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization = MapTo(src.Organization),
             PrimaryLocation = MapTo(src.PrimaryLocation)
         };
@@ -125,7 +125,7 @@ public class Mapper : IMapper
         dest.Name = src.Name;
         dest.About = src.About;
         dest.Timezone = src.Timezone;
-        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.FeatureImages = src.FeatureImages;
         dest.Organization = organization;
         dest.PrimaryLocation = primaryLocation;
         return dest;
@@ -140,7 +140,7 @@ public class Mapper : IMapper
                 Name = src.Name,
                 About = src.About,
                 Timezone = src.Timezone,
-                PrimaryFeatureImage = src.PrimaryFeatureImage,
+                FeatureImages = src.FeatureImages,
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
@@ -183,7 +183,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             Organization =
                 new Shared.Models.Organization
                 {
@@ -203,7 +203,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
@@ -214,7 +214,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             Organization =
                 new Shared.Models.Organization
                 {
@@ -273,7 +273,6 @@ public class Mapper : IMapper
             Name = src.Name.ToSafeString(),
             About = src.About.ToSafeString(),
             Timezone = src.Timezone.ToSafeString(),
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = string.IsNullOrWhiteSpace(src.Organization.Id) ? string.Empty : src.Organization.Id,
             PrimaryLocationId = src.PrimaryLocation is null ? string.Empty : src.PrimaryLocation.Id.ToSafeString(),
             Permissions = new Permissions
@@ -287,6 +286,7 @@ public class Mapper : IMapper
         };
 
         team.Members.AddRange(MapToGrpcResponse(src.TeamMembers));
+        team.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return team;
     }
@@ -299,7 +299,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
@@ -312,7 +312,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.Members.Select(item => MapTo(item, new Shared.Models.Team { Id = src.Id })).ToList()
@@ -489,11 +489,17 @@ public class Mapper : IMapper
                 EventRaisedAt = src.EventRaisedAt
             };
 
+    private static IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
+        src.Select(MapTo)!;
+
     private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>
         src is null ? null : new global::Api.Shared.Services.Models.CdnImageFile(MapTo(src.Original), MapTo(src.Thumbnail));
 
     private static global::Api.Shared.Services.Models.CdnFile? MapTo(CdnFile? src) =>
         src is null ? null : new global::Api.Shared.Services.Models.CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo)!;
 
     private static CdnImageFile? MapTo(global::Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

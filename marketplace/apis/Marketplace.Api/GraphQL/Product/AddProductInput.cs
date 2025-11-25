@@ -46,5 +46,5 @@ public class AddProductInput
 
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
 }

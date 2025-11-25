@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7dd5f6e5c8aff17224870df1c8d4db11>>
+ * @generated SignedSource<<f507bdb8e4277c69df840c3d80eed091>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,9 @@ import { ConcreteRequest } from 'relay-runtime';
 export type UpdateTeamInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
+  featureImages: ReadonlyArray<CdnImageFileInput>;
   id: string;
   name: string;
-  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };
@@ -34,9 +34,7 @@ export type organizationTeam_updateTeamMutation$data = {
   readonly updateTeam: {
     readonly team: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -47,7 +45,9 @@ export type organizationTeam_updateTeamMutation$data = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly name: string;
       readonly primaryLocation: {
         readonly id: string;
         readonly name: string;
@@ -60,9 +60,7 @@ export type organizationTeam_updateTeamMutation$rawResponse = {
   readonly updateTeam: {
     readonly team: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -73,7 +71,9 @@ export type organizationTeam_updateTeamMutation$rawResponse = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly name: string;
       readonly primaryLocation: {
         readonly id: string;
         readonly name: string;
@@ -177,8 +177,8 @@ v4 = [
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -241,16 +241,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "1ac5f16725eb76e8619957f937fd5d00",
+    "cacheID": "e6dbdfaf5f0c85f66798cae1442ca77d",
     "id": null,
     "metadata": {},
     "name": "organizationTeam_updateTeamMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationTeam_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      primaryLocation {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationTeam_updateTeamMutation(\n  $input: UpdateTeamInput!\n) {\n  updateTeam(input: $input) {\n    team {\n      id\n      name\n      about\n      timezone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      primaryLocation {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dbaabd75ae95f224d0f00e3586738123";
+(node as any).hash = "fef27b8bf28b617b18134a46522f40f0";
 
 export default node;

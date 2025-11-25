@@ -38,7 +38,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
         physicalAddress {
           multilinesFormattedAddress
         }
-        primaryFeatureImage {
+        featureImages {
           thumbnail {
             url
             height
@@ -82,8 +82,8 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
       component={NextLink}
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
-      {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
-        <CardMedia component="img" image={locationDetails.primaryFeatureImage.thumbnail.url} />
+      {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
+        <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} />
       )}
       <CardHeader
         sx={{ height: 60 }}

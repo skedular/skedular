@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1484affb4cf7579ba30e73413c109583>>
+ * @generated SignedSource<<054e49092c6bacbcc14a74fcfc7c2543>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,13 @@ import { FragmentRefs } from "relay-runtime";
 export type teamCard_TeamDetails$data = {
   readonly canDelete: boolean;
   readonly canModify: boolean;
+  readonly featureImages: ReadonlyArray<{
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  }>;
   readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly members: {
@@ -36,13 +43,6 @@ export type teamCard_TeamDetails$data = {
   readonly organization: {
     readonly uniqueAlphanumericName: string | null | undefined;
   };
-  readonly primaryFeatureImage: {
-    readonly thumbnail: {
-      readonly height: number | null | undefined;
-      readonly url: string;
-      readonly width: number | null | undefined;
-    } | null | undefined;
-  } | null | undefined;
   readonly " $fragmentType": "teamCard_TeamDetails";
 };
 export type teamCard_TeamDetails$key = {
@@ -188,8 +188,8 @@ return {
       "args": null,
       "concreteType": "CdnImageFile",
       "kind": "LinkedField",
-      "name": "primaryFeatureImage",
-      "plural": false,
+      "name": "featureImages",
+      "plural": true,
       "selections": [
         {
           "alias": null,
@@ -253,6 +253,6 @@ return {
 };
 })();
 
-(node as any).hash = "d4ab513a8049a7b7ac997e2eab5e29b0";
+(node as any).hash = "448f2acef6f04c6863d0f07059543c17";
 
 export default node;

@@ -83,7 +83,7 @@ type ProductDetails {
   maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
   latestProductVersionId: String!
-  primaryFeatureImage: CdnImageFile
+  featureImages: [CdnImageFile!]!
   id: ID!
 }
 
@@ -119,7 +119,7 @@ type ProductVersionDetails {
   requireConsecutiveDays: Boolean!
   maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
-  primaryFeatureImage: CdnImageFile
+  featureImages: [CdnImageFile!]!
   id: ID!
 }
 
@@ -177,7 +177,7 @@ input AddProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
 }
 
 input CdnFileInput {
@@ -234,7 +234,7 @@ input UpdateProductInput {
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
 }
 
 enum Currency {

@@ -10,7 +10,7 @@ public class Location : ModelBaseWithDeleted
     public string? Timezone { get; set; }
     public LocationType Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
-    public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     public LocationExtraMetadata? ExtraMetadata { get; set; }
     public string? UniqueClaimCode { get; set; }
     public bool ContactedViaEmail { get; set; }

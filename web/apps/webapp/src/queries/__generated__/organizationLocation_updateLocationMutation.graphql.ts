@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<defedf0245146ffddf50d8e9c3a5c914>>
+ * @generated SignedSource<<8454b9eeb86892ca179fb0b61e893c5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,10 +14,10 @@ export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
+  featureImages: ReadonlyArray<CdnImageFileInput>;
   id: string;
   locationTagIds: ReadonlyArray<string>;
   name: string;
-  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
 };
@@ -78,6 +78,18 @@ export type organizationLocation_updateLocationMutation$data = {
         readonly relatedVideoLinks: ReadonlyArray<string> | null | undefined;
         readonly website: string | null | undefined;
       } | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly locationSpaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -136,18 +148,6 @@ export type organizationLocation_updateLocationMutation$data = {
           };
         };
       };
-      readonly primaryFeatureImage: {
-        readonly original: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-        readonly thumbnail: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-      } | null | undefined;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -179,6 +179,18 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
         readonly relatedVideoLinks: ReadonlyArray<string> | null | undefined;
         readonly website: string | null | undefined;
       } | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly locationSpaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -237,18 +249,6 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
           };
         };
       };
-      readonly primaryFeatureImage: {
-        readonly original: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-        readonly thumbnail: {
-          readonly height: number | null | undefined;
-          readonly url: string;
-          readonly width: number | null | undefined;
-        } | null | undefined;
-      } | null | undefined;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -528,8 +528,8 @@ v7 = [
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -691,16 +691,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "4d20ae07ac54b1bf87685d3401839bc2",
+    "cacheID": "ed7a6f9ace3fe6dc6de1117b326f77ca",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      locationSpaceTypes {\n        id\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      locationSpaceTypes {\n        id\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0c13c5fe5044704b9beb1ffff847ca66";
+(node as any).hash = "544a2cba1b256df6dcb393912d64358e";
 
 export default node;

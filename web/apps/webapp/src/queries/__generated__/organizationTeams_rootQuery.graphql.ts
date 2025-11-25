@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ccd7946b145f285ac0a8e6e7e931b12>>
+ * @generated SignedSource<<6263cdf5bc1c9cfbe3a45ebdb1820d67>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -382,8 +382,8 @@ return {
                     "args": null,
                     "concreteType": "CdnImageFile",
                     "kind": "LinkedField",
-                    "name": "primaryFeatureImage",
-                    "plural": false,
+                    "name": "featureImages",
+                    "plural": true,
                     "selections": [
                       {
                         "alias": null,
@@ -484,12 +484,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2f22fc6e106231ba91a1f1b5dd4eaee4",
+    "cacheID": "09aed7b505680cbbe6ccb79264c31950",
     "id": null,
     "metadata": {},
     "name": "organizationTeams_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n  }\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  primaryFeatureImage {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
+    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n  }\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
   }
 };
 })();

@@ -31,33 +31,33 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             "YXBwU291cmNlGAMgASgJEhgKBHR5cGUYBCABKA4yCi50ZWFtLlR5cGUSKAoE",
             "dGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASFQoNY29y",
             "cmVsYXRpb25JZBgGIAEoCSItCgREYXRhEhoKBHRlYW0YASABKAsyCi50ZWFt",
-            "LlRlYW1IAEIJCgdwYXlsb2FkIvcBCgRUZWFtEgoKAmlkGAEgASgJEi0KCWRl",
+            "LlRlYW1IAEIJCgdwYXlsb2FkIvEBCgRUZWFtEgoKAmlkGAEgASgJEi0KCWRl",
             "bGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASDAoE",
             "bmFtZRgDIAEoCRINCgVhYm91dBgEIAEoCRIhCgdtZW1iZXJzGAUgAygLMhAu",
             "dGVhbS5UZWFtTWVtYmVyEhYKDm9yZ2FuaXphdGlvbklkGAYgASgJEhAKCHRp",
-            "bWV6b25lGAcgASgJEhkKEXByaW1hcnlMb2NhdGlvbklkGAggASgJEi8KE3By",
-            "aW1hcnlGZWF0dXJlSW1hZ2UYCSABKAsyEi50ZWFtLkNkbkltYWdlRmlsZSKa",
-            "AQoKVGVhbU1lbWJlchIKCgJpZBgBIAEoCRIYCgRyb2xlGAIgASgOMgoudGVh",
-            "bS5Sb2xlEhIKCmN1c3RvbWVySWQYAyABKAkSNAoSb3JnYW5pemF0aW9uTWVt",
-            "YmVyGAQgASgLMhgudGVhbS5Pcmdhbml6YXRpb25NZW1iZXISHAoGc3RhdHVz",
-            "GAUgASgOMgwudGVhbS5TdGF0dXMiXgoST3JnYW5pemF0aW9uTWVtYmVyEhIK",
-            "CmN1c3RvbWVySWQYASABKAkSHAoUb3JnYW5pemF0aW9uTWVtYmVySWQYAiAB",
-            "KAkSFgoOb3JnYW5pemF0aW9uSWQYAyABKAkiUQoMQ2RuSW1hZ2VGaWxlEh8K",
-            "CG9yaWdpbmFsGAEgASgLMg0udGVhbS5DZG5GaWxlEiAKCXRodW1ibmFpbBgC",
-            "IAEoCzINLnRlYW0uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIO",
-            "CgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyABKAUqMwoEVHlwZRIVChFUeXBl",
-            "X1RlYW1VcHNlcnRlZBAAEhQKEFR5cGVfVGVhbURlbGV0ZWQQASo/CgRSb2xl",
-            "Eg4KClJvbGVfT3duZXIQABIWChJSb2xfZUFkbWluaXN0cmF0b3IQARIPCgtS",
-            "b2xlX01lbWJlchACKjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoP",
-            "U3RhdHVzX0luYWN0aXZlEAFCM6oCMEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
-            "dHMuU2tlZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJvdG8z"));
+            "bWV6b25lGAcgASgJEhkKEXByaW1hcnlMb2NhdGlvbklkGAggASgJEikKDWZl",
+            "YXR1cmVJbWFnZXMYCSADKAsyEi50ZWFtLkNkbkltYWdlRmlsZSKaAQoKVGVh",
+            "bU1lbWJlchIKCgJpZBgBIAEoCRIYCgRyb2xlGAIgASgOMgoudGVhbS5Sb2xl",
+            "EhIKCmN1c3RvbWVySWQYAyABKAkSNAoSb3JnYW5pemF0aW9uTWVtYmVyGAQg",
+            "ASgLMhgudGVhbS5Pcmdhbml6YXRpb25NZW1iZXISHAoGc3RhdHVzGAUgASgO",
+            "MgwudGVhbS5TdGF0dXMiXgoST3JnYW5pemF0aW9uTWVtYmVyEhIKCmN1c3Rv",
+            "bWVySWQYASABKAkSHAoUb3JnYW5pemF0aW9uTWVtYmVySWQYAiABKAkSFgoO",
+            "b3JnYW5pemF0aW9uSWQYAyABKAkiUQoMQ2RuSW1hZ2VGaWxlEh8KCG9yaWdp",
+            "bmFsGAEgASgLMg0udGVhbS5DZG5GaWxlEiAKCXRodW1ibmFpbBgCIAEoCzIN",
+            "LnRlYW0uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWln",
+            "aHQYAiABKAUSDQoFd2lkdGgYAyABKAUqMwoEVHlwZRIVChFUeXBlX1RlYW1V",
+            "cHNlcnRlZBAAEhQKEFR5cGVfVGVhbURlbGV0ZWQQASo/CgRSb2xlEg4KClJv",
+            "bGVfT3duZXIQABIWChJSb2xfZUFkbWluaXN0cmF0b3IQARIPCgtSb2xlX01l",
+            "bWJlchACKjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVz",
+            "X0luYWN0aXZlEAFCM6oCMEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
+            "ZHVsYXIuVGVhbS5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Data.Parser, new[]{ "Team" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId", "PrimaryFeatureImage" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.Team.Parser, new[]{ "Id", "DeletedAt", "Name", "About", "Members", "OrganizationId", "Timezone", "PrimaryLocationId", "FeatureImages" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.TeamMember.Parser, new[]{ "Id", "Role", "CustomerId", "OrganizationMember", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.OrganizationMember.Parser, new[]{ "CustomerId", "OrganizationMemberId", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
@@ -1016,7 +1016,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       organizationId_ = other.organizationId_;
       timezone_ = other.timezone_;
       primaryLocationId_ = other.primaryLocationId_;
-      primaryFeatureImage_ = other.primaryFeatureImage_ != null ? other.primaryFeatureImage_.Clone() : null;
+      featureImages_ = other.featureImages_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1121,16 +1121,15 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "primaryFeatureImage" field.</summary>
-    public const int PrimaryFeatureImageFieldNumber = 9;
-    private global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile primaryFeatureImage_;
+    /// <summary>Field number for the "featureImages" field.</summary>
+    public const int FeatureImagesFieldNumber = 9;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile> _repeated_featureImages_codec
+        = pb::FieldCodec.ForMessage(74, global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile> featureImages_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile PrimaryFeatureImage {
-      get { return primaryFeatureImage_; }
-      set {
-        primaryFeatureImage_ = value;
-      }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile> FeatureImages {
+      get { return featureImages_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1156,7 +1155,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (OrganizationId != other.OrganizationId) return false;
       if (Timezone != other.Timezone) return false;
       if (PrimaryLocationId != other.PrimaryLocationId) return false;
-      if (!object.Equals(PrimaryFeatureImage, other.PrimaryFeatureImage)) return false;
+      if(!featureImages_.Equals(other.featureImages_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1172,7 +1171,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (OrganizationId.Length != 0) hash ^= OrganizationId.GetHashCode();
       if (Timezone.Length != 0) hash ^= Timezone.GetHashCode();
       if (PrimaryLocationId.Length != 0) hash ^= PrimaryLocationId.GetHashCode();
-      if (primaryFeatureImage_ != null) hash ^= PrimaryFeatureImage.GetHashCode();
+      hash ^= featureImages_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1220,10 +1219,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(66);
         output.WriteString(PrimaryLocationId);
       }
-      if (primaryFeatureImage_ != null) {
-        output.WriteRawTag(74);
-        output.WriteMessage(PrimaryFeatureImage);
-      }
+      featureImages_.WriteTo(output, _repeated_featureImages_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1263,10 +1259,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
         output.WriteRawTag(66);
         output.WriteString(PrimaryLocationId);
       }
-      if (primaryFeatureImage_ != null) {
-        output.WriteRawTag(74);
-        output.WriteMessage(PrimaryFeatureImage);
-      }
+      featureImages_.WriteTo(ref output, _repeated_featureImages_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1299,9 +1292,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (PrimaryLocationId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(PrimaryLocationId);
       }
-      if (primaryFeatureImage_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(PrimaryFeatureImage);
-      }
+      size += featureImages_.CalculateSize(_repeated_featureImages_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1339,12 +1330,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
       if (other.PrimaryLocationId.Length != 0) {
         PrimaryLocationId = other.PrimaryLocationId;
       }
-      if (other.primaryFeatureImage_ != null) {
-        if (primaryFeatureImage_ == null) {
-          PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile();
-        }
-        PrimaryFeatureImage.MergeFrom(other.PrimaryFeatureImage);
-      }
+      featureImages_.Add(other.featureImages_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1400,10 +1386,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             break;
           }
           case 74: {
-            if (primaryFeatureImage_ == null) {
-              PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile();
-            }
-            input.ReadMessage(PrimaryFeatureImage);
+            featureImages_.AddEntriesFrom(input, _repeated_featureImages_codec);
             break;
           }
         }
@@ -1461,10 +1444,7 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Value {
             break;
           }
           case 74: {
-            if (primaryFeatureImage_ == null) {
-              PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Team.V1.Value.CdnImageFile();
-            }
-            input.ReadMessage(PrimaryFeatureImage);
+            featureImages_.AddEntriesFrom(ref input, _repeated_featureImages_codec);
             break;
           }
         }

@@ -82,7 +82,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
@@ -111,7 +111,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
@@ -135,7 +135,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
@@ -159,7 +159,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
@@ -195,7 +195,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods
@@ -235,7 +235,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods
@@ -280,7 +280,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.FeatureImages = src.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
         dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
@@ -312,7 +312,7 @@ public class Mapper : IMapper
             RequireConsecutiveDays = src.RequireConsecutiveDays,
             MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
@@ -382,7 +382,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = productVersion.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImage = productVersion.PrimaryFeatureImage;
+        dest.FeatureImages = productVersion.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = productVersion.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = productVersion.MaxAllowedResourcesLockTimePaidViaBankTransfer;
         dest.AcceptedBookingPaymentMethods = productVersion.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
@@ -412,7 +412,7 @@ public class Mapper : IMapper
         dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
         dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.FeatureImages = src.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
         dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();

@@ -16,7 +16,7 @@ public class Location : EntityBaseWithDeleted
     public string? Timezone { get; set; }
     public string Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
-    public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public ICollection<CdnImageFile>? FeatureImages { get; set; }
     public LocationExtraMetadata? ExtraMetadata { get; set; }
     public string? UniqueClaimCode { get; set; }
     public bool ContactedViaEmail { get; set; }
@@ -50,7 +50,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength).HasDefaultValue(LocationTypeConstants.Private);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
-        builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
+        builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
         builder.Property(item => item.ExtraMetadata).HasColumnType("jsonb");
         builder.Property(item => item.UniqueClaimCode).HasMaxLength(Enterprise.Shared.Constants.MaxUniqueIdLength);
         builder.Property(item => item.ContactedViaEmail).HasDefaultValue(false);

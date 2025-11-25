@@ -28,7 +28,7 @@ public class TeamDetails : Node
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
-    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]

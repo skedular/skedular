@@ -2,6 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
+import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -20,8 +21,11 @@ import GridViewIcon from '@mui/icons-material/GridView';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
@@ -149,7 +153,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             relatedVideoLinks
             otherLinks
           }
-          primaryFeatureImage {
+          featureImages {
             original {
               url
               height
@@ -259,7 +263,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   const [physicalAddressCountryCode, setPhysicalAddressCountryCode] = useState<string>('');
   const debounceSetPhysicalAddressCountryCode = useDebounceCallback(setPhysicalAddressCountryCode, keyboardTextFieldDebounceTimeout);
 
-  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
+  const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
   const handleCloseClick = () => {
     onCancel();
@@ -311,16 +316,10 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
-    const finalPrimaryFeatureImage = primaryFeatureImage
-      ? {
-          original: primaryFeatureImage.original
-            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
-            : null,
-          thumbnail: primaryFeatureImage.thumbnail
-            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
-            : null,
-        }
-      : null;
+    const finalFeatureImages = featureImages.map((image) => ({
+      original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+      thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+    }));
 
     const countryData = getCountryData(countryCode as TCountryCode);
     let country = physicalAddressCountry;
@@ -363,7 +362,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
             otherLinks: stringToMultiLines(otherLinks),
           },
-          primaryFeatureImage: finalPrimaryFeatureImage,
+          featureImages: finalFeatureImages,
           locationTagIds: locationTagIds.concat(locationSpaceTypeIds),
           physicalAddress: {
             osmType: physicalAddressOsmType,
@@ -443,7 +442,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
               relatedVideoLinks: stringToMultiLines(relatedVideoLinks),
               otherLinks: stringToMultiLines(otherLinks),
             },
-            primaryFeatureImage: finalPrimaryFeatureImage,
+            featureImages: finalFeatureImages,
             locationTags: [],
             locationSpaceTypes: [],
             physicalAddress: {
@@ -470,7 +469,25 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImage(response);
+    setFeatureImages((prev) => [response, ...prev]);
+    setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
+  };
+
+  const handleRemoveFeatureImage = (image: FileUploadResponse) => {
+    setFeatureImages((prev) => {
+      const next = prev.filter((item) => item.original?.url !== image.original?.url);
+
+      if (primaryFeatureImage?.original?.url === image.original?.url) {
+        setPrimaryFeatureImage(next[0] ?? null);
+      }
+
+      return next;
+    });
+  };
+
+  const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
+    setPrimaryFeatureImage(image);
+    setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
   };
 
   return (
@@ -573,15 +590,47 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             return (
               <FormStackColumn onSubmit={handleSubmit}>
                 <Divider />
-
-                <FormFieldLabel label="Feature image">
+                <FormFieldLabel label="Feature Images">
                   <StackColumn>
-                    {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                      <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-                      </>
-                    )}
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                        gap: 2,
+                      }}
+                    >
+                      {featureImages.map((image, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            position: 'relative',
+                            borderRadius: 2,
+                            overflow: 'hidden',
+                            border: 1,
+                            borderColor: 'divider',
+                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                            <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </StackRow>
+                          <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                            {primaryFeatureImage?.original?.url === image.original?.url ? (
+                              <Chip size="small" color="success" label="Cover image" />
+                            ) : (
+                              <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                Make cover
+                              </Button>
+                            )}
+                          </StackRow>
+                        </Box>
+                      ))}
+                    </Box>
+
                     <ImageFileUploader
                       onUploadCompleted={handleFeatureImageUploadCompleted}
                       helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."

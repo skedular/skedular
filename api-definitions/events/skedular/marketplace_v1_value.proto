@@ -55,7 +55,7 @@ message ProductVersion {
   int32 numberOfResourcesToBook = 14;
   repeated string productTagIds = 15;
   repeated string locationTagIds = 16;
-  CdnImageFile primaryFeatureImage = 17;
+  repeated CdnImageFile featureImages = 17;
   int32 maxAllowedResourcesLockTimePaidViaCard = 18;
   int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 19;
   repeated string acceptedBookingPaymentMethods = 20;

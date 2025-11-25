@@ -35,7 +35,6 @@ public class Mapper : IMapper
                 LocationType.Marketplace => Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OrganizationId = src.Organization.Id,
             OpeningHours = MapTo(src.OpeningHours),
             PhysicalAddress = MapTo(src.PhysicalAddress)
@@ -61,6 +60,7 @@ public class Mapper : IMapper
         }));
 
         location.TagIds.AddRange(src.Tags.Select(tag => tag.Id));
+        location.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return location;
     }
@@ -138,6 +138,9 @@ public class Mapper : IMapper
                 PlaceId = src.PlaceId.ToSafeString(),
                 Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo)!;
 
     private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

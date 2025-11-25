@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<47206c3ff1a0f2ee2e5bf9e446e9b0a4>>
+ * @generated SignedSource<<0a13a561db02456e3a68c614884d6375>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,13 +14,13 @@ export type AddLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
+  featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
   locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
   physicalAddress?: LocationPhysicalAddressInput | null | undefined;
-  primaryFeatureImage?: CdnImageFileInput | null | undefined;
   timezone?: string | null | undefined;
   type: LocationType;
   weekOpeningHours?: WeekOpeningHoursInput | null | undefined;
@@ -47,6 +47,15 @@ export type PeopleCapacityInput = {
   from: string;
   to: string;
 };
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
+};
 export type LocationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
@@ -62,15 +71,6 @@ export type LocationPhysicalAddressInput = {
   province?: string | null | undefined;
   suburb?: string | null | undefined;
   zipcode: string;
-};
-export type CdnImageFileInput = {
-  original?: CdnFileInput | null | undefined;
-  thumbnail?: CdnFileInput | null | undefined;
-};
-export type CdnFileInput = {
-  height?: number | null | undefined;
-  url: string;
-  width?: number | null | undefined;
 };
 export type WeekOpeningHoursInput = {
   friday: OpeningHoursDetailsInput;
@@ -94,14 +94,7 @@ export type addPrivateLocation_addLocationMutation$data = {
   readonly addLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -112,7 +105,14 @@ export type addPrivateLocation_addLocationMutation$data = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
+      readonly name: string;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -125,14 +125,7 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
   readonly addLocation: {
     readonly location: {
       readonly about: string | null | undefined;
-      readonly id: string;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly name: string;
-      readonly primaryFeatureImage: {
+      readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
           readonly url: string;
@@ -143,7 +136,14 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
           readonly url: string;
           readonly width: number | null | undefined;
         } | null | undefined;
-      } | null | undefined;
+      }>;
+      readonly id: string;
+      readonly locationTags: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
+      readonly name: string;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -266,8 +266,8 @@ v4 = [
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -337,16 +337,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "0d23d11d8f32b03a72b014d0c836f0fc",
+    "cacheID": "91a41a5bbef13f321ffa0de3e98f86e6",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      primaryFeatureImage {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6a29a675934f00b149f664efc718a91d";
+(node as any).hash = "d1a384268e7394ca95b32f4bc318b54e";
 
 export default node;

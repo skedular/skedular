@@ -316,7 +316,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization = MapTo(src.Organization)
         };
 

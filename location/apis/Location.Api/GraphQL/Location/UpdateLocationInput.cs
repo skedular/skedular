@@ -14,6 +14,6 @@ public class UpdateLocationInput
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationType Type { get; set; }
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
 }

@@ -746,8 +746,19 @@ const NewBookingDialog = ({
                     />
                   )}
 
-                  {resources.length === 0 && !locationId && <BodyIconTypography label="There are currently no available resources." />}
-                  {resources.length === 0 && locationId && <BodyIconTypography label="There are currently no available resources in the chosen location." />}
+                  {resources.length === 0 && (
+                    <BodyIconTypography
+                      label={
+                        !locationId
+                          ? 'Pick a location to load available resources.'
+                          : !allDay && (!timeRange[0] || !timeRange[1])
+                            ? 'Pick a start and end time to load available resources.'
+                            : !timeRangeValidDerived
+                              ? 'Time values look off. Adjust them to load availability.'
+                              : 'No resources are available for this slot.'
+                      }
+                    />
+                  )}
                 </FormFieldLabel>
 
                 <TwoButtonsDialogActions onSecondaryClicked={onCancel} primaryLabel="Add" secondaryLabel="Cancel" />

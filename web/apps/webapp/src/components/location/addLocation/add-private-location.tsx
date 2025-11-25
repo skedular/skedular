@@ -1,6 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
+import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -20,8 +21,11 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -89,7 +93,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             type
             name
           }
-          primaryFeatureImage {
+          featureImages {
             original {
               url
               height
@@ -115,7 +119,9 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateLocationDetails = makeValidate(locationSchema);
   const requiredFields = makeRequired(locationSchema);
-  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse>();
+
+  const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
   const [locationName, setLocationName] = useState<string>('');
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
@@ -136,16 +142,10 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   const handleLocationAddClick = ({ name, about, timezone, type, locationTagIds }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
-    const finalPrimaryFeatureImage = primaryFeatureImage
-      ? {
-          original: primaryFeatureImage.original
-            ? { url: primaryFeatureImage.original.url, height: primaryFeatureImage.original.height, width: primaryFeatureImage.original.width }
-            : null,
-          thumbnail: primaryFeatureImage.thumbnail
-            ? { url: primaryFeatureImage.thumbnail.url, height: primaryFeatureImage.thumbnail.height, width: primaryFeatureImage.thumbnail.width }
-            : null,
-        }
-      : null;
+    const finalFeatureImages = featureImages.map((image) => ({
+      original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+      thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+    }));
 
     commitAddLocation({
       variables: {
@@ -157,7 +157,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           organizationUniqueAlphanumericName,
           timezone,
           type: type as LocationType,
-          primaryFeatureImage: finalPrimaryFeatureImage,
+          featureImages: finalFeatureImages,
           locationTagIds,
         },
       },
@@ -196,7 +196,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
               type: type as LocationType,
               name: '',
             },
-            primaryFeatureImage: finalPrimaryFeatureImage,
+            featureImages: finalFeatureImages,
             locationTags: [],
           },
         },
@@ -205,7 +205,25 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   };
 
   const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
-    setPrimaryFeatureImage(response);
+    setFeatureImages((prev) => [response, ...prev]);
+    setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
+  };
+
+  const handleRemoveFeatureImage = (image: FileUploadResponse) => {
+    setFeatureImages((prev) => {
+      const next = prev.filter((item) => item.original?.url !== image.original?.url);
+
+      if (primaryFeatureImage?.original?.url === image.original?.url) {
+        setPrimaryFeatureImage(next[0] ?? null);
+      }
+
+      return next;
+    });
+  };
+
+  const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
+    setPrimaryFeatureImage(image);
+    setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
   };
 
   return (
@@ -262,15 +280,63 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             return (
               <FormStackColumn onSubmit={handleSubmit}>
                 <Divider />
-
-                <FormFieldLabel label="Feature image">
+                <FormFieldLabel label="Feature Images">
                   <StackColumn>
-                    {primaryFeatureImage?.thumbnail && primaryFeatureImage.original.height && primaryFeatureImage.original.width && (
-                      <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={primaryFeatureImage.original.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-                      </>
-                    )}
+                    <Box
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                        gap: 2,
+                      }}
+                    >
+                      {featureImages.map((image, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            position: 'relative',
+                            borderRadius: 2,
+                            overflow: 'hidden',
+                            border: 1,
+                            borderColor: 'divider',
+                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                            <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                              <DeleteIcon fontSize="small" />
+                            </IconButton>
+                          </StackRow>
+                          <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                            {primaryFeatureImage?.original?.url === image.original?.url ? (
+                              <Chip size="small" color="success" label="Cover image" />
+                            ) : (
+                              <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                Make cover
+                              </Button>
+                            )}
+                          </StackRow>
+                        </Box>
+                      ))}
+
+                      {featureImages.length === 0 && (
+                        <Box
+                          sx={{
+                            borderRadius: 2,
+                            border: '1px dashed',
+                            borderColor: 'divider',
+                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                            padding: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <BodyIconTypography label="Add feature images to showcase this location. A 4:3 aspect ratio works best." />
+                        </Box>
+                      )}
+                    </Box>
+
                     <ImageFileUploader
                       onUploadCompleted={handleFeatureImageUploadCompleted}
                       helperText="Upload a high-quality image that represents this location. This image will be used in dashboards and reports to visually identify the workspace."

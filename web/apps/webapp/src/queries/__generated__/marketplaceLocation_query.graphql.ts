@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<625f7359b4451dfcb8a2228307d62bd2>>
+ * @generated SignedSource<<3376b638c4a9d65f83f6109259e62ba3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,6 +32,13 @@ export type marketplaceLocation_query$data = {
       readonly relatedVideoLinks: ReadonlyArray<string> | null | undefined;
       readonly website: string | null | undefined;
     } | null | undefined;
+    readonly featureImages: ReadonlyArray<{
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    }>;
     readonly id: string;
     readonly name: string;
     readonly openingHours: {
@@ -84,13 +91,6 @@ export type marketplaceLocation_query$data = {
       readonly latitude: number | null | undefined;
       readonly longitude: number | null | undefined;
       readonly multilinesFormattedAddress: string | null | undefined;
-    } | null | undefined;
-    readonly primaryFeatureImage: {
-      readonly original: {
-        readonly height: number | null | undefined;
-        readonly url: string;
-        readonly width: number | null | undefined;
-      } | null | undefined;
     } | null | undefined;
     readonly timezone: string | null | undefined;
   } | null | undefined;
@@ -306,8 +306,8 @@ return {
           "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
-          "name": "primaryFeatureImage",
-          "plural": false,
+          "name": "featureImages",
+          "plural": true,
           "selections": [
             {
               "alias": null,
@@ -477,6 +477,6 @@ return {
 };
 })();
 
-(node as any).hash = "c1364af0d6e54936249ad231bb34d766";
+(node as any).hash = "3af2746d76233e6d452cbe93da4c4284";
 
 export default node;

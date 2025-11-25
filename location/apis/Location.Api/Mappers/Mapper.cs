@@ -151,7 +151,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
             Tags = MapTo(src.OrganizationTags).ToList(),
@@ -197,7 +197,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             OpeningHours = src.OpeningHours,
             Organization = organization,
             OrganizationTags = organizationTags,
@@ -219,7 +219,7 @@ public class Mapper : IMapper
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
         dest.ExtraMetadata = src.ExtraMetadata;
-        dest.PrimaryFeatureImage = src.PrimaryFeatureImage;
+        dest.FeatureImages = src.FeatureImages;
         dest.OpeningHours = src.OpeningHours;
         dest.OrganizationTags = organizationTags;
         dest.UniqueClaimCode = src.UniqueClaimCode;
@@ -241,7 +241,7 @@ public class Mapper : IMapper
                 Timezone = src.Timezone,
                 Type = new LocationTypeDetails { Type = src.Type, Name = src.Type.ToLocationTypeName() },
                 ExtraMetadata = src.ExtraMetadata,
-                PrimaryFeatureImage = src.PrimaryFeatureImage,
+                FeatureImages = src.FeatureImages,
                 OpeningHours = MapTo(src.OpeningHours),
                 CanModify = src.Permissions.CanModify,
                 CanDelete = src.Permissions.CanDelete,
@@ -404,7 +404,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             Organization =
                 new Shared.Models.Organization
                 {
@@ -424,7 +424,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
-            PrimaryFeatureImage = src.PrimaryFeatureImage,
+            FeatureImages = src.FeatureImages,
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
@@ -476,7 +476,7 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
@@ -497,7 +497,7 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
@@ -519,7 +519,6 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Models.LocationType.Marketplace => LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
             OpeningHours = MapToGrpcResponse(src.OpeningHours),
             OrganizationId = src.Organization.Id,
             Permissions =
@@ -543,6 +542,7 @@ public class Mapper : IMapper
         location.CustomTagIds.AddRange(src.CustomTags.Select(item => item.Id));
         location.ZoneIds.AddRange(src.Zones.Select(item => item.Id));
         location.LocationTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id));
+        location.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return location;
     }
@@ -560,7 +560,7 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
@@ -581,7 +581,7 @@ public class Mapper : IMapper
                 LocationType.Marketplace => global::Api.Shared.Services.Models.LocationType.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PrimaryFeatureImage = MapTo(src.PrimaryFeatureImage),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
@@ -1034,11 +1034,17 @@ public class Mapper : IMapper
         Closed = false, OpenAllDay = true, From = string.Empty, Until = string.Empty
     };
 
+    private static IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
+        src.Select(MapTo)!;
+
     private static global::Api.Shared.Services.Models.CdnImageFile? MapTo(CdnImageFile? src) =>
         src is null ? null : new global::Api.Shared.Services.Models.CdnImageFile(MapTo(src.Original), MapTo(src.Thumbnail));
 
     private static global::Api.Shared.Services.Models.CdnFile? MapTo(CdnFile? src) =>
         src is null ? null : new global::Api.Shared.Services.Models.CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo)!;
 
     private static CdnImageFile? MapTo(global::Api.Shared.Services.Models.CdnImageFile? src) =>
         src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };

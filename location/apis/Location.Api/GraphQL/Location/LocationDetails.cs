@@ -39,7 +39,7 @@ public class LocationDetails : Node
     [GraphQLName("resourceTypeIds")] public IEnumerable<string> ResourceTypeIds { get; set; } = [];
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
     [GraphQLName("locationSpaceTypeIds")] public IEnumerable<string> LocationSpaceTypeIds { get; set; } = [];
-    [GraphQLName("primaryFeatureImage")] public CdnImageFile? PrimaryFeatureImage { get; set; }
+    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
     [GraphQLName("contactedViaEmail")] public bool ContactedViaEmail { get; set; }

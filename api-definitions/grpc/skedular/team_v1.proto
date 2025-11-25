@@ -57,7 +57,7 @@ message Team {
   repeated TeamMember members = 6;
   Permissions permissions = 7;
   string primaryLocationId = 8;
-  CdnImageFile primaryFeatureImage = 9;
+  repeated CdnImageFile featureImages = 9;
 }
 
 message Admin_GetInput {
@@ -114,7 +114,7 @@ message AddInput {
   string timezone = 5;
   repeated TeamMember members = 6;
   string primaryLocationId = 7;
-  CdnImageFile primaryFeatureImage = 8;
+  repeated CdnImageFile featureImages = 8;
 }
 
 message UpdateInput {
@@ -125,7 +125,7 @@ message UpdateInput {
   string timezone = 5;
   repeated TeamMember members = 6;
   string primaryLocationId = 7;
-  CdnImageFile primaryFeatureImage = 8;
+  repeated CdnImageFile featureImages = 8;
 }
 
 message RemoveInput {

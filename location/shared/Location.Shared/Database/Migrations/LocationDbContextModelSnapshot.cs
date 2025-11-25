@@ -22,7 +22,7 @@ namespace Location.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.10")
+                .HasAnnotation("ProductVersion", "10.0.0")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -515,6 +515,9 @@ namespace Location.Shared.Database.Migrations
                     b.Property<LocationExtraMetadata>("ExtraMetadata")
                         .HasColumnType("jsonb");
 
+                    b.Property<ICollection<CdnImageFile>>("FeatureImages")
+                        .HasColumnType("jsonb");
+
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -529,9 +532,6 @@ namespace Location.Shared.Database.Migrations
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("character varying(100)");
-
-                    b.Property<CdnImageFile>("PrimaryFeatureImage")
-                        .HasColumnType("jsonb");
 
                     b.Property<string>("Timezone")
                         .HasMaxLength(64)

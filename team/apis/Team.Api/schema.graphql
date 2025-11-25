@@ -114,7 +114,7 @@ type TeamDetails {
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!
-  primaryFeatureImage: CdnImageFile
+  featureImages: [CdnImageFile!]!
   id: ID!
 }
 
@@ -194,7 +194,7 @@ input AddTeamInput {
   timezone: String
   customerIds: [String!]!
   organizationMemberIds: [String!]!
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
 }
 
 input AddTeamMemberInput {
@@ -307,7 +307,7 @@ input UpdateTeamAndTeamMembersInput {
   organizationUniqueAlphanumericName: String
   primaryLocationId: String
   timezone: String
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
   customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
@@ -319,7 +319,7 @@ input UpdateTeamInput {
   about: String
   primaryLocationId: String
   timezone: String
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
 }
 
 input UpdateTeamMembersInput {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2ea7b5283859941bf3b4423e9f7137e>>
+ * @generated SignedSource<<65190773878ced5ed299f3dd70a85be2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,6 +29,13 @@ export type locationCard_LocationDetails$data = {
       readonly contactPhones: ReadonlyArray<string> | null | undefined;
     } | null | undefined;
   } | null | undefined;
+  readonly featureImages: ReadonlyArray<{
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  }>;
   readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
@@ -39,13 +46,6 @@ export type locationCard_LocationDetails$data = {
     readonly latitude: number | null | undefined;
     readonly longitude: number | null | undefined;
     readonly multilinesFormattedAddress: string | null | undefined;
-  } | null | undefined;
-  readonly primaryFeatureImage: {
-    readonly thumbnail: {
-      readonly height: number | null | undefined;
-      readonly url: string;
-      readonly width: number | null | undefined;
-    } | null | undefined;
   } | null | undefined;
   readonly resources: {
     readonly totalCount: number;
@@ -172,8 +172,8 @@ return {
       "args": null,
       "concreteType": "CdnImageFile",
       "kind": "LinkedField",
-      "name": "primaryFeatureImage",
-      "plural": false,
+      "name": "featureImages",
+      "plural": true,
       "selections": [
         {
           "alias": null,
@@ -333,6 +333,6 @@ return {
 };
 })();
 
-(node as any).hash = "22cd7ba4c5c8453c19a7ac41ef7b6eae";
+(node as any).hash = "13f280d784fb3a6b19212baceb0a5cdd";
 
 export default node;

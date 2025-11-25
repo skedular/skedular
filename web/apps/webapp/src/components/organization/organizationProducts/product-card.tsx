@@ -65,7 +65,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         organization {
           id
         }
-        primaryFeatureImage {
+        featureImages {
           thumbnail {
             url
             height
@@ -284,8 +284,8 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {productDetails.primaryFeatureImage && productDetails.primaryFeatureImage.thumbnail && (
-          <CardMedia component="img" image={productDetails.primaryFeatureImage.thumbnail.url} />
+        {productDetails.featureImages && productDetails.featureImages.length > 0 && productDetails.featureImages[0].thumbnail && (
+          <CardMedia component="img" image={productDetails.featureImages[0].thumbnail.url} />
         )}
         <CardHeader
           title={

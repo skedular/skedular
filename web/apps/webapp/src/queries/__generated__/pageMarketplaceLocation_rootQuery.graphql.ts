@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<649e2fe7bea4fb44a3b8d0d834fd78e8>>
+ * @generated SignedSource<<5687ed9bc7a8cc2ff5bcbdb209f872a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -245,8 +245,8 @@ return {
             "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
-            "name": "primaryFeatureImage",
-            "plural": false,
+            "name": "featureImages",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
@@ -414,12 +414,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e3ee20ddb2a628b8ffaf880a34c039e2",
+    "cacheID": "e4e7382f1d2c563741eed4862b99657d",
     "id": null,
     "metadata": {},
     "name": "pageMarketplaceLocation_rootQuery",
     "operationKind": "query",
-    "text": "query pageMarketplaceLocation_rootQuery(\n  $locationId: String!\n) {\n  ...marketplaceLocation_query\n}\n\nfragment marketplaceLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n      relatedVideoLinks\n      otherLinks\n    }\n    primaryFeatureImage {\n      original {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query pageMarketplaceLocation_rootQuery(\n  $locationId: String!\n) {\n  ...marketplaceLocation_query\n}\n\nfragment marketplaceLocation_query on Query {\n  location(id: $locationId) {\n    id\n    name\n    about\n    timezone\n    extraMetadata {\n      contactDetails {\n        contactPeople\n        contactEmails\n        contactPhones\n      }\n      areaRange {\n        fromInSqm\n        toInSqm\n      }\n      peopleCapacity {\n        from\n        to\n      }\n      website\n      relatedImageLinks\n      relatedVideoLinks\n      otherLinks\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n    physicalAddress {\n      longitude\n      latitude\n      multilinesFormattedAddress\n      id\n    }\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();

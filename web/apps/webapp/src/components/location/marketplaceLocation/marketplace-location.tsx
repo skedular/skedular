@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import Image from 'next/image';
 import NextLink from 'next/link';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -51,7 +50,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             relatedVideoLinks
             otherLinks
           }
-          primaryFeatureImage {
+          featureImages {
             original {
               url
               height
@@ -172,7 +171,6 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     return null;
   }
 
-  const image = locationDetails.primaryFeatureImage?.original;
   const openingHours = locationDetails.openingHours;
   const extraMetadata = locationDetails.extraMetadata;
 
@@ -192,7 +190,14 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <StackColumn>
         <StackRow>
-          {image && <Image src={image.url} height={200} width={400} alt="" />}
+          {locationDetails.featureImages
+            .filter((item) => !!item.original)
+            .map((item) => (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img key={item.original!.url} src={item.original!.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
+              </>
+            ))}
           {extraMetadata?.relatedImageLinks
             ?.filter((item) => !!item)
             .map((item, index) => (

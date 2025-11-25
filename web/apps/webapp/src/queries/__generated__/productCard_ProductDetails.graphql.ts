@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0add203d0aa5cc5df5ed15b73787d0f7>>
+ * @generated SignedSource<<56851f7b151f768811c52a1059626768>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,13 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
   readonly description: string | null | undefined;
+  readonly featureImages: ReadonlyArray<{
+    readonly thumbnail: {
+      readonly height: number | null | undefined;
+      readonly url: string;
+      readonly width: number | null | undefined;
+    } | null | undefined;
+  }>;
   readonly id: string;
   readonly inactive: boolean;
   readonly isPriceTaxInclusive: boolean;
@@ -27,13 +34,6 @@ export type productCard_ProductDetails$data = {
   readonly priceUnit: {
     readonly name: string;
   };
-  readonly primaryFeatureImage: {
-    readonly thumbnail: {
-      readonly height: number | null | undefined;
-      readonly url: string;
-      readonly width: number | null | undefined;
-    } | null | undefined;
-  } | null | undefined;
   readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -150,8 +150,8 @@ return {
       "args": null,
       "concreteType": "CdnImageFile",
       "kind": "LinkedField",
-      "name": "primaryFeatureImage",
-      "plural": false,
+      "name": "featureImages",
+      "plural": true,
       "selections": [
         {
           "alias": null,
@@ -201,6 +201,6 @@ return {
 };
 })();
 
-(node as any).hash = "a23d0b43ed7affc3352586b1378a25fe";
+(node as any).hash = "647481268230ba6c139d7b20cfc4d437";
 
 export default node;

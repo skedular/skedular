@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d4d2e96cb2f902bd82152e2cacc9758>>
+ * @generated SignedSource<<bfa691ba09d98c8456c48beca895713c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,17 +21,17 @@ export type marketplaceLocationCard_LocationDetails$data = {
       readonly to: string;
     } | null | undefined;
   } | null | undefined;
-  readonly id: string;
-  readonly name: string;
-  readonly physicalAddress: {
-    readonly multilinesFormattedAddress: string | null | undefined;
-  } | null | undefined;
-  readonly primaryFeatureImage: {
+  readonly featureImages: ReadonlyArray<{
     readonly thumbnail: {
       readonly height: number | null | undefined;
       readonly url: string;
       readonly width: number | null | undefined;
     } | null | undefined;
+  }>;
+  readonly id: string;
+  readonly name: string;
+  readonly physicalAddress: {
+    readonly multilinesFormattedAddress: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "marketplaceLocationCard_LocationDetails";
 };
@@ -144,8 +144,8 @@ const node: ReaderFragment = {
       "args": null,
       "concreteType": "CdnImageFile",
       "kind": "LinkedField",
-      "name": "primaryFeatureImage",
-      "plural": false,
+      "name": "featureImages",
+      "plural": true,
       "selections": [
         {
           "alias": null,
@@ -187,6 +187,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "25cdadf8794c121c0da432b348164454";
+(node as any).hash = "0e703977c94555acf5e5f6845987ddcf";
 
 export default node;

@@ -69,7 +69,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
             }
           }
         }
-        primaryFeatureImage {
+        featureImages {
           thumbnail {
             url
             height
@@ -180,7 +180,9 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
-        {teamDetails.primaryFeatureImage && teamDetails.primaryFeatureImage.thumbnail && <CardMedia component="img" image={teamDetails.primaryFeatureImage.thumbnail.url} />}
+        {teamDetails.featureImages && teamDetails.featureImages.length > 0 && teamDetails.featureImages[0].thumbnail && (
+          <CardMedia component="img" image={teamDetails.featureImages[0].thumbnail.url} />
+        )}
         <CardHeader
           title={
             <StackRow>

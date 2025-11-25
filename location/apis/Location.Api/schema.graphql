@@ -100,7 +100,7 @@ type LocationDetails {
   canDelete: Boolean!
   canViewAnalytics: Boolean!
   physicalAddress: LocationPhysicalAddressDetails
-  primaryFeatureImage: CdnImageFile
+  featureImages: [CdnImageFile!]!
   extraMetadata: LocationExtraMetadata
   uniqueClaimCode: String
   contactedViaEmail: Boolean!
@@ -323,7 +323,7 @@ input AddLocationInput {
   timezone: String
   type: LocationType!
   locationTagIds: [String!]!
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
   physicalAddress: LocationPhysicalAddressInput
   extraMetadata: LocationExtraMetadataInput
   weekOpeningHours: WeekOpeningHoursInput
@@ -558,7 +558,7 @@ input UpdateLocationInput {
   timezone: String
   type: LocationType!
   locationTagIds: [String!]!
-  primaryFeatureImage: CdnImageFileInput
+  featureImages: [CdnImageFileInput!]!
   extraMetadata: LocationExtraMetadataInput
 }
 

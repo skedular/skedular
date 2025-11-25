@@ -13,7 +13,7 @@ public class Team : EntityBaseWithDeleted
     public string Name { get; set; } = string.Empty;
     public string? About { get; set; }
     public string? Timezone { get; set; }
-    public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public ICollection<CdnImageFile>? FeatureImages { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -38,7 +38,7 @@ public class TeamConfiguration : IEntityTypeConfiguration<Team>
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxTeamNameLength);
         builder.Property(item => item.About).HasMaxLength(Constants.MaxDescriptionLength);
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
-        builder.Property(item => item.PrimaryFeatureImage).HasColumnType("jsonb");
+        builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Teams).HasForeignKey(item => item.OrganizationId);
         builder.HasOne(item => item.PrimaryLocation).WithMany(item => item.PrimaryLocationForTeams).HasForeignKey(item => item.PrimaryLocationId);

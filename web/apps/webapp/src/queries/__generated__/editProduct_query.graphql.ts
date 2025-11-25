@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2a8b73e8becc10465d86bcb1950da671>>
+ * @generated SignedSource<<a08bc2cfc2504a6d6a19ba9208cc408c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,6 +27,18 @@ export type editProduct_query$data = {
       readonly type: Currency;
     };
     readonly description: string | null | undefined;
+    readonly featureImages: ReadonlyArray<{
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    }>;
     readonly id: string;
     readonly inactive: boolean;
     readonly isPriceTaxInclusive: boolean;
@@ -50,18 +62,6 @@ export type editProduct_query$data = {
       readonly name: string;
       readonly type: PriceUnit;
     };
-    readonly primaryFeatureImage: {
-      readonly original: {
-        readonly height: number | null | undefined;
-        readonly url: string;
-        readonly width: number | null | undefined;
-      } | null | undefined;
-      readonly thumbnail: {
-        readonly height: number | null | undefined;
-        readonly url: string;
-        readonly width: number | null | undefined;
-      } | null | undefined;
-    } | null | undefined;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
       readonly id: string;
@@ -318,8 +318,8 @@ return {
           "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
-          "name": "primaryFeatureImage",
-          "plural": false,
+          "name": "featureImages",
+          "plural": true,
           "selections": [
             {
               "alias": null,
@@ -406,6 +406,6 @@ return {
 };
 })();
 
-(node as any).hash = "f429561b01d150d5acb3e8f14e32340d";
+(node as any).hash = "b0ff87c6319daf718adb5ec65a7eb581";
 
 export default node;

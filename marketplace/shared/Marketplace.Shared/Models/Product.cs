@@ -20,7 +20,7 @@ public class Product : ModelBaseWithDeleted
     public bool RequireConsecutiveDays { get; set; }
     public int? MaxBookingSpreadDays { get; set; }
     public int NumberOfResourcesToBook { get; set; }
-    public CdnImageFile? PrimaryFeatureImage { get; set; }
+    public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
     public ICollection<PaymentMethod> AcceptedBookingPaymentMethods { get; set; } = [];

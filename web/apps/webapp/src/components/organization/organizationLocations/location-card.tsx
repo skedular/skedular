@@ -121,7 +121,7 @@ const LocationCard = ({
           latitude
           longitude
         }
-        primaryFeatureImage {
+        featureImages {
           thumbnail {
             url
             height
@@ -562,8 +562,8 @@ const LocationCard = ({
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {locationDetails.primaryFeatureImage && locationDetails.primaryFeatureImage.thumbnail && (
-          <CardMedia component="img" image={locationDetails.primaryFeatureImage.thumbnail.url} />
+        {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
+          <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} />
         )}
         <CardHeader
           title={

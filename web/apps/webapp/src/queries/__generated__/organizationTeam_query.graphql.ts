@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0fad9b766df88c637a60eb17c26683b7>>
+ * @generated SignedSource<<f4d3226eb5f720955656786aa2ad88ea>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,9 +14,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationTeam_query$data = {
   readonly team: {
     readonly about: string | null | undefined;
-    readonly id: string;
-    readonly name: string;
-    readonly primaryFeatureImage: {
+    readonly featureImages: ReadonlyArray<{
       readonly original: {
         readonly height: number | null | undefined;
         readonly url: string;
@@ -27,7 +25,9 @@ export type organizationTeam_query$data = {
         readonly url: string;
         readonly width: number | null | undefined;
       } | null | undefined;
-    } | null | undefined;
+    }>;
+    readonly id: string;
+    readonly name: string;
     readonly primaryLocation: {
       readonly id: string;
       readonly name: string;
@@ -127,8 +127,8 @@ return {
           "args": null,
           "concreteType": "CdnImageFile",
           "kind": "LinkedField",
-          "name": "primaryFeatureImage",
-          "plural": false,
+          "name": "featureImages",
+          "plural": true,
           "selections": [
             {
               "alias": null,
@@ -187,6 +187,6 @@ return {
 };
 })();
 
-(node as any).hash = "f890a8616217f41730cc78354441a039";
+(node as any).hash = "02bac4a9a5ed5794776ada546c88ea8e";
 
 export default node;

@@ -36,7 +36,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiLdBAoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "cm9kdWN0VmVyc2lvbiLXBAoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRINCgVwcmljZRgE",
             "IAEoARIRCglwcmljZVVuaXQYBSABKAkSGwoTaXNQcmljZVRheEluY2x1c2l2",
             "ZRgGIAEoCBIQCghjdXJyZW5jeRgHIAEoCRIaChJtaW5EdXJhdGlvbk1pbnV0",
@@ -45,17 +45,17 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "RGF5cxgLIAEoBRIeChZyZXF1aXJlQ29uc2VjdXRpdmVEYXlzGAwgASgIEhwK",
             "FG1heEJvb2tpbmdTcHJlYWREYXlzGA0gASgFEh8KF251bWJlck9mUmVzb3Vy",
             "Y2VzVG9Cb29rGA4gASgFEhUKDXByb2R1Y3RUYWdJZHMYDyADKAkSFgoObG9j",
-            "YXRpb25UYWdJZHMYECADKAkSNgoTcHJpbWFyeUZlYXR1cmVJbWFnZRgRIAEo",
-            "CzIZLm1hcmtldHBsYWNlLkNkbkltYWdlRmlsZRIuCiZtYXhBbGxvd2VkUmVz",
-            "b3VyY2VzTG9ja1RpbWVQYWlkVmlhQ2FyZBgSIAEoBRI2Ci5tYXhBbGxvd2Vk",
-            "UmVzb3VyY2VzTG9ja1RpbWVQYWlkVmlhQmFua1RyYW5zZmVyGBMgASgFEiUK",
-            "HWFjY2VwdGVkQm9va2luZ1BheW1lbnRNZXRob2RzGBQgAygJIl8KDENkbklt",
-            "YWdlRmlsZRImCghvcmlnaW5hbBgBIAEoCzIULm1hcmtldHBsYWNlLkNkbkZp",
-            "bGUSJwoJdGh1bWJuYWlsGAIgASgLMhQubWFya2V0cGxhY2UuQ2RuRmlsZSI1",
-            "CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQYAiABKAUSDQoFd2lk",
-            "dGgYAyABKAUqOQoEVHlwZRIYChRUeXBlX1Byb2R1Y3RVcHNlcnRlZBAAEhcK",
-            "E1R5cGVfUHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBpLlNoYXJlZC5DbGllbnRz",
-            "LkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIGcHJvdG8z"));
+            "YXRpb25UYWdJZHMYECADKAkSMAoNZmVhdHVyZUltYWdlcxgRIAMoCzIZLm1h",
+            "cmtldHBsYWNlLkNkbkltYWdlRmlsZRIuCiZtYXhBbGxvd2VkUmVzb3VyY2Vz",
+            "TG9ja1RpbWVQYWlkVmlhQ2FyZBgSIAEoBRI2Ci5tYXhBbGxvd2VkUmVzb3Vy",
+            "Y2VzTG9ja1RpbWVQYWlkVmlhQmFua1RyYW5zZmVyGBMgASgFEiUKHWFjY2Vw",
+            "dGVkQm9va2luZ1BheW1lbnRNZXRob2RzGBQgAygJIl8KDENkbkltYWdlRmls",
+            "ZRImCghvcmlnaW5hbBgBIAEoCzIULm1hcmtldHBsYWNlLkNkbkZpbGUSJwoJ",
+            "dGh1bWJuYWlsGAIgASgLMhQubWFya2V0cGxhY2UuQ2RuRmlsZSI1CgdDZG5G",
+            "aWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyAB",
+            "KAUqOQoEVHlwZRIYChRUeXBlX1Byb2R1Y3RVcHNlcnRlZBAAEhcKE1R5cGVf",
+            "UHJvZHVjdERlbGV0ZWQQAUI6qgI3QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50",
+            "cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -63,7 +63,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "IsPriceTaxInclusive", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "PrimaryFeatureImage", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "AcceptedBookingPaymentMethods" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Price", "PriceUnit", "IsPriceTaxInclusive", "Currency", "MinDurationMinutes", "MaxDurationMinutes", "BookAllLocationResources", "RecurrenceWindowDays", "RequireConsecutiveDays", "MaxBookingSpreadDays", "NumberOfResourcesToBook", "ProductTagIds", "LocationTagIds", "FeatureImages", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "AcceptedBookingPaymentMethods" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null)
           }));
@@ -1381,7 +1381,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       numberOfResourcesToBook_ = other.numberOfResourcesToBook_;
       productTagIds_ = other.productTagIds_.Clone();
       locationTagIds_ = other.locationTagIds_.Clone();
-      primaryFeatureImage_ = other.primaryFeatureImage_ != null ? other.primaryFeatureImage_.Clone() : null;
+      featureImages_ = other.featureImages_.Clone();
       maxAllowedResourcesLockTimePaidViaCard_ = other.maxAllowedResourcesLockTimePaidViaCard_;
       maxAllowedResourcesLockTimePaidViaBankTransfer_ = other.maxAllowedResourcesLockTimePaidViaBankTransfer_;
       acceptedBookingPaymentMethods_ = other.acceptedBookingPaymentMethods_.Clone();
@@ -1584,16 +1584,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       get { return locationTagIds_; }
     }
 
-    /// <summary>Field number for the "primaryFeatureImage" field.</summary>
-    public const int PrimaryFeatureImageFieldNumber = 17;
-    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile primaryFeatureImage_;
+    /// <summary>Field number for the "featureImages" field.</summary>
+    public const int FeatureImagesFieldNumber = 17;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile> _repeated_featureImages_codec
+        = pb::FieldCodec.ForMessage(138, global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile> featureImages_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile PrimaryFeatureImage {
-      get { return primaryFeatureImage_; }
-      set {
-        primaryFeatureImage_ = value;
-      }
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile> FeatureImages {
+      get { return featureImages_; }
     }
 
     /// <summary>Field number for the "maxAllowedResourcesLockTimePaidViaCard" field.</summary>
@@ -1662,7 +1661,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != other.NumberOfResourcesToBook) return false;
       if(!productTagIds_.Equals(other.productTagIds_)) return false;
       if(!locationTagIds_.Equals(other.locationTagIds_)) return false;
-      if (!object.Equals(PrimaryFeatureImage, other.PrimaryFeatureImage)) return false;
+      if(!featureImages_.Equals(other.featureImages_)) return false;
       if (MaxAllowedResourcesLockTimePaidViaCard != other.MaxAllowedResourcesLockTimePaidViaCard) return false;
       if (MaxAllowedResourcesLockTimePaidViaBankTransfer != other.MaxAllowedResourcesLockTimePaidViaBankTransfer) return false;
       if(!acceptedBookingPaymentMethods_.Equals(other.acceptedBookingPaymentMethods_)) return false;
@@ -1689,7 +1688,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != 0) hash ^= NumberOfResourcesToBook.GetHashCode();
       hash ^= productTagIds_.GetHashCode();
       hash ^= locationTagIds_.GetHashCode();
-      if (primaryFeatureImage_ != null) hash ^= PrimaryFeatureImage.GetHashCode();
+      hash ^= featureImages_.GetHashCode();
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) hash ^= MaxAllowedResourcesLockTimePaidViaCard.GetHashCode();
       if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) hash ^= MaxAllowedResourcesLockTimePaidViaBankTransfer.GetHashCode();
       hash ^= acceptedBookingPaymentMethods_.GetHashCode();
@@ -1769,10 +1768,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(output, _repeated_locationTagIds_codec);
-      if (primaryFeatureImage_ != null) {
-        output.WriteRawTag(138, 1);
-        output.WriteMessage(PrimaryFeatureImage);
-      }
+      featureImages_.WriteTo(output, _repeated_featureImages_codec);
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
         output.WriteRawTag(144, 1);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
@@ -1850,10 +1846,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
       locationTagIds_.WriteTo(ref output, _repeated_locationTagIds_codec);
-      if (primaryFeatureImage_ != null) {
-        output.WriteRawTag(138, 1);
-        output.WriteMessage(PrimaryFeatureImage);
-      }
+      featureImages_.WriteTo(ref output, _repeated_featureImages_codec);
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
         output.WriteRawTag(144, 1);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
@@ -1917,9 +1910,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       size += productTagIds_.CalculateSize(_repeated_productTagIds_codec);
       size += locationTagIds_.CalculateSize(_repeated_locationTagIds_codec);
-      if (primaryFeatureImage_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PrimaryFeatureImage);
-      }
+      size += featureImages_.CalculateSize(_repeated_featureImages_codec);
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
         size += 2 + pb::CodedOutputStream.ComputeInt32Size(MaxAllowedResourcesLockTimePaidViaCard);
       }
@@ -1983,12 +1974,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       productTagIds_.Add(other.productTagIds_);
       locationTagIds_.Add(other.locationTagIds_);
-      if (other.primaryFeatureImage_ != null) {
-        if (primaryFeatureImage_ == null) {
-          PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile();
-        }
-        PrimaryFeatureImage.MergeFrom(other.PrimaryFeatureImage);
-      }
+      featureImages_.Add(other.featureImages_);
       if (other.MaxAllowedResourcesLockTimePaidViaCard != 0) {
         MaxAllowedResourcesLockTimePaidViaCard = other.MaxAllowedResourcesLockTimePaidViaCard;
       }
@@ -2080,10 +2066,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 138: {
-            if (primaryFeatureImage_ == null) {
-              PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile();
-            }
-            input.ReadMessage(PrimaryFeatureImage);
+            featureImages_.AddEntriesFrom(input, _repeated_featureImages_codec);
             break;
           }
           case 144: {
@@ -2182,10 +2165,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 138: {
-            if (primaryFeatureImage_ == null) {
-              PrimaryFeatureImage = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile();
-            }
-            input.ReadMessage(PrimaryFeatureImage);
+            featureImages_.AddEntriesFrom(ref input, _repeated_featureImages_codec);
             break;
           }
           case 144: {
