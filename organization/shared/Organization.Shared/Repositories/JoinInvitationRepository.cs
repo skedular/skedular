@@ -16,6 +16,12 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
+    Task<JoinInvitation?> GetByOrganizationInviterInviteeIdAsync(
+        string organizationId,
+        string inviterId,
+        string inviteeId,
+        CancellationToken cancellationToken);
+
     Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
@@ -24,7 +30,6 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
-    JoinInvitation Remove(JoinInvitation joinInvitation);
 
     Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
@@ -114,6 +119,23 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<JoinInvitation?> GetByOrganizationInviterInviteeIdAsync(
+        string organizationId,
+        string inviterId,
+        string inviteeId,
+        CancellationToken cancellationToken)
+    {
+        // Build the query with eager loading and tracking enabled
+        var query = DbContext.JoinInvitation
+            .AddDependentObjects(true)
+            .Where(query => query.Organization.Id == organizationId
+                            && query.CreatedBy.Id == inviterId
+                            && query.Invitee != null && query.Invitee.Id == inviteeId
+                            && query.Status == InvitationStatus.Pending.ToInvitationStatus());
+
+        return await query.FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
@@ -151,13 +173,6 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
     {
         var now = TimeProvider.GetUtcNow();
         joinInvitation.ModifiedAt = now;
-        return DbContext.JoinInvitation.Update(joinInvitation).Entity;
-    }
-
-    public JoinInvitation Remove(JoinInvitation joinInvitation)
-    {
-        var now = TimeProvider.GetUtcNow();
-        joinInvitation.DeletedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 

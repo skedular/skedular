@@ -20,7 +20,8 @@ public class RootQuery(IMapper mapper)
         new() { Type = InvitationStatus.Pending, Name = InvitationStatus.Pending.ToInvitationStatusName() },
         new() { Type = InvitationStatus.Accepted, Name = InvitationStatus.Accepted.ToInvitationStatusName() },
         new() { Type = InvitationStatus.Rejected, Name = InvitationStatus.Rejected.ToInvitationStatusName() },
-        new() { Type = InvitationStatus.Cancelled, Name = InvitationStatus.Cancelled.ToInvitationStatusName() }
+        new() { Type = InvitationStatus.Cancelled, Name = InvitationStatus.Cancelled.ToInvitationStatusName() },
+        new() { Type = InvitationStatus.Expired, Name = InvitationStatus.Expired.ToInvitationStatusName() }
     ];
 
     [UseResolverScope]

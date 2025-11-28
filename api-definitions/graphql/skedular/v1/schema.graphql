@@ -2551,6 +2551,7 @@ enum FloorPlanOrderField {
 enum InvitationStatus {
   ACCEPTED
   CANCELLED
+  EXPIRED
   PENDING
   REJECTED
 }

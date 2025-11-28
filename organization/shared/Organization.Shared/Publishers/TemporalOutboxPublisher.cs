@@ -24,6 +24,12 @@ public interface ITemporalOutboxPublisher
     void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
     void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
+
+    void SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+        string organizationId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxPublisher(
@@ -51,10 +57,10 @@ public class TemporalOutboxPublisher(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId(
-                    $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerId}"),
+                    $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerId}-{args.InviterCustomerId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate
             },
             unitOfWork);
 
@@ -88,7 +94,7 @@ public class TemporalOutboxPublisher(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId(
-                    $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerEmail}"),
+                    $"{Constants.InviteToOrganizationNewCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerEmail}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -112,6 +118,19 @@ public class TemporalOutboxPublisher(
         temporalSignalOutboxWorkflowExecutor.Signal(
             temporalHelperService.ToId(offeringId),
             typeof(ScheduleRenewOrganizationOffering).GetMethod(nameof(ScheduleRenewOrganizationOffering.CancelOfferingAsync))!
+                .ToWorkflowSignalType(),
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+        string organizationId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId(
+                $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerId}-{inviterCustomerId}"),
+            typeof(InviteToJoinOrganizationExistingCustomer).GetMethod(nameof(InviteToJoinOrganizationExistingCustomer.InvitationStatusChangedAsync))!
                 .ToWorkflowSignalType(),
             new WorkflowSignalOptions(),
             unitOfWork);

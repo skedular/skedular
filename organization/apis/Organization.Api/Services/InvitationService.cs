@@ -15,6 +15,7 @@ using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustom
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
+
 namespace Organization.Api.Services;
 
 public interface IInvitationService
@@ -30,7 +31,7 @@ public interface IInvitationService
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int )> GetMyPaginatedJoinInvitationsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinOrganizationInvitationOrder> orderByFields,
@@ -130,7 +131,10 @@ public class InvitationService(
             else
             {
                 temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationExistingCustomer(
-                    new InviteToJoinOrganizationExistingCustomerInput(organization.Id, customer.Id, matchingCustomerByEmail.Id),
+                    new InviteToJoinOrganizationExistingCustomerInput(
+                        organization.Id,
+                        matchingCustomerByEmail.Id,
+                        customerEntity.Id),
                     repositoryFactory.UnitOfWork);
             }
         }
@@ -176,7 +180,16 @@ public class InvitationService(
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
+
+        if (joinInvitation.Invitee is not null)
+        {
+            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -197,7 +210,16 @@ public class InvitationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Rejected;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
+
+        if (joinInvitation.Invitee is not null)
+        {
+            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -225,7 +247,16 @@ public class InvitationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
+
+        if (joinInvitation.Invitee is not null)
+        {
+            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

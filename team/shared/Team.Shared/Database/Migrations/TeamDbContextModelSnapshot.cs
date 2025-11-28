@@ -161,8 +161,8 @@ namespace Team.Shared.Database.Migrations
 
                     b.Property<string>("WorkflowId")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
 
                     b.Property<WorkflowSignalOptions>("WorkflowSignalOptions")
                         .IsRequired()

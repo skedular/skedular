@@ -67,6 +67,7 @@ public class Program
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<InvitationIntegrations>()
             .AddScopedActivities<OrganizationDailyAnalytics>()
             .AddScopedActivities<AzureTenantIntegrations>();
 

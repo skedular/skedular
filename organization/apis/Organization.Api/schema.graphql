@@ -979,6 +979,7 @@ enum InvitationStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+  EXPIRED
 }
 
 enum JoinOrganizationInvitationOrderField {

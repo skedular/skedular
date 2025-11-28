@@ -334,6 +334,7 @@ enum InvitationStatus {
   ACCEPTED
   REJECTED
   CANCELLED
+  EXPIRED
 }
 
 enum JoinTeamInvitationOrderField {

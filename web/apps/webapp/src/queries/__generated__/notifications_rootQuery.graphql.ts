@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fc28338d9deade03f4dc8affb508c9b>>
+ * @generated SignedSource<<2acb4a49d39c100d0bdc56264795c89a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "PENDING" | "REJECTED" | "%future added value";
+export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "EXPIRED" | "PENDING" | "REJECTED" | "%future added value";
 export type notifications_rootQuery$variables = Record<PropertyKey, never>;
 export type notifications_rootQuery$data = {
   readonly myInvitationsToJoinOrganizations: {

@@ -3,19 +3,22 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MsTeams.Shared.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Slack.Shared.Database;
 using Temporalio.Client;
 
 #nullable disable
 
-namespace MsTeams.Shared.Database.Migrations
+namespace Slack.Shared.Database.Migrations
 {
-    [DbContext(typeof(MsTeamsDbContext))]
-    partial class MsTeamsDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SlackDbContext))]
+    [Migration("20251128234122_IncreasedTemporalSignalWorkflowIdLengthTo2048")]
+    partial class IncreasedTemporalSignalWorkflowIdLengthTo2048
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,158 +164,7 @@ namespace MsTeams.Shared.Database.Migrations
                     b.ToTable("TemporalSignalOutbox");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.ToTable("AzureTenant");
-                });
-
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("AzureTenantId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(100000)
-                        .HasColumnType("character varying(100000)");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("WebUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AzureTenantId");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("AzureTenantTeam");
-                });
-
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("AzureTenantTeamId")
-                        .IsRequired()
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(100000)
-                        .HasColumnType("character varying(100000)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("WebUrl")
-                        .HasMaxLength(2000)
-                        .HasColumnType("character varying(2000)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AzureTenantTeamId");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("Email");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("AzureTenantTeamChannel");
-                });
-
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -348,12 +200,10 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Timezone");
-
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Identity", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(200)
@@ -400,7 +250,7 @@ namespace MsTeams.Shared.Database.Migrations
                     b.ToTable("Identity");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Location", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Location", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -408,6 +258,9 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DailyUpdateChannelId")
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -424,6 +277,9 @@ namespace MsTeams.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("SlackChannelDailyUpdateLastSentAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Timezone")
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
@@ -432,16 +288,20 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DailyUpdateChannelId");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
                     b.HasIndex("Timezone");
 
                     b.ToTable("Location");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Organization", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -449,6 +309,9 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DailyUpdateChannelId")
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
@@ -468,6 +331,9 @@ namespace MsTeams.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("SlackChannelDailyUpdateLastSentAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
@@ -483,11 +349,15 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasIndex("CreatedAt");
 
+                    b.HasIndex("DailyUpdateChannelId");
+
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("IsOwnershipVerified");
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("SlackChannelDailyUpdateLastSentAt");
 
                     b.HasIndex("UniqueAlphanumericName")
                         .IsUnique();
@@ -495,7 +365,7 @@ namespace MsTeams.Shared.Database.Migrations
                     b.ToTable("Organization");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationMember", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -558,7 +428,7 @@ namespace MsTeams.Shared.Database.Migrations
                     b.ToTable("OrganizationMember");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -615,7 +485,161 @@ namespace MsTeams.Shared.Database.Migrations
                     b.ToTable("OrganizationSsoSetting");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Team", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Team", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DailyUpdateChannelId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("SlackChannelDailyUpdateLastSentAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Timezone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DailyUpdateChannelId");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("SlackChannelDailyUpdateLastSentAt");
+
+                    b.HasIndex("Timezone");
+
+                    b.ToTable("Team");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Workspace", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AuthedRefreshToken")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("AuthedUserAccessToken")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("AuthedUserId")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("AuthedUserScope")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("BotRefreshToken")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("BotUserAccessToken")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("BotUserId")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("BotUserScope")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Domain")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("EmailDomain")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("EnterpriseId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("EnterpriseName")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthedUserScope");
+
+                    b.HasIndex("BotUserScope");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Workspace");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.WorkspaceChannel", b =>
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
@@ -633,15 +657,42 @@ namespace MsTeams.Shared.Database.Migrations
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<bool>("IsGeneral")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsGroup")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsMember")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsShared")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Timezone")
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Purpose")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("Topic")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
@@ -651,47 +702,136 @@ namespace MsTeams.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("Timezone");
+                    b.HasIndex("Name");
 
-                    b.ToTable("Team");
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceChannel");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.WorkspaceMember", b =>
                 {
-                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
-                        .WithMany("AzureTenants")
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Navigation("Organization");
+                    b.Property<bool?>("AutomaticallyUpdateProfileStatus")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Designation")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("character varying(320)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("FamilyName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("GivenName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsOwner")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPrimaryOwner")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LastProfileStatusUpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Locale")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl192")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl24")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl32")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl48")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl512")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("PhotoUrl72")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Timezone")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("WorkspaceId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AutomaticallyUpdateProfileStatus");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LastProfileStatusUpdatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("WorkspaceId");
+
+                    b.ToTable("WorkspaceMember");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Identity", b =>
                 {
-                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenant", "AzureTenant")
-                        .WithMany("AzureTenantTeams")
-                        .HasForeignKey("AzureTenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AzureTenant");
-                });
-
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeamChannel", b =>
-                {
-                    b.HasOne("MsTeams.Shared.Database.Entities.AzureTenantTeam", "AzureTenantTeam")
-                        .WithMany("AzureTenantTeamChannels")
-                        .HasForeignKey("AzureTenantTeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AzureTenantTeam");
-                });
-
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Identity", b =>
-                {
-                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("Slack.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("Identities")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -700,15 +840,33 @@ namespace MsTeams.Shared.Database.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationMember", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Location", b =>
                 {
-                    b.HasOne("MsTeams.Shared.Database.Entities.Customer", "Customer")
+                    b.HasOne("Slack.Shared.Database.Entities.WorkspaceChannel", "DailyUpdateChannel")
+                        .WithMany("LocationDailyUpdateChannels")
+                        .HasForeignKey("DailyUpdateChannelId");
+
+                    b.Navigation("DailyUpdateChannel");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Organization", b =>
+                {
+                    b.HasOne("Slack.Shared.Database.Entities.WorkspaceChannel", "DailyUpdateChannel")
+                        .WithMany("OrganizationDailyUpdateChannels")
+                        .HasForeignKey("DailyUpdateChannelId");
+
+                    b.Navigation("DailyUpdateChannel");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationMember", b =>
+                {
+                    b.HasOne("Slack.Shared.Database.Entities.Customer", "Customer")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("Slack.Shared.Database.Entities.Organization", "Organization")
                         .WithMany("OrganizationMembers")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -719,41 +877,89 @@ namespace MsTeams.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.OrganizationSsoSetting", b =>
                 {
-                    b.HasOne("MsTeams.Shared.Database.Entities.Organization", "Organization")
+                    b.HasOne("Slack.Shared.Database.Entities.Organization", "Organization")
                         .WithOne("OrganizationSsoSettings")
-                        .HasForeignKey("MsTeams.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
+                        .HasForeignKey("Slack.Shared.Database.Entities.OrganizationSsoSetting", "OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenant", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Team", b =>
                 {
-                    b.Navigation("AzureTenantTeams");
+                    b.HasOne("Slack.Shared.Database.Entities.WorkspaceChannel", "DailyUpdateChannel")
+                        .WithMany("TeamDailyUpdateChannels")
+                        .HasForeignKey("DailyUpdateChannelId");
+
+                    b.Navigation("DailyUpdateChannel");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.AzureTenantTeam", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Workspace", b =>
                 {
-                    b.Navigation("AzureTenantTeamChannels");
+                    b.HasOne("Slack.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("Workspaces")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Customer", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.WorkspaceChannel", b =>
+                {
+                    b.HasOne("Slack.Shared.Database.Entities.Workspace", "Workspace")
+                        .WithMany("Channels")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.WorkspaceMember", b =>
+                {
+                    b.HasOne("Slack.Shared.Database.Entities.Workspace", "Workspace")
+                        .WithMany("WorkspaceMembers")
+                        .HasForeignKey("WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Workspace");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("Identities");
 
                     b.Navigation("OrganizationMembers");
                 });
 
-            modelBuilder.Entity("MsTeams.Shared.Database.Entities.Organization", b =>
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Organization", b =>
                 {
-                    b.Navigation("AzureTenants");
-
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationSsoSettings");
+
+                    b.Navigation("Workspaces");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.Workspace", b =>
+                {
+                    b.Navigation("Channels");
+
+                    b.Navigation("WorkspaceMembers");
+                });
+
+            modelBuilder.Entity("Slack.Shared.Database.Entities.WorkspaceChannel", b =>
+                {
+                    b.Navigation("LocationDailyUpdateChannels");
+
+                    b.Navigation("OrganizationDailyUpdateChannels");
+
+                    b.Navigation("TeamDailyUpdateChannels");
                 });
 #pragma warning restore 612, 618
         }

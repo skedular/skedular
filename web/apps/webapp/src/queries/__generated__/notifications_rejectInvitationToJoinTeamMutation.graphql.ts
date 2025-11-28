@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6c2cb84574c26e1cbc89557358efdf3>>
+ * @generated SignedSource<<cade164b8ca62b4624a9fff9bc929bc2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "PENDING" | "REJECTED" | "%future added value";
+export type InvitationStatus = "ACCEPTED" | "CANCELLED" | "EXPIRED" | "PENDING" | "REJECTED" | "%future added value";
 export type RejectInvitationToJoinTeamInput = {
   clientMutationId?: string | null | undefined;
   id: string;
