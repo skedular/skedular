@@ -5,6 +5,7 @@ import { getMarketplaceLocationLink } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
+import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -78,11 +79,15 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
 
   return (
     <Card
-      sx={{ width: { xs: '100%', sm: 300 }, textDecoration: 'none', display: 'block' }}
+      sx={{ width: '100%', height: '100%', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
       component={NextLink}
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
-      <CardMediaCarousel images={locationDetails.featureImages ?? []} />
+      {locationDetails.featureImages && locationDetails.featureImages.length > 0 ? (
+        <CardMediaCarousel images={locationDetails.featureImages} />
+      ) : (
+        <Box sx={{ width: '100%', height: 180, bgcolor: 'background.default' }} />
+      )}
       <CardHeader
         sx={{ height: 60 }}
         title={
@@ -106,7 +111,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
           ) : null
         }
       />
-      <CardContent sx={{ height: onClose ? null : 200 }}>
+      <CardContent sx={{ flexGrow: 1 }}>
         <LeadIconTypography label={locationDetails.name} />
         {locationDetails.physicalAddress?.multilinesFormattedAddress && <SmallIconTypography label={locationDetails.physicalAddress?.multilinesFormattedAddress} />}
       </CardContent>

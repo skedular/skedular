@@ -1,5 +1,4 @@
 import { GridContainer, StackColumn } from '@/components/commons';
-//import { ResourceTypeSelector } from '@/components/organization/resourceTypeSelector';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
@@ -315,9 +314,9 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
       ) : (
         <GridContainer spacing={2}>
           <Grid size={{ xs: 12, md: 7 }}>
-            <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
+            <GridContainer sx={{ alignItems: 'stretch' }} spacing={1}>
               {locations.map((item) => (
-                <Grid key={item.id}>
+                <Grid key={item.id} size={{ xs: 12, sm: 6, lg: 4 }}>
                   <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                 </Grid>
               ))}
