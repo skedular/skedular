@@ -522,7 +522,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                 countryCode: billingCountryCode,
               }}
               validate={validateCustomerBilling}
-              render={({ handleSubmit, values }) => {
+              render={({ handleSubmit, values, form }) => {
                 debounceSetBillingCompanyName(values!.companyName);
                 debounceSetBillingEmail(values!.email);
                 debounceSetBillingAddressLine1(values!.addressLine1);
@@ -565,7 +565,18 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
                         zipcodeRequired={requiredCustomerBillingFields.zipcode}
                         countryName="countryCode"
                         countryRequired={requiredCustomerBillingFields.countryCode}
-                        onSelect={handleBillingAddressSelect}
+                        onSelect={(address) => {
+                          handleBillingAddressSelect(address);
+                          form.batch(() => {
+                            form.change('addressLine1', address.addressLine1 ?? '');
+                            form.change('addressLine2', address.addressLine2 ?? '');
+                            form.change('suburb', address.suburb ?? '');
+                            form.change('city', address.city ?? '');
+                            form.change('province', address.province ?? '');
+                            form.change('zipcode', address.zipcode ?? '');
+                            form.change('countryCode', address.countryCode ?? '');
+                          });
+                        }}
                       />
                     </StackColumn>
 

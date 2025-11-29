@@ -558,7 +558,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             countryCode: physicalAddressCountryCode,
           }}
           validate={validateLocationDetails}
-          render={({ handleSubmit, values }) => {
+          render={({ handleSubmit, values, form }) => {
             debounceSetLocationName(values!.name);
             debounceSetLocationAbout(values!.about);
             debounceSetLocationTimezone(values!.timezone);
@@ -770,7 +770,18 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   zipcodeRequired={requiredFields.zipcode}
                   countryName="countryCode"
                   countryRequired={requiredFields.countryCode}
-                  onSelect={handlePhysicalAddressSelect}
+                  onSelect={(address) => {
+                    handlePhysicalAddressSelect(address);
+                    form.batch(() => {
+                      form.change('addressLine1', address.addressLine1 ?? '');
+                      form.change('addressLine2', address.addressLine2 ?? '');
+                      form.change('suburb', address.suburb ?? '');
+                      form.change('city', address.city ?? '');
+                      form.change('province', address.province ?? '');
+                      form.change('zipcode', address.zipcode ?? '');
+                      form.change('countryCode', address.countryCode ?? '');
+                    });
+                  }}
                 />
 
                 <StackRow>

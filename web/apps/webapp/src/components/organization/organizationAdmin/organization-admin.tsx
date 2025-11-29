@@ -2345,7 +2345,7 @@ const OrganizationAdmin = ({
                 countryCode: physicalAddressCountryCode,
               }}
               validate={validatePhysicalAddress}
-              render={({ handleSubmit, values }) => {
+              render={({ handleSubmit, values, form }) => {
                 debounceSetPhysicalAddressAddressLine1(values!.addressLine1);
                 debounceSetPhysicalAddressAddressLine2(values!.addressLine2);
                 debounceSetPhysicalAddressSuburb(values!.suburb);
@@ -2387,7 +2387,18 @@ const OrganizationAdmin = ({
                         zipcodeRequired={requiredPhysicalAddressFields.zipcode}
                         countryName="countryCode"
                         countryRequired={requiredPhysicalAddressFields.countryCode}
-                        onSelect={handlePhysicalAddressSelect}
+                        onSelect={(address) => {
+                          handlePhysicalAddressSelect(address);
+                          form.batch(() => {
+                            form.change('addressLine1', address.addressLine1 ?? '');
+                            form.change('addressLine2', address.addressLine2 ?? '');
+                            form.change('suburb', address.suburb ?? '');
+                            form.change('city', address.city ?? '');
+                            form.change('province', address.province ?? '');
+                            form.change('zipcode', address.zipcode ?? '');
+                            form.change('countryCode', address.countryCode ?? '');
+                          });
+                        }}
                       />
                     </StackColumn>
 
@@ -2481,7 +2492,18 @@ const OrganizationAdmin = ({
                         zipcodeRequired={requiredBillingFields.zipcode}
                         countryName="countryCode"
                         countryRequired={requiredBillingFields.countryCode}
-                        onSelect={handleBillingAddressSelect}
+                        onSelect={(address) => {
+                          handleBillingAddressSelect(address);
+                          form.batch(() => {
+                            form.change('addressLine1', address.addressLine1 ?? '');
+                            form.change('addressLine2', address.addressLine2 ?? '');
+                            form.change('suburb', address.suburb ?? '');
+                            form.change('city', address.city ?? '');
+                            form.change('province', address.province ?? '');
+                            form.change('zipcode', address.zipcode ?? '');
+                            form.change('countryCode', address.countryCode ?? '');
+                          });
+                        }}
                       />
                     </StackColumn>
 
