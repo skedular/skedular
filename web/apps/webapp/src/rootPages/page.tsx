@@ -17,7 +17,6 @@ type Props = {
 
 const RootQuery = graphql`
   query pageHome_rootQuery($searchBoundaries: PolygonInput, $locationsSortingValues: [LocationOrderInput!], $resourceTypeToFilterWith: OrganizationTagType) {
-    ...marketplaceLocations_query
     ...marketplaceLocations_locations_query
   }
 `;
@@ -33,14 +32,14 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   if (user) {
     return (
       <NoOrganizationRootShell collapsed={true}>
-        <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+        <MarketplaceLocations rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );
   }
 
   return (
     <UnauthenticatedRootShell>
-      <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+      <MarketplaceLocations rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
     </UnauthenticatedRootShell>
   );
 };

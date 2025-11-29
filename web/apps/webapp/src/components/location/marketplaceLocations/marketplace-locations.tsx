@@ -1,9 +1,8 @@
 import { GridContainer, StackColumn } from '@/components/commons';
-import { ResourceTypeSelector } from '@/components/organization/resourceTypeSelector';
+//import { ResourceTypeSelector } from '@/components/organization/resourceTypeSelector';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
-import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -15,7 +14,7 @@ import { memo, startTransition, useCallback, useEffect, useMemo, useState } from
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
 
 let L: typeof import('leaflet');
@@ -44,21 +43,11 @@ const getToolbarHeight = (theme: Theme) => {
 };
 
 type Props = {
-  rootDataRelay: marketplaceLocations_query$key;
   rootDataLocationsRelay: marketplaceLocations_locations_query$key;
   onReloadRequired: () => void;
 };
 
-const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadRequired }: Props) => {
-  const rootData = useFragment<marketplaceLocations_query$key>(
-    graphql`
-      fragment marketplaceLocations_query on Query {
-        ...resourceTypeSelector_allResourceTypes_query
-      }
-    `,
-    rootDataRelay,
-  );
-
+const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Props) => {
   const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
     graphql`
       fragment marketplaceLocations_locations_query on Query
@@ -99,7 +88,6 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
   const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
   const [centerSet, setCenterSet] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
-  const [resourceType, setResourceType] = useState<string | null | undefined>(null);
 
   const selectedLocation = useMemo(() => {
     if (!selectedLocationId) {
@@ -192,8 +180,8 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
   );
 
   useEffect(() => {
-    handleRefetch(searchBoundaries, resourceType);
-  }, [searchBoundaries, resourceType, handleRefetch]);
+    handleRefetch(searchBoundaries, null);
+  }, [searchBoundaries, handleRefetch]);
 
   if (!dynamicLoadReady) {
     return null;
@@ -320,24 +308,12 @@ const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadR
     </Box>
   );
 
-  const handleResourceTypeChanged = (id?: string) => {
-    setResourceType(id);
-  };
-
   return (
     <StackColumn sx={{ p: isMobileOrTablet ? 0 : defaultPadding }}>
       {isMobileOrTablet ? (
-        <>
-          <Box sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <ResourceTypeSelector rootDataRelay={rootData} onChange={handleResourceTypeChanged} />
-          </Box>
-          {MapSection}
-        </>
+        <>{MapSection}</>
       ) : (
         <GridContainer spacing={2}>
-          <Grid size={{ xs: 12 }}>
-            <ResourceTypeSelector rootDataRelay={rootData} onChange={handleResourceTypeChanged} />
-          </Grid>
           <Grid size={{ xs: 12, md: 7 }}>
             <GridContainer sx={{ alignItems: 'flex-start' }} spacing={1}>
               {locations.map((item) => (
