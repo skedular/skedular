@@ -129,7 +129,9 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationUniqu
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 380 } }}>
-        {floorPlanDetails.image && floorPlanDetails.image.thumbnail && <CardMedia component="img" image={floorPlanDetails.image.thumbnail.url} />}
+        {floorPlanDetails.image && floorPlanDetails.image.thumbnail && (
+          <CardMedia component="img" image={floorPlanDetails.image.thumbnail.url} sx={{ objectFit: 'fill', height: floorPlanDetails.image.thumbnail.height }} />
+        )}
         <CardHeader
           title={
             <StackRow>

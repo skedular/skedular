@@ -181,7 +181,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
         {teamDetails.featureImages && teamDetails.featureImages.length > 0 && teamDetails.featureImages[0].thumbnail && (
-          <CardMedia component="img" image={teamDetails.featureImages[0].thumbnail.url} />
+          <CardMedia component="img" image={teamDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: teamDetails.featureImages[0].thumbnail.height }} />
         )}
         <CardHeader
           title={

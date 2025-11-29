@@ -563,7 +563,7 @@ const LocationCard = ({
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
         {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
-          <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} />
+          <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: locationDetails.featureImages[0].thumbnail.height }} />
         )}
         <CardHeader
           title={

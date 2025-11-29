@@ -83,7 +83,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
       {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
-        <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} />
+        <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: locationDetails.featureImages[0].thumbnail.height }} />
       )}
       <CardHeader
         sx={{ height: 60 }}
