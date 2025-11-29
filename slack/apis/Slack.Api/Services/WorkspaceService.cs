@@ -2,8 +2,8 @@ using Enterprise.Shared.Database;
 using Flurl;
 using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 using Slack.Shared.Workflows.ReSyncSlackWorkspace;
 using SlackNet;
@@ -21,7 +21,7 @@ public class WorkspaceService(
     IRepositoryFactory repositoryFactory,
     IWorkspaceOnboardingService workspaceOnboardingService,
     IMapper mapper,
-    ITemporalOutboxPublisher temporalOutboxPublisher)
+    ITemporalOutboxService temporalOutboxService)
     : IWorkspaceService
 {
     public async Task<string> InstallAsync(string code, string? state, CancellationToken cancellationToken)
@@ -50,13 +50,8 @@ public class WorkspaceService(
 
             workspace = repositoryFactory.WorkspaceRepository.Update(mapper.MergeTo(response, workspace, organization));
 
-            temporalOutboxPublisher.StartWorkflowReSyncSlackWorkspace(
-                new ReSyncSlackWorkspaceInput(workspace.Id, null),
-                repositoryFactory.UnitOfWork);
-
-            temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(
-                new NewSlackWorkspaceJoinedInput(workspace.Id),
-                repositoryFactory.UnitOfWork);
+            temporalOutboxService.StartWorkflowReSyncSlackWorkspace(new ReSyncSlackWorkspaceInput(workspace.Id, null), repositoryFactory.UnitOfWork);
+            temporalOutboxService.StartWorkflowNewSlackWorkspaceJoined(new NewSlackWorkspaceJoinedInput(workspace.Id), repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);

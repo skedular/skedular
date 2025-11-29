@@ -3,8 +3,8 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Shared.Models;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
+using Slack.Shared.Services;
 using Slack.Shared.Services.CrossDomains;
 using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 using Slack.Shared.Workflows.ReSyncSlackWorkspace;
@@ -23,7 +23,7 @@ public class WorkspaceOnboardingService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IMapper mapper,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IOrganizationService organizationService,
     ILocationService locationService)
     : IWorkspaceOnboardingService
@@ -42,8 +42,8 @@ public class WorkspaceOnboardingService(
         await CreateOrganizationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
         await CreateLocationAsync(oauthV2AccessResponse.Team.Name, organization, cancellationToken);
 
-        temporalOutboxPublisher.StartWorkflowReSyncSlackWorkspace(new ReSyncSlackWorkspaceInput(workspace.Id, null), repositoryFactory.UnitOfWork);
-        temporalOutboxPublisher.StartWorkflowNewSlackWorkspaceJoined(new NewSlackWorkspaceJoinedInput(workspace.Id), repositoryFactory.UnitOfWork);
+        temporalOutboxService.StartWorkflowReSyncSlackWorkspace(new ReSyncSlackWorkspaceInput(workspace.Id, null), repositoryFactory.UnitOfWork);
+        temporalOutboxService.StartWorkflowNewSlackWorkspaceJoined(new NewSlackWorkspaceJoinedInput(workspace.Id), repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

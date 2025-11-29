@@ -1,6 +1,8 @@
 using Core.Shared.Mappers;
 using Core.Shared.Repositories;
+using Core.Shared.Services;
 using Core.Shared.Services.Cache;
+using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,9 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>();
 

@@ -8,6 +8,7 @@ using Organization.Api.Mappers;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Location = Organization.Shared.Database.Entities.Location;
@@ -27,7 +28,7 @@ public class AzureTenantOnboardingService(
     IRandomHelper randomHelper,
     IMapper mapper,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IOrganizationTermsOfUseService organizationTermsOfUseService,
     LocationService.LocationServiceClient locationServiceClient,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
@@ -80,8 +81,8 @@ public class AzureTenantOnboardingService(
         organizationOutboxPublisher.PublishOrganizations(
             [mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id))],
             repositoryFactory.UnitOfWork);
-        temporalOutboxPublisher.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
-        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxService.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
+        temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,

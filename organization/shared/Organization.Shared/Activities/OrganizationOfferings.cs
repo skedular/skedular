@@ -6,6 +6,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Stripe;
 using Temporalio.Activities;
@@ -19,7 +20,7 @@ public class OrganizationOfferings(
     IMapper mapper,
     TimeProvider timeProvider,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     ICreatable<PaymentIntent, PaymentIntentCreateOptions> paymentIntentCreateService)
 {
     [Activity]
@@ -131,7 +132,7 @@ public class OrganizationOfferings(
         ];
 
         organizationOutboxPublisher.PublishOrganizations([mappedOrganization], repositoryFactory.UnitOfWork);
-        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 newOrganizationOffering.Id,

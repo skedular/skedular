@@ -34,9 +34,10 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
-                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-                .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedTeamService, CachedTeamService>()
@@ -80,8 +81,7 @@ public static class Extensions
 
         public IServiceCollection AddOutboxPublishers() =>
             services
-                .AddSingleton<IBookingOutboxPublisher, BookingOutboxPublisher>()
-                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+                .AddSingleton<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
         public IServiceCollection AddGrpcClients(IConfiguration configuration)
         {

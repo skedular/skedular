@@ -11,6 +11,7 @@ using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 using Location.Shared.Workflows.NewLocationJoined;
@@ -53,7 +54,7 @@ public class LocationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     ILocationOutboxPublisher locationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     TimeProvider timeProvider,
     IContext context,
@@ -169,17 +170,17 @@ public class LocationService(
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartWorkflowLocationDailyAnalytics(
+        temporalOutboxService.StartWorkflowLocationDailyAnalytics(
             new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
             repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(location.Organization.Id),
             repositoryFactory.UnitOfWork);
 
         if (organization.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
-            temporalOutboxPublisher.StartWorkflowNewLocationJoined(new NewLocationJoinedInput(location.Id), repositoryFactory.UnitOfWork);
+            temporalOutboxService.StartWorkflowNewLocationJoined(new NewLocationJoinedInput(location.Id), repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -235,7 +236,7 @@ public class LocationService(
 
         locationOutboxPublisher.PublishLocations([deletedLocation], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
 
@@ -438,7 +439,7 @@ public class LocationService(
 
         locationOutboxPublisher.PublishLocations([location], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
 

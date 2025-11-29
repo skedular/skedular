@@ -12,6 +12,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
 using Organization.Shared.Workflows.NewOrganizationJoined;
@@ -66,7 +67,7 @@ public class OrganizationService(
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     TimeProvider timeProvider,
     IContext context,
@@ -177,18 +178,18 @@ public class OrganizationService(
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+        temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
             new ScheduleRenewOrganizationOfferingInput(
                 organization.Id,
                 organizationOffering.Id,
                 organizationOffering.End.GetNextOfferingPeriodStart()),
             repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartWorkflowOrganizationDailyAnalytics(
+        temporalOutboxService.StartWorkflowOrganizationDailyAnalytics(
             new GenerateOrganizationDailyAnalyticsInput(organization.Id, timeProvider.GetUtcNow().AddDays(1)),
             repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartWorkflowNewOrganizationJoined(
+        temporalOutboxService.StartWorkflowNewOrganizationJoined(
             new NewOrganizationJoinedInput(organization.Id, organization.UniqueAlphanumericName),
             repositoryFactory.UnitOfWork);
 

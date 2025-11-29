@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Slack.Shared.Components;
 using Slack.Shared.Configurations;
 using Slack.Shared.Mappers;
-using Slack.Shared.Publishers;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using Slack.Shared.Services.Cache;
@@ -69,7 +68,9 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
-                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()
@@ -115,8 +116,7 @@ public static class Extensions
             services;
 
         public IServiceCollection AddOutboxPublishers() =>
-            services
-                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+            services;
 
         public IServiceCollection AddSlack(IConfiguration configuration,
             Action<AspNetSlackServiceConfiguration>? configure)

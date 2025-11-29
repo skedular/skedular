@@ -5,7 +5,6 @@ using Enterprise.Shared.Random;
 using Microsoft.EntityFrameworkCore;
 using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
-using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows.AddPayment;
@@ -37,7 +36,7 @@ public class PaymentService(
     IStripeCustomerService stripeCustomerService,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     ITemporalService temporalService) : IPaymentService
 {
     public async Task<string> HandleStripePaymentMethodEventAsync(string clientSecret, string redirectStatus, CancellationToken cancellationToken) =>
@@ -149,7 +148,7 @@ public class PaymentService(
 
                 repositoryFactory.OrganizationOfferingRepository.Add(newOrganizationOffering);
 
-                temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+                temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         newOrganizationOffering.Id,
@@ -160,7 +159,7 @@ public class PaymentService(
             {
                 repositoryFactory.OrganizationOfferingRepository.Undelete(existingFreeOffering);
 
-                temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+                temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                     new ScheduleRenewOrganizationOfferingInput(
                         organization.Id,
                         existingFreeOffering.Id,

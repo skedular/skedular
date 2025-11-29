@@ -8,8 +8,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualBasic;
 using Organization.Shared.Configurations;
 using Organization.Shared.Database.Entities;
-using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
 
 namespace Organization.Api.Services;
@@ -31,7 +31,7 @@ public class AzureTenantService(
     AzureEntraConfiguration azureEntraConfiguration,
     IHttpContextAccessor httpContextAccessor,
     IAzureTenantOnboardingService azureTenantOnboardingService,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     TimeProvider timeProvider) : IAzureTenantService
 {
     private static readonly string[] s_userProfilePermissions = ["User.ReadBasic.All", "ProfilePhoto.Read.All", "email", "offline_access", "openid"];
@@ -137,7 +137,7 @@ public class AzureTenantService(
             ArgumentNullException.ThrowIfNull(tenant);
 
             tenant = repositoryFactory.AzureTenantRepository.Update(tenant);
-            temporalOutboxPublisher.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
+            temporalOutboxService.StartWorkflowReSyncAzureTenant(new ReSyncAzureTenantInput(tenant.Id, null), repositoryFactory.UnitOfWork);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);

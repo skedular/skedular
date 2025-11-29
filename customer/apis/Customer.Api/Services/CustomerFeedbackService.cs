@@ -1,7 +1,7 @@
 using Customer.Api.Mappers;
 using Customer.Shared.Models;
-using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services;
 using Customer.Shared.Workflows.CustomerFeedback;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -19,7 +19,7 @@ public class CustomerFeedbackService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IRandomHelper randomHelper,
-    ITemporalOutboxPublisher temporalOutboxPublisher) : ICustomerFeedbackService
+    ITemporalOutboxService temporalOutboxService) : ICustomerFeedbackService
 {
     public async Task<CustomerFeedback> SubmitFeedbackAsync(CustomerFeedback feedback, CancellationToken cancellationToken)
     {
@@ -32,7 +32,7 @@ public class CustomerFeedbackService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var customerFeedback = mapper.MapTo(repositoryFactory.CustomerFeedbackRepository.Add(mapper.MapTo(feedback, customer)));
-        temporalOutboxPublisher.StartWorkflowSubmitCustomerFeedback(
+        temporalOutboxService.StartWorkflowSubmitCustomerFeedback(
             new SubmitCustomerFeedbackInput(customerFeedback.Id),
             repositoryFactory.UnitOfWork);
 

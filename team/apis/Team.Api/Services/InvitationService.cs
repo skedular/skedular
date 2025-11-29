@@ -9,6 +9,7 @@ using Team.Api.Services.Authorization;
 using Team.Shared.Models;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
+using Team.Shared.Services;
 using Team.Shared.Services.Cache;
 using Team.Shared.Workflows.InviteToJoinTeamExistingCustomer;
 using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
@@ -39,7 +40,7 @@ public class InvitationService(
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     ITeamOutboxPublisher teamOutboxPublisher,
     ICachedCustomerService cachedCustomerService,
     ICachedTeamService cachedTeamService) : IInvitationService
@@ -110,13 +111,13 @@ public class InvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamNewCustomer(
+                temporalOutboxService.StartWorkflowInviteToJoinTeamNewCustomer(
                     new InviteToJoinTeamNewCustomerInput(team.Id, customer.Id, email),
                     repositoryFactory.UnitOfWork);
             }
             else
             {
-                temporalOutboxPublisher.StartWorkflowInviteToJoinTeamExistingCustomer(
+                temporalOutboxService.StartWorkflowInviteToJoinTeamExistingCustomer(
                     new InviteToJoinTeamExistingCustomerInput(team.Id, customer.Id, matchingCustomerByEmail.Id),
                     repositoryFactory.UnitOfWork);
             }

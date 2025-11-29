@@ -9,6 +9,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Models;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
@@ -45,7 +46,7 @@ public class InvitationService(
     IOrganizationAuthorizationService organizationAuthorizationService,
     IMapper mapper,
     IRandomHelper randomHelper,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     ICachedCustomerService cachedCustomerService) : IInvitationService
@@ -124,13 +125,13 @@ public class InvitationService(
 
             if (matchingCustomerByEmail is null)
             {
-                temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationNewCustomer(
+                temporalOutboxService.StartWorkflowInviteToJoinOrganizationNewCustomer(
                     new InviteToJoinOrganizationNewCustomerInput(organization.Id, customer.Id, email),
                     repositoryFactory.UnitOfWork);
             }
             else
             {
-                temporalOutboxPublisher.StartWorkflowInviteToJoinOrganizationExistingCustomer(
+                temporalOutboxService.StartWorkflowInviteToJoinOrganizationExistingCustomer(
                     new InviteToJoinOrganizationExistingCustomerInput(
                         organization.Id,
                         matchingCustomerByEmail.Id,
@@ -184,7 +185,7 @@ public class InvitationService(
 
         if (joinInvitation.Invitee is not null)
         {
-            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
                 joinInvitation.Organization.Id,
                 joinInvitation.Invitee.Id,
                 joinInvitation.CreatedBy.Id,
@@ -214,7 +215,7 @@ public class InvitationService(
 
         if (joinInvitation.Invitee is not null)
         {
-            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
                 joinInvitation.Organization.Id,
                 joinInvitation.Invitee.Id,
                 joinInvitation.CreatedBy.Id,
@@ -251,7 +252,7 @@ public class InvitationService(
 
         if (joinInvitation.Invitee is not null)
         {
-            temporalOutboxPublisher.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
                 joinInvitation.Organization.Id,
                 joinInvitation.Invitee.Id,
                 joinInvitation.CreatedBy.Id,

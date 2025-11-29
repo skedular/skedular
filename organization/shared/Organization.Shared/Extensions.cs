@@ -33,8 +33,9 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
-                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
-                .AddSingleton<ITemporalSignalOutboxExecutor, TemporalSignalOutboxExecutorService>()
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
                 .AddSingleton<IGraphService, GraphService>()
                 .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
@@ -84,8 +85,7 @@ public static class Extensions
 
         public IServiceCollection AddOutboxPublishers() =>
             services
-                .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>()
-                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+                .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>();
 
         public IServiceCollection AddGrpcClients(IConfiguration configuration)
         {

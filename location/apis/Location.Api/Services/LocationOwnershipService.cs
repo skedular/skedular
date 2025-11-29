@@ -4,6 +4,7 @@ using Location.Api.Mappers;
 using Location.Api.Services.Authorization;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
 
@@ -26,7 +27,7 @@ public class LocationOwnershipService(
     TimeProvider timeProvider,
     IMapper mapper,
     ILocationOutboxPublisher locationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     ICachedLocationService cachedLocationService) : ILocationOwnershipService
 {
     public async Task<Shared.Models.Location> ClaimOwnershipAsync(
@@ -77,7 +78,7 @@ public class LocationOwnershipService(
 
         if (ownedBySkedularPublicLocationsOrganization)
         {
-            temporalOutboxPublisher.StartWorkflowLocationDailyAnalytics(
+            temporalOutboxService.StartWorkflowLocationDailyAnalytics(
                 new GenerateLocationDailyAnalyticsInput(location.Id, timeProvider.GetUtcNow().AddDays(1)),
                 repositoryFactory.UnitOfWork);
         }

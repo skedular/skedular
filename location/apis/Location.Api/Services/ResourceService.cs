@@ -9,6 +9,7 @@ using Location.Api.Services.Authorization;
 using Location.Shared.Models;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
+using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ public class ResourceService(
     ILocationOutboxPublisher locationOutboxPublisher,
     ICachedResourceService cachedResourceService,
     ICachedLocationService cachedLocationService,
-    ITemporalOutboxPublisher temporalOutboxPublisher) : IResourceService
+    ITemporalOutboxService temporalOutboxService) : IResourceService
 {
     public async Task<Resource> AddAsync(Resource resource, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
     {
@@ -132,7 +133,7 @@ public class ResourceService(
         var mappedResource = mapper.MapTo(repositoryFactory.ResourceRepository.Add(mapper.MapTo(resource, existingLocation, organizationTags)));
         locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
 
@@ -187,7 +188,7 @@ public class ResourceService(
 
         locationOutboxPublisher.PublishLocations([mappedLocation], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
 
@@ -497,7 +498,7 @@ public class ResourceService(
 
         locationOutboxPublisher.PublishLocations([mapper.MapTo(existingLocation)], repositoryFactory.UnitOfWork);
 
-        temporalOutboxPublisher.StartComputeOrganizationLocationsAndProductsRelationships(
+        temporalOutboxService.StartComputeOrganizationLocationsAndProductsRelationships(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(existingLocation.Organization.Id),
             repositoryFactory.UnitOfWork);
 

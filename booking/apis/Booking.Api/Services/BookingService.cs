@@ -49,7 +49,7 @@ public class BookingService(
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     IContext context,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
@@ -192,7 +192,7 @@ public class BookingService(
             switch (booking.PaymentMethod)
             {
                 case PaymentMethod.Card:
-                    temporalOutboxPublisher.StartWorkflowPayBookingViaCard(
+                    temporalOutboxService.StartWorkflowPayBookingViaCard(
                         new PayBookingViaCardInput(
                             booking.Id,
                             booking.PaymentExpiry,
@@ -200,7 +200,7 @@ public class BookingService(
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    temporalOutboxPublisher.StartWorkflowPayBookingViaBankTransfer(
+                    temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
                         new PayBookingViaBankTransferInput(
                             booking.Id,
                             booking.PaymentExpiry,
@@ -298,11 +298,11 @@ public class BookingService(
             switch (deletedBooking.PaymentMethod)
             {
                 case PaymentMethod.Card:
-                    temporalOutboxPublisher.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    temporalOutboxPublisher.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
                     break;
 
                 default: throw new ArgumentOutOfRangeException();

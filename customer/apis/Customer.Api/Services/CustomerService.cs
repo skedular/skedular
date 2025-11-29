@@ -4,6 +4,7 @@ using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
+using Customer.Shared.Services;
 using Customer.Shared.Services.Cache;
 using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared.Context;
@@ -42,7 +43,7 @@ public class CustomerService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerOutboxPublisher customerOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     IContext context,
     IRandomHelper randomHelper,
@@ -236,7 +237,7 @@ public class CustomerService(
 
         if (sendNewCustomerJoinedEmail)
         {
-            temporalOutboxPublisher.StartWorkflowNewCustomerJoined(new NewCustomerJoinedInput(customer.Id), repositoryFactory.UnitOfWork);
+            temporalOutboxService.StartWorkflowNewCustomerJoined(new NewCustomerJoinedInput(customer.Id), repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

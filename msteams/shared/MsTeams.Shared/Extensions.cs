@@ -22,8 +22,10 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<IGraphService, GraphService>()
-                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>();
 

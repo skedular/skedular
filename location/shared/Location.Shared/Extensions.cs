@@ -22,7 +22,9 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
-                .AddSingleton<ITemporalOutboxExecutor, TemporalOutboxExecutorService>()
+                .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
+                .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
@@ -58,7 +60,6 @@ public static class Extensions
 
         public IServiceCollection AddOutboxPublishers() =>
             services
-                .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>()
-                .AddSingleton<ITemporalOutboxPublisher, TemporalOutboxPublisher>();
+                .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>();
     }
 }

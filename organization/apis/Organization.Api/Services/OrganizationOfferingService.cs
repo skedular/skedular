@@ -8,6 +8,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
+using Organization.Shared.Services;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 
 namespace Organization.Api.Services;
@@ -33,7 +34,7 @@ public class OrganizationOfferingService(
     ICustomerService customerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
-    ITemporalOutboxPublisher temporalOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
     IMapper mapper,
     TimeProvider timeProvider) : IOrganizationOfferingService
@@ -101,9 +102,7 @@ public class OrganizationOfferingService(
 
         if (activeOffering is not null && activeOffering.Code != offeringCode)
         {
-            temporalOutboxPublisher.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(
-                activeOffering.Id,
-                repositoryFactory.UnitOfWork);
+            temporalOutboxService.SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(activeOffering.Id, repositoryFactory.UnitOfWork);
 
             repositoryFactory.OrganizationOfferingRepository.Remove(activeOffering);
         }
@@ -121,7 +120,7 @@ public class OrganizationOfferingService(
                 Organization = organization
             };
             repositoryFactory.OrganizationOfferingRepository.Add(organizationOffering);
-            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     organizationOffering.Id,
@@ -131,7 +130,7 @@ public class OrganizationOfferingService(
         else
         {
             repositoryFactory.OrganizationOfferingRepository.Undelete(matchingOffering);
-            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     matchingOffering.Id,
@@ -183,7 +182,7 @@ public class OrganizationOfferingService(
         foreach (var organization in organizations)
         {
             var offering = organization.OrganizationOfferings.First();
-            temporalOutboxPublisher.StartWorkflowScheduleRenewOrganizationOffering(
+            temporalOutboxService.StartWorkflowScheduleRenewOrganizationOffering(
                 new ScheduleRenewOrganizationOfferingInput(
                     organization.Id,
                     offering.Id,
