@@ -127,7 +127,7 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
-      key    = "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY"
+      key    = "GOOGLE_MAPS_API_KEY"
       value  = var.google_map_api_key
       target = ["development", "preview", "production"]
     },

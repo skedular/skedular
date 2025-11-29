@@ -1,4 +1,5 @@
-import { fetchPlaceDetails, fetchPlacePredictions, PlaceDetailsResult, PlacePrediction } from '@/libs/address/google-places';
+import { createPlacesSessionToken, fetchPlaceDetails, fetchPlacePredictions } from '@/libs/address/google-places';
+import { PlaceDetailsResult, PlacePrediction } from '@/libs/address/google-places-types';
 import { keyboardSearchDebounceTimeout } from '@/libs/utils';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,6 +15,7 @@ const GoogleAddressLookup = ({ onSelect }: Props) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<PlacePrediction[]>([]);
   const [loading, setLoading] = useState(false);
+  const [sessionToken, setSessionToken] = useState(() => createPlacesSessionToken());
 
   const handleSearch = async (query: string) => {
     if (!query || query.length < 3) {
@@ -24,7 +26,7 @@ const GoogleAddressLookup = ({ onSelect }: Props) => {
     setLoading(true);
 
     try {
-      const predictions = await fetchPlacePredictions(query);
+      const predictions = await fetchPlacePredictions(query, sessionToken);
       setOptions(predictions);
     } catch (error) {
       console.error('Google Places lookup error:', error);
@@ -66,8 +68,9 @@ const GoogleAddressLookup = ({ onSelect }: Props) => {
         setLoading(true);
 
         try {
-          const details = await fetchPlaceDetails(value.place_id);
+          const details = await fetchPlaceDetails(value.place_id, sessionToken);
           onSelect(details);
+          setSessionToken(createPlacesSessionToken());
         } catch (error) {
           console.error('Google Places details lookup error:', error);
         } finally {
