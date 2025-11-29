@@ -164,8 +164,11 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                 if (!rootData.myOrganizations) {
                   return (
                     <>
-                      <BodyIconTypography label="Please select an organization" sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }} />
-                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'none' } }} />
+                      <BodyIconTypography
+                        label="Please select an organization"
+                        sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -174,8 +177,11 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                 if (!selectedItem) {
                   return (
                     <>
-                      <BodyIconTypography label="Please select an organization" sx={{ display: { xs: 'none', sm: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }} />
-                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'none' } }} />
+                      <BodyIconTypography
+                        label="Please select an organization"
+                        sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, overflow: 'hidden', textOverflow: 'ellipsis' }}
+                      />
+                      <OrganizationIcon tip="Please select an organization" sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }} />
                     </>
                   );
                 }
@@ -220,13 +226,13 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           {!hideWelcomeMessage && (
             <>
               {!hideOrganizationSelector && !hideOrganizationSelector && rootData.myOrganizations.length !== 0 && <Divider orientation="vertical" flexItem />}
-              <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'block' }, paddingLeft: 2 }} />
+              <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: 2 }} />
             </>
           )}
           {showBreadcrumps && <>{breadcrumbs}</>}
 
           <PushToRight />
-          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'block' }, paddingRight: 2 }} />
+          <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
 
           <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">

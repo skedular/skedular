@@ -7,6 +7,8 @@ import type { marketplaceLocation_query$key } from '@/queries/__generated__/mark
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import NextLink from 'next/link';
@@ -114,6 +116,8 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
 
+  const theme = useTheme();
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locationDetails = rootData.location;
   const capacity = useMemo(() => {
@@ -190,91 +194,89 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     return null;
   }
 
+  const mapBlock = (
+    <Box sx={{ height: '20vh', width: '100%' }}>
+      <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+        <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+        {locaitonExists && <Marker position={initialPosition} />}
+      </MapContainer>
+    </Box>
+  );
+
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-      <StackColumn>
-        <ResponsiveImageCarousel images={featureImages} />
-        <GridContainer sx={{ mt: 2 }}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <StackColumn>
-              <SmallHeadingIconTypography label={locationDetails.name} />
-              <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
-              <LeadIconTypography label={'Opening Hours'} />
-              <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
-              <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
-              <SmallIconTypography label={`Wednesday: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
-              <SmallIconTypography label={`Thursday: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
-              <SmallIconTypography label={`Friday: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
-              <SmallIconTypography label={`Saturday: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
-              <SmallIconTypography label={`Sunday: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
-            </StackColumn>
-          </Grid>
+      <ResponsiveImageCarousel images={featureImages} />
+      <GridContainer sx={{ mt: 2 }}>
+        <Grid size={{ xs: 12, md: 9 }}>
+          <StackColumn>
+            <SmallHeadingIconTypography label={locationDetails.name} />
+            <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
+            <LeadIconTypography label={'Opening Hours'} />
+            <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
+            <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
+            <SmallIconTypography label={`Wednesday: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
+            <SmallIconTypography label={`Thursday: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
+            <SmallIconTypography label={`Friday: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
+            <SmallIconTypography label={`Saturday: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
+            <SmallIconTypography label={`Sunday: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
+            {isMdUp && <StackColumn sx={{ display: 'flex', alignItems: 'stretch' }}>{mapBlock}</StackColumn>}
+          </StackColumn>
+        </Grid>
 
-          <Grid size={{ xs: 12, md: 6 }}>
-            {extraMetadata?.contactDetails?.contactPeople && extraMetadata.contactDetails.contactPeople.length > 0 && (
-              <>
-                <CaptionIconTypography label={'Contact People'} />
-                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-              </>
-            )}
+        <Grid size={{ xs: 12, md: 3 }}>
+          {extraMetadata?.contactDetails?.contactPeople && extraMetadata.contactDetails.contactPeople.length > 0 && (
+            <>
+              <CaptionIconTypography label={'Contact People'} />
+              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+            </>
+          )}
 
-            {extraMetadata?.contactDetails?.contactPhones && extraMetadata.contactDetails.contactPhones.length > 0 && (
-              <>
-                <CaptionIconTypography label={'Phones'} />
-                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-              </>
-            )}
+          {extraMetadata?.contactDetails?.contactPhones && extraMetadata.contactDetails.contactPhones.length > 0 && (
+            <>
+              <CaptionIconTypography label={'Phones'} />
+              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+            </>
+          )}
 
-            {extraMetadata?.contactDetails?.contactEmails && extraMetadata.contactDetails.contactEmails.length > 0 && (
-              <>
-                <CaptionIconTypography label={'Emails'} />
-                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-              </>
-            )}
+          {extraMetadata?.contactDetails?.contactEmails && extraMetadata.contactDetails.contactEmails.length > 0 && (
+            <>
+              <CaptionIconTypography label={'Emails'} />
+              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+            </>
+          )}
 
-            {extraMetadata?.website && (
-              <>
-                <CaptionIconTypography label={'Website'} />
-                <Link component={NextLink} href={extraMetadata.website} target="_blank" rel="noopener noreferrer">
-                  <SmallIconTypography label={extraMetadata.website} sx={{ paddingBottom: 2 }} />
-                </Link>
-              </>
-            )}
+          {extraMetadata?.website && (
+            <>
+              <CaptionIconTypography label={'Website'} />
+              <Link component={NextLink} href={extraMetadata.website} target="_blank" rel="noopener noreferrer">
+                <SmallIconTypography label={extraMetadata.website} sx={{ paddingBottom: 2 }} />
+              </Link>
+            </>
+          )}
 
-            {locationDetails.physicalAddress && (
-              <>
-                <CaptionIconTypography label={'Address'} />
-                <SmallIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-              </>
-            )}
+          {locationDetails.physicalAddress && (
+            <>
+              <CaptionIconTypography label={'Address'} />
+              <SmallIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+            </>
+          )}
 
-            {areaSize && (
-              <>
-                <CaptionIconTypography label={'Total Area'} />
-                <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
-              </>
-            )}
+          {areaSize && (
+            <>
+              <CaptionIconTypography label={'Total Area'} />
+              <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+            </>
+          )}
 
-            {capacity && (
-              <>
-                <CaptionIconTypography label={'Capacity'} />
-                <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
-              </>
-            )}
-          </Grid>
-        </GridContainer>
-      </StackColumn>
-      <StackColumn sx={{ display: 'flex', alignItems: 'center' }}>
-        <Box sx={{ height: '20vh', width: { xs: '100%', sm: '50%' } }}>
-          <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {locaitonExists && <Marker position={initialPosition} />}
-          </MapContainer>
-        </Box>
-      </StackColumn>
+          {capacity && (
+            <>
+              <CaptionIconTypography label={'Capacity'} />
+              <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+            </>
+          )}
+        </Grid>
+      </GridContainer>
+      {!isMdUp && mapBlock}
     </StackColumn>
   );
 };
