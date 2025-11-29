@@ -15,7 +15,7 @@ public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
             inviterCustomerId,
             inviteeCustomerId,
             cancellationToken);
-        if (joinInvitation is null || joinInvitation.DeletedAt.HasValue)
+        if (joinInvitation is null)
         {
             // Invitation doesn't exist or was already processed
             return;

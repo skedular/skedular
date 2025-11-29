@@ -156,7 +156,7 @@ public class InvitationService(
         }
 
         joinInvitation.Status = InvitationStatusConstants.Accepted;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -177,7 +177,7 @@ public class InvitationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Rejected;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -201,7 +201,7 @@ public class InvitationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
-        joinInvitation = repositoryFactory.JoinInvitationRepository.Remove(joinInvitation);
+        joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

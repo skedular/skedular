@@ -7,7 +7,7 @@ namespace Team.Shared.Database.Entities;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
-public class JoinInvitation : EntityBaseWithDeleted
+public class JoinInvitation : EntityBase
 {
     public string? Email { get; set; }
     public string Status { get; set; }
@@ -23,7 +23,7 @@ public class JoinInvitationConfiguration : IEntityTypeConfiguration<JoinInvitati
 {
     public void Configure(EntityTypeBuilder<JoinInvitation> builder)
     {
-        builder.ConfigureEntityBaseWithDeleted();
+        builder.ConfigureEntityBase();
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxInvitationStatusLength);

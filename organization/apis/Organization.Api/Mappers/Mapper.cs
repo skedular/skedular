@@ -288,7 +288,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
             Status = src.Status.ToInvitationStatus(),
@@ -1684,7 +1683,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Email = src.Email,
             Status = src.Status.ToInvitationStatus(),

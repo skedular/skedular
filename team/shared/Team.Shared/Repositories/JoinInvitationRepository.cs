@@ -18,7 +18,6 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
-    JoinInvitation Remove(JoinInvitation joinInvitation);
 
     Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
@@ -39,8 +38,6 @@ internal static class JoinInvitationExtensions
 
         internal IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
         {
-            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
-
             if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
             {
                 originalQuery = originalQuery.Where(item =>
@@ -103,10 +100,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
     : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
     public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation
-            .CountAsync(
-                query => query.DeletedAt == null && query.Invitee != null && query.Invitee.Id == inviteeId,
-                cancellationToken);
+        await DbContext.JoinInvitation.CountAsync(query => query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
@@ -115,7 +109,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
 
     public async Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
-            .Where(query => !query.DeletedAt.HasValue && query.Team.Id == teamId && query.Status == status.ToInvitationStatus())
+            .Where(query => query.Team.Id == teamId && query.Status == status.ToInvitationStatus())
             .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
@@ -130,13 +124,6 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
     {
         var now = TimeProvider.GetUtcNow();
         joinInvitation.ModifiedAt = now;
-        return DbContext.JoinInvitation.Update(joinInvitation).Entity;
-    }
-
-    public JoinInvitation Remove(JoinInvitation joinInvitation)
-    {
-        var now = TimeProvider.GetUtcNow();
-        joinInvitation.DeletedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
 

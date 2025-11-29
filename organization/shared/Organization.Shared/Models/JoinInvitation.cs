@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
 
-public class JoinInvitation : ModelBaseWithDeleted
+public class JoinInvitation : ModelBase
 {
     public string? Email { get; set; } = string.Empty;
     public InvitationStatus Status { get; set; }
