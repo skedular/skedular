@@ -1,4 +1,4 @@
-import { CardMediaCarousel } from '@/components/CardMediaCarousel';
+import { CardMediaCarousel } from '@/components/carousel';
 import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';

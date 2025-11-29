@@ -1,4 +1,4 @@
-import { CardMediaCarousel } from '@/components/CardMediaCarousel';
+import { CardMediaCarousel } from '@/components/carousel';
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import { AreaIcon, CloseIcon, PersonIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';

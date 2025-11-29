@@ -1,5 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { CardMediaCarousel } from '@/components/CardMediaCarousel';
+import { CardMediaCarousel } from '@/components/carousel';
 import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';

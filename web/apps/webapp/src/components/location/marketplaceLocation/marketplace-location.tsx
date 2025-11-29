@@ -1,5 +1,5 @@
+import { ResponsiveImageCarousel } from '@/components/carousel';
 import { CaptionIconTypography, GridContainer, LeadIconTypography, SmallHeadingIconTypography, SmallIconTypography, StackColumn } from '@/components/commons';
-import StackRow from '@/components/commons/stack-row';
 import { AreaIcon, PersonIcon } from '@/components/icons';
 import { defaultPadding } from '@/libs/theme';
 import { stringCollectionToString, toOpeningHoursFromTime } from '@/libs/utils';
@@ -139,8 +139,10 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       return `${locationDetails.extraMetadata?.areaRange.fromInSqm} - ${locationDetails.extraMetadata?.areaRange.toInSqm} m2`;
     }
   }, [locationDetails?.extraMetadata?.areaRange]);
-  const locaitonExists = locationDetails?.physicalAddress?.longitude && locationDetails.physicalAddress?.latitude;
-  const initialPosition: LatLngTuple = locaitonExists ? [locationDetails.physicalAddress?.latitude, locationDetails.physicalAddress?.longitude] : [-36.8485, 174.7633];
+  const locaitonExists = locationDetails?.physicalAddress?.longitude && locationDetails?.physicalAddress?.latitude;
+  const initialPosition: LatLngTuple = locaitonExists
+    ? [locationDetails?.physicalAddress?.latitude as number, locationDetails?.physicalAddress?.longitude as number]
+    : [-36.8485, 174.7633];
 
   useEffect(() => {
     (async () => {
@@ -163,17 +165,15 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     })();
   }, []);
 
-  if (!dynamicLoadReady) {
-    return null;
-  }
-
-  if (!locationDetails) {
-    return null;
-  }
-
-  const openingHours = locationDetails.openingHours;
-  const extraMetadata = locationDetails.extraMetadata;
-
+  const openingHours = locationDetails?.openingHours;
+  const extraMetadata = locationDetails?.extraMetadata;
+  const featureImages = useMemo(
+    () => [
+      ...(locationDetails?.featureImages?.filter((item) => !!item.original?.url).map((item) => item.original!) ?? []),
+      ...(extraMetadata?.relatedImageLinks?.filter(Boolean).map((url) => ({ url, height: 200, width: 400 })) ?? []),
+    ],
+    [extraMetadata?.relatedImageLinks, locationDetails?.featureImages],
+  );
   const toOpeningHours = ({ closed, from, openAllDay, until }: { closed: boolean; from: string | null | undefined; openAllDay: boolean; until: string | null | undefined }) => {
     if (closed) {
       return 'Closed';
@@ -186,27 +186,14 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     return `${toOpeningHoursFromTime(from)?.format('hh:mm a')} - ${toOpeningHoursFromTime(until)?.format('hh:mm a')}`;
   };
 
+  if (!dynamicLoadReady || !locationDetails || !openingHours) {
+    return null;
+  }
+
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <StackColumn>
-        <StackRow>
-          {locationDetails.featureImages
-            .filter((item) => !!item.original)
-            .map((item) => (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img key={item.original!.url} src={item.original!.url} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-              </>
-            ))}
-          {extraMetadata?.relatedImageLinks
-            ?.filter((item) => !!item)
-            .map((item, index) => (
-              <>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img key={index} src={item} height={200} width={400} alt="" style={{ objectFit: 'cover' }} />
-              </>
-            ))}
-        </StackRow>
+        <ResponsiveImageCarousel images={featureImages} />
         <GridContainer sx={{ mt: 2 }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <StackColumn>

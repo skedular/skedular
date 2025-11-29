@@ -1,6 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
-import { CardMediaCarousel } from '@/components/CardMediaCarousel';
+import { CardMediaCarousel } from '@/components/carousel';
 import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { ContactEmails } from '@/components/contactEmail';
 import { ContactPeople } from '@/components/contactPeople';
