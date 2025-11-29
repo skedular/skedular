@@ -1,3 +1,4 @@
+import { CardMediaCarousel } from '@/components/CardMediaCarousel';
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import { AreaIcon, CloseIcon, PersonIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
@@ -7,7 +8,6 @@ import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__ge
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import NextLink from 'next/link';
 import { memo, useContext, useMemo } from 'react';
@@ -82,9 +82,7 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
       component={NextLink}
       href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
     >
-      {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
-        <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: locationDetails.featureImages[0].thumbnail.height }} />
-      )}
+      <CardMediaCarousel images={locationDetails.featureImages ?? []} />
       <CardHeader
         sx={{ height: 60 }}
         title={

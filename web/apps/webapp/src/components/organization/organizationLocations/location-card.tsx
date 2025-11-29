@@ -1,5 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { NewBookingButton } from '@/components/booking/addBooking';
+import { CardMediaCarousel } from '@/components/CardMediaCarousel';
 import { BodyIconTypography, DefaultDialogTitle, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { ContactEmails } from '@/components/contactEmail';
 import { ContactPeople } from '@/components/contactPeople';
@@ -27,7 +28,6 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -549,22 +549,20 @@ const LocationCard = ({
     });
   };
 
-  if (!dynamicLoadReady) {
-    return null;
-  }
-
   const resourcesCount = locationDetails.resources.totalCount;
   const zones = locationDetails.zones.map(({ id, name, color }) => ({ id, name, color }));
   const contactPeople = locationDetails.extraMetadata?.contactDetails?.contactPeople ?? [];
   const contactEmails = locationDetails.extraMetadata?.contactDetails?.contactEmails ?? [];
   const contactPhones = locationDetails.extraMetadata?.contactDetails?.contactPhones ?? [];
 
+  if (!dynamicLoadReady) {
+    return null;
+  }
+
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {locationDetails.featureImages && locationDetails.featureImages.length > 0 && locationDetails.featureImages[0].thumbnail && (
-          <CardMedia component="img" image={locationDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: locationDetails.featureImages[0].thumbnail.height }} />
-        )}
+        <CardMediaCarousel images={locationDetails.featureImages ?? []} />
         <CardHeader
           title={
             <StackRow>

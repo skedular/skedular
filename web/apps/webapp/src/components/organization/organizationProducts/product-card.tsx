@@ -1,3 +1,4 @@
+import { CardMediaCarousel } from '@/components/CardMediaCarousel';
 import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '@/components/commons';
 import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';
@@ -15,7 +16,6 @@ import type { productCard_query$key } from '@/queries/__generated__/productCard_
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
@@ -284,9 +284,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        {productDetails.featureImages && productDetails.featureImages.length > 0 && productDetails.featureImages[0].thumbnail && (
-          <CardMedia component="img" image={productDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: productDetails.featureImages[0].thumbnail.height }} />
-        )}
+        <CardMediaCarousel images={productDetails.featureImages ?? []} />
         <CardHeader
           title={
             <StackRow>

@@ -1,4 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
+import { CardMediaCarousel } from '@/components/CardMediaCarousel';
 import { DefaultDialogTitle, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import { EllipseMenuIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationTeamSetupBaseLink } from '@/components/links';
@@ -14,7 +15,6 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
@@ -180,9 +180,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
-        {teamDetails.featureImages && teamDetails.featureImages.length > 0 && teamDetails.featureImages[0].thumbnail && (
-          <CardMedia component="img" image={teamDetails.featureImages[0].thumbnail.url} sx={{ objectFit: 'fill', height: teamDetails.featureImages[0].thumbnail.height }} />
-        )}
+        <CardMediaCarousel images={teamDetails.featureImages ?? []} />
         <CardHeader
           title={
             <StackRow>
