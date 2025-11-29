@@ -118,18 +118,14 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         string organizationId,
         string inviterId,
         string inviteeId,
-        CancellationToken cancellationToken)
-    {
-        // Build the query with eager loading and tracking enabled
-        var query = DbContext.JoinInvitation
+        CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
             .AddDependentObjects(true)
             .Where(query => query.Organization.Id == organizationId
                             && query.CreatedBy.Id == inviterId
                             && query.Invitee != null && query.Invitee.Id == inviteeId
-                            && query.Status == InvitationStatus.Pending.ToInvitationStatus());
-
-        return await query.FirstOrDefaultAsync(cancellationToken);
-    }
+                            && query.Status == InvitationStatus.Pending.ToInvitationStatus())
+            .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
         string? organizationId,

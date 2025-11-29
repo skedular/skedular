@@ -19,6 +19,12 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
 
+    Task<JoinInvitation?> GetByTeamInviterInviteeIdAsync(
+        string teamId,
+        string inviterId,
+        string inviteeId,
+        CancellationToken cancellationToken);
+
     Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
@@ -126,6 +132,19 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         joinInvitation.ModifiedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
+
+    public async Task<JoinInvitation?> GetByTeamInviterInviteeIdAsync(
+        string teamId,
+        string inviterId,
+        string inviteeId,
+        CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
+            .AddDependentObjects(true)
+            .Where(query => query.Team.Id == teamId
+                            && query.CreatedBy.Id == inviterId
+                            && query.Invitee != null && query.Invitee.Id == inviteeId
+                            && query.Status == InvitationStatus.Pending.ToInvitationStatus())
+            .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,

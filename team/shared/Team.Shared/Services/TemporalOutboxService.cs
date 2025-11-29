@@ -5,8 +5,8 @@ using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Team.Shared.Workflows;
-using Team.Shared.Workflows.InviteToJoinTeamExistingCustomer;
-using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
+using Team.Shared.Workflows.Invitation.InviteToJoinTeamExistingCustomer;
+using Team.Shared.Workflows.Invitation.InviteToJoinTeamNewCustomer;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 using Temporalio.Exceptions;
@@ -17,16 +17,27 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 {
     void StartWorkflowInviteToJoinTeamExistingCustomer(InviteToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoinTeamNewCustomer(InviteToJoinTeamNewCustomerInput args, IUnitOfWork unitOfWork);
+
+    void SignalWorkflowInviteToJoinTeamExistingCustomerInvitationStatusChanged(
+        string teamId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
-    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxService
+    ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
+    ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor) : ITemporalOutboxService
 {
     private static readonly string s_inviteToJoinTeamExistingCustomer = typeof(InviteToJoinTeamExistingCustomer).ToWorkflowType();
     private static readonly string s_inviteToJoinTeamNewCustomer = typeof(InviteToJoinTeamNewCustomer).ToWorkflowType();
+
+    private static readonly string s_inviteToJoinTeamExistingCustomerInvitationStatusChangedAsync =
+        typeof(InviteToJoinTeamExistingCustomer).GetMethod(nameof(InviteToJoinTeamExistingCustomer.InvitationStatusChangedAsync))!
+            .ToWorkflowSignalType();
 
     public void StartWorkflowInviteToJoinTeamExistingCustomer(InviteToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<InviteToJoinTeamExistingCustomer, InviteToJoinTeamExistingCustomerInput>(
@@ -50,6 +61,18 @@ public class TemporalOutboxService(
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
             },
+            unitOfWork);
+
+    public void SignalWorkflowInviteToJoinTeamExistingCustomerInvitationStatusChanged(
+        string teamId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId(
+                $"{Constants.InviteToTeamExistingCustomerPrefix}-{teamId}-{inviteeCustomerId}-{inviterCustomerId}"),
+            s_inviteToJoinTeamExistingCustomerInvitationStatusChangedAsync,
+            new WorkflowSignalOptions(),
             unitOfWork);
 
     public async Task StartWorkflowAsync(
@@ -92,11 +115,24 @@ public class TemporalOutboxService(
         }
     }
 
-    public Task SignalAsync(
+    public async Task SignalAsync(
         string workflowId,
         string signalType,
         string? executionArgs,
         WorkflowSignalOptions workflowSignalOptions,
-        CancellationToken cancellationToken) =>
-        Task.CompletedTask;
+        CancellationToken cancellationToken)
+    {
+        await temporalClient.Connection.ConnectAsync();
+        if (signalType == s_inviteToJoinTeamExistingCustomerInvitationStatusChangedAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<InviteToJoinTeamExistingCustomer>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<InviteToJoinTeamExistingCustomer>(workflowId)
+                .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
+        }
+    }
 }

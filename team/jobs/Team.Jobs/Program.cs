@@ -9,8 +9,8 @@ using Team.Shared;
 using Team.Shared.Activities;
 using Team.Shared.Configurations;
 using Team.Shared.Database;
-using Team.Shared.Workflows.InviteToJoinTeamExistingCustomer;
-using Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
+using Team.Shared.Workflows.Invitation.InviteToJoinTeamExistingCustomer;
+using Team.Shared.Workflows.Invitation.InviteToJoinTeamNewCustomer;
 using Temporalio.Extensions.Hosting;
 
 namespace Team.Jobs;
@@ -52,7 +52,8 @@ public class Program
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
             .AddWorkflow<InviteToJoinTeamExistingCustomer>()
             .AddWorkflow<InviteToJoinTeamNewCustomer>()
-            .AddScopedActivities<EmailIntegrations>();
+            .AddScopedActivities<EmailIntegrations>()
+            .AddScopedActivities<InvitationIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

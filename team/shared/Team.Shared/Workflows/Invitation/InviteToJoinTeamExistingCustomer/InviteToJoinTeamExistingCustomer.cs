@@ -1,30 +1,27 @@
-using Organization.Shared.Activities;
+using Team.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
+namespace Team.Shared.Workflows.Invitation.InviteToJoinTeamExistingCustomer;
 
-public record InviteToJoinOrganizationExistingCustomerInput(string OrganizationId, string InviteeCustomerId, string InviterCustomerId);
+public record InviteToJoinTeamExistingCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerId);
 
-public record InviteToJoinOrganizationExistingCustomerState(bool InvitationStateChanged);
+public record InviteToJoinTeamExistingCustomerState(bool InvitationStateChanged);
 
 [Workflow]
-public class InviteToJoinOrganizationExistingCustomer
+public class InviteToJoinTeamExistingCustomer
 {
-    private InviteToJoinOrganizationExistingCustomerState? _state;
+    private InviteToJoinTeamExistingCustomerState? _state;
 
     [WorkflowRun]
-    public async Task ExecuteAsync(InviteToJoinOrganizationExistingCustomerInput args)
+    public async Task ExecuteAsync(InviteToJoinTeamExistingCustomerInput args)
     {
-        _state = new InviteToJoinOrganizationExistingCustomerState(false);
+        _state = new InviteToJoinTeamExistingCustomerState(false);
 
         // Step 1: Send invitation email
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
-                activity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(
-                    args.OrganizationId,
-                    args.InviteeCustomerId,
-                    args.InviterCustomerId),
+                activity.SendInviteCustomerToJoinTeamExistingCustomerAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerId),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),
@@ -40,7 +37,7 @@ public class InviteToJoinOrganizationExistingCustomer
         {
             await Workflow.ExecuteActivityAsync(
                 (InvitationIntegrations activity) =>
-                    activity.ExpireInvitationAsync(args.OrganizationId, args.InviterCustomerId, args.InviteeCustomerId),
+                    activity.ExpireInvitationAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),

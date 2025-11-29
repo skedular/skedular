@@ -2,7 +2,7 @@ using Team.Shared.Activities;
 using Temporalio.Common;
 using Temporalio.Workflows;
 
-namespace Team.Shared.Workflows.InviteToJoinTeamNewCustomer;
+namespace Team.Shared.Workflows.Invitation.InviteToJoinTeamNewCustomer;
 
 public record InviteToJoinTeamNewCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerEmail);
 
