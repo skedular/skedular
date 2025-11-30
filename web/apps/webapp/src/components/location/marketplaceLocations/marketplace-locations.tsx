@@ -349,7 +349,7 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
             paddingLeft: defaultPadding,
             paddingRight: defaultPadding,
             paddingTop: defaultPadding,
-            paddingBottom: 7,
+            paddingBottom: defaultPadding,
           }}
         >
           <Box sx={{ pointerEvents: 'auto' }}>
