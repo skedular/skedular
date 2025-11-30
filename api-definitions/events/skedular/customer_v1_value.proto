@@ -52,9 +52,10 @@ message Customer {
   repeated Resource preferredResources = 21;
   Settings settings = 22;
   repeated OrganizationTag preferredOrganizationTags = 23;
-  string phoneNumber = 24;
-  CustomerBillingDetails billingDetails = 25;
-  PersonalInformationVisibility personalInformationVisibility = 26;
+  repeated Location favouriteLocations = 24;
+  string phoneNumber = 25;
+  CustomerBillingDetails billingDetails = 26;
+  PersonalInformationVisibility personalInformationVisibility = 27;
 }
 
 message Identity {

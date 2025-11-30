@@ -43,6 +43,7 @@ public class CustomerDetails : Node
     [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
     [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
     [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
+    [GraphQLName("favouriteLocationIds")] public IEnumerable<string> FavouriteLocationIds { get; set; } = [];
 
     [GraphQLName("personalInformationVisibility")]
     public PersonalInformationVisibilityDetails PersonalInformationVisibility { get; set; } = new();
@@ -85,6 +86,7 @@ public static partial class CustomerDetailsType
         descriptor.Ignore(item => item.PreferredZoneIds);
         descriptor.Ignore(item => item.PreferredCustomTagIds);
         descriptor.Ignore(item => item.PreferredResourceIds);
+        descriptor.Ignore(item => item.FavouriteLocationIds);
     }
 
     public static OrganizationDetails? GetOrganization([Parent] CustomerDetails item) => string.IsNullOrWhiteSpace(item.DefaultOrganizationId)
@@ -102,4 +104,7 @@ public static partial class CustomerDetailsType
 
     public static IEnumerable<ResourceDetails> GetPreferredResources([Parent] CustomerDetails item) =>
         item.PreferredResourceIds.Select(id => new ResourceDetails(id));
+
+    public static IEnumerable<LocationDetails> GetFavouriteLocations([Parent] CustomerDetails item) =>
+        item.FavouriteLocationIds.Select(id => new LocationDetails(id));
 }

@@ -16,6 +16,7 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public ICollection<Location> FavouriteLocations { get; set; } = [];
     public StripeCustomer? StripeCustomer { get; set; }
     public CustomerBillingDetails? BillingDetails { get; set; }
     public string DisplayableName => this.ToDisplayableName();

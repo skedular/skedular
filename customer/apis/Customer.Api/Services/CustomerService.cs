@@ -203,6 +203,12 @@ public class CustomerService(
                     cancellationToken));
         }
 
+        var favouriteLocations = new List<Location>();
+        foreach (var location in customer.FavouriteLocations)
+        {
+            favouriteLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, null, cancellationToken));
+        }
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -216,7 +222,8 @@ public class CustomerService(
                 defaultOrganization,
                 preferredLocations,
                 preferredResources,
-                preferredOrganizationTags);
+                preferredOrganizationTags,
+                favouriteLocations);
 
             identities.ForEach(identity => identity.Customer = existingCustomer);
             repositoryFactory.IdentityRepository.AddRange(identities);

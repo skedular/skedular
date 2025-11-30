@@ -116,4 +116,24 @@ public class RootMutation(IMapper mapper)
         var customer = await customerResourceSettingsService.RemoveCustomerPreferredResourceAsync(input.ResourceId, null, cancellationToken);
         return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
     }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload> AddCustomerFavouriteLocationAsync(
+        AddCustomerFavouriteLocationInput input,
+        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerLocationSettingsService.AddCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+    }
+
+    [UseResolverScope]
+    public async Task<CustomerPayload> RemoveCustomerFavouriteLocationAsync(
+        RemoveCustomerFavouriteLocationInput input,
+        [Service] ICustomerLocationSettingsService customerLocationSettingsService,
+        CancellationToken cancellationToken)
+    {
+        var customer = await customerLocationSettingsService.RemoveCustomerFavouriteLocationAsync(input.LocationId, cancellationToken);
+        return new CustomerPayload { ClientMutationId = input.ClientMutationId, Customer = mapper.MapTo(customer) };
+    }
 }

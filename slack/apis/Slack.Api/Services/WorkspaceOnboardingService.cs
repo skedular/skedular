@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -59,7 +60,10 @@ public class WorkspaceOnboardingService(
         _ = await locationService.AdminAddAsync(
             new Location
             {
-                Id = location.Id, Name = $"{name.ToSafeString()} Office", Organization = new Shared.Models.Organization { Id = organization.Id }
+                Id = location.Id,
+                Name = $"{name.ToSafeString()} Office",
+                Organization = new Shared.Models.Organization { Id = organization.Id },
+                Type = LocationType.Private
             }, cancellationToken);
     }
 }

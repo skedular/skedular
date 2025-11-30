@@ -42,6 +42,7 @@ type CustomerDetails {
   preferredZones: [OrganizationTagDetails!]!
   preferredCustomTags: [OrganizationTagDetails!]!
   preferredResources: [ResourceDetails!]!
+  favouriteLocations: [LocationDetails!]!
   hasAttachedPaymentMethod: Boolean! @cost(weight: "10")
   paymentMethods: [CustomerPaymentMethod!]! @cost(weight: "10")
   billingDetails: CustomerBillingDetails @cost(weight: "10")
@@ -120,6 +121,8 @@ type Mutation {
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
+  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
+  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
 }
 
 type OrganizationDetails {
@@ -170,6 +173,11 @@ type Version {
   minor: Int!
   build: Int!
   revision: Int!
+}
+
+input AddCustomerFavouriteLocationInput {
+  clientMutationId: String
+  locationId: String!
 }
 
 input AddCustomerPaymentMethodIntentInput {
@@ -228,6 +236,11 @@ input CustomerOrderInput {
 input CustomersByPreferredLocationWhereInput {
   locationId: String!
   nameContains: String
+}
+
+input RemoveCustomerFavouriteLocationInput {
+  clientMutationId: String
+  locationId: String!
 }
 
 input RemoveCustomerPaymentMethodInput {

@@ -35,7 +35,8 @@ public interface IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Resource> preferredResources,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags);
+        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
+        ICollection<Shared.Database.Entities.Location> favouriteLocations);
 
     IEnumerable<Identity> MapToEntity(IEnumerable<Shared.Models.Identity> src);
     CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src);
@@ -100,6 +101,7 @@ public class Mapper : IMapper
             PreferredLocations = [],
             PreferredOrganizationTags = [],
             PreferredResources = [],
+            FavouriteLocations = [],
             PersonalInformationVisibility = PersonalInformationVisibility.Visible
         };
 
@@ -137,6 +139,7 @@ public class Mapper : IMapper
             PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
             PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
             PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
+            FavouriteLocationIds = src.FavouriteLocations.Select(item => item.Id),
             PersonalInformationVisibility = new PersonalInformationVisibilityDetails
             {
                 Type = src.PersonalInformationVisibility, Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName()
@@ -176,6 +179,7 @@ public class Mapper : IMapper
             PreferredLocations = MapTo(src.PreferredLocations).ToList(),
             PreferredResources = MapTo(src.PreferredResources).ToList(),
             PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
+            FavouriteLocations = MapTo(src.FavouriteLocations).ToList(),
             StripeCustomer = MapTo(src.StripeCustomer),
             StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList(),
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
@@ -249,6 +253,7 @@ public class Mapper : IMapper
             PreferredOrganizationTags = src.PreferredOrganizationTags
                 .Select(item => new OrganizationTag { Id = item.Id, Organization = new Organization { Id = item.Organization.Id } })
                 .ToList(),
+            FavouriteLocations = [],
             PersonalInformationVisibility = src.PersonalInformationVisibility switch
             {
                 global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
@@ -300,6 +305,7 @@ public class Mapper : IMapper
         customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
         customer.PreferredResourceIds.AddRange(src.PreferredResources.Select(item => item.Id));
         customer.PreferredOrganizationTagIds.AddRange(src.PreferredOrganizationTags.Select(item => item.Id));
+        customer.FavouriteLocationIds.AddRange(src.FavouriteLocations.Select(item => item.Id));
 
         return customer;
     }
@@ -474,7 +480,8 @@ public class Mapper : IMapper
         Shared.Database.Entities.Organization? defaultOrganization,
         ICollection<Shared.Database.Entities.Location> preferredLocations,
         ICollection<Resource> preferredResources,
-        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags) =>
+        ICollection<Shared.Database.Entities.OrganizationTag> preferredOrganizationTags,
+        ICollection<Shared.Database.Entities.Location> favouriteLocations) =>
         new()
         {
             Id = src.Id,
@@ -500,6 +507,7 @@ public class Mapper : IMapper
             PreferredLocations = preferredLocations,
             PreferredResources = preferredResources,
             PreferredOrganizationTags = preferredOrganizationTags,
+            FavouriteLocations = favouriteLocations,
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
         };
 
@@ -549,6 +557,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Organization = MapTo(src.Organization),
+                Type = src.Type.ToNullableLocationType(),
                 Resources = MapTo(src.Resources).ToList()
             };
 

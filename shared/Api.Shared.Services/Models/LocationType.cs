@@ -14,6 +14,19 @@ public static class LocationTypeConstants
 
 public static class LocationTypeExtensions
 {
+    extension(LocationType? src)
+    {
+        public string? ToNullableLocationType() =>
+            src is null
+                ? null
+                : src switch
+                {
+                    LocationType.Private => LocationTypeConstants.Private,
+                    LocationType.Marketplace => LocationTypeConstants.Marketplace,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+    }
+
     extension(LocationType src)
     {
         public string ToLocationType() =>
@@ -31,6 +44,19 @@ public static class LocationTypeExtensions
                 LocationType.Marketplace => "Marketplace",
                 _ => throw new ArgumentOutOfRangeException()
             };
+    }
+
+    extension(string? src)
+    {
+        public LocationType? ToNullableLocationType() =>
+            src is null
+                ? null
+                : src switch
+                {
+                    LocationTypeConstants.Private => LocationType.Private,
+                    LocationTypeConstants.Marketplace => LocationType.Marketplace,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
     }
 
     extension(string src)

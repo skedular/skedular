@@ -65,6 +65,10 @@ public class Mapper : IMapper
         customer.PreferredOrganizationTags.AddRange(
             src.PreferredOrganizationTags.Select(item => new OrganizationTag { Id = item.Id, OrganizationId = item.Organization.Id })
         );
+        customer.FavouriteLocations.AddRange(
+            src.FavouriteLocations.Select(item =>
+                new Location { Id = item.Id, OrganizationId = item.Organization is null ? string.Empty : item.Organization.Id })
+        );
 
         return customer;
     }

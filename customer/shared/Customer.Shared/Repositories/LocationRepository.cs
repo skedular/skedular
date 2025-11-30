@@ -22,7 +22,8 @@ internal static class LocationExtensions
             originalQuery
                 .Include(query => query.Resources)
                 .Include(query => query.Organization)
-                .Include(query => query.PreferredByCustomers);
+                .Include(query => query.PreferredByCustomers)
+                .Include(query => query.FavouredByCustomers);
     }
 }
 

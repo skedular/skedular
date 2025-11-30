@@ -88,7 +88,12 @@ public class LocationService(
                     Id = location.Id,
                     Name = location.Name,
                     OrganizationId = location.Organization!.Id,
-                    Type = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private
+                    Type = location.Type switch
+                    {
+                        LocationType.Private => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Private,
+                        LocationType.Marketplace => Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType.Marketplace,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
                 },
                 locationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));

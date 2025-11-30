@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,9 +9,11 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Location : ReplicatedEntityBaseWithDeleted
 {
+    public string? Type { get; set; }
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual Organization? Organization { get; set; }
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
+    public virtual ICollection<Customer> FavouredByCustomers { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -20,6 +23,9 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength);
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);
+
+        builder.HasIndex(item => item.Type);
     }
 }

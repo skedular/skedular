@@ -3,6 +3,7 @@ using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
 using Location = Customer.Shared.Models.Location;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationMember = Customer.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
@@ -133,7 +134,13 @@ public class Mapper : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            Organization = new Organization { Id = locationAfterState.OrganizationId }
+            Organization = new Organization { Id = locationAfterState.OrganizationId },
+            Type = locationAfterState.Type switch
+            {
+                LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         };
 
         location.Resources = locationAfterState.Resources.Select(item =>
@@ -174,6 +181,7 @@ public class Mapper : IMapper
                 PreferredLocations = MapTo(src.PreferredLocations).ToList(),
                 PreferredResources = MapTo(src.PreferredResources).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
+                FavouriteLocations = MapTo(src.FavouriteLocations).ToList(),
                 PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
             };
 
@@ -194,6 +202,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Type = src.Type.ToNullableLocationType();
         dest.Organization = organization;
         return dest;
     }
@@ -308,6 +317,7 @@ public class Mapper : IMapper
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
                 Organization = MapTo(src.Organization),
+                Type = src.Type.ToNullableLocationType(),
                 Resources = includeResources ? MapTo(src.Resources).ToList() : []
             };
 

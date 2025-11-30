@@ -78,12 +78,14 @@ public class LocationSubscriber(
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
     {
-        await UpdateCustomerPreferredLocationsAsync(existingLocation, cancellationToken);
+        await UpdateCustomerRelatedLocationsAsync(existingLocation, cancellationToken);
         _ = repositoryFactory.LocationRepository.Remove(existingLocation);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<Location> RebuildResourcesAsync(Shared.Models.Location location, Location existingLocation,
+    private async Task<Location> RebuildResourcesAsync(
+        Shared.Models.Location location,
+        Location existingLocation,
         CancellationToken cancellationToken)
     {
         var resources = await repositoryFactory.ResourceRepository.GetByLocationIdAsync(existingLocation.Id, cancellationToken);
@@ -111,7 +113,7 @@ public class LocationSubscriber(
         return existingLocation;
     }
 
-    private async Task UpdateCustomerPreferredLocationsAsync(Location location, CancellationToken cancellationToken)
+    private async Task UpdateCustomerRelatedLocationsAsync(Location location, CancellationToken cancellationToken)
     {
         var customerIds = location.PreferredByCustomers.Select(customer => customer.Id).ToList();
         foreach (var customerId in customerIds)
@@ -120,6 +122,9 @@ public class LocationSubscriber(
             customer.PreferredLocations = customer.PreferredLocations.Where(item => item.Id != location.Id).ToList();
             customer.PreferredResources =
                 customer.PreferredResources.Where(item => item.Location is not null && item.Location.Id != location.Id).ToList();
+
+            customer.FavouriteLocations = customer.FavouriteLocations.Where(item => item.Id != location.Id).ToList();
+
             _ = repositoryFactory.CustomerRepository.Update(customer);
 
             await cachedCustomerService.RemoveAsync([customer], cancellationToken);

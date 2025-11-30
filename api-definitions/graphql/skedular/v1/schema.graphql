@@ -228,6 +228,7 @@ type CustomerDetails {
   email: String
   emails: [String!]!
   familyName: String
+  favouriteLocations: [LocationDetails!]!
   givenName: String
   hasAttachedPaymentMethod: Boolean! @cost(weight: "10")
   id: ID!
@@ -452,6 +453,7 @@ type Mutation {
   activateProducts(input: ActivateProductsInput!): ProductsPayload! @cost(weight: "10")
   activateResources(input: ActivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
   addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
+  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
@@ -514,6 +516,7 @@ type Mutation {
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
@@ -1294,6 +1297,11 @@ input AddCustomTagInput {
   organizationUniqueAlphanumericName: String
 }
 
+input AddCustomerFavouriteLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+
 input AddCustomerPaymentMethodIntentInput {
   clientMutationId: String
 }
@@ -2034,6 +2042,11 @@ input RejectInvitationToJoinOrganizationInput {
 input RejectInvitationToJoinTeamInput {
   clientMutationId: String
   id: String!
+}
+
+input RemoveCustomerFavouriteLocationInput {
+  clientMutationId: String
+  locationId: String!
 }
 
 input RemoveCustomerPaymentMethodInput {

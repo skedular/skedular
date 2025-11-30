@@ -113,10 +113,11 @@ message Customer {
   repeated string preferredLocationIds = 19;
   repeated string preferredResourceIds = 20;
   repeated string preferredOrganizationTagIds = 21;
-  string phoneNumber = 22;
-  bool isOnboardingDone = 23;
-  string displayableName = 24;
-  PersonalInformationVisibility personalInformationVisibility = 25;
+  repeated string favouriteLocationIds = 22;
+  string phoneNumber = 23;
+  bool isOnboardingDone = 24;
+  string displayableName = 25;
+  PersonalInformationVisibility personalInformationVisibility = 26;
 }
 
 message Identity {

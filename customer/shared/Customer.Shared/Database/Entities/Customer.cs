@@ -20,6 +20,7 @@ public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
     public virtual ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<StripePaymentMethod> StripePaymentMethods { get; set; } = [];
+    public virtual ICollection<Location> FavouriteLocations { get; set; } = [];
     public virtual StripeCustomer? StripeCustomer { get; set; }
     public virtual CustomerBillingDetails? BillingDetails { get; set; }
     public string PersonalInformationVisibility { get; set; }
@@ -77,6 +78,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasMany(item => item.PreferredResources).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.PreferredOrganizationTags).WithMany(item => item.PreferredByCustomers);
         builder.HasMany(item => item.StripePaymentMethods).WithOne(item => item.Customer);
+        builder.HasMany(item => item.FavouriteLocations).WithMany(item => item.FavouredByCustomers);
 
         builder.HasIndex(item => item.IsOnboardingDone);
         builder.HasIndex(item => item.Designation);
