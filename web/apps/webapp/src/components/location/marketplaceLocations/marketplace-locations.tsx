@@ -48,7 +48,7 @@ type Props = {
   onReloadRequired: () => void;
 };
 
-const pageSize = 10;
+const pageSize = 9;
 
 const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Props) => {
   const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
@@ -97,6 +97,15 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
   const pathname = usePathname();
   const router = useRouter();
   const lastQueryRef = useRef<string | null>(null); // guard against redundant router.replace loops when syncing map center/zoom to query params
+  const currentUrl = useMemo(() => {
+    const params = searchParams?.toString();
+    return params ? `${pathname}?${params}` : pathname;
+  }, [pathname, searchParams]);
+
+  if (lastQueryRef.current === null) {
+    // seed with the initial URL so the first replace is only triggered on actual changes
+    lastQueryRef.current = currentUrl;
+  }
 
   const selectedLocation = useMemo(() => {
     if (!selectedLocationId) {
@@ -264,13 +273,16 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
 
   const updateQueryFromMap = (lat: number, lng: number, zoom: number) => {
     const params = new URLSearchParams(searchParams?.toString());
+
     params.set('lat', lat.toString());
     params.set('lng', lng.toString());
     params.set('zoom', zoom.toString());
+
     const newUrl = `${pathname}?${params.toString()}`;
     if (lastQueryRef.current === newUrl) {
       return;
     }
+
     lastQueryRef.current = newUrl;
     router.replace(newUrl, { scroll: false });
   };
