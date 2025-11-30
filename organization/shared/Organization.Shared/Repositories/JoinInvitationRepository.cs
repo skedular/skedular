@@ -107,7 +107,8 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
     : RepositoryBase<OrganizationDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
     public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation.CountAsync(query => query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
+        await DbContext.JoinInvitation.CountAsync(
+            query => query.Status == InvitationStatusConstants.Pending && query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
@@ -124,7 +125,7 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             .Where(query => query.Organization.Id == organizationId
                             && query.CreatedBy.Id == inviterId
                             && query.Invitee != null && query.Invitee.Id == inviteeId
-                            && query.Status == InvitationStatus.Pending.ToInvitationStatus())
+                            && query.Status == InvitationStatusConstants.Pending)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(

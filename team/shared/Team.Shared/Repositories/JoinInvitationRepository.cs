@@ -106,7 +106,8 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
     : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
     public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation.CountAsync(query => query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
+        await DbContext.JoinInvitation.CountAsync(
+            query => query.Status == InvitationStatusConstants.Pending && query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
@@ -143,7 +144,7 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
             .Where(query => query.Team.Id == teamId
                             && query.CreatedBy.Id == inviterId
                             && query.Invitee != null && query.Invitee.Id == inviteeId
-                            && query.Status == InvitationStatus.Pending.ToInvitationStatus())
+                            && query.Status == InvitationStatusConstants.Pending)
             .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
