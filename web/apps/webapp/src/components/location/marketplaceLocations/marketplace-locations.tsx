@@ -5,11 +5,13 @@ import type { marketplaceLocations_locations_refetchableFragment, OrganizationTa
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Pagination from '@mui/material/Pagination';
 import type { Theme } from '@mui/material/styles';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IPinfoWrapper } from 'node-ipinfo';
-import { memo, startTransition, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
@@ -45,6 +47,8 @@ type Props = {
   rootDataLocationsRelay: marketplaceLocations_locations_query$key;
   onReloadRequired: () => void;
 };
+
+const pageSize = 10;
 
 const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Props) => {
   const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
@@ -84,9 +88,15 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const locations = useMemo(() => rootDataLocationsRefetchable.marketplaceLocations.edges.map((edge) => edge.node), [rootDataLocationsRefetchable.marketplaceLocations]);
   const [initialPosition, setInitialPosition] = useState<LatLngTuple>([-36.8485, 174.7633]); // Auckland
+  const [initialZoom, setInitialZoom] = useState(13);
   const [searchBoundaries, setSearchBoundaries] = useState<LatLngBounds | null>(null);
   const [centerSet, setCenterSet] = useState(false);
   const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [pageIndex, setPageIndex] = useState(0);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const lastQueryRef = useRef<string | null>(null); // guard against redundant router.replace loops when syncing map center/zoom to query params
 
   const selectedLocation = useMemo(() => {
     if (!selectedLocationId) {
@@ -128,7 +138,20 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
         shadowUrl: '/leaflet/images/marker-shadow.png',
       });
 
-      if ('geolocation' in navigator) {
+      const latParam = searchParams?.get('lat');
+      const lngParam = searchParams?.get('lng');
+      const zoomParam = searchParams?.get('zoom');
+      const latNum = latParam ? Number.parseFloat(latParam) : null;
+      const lngNum = lngParam ? Number.parseFloat(lngParam) : null;
+      const zoomNum = zoomParam ? Number.parseInt(zoomParam, 10) : null;
+      const hasQueryLocation = Number.isFinite(latNum) && Number.isFinite(lngNum);
+
+      if (hasQueryLocation) {
+        setInitialPosition([latNum as number, lngNum as number]);
+        if (Number.isFinite(zoomNum)) {
+          setInitialZoom(zoomNum as number);
+        }
+      } else if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(({ coords }) => {
           setInitialPosition([coords.latitude, coords.longitude]);
           setCenterSet(false);
@@ -148,7 +171,7 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
 
       setDynamicLoadReady(true);
     })();
-  }, []);
+  }, [searchParams]);
 
   const handleRefetch = useCallback(
     (searchBoundaries: LatLngBounds | null, resourceType: string | null | undefined) => {
@@ -181,6 +204,21 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
   useEffect(() => {
     handleRefetch(searchBoundaries, null);
   }, [searchBoundaries, handleRefetch]);
+
+  useEffect(() => {
+    setPageIndex(0);
+  }, [isMobileOrTablet, locations.length]);
+
+  const paginatedLocations = useMemo(() => {
+    if (isMobileOrTablet) {
+      return locations;
+    }
+
+    const start = pageIndex * pageSize;
+    return locations.slice(start, start + pageSize);
+  }, [isMobileOrTablet, locations, pageIndex]);
+
+  const pageCount = useMemo(() => (isMobileOrTablet ? 1 : Math.max(1, Math.ceil(locations.length / pageSize))), [isMobileOrTablet, locations.length]);
 
   if (!dynamicLoadReady) {
     return null;
@@ -224,26 +262,41 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
     return null;
   };
 
+  const updateQueryFromMap = (lat: number, lng: number, zoom: number) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set('lat', lat.toString());
+    params.set('lng', lng.toString());
+    params.set('zoom', zoom.toString());
+    const newUrl = `${pathname}?${params.toString()}`;
+    if (lastQueryRef.current === newUrl) {
+      return;
+    }
+    lastQueryRef.current = newUrl;
+    router.replace(newUrl, { scroll: false });
+  };
+
   const MapCenterTracker = () => {
     const map = useMapEvents({
       moveend: () => {
         const newBounds = map.getBounds();
         if (!searchBoundaries) {
           setSearchBoundaries(map.getBounds());
+        } else {
+          const oldSouthWest = searchBoundaries.getSouthWest();
+          const oldNorthEast = searchBoundaries.getNorthEast();
+          const newSouthWest = newBounds.getSouthWest();
+          const newNorthEast = newBounds.getNorthEast();
 
-          return;
+          if (oldSouthWest.lat !== newSouthWest.lat || oldSouthWest.lng !== newSouthWest.lng || oldNorthEast.lat !== newNorthEast.lat || oldNorthEast.lng !== newNorthEast.lng) {
+            setSearchBoundaries(map.getBounds());
+          }
         }
-
-        const oldSouthWest = searchBoundaries.getSouthWest();
-        const oldNorthEast = searchBoundaries.getNorthEast();
-        const newSouthWest = newBounds.getSouthWest();
-        const newNorthEast = newBounds.getNorthEast();
-
-        if (oldSouthWest.lat !== newSouthWest.lat || oldSouthWest.lng !== newSouthWest.lng || oldNorthEast.lat !== newNorthEast.lat || oldNorthEast.lng !== newNorthEast.lng) {
-          setSearchBoundaries(map.getBounds());
-
-          return;
-        }
+        const center = map.getCenter();
+        updateQueryFromMap(center.lat, center.lng, map.getZoom());
+      },
+      zoomend: () => {
+        const center = map.getCenter();
+        updateQueryFromMap(center.lat, center.lng, map.getZoom());
       },
     });
 
@@ -252,7 +305,7 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
 
   const MapSection = (
     <Box sx={{ height: mapHeight, width: '100%', position: 'relative' }}>
-      <MapContainer center={initialPosition} zoom={13} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+      <MapContainer center={initialPosition} zoom={initialZoom} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         <MarkerClusterGroup chunkedLoading>
           {locations
@@ -315,12 +368,17 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
         <GridContainer spacing={2}>
           <Grid size={{ xs: 12, md: 7 }}>
             <GridContainer sx={{ alignItems: 'stretch' }} spacing={1}>
-              {locations.map((item) => (
+              {paginatedLocations.map((item) => (
                 <Grid key={item.id} size={{ xs: 12, sm: 6, lg: 4 }}>
                   <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                 </Grid>
               ))}
             </GridContainer>
+            {pageCount > 1 && (
+              <StackColumn sx={{ mt: 2, gap: 1, alignItems: 'center' }}>
+                <Pagination count={pageCount} page={pageIndex + 1} onChange={(_, page) => setPageIndex(page - 1)} color="primary" siblingCount={1} boundaryCount={1} />
+              </StackColumn>
+            )}
           </Grid>
           <Grid size={{ xs: 12, md: 5 }}>{MapSection}</Grid>
         </GridContainer>
