@@ -80,6 +80,7 @@ export { default as RemoveIcon } from '@mui/icons-material/Remove';
 export { default as CustomOpeningHoursIcon } from '@mui/icons-material/Schedule';
 export { default as SearchRoundedIcon } from '@mui/icons-material/SearchRounded';
 export { default as SsoSigninIcon } from '@mui/icons-material/Security';
+export { default as ShareIcon } from '@mui/icons-material/Share';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
 export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
 export { default as MarketplaceIcon } from '@mui/icons-material/Store';

@@ -1,6 +1,6 @@
 import { CardMediaCarousel } from '@/components/carousel';
 import { LeadIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
-import { AreaIcon, CloseIcon, PersonIcon } from '@/components/icons';
+import { AreaIcon, CloseIcon, PersonIcon, ShareIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
@@ -9,6 +9,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import NextLink from 'next/link';
 import { memo, useContext, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -52,6 +53,12 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
 
   const { integratedPlatrform } = useIntegratedPlatrform();
   const paletteMode = useContext(PaletteModeContext);
+  const shareUrl = useMemo(
+    () => `${typeof window !== 'undefined' ? window.location.origin : ''}${getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}`,
+    [integratedPlatrform, locationDetails.id],
+  );
+  const canShare = typeof navigator !== 'undefined' && typeof navigator.canShare === 'function' && navigator.canShare({ url: shareUrl });
+
   const capacity = useMemo(() => {
     if (!locationDetails.extraMetadata?.peopleCapacity) {
       return '';
@@ -76,6 +83,27 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
     }
   }, [locationDetails.extraMetadata?.areaRange]);
 
+  const handleShareClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: locationDetails.name, url: shareUrl });
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      }
+    } catch {
+      // user cancelled or share failed; ignore
+    }
+  };
+
+  const handleCloseClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    onClose?.();
+  };
+
   return (
     <Card
       sx={{ width: '100%', height: { md: 250 }, textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
@@ -92,18 +120,20 @@ const MarketplaceLocationCard = ({ locationDetailsRelay, onClose }: Props) => {
           </StackRow>
         }
         action={
-          onClose ? (
-            <IconButton
-              onClick={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                onClose?.();
-              }}
-              sx={{ color: paletteMode === 'dark' ? coal : sandstone, borderRadius: '50%' }}
-            >
-              <CloseIcon fontSize="medium" />
-            </IconButton>
-          ) : null
+          <StackRow>
+            {canShare && (
+              <Tooltip title="Share">
+                <IconButton onClick={handleShareClick} sx={{ color: paletteMode === 'dark' ? coal : sandstone, borderRadius: '50%' }}>
+                  <ShareIcon fontSize="medium" />
+                </IconButton>
+              </Tooltip>
+            )}
+            {onClose && (
+              <IconButton onClick={handleCloseClick} sx={{ color: paletteMode === 'dark' ? coal : sandstone, borderRadius: '50%' }}>
+                <CloseIcon fontSize="medium" />
+              </IconButton>
+            )}
+          </StackRow>
         }
       />
       <CardContent sx={{ flexGrow: 1 }}>
