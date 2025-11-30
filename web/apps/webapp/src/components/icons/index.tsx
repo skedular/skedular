@@ -46,6 +46,8 @@ export { default as DeskIcon } from '@mui/icons-material/Desk';
 export { default as TickIcon } from '@mui/icons-material/Done';
 export { default as EditIcon } from '@mui/icons-material/Edit';
 export { default as ErrorIcon } from '@mui/icons-material/Error';
+export { default as FavouriteIcon } from '@mui/icons-material/Favorite';
+export { default as NotFavouriteIcon } from '@mui/icons-material/FavoriteBorder';
 export { default as FeedIcon } from '@mui/icons-material/Feed';
 export { default as FeedbackIcon } from '@mui/icons-material/Feedback';
 export { default as GridViewIcon } from '@mui/icons-material/GridView';

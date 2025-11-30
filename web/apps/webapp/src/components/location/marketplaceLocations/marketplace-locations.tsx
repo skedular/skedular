@@ -2,6 +2,7 @@ import { GridContainer, StackColumn } from '@/components/commons';
 import { defaultPadding } from '@/libs/theme';
 import type { marketplaceLocations_locations_query$key } from '@/queries/__generated__/marketplaceLocations_locations_query.graphql';
 import type { marketplaceLocations_locations_refetchableFragment, OrganizationTagType } from '@/queries/__generated__/marketplaceLocations_locations_refetchableFragment.graphql';
+import type { marketplaceLocations_query$key } from '@/queries/__generated__/marketplaceLocations_query.graphql';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -15,7 +16,7 @@ import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useStat
 import { useMap, useMapEvents } from 'react-leaflet';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css';
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.Default.css';
-import { graphql, useRefetchableFragment } from 'react-relay';
+import { graphql, useFragment, useRefetchableFragment } from 'react-relay';
 import MarketplaceLocationCard from './marketplace-location-card';
 
 let L: typeof import('leaflet');
@@ -44,13 +45,23 @@ const getToolbarHeight = (theme: Theme) => {
 };
 
 type Props = {
+  rootDataRelay: marketplaceLocations_query$key;
   rootDataLocationsRelay: marketplaceLocations_locations_query$key;
   onReloadRequired: () => void;
 };
 
 const pageSize = 9;
 
-const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Props) => {
+const MarketplaceLocations = ({ rootDataRelay, rootDataLocationsRelay, onReloadRequired }: Props) => {
+  const rootData = useFragment(
+    graphql`
+      fragment marketplaceLocations_query on Query {
+        ...marketplaceLocationCard_query
+      }
+    `,
+    rootDataRelay,
+  );
+
   const [rootDataLocationsRefetchable, refetchLocations] = useRefetchableFragment<marketplaceLocations_locations_refetchableFragment, marketplaceLocations_locations_query$key>(
     graphql`
       fragment marketplaceLocations_locations_query on Query
@@ -338,7 +349,7 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
               >
                 {!isMobileOrTablet && (
                   <Popup>
-                    <MarketplaceLocationCard key={item.id} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                    <MarketplaceLocationCard key={item.id} rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                   </Popup>
                 )}
               </Marker>
@@ -365,7 +376,12 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
           }}
         >
           <Box sx={{ pointerEvents: 'auto' }}>
-            <MarketplaceLocationCard locationDetailsRelay={selectedLocation} onReloadRequired={onReloadRequired} onClose={() => setSelectedLocationId(null)} />
+            <MarketplaceLocationCard
+              rootDataRelay={rootData}
+              locationDetailsRelay={selectedLocation}
+              onReloadRequired={onReloadRequired}
+              onClose={() => setSelectedLocationId(null)}
+            />
           </Box>
         </Box>
       )}
@@ -382,7 +398,7 @@ const MarketplaceLocations = ({ rootDataLocationsRelay, onReloadRequired }: Prop
             <GridContainer sx={{ alignItems: 'stretch' }} spacing={1}>
               {paginatedLocations.map((item) => (
                 <Grid key={item.id} size={{ xs: 12, sm: 6, lg: 4 }}>
-                  <MarketplaceLocationCard locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
+                  <MarketplaceLocationCard rootDataRelay={rootData} locationDetailsRelay={item} onReloadRequired={onReloadRequired} />
                 </Grid>
               ))}
             </GridContainer>

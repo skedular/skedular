@@ -16,7 +16,13 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageHome_rootQuery($searchBoundaries: PolygonInput, $locationsSortingValues: [LocationOrderInput!], $resourceTypeToFilterWith: OrganizationTagType) {
+  query pageHome_rootQuery(
+    $searchBoundaries: PolygonInput
+    $locationsSortingValues: [LocationOrderInput!]
+    $resourceTypeToFilterWith: OrganizationTagType
+    $userSignedIn: Boolean!
+  ) {
+    ...marketplaceLocations_query
     ...marketplaceLocations_locations_query
   }
 `;
@@ -32,14 +38,14 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   if (user) {
     return (
       <NoOrganizationRootShell collapsed={true}>
-        <MarketplaceLocations rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+        <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
       </NoOrganizationRootShell>
     );
   }
 
   return (
     <UnauthenticatedRootShell>
-      <MarketplaceLocations rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
+      <MarketplaceLocations rootDataRelay={rootData} rootDataLocationsRelay={rootData} onReloadRequired={onReloadRequired} />
     </UnauthenticatedRootShell>
   );
 };
@@ -50,6 +56,7 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageHome_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     loadQuery(
@@ -60,12 +67,13 @@ const RootPageWithRelay = () => {
             field: 'NAME',
           },
         ],
+        userSignedIn: !loading && !!user,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId]);
+  }, [loadQuery, triggerReloadId, loading, user]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
