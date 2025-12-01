@@ -206,76 +206,78 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   return (
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       <ResponsiveImageCarousel images={featureImages} />
-      <GridContainer sx={{ mt: 2 }}>
-        <Grid size={{ xs: 12, md: 9 }}>
-          <StackColumn>
-            <SmallHeadingIconTypography label={locationDetails.name} />
-            <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
-            <LeadIconTypography label={'Opening Hours'} />
-            <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
-            <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
-            <SmallIconTypography label={`Wednesday: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
-            <SmallIconTypography label={`Thursday: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
-            <SmallIconTypography label={`Friday: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
-            <SmallIconTypography label={`Saturday: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
-            <SmallIconTypography label={`Sunday: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
-            {isMdUp && <StackColumn sx={{ display: 'flex', alignItems: 'stretch' }}>{mapBlock}</StackColumn>}
-          </StackColumn>
-        </Grid>
+      <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <GridContainer sx={{ mt: 2, maxWidth: 1400, width: '100%' }} spacing={{ xs: 1, md: 3 }}>
+          <Grid size={{ xs: 12, md: 9 }}>
+            <StackColumn>
+              <SmallHeadingIconTypography label={locationDetails.name} />
+              <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
+              <LeadIconTypography label={'Opening Hours'} />
+              <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
+              <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />
+              <SmallIconTypography label={`Wednesday: ${toOpeningHours(openingHours.weekOpeningHours.wednesday)}`} />
+              <SmallIconTypography label={`Thursday: ${toOpeningHours(openingHours.weekOpeningHours.thursday)}`} />
+              <SmallIconTypography label={`Friday: ${toOpeningHours(openingHours.weekOpeningHours.friday)}`} />
+              <SmallIconTypography label={`Saturday: ${toOpeningHours(openingHours.weekOpeningHours.saturday)}`} />
+              <SmallIconTypography label={`Sunday: ${toOpeningHours(openingHours.weekOpeningHours.sunday)}`} />
+              {isMdUp && <StackColumn sx={{ display: 'flex', alignItems: 'stretch' }}>{mapBlock}</StackColumn>}
+            </StackColumn>
+          </Grid>
 
-        <Grid size={{ xs: 12, md: 3 }}>
-          {extraMetadata?.contactDetails?.contactPeople && extraMetadata.contactDetails.contactPeople.length > 0 && (
-            <>
-              <CaptionIconTypography label={'Contact People'} />
-              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-            </>
-          )}
+          <Grid size={{ xs: 12, md: 3 }}>
+            {extraMetadata?.contactDetails?.contactPeople && extraMetadata.contactDetails.contactPeople.length > 0 && (
+              <>
+                <CaptionIconTypography label={'Contact People'} />
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPeople)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
+            )}
 
-          {extraMetadata?.contactDetails?.contactPhones && extraMetadata.contactDetails.contactPhones.length > 0 && (
-            <>
-              <CaptionIconTypography label={'Phones'} />
-              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-            </>
-          )}
+            {extraMetadata?.contactDetails?.contactPhones && extraMetadata.contactDetails.contactPhones.length > 0 && (
+              <>
+                <CaptionIconTypography label={'Phones'} />
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactPhones)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
+            )}
 
-          {extraMetadata?.contactDetails?.contactEmails && extraMetadata.contactDetails.contactEmails.length > 0 && (
-            <>
-              <CaptionIconTypography label={'Emails'} />
-              <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-            </>
-          )}
+            {extraMetadata?.contactDetails?.contactEmails && extraMetadata.contactDetails.contactEmails.length > 0 && (
+              <>
+                <CaptionIconTypography label={'Emails'} />
+                <SmallIconTypography label={stringCollectionToString(extraMetadata.contactDetails.contactEmails)} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
+            )}
 
-          {extraMetadata?.website && (
-            <>
-              <CaptionIconTypography label={'Website'} />
-              <Link component={NextLink} href={extraMetadata.website} target="_blank" rel="noopener noreferrer">
-                <SmallIconTypography label={extraMetadata.website} sx={{ paddingBottom: 2 }} />
-              </Link>
-            </>
-          )}
+            {extraMetadata?.website && (
+              <>
+                <CaptionIconTypography label={'Website'} />
+                <Link component={NextLink} href={extraMetadata.website} target="_blank" rel="noopener noreferrer">
+                  <SmallIconTypography label={extraMetadata.website} sx={{ paddingBottom: 2 }} />
+                </Link>
+              </>
+            )}
 
-          {locationDetails.physicalAddress && (
-            <>
-              <CaptionIconTypography label={'Address'} />
-              <SmallIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
-            </>
-          )}
+            {locationDetails.physicalAddress && (
+              <>
+                <CaptionIconTypography label={'Address'} />
+                <SmallIconTypography label={locationDetails.physicalAddress.multilinesFormattedAddress} sx={{ whiteSpace: 'pre-line', paddingBottom: 2 }} />
+              </>
+            )}
 
-          {areaSize && (
-            <>
-              <CaptionIconTypography label={'Total Area'} />
-              <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
-            </>
-          )}
+            {areaSize && (
+              <>
+                <CaptionIconTypography label={'Total Area'} />
+                <SmallIconTypography label={areaSize} startElement={<AreaIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+              </>
+            )}
 
-          {capacity && (
-            <>
-              <CaptionIconTypography label={'Capacity'} />
-              <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
-            </>
-          )}
-        </Grid>
-      </GridContainer>
+            {capacity && (
+              <>
+                <CaptionIconTypography label={'Capacity'} />
+                <SmallIconTypography label={capacity} startElement={<PersonIcon fontSize="small" />} sx={{ paddingBottom: 2 }} />
+              </>
+            )}
+          </Grid>
+        </GridContainer>
+      </Box>
       {!isMdUp && mapBlock}
     </StackColumn>
   );
