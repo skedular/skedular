@@ -717,7 +717,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           <Box sx={{ paddingBottom: defaultPadding }} />
 
           {viewMode === 'grid' && (
-            <GridContainer>
+            <GridContainer sx={{ alignItems: 'stretch' }}>
               {locations.map((location) => {
                 const resourcesCount = location.resources.totalCount;
                 const availableResourcesCount = rootDataRefetchable.availableResources

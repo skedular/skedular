@@ -54,6 +54,7 @@ const ResponsiveImageCarousel = ({ images }: Props) => {
         {Array.from({ length: itemsPerView }).map((_, idx) => {
           const image = validImages[(carouselIndex + idx) % validImages.length];
           const dimension = `calc((100% - ${(itemsPerView - 1) * 8}px) / ${itemsPerView})`;
+
           return (
             <Box
               key={`${image.url}-${idx}`}

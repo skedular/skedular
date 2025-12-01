@@ -561,7 +561,7 @@ const LocationCard = ({
 
   return (
     <>
-      <Card sx={{ width: { xs: '100%', sm: 600 } }}>
+      <Card sx={{ width: { xs: '100%', sm: 600 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
         <CardMediaCarousel images={locationDetails.featureImages ?? []} />
         <CardHeader
           title={
@@ -617,7 +617,7 @@ const LocationCard = ({
             </>
           }
         />
-        <CardContent>
+        <CardContent sx={{ flexGrow: 1 }}>
           <StackRow sx={{ paddingTop: 1, paddingBottom: 1, width: '100%', flexWrap: 'nowrap' }}>
             <SmallIconTypography label={`${resourcesCount} Resources`} sx={{ flexGrow: 0, flexShrink: 0 }} startElement={<ResourceIcon />} />
             <StackColumn sx={{ paddingLeft: 40, alignItems: 'flex-end', width: '100%' }}>

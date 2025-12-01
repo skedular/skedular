@@ -3,6 +3,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Box from '@mui/material/Box';
 import CardMedia from '@mui/material/CardMedia';
 import IconButton from '@mui/material/IconButton';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { memo, MouseEvent, useMemo, useState } from 'react';
 
 type Thumbnail = {
@@ -18,14 +19,20 @@ type ImageWithThumbnail = {
 type Props = {
   images: ImageWithThumbnail[] | readonly ImageWithThumbnail[];
   fallbackHeight?: number;
+  showPlaceholderWhenEmpty?: boolean;
+  placeholderSx?: SxProps<Theme>;
 };
 
-const CardMediaCarousel = ({ images, fallbackHeight = 200 }: Props) => {
+const CardMediaCarousel = ({ images, fallbackHeight = 200, showPlaceholderWhenEmpty = true, placeholderSx }: Props) => {
   const featureImages = useMemo(() => images.filter((image): image is { thumbnail: Thumbnail } => Boolean(image?.thumbnail?.url)), [images]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (featureImages.length === 0) {
-    return null;
+    if (!showPlaceholderWhenEmpty) {
+      return null;
+    }
+
+    return <Box sx={{ height: fallbackHeight, width: '100%', bgcolor: 'background.default', ...placeholderSx }} />;
   }
 
   const safeIndex = currentImageIndex % featureImages.length;
