@@ -284,7 +284,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
-        <CardMediaCarousel images={productDetails.featureImages} />
+        <CardMediaCarousel images={productDetails.featureImages} showPlaceholderWhenEmpty={false} />
         <CardHeader
           title={
             <StackRow>

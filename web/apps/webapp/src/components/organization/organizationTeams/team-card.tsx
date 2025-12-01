@@ -180,7 +180,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 400 } }}>
-        <CardMediaCarousel images={teamDetails.featureImages} />
+        <CardMediaCarousel images={teamDetails.featureImages} showPlaceholderWhenEmpty={false} />
         <CardHeader
           title={
             <StackRow>

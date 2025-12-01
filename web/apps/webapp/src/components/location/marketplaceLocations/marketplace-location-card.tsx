@@ -263,7 +263,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
         component={NextLink}
         href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
       >
-        <CardMediaCarousel images={locationDetails.featureImages} />
+        <CardMediaCarousel images={locationDetails.featureImages} placeholderImageUrl="/images/location_placeholder.webp" />
         <CardHeader
           sx={{ height: 60 }}
           title={
@@ -307,7 +307,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
             </StackRow>
           }
         />
-        <CardContent sx={{ flexGrow: 1, height: { md: 250 } }}>
+        <CardContent sx={{ flexGrow: 1, height: { md: 180 } }}>
           <LeadIconTypography label={locationDetails.name} />
           {locationDetails.physicalAddress?.multilinesFormattedAddress && <SmallIconTypography label={locationDetails.physicalAddress?.multilinesFormattedAddress} />}
         </CardContent>

@@ -21,15 +21,20 @@ type Props = {
   fallbackHeight?: number;
   showPlaceholderWhenEmpty?: boolean;
   placeholderSx?: SxProps<Theme>;
+  placeholderImageUrl?: string;
 };
 
-const CardMediaCarousel = ({ images, fallbackHeight = 200, showPlaceholderWhenEmpty = true, placeholderSx }: Props) => {
+const CardMediaCarousel = ({ images, fallbackHeight = 200, showPlaceholderWhenEmpty = true, placeholderSx, placeholderImageUrl }: Props) => {
   const featureImages = useMemo(() => images.filter((image): image is { thumbnail: Thumbnail } => Boolean(image?.thumbnail?.url)), [images]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   if (featureImages.length === 0) {
     if (!showPlaceholderWhenEmpty) {
       return null;
+    }
+
+    if (placeholderImageUrl) {
+      return <CardMedia component="img" image={placeholderImageUrl} sx={{ objectFit: 'fill', height: fallbackHeight, width: '100%', ...placeholderSx }} />;
     }
 
     return <Box sx={{ height: fallbackHeight, width: '100%', bgcolor: 'background.default', ...placeholderSx }} />;
