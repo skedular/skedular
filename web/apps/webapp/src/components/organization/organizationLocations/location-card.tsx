@@ -562,7 +562,7 @@ const LocationCard = ({
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
-        <CardMediaCarousel images={locationDetails.featureImages ?? []} />
+        <CardMediaCarousel images={locationDetails.featureImages} />
         <CardHeader
           title={
             <StackRow>

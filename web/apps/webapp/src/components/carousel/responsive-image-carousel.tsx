@@ -45,6 +45,7 @@ const ResponsiveImageCarousel = ({ images }: Props) => {
     return null;
   }
 
+  const gapPx = Number.parseInt(theme.spacing(1), 10) || 8;
   const handleNext = () => setCarouselIndex((prev) => (prev + 1) % validImages.length);
   const handlePrevious = () => setCarouselIndex((prev) => (prev - 1 + validImages.length) % validImages.length);
 
@@ -53,7 +54,8 @@ const ResponsiveImageCarousel = ({ images }: Props) => {
       <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center', gap: 1, flexWrap: 'nowrap' }}>
         {Array.from({ length: itemsPerView }).map((_, idx) => {
           const image = validImages[(carouselIndex + idx) % validImages.length];
-          const dimension = `calc((100% - ${(itemsPerView - 1) * 8}px) / ${itemsPerView})`;
+          const baseDimension = `calc((100% - ${(itemsPerView - 1) * gapPx}px) / ${itemsPerView})`;
+          const dimension = `min(300px, ${baseDimension})`;
 
           return (
             <Box
