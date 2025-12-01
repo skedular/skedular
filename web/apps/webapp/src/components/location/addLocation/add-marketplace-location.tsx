@@ -10,7 +10,7 @@ import { MultipleChoicesLocationTags } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
@@ -631,7 +631,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                       ))}
                     </Box>
 
-                    <ImageFileUploader
+                    <ImageFileUploaderWithCropper
+                      defaultAspectRatio={1}
                       onUploadCompleted={handleFeatureImageUploadCompleted}
                       helperText="Upload a high-quality image that best represents your co-working space. This will appear in search results and marketing pages."
                     />

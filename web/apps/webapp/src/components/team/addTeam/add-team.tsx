@@ -8,7 +8,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { OrganizationMemberSelector } from '@/components/organization';
 import type { RootError } from '@/components/relayError';
 import { RelayError } from '@/components/relayError';
-import { ImageFileUploader } from '@/libs/image-file-uploader';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -256,7 +256,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
                         ))}
                       </Box>
 
-                      <ImageFileUploader onUploadCompleted={handleFeatureImageUploadCompleted} />
+                      <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
                     </StackColumn>
                   </FormFieldLabel>
 

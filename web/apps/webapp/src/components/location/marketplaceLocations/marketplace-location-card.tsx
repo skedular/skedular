@@ -259,7 +259,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
   return (
     <>
       <Card
-        sx={{ width: '100%', height: { md: 250 }, textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
+        sx={{ width: '100%', textDecoration: 'none', display: 'flex', flexDirection: 'column' }}
         component={NextLink}
         href={getMarketplaceLocationLink(integratedPlatrform, locationDetails.id)}
       >
