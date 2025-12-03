@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using Testing.Shared.IntegrationTests.Pact;
-
-//using Xunit.DependencyInjection;
+using Xunit.DependencyInjection;
 
 namespace Testing.Shared.IntegrationTests.Processors;
 
-public class CustomWebApplicationFactory<TStartup>(
-    //ITestOutputHelperAccessor testOutputHelper,
+public class CustomWebApplicationFactory<TProgram>(
+    ITestOutputHelperAccessor testOutputHelper,
     IServiceProvider serviceProvider)
-    : WebApplicationFactory<TStartup>
-    where TStartup : class
+    : WebApplicationFactory<TProgram>
+    where TProgram : class
 {
     private readonly IPactAccessor? _accessor = serviceProvider.GetService<IPactAccessor>();
 
@@ -22,12 +22,12 @@ public class CustomWebApplicationFactory<TStartup>(
             collection.AddLogging(loggingBuilder =>
             {
                 loggingBuilder.SetMinimumLevel(LogLevel.Trace);
-                //loggingBuilder.Services.AddSingleton(testOutputHelper).AddSingleton<ILoggerProvider, ConsoleLoggerProvider>();
+                loggingBuilder.Services.AddSingleton(testOutputHelper).AddSingleton<ILoggerProvider, ConsoleLoggerProvider>();
             });
 
             if (_accessor is not null)
             {
-                // Update the local configs to use pact
+                // Update the local configs to use Pact
                 collection.UpdateConfigsToUsePactHost(_accessor.PactPort);
             }
         });
