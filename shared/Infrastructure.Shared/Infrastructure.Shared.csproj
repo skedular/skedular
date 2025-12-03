@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <AssemblyName>Customer.Infrastructure</AssemblyName>
-        <AssemblyTitle>Customer.Infrastructure</AssemblyTitle>
-        <Product>Skedular Customer Infrastructure</Product>
-        <Description>Skedular Customer Infrastructure</Description>
+        <AssemblyName>Infrastructure.Shared</AssemblyName>
+        <AssemblyTitle>Infrastructure.Shared</AssemblyTitle>
+        <Product>Skedular Shared Infrastructure</Product>
+        <Description>Skedular Shared Infrastructure</Description>
         <Author>Skedular Team</Author>
         <Copyright>© Skedular 2025. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
@@ -19,6 +19,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Infrastructure.Shared</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Customer.Shared\Customer.Shared.csproj"/>
+        <ProjectReference Include="..\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
