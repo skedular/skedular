@@ -47,7 +47,8 @@ public class WorkaroundService(
         var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
         await organizationPublisher.PublishOrganizationsAsync(
             organizations.Select(item =>
-                mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))), cancellationToken);
+                mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList(),
+            cancellationToken);
     }
 
     public async Task ReSyncAzureTenantAsync(string tenantId, CancellationToken cancellationToken)

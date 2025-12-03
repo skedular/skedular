@@ -32,7 +32,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.13.1"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.14"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.5"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.12.0"/>
@@ -117,7 +117,7 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0"/>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>
-        <PackageReference Include="WorkOS.net" Version="2.9.0"/>
+        <PackageReference Include="WorkOS.net" Version="2.10.1"/>
         <PackageReference Include="YamlDotNet" Version="16.3.0"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">

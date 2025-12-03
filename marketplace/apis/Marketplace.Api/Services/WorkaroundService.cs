@@ -16,13 +16,13 @@ public class WorkaroundService(IRepositoryFactory repositoryFactory, IMapper map
     {
         var products = await repositoryFactory.ProductRepository.GetAllByOrganizationIdAsync(organizationId, cancellationToken);
 
-        await marketplacePublisher.PublishProductsAsync(products.Select(mapper.MapTo), cancellationToken);
+        await marketplacePublisher.PublishProductsAsync(products.Select(mapper.MapTo).ToList(), cancellationToken);
     }
 
     public async Task RepublishAllProductsAsync(CancellationToken cancellationToken)
     {
         var products = await repositoryFactory.ProductRepository.GetAllAsync(cancellationToken);
 
-        await marketplacePublisher.PublishProductsAsync(products.Select(mapper.MapTo), cancellationToken);
+        await marketplacePublisher.PublishProductsAsync(products.Select(mapper.MapTo).ToList(), cancellationToken);
     }
 }

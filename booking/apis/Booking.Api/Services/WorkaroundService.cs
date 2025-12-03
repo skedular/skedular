@@ -40,7 +40,7 @@ public class WorkaroundService(
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
         await bookingPublisher.PublishBookingsAsync(
-            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item))),
+            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item))).ToList(),
             cancellationToken);
     }
 
