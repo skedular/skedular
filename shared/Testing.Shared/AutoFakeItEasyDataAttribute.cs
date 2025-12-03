@@ -23,6 +23,7 @@ public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool
 
     fixture.Customizations.Add(new ExceptionContextGenerator());
     fixture.Customizations.Add(new CancellationTokenGenerator());
+    fixture.Customizations.Add(new CoordinateGenerator());
 
     if (!skipGlobalCustomizers)
     {
