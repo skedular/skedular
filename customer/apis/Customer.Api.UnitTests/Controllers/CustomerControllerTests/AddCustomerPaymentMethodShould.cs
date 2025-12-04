@@ -2,8 +2,8 @@ using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Customer.Api.Services;
 using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Shouldly;
 using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
@@ -44,11 +44,11 @@ public class AddCustomerPaymentMethodShould
 
         var result = await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken);
 
-        result.Should().BeOfType<RedirectResult>();
+        result.ShouldBeOfType<RedirectResult>();
 
         var redirectResult = result as RedirectResult;
-        redirectResult.Should().NotBeNull();
-        redirectResult.Url.Should().Be(url);
+        redirectResult.ShouldNotBeNull();
+        redirectResult.Url.ShouldBe(url);
     }
 
     [Theory]
@@ -65,6 +65,6 @@ public class AddCustomerPaymentMethodShould
 
         var action = async () => await sut.AddCustomerPaymentMethod(setupIntent, setupIntentClientSecret, redirectStatus, cancellationToken);
 
-        await action.Should().ThrowAsync<Exception>();
+        await action.ShouldThrowAsync<Exception>();
     }
 }

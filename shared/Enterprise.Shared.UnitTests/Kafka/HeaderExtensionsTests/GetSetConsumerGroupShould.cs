@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
@@ -15,7 +15,7 @@ public class GetSetConsumerGroupShould
     {
         var result = message.GetConsumerGroup();
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Theory]
@@ -27,7 +27,7 @@ public class GetSetConsumerGroupShould
         message.SetConsumerGroup(consumerGroup);
         var result = message.GetConsumerGroup();
 
-        result.Should().Be(consumerGroup);
+        result.ShouldBe(consumerGroup);
     }
 
     [Theory]
@@ -41,6 +41,6 @@ public class GetSetConsumerGroupShould
         var first =
             message.Headers.Single(header => header.Key == HeaderKeys.ConsumerGroupMatch);
 
-        Encoding.UTF8.GetString(first.GetValueBytes()).Should().Be(consumerGroup);
+        Encoding.UTF8.GetString(first.GetValueBytes()).ShouldBe(consumerGroup);
     }
 }

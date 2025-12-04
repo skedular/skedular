@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
 
@@ -15,9 +15,9 @@ public class SetShould
         headers.Set("my header", "my value");
 
         var header = headers[3];
-        header.Key.Should().Be("my header");
+        header.Key.ShouldBe("my header");
         var valueBytes = header.GetValueBytes();
-        Encoding.UTF8.GetString(valueBytes).Should().Be("my value");
+        Encoding.UTF8.GetString(valueBytes).ShouldBe("my value");
     }
 
     [Fact]
@@ -28,8 +28,8 @@ public class SetShould
         headers.Set("my header", "my value");
 
         var header = headers[2];
-        header.Key.Should().Be("my header");
+        header.Key.ShouldBe("my header");
         var valueBytes = header.GetValueBytes();
-        Encoding.UTF8.GetString(valueBytes).Should().Be("my value");
+        Encoding.UTF8.GetString(valueBytes).ShouldBe("my value");
     }
 }

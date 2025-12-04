@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Telemetry;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivitySourceFacadeTests;
@@ -12,9 +11,7 @@ public class StartActivityShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Start_Activity_Via_ActivitySource(
-        string name,
-        string activityName)
+    public void Start_Activity_Via_ActivitySource(string name, string activityName)
     {
         // set up listeners so the source will return activities
         var listener = new ActivityListener { ShouldListenTo = _ => true };
@@ -27,16 +24,12 @@ public class StartActivityShould
         var activityContext = ActivityContext.Parse(TraceParent, "");
         var startActivity = facade.StartActivity(activityName, ActivityKind.Producer, activityContext);
 
-        startActivity.Should().NotBeNull();
+        startActivity.ShouldNotBeNull();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Start_Activity_With_Correct_Parameters(
-        string name,
-        string activityName,
-        string tagKey,
-        string tagValue)
+    public void Start_Activity_With_Correct_Parameters(string name, string activityName, string tagKey, string tagValue)
     {
         // set up listeners so the source will return activities
         var listener = new ActivityListener { ShouldListenTo = _ => true };
@@ -46,21 +39,17 @@ public class StartActivityShould
         ActivitySource.AddActivityListener(listener);
 
         var facade = new ActivitySourceFacade(name);
-        var activityContext =
-            ActivityContext.Parse(TraceParent, "");
+        var activityContext = ActivityContext.Parse(TraceParent, "");
         var tags = new Dictionary<string, object?> { [tagKey] = tagValue };
         var activity = facade.StartActivity(activityName, ActivityKind.Producer, activityContext, tags);
 
-        activity.Should().NotBeNull();
+        activity.ShouldNotBeNull();
 
-        using (new AssertionScope())
-        {
-            activity.DisplayName.Should().Be(activityName);
-            activity.OperationName.Should().Be(activityName);
+        activity.DisplayName.ShouldBe(activityName);
+        activity.OperationName.ShouldBe(activityName);
 
-            activity.ParentId.Should().Be(TraceParent);
-            activity.Tags.Should().ContainKey(tagKey);
-            activity.Tags.Should().ContainValue(tagValue);
-        }
+        activity.ParentId.ShouldBe(TraceParent);
+        activity.Tags.ShouldContain(item => item.Key == tagKey);
+        activity.Tags.ShouldContain(item => item.Value == tagValue);
     }
 }

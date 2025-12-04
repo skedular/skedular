@@ -2,7 +2,7 @@ using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Enterprise.Shared.Version;
 using FakeItEasy;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
@@ -33,11 +33,11 @@ public class GetVersionShould
 
         var result = await sut.GetVersion(cancellationToken);
 
-        result.Value.Should().NotBeNull();
-        result.Value.Major.Should().Be(version.Major);
-        result.Value.Minor.Should().Be(version.Minor);
-        result.Value.Build.Should().Be(version.Build);
-        result.Value.Revision.Should().Be(version.Revision);
+        result.Value.ShouldNotBeNull();
+        result.Value.Major.ShouldBe(version.Major);
+        result.Value.Minor.ShouldBe(version.Minor);
+        result.Value.Build.ShouldBe(version.Build);
+        result.Value.Revision.ShouldBe(version.Revision);
     }
 
     [Theory]
@@ -51,6 +51,6 @@ public class GetVersionShould
 
         var action = async () => await sut.GetVersion(cancellationToken);
 
-        await action.Should().ThrowAsync<Exception>();
+        await action.ShouldThrowAsync<Exception>();
     }
 }

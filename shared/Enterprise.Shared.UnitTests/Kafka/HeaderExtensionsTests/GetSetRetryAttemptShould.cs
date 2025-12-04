@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
@@ -10,40 +10,32 @@ public class GetSetRetryAttemptShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void ReturnNullIfValueNotSetInHeader(
-        Message<string, byte[]> message)
+    public void ReturnNullIfValueNotSetInHeader(Message<string, byte[]> message)
     {
         var result = message.GetRetryAttempt();
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void ReturnValueSetInHeader(
-        int retryAttempt,
-        Message<string, byte[]> message)
+    public void ReturnValueSetInHeader(int retryAttempt, Message<string, byte[]> message)
     {
         message.SetRetryAttempt(retryAttempt);
 
         var result = message.GetRetryAttempt();
 
-        result.Should().Be(retryAttempt);
+        result.ShouldBe(retryAttempt);
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void SetHeader(
-        int retryAttempt,
-        Message<string, byte[]> message)
+    public void SetHeader(int retryAttempt, Message<string, byte[]> message)
     {
         message.SetRetryAttempt(retryAttempt);
 
-        var first =
-            message.Headers.First(header => header.Key == HeaderKeys.RetryAttempt);
+        var first = message.Headers.First(header => header.Key == HeaderKeys.RetryAttempt);
 
-        Encoding.UTF8.GetString(first.GetValueBytes())
-            .Should()
-            .Contain(retryAttempt.ToString());
+        Encoding.UTF8.GetString(first.GetValueBytes()).ShouldContain(retryAttempt.ToString());
     }
 }

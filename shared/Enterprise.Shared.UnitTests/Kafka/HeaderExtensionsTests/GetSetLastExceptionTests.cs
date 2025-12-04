@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
@@ -10,19 +10,16 @@ public class GetSetLastExceptionTests
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void ReturnNullIfValueNotSetInHeader(
-        Message<string, byte[]> message)
+    public void ReturnNullIfValueNotSetInHeader(Message<string, byte[]> message)
     {
         var result = message.GetLastException();
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void ReturnValueSetInHeader(
-        string exceptionMessage,
-        Message<string, byte[]> message)
+    public void ReturnValueSetInHeader(string exceptionMessage, Message<string, byte[]> message)
     {
         var exception = new Exception(exceptionMessage);
 
@@ -30,22 +27,20 @@ public class GetSetLastExceptionTests
 
         var result = message.GetLastException();
 
-        result.Should().Contain(exceptionMessage);
+        result.ShouldNotBeNull();
+        result.ShouldContain(exceptionMessage);
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void SetHeader(
-        string exceptionMessage,
-        Message<string, byte[]> message)
+    public void SetHeader(string exceptionMessage, Message<string, byte[]> message)
     {
         var exception = new Exception(exceptionMessage);
 
         message.SetLastException(exception);
 
-        var first =
-            message.Headers.Single(header => header.Key == HeaderKeys.LastException);
+        var first = message.Headers.Single(header => header.Key == HeaderKeys.LastException);
 
-        Encoding.UTF8.GetString(first.GetValueBytes()).Should().Contain(exceptionMessage);
+        Encoding.UTF8.GetString(first.GetValueBytes()).ShouldContain(exceptionMessage);
     }
 }

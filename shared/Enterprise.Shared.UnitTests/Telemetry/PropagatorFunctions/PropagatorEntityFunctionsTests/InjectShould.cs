@@ -1,6 +1,6 @@
 ﻿using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.PropagatorEntityFunctionsTests;
@@ -13,7 +13,7 @@ public class InjectShould
     {
         entity.TraceContext = "{}";
         functions.Inject(entity, "my field", "my value");
-        entity.TraceContext.Should().Be("{\"my field\":\"my value\"}");
+        entity.TraceContext.ShouldBe("{\"my field\":\"my value\"}");
     }
 
     [Theory]
@@ -24,7 +24,7 @@ public class InjectShould
     {
         entity.TraceContext = "{\"my field\":\"my value\"}";
         functions.Inject(entity, "my field", "new value");
-        entity.TraceContext.Should().Be("{\"my field\":\"new value\"}");
+        entity.TraceContext.ShouldBe("{\"my field\":\"new value\"}");
     }
 
 
@@ -34,7 +34,7 @@ public class InjectShould
     {
         entity.TraceContext = "";
         functions.Inject(entity, "my field", "new value");
-        entity.TraceContext.Should().Be("{\"my field\":\"new value\"}");
+        entity.TraceContext.ShouldBe("{\"my field\":\"new value\"}");
     }
 
 
@@ -44,6 +44,6 @@ public class InjectShould
     {
         entity.TraceContext = "{\"my field\":\"my value\"";
         functions.Inject(entity, "my field", "new value");
-        entity.TraceContext.Should().Be("{\"my field\":\"new value\"}");
+        entity.TraceContext.ShouldBe("{\"my field\":\"new value\"}");
     }
 }

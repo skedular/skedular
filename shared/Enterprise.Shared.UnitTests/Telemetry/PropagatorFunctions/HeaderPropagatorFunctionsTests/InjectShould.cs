@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.HeaderPropagatorFunctionsTests;
@@ -14,9 +14,9 @@ public class InjectShould
     {
         var destination = new Headers();
         functions.Inject(destination, "my key", "my value");
-        destination[0].Key.Should().Be("my key");
+        destination[0].Key.ShouldBe("my key");
         var valueBytes = destination[0].GetValueBytes();
-        Encoding.UTF8.GetString(valueBytes).Should().Be("my value");
+        Encoding.UTF8.GetString(valueBytes).ShouldBe("my value");
     }
 
     [Theory]
@@ -27,8 +27,8 @@ public class InjectShould
         var destination = new Headers { { "my key", "my first value"u8.ToArray() } };
         functions.Inject(destination, "my key", "my second value");
 
-        destination[0].Key.Should().Be("my key");
+        destination[0].Key.ShouldBe("my key");
         var valueBytes = destination[0].GetValueBytes();
-        Encoding.UTF8.GetString(valueBytes).Should().Be("my second value");
+        Encoding.UTF8.GetString(valueBytes).ShouldBe("my second value");
     }
 }

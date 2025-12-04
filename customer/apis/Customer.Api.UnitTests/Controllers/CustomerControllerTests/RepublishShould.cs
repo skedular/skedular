@@ -2,8 +2,8 @@ using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Customer.Api.Services;
 using FakeItEasy;
-using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Shouldly;
 using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
@@ -32,7 +32,7 @@ public class RepublishShould
     {
         var result = await sut.Republish(customerId, cancellationToken);
 
-        result.Should().BeOfType<OkResult>();
+        result.ShouldBeOfType<OkResult>();
     }
 
     [Theory]
@@ -47,6 +47,6 @@ public class RepublishShould
 
         var action = async () => await sut.Republish(customerId, cancellationToken);
 
-        await action.Should().ThrowAsync<Exception>();
+        await action.ShouldThrowAsync<Exception>();
     }
 }

@@ -1,5 +1,5 @@
 using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Customer.Domain.IntegrationTests.Api.Controllers.CustomerControllerTests;
@@ -14,6 +14,6 @@ public class GetVersionShould(ICustomerClient customerClient)
     {
         var result = await customerClient.GetVersionAsync(cancellationToken);
 
-        result.Should().NotBeNull();
+        result.ShouldNotBeNull();
     }
 }

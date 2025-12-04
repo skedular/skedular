@@ -3,9 +3,11 @@ using AutoFixture.Xunit3;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using Shouldly;
 using Testing.Shared;
+
+// using FluentAssertions;
+// using FluentAssertions.Execution;
 
 namespace Enterprise.Shared.UnitTests.Kafka.Telemetry.KafkaActivityStarterTests;
 
@@ -32,20 +34,17 @@ public class StartActivityFromContextShould
                     string _,
                     ActivityKind _,
                     ActivityContext parentContext,
-                    IEnumerable<KeyValuePair<string, object>> _) =>
+                    IEnumerable<KeyValuePair<string, object?>> _) =>
                 received = parentContext);
 
         starter.StartActivityFromContext("something", KafkaOperationType.Consume, default,
             0);
 
-        using (new AssertionScope())
-        {
-            received.TraceId.Should().NotBeNull();
-            received.TraceId.Should().NotBe(new ActivityTraceId());
-            received.SpanId.Should().NotBeNull();
-            received.SpanId.Should().NotBe(new ActivitySpanId());
-            received.TraceFlags.Should().Be(ActivityTraceFlags.Recorded);
-        }
+        received.TraceId.ShouldNotBe(default);
+        received.TraceId.ShouldNotBe(new ActivityTraceId());
+        received.SpanId.ShouldNotBe(default);
+        received.SpanId.ShouldNotBe(new ActivitySpanId());
+        received.TraceFlags.ShouldBe(ActivityTraceFlags.Recorded);
     }
 
     [Theory]
@@ -72,12 +71,11 @@ public class StartActivityFromContextShould
                     string _,
                     ActivityKind _,
                     ActivityContext parentContext,
-                    IEnumerable<KeyValuePair<string, object>> _) =>
+                    IEnumerable<KeyValuePair<string, object?>> _) =>
                 received = parentContext);
 
-        starter.StartActivityFromContext("something", KafkaOperationType.Consume, expected,
-            0);
+        starter.StartActivityFromContext("something", KafkaOperationType.Consume, expected, 0);
 
-        received.Should().Be(expected);
+        received.ShouldBe(expected);
     }
 }

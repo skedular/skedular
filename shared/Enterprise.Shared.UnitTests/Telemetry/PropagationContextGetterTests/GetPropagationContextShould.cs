@@ -2,8 +2,8 @@
 using AutoFixture.Xunit3;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
-using FluentAssertions;
 using OpenTelemetry.Context.Propagation;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagationContextGetterTests;
@@ -15,7 +15,7 @@ public class GetPropagationContextShould
     public void Return_Propagation_Context(PropagationContextGetter getter)
     {
         var propagationContext = getter.GetPropagationContext();
-        propagationContext.Should().Be(new PropagationContext());
+        propagationContext.ShouldBe(new PropagationContext());
     }
 
     [Theory]
@@ -23,7 +23,7 @@ public class GetPropagationContextShould
     public void Return_Null_On_Null_Activity([Frozen] IActivityGetter activityGetter, PropagationContextGetter getter)
     {
         A.CallTo(() => activityGetter.GetCurrent()).Returns(null);
-        getter.GetPropagationContext().Should().BeNull();
+        getter.GetPropagationContext().ShouldBeNull();
     }
 
     [Theory]
@@ -34,7 +34,7 @@ public class GetPropagationContextShould
         A.CallTo(() => activityGetter.GetCurrent()).Returns(activity);
 
         var propagationContext = getter.GetPropagationContext();
-        propagationContext!.Value.ActivityContext.Should().Be(activity.Context);
+        propagationContext!.Value.ActivityContext.ShouldBe(activity.Context);
     }
 
     [Theory]
@@ -48,6 +48,6 @@ public class GetPropagationContextShould
 
         var propagationContext = getter.GetPropagationContext();
         var baggageResult = propagationContext!.Value.Baggage;
-        baggageResult.GetBaggage("test").Should().Be("entry");
+        baggageResult.GetBaggage("test").ShouldBe("entry");
     }
 }

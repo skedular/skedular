@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.
@@ -13,7 +13,7 @@ public class InjectShould
     {
         var destination = new Dictionary<string, string>();
         functions.Inject(destination, "my field", "my value");
-        destination["my field"].Should().Be("my value");
+        destination["my field"].ShouldBe("my value");
     }
 
     [Theory]
@@ -22,7 +22,7 @@ public class InjectShould
     {
         var destination = new Dictionary<string, string> { ["my field"] = "old value" };
         functions.Inject(destination, "my field", "my value");
-        destination.Should().HaveCount(1);
-        destination["my field"].Should().Be("my value");
+        destination.Count.ShouldBe(1);
+        destination["my field"].ShouldBe("my value");
     }
 }

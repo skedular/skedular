@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
@@ -14,21 +14,18 @@ public class HeaderGetShould
     {
         var result = headers.Get(key);
 
-        result.Should().BeNull();
+        result.ShouldBeNull();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void ReturnValueIHeaderExist(
-        string key,
-        string value,
-        Headers headers)
+    public void ReturnValueIHeaderExist(string key, string value, Headers headers)
     {
         headers.Add(key, Encoding.UTF8.GetBytes(value));
 
         var result = headers.Get(key);
 
-        result.Should().NotBeNull();
-        result.Should().Be(value);
+        result.ShouldNotBeNull();
+        result.ShouldBe(value);
     }
 }

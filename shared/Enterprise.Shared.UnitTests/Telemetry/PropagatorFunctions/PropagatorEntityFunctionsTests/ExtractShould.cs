@@ -1,6 +1,6 @@
 ﻿using Enterprise.Shared.Telemetry;
 using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.PropagatorEntityFunctionsTests;
@@ -13,7 +13,7 @@ public class ExtractShould
     {
         entity.TraceContext = "{\"my field\":\"my value\"}";
         var extract = functions.Extract(entity, "my field");
-        extract.Single().Should().Be("my value");
+        extract.Single().ShouldBe("my value");
     }
 
     [Theory]
@@ -24,7 +24,7 @@ public class ExtractShould
     {
         entity.TraceContext = "{}";
         var extract = functions.Extract(entity, "my other key");
-        extract.Should().HaveCount(0);
+        extract.ShouldBeEmpty();
     }
 
     [Theory]
@@ -33,7 +33,7 @@ public class ExtractShould
     {
         entity.TraceContext = "";
         var extract = functions.Extract(entity, "my key").ToArray();
-        extract.Should().HaveCount(0);
+        extract.ShouldBeEmpty();
     }
 
     [Theory]
@@ -42,6 +42,6 @@ public class ExtractShould
     {
         entity.TraceContext = "{\"my field\":\"my value";
         var extract = functions.Extract(entity, "my key").ToArray();
-        extract.Should().HaveCount(0);
+        extract.ShouldBeEmpty();
     }
 }

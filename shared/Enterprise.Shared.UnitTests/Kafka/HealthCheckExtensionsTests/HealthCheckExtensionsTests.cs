@@ -1,9 +1,9 @@
 ﻿using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
-using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Shouldly;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HealthCheckExtensionsTests;
 
@@ -27,6 +27,6 @@ public class HealthCheckExtensionsTests
             .Registrations
             .First();
 
-        registration.Tags.Should().Contain(HealthCheck.Constants.ReadinessTag);
+        registration.Tags.ShouldContain(HealthCheck.Constants.ReadinessTag);
     }
 }

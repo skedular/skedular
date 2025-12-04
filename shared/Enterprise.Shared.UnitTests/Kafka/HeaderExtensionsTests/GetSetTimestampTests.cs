@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
@@ -15,12 +15,12 @@ public class GetSetTimestampTests
 
         var resul = message.GetTimestamp();
 
-        resul.Should().Be(DateTime.MinValue);
+        resul.ShouldBe(DateTime.MinValue);
 
         message.SetTimestamp();
 
         resul = message.GetTimestamp();
-        resul.Should().NotBe(DateTime.MinValue);
+        resul.ShouldNotBe(DateTime.MinValue);
     }
 
     [Theory]
@@ -31,6 +31,6 @@ public class GetSetTimestampTests
 
         message.SetTimestamp();
 
-        message.Timestamp.Should().NotBe(new Timestamp(DateTime.MinValue));
+        message.Timestamp.ShouldNotBe(new Timestamp(DateTime.MinValue));
     }
 }

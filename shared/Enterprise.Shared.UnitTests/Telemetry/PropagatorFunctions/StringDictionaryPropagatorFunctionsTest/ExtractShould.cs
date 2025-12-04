@@ -1,5 +1,5 @@
 ﻿using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using FluentAssertions;
+using Shouldly;
 using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.StringDictionaryPropagatorFunctionsTest;
@@ -12,7 +12,7 @@ public class ExtractShould
     {
         var destination = new Dictionary<string, string> { { "my key", "my value" } };
         var extract = functions.Extract(destination, "my key");
-        extract.Single().Should().Be("my value");
+        extract.Single().ShouldBe("my value");
     }
 
     [Theory]
@@ -21,7 +21,7 @@ public class ExtractShould
     {
         var destination = new Dictionary<string, string> { { "my key", "my value" } };
         var extract = functions.Extract(destination, "my other key");
-        extract.Should().HaveCount(0);
+        extract.ShouldBeEmpty();
     }
 
     [Theory]
@@ -29,8 +29,7 @@ public class ExtractShould
     public void Extract_Field(StringDictionaryPropagatorFunctions functions)
     {
         var destination = new Dictionary<string, string> { { "my key", "one" }, { "my second key", "two" } };
-
         var extract = functions.Extract(destination, "my key").ToArray();
-        extract[0].Should().Be("one");
+        extract[0].ShouldBe("one");
     }
 }
