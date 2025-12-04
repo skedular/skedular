@@ -33,6 +33,12 @@ public class Startup
 #pragma warning restore VSTHRD002
 #pragma warning restore VSTHRD104
 
+        var pgadmin = distributedApp.GetEndpoint("pgadmin");
+        var kafkaui = distributedApp.GetEndpoint("kafka-ui");
+
+        Console.WriteLine($"pgadmin: {pgadmin}");
+        Console.WriteLine($"kafkaui: {kafkaui}");
+
         var customerApiClient = distributedApp.CreateHttpClient("customerapi");
 
         ArgumentException.ThrowIfNullOrWhiteSpace(dbConnectionString);
