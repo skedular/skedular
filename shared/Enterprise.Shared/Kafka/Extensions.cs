@@ -24,15 +24,17 @@ public static class Extensions
 
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddKafka(IConfiguration configuration, bool useTelemetry = true)
+        public IServiceCollection AddKafka(IConfiguration configuration, bool useTelemetry = true) =>
+            services.AddKafkaWithConnectionString(configuration, configuration.GetConnectionString("kafka"), useTelemetry);
+
+        public IServiceCollection AddKafkaWithConnectionString(IConfiguration configuration, string? connectionString, bool useTelemetry = true)
         {
             var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
             ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
-            var bootstrapServers = configuration.GetConnectionString("kafka");
-            if (!string.IsNullOrWhiteSpace(bootstrapServers))
+            if (!string.IsNullOrWhiteSpace(connectionString))
             {
-                kafkaConfiguration.BootstrapServers = bootstrapServers;
+                kafkaConfiguration.BootstrapServers = connectionString;
             }
 
             services.AddSingleton(kafkaConfiguration);

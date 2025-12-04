@@ -14,7 +14,8 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection WithPooledDbContext<TDbContext>(IConfiguration configuration,
+        public IServiceCollection WithPooledDbContext<TDbContext>(
+            IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
             bool isPostgisEnabled = false)
@@ -23,6 +24,16 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+            return services.WithPooledDbContextWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+        }
+
+        public IServiceCollection WithPooledDbContextWithConnectionString<TDbContext>(
+            IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
+        {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
 
@@ -52,7 +63,8 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithDbContext<TDbContext>(IConfiguration configuration,
+        public IServiceCollection WithDbContext<TDbContext>(
+            IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
             bool isPostgisEnabled = false)
@@ -61,6 +73,16 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+            return services.WithDbContextWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+        }
+
+        public IServiceCollection WithDbContextWithConnectionString<TDbContext>(
+            IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
+        {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
 
@@ -89,7 +111,8 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithPooledDbContextFactory<TDbContext>(IConfiguration configuration,
+        public IServiceCollection WithPooledDbContextFactory<TDbContext>(
+            IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
             bool isPostgisEnabled = false)
@@ -98,6 +121,17 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+            return services.WithPooledDbContextFactoryWithConnectionString<TDbContext>(configuration, environment, connectionString,
+                isPostgisEnabled);
+        }
+
+        public IServiceCollection WithPooledDbContextFactoryWithConnectionString<TDbContext>(
+            IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
+        {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
 
@@ -127,7 +161,8 @@ public static class Extensions
             });
         }
 
-        public IServiceCollection WithDbContextFactory<TDbContext>(IConfiguration configuration,
+        public IServiceCollection WithDbContextFactory<TDbContext>(
+            IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
             bool isPostgisEnabled = false)
@@ -136,6 +171,16 @@ public static class Extensions
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
+            return services.WithDbContextFactoryWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+        }
+
+        public IServiceCollection WithDbContextFactoryWithConnectionString<TDbContext>(
+            IConfiguration configuration,
+            IHostEnvironment environment,
+            string connectionString,
+            bool isPostgisEnabled = false)
+            where TDbContext : DbContext
+        {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
 

@@ -1,5 +1,6 @@
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
+using Microsoft.Extensions.Hosting;
 using Projects;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
@@ -14,13 +15,13 @@ var redis = builder.AddRedis("redis");
 var customerDatabase = postgres.AddDatabase("customerdb");
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Production")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
 var customerInfrastructure = builder
     .AddProject<Customer_Infrastructure>("customerinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Production")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -31,7 +32,7 @@ var customerInfrastructure = builder
 
 builder
     .AddProject<Customer_Api>("customerapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Production")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -41,7 +42,7 @@ builder
 
 builder
     .AddProject<Customer_Jobs>("customerprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Production")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -51,7 +52,7 @@ builder
 
 builder
     .AddProject<Customer_Jobs>("customerjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", "Production")
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)

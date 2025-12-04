@@ -478,6 +478,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Domain.AppHost", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Shared", "shared\Infrastructure.Shared\Infrastructure.Shared.csproj", "{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Domain.IntegrationTests", "customer\domain\Customer.Domain.IntegrationTests\Customer.Domain.IntegrationTests.csproj", "{F6E3BA48-F043-4312-AC12-078D11CD004C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -996,6 +998,10 @@ Global
 		{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1177,5 +1183,6 @@ Global
 		{8894FBEB-EFAC-4A51-A368-176C08BE18E0} = {912B262C-F71D-428B-BE98-EB7069B9ED6D}
 		{026BE11E-7A3E-4E50-B29E-78FAB393A0B9} = {8894FBEB-EFAC-4A51-A368-176C08BE18E0}
 		{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6} = {0916AC00-8FE9-4B38-A135-EF9CE225C84B}
+		{F6E3BA48-F043-4312-AC12-078D11CD004C} = {8894FBEB-EFAC-4A51-A368-176C08BE18E0}
 	EndGlobalSection
 EndGlobal
