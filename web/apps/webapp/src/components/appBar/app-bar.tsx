@@ -170,7 +170,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
             borderColor: (theme) => theme.palette.divider,
           }}
         >
-          {!hideOrganizationSelector && rootData.myOrganizations.length !== 0 && (
+          {!hideOrganizationSelector && (
             <Select
               value={selectedOrganizationId}
               displayEmpty
@@ -237,7 +237,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                 </MenuItem>
               ))}
 
-              <Divider />
+              {rootData.myOrganizations.length !== 0 && <Divider />}
 
               <MenuItem value={createOrganizationId}>
                 <LeadIconTypography label="Create Organization" startElement={<AddIcon />} />
