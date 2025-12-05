@@ -41,7 +41,7 @@ builder
     .WaitForCompletion(customerInfrastructure);
 
 builder
-    .AddProject<Customer_Jobs>("customerprocessors")
+    .AddProject<Customer_Processors>("customerprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)

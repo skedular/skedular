@@ -42,7 +42,7 @@ var bookingApi = builder
     .WaitForCompletion(bookingInfrastructure);
 
 builder
-    .AddProject<Booking_Jobs>("bookingprocessors")
+    .AddProject<Booking_Processors>("bookingprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -86,7 +86,7 @@ var coreApi = builder
     .WaitForCompletion(coreInfrastructure);
 
 builder
-    .AddProject<Core_Jobs>("coreprocessors")
+    .AddProject<Core_Processors>("coreprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -130,7 +130,7 @@ var customerApi = builder
     .WaitForCompletion(customerInfrastructure);
 
 builder
-    .AddProject<Customer_Jobs>("customerprocessors")
+    .AddProject<Customer_Processors>("customerprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -174,7 +174,7 @@ var locationApi = builder
     .WaitForCompletion(locationInfrastructure);
 
 builder
-    .AddProject<Location_Jobs>("locationprocessors")
+    .AddProject<Location_Processors>("locationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -218,7 +218,7 @@ var marketplaceApi = builder
     .WaitForCompletion(marketplaceInfrastructure);
 
 builder
-    .AddProject<Marketplace_Jobs>("marketplaceprocessors")
+    .AddProject<Marketplace_Processors>("marketplaceprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -262,7 +262,7 @@ var msteamsApi = builder
     .WaitForCompletion(msteamsInfrastructure);
 
 builder
-    .AddProject<MsTeams_Jobs>("msteamsprocessors")
+    .AddProject<MsTeams_Processors>("msteamsprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -306,7 +306,7 @@ var organizationApi = builder
     .WaitForCompletion(organizationInfrastructure);
 
 builder
-    .AddProject<Organization_Jobs>("organizationprocessors")
+    .AddProject<Organization_Processors>("organizationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -350,7 +350,7 @@ var slackApi = builder
     .WaitForCompletion(slackInfrastructure);
 
 builder
-    .AddProject<Slack_Jobs>("slackprocessors")
+    .AddProject<Slack_Processors>("slackprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
@@ -394,7 +394,7 @@ var teamApi = builder
     .WaitForCompletion(teamInfrastructure);
 
 builder
-    .AddProject<Team_Jobs>("teamprocessors")
+    .AddProject<Team_Processors>("teamprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
