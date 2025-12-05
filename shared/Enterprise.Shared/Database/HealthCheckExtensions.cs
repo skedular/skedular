@@ -13,12 +13,14 @@ public static class HealthCheckExtensions
     public static IHealthChecksBuilder AddDatabaseHealthCheck(
         this IServiceCollection services,
         NpgsqlDataSource npgsqlDataSource,
+        string? healthCheckName,
         int healthCheckTimeOutInSeconds = 5) =>
         services
             .AddHealthChecks()
             .AddNpgSql(
                 new NpgSqlHealthCheckOptions(npgsqlDataSource),
                 tags: [HealthCheck.Constants.ReadinessTag],
-                timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds)
+                timeout: TimeSpan.FromSeconds(healthCheckTimeOutInSeconds),
+                name: healthCheckName
             );
 }

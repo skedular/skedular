@@ -18,24 +18,31 @@ public static class Extensions
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithPooledDbContextWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+            return services.WithPooledDbContextWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
         }
 
         public IServiceCollection WithPooledDbContextWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
+            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContextPool<TDbContext>(options =>
             {
@@ -67,24 +74,31 @@ public static class Extensions
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithDbContextWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+            return services.WithDbContextWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
         }
 
         public IServiceCollection WithDbContextWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
+            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContext<TDbContext>(options =>
             {
@@ -115,25 +129,31 @@ public static class Extensions
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithPooledDbContextFactoryWithConnectionString<TDbContext>(configuration, environment, connectionString,
-                isPostgisEnabled);
+            return services.WithPooledDbContextFactoryWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
         }
 
         public IServiceCollection WithPooledDbContextFactoryWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString);
+            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddPooledDbContextFactory<TDbContext>(options =>
             {
@@ -165,24 +185,31 @@ public static class Extensions
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionName,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var connectionString = configuration.GetConnectionString(connectionName);
             ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-            return services.WithDbContextFactoryWithConnectionString<TDbContext>(configuration, environment, connectionString, isPostgisEnabled);
+            return services.WithDbContextFactoryWithConnectionString<TDbContext>(
+                configuration,
+                environment,
+                connectionString,
+                isPostgisEnabled,
+                healthCheckName);
         }
 
         public IServiceCollection WithDbContextFactoryWithConnectionString<TDbContext>(
             IConfiguration configuration,
             IHostEnvironment environment,
             string connectionString,
-            bool isPostgisEnabled = false)
+            bool isPostgisEnabled = false,
+            string? healthCheckName = null)
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString);
+            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContextFactory<TDbContext>(options =>
             {
@@ -209,7 +236,7 @@ public static class Extensions
             });
         }
 
-        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString)
+        private NpgsqlDataSource GetDatasource(bool isPooled, bool isPostgisEnabled, string connectionString, string? healthCheckName)
         {
             services
                 .AddSingleton(new CustomDbContextOptions { IsPooled = isPooled, IsPostgisEnabled = isPostgisEnabled })
@@ -218,7 +245,7 @@ public static class Extensions
 
             var dataSource = connectionString.BuildDataSource(isPostgisEnabled);
 
-            services.AddDatabaseHealthCheck(dataSource);
+            services.AddDatabaseHealthCheck(dataSource, healthCheckName);
 
             return dataSource;
         }

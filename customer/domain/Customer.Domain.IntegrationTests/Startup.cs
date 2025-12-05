@@ -27,21 +27,22 @@ public class Startup
 #pragma warning disable CA2012
         var builder = DistributedApplicationTestingBuilder.CreateAsync<Customer_Domain_AppHost>().Result;
         var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
+
         var kafkaConnectionString = distributedApp.GetConnectionStringAsync("kafka").Result;
-        var dbConnectionString = distributedApp.GetConnectionStringAsync("customerdb").Result;
+        var customerDbConnectionString = distributedApp.GetConnectionStringAsync("customerdb").Result;
 #pragma warning restore CA2012
 #pragma warning restore VSTHRD002
 #pragma warning restore VSTHRD104
 
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerDbConnectionString);
+
         var pgadmin = distributedApp.GetEndpoint("pgadmin");
-        var kafkaui = distributedApp.GetEndpoint("kafka-ui");
+        var kafkaUi = distributedApp.GetEndpoint("kafka-ui");
 
         Console.WriteLine($"pgadmin: {pgadmin}");
-        Console.WriteLine($"kafkaui: {kafkaui}");
+        Console.WriteLine($"kafkaUi: {kafkaUi}");
 
         var customerApiClient = distributedApp.CreateHttpClient("customerapi");
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(dbConnectionString);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
 
@@ -50,7 +51,12 @@ public class Startup
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 
         services
-            .WithPooledDbContextFactoryWithConnectionString<CustomerDbContext>(configuration, environment, dbConnectionString, true)
+            .WithPooledDbContextFactoryWithConnectionString<CustomerDbContext>(
+                configuration,
+                environment,
+                customerDbConnectionString,
+                true,
+                "customerdb")
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()
