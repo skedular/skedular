@@ -6,7 +6,7 @@ using Enterprise.Shared.Email;
 using Enterprise.Shared.Grpc;
 using Flurl;
 using Team.Shared.Configurations;
-using Team.Shared.Services.Cache;
+using Team.Shared.Repositories;
 using Temporalio.Activities;
 
 namespace Team.Shared.Activities;
@@ -16,15 +16,22 @@ public class EmailIntegrations(
     EmailConfiguration emailConfiguration,
     CustomerConfiguration customerConfiguration,
     IEmailService emailService,
-    ICachedTeamService cachedTeamService,
+    IRepositoryFactory repositoryFactory,
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
-    public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(string teamId, string inviterCustomerId, string inviteeCustomerEmail)
+    public async Task SendInviteCustomerToJoinTeamNewCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
-        if (team is null)
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
+        if (joinInvitation is null)
+        {
+            return;
+        }
+
+        var inviterCustomerId = joinInvitation.CreatedBy.Id;
+        var inviteeCustomerEmail = joinInvitation.Email;
+        if (string.IsNullOrWhiteSpace(inviteeCustomerEmail))
         {
             return;
         }
@@ -47,12 +54,12 @@ public class EmailIntegrations(
         var text = await textReader.ReadToEndAsync(cancellationToken);
 
         html = html
-            .Replace("{{TEAM_NAME}}", team.Name)
+            .Replace("{{TEAM_NAME}}", joinInvitation.Team.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "signup"));
 
         text = text
-            .Replace("{{TEAM_NAME}}", team.Name)
+            .Replace("{{TEAM_NAME}}", joinInvitation.Team.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "signup"));
 
@@ -69,11 +76,18 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendInviteCustomerToJoinTeamExistingCustomerAsync(string teamId, string inviterCustomerId, string inviteeCustomerId)
+    public async Task SendInviteCustomerToJoinTeamExistingCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken);
-        if (team is null)
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
+        if (joinInvitation is null)
+        {
+            return;
+        }
+
+        var inviterCustomerId = joinInvitation.CreatedBy.Id;
+        var inviteeCustomerId = joinInvitation.Invitee?.Id;
+        if (string.IsNullOrWhiteSpace(inviteeCustomerId))
         {
             return;
         }
@@ -101,12 +115,12 @@ public class EmailIntegrations(
         var text = await textReader.ReadToEndAsync(cancellationToken);
 
         html = html
-            .Replace("{{TEAM_NAME}}", team.Name)
+            .Replace("{{TEAM_NAME}}", joinInvitation.Team.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"));
 
         text = text
-            .Replace("{{TEAM_NAME}}", team.Name)
+            .Replace("{{TEAM_NAME}}", joinInvitation.Team.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"));
 

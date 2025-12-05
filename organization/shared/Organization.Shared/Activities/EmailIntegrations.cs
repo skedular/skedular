@@ -20,15 +20,18 @@ public class EmailIntegrations(
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail)
+    public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
-        if (organization is null)
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
+        if (joinInvitation is null)
+        {
+            return;
+        }
+
+        var inviterCustomerId = joinInvitation.CreatedBy.Id;
+        var inviteeCustomerEmail = joinInvitation.Email;
+        if (string.IsNullOrWhiteSpace(inviteeCustomerEmail))
         {
             return;
         }
@@ -53,12 +56,12 @@ public class EmailIntegrations(
         var text = await textReader.ReadToEndAsync(cancellationToken);
 
         html = html
-            .Replace("{{ORGANIZATION_NAME}}", organization.Name)
+            .Replace("{{ORGANIZATION_NAME}}", joinInvitation.Organization.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "signup"));
 
         text = text
-            .Replace("{{ORGANIZATION_NAME}}", organization.Name)
+            .Replace("{{ORGANIZATION_NAME}}", joinInvitation.Organization.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "signup"));
 
@@ -75,17 +78,18 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerId)
+    public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-            organizationId,
-            null,
-            cancellationToken);
-        if (organization is null)
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
+        if (joinInvitation is null)
+        {
+            return;
+        }
+
+        var inviterCustomerId = joinInvitation.CreatedBy.Id;
+        var inviteeCustomerId = joinInvitation.Invitee?.Id;
+        if (string.IsNullOrWhiteSpace(inviteeCustomerId))
         {
             return;
         }
@@ -115,12 +119,12 @@ public class EmailIntegrations(
         var text = await textReader.ReadToEndAsync(cancellationToken);
 
         html = html
-            .Replace("{{ORGANIZATION_NAME}}", organization.Name)
+            .Replace("{{ORGANIZATION_NAME}}", joinInvitation.Organization.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"));
 
         text = text
-            .Replace("{{ORGANIZATION_NAME}}", organization.Name)
+            .Replace("{{ORGANIZATION_NAME}}", joinInvitation.Organization.Name)
             .Replace("{{INVITER_NAME}}", inviterCustomer.DisplayableName)
             .Replace("{{INVITATION_LINK}}", Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "notifications"));
 

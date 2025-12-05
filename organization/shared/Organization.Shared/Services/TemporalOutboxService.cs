@@ -7,8 +7,7 @@ using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Workflows;
 using Organization.Shared.Workflows.AddPayment;
 using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
-using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.InviteToJoinOrganization;
 using Organization.Shared.Workflows.NewOrganizationJoined;
 using Organization.Shared.Workflows.OrganizationOfferingRenewal;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
@@ -21,24 +20,12 @@ namespace Organization.Shared.Services;
 public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSignalOutboxExecutor
 {
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
-    void StartWorkflowInviteToJoinOrganizationExistingCustomer(InviteToJoinOrganizationExistingCustomerInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowInviteToJoin(InviteToJoinOrganizationInput args, IUnitOfWork unitOfWork);
     void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork);
     void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork);
-    void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork);
     void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork);
-
-    void SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-        string organizationId,
-        string inviteeCustomerId,
-        string inviterCustomerId,
-        IUnitOfWork unitOfWork);
-
-    void SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork);
+    void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
@@ -50,8 +37,7 @@ public class TemporalOutboxService(
 {
     private static readonly string s_renewOrganizationOfferingType = typeof(ScheduleRenewOrganizationOffering).ToWorkflowType();
     private static readonly string s_addOrganizationStripePaymentMethodType = typeof(AddOrganizationStripePaymentMethod).ToWorkflowType();
-    private static readonly string s_inviteToJoinOrganizationExistingCustomer = typeof(InviteToJoinOrganizationExistingCustomer).ToWorkflowType();
-    private static readonly string s_inviteToJoinOrganizationNewCustomer = typeof(InviteToJoinOrganizationNewCustomer).ToWorkflowType();
+    private static readonly string s_inviteToJoinOrganizationExistingCustomer = typeof(InviteToJoinOrganization).ToWorkflowType();
     private static readonly string s_generateOrganizationDailyAnalytics = typeof(GenerateOrganizationDailyAnalytics).ToWorkflowType();
     private static readonly string s_reSyncAzureTenant = typeof(ReSyncAzureTenant).ToWorkflowType();
     private static readonly string s_newOrganizationJoined = typeof(NewOrganizationJoined).ToWorkflowType();
@@ -60,12 +46,8 @@ public class TemporalOutboxService(
         typeof(ScheduleRenewOrganizationOffering).GetMethod(nameof(ScheduleRenewOrganizationOffering.CancelOfferingAsync))!
             .ToWorkflowSignalType();
 
-    private static readonly string s_inviteToJoinOrganizationExistingCustomerInvitationStatusChangedAsync =
-        typeof(InviteToJoinOrganizationExistingCustomer).GetMethod(nameof(InviteToJoinOrganizationExistingCustomer.InvitationStatusChangedAsync))!
-            .ToWorkflowSignalType();
-
-    private static readonly string s_inviteToJoinOrganizationNewCustomerInvitationStatusChangedAsync =
-        typeof(InviteToJoinOrganizationNewCustomer).GetMethod(nameof(InviteToJoinOrganizationNewCustomer.InvitationStatusChangedAsync))!
+    private static readonly string s_inviteToJoinOrganizationInvitationStatusChangedAsync =
+        typeof(InviteToJoinOrganization).GetMethod(nameof(InviteToJoinOrganization.InvitationStatusChangedAsync))!
             .ToWorkflowSignalType();
 
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
@@ -80,13 +62,12 @@ public class TemporalOutboxService(
             },
             unitOfWork);
 
-    public void StartWorkflowInviteToJoinOrganizationExistingCustomer(InviteToJoinOrganizationExistingCustomerInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxWorkflowExecutor.Execute<InviteToJoinOrganizationExistingCustomer, InviteToJoinOrganizationExistingCustomerInput>(
+    public void StartWorkflowInviteToJoin(InviteToJoinOrganizationInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<InviteToJoinOrganization, InviteToJoinOrganizationInput>(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(
-                    $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{args.OrganizationId}-{args.InviteeCustomerId}-{args.InviterCustomerId}"),
+                Id = temporalHelperService.ToId(args.JoinInvitationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
@@ -117,19 +98,6 @@ public class TemporalOutboxService(
             },
             unitOfWork);
 
-    public void StartWorkflowInviteToJoinOrganizationNewCustomer(InviteToJoinOrganizationNewCustomerInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxWorkflowExecutor.Execute<InviteToJoinOrganizationNewCustomer, InviteToJoinOrganizationNewCustomerInput>(
-            args,
-            new WorkflowOptions
-            {
-                Id = temporalHelperService.ToId(
-                    $"{Constants.InviteToOrganizationNewCustomerPrefix}-{args.OrganizationId}-{args.InviterCustomerId}-{args.InviteeCustomerEmail}"),
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
-            },
-            unitOfWork);
-
     public void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<NewOrganizationJoined, NewOrganizationJoinedInput>(
             args,
@@ -150,27 +118,10 @@ public class TemporalOutboxService(
             new WorkflowSignalOptions(),
             unitOfWork);
 
-    public void SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-        string organizationId,
-        string inviteeCustomerId,
-        string inviterCustomerId,
-        IUnitOfWork unitOfWork) =>
+    public void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{organizationId}-{inviteeCustomerId}-{inviterCustomerId}"),
-            s_inviteToJoinOrganizationExistingCustomerInvitationStatusChangedAsync,
-            new WorkflowSignalOptions(),
-            unitOfWork);
-
-    public void SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-        string organizationId,
-        string inviterCustomerId,
-        string inviteeCustomerEmail,
-        IUnitOfWork unitOfWork) =>
-        temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationNewCustomerPrefix}-{organizationId}-{inviterCustomerId}-{inviteeCustomerEmail}"),
-            s_inviteToJoinOrganizationNewCustomerInvitationStatusChangedAsync,
+            temporalHelperService.ToId(joinInvitationId),
+            s_inviteToJoinOrganizationInvitationStatusChangedAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
 
@@ -219,27 +170,11 @@ public class TemporalOutboxService(
             try
             {
                 ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var input = JsonSerializer.Deserialize<InviteToJoinOrganizationExistingCustomerInput>(executionArgs);
+                var input = JsonSerializer.Deserialize<InviteToJoinOrganizationInput>(executionArgs);
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync(
-                    (InviteToJoinOrganizationExistingCustomer workflow) => workflow.ExecuteAsync(input),
-                    workflowOptions);
-            }
-            catch (WorkflowAlreadyStartedException)
-            {
-            }
-        }
-        else if (workflowType == s_inviteToJoinOrganizationNewCustomer)
-        {
-            try
-            {
-                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var input = JsonSerializer.Deserialize<InviteToJoinOrganizationNewCustomerInput>(executionArgs);
-                ArgumentNullException.ThrowIfNull(input);
-
-                _ = await temporalClient.StartWorkflowAsync(
-                    (InviteToJoinOrganizationNewCustomer workflow) => workflow.ExecuteAsync(input),
+                    (InviteToJoinOrganization workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
@@ -310,26 +245,15 @@ public class TemporalOutboxService(
                 .GetWorkflowHandle<ScheduleRenewOrganizationOffering>(workflowId)
                 .SignalAsync(workflow => workflow.CancelOfferingAsync(), workflowSignalOptions);
         }
-        else if (signalType == s_inviteToJoinOrganizationExistingCustomerInvitationStatusChangedAsync)
+        else if (signalType == s_inviteToJoinOrganizationInvitationStatusChangedAsync)
         {
-            if (!await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationExistingCustomer>(workflowId, cancellationToken))
+            if (!await temporalHelperService.IsRunningAsync<InviteToJoinOrganization>(workflowId, cancellationToken))
             {
                 return;
             }
 
             await temporalClient
-                .GetWorkflowHandle<InviteToJoinOrganizationExistingCustomer>(workflowId)
-                .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
-        }
-        else if (signalType == s_inviteToJoinOrganizationNewCustomerInvitationStatusChangedAsync)
-        {
-            if (!await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationNewCustomer>(workflowId, cancellationToken))
-            {
-                return;
-            }
-
-            await temporalClient
-                .GetWorkflowHandle<InviteToJoinOrganizationNewCustomer>(workflowId)
+                .GetWorkflowHandle<InviteToJoinOrganization>(workflowId)
                 .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
         }
     }

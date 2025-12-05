@@ -11,8 +11,7 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
-using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
-using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
+using Organization.Shared.Workflows.InviteToJoinOrganization;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
@@ -123,26 +122,9 @@ public class InvitationService(
 
             joinInvitations.Add(mapper.MapTo(existingJoinInvitation));
 
-            if (matchingCustomerByEmail is null)
-            {
-                temporalOutboxService.StartWorkflowInviteToJoinOrganizationNewCustomer(
-                    new InviteToJoinOrganizationNewCustomerInput(
-                        existingJoinInvitation.Id,
-                        organization.Id,
-                        customerEntity.Id,
-                        email),
-                    repositoryFactory.UnitOfWork);
-            }
-            else
-            {
-                temporalOutboxService.StartWorkflowInviteToJoinOrganizationExistingCustomer(
-                    new InviteToJoinOrganizationExistingCustomerInput(
-                        existingJoinInvitation.Id,
-                        organization.Id,
-                        matchingCustomerByEmail.Id,
-                        customerEntity.Id),
-                    repositoryFactory.UnitOfWork);
-            }
+            temporalOutboxService.StartWorkflowInviteToJoin(
+                new InviteToJoinOrganizationInput(existingJoinInvitation.Id, matchingCustomerByEmail is null),
+                repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -196,22 +178,7 @@ public class InvitationService(
         joinInvitation.Status = InvitationStatusConstants.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
-        if (joinInvitation.Invitee is not null)
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.Invitee.Id,
-                joinInvitation.CreatedBy.Id,
-                repositoryFactory.UnitOfWork);
-        }
-        else if (joinInvitation.Email is not null) // Check new customer workflow
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.CreatedBy.Id,
-                joinInvitation.Email,
-                repositoryFactory.UnitOfWork);
-        }
+        temporalOutboxService.SignalWorkflowInviteToJoinInvitationStatusChanged(joinInvitation.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -234,22 +201,7 @@ public class InvitationService(
         joinInvitation.Status = InvitationStatusConstants.Rejected;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
-        if (joinInvitation.Invitee is not null)
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.Invitee.Id,
-                joinInvitation.CreatedBy.Id,
-                repositoryFactory.UnitOfWork);
-        }
-        else if (joinInvitation.Email is not null) // Check new customer workflow
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.CreatedBy.Id,
-                joinInvitation.Email,
-                repositoryFactory.UnitOfWork);
-        }
+        temporalOutboxService.SignalWorkflowInviteToJoinInvitationStatusChanged(joinInvitation.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -279,22 +231,7 @@ public class InvitationService(
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
-        if (joinInvitation.Invitee is not null)
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.Invitee.Id,
-                joinInvitation.CreatedBy.Id,
-                repositoryFactory.UnitOfWork);
-        }
-        else if (joinInvitation.Email is not null) // Check new customer workflow
-        {
-            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                joinInvitation.Organization.Id,
-                joinInvitation.CreatedBy.Id,
-                joinInvitation.Email,
-                repositoryFactory.UnitOfWork);
-        }
+        temporalOutboxService.SignalWorkflowInviteToJoinInvitationStatusChanged(joinInvitation.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
