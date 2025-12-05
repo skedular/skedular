@@ -12,13 +12,13 @@ var postgres = builder.AddPostgres("postgres").WithImage("postgis/postgis", "16-
 var temporal = builder.AddTemporalServerContainer("temporal");
 var redis = builder.AddRedis("redis");
 
-var customerDatabase = postgres.AddDatabase("customerdb");
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
+var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
     .AddProject<Customer_Infrastructure>("customerinfrastructure")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
