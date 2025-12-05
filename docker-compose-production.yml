@@ -186,9 +186,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@staging.skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
@@ -298,9 +298,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@staging.skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -404,8 +404,8 @@ services:
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@staging.skedular.app>"
-      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -504,9 +504,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@staging.skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@staging.skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -575,8 +575,8 @@ services:
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@skedular.app>"
-      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@skedular.app>"
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
@@ -687,9 +687,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -792,9 +792,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
@@ -893,9 +893,9 @@ services:
       Email__NewSlackWorkspaceJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewCustomerJoinedEmail: true
       Email__EnableNewSlackWorkspaceJoinedEmail: true
-      Email__BookingInvoiceEmailSender: "<no-reply@skedular.app>"
+      Email__BookingInvoiceEmailSender: "Skedular <no-reply@skedular.app>"
       Email__EnableNewOrganizationJoinedEmail: true
-      Email__NewOrganizationJoinedEmailSender: "<no-reply@skedular.app>"
+      Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
       OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
