@@ -480,7 +480,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Shared", "sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Domain.IntegrationTests", "customer\domain\Customer.Domain.IntegrationTests\Customer.Domain.IntegrationTests.csproj", "{F6E3BA48-F043-4312-AC12-078D11CD004C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedular.AppHost", "all-in-one\Skedular.AppHost\Skedular.AppHost.csproj", "{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{7BB01DDD-1C61-4BF5-A800-848B10D52CC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedular.AppHost", "system\Skedular.AppHost\Skedular.AppHost.csproj", "{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1004,10 +1006,10 @@ Global
 		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E3BA48-F043-4312-AC12-078D11CD004C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1190,6 +1192,6 @@ Global
 		{026BE11E-7A3E-4E50-B29E-78FAB393A0B9} = {8894FBEB-EFAC-4A51-A368-176C08BE18E0}
 		{8F79515A-69D0-4931-BE00-FC4FFDEDD5F6} = {0916AC00-8FE9-4B38-A135-EF9CE225C84B}
 		{F6E3BA48-F043-4312-AC12-078D11CD004C} = {8894FBEB-EFAC-4A51-A368-176C08BE18E0}
-		{4965A939-8BF8-4E05-B0BE-FEF2C77E8BF2} = {3C37F231-E3BF-4C6C-90ED-6EDA6C0CAF64}
+		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53} = {7BB01DDD-1C61-4BF5-A800-848B10D52CC5}
 	EndGlobalSection
 EndGlobal
