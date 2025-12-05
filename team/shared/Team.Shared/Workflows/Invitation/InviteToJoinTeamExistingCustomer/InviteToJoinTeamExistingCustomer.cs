@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Team.Shared.Workflows.Invitation.InviteToJoinTeamExistingCustomer;
 
-public record InviteToJoinTeamExistingCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerId);
+public record InviteToJoinTeamExistingCustomerInput(string JoinInvitationId, string TeamId, string InviterCustomerId, string InviteeCustomerId);
 
 public record InviteToJoinTeamExistingCustomerState(bool InvitationStateChanged);
 
@@ -35,9 +35,7 @@ public class InviteToJoinTeamExistingCustomer
         // Step 3: If no response after 2 weeks, expire the invitation
         if (!responded)
         {
-            await Workflow.ExecuteActivityAsync(
-                (InvitationIntegrations activity) =>
-                    activity.ExpireInvitationAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerId),
+            await Workflow.ExecuteActivityAsync((InvitationIntegrations activity) => activity.ExpireInvitationAsync(args.JoinInvitationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),

@@ -7,22 +7,13 @@ namespace Team.Shared.Activities;
 public class InvitationIntegrations(IRepositoryFactory repositoryFactory)
 {
     [Activity]
-    public async Task ExpireInvitationAsync(string teamId, string inviterCustomerId, string inviteeCustomerId)
+    public async Task ExpireInvitationAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByTeamInviterInviteeIdAsync(
-            teamId,
-            inviterCustomerId,
-            inviteeCustomerId,
-            cancellationToken);
-        if (joinInvitation is null)
+        var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
+        if (joinInvitation is null || joinInvitation.Status != InvitationStatusConstants.Pending)
         {
             // Invitation doesn't exist or was already processed
-            return;
-        }
-
-        if (joinInvitation.Status != InvitationStatusConstants.Pending)
-        {
             return;
         }
 

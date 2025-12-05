@@ -13,17 +13,11 @@ namespace Team.Shared.Repositories;
 
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
-    Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
+    Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<JoinInvitation>> GetByTeamIdAsync(string teamId, InvitationStatus status, CancellationToken cancellationToken);
     JoinInvitation Add(JoinInvitation joinInvitation);
     JoinInvitation Update(JoinInvitation joinInvitation);
-
-    Task<JoinInvitation?> GetByTeamInviterInviteeIdAsync(
-        string teamId,
-        string inviterId,
-        string inviteeId,
-        CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
@@ -105,9 +99,11 @@ internal static class JoinInvitationExtensions
 public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<TeamDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
-    public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation.CountAsync(
-            query => query.Status == InvitationStatusConstants.Pending && query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
+            query => query.Status == InvitationStatusConstants.Pending && ((query.Invitee != null && query.Invitee.Id == inviteeId) ||
+                                                                           (query.Email != null && customerEmails.Contains(query.Email))),
+            cancellationToken);
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
@@ -133,19 +129,6 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
         joinInvitation.ModifiedAt = now;
         return DbContext.JoinInvitation.Update(joinInvitation).Entity;
     }
-
-    public async Task<JoinInvitation?> GetByTeamInviterInviteeIdAsync(
-        string teamId,
-        string inviterId,
-        string inviteeId,
-        CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation
-            .AddDependentObjects(true)
-            .Where(query => query.Team.Id == teamId
-                            && query.CreatedBy.Id == inviterId
-                            && query.Invitee != null && query.Invitee.Id == inviteeId
-                            && query.Status == InvitationStatusConstants.Pending)
-            .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetPaginatedJoinInvitationsUntrackedAsync(
         PaginationInputParam paginationInputParam,

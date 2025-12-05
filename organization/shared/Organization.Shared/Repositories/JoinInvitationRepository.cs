@@ -13,14 +13,8 @@ namespace Organization.Shared.Repositories;
 
 public interface IJoinInvitationRepository : IRepository<JoinInvitation>
 {
-    Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken);
+    Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<JoinInvitation?> GetByOrganizationInviterInviteeIdAsync(
-        string organizationId,
-        string inviterId,
-        string inviteeId,
-        CancellationToken cancellationToken);
 
     Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
         string? organizationId,
@@ -36,6 +30,10 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        ICollection<string> emails,
+        CancellationToken cancellationToken);
 }
 
 internal static class JoinInvitationExtensions
@@ -50,10 +48,12 @@ internal static class JoinInvitationExtensions
 
         internal IQueryable<JoinInvitation> AddSearchCriteria(JoinInvitationSearchCriteria searchCriteria)
         {
-            if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId))
+            if (!string.IsNullOrWhiteSpace(searchCriteria.InviteeId) ||
+                (searchCriteria.CustomerEmails != null && searchCriteria.CustomerEmails.Count != 0))
             {
                 originalQuery = originalQuery.Where(item =>
-                    item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
+                    (item.Invitee != null && searchCriteria.InviteeId != null && item.Invitee.Id == searchCriteria.InviteeId) ||
+                    (item.Email != null && searchCriteria.CustomerEmails != null && searchCriteria.CustomerEmails.Contains(item.Email)));
             }
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
@@ -106,27 +106,16 @@ internal static class JoinInvitationExtensions
 public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<OrganizationDbContext, JoinInvitation>(dbContext, timeProvider), IJoinInvitationRepository
 {
-    public async Task<int> PendingInvitationsCountAsync(string inviteeId, CancellationToken cancellationToken) =>
+    public async Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation.CountAsync(
-            query => query.Status == InvitationStatusConstants.Pending && query.Invitee != null && query.Invitee.Id == inviteeId, cancellationToken);
+            query => query.Status == InvitationStatusConstants.Pending && ((query.Invitee != null && query.Invitee.Id == inviteeId) ||
+                                                                           (query.Email != null && customerEmails.Contains(query.Email))),
+            cancellationToken);
 
     public async Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.JoinInvitation
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public async Task<JoinInvitation?> GetByOrganizationInviterInviteeIdAsync(
-        string organizationId,
-        string inviterId,
-        string inviteeId,
-        CancellationToken cancellationToken) =>
-        await DbContext.JoinInvitation
-            .AddDependentObjects(true)
-            .Where(query => query.Organization.Id == organizationId
-                            && query.CreatedBy.Id == inviterId
-                            && query.Invitee != null && query.Invitee.Id == inviteeId
-                            && query.Status == InvitationStatusConstants.Pending)
-            .FirstOrDefaultAsync(cancellationToken);
 
     public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
         string? organizationId,
@@ -179,4 +168,14 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
+
+    public async Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
+        ICollection<string> emails,
+        CancellationToken cancellationToken) =>
+        await DbContext.JoinInvitation
+            .Where(query =>
+                query.Status == InvitationStatusConstants.Pending &&
+                query.Invitee == null &&
+                emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
+            .ToListAsync(cancellationToken);
 }

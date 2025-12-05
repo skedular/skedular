@@ -60,9 +60,7 @@ public class CustomerRepository(OrganizationDbContext dbContext, TimeProvider ti
             .FirstOrDefaultAsync(
                 query =>
                     !query.DeletedAt.HasValue &&
-                    query.Identities.Any(identity =>
-                        identity.Email != null &&
-                        EF.Functions.ILike(identity.Email, email)),
+                    query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
                 cancellationToken);
 
     public Customer Update(Customer customer)

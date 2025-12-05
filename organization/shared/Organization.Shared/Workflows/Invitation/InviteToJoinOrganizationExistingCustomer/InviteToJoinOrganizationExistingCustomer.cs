@@ -4,7 +4,11 @@ using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingCustomer;
 
-public record InviteToJoinOrganizationExistingCustomerInput(string OrganizationId, string InviteeCustomerId, string InviterCustomerId);
+public record InviteToJoinOrganizationExistingCustomerInput(
+    string JoinInvitationId,
+    string OrganizationId,
+    string InviteeCustomerId,
+    string InviterCustomerId);
 
 public record InviteToJoinOrganizationExistingCustomerState(bool InvitationStateChanged);
 
@@ -35,12 +39,10 @@ public class InviteToJoinOrganizationExistingCustomer
         // Step 2: Wait for response (accept/reject/cancel) or a week
         var responded = await Workflow.WaitConditionAsync(() => _state.InvitationStateChanged, TimeSpan.FromDays(7));
 
-        // Step 3: If no response after 2 weeks, expire the invitation
+        // Step 3: If no response after a week, expire the invitation
         if (!responded)
         {
-            await Workflow.ExecuteActivityAsync(
-                (InvitationIntegrations activity) =>
-                    activity.ExpireInvitationAsync(args.OrganizationId, args.InviterCustomerId, args.InviteeCustomerId),
+            await Workflow.ExecuteActivityAsync((InvitationIntegrations activity) => activity.ExpireInvitationAsync(args.JoinInvitationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),

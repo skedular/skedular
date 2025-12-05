@@ -118,7 +118,7 @@ public class InvitationService(
             else
             {
                 temporalOutboxService.StartWorkflowInviteToJoinTeamExistingCustomer(
-                    new InviteToJoinTeamExistingCustomerInput(team.Id, customer.Id, matchingCustomerByEmail.Id),
+                    new InviteToJoinTeamExistingCustomerInput(existingJoinInvitation.Id, team.Id, customer.Id, matchingCustomerByEmail.Id),
                     repositoryFactory.UnitOfWork);
             }
         }
@@ -240,7 +240,10 @@ public class InvitationService(
     public async Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(customer.Id, cancellationToken);
+        return await repositoryFactory.JoinInvitationRepository.PendingInvitationsCountAsync(
+            customer.Id,
+            customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList(),
+            cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
