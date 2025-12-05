@@ -23,6 +23,12 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
         string inviteeCustomerId,
         string inviterCustomerId,
         IUnitOfWork unitOfWork);
+
+    void SignalWorkflowInviteToJoinTeamNewCustomerInvitationStatusChanged(
+        string teamId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
@@ -37,6 +43,10 @@ public class TemporalOutboxService(
 
     private static readonly string s_inviteToJoinTeamExistingCustomerInvitationStatusChangedAsync =
         typeof(InviteToJoinTeamExistingCustomer).GetMethod(nameof(InviteToJoinTeamExistingCustomer.InvitationStatusChangedAsync))!
+            .ToWorkflowSignalType();
+
+    private static readonly string s_inviteToJoinTeamNewCustomerInvitationStatusChangedAsync =
+        typeof(InviteToJoinTeamNewCustomer).GetMethod(nameof(InviteToJoinTeamExistingCustomer.InvitationStatusChangedAsync))!
             .ToWorkflowSignalType();
 
     public void StartWorkflowInviteToJoinTeamExistingCustomer(InviteToJoinTeamExistingCustomerInput args, IUnitOfWork unitOfWork) =>
@@ -63,15 +73,26 @@ public class TemporalOutboxService(
             },
             unitOfWork);
 
+
     public void SignalWorkflowInviteToJoinTeamExistingCustomerInvitationStatusChanged(
         string teamId,
         string inviteeCustomerId,
         string inviterCustomerId,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(
-                $"{Constants.InviteToTeamExistingCustomerPrefix}-{teamId}-{inviteeCustomerId}-{inviterCustomerId}"),
+            temporalHelperService.ToId($"{Constants.InviteToTeamExistingCustomerPrefix}-{teamId}-{inviteeCustomerId}-{inviterCustomerId}"),
             s_inviteToJoinTeamExistingCustomerInvitationStatusChangedAsync,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowInviteToJoinTeamNewCustomerInvitationStatusChanged(
+        string teamId,
+        string inviteeCustomerId,
+        string inviterCustomerId,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId($"{Constants.InviteToTeamNewCustomerPrefix}-{teamId}-{inviteeCustomerId}-{inviterCustomerId}"),
+            s_inviteToJoinTeamNewCustomerInvitationStatusChangedAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
 
@@ -132,6 +153,17 @@ public class TemporalOutboxService(
 
             await temporalClient
                 .GetWorkflowHandle<InviteToJoinTeamExistingCustomer>(workflowId)
+                .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
+        }
+        else if (signalType == s_inviteToJoinTeamNewCustomerInvitationStatusChangedAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<InviteToJoinTeamNewCustomer>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<InviteToJoinTeamNewCustomer>(workflowId)
                 .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
         }
     }

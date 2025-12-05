@@ -3,7 +3,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
-using Enterprise.Shared.Temporal;
 using HotChocolate.Types.Pagination;
 using Organization.Api.Mappers;
 using Organization.Api.Services.Authorization;
@@ -16,7 +15,6 @@ using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationExistingC
 using Organization.Shared.Workflows.Invitation.InviteToJoinOrganizationNewCustomer;
 using Customer = Organization.Shared.Models.Customer;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
-using Constants = Organization.Shared.Workflows.Constants;
 
 
 namespace Organization.Api.Services;
@@ -34,7 +32,6 @@ public interface IInvitationService
     Task<JoinInvitation> CancelInvitationToJoinAsync(string id, CancellationToken cancellationToken);
     Task<int> PendingInvitationsCountAsync(CancellationToken cancellationToken);
 
-
     Task<(PaginatedInfo, ICollection<Edge<JoinInvitation>>, int)> GetMyPaginatedJoinInvitationsAsync(
         PaginationInputParam paginationInputParam,
         JoinInvitationSearchCriteria searchCriteria,
@@ -43,7 +40,6 @@ public interface IInvitationService
 }
 
 public class InvitationService(
-    ITemporalHelperService temporalHelperService,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     ICustomerService customerService,
@@ -53,7 +49,6 @@ public class InvitationService(
     ITemporalOutboxService temporalOutboxService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    ILogger<InvitationService> logger,
     ICachedCustomerService cachedCustomerService) : IInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
@@ -201,54 +196,21 @@ public class InvitationService(
         joinInvitation.Status = InvitationStatusConstants.Accepted;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
-        // Only signal if the workflow exists and is running
         if (joinInvitation.Invitee is not null)
         {
-            var existingCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.Invitee.Id}-{joinInvitation.CreatedBy.Id}");
-
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationExistingCustomer>(
-                        existingCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.Invitee.Id,
-                        joinInvitation.CreatedBy.Id,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for existing customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
         }
-
-        // Check new customer workflow
-        if (joinInvitation.Email is not null)
+        else if (joinInvitation.Email is not null) // Check new customer workflow
         {
-            var newCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationNewCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.CreatedBy.Id}-{joinInvitation.Email}");
-
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationNewCustomer>(
-                        newCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.CreatedBy.Id,
-                        joinInvitation.Email,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for new customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
+                repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -274,49 +236,19 @@ public class InvitationService(
 
         if (joinInvitation.Invitee is not null)
         {
-            var existingCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.Invitee.Id}-{joinInvitation.CreatedBy.Id}");
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationExistingCustomer>(existingCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.Invitee.Id,
-                        joinInvitation.CreatedBy.Id,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for existing customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
         }
-
-        //Check new Customer workflow
-        if (joinInvitation.Email is not null)
+        else if (joinInvitation.Email is not null) // Check new customer workflow
         {
-            var newCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationNewCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.CreatedBy.Id}-{joinInvitation.Email}");
-
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationNewCustomer>(
-                        newCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.CreatedBy.Id,
-                        joinInvitation.Email,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for new customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
+                repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -347,54 +279,21 @@ public class InvitationService(
         joinInvitation.Status = InvitationStatusConstants.Cancelled;
         joinInvitation = repositoryFactory.JoinInvitationRepository.Update(joinInvitation);
 
-// Only signal if workflow exists and is running
         if (joinInvitation.Invitee is not null)
         {
-            var existingCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationExistingCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.Invitee.Id}-{joinInvitation.CreatedBy.Id}");
-
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationExistingCustomer>(
-                        existingCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.Invitee.Id,
-                        joinInvitation.CreatedBy.Id,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for existing customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationExistingCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.Invitee.Id,
+                joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
         }
-
-        // Check new customer workflow
-        if (joinInvitation.Email is not null)
+        else if (joinInvitation.Email is not null) // Check new customer workflow
         {
-            var newCustomerWorkflowId = temporalHelperService.ToId(
-                $"{Constants.InviteToOrganizationNewCustomerPrefix}-{joinInvitation.Organization.Id}-{joinInvitation.CreatedBy.Id}-{joinInvitation.Email}");
-
-            try
-            {
-                if (await temporalHelperService.IsRunningAsync<InviteToJoinOrganizationNewCustomer>(
-                        newCustomerWorkflowId,
-                        cancellationToken))
-                {
-                    temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
-                        joinInvitation.Organization.Id,
-                        joinInvitation.CreatedBy.Id,
-                        joinInvitation.Email,
-                        repositoryFactory.UnitOfWork);
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Workflow for new customer not found or already completed");
-            }
+            temporalOutboxService.SignalWorkflowInviteToJoinOrganizationNewCustomerInvitationStatusChanged(
+                joinInvitation.Organization.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
+                repositoryFactory.UnitOfWork);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);

@@ -112,7 +112,7 @@ public class InvitationService(
             if (matchingCustomerByEmail is null)
             {
                 temporalOutboxService.StartWorkflowInviteToJoinTeamNewCustomer(
-                    new InviteToJoinTeamNewCustomerInput(team.Id, customer.Id, email),
+                    new InviteToJoinTeamNewCustomerInput(existingJoinInvitation.Id, team.Id, customer.Id, email),
                     repositoryFactory.UnitOfWork);
             }
             else
@@ -167,6 +167,14 @@ public class InvitationService(
                 joinInvitation.CreatedBy.Id,
                 repositoryFactory.UnitOfWork);
         }
+        else if (joinInvitation.Email is not null) // Check new customer workflow
+        {
+            temporalOutboxService.SignalWorkflowInviteToJoinTeamNewCustomerInvitationStatusChanged(
+                joinInvitation.Team.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -195,6 +203,14 @@ public class InvitationService(
                 joinInvitation.Team.Id,
                 joinInvitation.Invitee.Id,
                 joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
+        }
+        else if (joinInvitation.Email is not null) // Check new customer workflow
+        {
+            temporalOutboxService.SignalWorkflowInviteToJoinTeamNewCustomerInvitationStatusChanged(
+                joinInvitation.Team.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
                 repositoryFactory.UnitOfWork);
         }
 
@@ -228,6 +244,14 @@ public class InvitationService(
                 joinInvitation.Team.Id,
                 joinInvitation.Invitee.Id,
                 joinInvitation.CreatedBy.Id,
+                repositoryFactory.UnitOfWork);
+        }
+        else if (joinInvitation.Email is not null) // Check new customer workflow
+        {
+            temporalOutboxService.SignalWorkflowInviteToJoinTeamNewCustomerInvitationStatusChanged(
+                joinInvitation.Team.Id,
+                joinInvitation.CreatedBy.Id,
+                joinInvitation.Email,
                 repositoryFactory.UnitOfWork);
         }
 

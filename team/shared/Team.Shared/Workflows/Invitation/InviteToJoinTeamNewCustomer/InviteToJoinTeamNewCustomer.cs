@@ -4,13 +4,21 @@ using Temporalio.Workflows;
 
 namespace Team.Shared.Workflows.Invitation.InviteToJoinTeamNewCustomer;
 
-public record InviteToJoinTeamNewCustomerInput(string TeamId, string InviterCustomerId, string InviteeCustomerEmail);
+public record InviteToJoinTeamNewCustomerInput(string JoinInvitationId, string TeamId, string InviterCustomerId, string InviteeCustomerEmail);
+
+public record InviteToJoinTeamNewCustomerState(bool InvitationStateChanged);
 
 [Workflow]
 public class InviteToJoinTeamNewCustomer
 {
+    private InviteToJoinTeamNewCustomerState? _state;
+
     [WorkflowRun]
-    public async Task ExecuteAsync(InviteToJoinTeamNewCustomerInput args) =>
+    public async Task ExecuteAsync(InviteToJoinTeamNewCustomerInput args)
+    {
+        _state = new InviteToJoinTeamNewCustomerState(false);
+
+        // Step 1: Send invitation email
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
                 activity.SendInviteCustomerToJoinTeamNewCustomerAsync(args.TeamId, args.InviterCustomerId, args.InviteeCustomerEmail),
@@ -20,4 +28,29 @@ public class InviteToJoinTeamNewCustomer
                 TaskQueue = Workflow.Info.TaskQueue,
                 RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
             });
+
+        // Step 2: Wait for response (accept/reject/cancel) or a week
+        var responded = await Workflow.WaitConditionAsync(() => _state.InvitationStateChanged, TimeSpan.FromDays(7));
+
+        //Step3: If no response after a week, expire the invitation
+        if (!responded)
+        {
+            await Workflow.ExecuteActivityAsync((InvitationIntegrations activity) => activity.ExpireInvitationAsync(args.JoinInvitationId),
+                new ActivityOptions
+                {
+                    StartToCloseTimeout = TimeSpan.FromMinutes(1),
+                    TaskQueue = Workflow.Info.TaskQueue,
+                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromMinutes(1) }
+                });
+        }
+    }
+
+    [WorkflowSignal]
+    public Task InvitationStatusChangedAsync()
+    {
+        ArgumentNullException.ThrowIfNull(_state);
+
+        _state = _state with { InvitationStateChanged = true };
+        return Task.CompletedTask;
+    }
 }

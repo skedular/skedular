@@ -66,6 +66,7 @@ public class CustomerSubscriber(
     {
         _ = RebuildIdentities(customer, existingCustomer);
         existingCustomer = repositoryFactory.CustomerRepository.Update(mapper.MergeToEntity(customer, existingCustomer, existingCustomer.Identities));
+
         await LinkInvitationsToNewCustomerAsync(existingCustomer, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
@@ -102,10 +103,10 @@ public class CustomerSubscriber(
         return existingCustomer;
     }
 
-    private async Task LinkInvitationsToNewCustomerAsync(Shared.Database.Entities.Customer existingCustomer, CancellationToken cancellationToken)
+    private async Task LinkInvitationsToNewCustomerAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken)
     {
         // Step 1: get all pending invitations that don't have an invitee yet
-        var emails = existingCustomer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList();
+        var emails = customer.Identities.Where(item => !string.IsNullOrWhiteSpace(item.Email)).Select(item => item.Email!).ToList();
         var pendingInvitations = await repositoryFactory.JoinInvitationRepository.GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
             emails,
             cancellationToken);
@@ -117,7 +118,7 @@ public class CustomerSubscriber(
         // Step 2: Link the matched invitations to the customer
         foreach (var invitation in pendingInvitations)
         {
-            invitation.Invitee = existingCustomer;
+            invitation.Invitee = customer;
             repositoryFactory.JoinInvitationRepository.Update(invitation);
         }
     }

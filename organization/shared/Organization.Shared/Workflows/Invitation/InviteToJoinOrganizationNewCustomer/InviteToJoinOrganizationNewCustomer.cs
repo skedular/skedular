@@ -10,7 +10,7 @@ public record InviteToJoinOrganizationNewCustomerInput(
     string InviterCustomerId,
     string InviteeCustomerEmail);
 
-public record InviteToJoinOrganizationNewCustomerState(bool InvitationNewCustomerStateChanged);
+public record InviteToJoinOrganizationNewCustomerState(bool InvitationStateChanged);
 
 [Workflow]
 public class InviteToJoinOrganizationNewCustomer
@@ -21,6 +21,7 @@ public class InviteToJoinOrganizationNewCustomer
     public async Task ExecuteAsync(InviteToJoinOrganizationNewCustomerInput args)
     {
         _state = new InviteToJoinOrganizationNewCustomerState(false);
+
         // Step 1: Send invitation email
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
@@ -33,7 +34,7 @@ public class InviteToJoinOrganizationNewCustomer
             });
 
         // Step 2: Wait for response (accept/reject/cancel) or a week
-        var responded = await Workflow.WaitConditionAsync(() => _state.InvitationNewCustomerStateChanged, TimeSpan.FromDays(7));
+        var responded = await Workflow.WaitConditionAsync(() => _state.InvitationStateChanged, TimeSpan.FromDays(7));
 
         //Step3: If no response after a week, expire the invitation
         if (!responded)
@@ -49,10 +50,11 @@ public class InviteToJoinOrganizationNewCustomer
     }
 
     [WorkflowSignal]
-    public Task InvitationStatusNewCustomerChangedAsync()
+    public Task InvitationStatusChangedAsync()
     {
         ArgumentNullException.ThrowIfNull(_state);
-        _state = _state with { InvitationNewCustomerStateChanged = true };
+
+        _state = _state with { InvitationStateChanged = true };
         return Task.CompletedTask;
     }
 }

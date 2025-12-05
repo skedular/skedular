@@ -65,7 +65,7 @@ public class TemporalOutboxService(
             .ToWorkflowSignalType();
 
     private static readonly string s_inviteToJoinOrganizationNewCustomerInvitationStatusChangedAsync =
-        typeof(InviteToJoinOrganizationNewCustomer).GetMethod(nameof(InviteToJoinOrganizationNewCustomer.InvitationStatusNewCustomerChangedAsync))!
+        typeof(InviteToJoinOrganizationNewCustomer).GetMethod(nameof(InviteToJoinOrganizationNewCustomer.InvitationStatusChangedAsync))!
             .ToWorkflowSignalType();
 
     public void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork) =>
@@ -330,7 +330,7 @@ public class TemporalOutboxService(
 
             await temporalClient
                 .GetWorkflowHandle<InviteToJoinOrganizationNewCustomer>(workflowId)
-                .SignalAsync(workflow => workflow.InvitationStatusNewCustomerChangedAsync(), workflowSignalOptions);
+                .SignalAsync(workflow => workflow.InvitationStatusChangedAsync(), workflowSignalOptions);
         }
     }
 }
