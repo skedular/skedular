@@ -3,7 +3,7 @@ using Customer.Domain.IntegrationTests.Fixtures;
 using Customer.Shared.Repositories;
 using Testing.Shared;
 
-namespace Customer.Domain.IntegrationTests.Api.Controllers.CustomerControllerTests;
+namespace Customer.Domain.IntegrationTests.Api.Rest.CustomerControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Customer.Api")]

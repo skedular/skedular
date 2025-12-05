@@ -2,7 +2,7 @@ using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
 using Shouldly;
 using Testing.Shared;
 
-namespace Customer.Domain.IntegrationTests.Api.Controllers.CustomerControllerTests;
+namespace Customer.Domain.IntegrationTests.Api.Rest.CustomerControllerTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Integration)]
 [Collection("Customer.Api")]
