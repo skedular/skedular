@@ -47,8 +47,9 @@ public class Startup
 
         services.TryAddSingleton(TimeProvider.System);
 
+        services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
+
         services
-            .AddKafkaWithConnectionString(configuration, kafkaConnectionString)
             .WithPooledDbContextFactoryWithConnectionString<CustomerDbContext>(configuration, environment, dbConnectionString, true)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()

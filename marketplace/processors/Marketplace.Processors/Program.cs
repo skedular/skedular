@@ -5,7 +5,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 using Marketplace.Processors.Subscribers;
 using Marketplace.Shared;
 using Marketplace.Shared.Database;
@@ -22,12 +21,9 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        var kafkaConfiguration = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddKafkaReliableEventConsumers<

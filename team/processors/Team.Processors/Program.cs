@@ -5,7 +5,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;
@@ -29,11 +28,9 @@ public class Program
         ArgumentNullException.ThrowIfNull(emailConfiguration);
         services.AddSingleton(emailConfiguration);
 
-        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        var kafkaConfiguration = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
             .AddKafkaReliableEventConsumers<

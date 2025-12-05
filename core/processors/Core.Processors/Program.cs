@@ -9,7 +9,6 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 
 namespace Core.Processors;
 
@@ -23,12 +22,9 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        var kafkaConfiguration = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)

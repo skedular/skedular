@@ -24,9 +24,9 @@ public class Program
 
         var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        _ = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)

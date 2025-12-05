@@ -13,9 +13,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args).AddDefaultServices<Program>();
         var services = builder.Services;
         var configuration = builder.Configuration;
+        _ = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddServices()
             .AddJobs();
         return builder.Build().UseWebApplicationDefaults<Program>();

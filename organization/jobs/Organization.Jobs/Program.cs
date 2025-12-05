@@ -34,9 +34,9 @@ public class Program
         var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
         ArgumentNullException.ThrowIfNull(emailConfiguration);
         services.AddSingleton(emailConfiguration);
+        _ = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<OrganizationDbContext>(configuration, environment, "organizationdb", true)
             .AddKafkaOutboxBackgroundService<OrganizationDbContext>()

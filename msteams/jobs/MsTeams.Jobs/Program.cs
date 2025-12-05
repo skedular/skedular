@@ -23,9 +23,9 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
+        _ = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddKafkaOutboxBackgroundService<MsTeamsDbContext>()

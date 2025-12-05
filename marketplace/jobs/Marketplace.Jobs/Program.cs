@@ -24,8 +24,9 @@ public class Program
         var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
         ArgumentNullException.ThrowIfNull(kafkaConfiguration);
 
+        _ = services.AddKafka(configuration);
+
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<MarketplaceDbContext>(configuration, environment, "marketplacedb", true)
             .AddKafkaOutboxBackgroundService<MarketplaceDbContext>()

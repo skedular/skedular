@@ -5,7 +5,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Temporal;
 using MsTeams.Processors.Subscribers;
 using MsTeams.Shared;
@@ -23,12 +22,9 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
-        ArgumentNullException.ThrowIfNull(kafkaConfiguration);
+        var kafkaConfiguration = services.AddKafka(configuration);
 
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<MsTeamsDbContext>(configuration, environment, "msteamsdb", true)
             .AddKafkaReliableEventConsumers<

@@ -31,8 +31,9 @@ public class Program
         ArgumentNullException.ThrowIfNull(emailConfiguration);
         services.AddSingleton(emailConfiguration);
 
+        _ = services.AddKafka(configuration);
+
         services
-            .AddKafka(configuration)
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddKafkaOutboxBackgroundService<LocationDbContext>()

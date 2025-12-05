@@ -24,10 +24,10 @@ public static class Extensions
 
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddKafka(IConfiguration configuration, bool useTelemetry = true) =>
+        public KafkaConfiguration AddKafka(IConfiguration configuration, bool useTelemetry = true) =>
             services.AddKafkaWithConnectionString(configuration, configuration.GetConnectionString("kafka"), useTelemetry);
 
-        public IServiceCollection AddKafkaWithConnectionString(IConfiguration configuration, string? connectionString, bool useTelemetry = true)
+        public KafkaConfiguration AddKafkaWithConnectionString(IConfiguration configuration, string? connectionString, bool useTelemetry = true)
         {
             var kafkaConfiguration = configuration.GetSection(KafkaConfiguration.Key).Get<KafkaConfiguration>();
             ArgumentNullException.ThrowIfNull(kafkaConfiguration);
@@ -60,7 +60,7 @@ public static class Extensions
             services.TryAddSingleton<IKafkaLogger, KafkaLogger>();
             services.TryAddSingleton<IHostApplicationLifetimeWrapper, HostApplicationLifetimeWrapper>();
 
-            return services;
+            return kafkaConfiguration;
         }
 
         public IServiceCollection AddKafkaEventConsumers<TSubscriber, TKey, TEvent>(KafkaConfiguration kafkaConfiguration)
