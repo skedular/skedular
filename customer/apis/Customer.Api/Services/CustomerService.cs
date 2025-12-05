@@ -225,7 +225,6 @@ public class CustomerService(
                 preferredOrganizationTags,
                 favouriteLocations);
 
-            identities.ForEach(identity => identity.Customer = existingCustomer);
             repositoryFactory.IdentityRepository.AddRange(identities);
             existingCustomer.Identities = identities;
             existingCustomer = repositoryFactory.CustomerRepository.Add(existingCustomer);
