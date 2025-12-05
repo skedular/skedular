@@ -6,7 +6,7 @@ using Testing.Shared;
 
 namespace Customer.Domain.IntegrationTests.Fixtures;
 
-public class NakedCustomerFixtureCustomizer : IFixtureCustomizer
+public class BasicCustomerWithIdentityFixtureCustomizer : IFixtureCustomizer
 {
     public void Customize(IFixture fixture)
     {

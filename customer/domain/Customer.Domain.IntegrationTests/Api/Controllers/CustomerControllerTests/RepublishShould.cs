@@ -10,7 +10,7 @@ namespace Customer.Domain.IntegrationTests.Api.Controllers.CustomerControllerTes
 public class RepublishShould(ICustomerClient customerClient, IRepositoryFactory repositoryFactory)
 {
     [Theory]
-    [AutoFakeItEasyData([typeof(NakedCustomerFixtureCustomizer)])]
+    [AutoFakeItEasyData([typeof(BasicCustomerWithIdentityFixtureCustomizer)])]
     public async Task Republish_Customer(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken)
     {
         repositoryFactory.CustomerRepository.Add(customer);
