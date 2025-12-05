@@ -10,7 +10,7 @@ public class GetVersionShould(ICustomerClient customerClient)
 {
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Return_Api_Version(CancellationToken cancellationToken)
+    public async Task Return_Version(CancellationToken cancellationToken)
     {
         var result = await customerClient.GetVersionAsync(cancellationToken);
 

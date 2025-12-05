@@ -15,6 +15,7 @@ using Customer.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Flurl;
 using Location.Shared.Database;
 using Marketplace.Shared.Database;
 using Microsoft.Extensions.Configuration;
@@ -154,5 +155,9 @@ public class Startup
             .AddSingleton<ISlackClient>(_ => new SlackClient(slackApiClient))
             .AddSingleton<ITeamClient>(_ => new TeamClient(teamApiClient))
             .AddSingleton<IGatewayClient>(_ => new GatewayClient(gatewayClient));
+
+        services
+            .AddSkedularGraphQlClientV1()
+            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = gatewayClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

@@ -6,6 +6,7 @@ using Customer.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
+using Flurl;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -65,5 +66,9 @@ public class Startup
             .AddPublishers()
             .AddOutboxPublishers()
             .AddSingleton<ICustomerClient>(_ => new CustomerClient(customerApiClient));
+
+        services
+            .AddSkedularGraphQlCustomerClientV1()
+            .ConfigureHttpClient(httpClient => httpClient.BaseAddress = customerApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

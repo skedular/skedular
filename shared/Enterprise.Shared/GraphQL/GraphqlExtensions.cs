@@ -21,6 +21,7 @@ public static class GraphqlExtensions
             var builder = services
                 .AddErrorFilter<GraphqlErrorFilter>()
                 .AddGraphQLServer()
+                .AddCostAnalyzer()
                 .InitializeOnStartup()
                 .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
                 .AddCustomGraphqlInstrumentation();

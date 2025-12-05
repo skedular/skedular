@@ -1,0 +1,29 @@
+query GetVersion {
+    bookingVersion {
+        major
+    }
+    coreVersion {
+        major
+    }
+    customerVersion {
+        major
+    }
+    locationVersion {
+        major
+    }
+    marketplaceVersion {
+        major
+    }
+    msTeamsVersion {
+        major
+    }
+    organizationVersion {
+        major
+    }
+    slackVersion {
+        major
+    }
+    teamVersion {
+        major
+    }
+}
