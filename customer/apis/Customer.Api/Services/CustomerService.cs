@@ -173,6 +173,8 @@ public class CustomerService(
             existingCustomer = await repositoryFactory.CustomerRepository.GetByEmailAsync(identityToAddOrUpdate.Email, cancellationToken);
         }
 
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
         var defaultOrganization = customer.DefaultOrganization is null
             ? null
             : await repositoryFactory.OrganizationRepository.UpsertNakedAsync(customer.DefaultOrganization.Id, cancellationToken);
@@ -208,10 +210,6 @@ public class CustomerService(
         {
             favouriteLocations.Add(await repositoryFactory.LocationRepository.UpsertNakedAsync(location.Id, null, cancellationToken));
         }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (existingCustomer is null)
         {
