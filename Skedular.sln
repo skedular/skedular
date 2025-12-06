@@ -432,6 +432,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedular.AppHost", "system\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedular.SystemTests", "system\Skedular.SystemTests\Skedular.SystemTests.csproj", "{FF09CA36-A064-4742-BCCB-CC14AE7649FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "domain", "domain", "{CED664DE-BD3C-4AC2-B3D9-ECE8A7DC4321}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain.AppHost", "booking\domain\Booking.Domain.AppHost\Booking.Domain.AppHost.csproj", "{17B1B2A4-6DA9-4F47-A59C-4A415259F525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Booking.Domain.IntegrationTests", "booking\domain\Booking.Domain.IntegrationTests\Booking.Domain.IntegrationTests.csproj", "{5F68DC0F-A172-449D-840A-0971E6B1303B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -854,6 +860,14 @@ Global
 		{FF09CA36-A064-4742-BCCB-CC14AE7649FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF09CA36-A064-4742-BCCB-CC14AE7649FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF09CA36-A064-4742-BCCB-CC14AE7649FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17B1B2A4-6DA9-4F47-A59C-4A415259F525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17B1B2A4-6DA9-4F47-A59C-4A415259F525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17B1B2A4-6DA9-4F47-A59C-4A415259F525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17B1B2A4-6DA9-4F47-A59C-4A415259F525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F68DC0F-A172-449D-840A-0971E6B1303B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F68DC0F-A172-449D-840A-0971E6B1303B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F68DC0F-A172-449D-840A-0971E6B1303B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F68DC0F-A172-449D-840A-0971E6B1303B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1011,5 +1025,8 @@ Global
 		{F6E3BA48-F043-4312-AC12-078D11CD004C} = {8894FBEB-EFAC-4A51-A368-176C08BE18E0}
 		{43D7E678-10EE-4F0C-A79C-DBDFDD9A8F53} = {7BB01DDD-1C61-4BF5-A800-848B10D52CC5}
 		{FF09CA36-A064-4742-BCCB-CC14AE7649FC} = {7BB01DDD-1C61-4BF5-A800-848B10D52CC5}
+		{CED664DE-BD3C-4AC2-B3D9-ECE8A7DC4321} = {827FE56E-B3A2-4C93-9DE4-75951441FD57}
+		{17B1B2A4-6DA9-4F47-A59C-4A415259F525} = {CED664DE-BD3C-4AC2-B3D9-ECE8A7DC4321}
+		{5F68DC0F-A172-449D-840A-0971E6B1303B} = {CED664DE-BD3C-4AC2-B3D9-ECE8A7DC4321}
 	EndGlobalSection
 EndGlobal

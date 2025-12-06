@@ -1,0 +1,328 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  bookingTypes: [BookingTypeDetails!]!
+  marketplaceBookingTypes: [BookingTypeDetails!]!
+  booking(id: String!): BookingDetails
+  bookingById(id: String!): BookingDetails
+  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge!
+  allBookings(where: BookingWhereInput!): [BookingDetails!]!
+  paymentMethodTypes: [PaymentMethodTypeDetails!]!
+  paymentStatuses: [PaymentStatusDetails!]!
+  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions!
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions!
+  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]!
+  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources!
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean!
+}
+
+type Mutation {
+  addBooking(input: AddBookingInput!): BookingPayload!
+  updateBooking(input: UpdateBookingInput!): BookingPayload!
+  deleteBooking(input: DeleteBookingInput!): BookingPayload!
+  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload!
+  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload!
+  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload!
+}
+
+type BookingDetails {
+  involvedCustomers: [CustomerDetails!]!
+  paidByCustomer: CustomerDetails
+  createdByCustomer: CustomerDetails
+  lastModifiedByCustomer: CustomerDetails
+  deletedByCustomer: CustomerDetails
+  involvedOrganizations: [OrganizationDetails!]!
+  paidByOrganization: OrganizationDetails
+  involvedLocations: [LocationDetails!]!
+  involvedTeams: [TeamDetails!]!
+  paymentStatus: PaymentStatusDetails!
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  type: BookingTypeDetails!
+  bookingResources: [BookingResourceDetails!]!
+  lineItems: [LineItemDetails!]!
+  paymentMethod: PaymentMethodTypeDetails
+  totalAmountExcludeTax: Decimal
+  totalAmountExcludeTaxToDisplay: String!
+  taxAmount: Decimal
+  taxAmountToDisplay: String!
+  taxRatePercentage: Decimal
+  taxRatePercentageToDisplay: String!
+  totalAmount: Decimal
+  totalAmountToDisplay: String!
+  currency: String
+  currencyToDisplay: String!
+  invoiceUrl: String
+  invoiceNumber: String
+  invoiceEmailList: [String!]
+  isPaymentRequired: Boolean!
+  bookingCheckoutSession: BookingCheckoutSessionDetails
+  paymentExpiry: DateTime!
+  bookedOnMarketplace: Boolean!
+  id: ID!
+}
+
+type BookingResourceDetails {
+  resource: ResourceDetails!
+  location: LocationDetails
+  customers: [CustomerDetails!]!
+}
+
+type LineItemDetails {
+  productVersion: ProductVersionDetails!
+  quantity: Int!
+}
+
+type CustomerDetails {
+  id: ID!
+}
+
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
+}
+
+type LocationDetails {
+  id: ID!
+}
+
+type TeamDetails {
+  id: ID!
+}
+
+type PaymentStatusDetails {
+  type: PaymentStatus!
+  name: String!
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type BookingTypeDetails {
+  type: BookingType!
+  name: String!
+}
+
+type PaymentMethodTypeDetails {
+  type: PaymentMethod!
+  name: String!
+}
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
+
+type BookingCheckoutSessionDetails {
+  uniqueId: ID!
+  checkoutUrl: String!
+}
+
+type ResourceDetails {
+  id: ID!
+}
+
+type ProductVersionDetails {
+  id: ID!
+}
+
+enum BookingType {
+  WORKING_FROM_HOME
+  WORKING_FROM_OFFICE
+  WORKING_FROM_COWORKING_SPACE
+  SICK_LEAVE
+  ANNUAL_LEAVE
+  WELLBEING_LEAVE
+  CLIENT_OFFICE
+  VACATION
+  TRAVELING_FOR_WORK
+  NON_WORKING_DAY
+}
+
+enum PaymentStatus {
+  PENDING
+  REJECTED
+  CONFIRMED
+  EXPIRED
+  RECORD_NEVER_CREATED
+  NO_PAYMENT_REQUIRED
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input OrganizationAvailableResourcesWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  from: DateTime!
+  until: DateTime!
+}
+
+type OrganizationAvailableResources {
+  resourcesCount: Int!
+  availableResourcesCount: Int!
+}
+
+input AvailableResourcesWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  locationId: String
+  from: DateTime!
+  until: DateTime!
+  customTagIds: [String!]
+  zoneIds: [String!]
+  resourceIdsToInclude: [String!]
+  productId: String
+}
+
+type TeamBookingPermissions {
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+}
+
+type OrganizationBookingPermissions {
+  canViewBookings: Boolean!
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canModifyPaymentMethod: Boolean!
+}
+
+input MakeBookingPaymentNotRequiredInput {
+  clientMutationId: String
+  id: String!
+}
+
+input RejectBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ConfirmBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
+input BookingOrderInput {
+  direction: OrderDirection!
+  field: BookingOrderField!
+}
+
+input BookingWhereInput {
+  fromGt: DateTime
+  fromGte: DateTime
+  fromLt: DateTime
+  fromLte: DateTime
+  toGt: DateTime
+  toGte: DateTime
+  toLt: DateTime
+  toLte: DateTime
+  notesContains: String
+  type: BookingType
+  paymentStatuses: [PaymentStatus!]
+  nameContains: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  locationIds: [String!]
+  teamIds: [String!]
+  customerIds: [String!]
+  includeMineOnly: Boolean
+  includeFutureBookingsOnly: Boolean
+}
+
+type ConnectionOfBookingEdge {
+  pageInfo: PageInfo!
+  edges: [BookingEdge!]!
+  totalCount: Int!
+}
+
+input DeleteBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input UpdateBookingInput {
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  type: BookingType!
+  resourceIds: [String!]!
+}
+
+input AddBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  type: BookingType!
+  resourceIds: [String!]!
+  lineItems: [LineItemInput!]!
+  paymentMethod: PaymentMethod
+  invoiceEmailList: [String!]
+}
+
+type BookingPayload {
+  clientMutationId: String
+  booking: BookingDetails!
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+}
+
+input LineItemInput {
+  productVersionId: String!
+  quantity: Int!
+}
+
+type BookingEdge {
+  node: BookingDetails!
+  cursor: String!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+enum BookingOrderField {
+  FROM
+  TO
+  NOTES
+  TYPE
+  STATUS
+}
+
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
