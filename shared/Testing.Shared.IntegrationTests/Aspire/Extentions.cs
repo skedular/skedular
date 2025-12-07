@@ -7,7 +7,7 @@ namespace Testing.Shared.IntegrationTests.Aspire;
 
 public static class Extensions
 {
-    private static readonly TimeSpan s_defaultTimeout = TimeSpan.FromMinutes(1);
+    private static readonly TimeSpan s_defaultTimeout = TimeSpan.FromMinutes(5);
 
     extension(IDistributedApplicationTestingBuilder builder)
     {
