@@ -1,4 +1,5 @@
 ﻿using Enterprise.Shared.Outbox;
+using Location.Shared.Configurations;
 using Location.Shared.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
@@ -13,8 +14,13 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
-            services;
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration)
+        {
+            var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+            ArgumentNullException.ThrowIfNull(emailConfiguration);
+
+            return services.AddSingleton(emailConfiguration);
+        }
 
         public IServiceCollection AddDomainSharedMappers() =>
             services

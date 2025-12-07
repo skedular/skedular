@@ -1,6 +1,5 @@
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Configurations;
-using Gateway.Configurations;
 using Gateway.Handlers;
 using HotChocolate.Fusion.Metadata;
 
@@ -16,12 +15,8 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
 
-        var subgraphsConfigurations = configuration.GetSection(SubgraphsConfigurations.Key).Get<SubgraphsConfigurations>();
-        ArgumentNullException.ThrowIfNull(subgraphsConfigurations);
-        services.AddSingleton(subgraphsConfigurations);
-
-        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
-        ArgumentNullException.ThrowIfNull(graphqlConfig);
+        services
+            .AddConfigurations(configuration);
 
         services
             .AddHttpClient("Fusion", options => options.Timeout = TimeSpan.FromSeconds(30))
@@ -40,6 +35,9 @@ public class Program
                 embeddedGatewayFileStream.CopyTo(fileStream);
             }
         }
+
+        var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
+        ArgumentNullException.ThrowIfNull(graphqlConfig);
 
         _ = services
             .AddFusionGatewayServer()

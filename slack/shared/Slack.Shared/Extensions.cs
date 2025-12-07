@@ -58,7 +58,12 @@ public static class Extensions
                 Console.Error.WriteLine("slackConfiguration.SuccessInstallUrl is null");
             }
 
-            return services.AddSingleton(slackConfigurationService);
+            var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+            ArgumentNullException.ThrowIfNull(emailConfiguration);
+
+            return services
+                .AddSingleton(slackConfigurationService)
+                .AddSingleton(emailConfiguration);
         }
 
         public IServiceCollection AddDomainSharedMappers() =>

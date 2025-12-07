@@ -19,7 +19,6 @@ using Slack.Api.Handlers.ActionHandlers.Zone;
 using Slack.Api.Handlers.OptionProviders;
 using Slack.Api.Pages;
 using Slack.Shared;
-using Slack.Shared.Configurations;
 using Slack.Shared.Constants;
 using Slack.Shared.Database;
 using SlackNet.AspNetCore;
@@ -37,10 +36,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
         _ = services.AddKafka(configuration);
 
         services

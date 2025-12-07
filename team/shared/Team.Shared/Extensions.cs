@@ -4,6 +4,7 @@ using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Team.Shared.Configurations;
 using Team.Shared.Mappers;
 using Team.Shared.Publishers;
 using Team.Shared.Repositories;
@@ -16,8 +17,13 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration) =>
-            services;
+        public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration)
+        {
+            var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+            ArgumentNullException.ThrowIfNull(emailConfiguration);
+
+            return services.AddSingleton(emailConfiguration);
+        }
 
         public IServiceCollection AddDomainSharedMappers() =>
             services

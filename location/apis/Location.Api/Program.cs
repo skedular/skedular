@@ -9,7 +9,6 @@ using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Temporal;
 using Location.Api.Grpc;
 using Location.Shared;
-using Location.Shared.Configurations;
 using Location.Shared.Database;
 
 namespace Location.Api;
@@ -24,10 +23,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
         _ = services.AddKafka(configuration);
 
         services

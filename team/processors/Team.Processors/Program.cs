@@ -8,7 +8,6 @@ using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;
-using Team.Shared.Configurations;
 using Team.Shared.Database;
 
 namespace Team.Processors;
@@ -23,11 +22,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
-
         var kafkaConfiguration = services.AddKafka(configuration);
 
         services

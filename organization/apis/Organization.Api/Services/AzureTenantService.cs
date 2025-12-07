@@ -1,4 +1,5 @@
 ﻿using Enterprise.Shared.Azure.Configurations;
+using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -6,11 +7,11 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.VisualBasic;
-using Organization.Shared.Configurations;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows.ReSyncAzureTenant;
+using Constants = Enterprise.Shared.Constants;
 
 namespace Organization.Api.Services;
 
@@ -22,7 +23,7 @@ public interface IAzureTenantService
 }
 
 public class AzureTenantService(
-    OrganizationConfigurationService organizationConfigurationService,
+    ApplicationConfiguration applicationConfiguration,
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IContext context,
@@ -94,12 +95,12 @@ public class AzureTenantService(
             throw new ArgumentException(nameof(tenantId));
         }
 
-        var currentUri = string.IsNullOrWhiteSpace(organizationConfigurationService.ApiBaseDomain)
+        var currentUri = applicationConfiguration.ApiBaseDomain == Constants.EmptyUri
             ? UriHelper.BuildAbsolute(
                 httpContextAccessor.HttpContext.Request.Scheme,
                 httpContextAccessor.HttpContext.Request.Host,
                 httpContextAccessor.HttpContext.Request.PathBase)
-            : organizationConfigurationService.ApiBaseDomain;
+            : applicationConfiguration.ApiBaseDomain.AbsoluteUri;
 
         var installStateUserIdLookup = repositoryFactory.AzureInstallStateUserIdLookupRepository.Add(
             new AzureInstallStateUserIdLookup { Id = randomHelper.Generate(), InstalledByUserId = verifiableToken });

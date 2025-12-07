@@ -10,7 +10,6 @@ using Enterprise.Shared.Security.Sso;
 using Enterprise.Shared.Temporal;
 using Organization.Api.Grpc;
 using Organization.Shared;
-using Organization.Shared.Configurations;
 using Organization.Shared.Database;
 
 namespace Organization.Api;
@@ -25,10 +24,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
         _ = services.AddKafka(configuration);
 
         services

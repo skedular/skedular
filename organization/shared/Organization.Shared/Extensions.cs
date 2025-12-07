@@ -20,11 +20,10 @@ public static class Extensions
     {
         public IServiceCollection AddDomainSharedConfigurations(IConfiguration configuration)
         {
-            var organizationConfigurationService =
-                configuration.GetSection(OrganizationConfigurationService.Key).Get<OrganizationConfigurationService>();
-            ArgumentNullException.ThrowIfNull(organizationConfigurationService);
+            var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
+            ArgumentNullException.ThrowIfNull(emailConfiguration);
 
-            return services.AddSingleton(organizationConfigurationService);
+            return services.AddSingleton(emailConfiguration);
         }
 
         public IServiceCollection AddDomainSharedMappers() =>

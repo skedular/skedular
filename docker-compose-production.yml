@@ -307,7 +307,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
@@ -412,7 +411,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
@@ -513,7 +511,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapistaging.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${STAGING_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${STAGING_CLOUDFLARE_SECRET_KEY}
@@ -696,7 +693,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
@@ -801,7 +797,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}
@@ -902,7 +897,6 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
       OpenTelemetry__EntityFrameworkEnabled: true
-      Organization__ApiBaseDomain: https://organizationapi.skedular.app
       FileStorage__UseLocal: false
       Cloudflare__AccessKey: ${PRODUCTION_CLOUDFLARE_ACCESS_KEY}
       Cloudflare__SecretKey: ${PRODUCTION_CLOUDFLARE_SECRET_KEY}

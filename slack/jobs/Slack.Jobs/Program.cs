@@ -7,7 +7,6 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Temporal;
 using Slack.Shared;
 using Slack.Shared.Activities;
-using Slack.Shared.Configurations;
 using Slack.Shared.Database;
 using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
 using Slack.Shared.Workflows.ReSyncSlackWorkspace;
@@ -25,10 +24,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
         _ = services.AddKafka(configuration);
 
         services

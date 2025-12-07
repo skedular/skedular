@@ -9,7 +9,6 @@ using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;
 using Organization.Processors.Subscribers;
 using Organization.Shared;
-using Organization.Shared.Configurations;
 using Organization.Shared.Database;
 
 namespace Organization.Processors;
@@ -24,11 +23,6 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-
-        var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
-        ArgumentNullException.ThrowIfNull(emailConfiguration);
-        services.AddSingleton(emailConfiguration);
-
         var kafkaConfiguration = services.AddKafka(configuration);
 
         services
