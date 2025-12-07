@@ -31,13 +31,9 @@ public static class Extensions
 
         public async Task<DistributedApplication> StartAsync(CancellationToken cancellationToken)
         {
-            var distributedApplication = await builder
-                .BuildAsync(cancellationToken)
-                .WaitAsync(s_defaultTimeout, cancellationToken);
+            var distributedApplication = await builder.BuildAsync(cancellationToken).WaitAsync(s_defaultTimeout, cancellationToken);
 
-            await distributedApplication
-                .StartAsync(cancellationToken)
-                .WaitAsync(s_defaultTimeout, cancellationToken);
+            await distributedApplication.StartAsync(cancellationToken).WaitAsync(s_defaultTimeout, cancellationToken);
 
             return distributedApplication;
         }
