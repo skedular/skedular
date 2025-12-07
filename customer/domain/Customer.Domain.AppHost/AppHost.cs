@@ -14,14 +14,14 @@ var redis = builder.AddRedis("redis");
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
 var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
     .AddProject<Customer_Infrastructure>("customerinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -32,7 +32,7 @@ var customerInfrastructure = builder
 
 builder
     .AddProject<Customer_Api>("customerapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -42,7 +42,7 @@ builder
 
 builder
     .AddProject<Customer_Processors>("customerprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -52,7 +52,7 @@ builder
 
 builder
     .AddProject<Customer_Jobs>("customerjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)

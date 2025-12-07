@@ -14,14 +14,14 @@ var redis = builder.AddRedis("redis");
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
 var bookingDatabase = postgres.AddDatabase("bookingdb");
 var bookingInfrastructure = builder
     .AddProject<Booking_Infrastructure>("bookinginfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -32,7 +32,7 @@ var bookingInfrastructure = builder
 
 builder
     .AddProject<Booking_Api>("bookingapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -42,7 +42,7 @@ builder
 
 builder
     .AddProject<Booking_Processors>("bookingprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -52,7 +52,7 @@ builder
 
 builder
     .AddProject<Booking_Jobs>("bookingjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)

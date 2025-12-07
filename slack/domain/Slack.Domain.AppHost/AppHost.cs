@@ -14,14 +14,14 @@ var redis = builder.AddRedis("redis");
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
 var slackDatabase = postgres.AddDatabase("slackdb");
 var slackInfrastructure = builder
     .AddProject<Slack_Infrastructure>("slackinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -32,7 +32,7 @@ var slackInfrastructure = builder
 
 builder
     .AddProject<Slack_Api>("slackapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -42,7 +42,7 @@ builder
 
 builder
     .AddProject<Slack_Processors>("slackprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -52,7 +52,7 @@ builder
 
 builder
     .AddProject<Slack_Jobs>("slackjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)

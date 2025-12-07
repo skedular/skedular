@@ -14,14 +14,14 @@ var redis = builder.AddRedis("redis");
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
 var marketplaceDatabase = postgres.AddDatabase("marketplacedb");
 var marketplaceInfrastructure = builder
     .AddProject<Marketplace_Infrastructure>("marketplaceinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -32,7 +32,7 @@ var marketplaceInfrastructure = builder
 
 builder
     .AddProject<Marketplace_Api>("marketplaceapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -42,7 +42,7 @@ builder
 
 builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -52,7 +52,7 @@ builder
 
 builder
     .AddProject<Marketplace_Jobs>("marketplacejobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)

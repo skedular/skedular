@@ -1,3 +1,5 @@
+using Enterprise.Shared;
+
 namespace Gateway.Configurations;
 
 public class SubgraphsConfigurations
@@ -18,5 +20,5 @@ public class SubgraphsConfigurations
 
 public class UrlConfig
 {
-    public Uri? Uri { get; set; }
+    public Uri Uri { get; set; } = Constants.EmptyUri;
 }

@@ -14,7 +14,7 @@ var redis = builder.AddRedis("redis");
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
@@ -22,7 +22,7 @@ var sharedInfrastructure = builder
 var bookingDatabase = postgres.AddDatabase("bookingdb");
 var bookingInfrastructure = builder
     .AddProject<Booking_Infrastructure>("bookinginfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -33,7 +33,7 @@ var bookingInfrastructure = builder
 
 var bookingApi = builder
     .AddProject<Booking_Api>("bookingapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -52,7 +52,7 @@ var bookingApi = builder
 
 builder
     .AddProject<Booking_Processors>("bookingprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -71,7 +71,7 @@ builder
 
 builder
     .AddProject<Booking_Jobs>("bookingjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -93,7 +93,7 @@ builder
 var coreDatabase = postgres.AddDatabase("coredb");
 var coreInfrastructure = builder
     .AddProject<Core_Infrastructure>("coreinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -104,7 +104,7 @@ var coreInfrastructure = builder
 
 var coreApi = builder
     .AddProject<Core_Api>("coreapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -123,7 +123,7 @@ var coreApi = builder
 
 builder
     .AddProject<Core_Processors>("coreprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -142,7 +142,7 @@ builder
 
 builder
     .AddProject<Core_Jobs>("corejobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -164,7 +164,7 @@ builder
 var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
     .AddProject<Customer_Infrastructure>("customerinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -175,7 +175,7 @@ var customerInfrastructure = builder
 
 var customerApi = builder
     .AddProject<Customer_Api>("customerapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -194,7 +194,7 @@ var customerApi = builder
 
 builder
     .AddProject<Customer_Processors>("customerprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -213,7 +213,7 @@ builder
 
 builder
     .AddProject<Customer_Jobs>("customerjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -235,7 +235,7 @@ builder
 var locationDatabase = postgres.AddDatabase("locationdb");
 var locationInfrastructure = builder
     .AddProject<Location_Infrastructure>("locationinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -246,7 +246,7 @@ var locationInfrastructure = builder
 
 var locationApi = builder
     .AddProject<Location_Api>("locationapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -265,7 +265,7 @@ var locationApi = builder
 
 builder
     .AddProject<Location_Processors>("locationprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -284,7 +284,7 @@ builder
 
 builder
     .AddProject<Location_Jobs>("locationjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -306,7 +306,7 @@ builder
 var marketplaceDatabase = postgres.AddDatabase("marketplacedb");
 var marketplaceInfrastructure = builder
     .AddProject<Marketplace_Infrastructure>("marketplaceinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -317,7 +317,7 @@ var marketplaceInfrastructure = builder
 
 var marketplaceApi = builder
     .AddProject<Marketplace_Api>("marketplaceapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -336,7 +336,7 @@ var marketplaceApi = builder
 
 builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -355,7 +355,7 @@ builder
 
 builder
     .AddProject<Marketplace_Jobs>("marketplacejobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -377,7 +377,7 @@ builder
 var msteamsDatabase = postgres.AddDatabase("msteamsdb");
 var msteamsInfrastructure = builder
     .AddProject<MsTeams_Infrastructure>("msteamsinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -388,7 +388,7 @@ var msteamsInfrastructure = builder
 
 var msteamsApi = builder
     .AddProject<MsTeams_Api>("msteamsapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -407,7 +407,7 @@ var msteamsApi = builder
 
 builder
     .AddProject<MsTeams_Processors>("msteamsprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -426,7 +426,7 @@ builder
 
 builder
     .AddProject<MsTeams_Jobs>("msteamsjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -448,7 +448,7 @@ builder
 var organizationDatabase = postgres.AddDatabase("organizationdb");
 var organizationInfrastructure = builder
     .AddProject<Organization_Infrastructure>("organizationinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -459,7 +459,7 @@ var organizationInfrastructure = builder
 
 var organizationApi = builder
     .AddProject<Organization_Api>("organizationapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -478,7 +478,7 @@ var organizationApi = builder
 
 builder
     .AddProject<Organization_Processors>("organizationprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -497,7 +497,7 @@ builder
 
 builder
     .AddProject<Organization_Jobs>("organizationjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -519,7 +519,7 @@ builder
 var slackDatabase = postgres.AddDatabase("slackdb");
 var slackInfrastructure = builder
     .AddProject<Slack_Infrastructure>("slackinfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -530,7 +530,7 @@ var slackInfrastructure = builder
 
 var slackApi = builder
     .AddProject<Slack_Api>("slackapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -549,7 +549,7 @@ var slackApi = builder
 
 builder
     .AddProject<Slack_Processors>("slackprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -568,7 +568,7 @@ builder
 
 builder
     .AddProject<Slack_Jobs>("slackjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -590,7 +590,7 @@ builder
 var teamDatabase = postgres.AddDatabase("teamdb");
 var teamInfrastructure = builder
     .AddProject<Team_Infrastructure>("teaminfrastructure")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka)
     .WithReference(temporal)
@@ -601,7 +601,7 @@ var teamInfrastructure = builder
 
 var teamApi = builder
     .AddProject<Team_Api>("teamapi")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -620,7 +620,7 @@ var teamApi = builder
 
 builder
     .AddProject<Team_Processors>("teamprocessors")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -639,7 +639,7 @@ builder
 
 builder
     .AddProject<Team_Jobs>("teamjobs")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Booking__GrpcUrl", "http://bookingapi")
     .WithEnvironment("Core__GrpcUrl", "http://coreapi")
     .WithEnvironment("Customer__GrpcUrl", "http://customerapi")
@@ -659,7 +659,7 @@ builder
 
 _ = builder
     .AddProject<Gateway>("gateway")
-    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Production)
+    .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithEnvironment("Subgraphs__Booking__Uri", "https+http://bookingapi/v1/graphql")
     .WithEnvironment("Subgraphs__Core__Uri", "https+http://coreapi/v1/graphql")
     .WithEnvironment("Subgraphs__Customer__Uri", "https+http://customerapi/v1/graphql")
