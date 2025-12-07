@@ -1,0 +1,380 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+input RemoveTeamMembersInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input UpdateTeamMembersInput {
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
+}
+
+type Mutation {
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload!
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload!
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload!
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload!
+  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload!
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload!
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload!
+  addTeam(input: AddTeamInput!): TeamPayload!
+  updateTeam(input: UpdateTeamInput!): TeamPayload!
+  deleteTeam(input: DeleteTeamInput!): TeamPayload!
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload!
+}
+
+type InviteCustomerToJoinTeamDetails {
+  createdBy: CustomerDetails!
+  invitee: CustomerDetails
+  email: String
+  status: TeamInvitationStatusDetails!
+  role: TeamMemberRole!
+  team: TeamDetails!
+  id: ID!
+}
+
+type TeamMemberEdge {
+  node: TeamMemberDetails!
+  cursor: String!
+}
+
+enum JoinTeamInvitationOrderField {
+  CREATED_AT
+  STATUS
+}
+
+input AcceptInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input InviteCustomersToJoinTeamInput {
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
+}
+
+enum TeamMemberRole {
+  OWNER
+  ADMINISTRATOR
+  MEMBER
+}
+
+enum TeamMemberOrderField {
+  ROLE
+  STATUS
+  NAME
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
+}
+
+type ConnectionOfTeamEdge {
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int!
+}
+
+input MyInvitationsToJoinTeamsWhereInput {
+  organizationUniqueAlphanumericName: String
+  teamId: String
+  status: InvitationStatus
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+type TeamOrganizationMemberDetails {
+  customer: CustomerDetails!
+  uniqueId: ID!
+}
+
+input TeamWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  nameContains: String
+  primaryLocationIds: [String!]
+}
+
+type CustomerDetails {
+  id: ID!
+}
+
+input TeamOrderInput {
+  direction: OrderDirection!
+  field: TeamOrderField!
+}
+
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
+}
+
+type InviteCustomersToJoinTeamPayload {
+  clientMutationId: String
+  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
+}
+
+type TeamInvitationStatusDetails {
+  type: InvitationStatus!
+  name: String!
+}
+
+type TeamJoinInvitationEdge {
+  node: InviteCustomerToJoinTeamDetails!
+  cursor: String!
+}
+
+input RemoveTeamMemberInput {
+  clientMutationId: String
+  id: String!
+}
+
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
+}
+
+input DeleteTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input AddTeamInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  primaryLocationId: String
+  timezone: String
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
+  featureImages: [CdnImageFileInput!]!
+}
+
+type ConnectionOfTeamMemberEdge {
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int!
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
+input ChangeTeamMembersStatusInput {
+  clientMutationId: String
+  ids: [String!]!
+  status: TeamMemberStatus!
+}
+
+input CancelInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+type Query {
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
+  pendingTeamInvitationsCount: Int!
+  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge!
+  teamMemberRoles: [TeamMemberRole!]!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean!
+  team(id: String!): TeamDetails
+  teamById(id: String!): TeamDetails
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge!
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge!
+  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]!
+}
+
+input JoinTeamInvitationOrderInput {
+  direction: OrderDirection!
+  field: JoinTeamInvitationOrderField!
+}
+
+type TeamMembersDetailsPayload {
+  clientMutationId: String
+  members: [TeamMemberDetails!]!
+}
+
+type InvitationToJoinTeamPayload {
+  clientMutationId: String
+  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
+}
+
+type TeamMemberDetailsPayload {
+  clientMutationId: String
+  member: TeamMemberDetails
+}
+
+input TeamMemberWhereInput {
+  nameContains: String
+}
+
+input AddTeamMemberInput {
+  clientMutationId: String
+  id: String!
+  customerId: String
+  organizationMemberId: String
+}
+
+input RejectInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input UpdateTeamAndTeamMembersInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  primaryLocationId: String
+  timezone: String
+  featureImages: [CdnImageFileInput!]!
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
+}
+
+input UpdateTeamInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  primaryLocationId: String
+  timezone: String
+  featureImages: [CdnImageFileInput!]!
+}
+
+input ChangeTeamMemberRoleInput {
+  clientMutationId: String
+  id: String!
+  role: TeamMemberRole!
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  CANCELLED
+  EXPIRED
+}
+
+type ConnectionOfTeamJoinInvitationEdge {
+  pageInfo: PageInfo!
+  edges: [TeamJoinInvitationEdge!]!
+  totalCount: Int!
+}
+
+type LocationDetails {
+  id: ID!
+}
+
+enum TeamOrderField {
+  NAME
+  ABOUT
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type TeamDetails {
+  organization: OrganizationDetails!
+  primaryLocation: LocationDetails
+  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge!
+  hasFutureBooking: Boolean!
+  name: String!
+  about: String
+  timezone: String
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  featureImages: [CdnImageFile!]!
+  id: ID!
+}
+
+enum TeamMemberStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type TeamMemberPayload {
+  clientMutationId: String
+  teamMember: TeamMemberDetails!
+}
+
+type TeamMemberDetails {
+  customer: CustomerDetails!
+  role: TeamMemberRole
+  status: TeamMemberStatus!
+  organizationMember: TeamOrganizationMemberDetails
+  id: ID!
+}
+
+input CustomerTeamWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  customerId: String!
+  nameContains: String
+  primaryLocationIds: [String!]
+}
+
+input TeamMemberOrderInput {
+  direction: OrderDirection!
+  field: TeamMemberOrderField!
+}
+
+type TeamEdge {
+  node: TeamDetails!
+  cursor: String!
+}
+
+type TeamPayload {
+  clientMutationId: String
+  team: TeamDetails!
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION

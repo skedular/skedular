@@ -1,0 +1,681 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type RoomsOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
+input DeleteResourceInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteFloorPlanInput {
+  clientMutationId: String
+  id: String!
+}
+
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type AreaRange {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
+input OpeningHoursDetailsInput {
+  closed: Boolean!
+  openAllDay: Boolean!
+  from: String
+  until: String
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input ResourceWhereInput {
+  nameContains: String
+  customTagIds: [String!]
+  zoneIds: [String!]
+  productTagIds: [String!]
+  floorPlanId: String
+}
+
+input AreaRangeInput {
+  fromInSqm: String!
+  toInSqm: String!
+}
+
+enum LocationType {
+  PRIVATE
+  MARKETPLACE
+}
+
+input LocationWhereInput {
+  organizationUniqueAlphanumericName: String
+  locationIds: [String!]
+  nameContains: String
+  customTagIds: [String!]
+  zoneIds: [String!]
+  types: [LocationType!]
+  searchBoundaries: PolygonInput
+  notContactedYet: Boolean
+  resourceType: OrganizationTagType
+}
+
+input ToggleContactedViaCallInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
+type WeekOpeningHours {
+  monday: OpeningHoursDetails!
+  tuesday: OpeningHoursDetails!
+  wednesday: OpeningHoursDetails!
+  thursday: OpeningHoursDetails!
+  friday: OpeningHoursDetails!
+  saturday: OpeningHoursDetails!
+  sunday: OpeningHoursDetails!
+}
+
+input UpdateLocationResourceAvailableHoursInput {
+  clientMutationId: String
+  id: String!
+  overrideAvailableHours: Boolean!
+  availableHours: WeekOpeningHoursInput
+}
+
+input ResourceOrderInput {
+  direction: OrderDirection!
+  field: ResourceOrderField!
+}
+
+input UpdateLocationInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  about: String
+  timezone: String
+  type: LocationType!
+  locationTagIds: [String!]!
+  featureImages: [CdnImageFileInput!]!
+  extraMetadata: LocationExtraMetadataInput
+}
+
+type VariedDateOpeningHours {
+  date: DateTime!
+  openingHoursDetails: OpeningHoursDetails!
+}
+
+type FloorPlanDetails {
+  name: String!
+  image: CdnImageFile!
+  resourcePositions: [ResourcePositionDetails!]!
+  resourceCount: Int!
+  id: ID!
+}
+
+type LocationEdge {
+  node: LocationDetails!
+  cursor: String!
+}
+
+type LocationPayload {
+  clientMutationId: String
+  location: LocationDetails!
+}
+
+input AddResourceInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  inactive: Boolean!
+  locationId: String!
+  customTagIds: [String!]!
+  zoneIds: [String!]!
+  productTagIds: [String!]!
+  requireBookingApproval: Boolean!
+  color: String
+  capacity: Int!
+  organizationResourceTypeId: String!
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type ResourcesPayload {
+  clientMutationId: String
+  resources: [ResourceDetails!]!
+}
+
+type LocationPhysicalAddressDetails {
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  multilinesFormattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+  organization: LocationDetails!
+  id: ID!
+}
+
+input WeekOpeningHoursInput {
+  monday: OpeningHoursDetailsInput!
+  tuesday: OpeningHoursDetailsInput!
+  wednesday: OpeningHoursDetailsInput!
+  thursday: OpeningHoursDetailsInput!
+  friday: OpeningHoursDetailsInput!
+  saturday: OpeningHoursDetailsInput!
+  sunday: OpeningHoursDetailsInput!
+}
+
+input UpdateLocationOpeningHoursInput {
+  clientMutationId: String
+  id: String!
+  weekOpeningHours: WeekOpeningHoursInput!
+}
+
+input UpdateResourcePositionsInput {
+  clientMutationId: String
+  floorPlanId: String!
+  resourcePositions: [ResourcePositionInput!]!
+}
+
+type PeopleCapacity {
+  from: String!
+  to: String!
+}
+
+type ResourcePayload {
+  clientMutationId: String
+  resource: ResourceDetails!
+}
+
+input LocationOrderInput {
+  direction: OrderDirection!
+  field: LocationOrderField!
+}
+
+input PolygonInput {
+  northEast: PointCoordinatesInput!
+  southWest: PointCoordinatesInput!
+}
+
+input ActivateResourcesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
+}
+
+type Mutation {
+  toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload!
+  toggleContactedViaCall(input: ToggleContactedViaCallInput!): LocationPayload!
+  toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload!
+  toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload!
+  addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload!
+  updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload!
+  deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload!
+  updateResourcePositions(input: UpdateResourcePositionsInput!): FloorPlanPayload!
+  addLocation(input: AddLocationInput!): LocationPayload!
+  updateLocation(input: UpdateLocationInput!): LocationPayload!
+  deleteLocation(input: DeleteLocationInput!): LocationPayload!
+  updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload!
+  claimLocationOwnership(input: ClaimLocationOwnershipInput!): LocationPayload!
+  addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload!
+  updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload!
+  addResource(input: AddResourceInput!): ResourcePayload!
+  updateResource(input: UpdateResourceInput!): ResourcePayload!
+  deleteResource(input: DeleteResourceInput!): ResourcePayload!
+  deleteResources(input: DeleteResourcesInput!): ResourcesPayload!
+  activateResources(input: ActivateResourcesInput!): ResourcesPayload!
+  deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload!
+  updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload!
+}
+
+type ResourceDetails {
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
+  resourceType: OrganizationTagDetails!
+  name: String!
+  inactive: Boolean!
+  requireBookingApproval: Boolean!
+  color: String
+  capacity: Int!
+  isAvailableHoursOverridden: Boolean!
+  availableHours: OpeningHours
+  id: ID!
+}
+
+input DeleteResourcesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type OpeningHours {
+  weekOpeningHours: WeekOpeningHours!
+  closedDates: [DateTime!]!
+  datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
+}
+
+input LocationPhysicalAddressInput {
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+}
+
+type ProductDetails {
+  id: ID!
+}
+
+input DeactivateResourcesInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input FloorPlanWhereInput {
+  locationId: String!
+}
+
+input UpdateFloorPlanInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  image: CdnImageFileInput!
+  resourcePositions: [ResourcePositionInput!]
+}
+
+input AddFloorPlanInput {
+  clientMutationId: String
+  id: String
+  locationId: String!
+  name: String!
+  image: CdnImageFileInput!
+  resourcePositions: [ResourcePositionInput!]
+}
+
+input ToggleContactedViaEmailInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input ToggleContactedViaSmsInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+type ConnectionOfLocationEdge {
+  pageInfo: PageInfo!
+  edges: [LocationEdge!]!
+  totalCount: Int!
+}
+
+input PointCoordinatesInput {
+  longitude: Float!
+  latitude: Float!
+}
+
+input LocationExtraMetadataInput {
+  contactDetails: ContactDetailsInput
+  areaRange: AreaRangeInput
+  peopleCapacity: PeopleCapacityInput
+  website: String
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  otherLinks: [String!]
+}
+
+type LocationDailyBookingsTotal {
+  date: DateTime!
+  total: Int!
+}
+
+type ResourcePositionDetails {
+  id: ID!
+  x: Int!
+  y: Int!
+  resource: ResourceDetails!
+}
+
+input UpdateLocationPhysicalAddressInput {
+  clientMutationId: String
+  id: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+}
+
+type LocationAnalytics {
+  name: String!
+  desksOccupancyPercentage: [DesksOccupancyPercentage!]!
+  roomsOccupancyPercentage: [RoomsOccupancyPercentage!]!
+  dailyBookingsTotals: [LocationDailyBookingsTotal!]!
+}
+
+input AddLocationPhysicalAddressInput {
+  clientMutationId: String
+  id: String
+  locationId: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
+}
+
+type FloorPlanEdge {
+  node: FloorPlanDetails!
+  cursor: String!
+}
+
+enum OrganizationTagType {
+  CUSTOM
+  ZONE
+  PRODUCT
+  LOCATION
+  RESOURCE_DESK
+  RESOURCE_ROOM
+  RESOURCE_PARKING
+  RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_OTHERS
+}
+
+type DesksOccupancyPercentage {
+  date: DateTime!
+  percentage: Float!
+}
+
+enum LocationOrderField {
+  NAME
+  ABOUT
+  TIMEZONE
+  TYPE
+}
+
+input ContactDetailsInput {
+  contactPeople: [String!]
+  contactEmails: [String!]
+  contactPhones: [String!]
+}
+
+enum FloorPlanOrderField {
+  NAME
+}
+
+type LocationTypeDetails {
+  type: LocationType!
+  name: String!
+}
+
+type Query {
+  locationsAnalytics(from: DateTime! until: DateTime! where: LocationWhereInput orderBy: [LocationOrderInput!]): [LocationAnalytics!]!
+  floorPlan(id: String!): FloorPlanDetails
+  floorPlanById(id: String!): FloorPlanDetails
+  floorPlans(after: String first: Int before: String last: Int where: FloorPlanWhereInput! orderBy: [FloorPlanOrderInput!]): ConnectionOfFloorPlanEdge!
+  locationTypes: [LocationTypeDetails!]!
+  location(id: String!): LocationDetails
+  locationById(id: String!): LocationDetails
+  locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge!
+  marketplaceLocations(after: String first: Int before: String last: Int where: MarketplaceLocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge!
+  myLocations(organizationId: String organizationUniqueAlphanumericName: String): [LocationDetails!]
+  resource(id: String!): ResourceDetails
+  resourceById(id: String!): ResourceDetails
+  locationVersion: Version!
+  locationCustomerRecordSynced: Boolean!
+}
+
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
+}
+
+input UpdateResourceInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  inactive: Boolean!
+  requireBookingApproval: Boolean!
+  color: String
+  capacity: Int!
+  customTagIds: [String!]!
+  zoneIds: [String!]!
+  productTagIds: [String!]!
+  organizationResourceTypeId: String!
+}
+
+input FloorPlanOrderInput {
+  direction: OrderDirection!
+  field: FloorPlanOrderField!
+}
+
+input DeleteLocationInput {
+  clientMutationId: String
+  id: String!
+}
+
+input ResourcePositionInput {
+  resourceId: String!
+  x: Int!
+  y: Int!
+}
+
+type OpeningHoursDetails {
+  closed: Boolean!
+  openAllDay: Boolean!
+  from: String
+  until: String
+}
+
+type ContactDetails {
+  contactPeople: [String!]
+  contactEmails: [String!]
+  contactPhones: [String!]
+}
+
+type ResourceEdge {
+  node: ResourceDetails!
+  cursor: String!
+}
+
+input MarketplaceLocationWhereInput {
+  locationIds: [String!]
+  nameContains: String
+  customTagIds: [String!]
+  zoneIds: [String!]
+  searchBoundaries: PolygonInput
+  resourceType: OrganizationTagType
+}
+
+enum ResourceOrderField {
+  NAME
+}
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime
+
+type ConnectionOfFloorPlanEdge {
+  pageInfo: PageInfo!
+  edges: [FloorPlanEdge!]!
+  totalCount: Int!
+}
+
+type LocationExtraMetadata {
+  contactDetails: ContactDetails
+  areaRange: AreaRange
+  peopleCapacity: PeopleCapacity
+  website: String
+  relatedImageLinks: [String!]
+  relatedVideoLinks: [String!]
+  otherLinks: [String!]
+}
+
+input AddLocationInput {
+  clientMutationId: String
+  id: String
+  name: String!
+  about: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  timezone: String
+  type: LocationType!
+  locationTagIds: [String!]!
+  featureImages: [CdnImageFileInput!]!
+  physicalAddress: LocationPhysicalAddressInput
+  extraMetadata: LocationExtraMetadataInput
+  weekOpeningHours: WeekOpeningHoursInput
+}
+
+type ConnectionOfResourceEdge {
+  pageInfo: PageInfo!
+  edges: [ResourceEdge!]!
+  totalCount: Int!
+}
+
+type FloorPlanPayload {
+  clientMutationId: String
+  floorPlan: FloorPlanDetails!
+}
+
+input PeopleCapacityInput {
+  from: String!
+  to: String!
+}
+
+type OrganizationTagDetails {
+  id: ID!
+}
+
+input ClaimLocationOwnershipInput {
+  clientMutationId: String
+  id: String
+  uniqueClaimCode: String!
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+}
+
+type LocationDetails {
+  organization: OrganizationDetails!
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  resourceTypes: [OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  products: [ProductDetails!]!
+  analytics(from: DateTime! until: DateTime!): LocationAnalytics!
+  resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge!
+  hasFutureBooking: Boolean!
+  name: String!
+  about: String
+  timezone: String
+  type: LocationTypeDetails!
+  openingHours: OpeningHours!
+  deskCapacity: Int!
+  roomCapacity: Int!
+  canModify: Boolean!
+  canDelete: Boolean!
+  canViewAnalytics: Boolean!
+  physicalAddress: LocationPhysicalAddressDetails
+  featureImages: [CdnImageFile!]!
+  extraMetadata: LocationExtraMetadata
+  uniqueClaimCode: String
+  contactedViaEmail: Boolean!
+  contactedViaSms: Boolean!
+  contactedViaCall: Boolean!
+  contactedViaWhatsapp: Boolean!
+  id: ID!
+}
+
+input ToggleContactedViaWhatsappInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION
