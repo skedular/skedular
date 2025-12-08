@@ -26,12 +26,8 @@
       "!Program.cs",
       "!**/*.g.cs",
       "!**/*Migrations/*",
-      "!**/EntityConfigurations/*",
-      "!**/Mappings/*",
       "!**/Repositories/*",
-      "!Generator/IdGeneratorCoordinator.cs",
-      "!Database/**",
-      "!Application/**"
+      "!**/Database/*"
     ]
   }
 }

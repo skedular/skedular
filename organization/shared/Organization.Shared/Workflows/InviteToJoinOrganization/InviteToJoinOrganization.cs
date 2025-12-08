@@ -22,7 +22,7 @@ public class InviteToJoinOrganization
         if (args.IsNewCustomer)
         {
             await Workflow.ExecuteActivityAsync(
-                (EmailIntegrations activity) => activity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(args.JoinInvitationId),
+                (EmailIntegrations activity) => activity.SendInviteCustomerToJoinOrganizationNewCustomerAsync(args.JoinInvitationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),
@@ -33,7 +33,7 @@ public class InviteToJoinOrganization
         else
         {
             await Workflow.ExecuteActivityAsync(
-                (EmailIntegrations activity) => activity.SendInviteCustomerToJoinOrganizationNewCustomerAsync(args.JoinInvitationId),
+                (EmailIntegrations activity) => activity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(args.JoinInvitationId),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(1),

@@ -1,12 +1,6 @@
 ﻿{
   "stryker-config": {
-    "reporters": [
-      "html",
-      "cleartext",
-      "cleartexttree",
-      "dots",
-      "json"
-    ],
+    "reporters": ["html", "cleartext", "cleartexttree", "dots", "json"],
     "additional-timeout": 10000,
     "project": "Booking.Jobs.csproj",
     "thresholds": {
@@ -15,23 +9,8 @@
       "break": 100
     },
     "mutation-level": "Complete",
-    "ignore-methods": [
-      "*.Log*"
-    ],
-    "ignore-mutations": [
-      "string"
-    ],
-    "mutate": [
-      "!Startup.cs",
-      "!Program.cs",
-      "!**/*.g.cs",
-      "!**/*Migrations/*",
-      "!**/EntityConfigurations/*",
-      "!**/Mappings/*",
-      "!**/Repositories/*",
-      "!Generator/IdGeneratorCoordinator.cs",
-      "!Database/**",
-      "!Application/**"
-    ]
+    "ignore-methods": ["*.Log*"],
+    "ignore-mutations": ["string"],
+    "mutate": ["!Startup.cs", "!Program.cs", "!**/*.g.cs", "!**/*Migrations/*", "!**/Repositories/*", "!**/Database/*"]
   }
 }
