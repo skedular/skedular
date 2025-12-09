@@ -99,7 +99,7 @@ public class CustomerSubscriber(
 
         return existingCustomer;
     }
-    
+
     private async Task LinkInvitationsToNewCustomerAsync(Shared.Database.Entities.Customer customer, CancellationToken cancellationToken)
     {
         // Step 1: get all pending invitations that don't have an invitee yet

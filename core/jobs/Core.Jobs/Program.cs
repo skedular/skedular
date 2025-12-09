@@ -6,7 +6,6 @@ using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Kafka.Configurations;
 using Enterprise.Shared.Outbox;
 
 namespace Core.Jobs;

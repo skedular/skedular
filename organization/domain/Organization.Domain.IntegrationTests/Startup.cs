@@ -1,8 +1,6 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Api.Shared.Services;
 using Aspire.Hosting.Testing;
-using Organization.Shared;
-using Organization.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -12,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
+using Organization.Shared;
+using Organization.Shared.Database;
 using Projects;
 using Testing.Shared.IntegrationTests.Aspire;
 

@@ -1,8 +1,6 @@
 using Api.Shared.Clients.OpenApi.Skedular.Team.V1;
 using Api.Shared.Services;
 using Aspire.Hosting.Testing;
-using Team.Shared;
-using Team.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -13,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Projects;
+using Team.Shared;
+using Team.Shared.Database;
 using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Team.Domain.IntegrationTests;

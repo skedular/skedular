@@ -1,6 +1,5 @@
-using Api.Shared.Clients.OpenApi.Skedular.Team.V1;
-using Team.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Shouldly;
+using Team.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Testing.Shared;
 
 namespace Team.Domain.IntegrationTests.Api.GraphQL;

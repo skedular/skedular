@@ -1,6 +1,5 @@
-using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
-using Slack.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Shouldly;
+using Slack.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Testing.Shared;
 
 namespace Slack.Domain.IntegrationTests.Api.GraphQL;

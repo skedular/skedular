@@ -1,8 +1,6 @@
 using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
 using Api.Shared.Services;
 using Aspire.Hosting.Testing;
-using Slack.Shared;
-using Slack.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -13,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Projects;
+using Slack.Shared;
+using Slack.Shared.Database;
 using Testing.Shared.IntegrationTests.Aspire;
 
 namespace Slack.Domain.IntegrationTests;

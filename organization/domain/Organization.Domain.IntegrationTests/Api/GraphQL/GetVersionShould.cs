@@ -1,4 +1,3 @@
-using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Organization.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Shouldly;
 using Testing.Shared;

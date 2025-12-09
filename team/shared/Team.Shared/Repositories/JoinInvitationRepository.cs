@@ -24,7 +24,7 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken);
-    
+
     Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
         ICollection<string> emails,
         CancellationToken cancellationToken);
@@ -154,4 +154,5 @@ public class JoinInvitationRepository(TeamDbContext dbContext, TimeProvider time
                 query.Status == InvitationStatusConstants.Pending &&
                 query.Invitee == null &&
                 emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
-            .ToListAsync(cancellationToken);}
+            .ToListAsync(cancellationToken);
+}

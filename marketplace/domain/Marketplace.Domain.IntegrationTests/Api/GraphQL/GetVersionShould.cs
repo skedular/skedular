@@ -1,4 +1,3 @@
-using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
 using Marketplace.Domain.IntegrationTests.Clients.GraphQL.V1;
 using Shouldly;
 using Testing.Shared;
