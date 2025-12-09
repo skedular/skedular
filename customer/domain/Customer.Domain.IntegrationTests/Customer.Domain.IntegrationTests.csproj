@@ -53,14 +53,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <GraphQL Update="schema.extensions.graphql">
-        <Generator>MSBuild:GenerateGraphQLCode</Generator>
-      </GraphQL>
-      <GraphQL Update="schema.graphql">
-        <Generator>MSBuild:GenerateGraphQLCode</Generator>
-      </GraphQL>
-      <GraphQL Update="Api\GraphQL\GetVersion.graphql">
-        <Generator>MSBuild:GenerateGraphQLCode</Generator>
-      </GraphQL>
+        <GraphQL Update="schema.extensions.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
+        <GraphQL Update="schema.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
+        <GraphQL Update="Api\GraphQL\GetVersion.graphql">
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
+        </GraphQL>
     </ItemGroup>
 </Project>

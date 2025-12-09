@@ -20,7 +20,7 @@ public class EmailIntegrations(
     CustomerService.CustomerServiceClient customerServiceClient)
 {
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(string joinInvitationId)
+    public virtual async Task SendInviteCustomerToJoinOrganizationNewCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);
@@ -78,7 +78,7 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(string joinInvitationId)
+    public virtual async Task SendInviteCustomerToJoinOrganizationExistingCustomerAsync(string joinInvitationId)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(joinInvitationId, cancellationToken);

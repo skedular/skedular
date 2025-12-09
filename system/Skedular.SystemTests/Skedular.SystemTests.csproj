@@ -69,7 +69,7 @@
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
         <GraphQL Update="Gateway\GraphQl\GetVersion.graphql">
-          <Generator>MSBuild:GenerateGraphQLCode</Generator>
+            <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
     </ItemGroup>
 </Project>
