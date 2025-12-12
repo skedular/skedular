@@ -9,7 +9,7 @@ import Grid from '@mui/material/Grid';
 import Pagination from '@mui/material/Pagination';
 import type { Theme } from '@mui/material/styles';
 import type { LatLngBounds, LatLngTuple } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import '@/styles/leaflet/leaflet.css';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { IPinfoWrapper } from 'node-ipinfo';
 import { memo, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react';

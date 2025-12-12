@@ -10,7 +10,7 @@ import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import type { LatLngTuple } from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import '@/styles/leaflet/leaflet.css';
 import NextLink from 'next/link';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';

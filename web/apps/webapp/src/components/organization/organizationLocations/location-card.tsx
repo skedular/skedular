@@ -39,7 +39,7 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
-import 'leaflet/dist/leaflet.css';
+import '@/styles/leaflet/leaflet.css';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
