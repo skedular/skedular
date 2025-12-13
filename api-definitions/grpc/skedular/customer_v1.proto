@@ -4,6 +4,8 @@ package customer;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Customer.V1";
 
 service CustomerService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+  
   rpc Admin_Get (Admin_GetInput) returns (Customer);
   rpc Admin_Add (Admin_AddInput) returns (Customer);
   rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
@@ -23,6 +25,14 @@ service CustomerService {
   rpc RemovePreferredOrganizationTag (RemovePreferredOrganizationTagInput) returns (Customer);
   rpc AddPreferredResource (AddPreferredResourceInput) returns (Customer);
   rpc RemovePreferredResource (RemovePreferredResourceInput) returns (Customer);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

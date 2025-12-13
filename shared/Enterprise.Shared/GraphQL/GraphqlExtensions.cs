@@ -1,6 +1,8 @@
-﻿using Enterprise.Shared.GraphQL.Configurations;
+﻿using Enterprise.Shared.Configurations;
+using Enterprise.Shared.GraphQL.Configurations;
 using HotChocolate.AspNetCore;
 using HotChocolate.Execution.Configuration;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +30,15 @@ public static class GraphqlExtensions
                 .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
                 .AddCustomGraphqlInstrumentation();
 
-            builder = useRedisSubscriptions ? builder.AddRedisSubscriptions() : builder.AddInMemorySubscriptions();
+            var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
+            ArgumentNullException.ThrowIfNull(applicationConfiguration);
+
+            var subscriptionOptions =
+                new SubscriptionOptions { TopicPrefix = $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:" };
+
+            builder = useRedisSubscriptions
+                ? builder.AddRedisSubscriptions(subscriptionOptions)
+                : builder.AddInMemorySubscriptions(subscriptionOptions);
 
             configure(builder);
 

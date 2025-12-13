@@ -7,6 +7,7 @@ using Enterprise.Shared;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Version;
 using Grpc.Core;
+using HotChocolate.Subscriptions;
 using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using FeedbackChannel = Api.Shared.Services.Grpc.Skedular.Customer.V1.FeedbackChannel;
 using Version = Api.Shared.Services.Grpc.Skedular.Customer.V1.Version;
@@ -23,8 +24,16 @@ public class CustomerGrpcService(
     ICustomerOrganizationTagSettingsService customerOrganizationTagSettingsService,
     ICustomerResourceSettingsService customerResourceSettingsService,
     IMapper mapper,
-    IGrpcAuthenticator grpcAuthenticator) : CustomerService.CustomerServiceBase
+    IGrpcAuthenticator grpcAuthenticator,
+    ITopicEventSender topicEventSender) : CustomerService.CustomerServiceBase
 {
+    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
+    {
+        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+
+        return new RaiseGraphqlChangeResponse();
+    }
+
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();
