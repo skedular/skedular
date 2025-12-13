@@ -23,7 +23,7 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-        _ = services.AddKafka(configuration);
+        _ = services.AddKafka(configuration, "kafka");
 
         services
             .AddRedis(configuration, "redis")
@@ -43,7 +43,7 @@ public class Program
             .AddGrpcClients(configuration);
 
         services
-            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion)
+            .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<InviteToJoinTeam>()
             .AddScopedActivities<EmailIntegrations>()
             .AddScopedActivities<InvitationIntegrations>();

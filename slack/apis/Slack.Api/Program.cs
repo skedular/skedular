@@ -36,7 +36,7 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-        _ = services.AddKafka(configuration);
+        _ = services.AddKafka(configuration, "kafka");
 
         services
             .AddRedis(configuration, "redis")
@@ -135,7 +135,7 @@ public class Program
             .AddGrpcServices(configuration)
             .AddGrpcClients(configuration)
             .AddPages()
-            .AddTemporalClient(configuration);
+            .AddTemporalClient(configuration, "temporal");
 
         services.AddGrpc();
 

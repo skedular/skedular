@@ -67,12 +67,16 @@ public static class Extensions
 
     extension(IServiceCollection services)
     {
-        public ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(IConfiguration configuration, string deploymentName, string buildId)
+        public ITemporalWorkerServiceOptionsBuilder AddTemporalWorker(
+            IConfiguration configuration,
+            string deploymentName,
+            string buildId,
+            string connectionName)
         {
             var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
             ArgumentNullException.ThrowIfNull(temporalConfiguration);
 
-            var target = configuration.GetConnectionString("temporal");
+            var target = configuration.GetConnectionString(connectionName);
             if (!string.IsNullOrWhiteSpace(target))
             {
                 temporalConfiguration.Connection.Target = target;
@@ -102,12 +106,12 @@ public static class Extensions
                 .ConfigureOptions(temporalWorkerServiceOptions => temporalWorkerServiceOptions.ConfigureService(temporalConfiguration));
         }
 
-        public IServiceCollection AddTemporalClient(IConfiguration configuration)
+        public IServiceCollection AddTemporalClient(IConfiguration configuration, string connectionName)
         {
             var temporalConfiguration = configuration.GetSection(TemporalConfiguration.Key).Get<TemporalConfiguration>();
             ArgumentNullException.ThrowIfNull(temporalConfiguration);
 
-            var target = configuration.GetConnectionString("temporal");
+            var target = configuration.GetConnectionString(connectionName);
             if (!string.IsNullOrWhiteSpace(target))
             {
                 temporalConfiguration.Connection.Target = target;

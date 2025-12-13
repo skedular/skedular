@@ -21,7 +21,7 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-        _ = services.AddKafka(configuration);
+        _ = services.AddKafka(configuration, "kafka");
 
         services
             .AddRedis(configuration, "redis")
@@ -31,7 +31,7 @@ public class Program
             .AddRootLevelSharedServices()
             .AddServices()
             .AddJobs()
-            .AddTemporalClient(configuration);
+            .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -12,8 +12,10 @@ public static class GraphqlExtensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddGraphql(IConfiguration configuration,
-            Action<IRequestExecutorBuilder> configure)
+        public IServiceCollection AddGraphql(
+            IConfiguration configuration,
+            Action<IRequestExecutorBuilder> configure,
+            bool useRedisSubscriptions = true)
         {
             var graphqlConfig = configuration.GetSection(GraphqlConfig.Key).Get<GraphqlConfig>();
             ArgumentNullException.ThrowIfNull(graphqlConfig);
@@ -25,6 +27,8 @@ public static class GraphqlExtensions
                 .InitializeOnStartup()
                 .DisableIntrospection(!graphqlConfig.IntrospectionEnabled)
                 .AddCustomGraphqlInstrumentation();
+
+            builder = useRedisSubscriptions ? builder.AddRedisSubscriptions() : builder.AddInMemorySubscriptions();
 
             configure(builder);
 
@@ -50,15 +54,17 @@ public static class GraphqlExtensions
                 return;
             }
 
-            endpoints.MapGraphQL(pathString).WithOptions(new GraphQLServerOptions
-            {
-                Tool =
+            endpoints
+                .MapGraphQL(pathString)
+                .WithOptions(new GraphQLServerOptions
                 {
-                    IncludeCookies = graphqlConfig.IncludeCookies,
-                    Enable = graphqlConfig.NitroEnabled,
-                    DisableTelemetry = graphqlConfig.DisableTelemetry
-                }
-            });
+                    Tool =
+                    {
+                        IncludeCookies = graphqlConfig.IncludeCookies,
+                        Enable = graphqlConfig.NitroEnabled,
+                        DisableTelemetry = graphqlConfig.DisableTelemetry
+                    }
+                });
         }
     }
 }

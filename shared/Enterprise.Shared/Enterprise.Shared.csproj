@@ -49,6 +49,7 @@
         <PackageReference Include="HotChocolate.Data.EntityFramework" Version="15.1.11"/>
         <PackageReference Include="HotChocolate.Diagnostics" Version="15.1.11"/>
         <PackageReference Include="HotChocolate.Fusion.SourceSchema" Version="15.1.11"/>
+        <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="15.1.11"/>
 
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.1"/>
         <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.1"/>

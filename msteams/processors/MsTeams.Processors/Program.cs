@@ -22,7 +22,7 @@ public class Program
         var services = builder.Services;
         var configuration = builder.Configuration;
         var environment = builder.Environment;
-        var kafkaConfiguration = services.AddKafka(configuration);
+        var kafkaConfiguration = services.AddKafka(configuration, "kafka");
 
         services
             .AddRedis(configuration, "redis")
@@ -55,7 +55,7 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddServices()
-            .AddTemporalClient(configuration);
+            .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

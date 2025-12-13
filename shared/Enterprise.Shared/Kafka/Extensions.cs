@@ -24,8 +24,8 @@ public static class Extensions
 
     extension(IServiceCollection services)
     {
-        public KafkaConfiguration AddKafka(IConfiguration configuration, bool useTelemetry = true) =>
-            services.AddKafkaWithConnectionString(configuration, configuration.GetConnectionString("kafka"), useTelemetry);
+        public KafkaConfiguration AddKafka(IConfiguration configuration, string connectionName, bool useTelemetry = true) =>
+            services.AddKafkaWithConnectionString(configuration, configuration.GetConnectionString(connectionName), useTelemetry);
 
         public KafkaConfiguration AddKafkaWithConnectionString(IConfiguration configuration, string? connectionString, bool useTelemetry = true)
         {
