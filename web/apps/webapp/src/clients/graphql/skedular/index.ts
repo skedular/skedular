@@ -1,9 +1,11 @@
 import { isServer } from '@/libs/utils';
-import { Environment, Network, RecordSource, Store } from 'relay-runtime';
+import { createClient } from 'graphql-sse';
+import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime';
+import type { FetchFunction, GraphQLResponse, SubscribeFunction } from 'relay-runtime';
 import { v7 as uuid } from 'uuid';
 
 export function createNetwork(endpoint: string, token?: string | null | undefined) {
-  return Network.create(async (params, variables) => {
+  const buildHeaders = () => {
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
       'X-Correlation-Id': uuid(),
@@ -13,9 +15,16 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    return headers;
+  };
+
+  const fetchFn: FetchFunction = async (params, variables, _cacheConfig, _uploadables) => {
+    void _cacheConfig;
+    void _uploadables;
+
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers,
+      headers: buildHeaders(),
       body: JSON.stringify({
         query: params.text,
         variables,
@@ -23,7 +32,45 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
     });
 
     return await response.json();
+  };
+
+  const sseFetch: typeof fetch = (input, init) =>
+    fetch(input, {
+      ...init,
+      headers: {
+        ...(init?.headers ?? {}),
+        'Content-Type': 'application/json',
+      },
+    });
+
+  const sseClient = createClient({
+    url: endpoint,
+    headers: buildHeaders,
+    fetchFn: sseFetch,
   });
+
+  const subscribeFn: SubscribeFunction = (params, variables, _cacheConfig) =>
+    Observable.create<GraphQLResponse>((sink) => {
+      void _cacheConfig;
+
+      const dispose = sseClient.subscribe(
+        {
+          query: params.text ?? '',
+          variables,
+        },
+        {
+          next: (value) => sink.next(value as GraphQLResponse),
+          error: (err) => sink.error(err instanceof Error ? err : new Error(String(err))),
+          complete: () => sink.complete(),
+        },
+      );
+
+      return () => {
+        dispose();
+      };
+    });
+
+  return Network.create(fetchFn, subscribeFn);
 }
 
 let clientEnvironment: Environment | undefined;

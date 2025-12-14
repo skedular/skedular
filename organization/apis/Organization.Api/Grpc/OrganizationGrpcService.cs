@@ -7,6 +7,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
+using HotChocolate.Subscriptions;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
@@ -33,8 +34,18 @@ public class OrganizationGrpcService(
     IOrganizationBankAccountService organizationBankAccountService,
     ITagService tagService,
     IOrganizationBillingService organizationBillingService,
-    IMapper mapper) : OrganizationService.OrganizationServiceBase
+    IMapper mapper,
+    ITopicEventSender topicEventSender) : OrganizationService.OrganizationServiceBase
 {
+    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+
+        return new RaiseGraphqlChangeResponse();
+    }
+
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

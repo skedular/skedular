@@ -6,6 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Booking.V1";
 
 service BookingService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+
   rpc Admin_GetPaginatedBookings (Admin_GetPaginatedBookingsInput) returns (BookingConnection);
 
   rpc GetVersion (VersionInput) returns (Version);
@@ -17,6 +19,14 @@ service BookingService {
   rpc Update (UpdateInput) returns (Booking);
   rpc Delete (DeleteInput) returns (Booking);
   rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

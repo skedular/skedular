@@ -6,6 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Organization.V1";
 
 service OrganizationService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+
   rpc Admin_Get (Admin_GetInput) returns (Organization);
   rpc Admin_Add (Admin_AddInput) returns (Organization);
   rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
@@ -57,6 +59,14 @@ service OrganizationService {
   rpc GetBillingDetails (GetBillingDetailsInput) returns (BillingDetails);
   rpc AddBillingDetails (AddBillingDetailsInput) returns (BillingDetails);
   rpc UpdateBillingDetails (UpdateBillingDetailsInput) returns (BillingDetails);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

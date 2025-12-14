@@ -29,6 +29,8 @@ public class CustomerGrpcService(
 {
     public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
     {
+        grpcAuthenticator.VerifyAndEnrich(customerConfiguration.ApiKey);
+
         await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
 
         return new RaiseGraphqlChangeResponse();

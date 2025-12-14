@@ -22,7 +22,11 @@ const handler = async (request: NextRequest) => {
     body: await request.text(),
   });
 
-  return new NextResponse(await response.text());
+  // Stream the response through so subscriptions (SSE) keep flowing.
+  return new NextResponse(response.body, {
+    status: response.status,
+    headers: response.headers,
+  });
 };
 
 export { handler as GET, handler as POST };

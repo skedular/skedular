@@ -6,6 +6,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
+using HotChocolate.Subscriptions;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Api.Services.Authorization;
@@ -24,8 +25,18 @@ public class TeamGrpcService(
     IGrpcAuthenticator grpcAuthenticator,
     ITeamService teamService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper) : TeamService.TeamServiceBase
+    IMapper mapper,
+    ITopicEventSender topicEventSender) : TeamService.TeamServiceBase
 {
+    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(teamConfiguration.ApiKey);
+
+        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+
+        return new RaiseGraphqlChangeResponse();
+    }
+
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

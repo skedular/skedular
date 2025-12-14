@@ -6,6 +6,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
+using HotChocolate.Subscriptions;
 using Location.Api.Mappers;
 using Location.Api.Services;
 using Location.Api.Services.Authorization;
@@ -29,8 +30,18 @@ public class LocationGrpcService(
     ILocationService locationService,
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    IMapper mapper) : LocationService.LocationServiceBase
+    IMapper mapper,
+    ITopicEventSender topicEventSender) : LocationService.LocationServiceBase
 {
+    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(locationConfiguration.ApiKey);
+
+        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+
+        return new RaiseGraphqlChangeResponse();
+    }
+
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

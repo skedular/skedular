@@ -4,7 +4,17 @@ package marketplace;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Marketplace.V1";
 
 service MarketplaceService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+
   rpc GetVersion (VersionInput) returns (Version);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

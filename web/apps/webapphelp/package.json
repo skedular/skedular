@@ -20,11 +20,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
-    "@types/node": "^25.0.1",
+    "@types/node": "^25.0.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "cross-env": "^10.1.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "eslint-config-next": "^16.0.10",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3"

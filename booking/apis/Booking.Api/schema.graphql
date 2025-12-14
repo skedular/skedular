@@ -1,6 +1,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type BookingCheckoutSessionDetails {
@@ -153,6 +154,10 @@ type Query {
 
 type ResourceDetails {
   id: ID!
+}
+
+type Subscription {
+  booking(id: String!): BookingDetails!
 }
 
 type TeamBookingPermissions {

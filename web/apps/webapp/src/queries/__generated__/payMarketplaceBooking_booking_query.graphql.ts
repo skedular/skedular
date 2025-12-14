@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee36cfa190efe1fb0139b97e121fd91a>>
+ * @generated SignedSource<<266386627860b6d9eed673a1991a69a9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -98,8 +98,6 @@ export type payMarketplaceBooking_booking_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"payMarketplaceBooking_booking_query">;
 };
 
-import payMarketplaceBooking_booking_refetchableFragment_graphql from './payMarketplaceBooking_booking_refetchableFragment.graphql';
-
 const node: ReaderFragment = (function(){
 var v0 = {
   "alias": null,
@@ -157,13 +155,7 @@ return {
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "refetch": {
-      "connection": null,
-      "fragmentPathInResult": [],
-      "operation": payMarketplaceBooking_booking_refetchableFragment_graphql
-    }
-  },
+  "metadata": null,
   "name": "payMarketplaceBooking_booking_query",
   "selections": [
     {
@@ -489,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "5de5e99a3fd93763070b526829100596";
+(node as any).hash = "aefc24ce917abbfec3714be3f73a73d3";
 
 export default node;

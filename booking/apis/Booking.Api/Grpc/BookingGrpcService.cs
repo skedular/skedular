@@ -10,6 +10,7 @@ using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Version;
 using Grpc.Core;
+using HotChocolate.Subscriptions;
 using BookingOrderField = Booking.Shared.Models.BookingOrderField;
 using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 using OrderDirection = Enterprise.Shared.Pagination.OrderDirection;
@@ -27,9 +28,19 @@ public class BookingGrpcService(
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
-    IMapper mapper)
+    IMapper mapper,
+    ITopicEventSender topicEventSender)
     : BookingService.BookingServiceBase
 {
+    public override async Task<RaiseGraphqlChangeResponse> RaiseGraphqlChange(RaiseGraphqlChangeInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
+
+        await topicEventSender.SendAsync(request.TopicName, request.Id, context.CancellationToken);
+
+        return new RaiseGraphqlChangeResponse();
+    }
+
     public override Task<Version> GetVersion(VersionInput request, ServerCallContext context)
     {
         var version = versionService.GetVersion();

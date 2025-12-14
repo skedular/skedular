@@ -11,7 +11,7 @@ import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
-import type { payMarketplaceBooking_booking_refetchableFragment } from '@/queries/__generated__/payMarketplaceBooking_booking_refetchableFragment.graphql';
+import type { payMarketplaceBooking_booking_Subscription } from '@/queries/__generated__/payMarketplaceBooking_booking_Subscription.graphql';
 import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
 import type { payMarketplaceBooking_deleteBookingMutation } from '@/queries/__generated__/payMarketplaceBooking_deleteBookingMutation.graphql';
 import type { payMarketplaceBooking_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/payMarketplaceBooking_makeBookingPaymentNotRequiredMutation.graphql';
@@ -24,8 +24,8 @@ import { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, useCallback, useContext, useEffect, useState, useTransition } from 'react';
-import { graphql, useMutation, useRefetchableFragment } from 'react-relay';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { graphql, useFragment, useMutation, useSubscription } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
@@ -36,9 +36,9 @@ type Props = {
 };
 
 const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
-  const [rootData, refetch] = useRefetchableFragment<payMarketplaceBooking_booking_refetchableFragment, payMarketplaceBooking_booking_query$key>(
+  const rootData = useFragment<payMarketplaceBooking_booking_query$key>(
     graphql`
-      fragment payMarketplaceBooking_booking_query on Query @refetchable(queryName: "payMarketplaceBooking_booking_refetchableFragment") {
+      fragment payMarketplaceBooking_booking_query on Query {
         booking(id: $bookingId) {
           id
           from
@@ -121,6 +121,25 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
     rootDataRelay,
   );
 
+  useSubscription<payMarketplaceBooking_booking_Subscription>(
+    useMemo(
+      () => ({
+        variables: { bookingId: rootData.booking?.id ?? '' },
+        subscription: graphql`
+          subscription payMarketplaceBooking_booking_Subscription($bookingId: String!) {
+            booking(id: $bookingId) {
+              paymentStatus {
+                type
+                name
+              }
+            }
+          }
+        `,
+      }),
+      [rootData.booking],
+    ),
+  );
+
   const [commitDeleteBooking] = useMutation<payMarketplaceBooking_deleteBookingMutation>(graphql`
     mutation payMarketplaceBooking_deleteBookingMutation($input: DeleteBookingInput!) {
       deleteBooking(input: $input) {
@@ -197,36 +216,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const router = useRouter();
-  const [, startTransition] = useTransition();
   const [allDay] = useState<boolean>(isMidnight(rootData.booking?.from) && isMidnight(rootData.booking?.until));
   const [timeRange] = useState<DateRange<Dayjs>>([
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
   const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() => (rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.paymentExpiry) : null));
-
-  const handleRefetch = useCallback(() => {
-    startTransition(() => {
-      refetch(
-        {},
-        {
-          fetchPolicy: 'store-and-network',
-        },
-      );
-    });
-  }, [startTransition, refetch]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!rootData.booking?.bookingCheckoutSession) {
-        handleRefetch();
-      } else {
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [handleRefetch, rootData.booking?.bookingCheckoutSession]);
 
   useEffect(() => {
     const interval = setInterval(() => {

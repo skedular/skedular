@@ -6,6 +6,8 @@ import "google/protobuf/timestamp.proto";
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Location.V1";
 
 service LocationService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+
   rpc Admin_Add (Admin_AddInput) returns (Location);
   rpc Admin_Update (Admin_UpdateInput) returns (Location);
   rpc Admin_GetPaginatedLocations (Admin_GetPaginatedLocationsInput) returns (LocationConnection);
@@ -25,6 +27,14 @@ service LocationService {
   rpc AddResource (AddResourceInput) returns (Resource);
   rpc UpdateResource (UpdateResourceInput) returns (Resource);
   rpc RemoveResource (RemoveResourceInput) returns (Resource);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {

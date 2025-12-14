@@ -4,7 +4,17 @@ package slack;
 option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Slack.V1";
 
 service SlackService {
+  rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
+
   rpc GetVersion (VersionInput) returns (Version);
+}
+
+message RaiseGraphqlChangeInput {
+  string topicName = 1;
+  string id = 2;
+}
+
+message RaiseGraphqlChangeResponse {
 }
 
 message VersionInput {
