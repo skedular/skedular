@@ -317,7 +317,7 @@ public class OrganizationStripeConnectAccountService(
         CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               null,
+                               searchCriteria.OrganizationId,
                                searchCriteria.OrganizationUniqueAlphanumericName,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
