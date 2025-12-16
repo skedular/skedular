@@ -32,7 +32,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.14.3"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.15"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.8"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.12.0"/>

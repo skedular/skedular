@@ -107,13 +107,27 @@ public class BookingPaymentService(
 
         existingBooking.PaymentStatus = paymentStatus.ToPaymentStatus();
 
-        if (!string.IsNullOrWhiteSpace(existingBooking.PaymentMethod) &&
-            existingBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer)
+        if (!string.IsNullOrWhiteSpace(existingBooking.PaymentMethod))
         {
-            temporalOutboxService.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
-                existingBooking.Id,
-                new SetPaymentStatusArgs(existingBooking.PaymentStatus),
-                repositoryFactory.UnitOfWork);
+            switch (existingBooking.PaymentMethod.ToPaymentMethod())
+            {
+                case PaymentMethod.Card:
+                    temporalOutboxService.SignalWorkflowPayBookingViaCardSetPaymentStatus(
+                        existingBooking.Id,
+                        new SetPaymentStatusArgs(existingBooking.PaymentStatus),
+                        repositoryFactory.UnitOfWork);
+                    break;
+
+                case PaymentMethod.BankTransfer:
+                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
+                        existingBooking.Id,
+                        new SetPaymentStatusArgs(existingBooking.PaymentStatus),
+                        repositoryFactory.UnitOfWork);
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         var booking = mapper.MapTo(existingBooking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));

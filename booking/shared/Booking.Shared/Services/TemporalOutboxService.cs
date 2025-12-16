@@ -19,6 +19,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork);
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+    void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
 }
@@ -73,6 +74,17 @@ public class TemporalOutboxService(
         temporalSignalOutboxWorkflowExecutor.Signal(
             temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"),
             s_payBookingViaCardDeleteBookingAsync,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowPayBookingViaCardSetPaymentStatus(
+        string bookingId,
+        SetPaymentStatusArgs executionArgs,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"),
+            s_payBookingViaCardSetPaymentStatusAsync,
+            executionArgs,
             new WorkflowSignalOptions(),
             unitOfWork);
 
