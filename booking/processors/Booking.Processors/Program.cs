@@ -63,6 +63,7 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
+            .AddServices()
             .AddDomainSharedGrpcClients(configuration)
             .AddGrpcClients(configuration)
             .AddTemporalClient(configuration, "temporal")

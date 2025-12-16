@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c39e1a37349201c2c568db0603dba44a>>
+ * @generated SignedSource<<e6142e6e18a5951a1db114eed3232d23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,11 @@ export type payMarketplaceBooking_booking_Subscription$variables = {
 };
 export type payMarketplaceBooking_booking_Subscription$data = {
   readonly booking: {
+    readonly bookingCheckoutSession: {
+      readonly checkoutUrl: string;
+    } | null | undefined;
+    readonly invoiceUrl: string | null | undefined;
+    readonly paymentExpiry: any;
     readonly paymentStatus: {
       readonly name: string;
       readonly type: PaymentStatus;
@@ -42,6 +47,38 @@ v1 = [
   }
 ],
 v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "paymentExpiry",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "BookingCheckoutSessionDetails",
+  "kind": "LinkedField",
+  "name": "bookingCheckoutSession",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "checkoutUrl",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v5 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
@@ -81,7 +118,10 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/)
         ],
         "storageKey": null
       }
@@ -104,6 +144,9 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -117,16 +160,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cd366327aaed1194920afb1ef29a53ed",
+    "cacheID": "bf774610a8a2c28fb343e29a26220246",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_booking_Subscription",
     "operationKind": "subscription",
-    "text": "subscription payMarketplaceBooking_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    paymentStatus {\n      type\n      name\n    }\n    id\n  }\n}\n"
+    "text": "subscription payMarketplaceBooking_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    paymentExpiry\n    invoiceUrl\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentStatus {\n      type\n      name\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d41044375db258d7813bf99a4cd3ae9d";
+(node as any).hash = "9d05dc1f9111fa5b247bea338cf0e974";
 
 export default node;

@@ -128,6 +128,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         subscription: graphql`
           subscription payMarketplaceBooking_booking_Subscription($bookingId: String!) {
             booking(id: $bookingId) {
+              paymentExpiry
+              invoiceUrl
+              bookingCheckoutSession {
+                checkoutUrl
+              }
               paymentStatus {
                 type
                 name

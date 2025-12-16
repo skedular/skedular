@@ -1,12 +1,10 @@
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
-using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows.Payment;
 using Enterprise.Shared;
-using Enterprise.Shared.Grpc;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka.Consume;
 using Stripe;
 using Stripe.Checkout;
@@ -19,8 +17,7 @@ namespace Booking.Processors.Subscribers;
 public class BookingInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
-    BookingConfiguration bookingConfiguration,
-    BookingService.BookingServiceClient bookingServiceClient) : IEventSubscriber<Key, Event>
+    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -91,10 +88,7 @@ public class BookingInternalSubscriber(
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
 
-        _ = await bookingServiceClient.RaiseGraphqlChangeAsync(
-            new RaiseGraphqlChangeInput { TopicName = Constants.BookingTopicName, Id = stripeCheckoutSession.Booking.Id },
-            bookingConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
+        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -131,9 +125,6 @@ public class BookingInternalSubscriber(
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
 
-        _ = await bookingServiceClient.RaiseGraphqlChangeAsync(
-            new RaiseGraphqlChangeInput { TopicName = Constants.BookingTopicName, Id = stripeCheckoutSession.Booking.Id },
-            bookingConfiguration.ApiKey.CreateMetadata(),
-            cancellationToken: cancellationToken);
+        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
     }
 }

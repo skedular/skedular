@@ -7,12 +7,14 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Email;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Google.Protobuf;
 using Microsoft.Extensions.Hosting;
 using QuestPDF.Companion;
 using QuestPDF.Fluent;
 using Temporalio.Activities;
+using Constants = Booking.Shared.GraphQl.Constants;
 
 namespace Booking.Shared.Activities;
 
@@ -25,7 +27,8 @@ public class InvoiceIntegrations(
     IDbTransactionBuilder transactionBuilder,
     IOrganizationInvoiceCounterService organizationInvoiceCounterService,
     IEmailService emailService,
-    IHostEnvironment hostEnvironment)
+    IHostEnvironment hostEnvironment,
+    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender)
 {
     [Activity]
     public async Task GenerateAndSendInvoiceAsync(GenerateAndSendInvoiceInput args)
@@ -93,6 +96,8 @@ public class InvoiceIntegrations(
         }
 
         await SendInvoiceEmailAsync(args, booking, organizationId, pdfStream, cancellationToken);
+
+        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
     private async Task SendInvoiceEmailAsync(

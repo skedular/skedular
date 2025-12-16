@@ -8,11 +8,13 @@ using Booking.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
 using Stripe;
 using Stripe.Checkout;
 using Temporalio.Activities;
+using Constants = Booking.Shared.GraphQl.Constants;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using StripeCustomer = Booking.Shared.Database.Entities.StripeCustomer;
 
@@ -27,7 +29,8 @@ public class StripeIntegrations(
     IStripeCustomerService stripeCustomerService,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IRandomHelper randomHelper,
-    IMapper mapper)
+    IMapper mapper,
+    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender)
 {
     [Activity]
     public async Task<UpsertProductAndPricingResponse?> UpsertProductAndPricingAsync(UpsertProductAndPricingInput args)
@@ -197,6 +200,8 @@ public class StripeIntegrations(
 
         _ = repositoryFactory.BookingRepository.Update(booking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
     }
