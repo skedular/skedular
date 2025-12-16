@@ -18,6 +18,7 @@ export { $Version } from './schemas/$Version';
 
 export { BookingService } from './services/BookingService';
 export { ConnectService } from './services/ConnectService';
+export { GraphqlService } from './services/GraphqlService';
 export { PlatformService } from './services/PlatformService';
 export { StripeService } from './services/StripeService';
 export { V1Service } from './services/V1Service';

@@ -93,16 +93,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skedularctl", "shared\Skedu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "skedular", "skedular", "{1ABAA2ED-531A-4382-9473-E3E837A0E215}"
 	ProjectSection(SolutionItems) = preProject
-		api-definitions\openapi\skedular\booking_v1.json = api-definitions\openapi\skedular\booking_v1.json
-		api-definitions\openapi\skedular\customer_v1.json = api-definitions\openapi\skedular\customer_v1.json
-		api-definitions\openapi\skedular\gateway_v1.json = api-definitions\openapi\skedular\gateway_v1.json
-		api-definitions\openapi\skedular\location_v1.json = api-definitions\openapi\skedular\location_v1.json
-		api-definitions\openapi\skedular\msteams_v1.json = api-definitions\openapi\skedular\msteams_v1.json
-		api-definitions\openapi\skedular\organization_v1.json = api-definitions\openapi\skedular\organization_v1.json
-		api-definitions\openapi\skedular\slack_v1.json = api-definitions\openapi\skedular\slack_v1.json
-		api-definitions\openapi\skedular\team_v1.json = api-definitions\openapi\skedular\team_v1.json
-		api-definitions\openapi\skedular\marketplace_v1.json = api-definitions\openapi\skedular\marketplace_v1.json
-		api-definitions\openapi\skedular\core_v1.json = api-definitions\openapi\skedular\core_v1.json
 		api-definitions\openapi\skedular\booking_v1.yaml = api-definitions\openapi\skedular\booking_v1.yaml
 		api-definitions\openapi\skedular\core_v1.yaml = api-definitions\openapi\skedular\core_v1.yaml
 		api-definitions\openapi\skedular\customer_v1.yaml = api-definitions\openapi\skedular\customer_v1.yaml

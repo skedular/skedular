@@ -3,6 +3,7 @@ using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Offering;
 using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
 using Enterprise.Shared.Version;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Organization.Api.Services;
 using Organization.Shared.Publishers;
@@ -26,7 +27,8 @@ public class OrganizationController(
     IOrganizationOfferingService organizationOfferingService,
     IOrganizationOwnershipService organizationOwnershipService,
     TimeProvider timeProvider,
-    ILogger<OrganizationController> logger) : OrganizationControllerBase
+    ILogger<OrganizationController> logger,
+    ITopicEventSender topicEventSender) : OrganizationControllerBase
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
@@ -38,6 +40,23 @@ public class OrganizationController(
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
+    }
+
+    public override async Task<IActionResult> RaiseGraphqlChange(
+        string topicName,
+        string id,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != organizationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+
+        return Ok();
     }
 
     public override async Task<IActionResult> Republish(string organizationId, CancellationToken cancellationToken = default)

@@ -1,5 +1,7 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Location.V1;
 using Enterprise.Shared.Version;
+using HotChocolate.Subscriptions;
 using Location.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Version = Api.Shared.Services.OpenApi.Skedular.Location.V1.Version;
@@ -7,7 +9,12 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Location.V1.Version;
 namespace Location.Api.Controllers;
 
 [ApiController]
-public class LocationController(IVersionService versionService, IWorkaroundService workaroundService) : LocationControllerBase
+public class LocationController(
+    IVersionService versionService,
+    LocationConfiguration locationConfiguration,
+    IWorkaroundService workaroundService,
+    ITopicEventSender topicEventSender)
+    : LocationControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
     {
@@ -17,6 +24,23 @@ public class LocationController(IVersionService versionService, IWorkaroundServi
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
+    }
+
+    public override async Task<IActionResult> RaiseGraphqlChange(
+        string topicName,
+        string id,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != locationConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+
+        return Ok();
     }
 
     public override async Task<IActionResult> Republish(string locationId, CancellationToken cancellationToken = default)

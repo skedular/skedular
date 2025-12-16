@@ -21,6 +21,32 @@ export class OrganizationService {
         });
     }
     /**
+     * raise graphql change
+     * @param topicName
+     * @param id
+     * @param xApiKey API Key
+     * @returns any the result of raising the graphql change
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public raiseGraphqlChange(
+        topicName: string,
+        id: string,
+        xApiKey: string,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/v1/organization/raiseGraphqlChange/{topicName}/{id}',
+            path: {
+                'topicName': topicName,
+                'id': id,
+            },
+            headers: {
+                'X-API-Key': xApiKey,
+            },
+        });
+    }
+    /**
      * republish organization
      * @param organizationId
      * @returns any the status of organization republishing

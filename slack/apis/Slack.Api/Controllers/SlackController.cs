@@ -1,5 +1,7 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Slack.V1;
 using Enterprise.Shared.Version;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Slack.Api.Services;
 using Version = Api.Shared.Services.OpenApi.Skedular.Slack.V1.Version;
@@ -7,7 +9,12 @@ using Version = Api.Shared.Services.OpenApi.Skedular.Slack.V1.Version;
 namespace Slack.Api.Controllers;
 
 [ApiController]
-public class SlackController(IVersionService versionService, IWorkspaceService workspaceService, IWorkaroundService workaroundService)
+public class SlackController(
+    IVersionService versionService,
+    SlackConfiguration slackConfiguration,
+    IWorkspaceService workspaceService,
+    IWorkaroundService workaroundService,
+    ITopicEventSender topicEventSender)
     : SlackControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
@@ -18,6 +25,23 @@ public class SlackController(IVersionService versionService, IWorkspaceService w
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
+    }
+
+    public override async Task<IActionResult> RaiseGraphqlChange(
+        string topicName,
+        string id,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != slackConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+
+        return Ok();
     }
 
     public override async Task<IActionResult> Callback(string code, string? state, CancellationToken cancellationToken = default) =>

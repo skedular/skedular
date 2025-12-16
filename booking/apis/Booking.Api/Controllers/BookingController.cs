@@ -1,8 +1,10 @@
 using System.Globalization;
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Booking.V1;
 using Booking.Api.Services;
 using Booking.Shared.Publishers;
 using Enterprise.Shared.Version;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
@@ -14,11 +16,13 @@ namespace Booking.Api.Controllers;
 [ApiController]
 public class BookingController(
     IVersionService versionService,
+    BookingConfiguration bookingConfiguration,
     StripeConfiguration stripeConfiguration,
     IWorkaroundService workaroundService,
     IBookingInternalPublisher bookingInternalPublisher,
     TimeProvider timeProvider,
-    ILogger<BookingController> logger)
+    ILogger<BookingController> logger,
+    ITopicEventSender topicEventSender)
     : BookingControllerBase
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -31,6 +35,23 @@ public class BookingController(
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
+    }
+
+    public override async Task<IActionResult> RaiseGraphqlChange(
+        string topicName,
+        string id,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != bookingConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+
+        return Ok();
     }
 
     public override async Task<IActionResult> Republish(string bookingId, CancellationToken cancellationToken = default)

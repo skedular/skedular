@@ -105,10 +105,10 @@ importers:
         version: 0.208.0(@opentelemetry/api@1.9.0)
       '@stripe/react-stripe-js':
         specifier: ^5.4.1
-        version: 5.4.1(@stripe/stripe-js@8.5.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 5.4.1(@stripe/stripe-js@8.6.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@stripe/stripe-js':
-        specifier: ^8.5.3
-        version: 8.5.3
+        specifier: ^8.6.0
+        version: 8.6.0
       '@vercel/analytics':
         specifier: ^1.6.1
         version: 1.6.1(next@16.0.10(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
@@ -149,11 +149,11 @@ importers:
         specifier: ^0.1.2
         version: 0.1.2
       logrocket:
-        specifier: ^10.1.1
-        version: 10.1.1
+        specifier: ^11.0.0
+        version: 11.0.0
       logrocket-react:
         specifier: ^6.0.3
-        version: 6.0.3(logrocket@10.1.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+        version: 6.0.3(logrocket@11.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       mui-rff:
         specifier: ^8.2.3
         version: 8.2.3(18b2220615d1ee4931debe3daf2fd718)
@@ -1566,8 +1566,8 @@ packages:
       react: '>=16.8.0 <20.0.0'
       react-dom: '>=16.8.0 <20.0.0'
 
-  '@stripe/stripe-js@8.5.3':
-    resolution: {integrity: sha512-UM0GHAxlTN7v0lCK2P6t0VOlvBIdApIQxhnM3yZ2kupQ4PpSrLsK/n/NyYKtw2NJGMaNRRD1IicWS7fSL2sFtA==}
+  '@stripe/stripe-js@8.6.0':
+    resolution: {integrity: sha512-EB0/GGgs4hfezzkiMkinlRgWtjz8fSdwVQhwYS7Sg/RQrSvuNOz+ssPjD+lAzqaYTCB0zlbrt0fcqVziLJrufQ==}
     engines: {node: '>=12.16'}
 
   '@swc/helpers@0.5.15':
@@ -3879,8 +3879,8 @@ packages:
   logrocket@1.0.1:
     resolution: {integrity: sha512-oPA0c5GzMKsWp/6p19OaujZQMzttluqVOI+989uHeciPAljPZvGEpZRbNO3Rr+jC/8jVLJdlMP9IHuyhKsASGA==}
 
-  logrocket@10.1.1:
-    resolution: {integrity: sha512-Yv3ociIxbYxyY5sevTHS+I4ngtvQK6SGeeOBgg/X2R1hyqeHOPXTmrNUSu1+bG9g96VF0aR0rcyNwXDfuUFAtQ==}
+  logrocket@11.0.0:
+    resolution: {integrity: sha512-/WBl2VJ/WVRsveU0PhWcO++XZpKUifRQZwAFqjUyPSwxdy+OFEgKk+W69WSQFM9pejizarXRwmb3Wo7msD75+g==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -6894,14 +6894,14 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.0.2': {}
 
-  '@stripe/react-stripe-js@5.4.1(@stripe/stripe-js@8.5.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+  '@stripe/react-stripe-js@5.4.1(@stripe/stripe-js@8.6.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
     dependencies:
-      '@stripe/stripe-js': 8.5.3
+      '@stripe/stripe-js': 8.6.0
       prop-types: 15.8.1
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
-  '@stripe/stripe-js@8.5.3': {}
+  '@stripe/stripe-js@8.6.0': {}
 
   '@swc/helpers@0.5.15':
     dependencies:
@@ -9588,15 +9588,15 @@ snapshots:
 
   lodash@4.17.21: {}
 
-  logrocket-react@6.0.3(logrocket@10.1.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
+  logrocket-react@6.0.3(logrocket@11.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
-      logrocket: 10.1.1
+      logrocket: 11.0.0
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
   logrocket@1.0.1: {}
 
-  logrocket@10.1.1: {}
+  logrocket@11.0.0: {}
 
   longest-streak@3.1.0: {}
 

@@ -38,6 +38,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/core/raiseGraphqlChange/{topicName}/{id}:
+    get:
+      tags:
+        - v1
+        - core
+        - graphql
+      summary: raise graphql change
+      operationId: raiseGraphqlChange
+      parameters:
+        - in: path
+          name: topicName
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+        - in: header
+          name: X-API-Key
+          schema:
+            type: string
+          required: true
+          description: API Key
+
+      responses:
+        "200":
+          description: the result of raising the graphql change
+
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+
   /v1/core/uploadPublicAccessFile:
     post:
       tags:

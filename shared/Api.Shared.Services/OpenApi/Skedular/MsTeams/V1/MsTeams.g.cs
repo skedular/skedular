@@ -43,6 +43,16 @@ namespace Api.Shared.Services.OpenApi.Skedular.MsTeams.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.ActionResult<Version>> GetVersion(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// raise graphql change
+        /// </summary>
+        /// <param name="x_API_Key">API Key</param>
+        /// <returns>the result of raising the graphql change</returns>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/msteams/raiseGraphqlChange/{topicName}/{id}")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("raise graphql change")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> RaiseGraphqlChange(string topicName, string id, [Microsoft.AspNetCore.Mvc.FromHeader(Name = "X-API-Key")] string x_API_Key, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// resync all MsTeams
         /// </summary>
         /// <returns>the status of resyncing all MsTeams</returns>

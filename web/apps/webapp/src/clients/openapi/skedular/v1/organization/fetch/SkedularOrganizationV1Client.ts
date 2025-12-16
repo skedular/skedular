@@ -8,6 +8,7 @@ import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { AnalyticsService } from './services/AnalyticsService';
 import { AzureTenantService } from './services/AzureTenantService';
 import { ConnectService } from './services/ConnectService';
+import { GraphqlService } from './services/GraphqlService';
 import { OauthService } from './services/OauthService';
 import { OfferingService } from './services/OfferingService';
 import { OnboardingService } from './services/OnboardingService';
@@ -27,6 +28,7 @@ export class SkedularOrganizationV1Client {
     public readonly analytics: AnalyticsService;
     public readonly azureTenant: AzureTenantService;
     public readonly connect: ConnectService;
+    public readonly graphql: GraphqlService;
     public readonly oauth: OauthService;
     public readonly offering: OfferingService;
     public readonly onboarding: OnboardingService;
@@ -57,6 +59,7 @@ export class SkedularOrganizationV1Client {
         this.analytics = new AnalyticsService(this.request);
         this.azureTenant = new AzureTenantService(this.request);
         this.connect = new ConnectService(this.request);
+        this.graphql = new GraphqlService(this.request);
         this.oauth = new OauthService(this.request);
         this.offering = new OfferingService(this.request);
         this.onboarding = new OnboardingService(this.request);

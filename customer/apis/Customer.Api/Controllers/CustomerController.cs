@@ -1,13 +1,20 @@
+using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Customer.V1;
 using Customer.Api.Services;
 using Enterprise.Shared.Version;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Version = Api.Shared.Services.OpenApi.Skedular.Customer.V1.Version;
 
 namespace Customer.Api.Controllers;
 
 [ApiController]
-public class CustomerController(IVersionService versionService, IWorkaroundService workaroundService, IPaymentService paymentService)
+public class CustomerController(
+    IVersionService versionService,
+    CustomerConfiguration customerConfiguration,
+    IWorkaroundService workaroundService,
+    IPaymentService paymentService,
+    ITopicEventSender topicEventSender)
     : CustomerControllerBase
 {
     public override Task<ActionResult<Version>> GetVersion(CancellationToken cancellationToken = default)
@@ -18,6 +25,23 @@ public class CustomerController(IVersionService versionService, IWorkaroundServi
         {
             Major = version.Major, Minor = version.Minor, Build = version.Build, Revision = version.Revision
         });
+    }
+
+    public override async Task<IActionResult> RaiseGraphqlChange(
+        string topicName,
+        string id,
+        // ReSharper disable once InconsistentNaming
+        string x_API_Key,
+        CancellationToken cancellationToken = default)
+    {
+        if (x_API_Key != customerConfiguration.ApiKey)
+        {
+            return Unauthorized();
+        }
+
+        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+
+        return Ok();
     }
 
     public override async Task<IActionResult> Republish(string customerId, CancellationToken cancellationToken = default)

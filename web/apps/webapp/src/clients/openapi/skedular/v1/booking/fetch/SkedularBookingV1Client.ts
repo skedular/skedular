@@ -7,6 +7,7 @@ import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
 import { BookingService } from './services/BookingService';
 import { ConnectService } from './services/ConnectService';
+import { GraphqlService } from './services/GraphqlService';
 import { PlatformService } from './services/PlatformService';
 import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
@@ -16,6 +17,7 @@ type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularBookingV1Client {
     public readonly booking: BookingService;
     public readonly connect: ConnectService;
+    public readonly graphql: GraphqlService;
     public readonly platform: PlatformService;
     public readonly stripe: StripeService;
     public readonly v1: V1Service;
@@ -36,6 +38,7 @@ export class SkedularBookingV1Client {
         });
         this.booking = new BookingService(this.request);
         this.connect = new ConnectService(this.request);
+        this.graphql = new GraphqlService(this.request);
         this.platform = new PlatformService(this.request);
         this.stripe = new StripeService(this.request);
         this.v1 = new V1Service(this.request);

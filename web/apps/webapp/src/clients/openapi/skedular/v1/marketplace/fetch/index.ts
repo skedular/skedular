@@ -16,6 +16,7 @@ export type { Version } from './models/Version';
 export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
+export { GraphqlService } from './services/GraphqlService';
 export { MarketplaceService } from './services/MarketplaceService';
 export { ProductService } from './services/ProductService';
 export { V1Service } from './services/V1Service';

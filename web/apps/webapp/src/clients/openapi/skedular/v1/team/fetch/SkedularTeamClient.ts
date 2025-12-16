@@ -5,11 +5,13 @@
 import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { FetchHttpRequest } from './core/FetchHttpRequest';
+import { GraphqlService } from './services/GraphqlService';
 import { TeamService } from './services/TeamService';
 import { V1Service } from './services/V1Service';
 import { WorkaroundService } from './services/WorkaroundService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularTeamClient {
+    public readonly graphql: GraphqlService;
     public readonly team: TeamService;
     public readonly v1: V1Service;
     public readonly workaround: WorkaroundService;
@@ -26,6 +28,7 @@ export class SkedularTeamClient {
             HEADERS: config?.HEADERS,
             ENCODE_PATH: config?.ENCODE_PATH,
         });
+        this.graphql = new GraphqlService(this.request);
         this.team = new TeamService(this.request);
         this.v1 = new V1Service(this.request);
         this.workaround = new WorkaroundService(this.request);

@@ -19,6 +19,7 @@ export { $Version } from './schemas/$Version';
 export { AnalyticsService } from './services/AnalyticsService';
 export { AzureTenantService } from './services/AzureTenantService';
 export { ConnectService } from './services/ConnectService';
+export { GraphqlService } from './services/GraphqlService';
 export { OauthService } from './services/OauthService';
 export { OfferingService } from './services/OfferingService';
 export { OnboardingService } from './services/OnboardingService';

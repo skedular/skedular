@@ -17,6 +17,7 @@ export { $ProblemDetails } from './schemas/$ProblemDetails';
 export { $Version } from './schemas/$Version';
 
 export { CustomerService } from './services/CustomerService';
+export { GraphqlService } from './services/GraphqlService';
 export { PaymentMethodService } from './services/PaymentMethodService';
 export { V1Service } from './services/V1Service';
 export { WorkaroundService } from './services/WorkaroundService';

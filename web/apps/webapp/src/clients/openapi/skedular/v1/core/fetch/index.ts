@@ -22,6 +22,7 @@ export { $Version } from './schemas/$Version';
 
 export { CdnService } from './services/CdnService';
 export { CoreService } from './services/CoreService';
+export { GraphqlService } from './services/GraphqlService';
 export { PrivateService } from './services/PrivateService';
 export { PublicService } from './services/PublicService';
 export { V1Service } from './services/V1Service';
