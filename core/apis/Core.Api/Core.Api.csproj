@@ -44,12 +44,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="../../../.dockerignore">
-            <Link>.dockerignore</Link>
-        </Content>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\..\shared\Core.Shared\Core.Shared.csproj"/>
     </ItemGroup>
 

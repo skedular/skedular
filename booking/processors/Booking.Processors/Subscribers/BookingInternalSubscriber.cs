@@ -1,18 +1,26 @@
+using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
+using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows.Payment;
 using Enterprise.Shared;
+using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Kafka.Consume;
 using Stripe;
 using Stripe.Checkout;
+using Constants = Booking.Shared.GraphQl.Constants;
 using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
 
 namespace Booking.Processors.Subscribers;
 
-public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, ITemporalService temporalService) : IEventSubscriber<Key, Event>
+public class BookingInternalSubscriber(
+    IRepositoryFactory repositoryFactory,
+    ITemporalService temporalService,
+    BookingConfiguration bookingConfiguration,
+    BookingService.BookingServiceClient bookingServiceClient) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -63,7 +71,6 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, ITe
             _ => throw new ArgumentOutOfRangeException()
         };
 
-
         stripeCheckoutSession.Booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
         stripeCheckoutSession.Booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
         stripeCheckoutSession.Booking.TaxAmount =
@@ -83,6 +90,11 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, ITe
             stripeCheckoutSession.Booking.Id,
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
+
+        _ = await bookingServiceClient.RaiseGraphqlChangeAsync(
+            new RaiseGraphqlChangeInput { TopicName = Constants.BookingTopicName, Id = stripeCheckoutSession.Booking.Id },
+            bookingConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -118,5 +130,10 @@ public class BookingInternalSubscriber(IRepositoryFactory repositoryFactory, ITe
             stripeCheckoutSession.Booking.Id,
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
+
+        _ = await bookingServiceClient.RaiseGraphqlChangeAsync(
+            new RaiseGraphqlChangeInput { TopicName = Constants.BookingTopicName, Id = stripeCheckoutSession.Booking.Id },
+            bookingConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
     }
 }

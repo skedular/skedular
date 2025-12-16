@@ -19,7 +19,7 @@ public static class Extensions
 
         public IServiceCollection AddGrpcClients(IConfiguration configuration)
         {
-            var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<OrganizationConfiguration>();
+            var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
             ArgumentNullException.ThrowIfNull(bookingConfiguration);
             ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
             ArgumentNullException.ThrowIfNull(bookingConfiguration.GrpcUrl);
