@@ -63,7 +63,7 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddMappers()
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddStripe(configuration);
 

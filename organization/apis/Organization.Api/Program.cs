@@ -44,7 +44,7 @@ public class Program
             .AddServices()
             .AddMappers()
             .AddGrpcServices(configuration)
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddStripe(configuration)
             .AddTemporalClient(configuration, "temporal");
 

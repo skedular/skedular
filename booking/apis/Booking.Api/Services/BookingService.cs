@@ -322,7 +322,7 @@ public class BookingService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await cachedBookingService.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
+        var booking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
 
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
 

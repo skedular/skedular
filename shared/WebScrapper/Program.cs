@@ -64,7 +64,7 @@ public class Program
                         .AddSingleton<IContentEnricherService, ContentEnricherService>()
                         .AddSingleton<ILocationService, LocationService>()
                         .AddSingleton<ICsvLocationFileReaderService, CsvLocationFileReaderService>()
-                        .AddGrpcClients(hostBuilderContext.Configuration);
+                        .AddDomainSharedGrpcClients(hostBuilderContext.Configuration);
                 });
             }).Build();
 }

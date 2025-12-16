@@ -143,7 +143,7 @@ public static class Extensions
                 });
         }
 
-        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        public IServiceCollection AddDomainSharedGrpcClients(IConfiguration configuration)
         {
             var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
             ArgumentNullException.ThrowIfNull(bookingConfiguration);

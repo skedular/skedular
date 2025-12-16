@@ -83,7 +83,7 @@ public static class Extensions
             services
                 .AddSingleton<IBookingOutboxPublisher, BookingOutboxPublisher>();
 
-        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        public IServiceCollection AddDomainSharedGrpcClients(IConfiguration configuration)
         {
             var coreConfiguration = configuration.GetSection(CoreConfiguration.Key).Get<CoreConfiguration>();
             ArgumentNullException.ThrowIfNull(coreConfiguration);

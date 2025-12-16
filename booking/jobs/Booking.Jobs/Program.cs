@@ -43,6 +43,7 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
+            .AddDomainSharedGrpcClients(configuration)
             .AddGrpcClients(configuration)
             .AddStripe(configuration);
 

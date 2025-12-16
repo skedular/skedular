@@ -44,7 +44,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddGrpcServices(configuration)
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddStripe(configuration)
             .AddTemporalClient(configuration, "temporal");
 

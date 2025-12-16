@@ -40,7 +40,7 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddGrpcClients(configuration);
+            .AddDomainSharedGrpcClients(configuration);
 
         services
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")

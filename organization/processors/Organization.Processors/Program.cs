@@ -61,7 +61,7 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddServices()
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddStripe(configuration);
 

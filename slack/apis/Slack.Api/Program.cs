@@ -133,7 +133,7 @@ public class Program
                         .RegisterBlockActionHandler<ButtonAction, CancelBookingButtonHandler>($"{BookingActionTypes.CancelBooking}{idx}"));
                 })
             .AddGrpcServices(configuration)
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddPages()
             .AddTemporalClient(configuration, "temporal");
 

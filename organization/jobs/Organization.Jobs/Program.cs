@@ -47,7 +47,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddStripe(configuration)
-            .AddGrpcClients(configuration);
+            .AddDomainSharedGrpcClients(configuration);
 
         services
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")

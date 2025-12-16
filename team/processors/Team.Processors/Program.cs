@@ -53,7 +53,7 @@ public class Program
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddGrpcClients(configuration)
+            .AddDomainSharedGrpcClients(configuration)
             .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();
