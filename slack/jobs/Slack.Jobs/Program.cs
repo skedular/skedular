@@ -42,7 +42,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddSlack(configuration, _ => { })
-            .AddDomainSharedGrpcClients(configuration);
+            .AddSharedCrossDomainClients(configuration);
 
         services
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")

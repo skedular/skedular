@@ -86,7 +86,7 @@ public static class Extensions
             services
                 .AddSingleton<IOrganizationOutboxPublisher, OrganizationOutboxPublisher>();
 
-        public IServiceCollection AddDomainSharedGrpcClients(IConfiguration configuration)
+        public IServiceCollection AddSharedCrossDomainClients(IConfiguration configuration)
         {
             var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
             ArgumentNullException.ThrowIfNull(customerConfiguration);

@@ -43,8 +43,8 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddDomainSharedGrpcClients(configuration)
-            .AddGrpcClients(configuration)
+            .AddSharedCrossDomainClients(configuration)
+            .AddCrossDomainClients(configuration)
             .AddStripe(configuration);
 
         services

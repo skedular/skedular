@@ -18,7 +18,7 @@ public static class Extensions
             services
                 .AddSingleton<IDomainGraphQlTopicEventSender, DomainGraphQlTopicEventSender>();
 
-        public IServiceCollection AddGrpcClients(IConfiguration configuration)
+        public IServiceCollection AddCrossDomainClients(IConfiguration configuration)
         {
             var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
             ArgumentNullException.ThrowIfNull(bookingConfiguration);

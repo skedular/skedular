@@ -11,7 +11,7 @@ public static class Extensions
 {
     extension(IServiceCollection services)
     {
-        public IServiceCollection AddDomainSharedGrpcClients(IConfiguration configuration)
+        public IServiceCollection AddSharedCrossDomainClients(IConfiguration configuration)
         {
             var locationConfiguration = configuration.GetSection(LocationConfiguration.Key).Get<LocationConfiguration>();
             ArgumentNullException.ThrowIfNull(locationConfiguration);

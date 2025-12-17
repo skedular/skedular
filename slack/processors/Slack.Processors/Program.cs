@@ -55,7 +55,7 @@ public class Program
             .AddMappers()
             .AddJobs()
             .AddSlack(configuration, _ => { })
-            .AddDomainSharedGrpcClients(configuration)
+            .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();
