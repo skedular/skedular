@@ -21,6 +21,7 @@ public static class Extensions
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()
                 .AddScoped<IBookingService, BookingService>()
                 .AddScoped<IResourceService, ResourceService>()
+                .AddScoped<IGraphQlHelperService, GraphQlHelperService>()
                 .AddScoped<IWorkaroundService, WorkaroundService>();
 
         public IServiceCollection AddJobs() =>

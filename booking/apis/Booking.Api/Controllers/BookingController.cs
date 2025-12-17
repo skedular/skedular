@@ -4,7 +4,6 @@ using Api.Shared.Services.OpenApi.Skedular.Booking.V1;
 using Booking.Api.Services;
 using Booking.Shared.Publishers;
 using Enterprise.Shared.Version;
-using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 using Stripe.Checkout;
@@ -22,7 +21,7 @@ public class BookingController(
     IBookingInternalPublisher bookingInternalPublisher,
     TimeProvider timeProvider,
     ILogger<BookingController> logger,
-    ITopicEventSender topicEventSender)
+    IGraphQlHelperService graphQlHelperService)
     : BookingControllerBase
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -49,7 +48,7 @@ public class BookingController(
             return Unauthorized();
         }
 
-        await topicEventSender.SendAsync(topicName, id, cancellationToken);
+        await graphQlHelperService.RaiseGraphqlChange(topicName, id, cancellationToken);
 
         return Ok();
     }
