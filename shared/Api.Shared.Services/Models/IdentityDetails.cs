@@ -20,8 +20,7 @@ public static class IdentityDetailsExtensions
 
     extension<T>(IEnumerable<T> src) where T : IIdentityDetails
     {
-        public ICollection<string> ToEmails() =>
-            src.Select(item => item.Email).ToEmails();
+        public ICollection<string> ToEmails() => src.Select(item => item.Email).ToEmails();
 
         public string ToStringEmails() => string.Join(',', src.ToEmails());
         public string? ToFirstEmail() => src.ToEmails().FirstOrDefault();

@@ -559,8 +559,8 @@ public class Mapper : IMapper
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
 
-    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity?>? src) =>
-        (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
+    private static IEnumerable<Shared.Models.Identity> MapTo(IEnumerable<Identity>? src) =>
+        (src is null ? [] : src.Select(MapTo))!;
 
     private static Shared.Models.Identity? MapTo(Identity? src) =>
         src is null

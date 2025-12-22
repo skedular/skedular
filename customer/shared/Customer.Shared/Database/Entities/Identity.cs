@@ -24,7 +24,7 @@ public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
         builder.ConfigureEntityBase(Constants.MaxVerifiableTokenLength);
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength).HasDefaultValue(IdentityTypeConstants.Registered);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
 
         builder.HasOne(item => item.Customer).WithMany(item => item.Identities);
 
