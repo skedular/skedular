@@ -29,7 +29,7 @@ const LogRocketProvider = ({ ignoreOptOutCookie, forceOverride, logRocketAppId }
     }
 
     LogRocket.init(logRocketAppId);
-    setupLogRocketReact(LogRocket);
+    setupLogRocketReact();
   }, [shouldUseAnalytics, logRocketAppId]);
 
   return null;

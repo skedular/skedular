@@ -8,6 +8,7 @@ using Location = Organization.Shared.Models.Location;
 using Team = Organization.Shared.Models.Team;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
+using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
@@ -78,7 +79,18 @@ public class Mapper : IMapper
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
             Identities = customer.Identities
-                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                    Type = item.Type switch
+                    {
+                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                })
                 .ToList()
         };
     }
@@ -164,6 +176,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;
@@ -317,7 +330,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
+            Type = src.Type.ToNullableIdentityType()
         };
 
     private static TermsOfUse? MapTo(Shared.Database.Entities.TermsOfUse? src) =>

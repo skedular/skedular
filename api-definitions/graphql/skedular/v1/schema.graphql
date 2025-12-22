@@ -265,6 +265,7 @@ type CustomerEdge {
 type CustomerIdentity {
   email: String
   id: ID!
+  type: IdentityType!
   verified: Boolean!
 }
 
@@ -2564,6 +2565,11 @@ enum FeedbackChannelType {
 
 enum FloorPlanOrderField {
   NAME
+}
+
+enum IdentityType {
+  GUEST
+  REGISTERED
 }
 
 enum InvitationStatus {

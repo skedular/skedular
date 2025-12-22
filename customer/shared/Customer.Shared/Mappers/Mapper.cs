@@ -5,6 +5,7 @@ using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails;
 using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
+using IdentityType = Api.Shared.Services.Models.IdentityType;
 using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
 using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
 using PaymentMethod = Stripe.PaymentMethod;
@@ -93,7 +94,18 @@ public class Mapper : IMapper
     private static IEnumerable<Identity> MapTo(IEnumerable<Models.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Models.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = src.EmailVerified ?? false,
+            Type = src.Type switch
+            {
+                IdentityType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest,
+                IdentityType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
     private static CustomerBillingDetails? MapTo(Models.CustomerBillingDetails? src) =>
         src is null

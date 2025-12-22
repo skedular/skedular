@@ -16,6 +16,7 @@ using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
+using IdentityType = Api.Shared.Services.Grpc.Skedular.Customer.V1.IdentityType;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
@@ -197,10 +198,24 @@ public class Mapper : IMapper
     }
 
     public Admin_AddIdentityInput MapToAddIdentityInput(WorkspaceMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+            Type = IdentityType.Registered
+        };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(WorkspaceMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+            Type = IdentityType.Registered
+        };
 
     public Admin_AddInput MapTo(WorkspaceMember src, string customerId, string defaultOrganizationId, ICollection<string> preferredLocationIds)
     {
@@ -543,7 +558,18 @@ public class Mapper : IMapper
         src.Select(MapTo);
 
     private static Identity MapTo(Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity src) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = src.EmailVerified,
+            Type = src.Type switch
+            {
+                IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        };
 
     private IEnumerable<Resource> MapTo(IEnumerable<Api.Shared.Services.Grpc.Skedular.Location.V1.Resource> src) =>
         src.Select(MapTo);

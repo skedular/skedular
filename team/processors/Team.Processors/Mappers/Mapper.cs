@@ -6,6 +6,7 @@ using Team.Shared.Models;
 using Customer = Team.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Team.Shared.Database.Entities.Identity;
+using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Location = Team.Shared.Models.Location;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 using Offering = Api.Shared.Services.Models.Offering;
@@ -82,7 +83,18 @@ public class Mapper : IMapper
             MiddleName = customer.MiddleName,
             FamilyName = customer.FamilyName,
             Identities = customer.Identities.Select(item =>
-                    new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                    new Shared.Models.Identity
+                    {
+                        Id = item.Id,
+                        Email = item.Email.ToSafeString(),
+                        EmailVerified = item.EmailVerified,
+                        Type = item.Type switch
+                        {
+                            IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                            IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                            _ => throw new ArgumentOutOfRangeException()
+                        }
+                    })
                 .ToList()
         };
     }
@@ -227,6 +239,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;
@@ -425,6 +438,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
+            Type = src.Type.ToNullableIdentityType()
         };
 }

@@ -454,7 +454,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
+            Type = src.Type.ToNullableIdentityType()
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Team team) =>

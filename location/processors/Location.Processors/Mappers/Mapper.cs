@@ -6,6 +6,7 @@ using Location.Shared.Models;
 using Customer = Location.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
+using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
@@ -84,7 +85,18 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                    Type = item.Type switch
+                    {
+                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                })
                 .ToList()
         };
     }
@@ -200,6 +212,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

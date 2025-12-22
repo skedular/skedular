@@ -134,6 +134,7 @@ message Identity {
   string id = 1;
   string email = 2;
   bool emailVerified = 3;
+  IdentityType type = 4;
 }
 
 message Organization {
@@ -151,6 +152,7 @@ message Admin_AddIdentityInput {
   string id = 2;
   string email = 3;
   bool emailVerified = 4;
+  IdentityType type = 5;
 }
 
 message Admin_UpdateIdentityInput {
@@ -158,6 +160,7 @@ message Admin_UpdateIdentityInput {
   string id = 2;
   string email = 3;
   bool emailVerified = 4;
+  IdentityType type = 5;
 }
 
 message Admin_SetDefaultOrganizationInput {
@@ -223,4 +226,9 @@ message RemovePreferredResourceInput {
 enum PersonalInformationVisibility {
   PersonalInformationVisibility_Visible = 0;
   PersonalInformationVisibility_Redacted = 1;
+}
+
+enum IdentityType {
+  IdentityType_Guest = 0;
+  IdentityType_Registered = 1;
 }

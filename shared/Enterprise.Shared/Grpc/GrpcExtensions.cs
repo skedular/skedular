@@ -15,7 +15,7 @@ public static class GrpcExtensions
         public Metadata CreateMetadata(string verifiableToken)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(apiKey);
-            return CreateMetadata(apiKey).AddVerifiableToken(verifiableToken);
+            return apiKey.CreateMetadata().AddVerifiableToken(verifiableToken);
         }
     }
 

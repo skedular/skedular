@@ -9,6 +9,7 @@ using Organization.Shared.Models;
 using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
 using Identity = Organization.Shared.Models.Identity;
+using IdentityType = Api.Shared.Services.Grpc.Skedular.Customer.V1.IdentityType;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
@@ -216,10 +217,24 @@ public class Mapper : IMapper
     }
 
     Admin_AddIdentityInput IMapper.MapTo(Database.Entities.AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+            Type = IdentityType.Registered
+        };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId) =>
-        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
+        new()
+        {
+            Id = src.Id,
+            Email = src.Email.ToSafeString(),
+            EmailVerified = true,
+            CustomerId = customerId,
+            Type = IdentityType.Registered
+        };
 
     public Admin_AddInput MapTo(
         Database.Entities.AzureTenantMember src,
@@ -376,7 +391,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
+            Type = src.Type.ToNullableIdentityType()
         };
 
     private static IEnumerable<OrganizationOffering> MapTo(

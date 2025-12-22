@@ -62,6 +62,7 @@ message Identity {
   string id = 1;
   string email = 2;
   bool emailVerified = 3;
+  IdentityType type = 4;
 }
 
 message Settings {
@@ -111,4 +112,9 @@ message Coordinates {
 enum PersonalInformationVisibility {
   PersonalInformationVisibility_Visible = 0;
   PersonalInformationVisibility_Redacted = 1;
+}
+
+enum IdentityType {
+  IdentityType_Guest = 0;
+  IdentityType_Registered = 1;
 }

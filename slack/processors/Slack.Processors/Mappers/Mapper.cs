@@ -8,6 +8,7 @@ using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
+using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
@@ -72,7 +73,18 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Timezone = customer.Timezone.ToSafeString(),
             Identities = customer.Identities
-                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                    Type = item.Type switch
+                    {
+                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                })
                 .ToList()
         };
     }
@@ -101,6 +113,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

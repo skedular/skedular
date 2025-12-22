@@ -5,6 +5,7 @@ using MsTeams.Shared.Models;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = MsTeams.Shared.Models.Customer;
 using Identity = MsTeams.Shared.Database.Entities.Identity;
+using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
@@ -61,7 +62,18 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailVerified = item.EmailVerified,
+                    Type = item.Type switch
+                    {
+                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
+                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                })
                 .ToList()
         };
     }
@@ -86,6 +98,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

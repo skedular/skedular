@@ -26,21 +26,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.0.2"/>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.0.2"/>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.1.0"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.1.0"/>
 
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.15.1"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.15.2"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.8"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.12.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.12.0"/>
 
         <PackageReference Include="Google.Protobuf" Version="3.33.2"/>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
-        <PackageReference Include="Grpc.Net.Client" Version="2.71.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
+        <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
 
         <PackageReference Include="HotChocolate" Version="15.1.11"/>
         <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.11"/>
@@ -63,12 +63,12 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.1.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.1.0"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.98.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.1.1"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.99.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.2.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0"/>
-        <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.0"/>
+        <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.1"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.14.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.14.0"/>
@@ -115,7 +115,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12"/>
         <PackageReference Include="StackExchange.Redis" Version="2.10.1"/>
         <PackageReference Include="Stripe.net" Version="50.1.0"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0"/>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>
         <PackageReference Include="WorkOS.net" Version="2.10.1"/>

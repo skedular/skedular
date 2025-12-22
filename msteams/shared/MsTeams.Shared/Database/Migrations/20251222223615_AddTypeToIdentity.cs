@@ -1,0 +1,38 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace MsTeams.Shared.Database.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddTypeToIdentity : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "Type",
+                table: "Identity",
+                type: "character varying(20)",
+                maxLength: 20,
+                nullable: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Identity_Type",
+                table: "Identity",
+                column: "Type");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropIndex(
+                name: "IX_Identity_Type",
+                table: "Identity");
+
+            migrationBuilder.DropColumn(
+                name: "Type",
+                table: "Identity");
+        }
+    }
+}

@@ -305,7 +305,7 @@ public class Mapper : IMapper
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Database.Entities.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Type = src.Type.ToNullableIdentityType() };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 

@@ -852,7 +852,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified
+            EmailVerified = src.EmailVerified,
+            Type = src.Type.ToNullableIdentityType()
         };
 
     private static IEnumerable<DailyDeskCountRecording> MapTo(

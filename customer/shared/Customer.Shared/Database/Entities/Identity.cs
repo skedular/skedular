@@ -10,6 +10,7 @@ namespace Customer.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Identity : EntityBase, IIdentityDetails
 {
+    public string Type { get; set; }
     public virtual Customer Customer { get; set; }
     public string? Email { get; set; }
     public bool? EmailVerified { get; set; }
@@ -23,10 +24,12 @@ public class IdentityConfiguration : IEntityTypeConfiguration<Identity>
         builder.ConfigureEntityBase(Constants.MaxVerifiableTokenLength);
 
         builder.Property(item => item.Email).HasMaxLength(Constants.MaxEmailLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength).HasDefaultValue(IdentityTypeConstants.Registered);
 
         builder.HasOne(item => item.Customer).WithMany(item => item.Identities);
 
         builder.HasIndex(item => item.Email);
         builder.HasIndex(item => item.EmailVerified);
+        builder.HasIndex(item => item.Type);
     }
 }

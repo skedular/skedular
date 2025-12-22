@@ -13,6 +13,7 @@ using Stripe;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
 using Identity = Customer.Shared.Database.Entities.Identity;
+using IdentityType = Api.Shared.Services.Grpc.Skedular.Customer.V1.IdentityType;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
@@ -93,7 +94,8 @@ public class Mapper : IMapper
                     {
                         Id = context.GetVerifiableToken().ToSafeString(),
                         Email = context.GetEmail(),
-                        EmailVerified = context.GetEmailVerified()
+                        EmailVerified = context.GetEmailVerified(),
+                        Type = global::Api.Shared.Services.Models.IdentityType.Registered
                     }
                 },
             IsOnboardingDone = false,
@@ -106,7 +108,13 @@ public class Mapper : IMapper
         };
 
     public Identity MapToIdentity(IContext context) =>
-        new() { Id = context.GetVerifiableToken().ToSafeString(), Email = context.GetEmail(), EmailVerified = context.GetEmailVerified() };
+        new()
+        {
+            Id = context.GetVerifiableToken().ToSafeString(),
+            Email = context.GetEmail(),
+            EmailVerified = context.GetEmailVerified(),
+            Type = IdentityTypeConstants.Registered
+        };
 
     public CustomerDetails MapTo(Shared.Models.Customer src) =>
         new()
@@ -240,7 +248,18 @@ public class Mapper : IMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             Identities = src.Identities
-                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
+                .Select(item => new Shared.Models.Identity
+                {
+                    Id = item.Id,
+                    Email = item.Email.ToSafeString(),
+                    EmailVerified = item.EmailVerified,
+                    Type = item.Type switch
+                    {
+                        IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
+                        IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
+                        _ => throw new ArgumentOutOfRangeException()
+                    }
+                })
                 .ToList(),
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId) ? null : new Organization { Id = src.DefaultOrganizationId },
@@ -299,7 +318,15 @@ public class Mapper : IMapper
         customer.Identities.AddRange(src.Identities.Select(item =>
             new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
             {
-                Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
+                Id = item.Id,
+                Email = item.Email.ToSafeString(),
+                EmailVerified = item.EmailVerified ?? false,
+                Type = item.Type switch
+                {
+                    global::Api.Shared.Services.Models.IdentityType.Guest => IdentityType.Guest,
+                    global::Api.Shared.Services.Models.IdentityType.Registered => IdentityType.Registered,
+                    _ => throw new ArgumentOutOfRangeException()
+                }
             }));
 
         customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
@@ -317,6 +344,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
+        dest.Type = src.Type.ToIdentityType();
         dest.Customer = customer;
         return dest;
     }
@@ -327,6 +355,12 @@ public class Mapper : IMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
+            Type = src.Type switch
+            {
+                IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
+                IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
@@ -336,6 +370,12 @@ public class Mapper : IMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
+            Type = src.Type switch
+            {
+                IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
+                IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
@@ -511,7 +551,10 @@ public class Mapper : IMapper
             PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
         };
 
-    private static Identity MapToEntity(Shared.Models.Identity src) => new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+    private static Identity MapToEntity(Shared.Models.Identity src) => new()
+    {
+        Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Type = src.Type.ToIdentityType()
+    };
 
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -528,7 +571,8 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified
+                EmailVerified = src.EmailVerified,
+                Type = src.Type.ToIdentityType()
             };
 
     private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>
@@ -597,7 +641,7 @@ public class Mapper : IMapper
     private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
+        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false, Type = src.Type };
 
     private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src) =>
         src is null

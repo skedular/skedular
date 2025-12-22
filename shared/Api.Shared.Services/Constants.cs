@@ -129,5 +129,7 @@ public static class Constants
     public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
 
+    public const int MaxIdentityTypeLength = 20;
+
     public const string SkedularPublicLocationsUniqueAlphanumericName = "skedularpubliclocations";
 }

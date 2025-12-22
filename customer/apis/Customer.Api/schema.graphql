@@ -79,6 +79,7 @@ type CustomerEdge {
 type CustomerIdentity {
   email: String
   verified: Boolean!
+  type: IdentityType!
   id: ID!
 }
 
@@ -340,6 +341,11 @@ enum FeedbackChannelType {
   WEB
   SLACK
   MS_TEAMS
+}
+
+enum IdentityType {
+  GUEST
+  REGISTERED
 }
 
 enum OrderDirection {

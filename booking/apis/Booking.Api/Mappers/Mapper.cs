@@ -503,7 +503,7 @@ public class Mapper : IMapper
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Shared.Database.Entities.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
+        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Type = src.Type.ToNullableIdentityType() };
 
     private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 

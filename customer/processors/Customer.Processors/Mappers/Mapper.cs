@@ -288,7 +288,8 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified
+                EmailVerified = src.EmailVerified,
+                Type = src.Type.ToIdentityType()
             };
 
     private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>

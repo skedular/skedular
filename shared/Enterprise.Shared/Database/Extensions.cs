@@ -42,7 +42,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContextPool<TDbContext>(options =>
             {
@@ -98,7 +98,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContext<TDbContext>(options =>
             {
@@ -153,7 +153,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, true, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(true, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddPooledDbContextFactory<TDbContext>(options =>
             {
@@ -209,7 +209,7 @@ public static class Extensions
             where TDbContext : DbContext
         {
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
-            var dataSource = GetDatasource(services, false, isPostgisEnabled, connectionString, healthCheckName);
+            var dataSource = services.GetDatasource(false, isPostgisEnabled, connectionString, healthCheckName);
 
             return services.AddDbContextFactory<TDbContext>(options =>
             {
