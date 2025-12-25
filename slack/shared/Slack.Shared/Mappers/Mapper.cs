@@ -57,7 +57,6 @@ public interface IMapper
     OrganizationBillingDetails MapTo(BillingDetails src);
     Resource MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.Resource src);
     OrganizationProductTag MapTo(ProductTag src);
-    OrganizationLocationTag MapTo(LocationTag src);
     OrganizationTag MapTo(Tag src);
     TeamBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.TeamPermissions src);
     OrganizationBookingPermissions MapTo(Api.Shared.Services.Grpc.Skedular.Booking.V1.OrganizationPermissions src);
@@ -400,9 +399,6 @@ public class Mapper : IMapper
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     public OrganizationProductTag MapTo(ProductTag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    public OrganizationLocationTag MapTo(LocationTag src) =>
         new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
 
     public OrganizationTag MapTo(Tag src) =>

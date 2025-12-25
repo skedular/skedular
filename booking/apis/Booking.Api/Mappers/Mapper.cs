@@ -29,7 +29,6 @@ namespace Booking.Api.Mappers;
 public interface IMapper
 {
     Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset paymentExpiry);
-    Customer? MapTo(Shared.Database.Entities.Customer? src);
     BookingDetails MapTo(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddBookingInput src);
     Shared.Models.Booking MapTo(UpdateBookingInput src);
@@ -118,35 +117,6 @@ public class Mapper : IMapper
             InvoiceNumber = src.InvoiceNumber,
             InvoiceEmailList = src.InvoiceEmailList
         };
-
-    public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
-        src is null
-            ? null
-            : new Customer
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Designation = src.Designation,
-                Title = src.Title,
-                Timezone = src.Timezone,
-                Locale = src.Locale,
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber,
-                Identities = MapTo(src.Identities).ToList()
-            };
 
     public BookingDetails MapTo(Shared.Models.Booking src) =>
         new()
@@ -499,6 +469,35 @@ public class Mapper : IMapper
 
     public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
     public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item => MapTo(item, []));
+
+    private static Customer? MapTo(Shared.Database.Entities.Customer? src) =>
+        src is null
+            ? null
+            : new Customer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Designation = src.Designation,
+                Title = src.Title,
+                Timezone = src.Timezone,
+                Locale = src.Locale,
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                PhotoUrl = src.PhotoUrl,
+                PhotoUrl24 = src.PhotoUrl24,
+                PhotoUrl32 = src.PhotoUrl32,
+                PhotoUrl48 = src.PhotoUrl48,
+                PhotoUrl72 = src.PhotoUrl72,
+                PhotoUrl192 = src.PhotoUrl192,
+                PhotoUrl512 = src.PhotoUrl512,
+                PhoneNumber = src.PhoneNumber,
+                Identities = MapTo(src.Identities).ToList()
+            };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
 

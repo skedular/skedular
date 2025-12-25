@@ -25,7 +25,6 @@ public interface IMapper
 {
     TeamMember MapTo(Shared.Database.Entities.TeamMember src);
     Shared.Models.Team MapTo(Shared.Database.Entities.Team src);
-    Customer? MapTo(Shared.Database.Entities.Customer? src);
     Shared.Database.Entities.Team MapTo(Shared.Models.Team src, Organization organization, Location? primaryLocation);
 
     Shared.Database.Entities.Team MergeTo(
@@ -94,23 +93,6 @@ public class Mapper : IMapper
 
         return team;
     }
-
-    public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
-        src is null
-            ? null
-            : new Customer
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                Identities = MapTo(src.Identities).ToList()
-            };
 
     public Shared.Database.Entities.Team MapTo(Shared.Models.Team src, Organization organization, Location? primaryLocation) =>
         MergeTo(src, new Shared.Database.Entities.Team(), organization, primaryLocation);
@@ -345,6 +327,23 @@ public class Mapper : IMapper
 
     public Edge<JoinInvitation> MapTo(Edge<Shared.Database.Entities.JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
     public TeamJoinInvitationEdge MapTo(Edge<JoinInvitation> src) => new(MapTo(src.Node), src.Cursor);
+
+    private static Customer? MapTo(Shared.Database.Entities.Customer? src) =>
+        src is null
+            ? null
+            : new Customer
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
+                GivenName = src.GivenName,
+                MiddleName = src.MiddleName,
+                FamilyName = src.FamilyName,
+                Identities = MapTo(src.Identities).ToList()
+            };
 
     private IEnumerable<TeamMember> MapTo(IEnumerable<Shared.Database.Entities.TeamMember> src, Shared.Models.Team team) =>
         src.Select(item => MapTo(item, team));

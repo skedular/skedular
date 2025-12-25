@@ -8,6 +8,7 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows.Payment;
 using Enterprise.Shared.Database;
+using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Api.Services;
 
@@ -28,7 +29,8 @@ public class BookingPaymentService(
     ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService) : IBookingPaymentService
+    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
+    IGraphQlHelperService graphQlHelperService) : IBookingPaymentService
 {
     public async Task<PaymentStatus> GetPaymentStatusAsync(string id, CancellationToken cancellationToken)
     {
@@ -136,6 +138,8 @@ public class BookingPaymentService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await graphQlHelperService.RaiseGraphqlChange(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return booking;
     }

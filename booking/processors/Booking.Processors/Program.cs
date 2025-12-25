@@ -51,9 +51,7 @@ public class Program
             .AddKafkaReliableEventConsumers<
                 MarketplaceSubscriber,
                 Key,
-                Event>(kafkaConfiguration);
-
-        services
+                Event>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

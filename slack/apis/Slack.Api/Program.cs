@@ -135,9 +135,8 @@ public class Program
             .AddGrpcServices(configuration)
             .AddSharedCrossDomainClients(configuration)
             .AddPages()
-            .AddTemporalClient(configuration, "temporal");
-
-        services.AddGrpc();
+            .AddTemporalClient(configuration, "temporal")
+            .AddGrpc();
 
         var app = builder
             .Build()

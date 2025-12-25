@@ -39,9 +39,7 @@ public class Program
             .AddPublishers()
             .AddOutboxPublishers()
             .AddJobs()
-            .AddServices();
-
-        services
+            .AddServices()
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<ReSyncMsTeams>()
             .AddScopedActivities<MsTeamsIntegrations>();

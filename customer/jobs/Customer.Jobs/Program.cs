@@ -43,9 +43,7 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddStripe(configuration);
-
-        services
+            .AddStripe(configuration)
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<SubmitCustomerFeedback>()
             .AddWorkflow<AddCustomerStripePaymentMethod>()

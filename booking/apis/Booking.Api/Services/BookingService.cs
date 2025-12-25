@@ -16,6 +16,7 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -54,7 +55,8 @@ public class BookingService(
     IContext context,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
-    ICachedBookingService cachedBookingService) : IBookingService
+    ICachedBookingService cachedBookingService,
+    IGraphQlHelperService graphQlHelperService) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -755,6 +757,8 @@ public class BookingService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        await graphQlHelperService.RaiseGraphqlChange(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return booking;
     }

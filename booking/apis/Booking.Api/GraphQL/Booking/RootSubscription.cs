@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
-using Booking.Shared.GraphQl;
+using Booking.Shared.GraphQL;
 using HotChocolate;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;

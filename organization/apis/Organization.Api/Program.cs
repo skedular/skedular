@@ -46,9 +46,8 @@ public class Program
             .AddGrpcServices(configuration)
             .AddSharedCrossDomainClients(configuration)
             .AddStripe(configuration)
-            .AddTemporalClient(configuration, "temporal");
-
-        services.AddGrpc();
+            .AddTemporalClient(configuration, "temporal")
+            .AddGrpc();
 
         var app = builder
             .Build()

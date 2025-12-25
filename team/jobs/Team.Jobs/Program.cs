@@ -40,9 +40,7 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddSharedCrossDomainClients(configuration);
-
-        services
+            .AddSharedCrossDomainClients(configuration)
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<InviteToJoinTeam>()
             .AddScopedActivities<EmailIntegrations>()

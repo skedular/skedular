@@ -1,4 +1,4 @@
-using Booking.Shared.GraphQl;
+using Booking.Shared.GraphQL;
 using Booking.Shared.Services.Cache;
 using HotChocolate.Subscriptions;
 

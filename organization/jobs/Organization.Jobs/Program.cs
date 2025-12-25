@@ -47,9 +47,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddStripe(configuration)
-            .AddSharedCrossDomainClients(configuration);
-
-        services
+            .AddSharedCrossDomainClients(configuration)
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<ScheduleRenewOrganizationOffering>()
             .AddWorkflow<AddOrganizationStripePaymentMethod>()

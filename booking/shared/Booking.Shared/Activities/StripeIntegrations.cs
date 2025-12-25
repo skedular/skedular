@@ -14,7 +14,7 @@ using Enterprise.Shared.Random;
 using Stripe;
 using Stripe.Checkout;
 using Temporalio.Activities;
-using Constants = Booking.Shared.GraphQl.Constants;
+using Constants = Booking.Shared.GraphQL.Constants;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using StripeCustomer = Booking.Shared.Database.Entities.StripeCustomer;
 

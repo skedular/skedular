@@ -8,7 +8,7 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka.Consume;
 using Stripe;
 using Stripe.Checkout;
-using Constants = Booking.Shared.GraphQl.Constants;
+using Constants = Booking.Shared.GraphQL.Constants;
 using Event = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event;
 using Type = Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Type;
 

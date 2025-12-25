@@ -14,7 +14,7 @@ using Microsoft.Extensions.Hosting;
 using QuestPDF.Companion;
 using QuestPDF.Fluent;
 using Temporalio.Activities;
-using Constants = Booking.Shared.GraphQl.Constants;
+using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Activities;
 

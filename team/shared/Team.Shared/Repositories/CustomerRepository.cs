@@ -75,9 +75,7 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
             .FirstOrDefaultAsync(
                 query =>
                     !query.DeletedAt.HasValue &&
-                    query.Identities.Any(identity =>
-                        identity.Email != null &&
-                        EF.Functions.ILike(identity.Email, email)),
+                    query.Identities.Any(identity => identity.Email != null && EF.Functions.ILike(identity.Email, email)),
                 cancellationToken);
 
     public async Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>

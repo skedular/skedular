@@ -42,9 +42,8 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
-            .AddGrpcServices(configuration);
-
-        services.AddGrpc();
+            .AddGrpcServices(configuration)
+            .AddGrpc();
 
         var app = builder
             .Build()

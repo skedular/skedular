@@ -10,11 +10,9 @@ using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
 using Location.Shared.Models;
 using NetTopologySuite.Geometries;
-using Customer = Location.Shared.Models.Customer;
 using DailyDeskCountRecording = Location.Shared.Models.DailyDeskCountRecording;
 using Resource = Location.Shared.Database.Entities.Resource;
 using LocationDesksOccupancyPercentage = Location.Shared.Models.LocationDesksOccupancyPercentage;
-using Identity = Location.Shared.Models.Identity;
 using LocationEdge = Location.Api.GraphQL.Location.LocationEdge;
 using LocationDailyBookingsTotal = Location.Shared.Models.LocationDailyBookingsTotal;
 using Organization = Location.Shared.Database.Entities.Organization;
@@ -45,7 +43,6 @@ namespace Location.Api.Mappers;
 public interface IMapper
 {
     Shared.Models.Location MapTo(Shared.Database.Entities.Location src);
-    Customer? MapTo(Shared.Database.Entities.Customer? src);
 
     Shared.Database.Entities.Location MapTo(
         Shared.Models.Location src,
@@ -171,19 +168,6 @@ public class Mapper : IMapper
 
         return location;
     }
-
-    public Customer? MapTo(Shared.Database.Entities.Customer? src) =>
-        src is null
-            ? null
-            : new Customer
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Identities = MapTo(src.Identities).ToList()
-            };
 
     public Shared.Database.Entities.Location MapTo(
         Shared.Models.Location src,
@@ -840,20 +824,6 @@ public class Mapper : IMapper
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
             Tags = MapTo(src.Tags).ToList()
-        };
-
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
-
-    private static Identity MapTo(Shared.Database.Entities.Identity src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Email = src.Email,
-            EmailVerified = src.EmailVerified,
-            Type = src.Type.ToNullableIdentityType()
         };
 
     private static IEnumerable<DailyDeskCountRecording> MapTo(

@@ -34,9 +34,7 @@ public class Program
             .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,
-                Event>(kafkaConfiguration);
-
-        services
+                Event>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()
