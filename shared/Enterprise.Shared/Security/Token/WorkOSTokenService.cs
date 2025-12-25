@@ -15,40 +15,24 @@ namespace Enterprise.Shared.Security.Token;
 public interface IWorkOSTokenService : ITokenService;
 
 // ReSharper disable once InconsistentNaming
-public class WorkOSTokenService : IWorkOSTokenService
+public class WorkOSTokenService(
+    IdentityProvidersConfiguration identityProvidersConfiguration,
+    IContext context,
+    IMemoryCache memoryCache,
+    WorkOSClient workOsClient,
+    IServiceProvider serviceProvider,
+    TimeProvider timeProvider)
+    : IWorkOSTokenService
 {
-    private readonly Configurations.WorkOS _configuration;
-    private readonly IContext _context;
-    private readonly IMemoryCache _memoryCache;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly TimeProvider _timeProvider;
-    private readonly WorkOSClient _workOsClient;
-
-    public WorkOSTokenService(
-        IdentityProvidersConfiguration identityProvidersConfiguration,
-        IContext context,
-        IMemoryCache memoryCache,
-        WorkOSClient workOsClient,
-        IServiceProvider serviceProvider,
-        TimeProvider timeProvider)
-    {
-        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.WorkOS);
-        _configuration = identityProvidersConfiguration.WorkOS;
-
-        _context = context;
-        _memoryCache = memoryCache;
-        _workOsClient = workOsClient;
-        _serviceProvider = serviceProvider;
-        _timeProvider = timeProvider;
-    }
+    private readonly Configurations.WorkOS _configuration = identityProvidersConfiguration.WorkOS!;
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
-            var jws = await _memoryCache.GetOrCreateAsync<Jws>("workos-public-keys", async cacheEntry =>
+            var jws = await memoryCache.GetOrCreateAsync<Jws>("workos-public-keys", async cacheEntry =>
             {
-                cacheEntry.AbsoluteExpiration = _timeProvider.GetUtcNow().AddMinutes(15);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
 
                 return await _configuration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
             });
@@ -76,43 +60,43 @@ public class WorkOSTokenService : IWorkOSTokenService
 
             var sub = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(sub);
-            _context.SetVerifiableToken(sub);
+            context.SetVerifiableToken(sub);
 
-            await using var scope = _serviceProvider.CreateAsyncScope();
+            await using var scope = serviceProvider.CreateAsyncScope();
             var customerHelper = scope.ServiceProvider.GetService<ICustomerHelper>();
             if (customerHelper is not null && !await customerHelper.DoesCustomerExistAsync(sub, cancellationToken))
             {
-                var userProfile = await _workOsClient.MakeAPIRequest<Profile>(
+                var userProfile = await workOsClient.MakeAPIRequest<Profile>(
                     new WorkOSRequest { Method = HttpMethod.Get, Path = $"/user_management/users/{sub}" },
                     cancellationToken);
 
-                _context.SetEmail(userProfile.Email);
-                _context.SetEmailVerified(userProfile.EmailVerified);
+                context.SetEmail(userProfile.Email);
+                context.SetEmailVerified(userProfile.EmailVerified);
 
                 if (!string.IsNullOrWhiteSpace(userProfile.PhotoUrl))
                 {
-                    _context.SetPhotoUrl(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl24(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl32(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl48(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl72(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl192(userProfile.PhotoUrl);
-                    _context.SetPhotoUrl512(userProfile.PhotoUrl);
+                    context.SetPhotoUrl(userProfile.PhotoUrl);
+                    context.SetPhotoUrl24(userProfile.PhotoUrl);
+                    context.SetPhotoUrl32(userProfile.PhotoUrl);
+                    context.SetPhotoUrl48(userProfile.PhotoUrl);
+                    context.SetPhotoUrl72(userProfile.PhotoUrl);
+                    context.SetPhotoUrl192(userProfile.PhotoUrl);
+                    context.SetPhotoUrl512(userProfile.PhotoUrl);
                 }
 
                 if (!string.IsNullOrWhiteSpace(userProfile.FirstName) && !string.IsNullOrWhiteSpace(userProfile.LastName))
                 {
-                    _context.SetGivenName(userProfile.FirstName);
-                    _context.SetFamilyName(userProfile.LastName);
-                    _context.SetName($"{userProfile.FirstName} {userProfile.LastName}");
+                    context.SetGivenName(userProfile.FirstName);
+                    context.SetFamilyName(userProfile.LastName);
+                    context.SetName($"{userProfile.FirstName} {userProfile.LastName}");
                 }
                 else if (!string.IsNullOrWhiteSpace(userProfile.FirstName))
                 {
-                    _context.SetGivenName(userProfile.FirstName);
+                    context.SetGivenName(userProfile.FirstName);
                 }
                 else if (!string.IsNullOrWhiteSpace(userProfile.LastName))
                 {
-                    _context.SetFamilyName(userProfile.LastName);
+                    context.SetFamilyName(userProfile.LastName);
                 }
             }
         }

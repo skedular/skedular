@@ -11,40 +11,27 @@ namespace Enterprise.Shared.Security.Token;
 
 public interface ICognitoTokenService : ITokenService;
 
-public class CognitoTokenService : ICognitoTokenService
+public class CognitoTokenService(
+    IdentityProvidersConfiguration identityProvidersConfiguration,
+    IContext context,
+    IMemoryCache memoryCache,
+    TimeProvider timeProvider)
+    : ICognitoTokenService
 {
-    private readonly IReadOnlyCollection<string> _audiences;
-    private readonly Cognito _cognitoConfiguration;
-    private readonly IContext _context;
-    private readonly IMemoryCache _memoryCache;
-    private readonly TimeProvider _timeProvider;
+    private readonly IReadOnlyCollection<string> _audiences = identityProvidersConfiguration.Cognito!.Audiences is null
+        ? []
+        : identityProvidersConfiguration.Cognito.Audiences.Split(",").Select(audience => audience.Trim())
+            .Where(audience => !string.IsNullOrWhiteSpace(audience)).ToList();
 
-    public CognitoTokenService(
-        IdentityProvidersConfiguration identityProvidersConfiguration,
-        IContext context,
-        IMemoryCache memoryCache,
-        TimeProvider timeProvider)
-    {
-        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.Cognito);
-        _cognitoConfiguration = identityProvidersConfiguration.Cognito;
-
-        _audiences = _cognitoConfiguration.Audiences is null
-            ? []
-            : _cognitoConfiguration.Audiences.Split(",").Select(audience => audience.Trim())
-                .Where(audience => !string.IsNullOrWhiteSpace(audience)).ToList();
-
-        _context = context;
-        _memoryCache = memoryCache;
-        _timeProvider = timeProvider;
-    }
+    private readonly Cognito _cognitoConfiguration = identityProvidersConfiguration.Cognito!;
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
         try
         {
-            var jws = await _memoryCache.GetOrCreateAsync<Jws>("cognito-public-keys", async cacheEntry =>
+            var jws = await memoryCache.GetOrCreateAsync<Jws>("cognito-public-keys", async cacheEntry =>
             {
-                cacheEntry.AbsoluteExpiration = _timeProvider.GetUtcNow().AddMinutes(15);
+                cacheEntry.AbsoluteExpiration = timeProvider.GetUtcNow().AddMinutes(15);
 
                 return await _cognitoConfiguration.JwksUri.GetJsonAsync<Jws>(cancellationToken: cancellationToken);
             });
@@ -73,47 +60,47 @@ public class CognitoTokenService : ICognitoTokenService
 
             var value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "sub")?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
-            _context.SetVerifiableToken(value);
+            context.SetVerifiableToken(value);
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "name")?.Value;
             if (value is not null)
             {
-                _context.SetName(value);
+                context.SetName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "given_name")?.Value;
             if (value is not null)
             {
-                _context.SetGivenName(value);
+                context.SetGivenName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "family_name")?.Value;
             if (value is not null)
             {
-                _context.SetFamilyName(value);
+                context.SetFamilyName(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "picture")?.Value;
             if (value is not null)
             {
-                _context.SetPhotoUrl(value);
-                _context.SetPhotoUrl24(value);
-                _context.SetPhotoUrl32(value);
-                _context.SetPhotoUrl48(value);
-                _context.SetPhotoUrl72(value);
-                _context.SetPhotoUrl192(value);
-                _context.SetPhotoUrl512(value);
+                context.SetPhotoUrl(value);
+                context.SetPhotoUrl24(value);
+                context.SetPhotoUrl32(value);
+                context.SetPhotoUrl48(value);
+                context.SetPhotoUrl72(value);
+                context.SetPhotoUrl192(value);
+                context.SetPhotoUrl512(value);
             }
 
             value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email")?.Value;
             if (value is not null && EmailValidator.Validate(value))
             {
-                _context.SetEmail(value);
+                context.SetEmail(value);
 
                 value = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "email_verified")?.Value;
                 if (value is not null)
                 {
-                    _context.SetEmailVerified(bool.Parse(value));
+                    context.SetEmailVerified(bool.Parse(value));
                 }
             }
         }

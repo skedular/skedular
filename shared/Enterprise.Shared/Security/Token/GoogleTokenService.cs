@@ -7,17 +7,10 @@ namespace Enterprise.Shared.Security.Token;
 
 public interface IGoogleTokenService : ITokenService;
 
-public class GoogleTokenService : IGoogleTokenService
+public class GoogleTokenService(IdentityProvidersConfiguration identityProvidersConfiguration, IContext context)
+    : IGoogleTokenService
 {
-    private readonly IContext _context;
-    private readonly Configurations.Google _googleConfiguration;
-
-    public GoogleTokenService(IdentityProvidersConfiguration identityProvidersConfiguration, IContext context)
-    {
-        ArgumentNullException.ThrowIfNull(identityProvidersConfiguration.Google);
-        _googleConfiguration = identityProvidersConfiguration.Google;
-        _context = context;
-    }
+    private readonly Configurations.Google _googleConfiguration = identityProvidersConfiguration.Google!;
 
     public async Task VerifyTokenAsync(string token, CancellationToken cancellationToken)
     {
@@ -36,20 +29,20 @@ public class GoogleTokenService : IGoogleTokenService
                 return;
             }
 
-            _context.SetVerifiableToken(payload.Subject);
-            _context.SetName(payload.Name);
-            _context.SetGivenName(payload.GivenName);
-            _context.SetFamilyName(payload.FamilyName);
-            _context.SetPhotoUrl(payload.Picture);
-            _context.SetPhotoUrl24(payload.Picture);
-            _context.SetPhotoUrl32(payload.Picture);
-            _context.SetPhotoUrl48(payload.Picture);
-            _context.SetPhotoUrl72(payload.Picture);
-            _context.SetPhotoUrl192(payload.Picture);
-            _context.SetPhotoUrl512(payload.Picture);
-            _context.SetLocale(payload.Locale);
-            _context.SetEmail(payload.Email);
-            _context.SetEmailVerified(payload.EmailVerified);
+            context.SetVerifiableToken(payload.Subject);
+            context.SetName(payload.Name);
+            context.SetGivenName(payload.GivenName);
+            context.SetFamilyName(payload.FamilyName);
+            context.SetPhotoUrl(payload.Picture);
+            context.SetPhotoUrl24(payload.Picture);
+            context.SetPhotoUrl32(payload.Picture);
+            context.SetPhotoUrl48(payload.Picture);
+            context.SetPhotoUrl72(payload.Picture);
+            context.SetPhotoUrl192(payload.Picture);
+            context.SetPhotoUrl512(payload.Picture);
+            context.SetLocale(payload.Locale);
+            context.SetEmail(payload.Email);
+            context.SetEmailVerified(payload.EmailVerified);
         }
         catch
         {
