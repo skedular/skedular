@@ -41,7 +41,7 @@ public class WorkOSTokenService(
 
             var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
             var issuer = jwtToken.Claims.FirstOrDefault(claim => claim.Type == "iss")?.Value;
-            if (issuer is not null && _configuration.Issuer != issuer)
+            if (issuer is null || (_configuration.Issuer != issuer && _configuration.OtherIssuers.All(item => item.ToString() != issuer)))
             {
                 return;
             }
