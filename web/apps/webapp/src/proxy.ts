@@ -2,7 +2,7 @@ import { authkitMiddleware } from '@workos-inc/authkit-nextjs';
 
 export default authkitMiddleware({
   debug: true,
-  redirectUri: process.env.NEXT_PUBLIC_WORKOS_AUTHKIT_REDIRECT_URI!,
+  redirectUri: process.env.NEXT_PUBLIC_WORKOS_REDIRECT_URI!,
   middlewareAuth: {
     enabled: true,
     unauthenticatedPaths: ['/', '/marketplace', '/marketplace/:path*'],
