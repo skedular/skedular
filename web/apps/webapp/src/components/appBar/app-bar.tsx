@@ -329,13 +329,13 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
             {paletteMode === 'dark' && (
               <MenuItem onClick={handleLightThemeClicked}>
-                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
+                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
               </MenuItem>
             )}
 
             {paletteMode === 'light' && (
               <MenuItem onClick={handleDarkThemeClicked}>
-                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
+                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
               </MenuItem>
             )}
 

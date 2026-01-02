@@ -63,13 +63,13 @@ const UnauthenticatedAppBar = ({ showBreadcrumps, breadcrumbs }: Props) => {
         <PushToRight />
         {paletteMode === 'dark' && (
           <IconButton onClick={handleLightThemeClicked}>
-            <DarkModeIcon />
+            <LightModeIcon />
           </IconButton>
         )}
 
         {paletteMode === 'light' && (
           <IconButton onClick={handleDarkThemeClicked}>
-            <LightModeIcon />
+            <DarkModeIcon />
           </IconButton>
         )}
 
