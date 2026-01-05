@@ -10,7 +10,7 @@ all: dep generate ## Runs dep generate
 .PHONY: dep
 dep: ## Install dependencies
 	@cd $(CURRENT_DIRECTORY)
-	@dotnet restore Skedular.sln
+	@dotnet restore Skedular.slnx
 
 .PHONY: generate
 generate: ## Generate code
