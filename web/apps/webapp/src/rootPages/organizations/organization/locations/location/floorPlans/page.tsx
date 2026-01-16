@@ -1,8 +1,7 @@
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { FloorPlans } from '@/components/floorPlan/floorPlans';
 import { Loading } from '@/components/loading';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { endOfDay, startOfDay } from '@/libs/utils';
 import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloorPlans_rootQuery.graphql';
@@ -183,7 +182,7 @@ const RootPageWithRelay = () => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoRootPage
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

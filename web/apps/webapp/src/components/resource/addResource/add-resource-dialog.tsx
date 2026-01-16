@@ -11,8 +11,7 @@ import {
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZones, SingleChoiceResourceType } from '@/components/organization';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
@@ -383,7 +382,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationUniqueAlphan
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoAddResourceDialog
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

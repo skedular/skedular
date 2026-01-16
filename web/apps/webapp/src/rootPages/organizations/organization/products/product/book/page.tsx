@@ -1,8 +1,7 @@
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import BookProduct from '@/components/product/bookProduct/book-product';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { startOfDay } from '@/libs/utils';
 import type { pageOrganizationProductBook_rootQuery } from '@/queries/__generated__/pageOrganizationProductBook_rootQuery.graphql';
@@ -139,7 +138,7 @@ const RootPageWithRelay = () => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );

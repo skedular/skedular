@@ -2,8 +2,7 @@ import { getOrganizationBaseLink, getOrganizationLocationAddIndividualLink, getO
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { AddIndividualOrganization } from '@/components/organization/addOrganization';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
@@ -232,7 +231,7 @@ const RootPageWithRelay = () => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );

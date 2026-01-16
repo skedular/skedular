@@ -1,8 +1,7 @@
 import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { OrganizationAdmin } from '@/components/organization/organizationAdmin';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import type { pageOrganizationAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationAdmin_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
@@ -111,7 +110,7 @@ const RootPageWithRelay = () => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );

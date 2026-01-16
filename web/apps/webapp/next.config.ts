@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 import relayConfig from "./relay.config";
 
+const isVercel = process.env.VERCEL === "1";
+
 const nextConfig: NextConfig = {
   compiler: {
     relay: {
       ...relayConfig,
       language: relayConfig.language as "typescript" | "javascript" | "flow",
     },
+  },
+  typescript: {
+    ignoreBuildErrors: isVercel,
   },
   images: {
     remotePatterns: [

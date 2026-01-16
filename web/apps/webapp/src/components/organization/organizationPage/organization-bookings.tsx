@@ -6,8 +6,7 @@ import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { LocationSelector } from '@/components/location/locationSelector';
 import { OrganizationUserSelector } from '@/components/organization/organizationUserSelector';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
@@ -195,7 +194,7 @@ const ModernOrganizationWithRelay = ({ organizationUniqueAlphanumericName }: Rel
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoOrganizationBookings
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

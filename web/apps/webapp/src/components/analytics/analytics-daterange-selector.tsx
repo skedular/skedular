@@ -3,6 +3,7 @@ import { startOfDay } from '@/libs/utils';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+import type { PickerRangeValue } from '@mui/x-date-pickers/internals';
 import type { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 
@@ -83,7 +84,7 @@ const AnalyticsDaterangeSelector = ({ defaultPeriod, defaultCustomFrom, defaultC
         <DateRangePicker
           localeText={{ start: 'From', end: 'To' }}
           defaultValue={[from, until]}
-          onChange={(dateRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
+          onChange={(dateRangeValue: PickerRangeValue) => handleSelectedDateChange(dateRangeValue[0], dateRangeValue[1])}
         />
       )}
     </StackColumn>

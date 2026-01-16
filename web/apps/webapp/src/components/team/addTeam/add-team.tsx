@@ -6,8 +6,7 @@ import { Loading } from '@/components/loading';
 import { SingleChoiceLocation } from '@/components/location/locationSelector';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationMemberSelector } from '@/components/organization';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -372,7 +371,7 @@ const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoAddTeam
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

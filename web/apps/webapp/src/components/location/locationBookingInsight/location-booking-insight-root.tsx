@@ -1,6 +1,5 @@
 import { SectionIconTypography } from '@/components/commons';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { startOfDay } from '@/libs/utils';
 import type { locationBookingInsightRoot_rootQuery } from '@/queries/__generated__/locationBookingInsightRoot_rootQuery.graphql';
 import Card from '@mui/material/Card';
@@ -79,7 +78,7 @@ const LocationBookingInsightRootWithRelay = ({ onReloadRequired, locationId }: R
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoLocationBookingInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );

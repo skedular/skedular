@@ -1,6 +1,5 @@
 import { SectionIconTypography } from '@/components/commons';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { startOfDay } from '@/libs/utils';
 import type { locationDeskOccupancyInsightRoot_rootQuery } from '@/queries/__generated__/locationDeskOccupancyInsightRoot_rootQuery.graphql';
 import Card from '@mui/material/Card';
@@ -79,7 +78,7 @@ const LocationDeskOccupancyInsightRootWithRelay = ({ onReloadRequired, locationI
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoLocationDeskOccupancyInsightRoot queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );

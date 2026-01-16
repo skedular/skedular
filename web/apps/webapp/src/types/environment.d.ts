@@ -4,7 +4,6 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NEXT_PUBLIC_SITE_URL: string;
-      NEXT_PUBLIC_MICROANALYTICS_APP_ID: string;
       NEXT_PUBLIC_LOGROCKET_APP_ID: string;
       NEXT_PUBLIC_SLACK_CLIENT_ID: string;
       NEXT_PUBLIC_SLACK_REDIRECT_URL: string;

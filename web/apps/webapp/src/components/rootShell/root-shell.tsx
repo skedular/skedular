@@ -5,8 +5,7 @@ import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, g
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, emerald } from '@/libs/theme';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
@@ -259,7 +258,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoRootShell
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

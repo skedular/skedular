@@ -1,8 +1,7 @@
 import { GridContainer, PushToRight, SectionIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import NewProductButton from '@/components/product/addProduct/new-product-button';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import type { organizationProducts_rootQuery } from '@/queries/__generated__/organizationProducts_rootQuery.graphql';
 import Divider from '@mui/material/Divider';
@@ -117,7 +116,7 @@ const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: R
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );

@@ -5,8 +5,7 @@ import { getInstallMsTeamsLink, getRootLink, getWelcomeLink } from '@/components
 import { Loading } from '@/components/loading';
 import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { InMsTeamsContext, useIntegratedPlatrform } from '@/libs/providers';
 import type { noOrganizationRootShell_rootQuery } from '@/queries/__generated__/noOrganizationRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -194,7 +193,7 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoNoOrganizationRootShell
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

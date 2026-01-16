@@ -3,6 +3,7 @@ import { RefreshIcon } from '@/components/icons';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { memo } from 'react';
+import type { FallbackProps } from 'react-error-boundary';
 
 export interface Error {
   message: string;
@@ -20,6 +21,18 @@ export interface RootError {
 interface Props {
   error: RootError;
 }
+
+export const toRootError = (error: FallbackProps['error']): RootError => {
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    const typedError = error as { message?: string; source?: RootError['source'] };
+    return {
+      message: typedError.message ?? 'Unknown error',
+      source: typedError.source,
+    };
+  }
+
+  return { message: typeof error === 'string' ? error : 'Unknown error' };
+};
 
 const RelayError = ({ error }: Props) => {
   const handleRefreshClicked = () => {

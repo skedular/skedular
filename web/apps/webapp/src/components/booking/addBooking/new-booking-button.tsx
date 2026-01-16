@@ -1,8 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
 import { NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { coal } from '@/libs/theme';
 import { startOfDay } from '@/libs/utils';
 import type { newBookingButton_rootQuery } from '@/queries/__generated__/newBookingButton_rootQuery.graphql';
@@ -211,7 +210,7 @@ const NewBookingButtonWithRelay = ({
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoNewBookingButton
         queryReference={queryReference}
         connectionIds={connectionIds}

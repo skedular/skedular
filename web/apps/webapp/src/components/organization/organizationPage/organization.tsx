@@ -8,8 +8,7 @@ import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { ClaimLocationOwnershipButton } from '@/components/location';
 import { LocationSelector } from '@/components/location/locationSelector';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { TeamSelector } from '@/components/team/teamSelector';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
@@ -163,7 +162,7 @@ const OrganizationWithRelay = ({ organizationUniqueAlphanumericName }: RelayProp
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoOrganization
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}

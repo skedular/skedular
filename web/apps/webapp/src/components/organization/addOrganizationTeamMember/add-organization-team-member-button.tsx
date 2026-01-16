@@ -1,8 +1,7 @@
 import { BodyIconTypography, LeadIconTypography, SmallIconTypography } from '@/components/commons';
 import { NewIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import type { addOrganizationTeamMemberButton_rootQuery } from '@/queries/__generated__/addOrganizationTeamMemberButton_rootQuery.graphql';
 import Button from '@mui/material/Button';
 import { memo, useEffect, useState } from 'react';
@@ -120,7 +119,7 @@ const AddOrganizationTeamMemberButtonWithRelay = ({
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoAddOrganizationTeamMemberButton
         queryReference={queryReference}
         onReloadRequired={onReloadRequired}

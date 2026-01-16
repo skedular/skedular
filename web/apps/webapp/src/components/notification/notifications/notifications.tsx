@@ -1,8 +1,7 @@
 import { AppBarWithStackColumn, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import type { RootError } from '@/components/relayError';
-import { RelayError } from '@/components/relayError';
+import { RelayError, toRootError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { getCustomerFullName, joinErrors } from '@/libs/utils';
@@ -546,7 +545,7 @@ const NotificationsWithRelay = () => {
   }
 
   return (
-    <ErrorBoundary fallbackRender={({ error }: { error: RootError }) => <RelayError error={error} />}>
+    <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
       <MemoNotifications queryReference={queryReference} onReloadRequired={handleReloadRequired} />
     </ErrorBoundary>
   );
