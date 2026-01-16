@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using MsTeams.Shared.Models;
 
 namespace MsTeams.Api.Mappers;
@@ -19,6 +20,6 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Timezone = src.Timezone
+                Type = src.Type.ToNullableCustomerType()
             };
 }

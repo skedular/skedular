@@ -4,8 +4,8 @@ using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CustomerBillingDetails = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerBillingDetails;
+using CustomerType = Api.Shared.Services.Models.CustomerType;
 using Identity = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity;
-using IdentityType = Api.Shared.Services.Models.IdentityType;
 using Location = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location;
 using OrganizationTag = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.OrganizationTag;
 using PaymentMethod = Stripe.PaymentMethod;
@@ -52,6 +52,12 @@ public class Mapper : IMapper
                 PersonalInformationVisibility.Visible => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible,
                 PersonalInformationVisibility.Redacted => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException()
+            },
+            Type = src.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
             }
         };
 
@@ -94,18 +100,7 @@ public class Mapper : IMapper
     private static IEnumerable<Identity> MapTo(IEnumerable<Models.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Models.Identity src) =>
-        new()
-        {
-            Id = src.Id,
-            Email = src.Email.ToSafeString(),
-            EmailVerified = src.EmailVerified ?? false,
-            Type = src.Type switch
-            {
-                IdentityType.Guest => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest,
-                IdentityType.Registered => Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
-            }
-        };
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = src.EmailVerified ?? false };
 
     private static CustomerBillingDetails? MapTo(Models.CustomerBillingDetails? src) =>
         src is null

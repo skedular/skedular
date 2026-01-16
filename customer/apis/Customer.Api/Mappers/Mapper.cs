@@ -12,8 +12,8 @@ using NetTopologySuite.Geometries;
 using Stripe;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using CustomerFeedback = Customer.Shared.Models.CustomerFeedback;
+using CustomerType = Api.Shared.Services.Models.CustomerType;
 using Identity = Customer.Shared.Database.Entities.Identity;
-using IdentityType = Api.Shared.Services.Grpc.Skedular.Customer.V1.IdentityType;
 using Location = Customer.Shared.Models.Location;
 using Organization = Customer.Shared.Models.Organization;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
@@ -94,8 +94,7 @@ public class Mapper : IMapper
                     {
                         Id = context.GetVerifiableToken().ToSafeString(),
                         Email = context.GetEmail(),
-                        EmailVerified = context.GetEmailVerified(),
-                        Type = global::Api.Shared.Services.Models.IdentityType.Registered
+                        EmailVerified = context.GetEmailVerified()
                     }
                 },
             IsOnboardingDone = false,
@@ -104,17 +103,12 @@ public class Mapper : IMapper
             PreferredOrganizationTags = [],
             PreferredResources = [],
             FavouriteLocations = [],
-            PersonalInformationVisibility = PersonalInformationVisibility.Visible
+            PersonalInformationVisibility = PersonalInformationVisibility.Visible,
+            Type = CustomerType.Registered
         };
 
     public Identity MapToIdentity(IContext context) =>
-        new()
-        {
-            Id = context.GetVerifiableToken().ToSafeString(),
-            Email = context.GetEmail(),
-            EmailVerified = context.GetEmailVerified(),
-            Type = IdentityTypeConstants.Registered
-        };
+        new() { Id = context.GetVerifiableToken().ToSafeString(), Email = context.GetEmail(), EmailVerified = context.GetEmailVerified() };
 
     public CustomerDetails MapTo(Shared.Models.Customer src) =>
         new()
@@ -151,7 +145,8 @@ public class Mapper : IMapper
             PersonalInformationVisibility = new PersonalInformationVisibilityDetails
             {
                 Type = src.PersonalInformationVisibility, Name = src.PersonalInformationVisibility.ToPersonalInformationVisibilityName()
-            }
+            },
+            Type = src.Type
         };
 
     public CustomerFeedback MapTo(SubmitCustomerFeedbackInput src) =>
@@ -190,7 +185,8 @@ public class Mapper : IMapper
             FavouriteLocations = MapTo(src.FavouriteLocations).ToList(),
             StripeCustomer = MapTo(src.StripeCustomer),
             StripePaymentMethods = MapTo(src.StripePaymentMethods).ToList(),
-            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
+            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
+            Type = src.Type.ToCustomerType()
         };
 
     public CustomerFeedback MapTo(Shared.Database.Entities.CustomerFeedback src) =>
@@ -248,18 +244,7 @@ public class Mapper : IMapper
             Locale = src.Locale,
             PhoneNumber = src.PhoneNumber,
             Identities = src.Identities
-                .Select(item => new Shared.Models.Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList(),
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganization = string.IsNullOrWhiteSpace(src.DefaultOrganizationId) ? null : new Organization { Id = src.DefaultOrganizationId },
@@ -278,6 +263,12 @@ public class Mapper : IMapper
                 global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Visible => PersonalInformationVisibility.Visible,
                 global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted =>
                     PersonalInformationVisibility.Redacted,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Type = src.Type switch
+            {
+                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Guest => CustomerType.Guest,
+                global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered => CustomerType.Registered,
                 _ => throw new ArgumentOutOfRangeException()
             }
         };
@@ -312,21 +303,19 @@ public class Mapper : IMapper
                 PersonalInformationVisibility.Redacted =>
                     global::Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility.Redacted,
                 _ => throw new ArgumentOutOfRangeException()
+            },
+            Type = src.Type switch
+            {
+                CustomerType.Guest => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Guest,
+                CustomerType.Registered => global::Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
             }
         };
 
         customer.Identities.AddRange(src.Identities.Select(item =>
             new global::Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity
             {
-                Id = item.Id,
-                Email = item.Email.ToSafeString(),
-                EmailVerified = item.EmailVerified ?? false,
-                Type = item.Type switch
-                {
-                    global::Api.Shared.Services.Models.IdentityType.Guest => IdentityType.Guest,
-                    global::Api.Shared.Services.Models.IdentityType.Registered => IdentityType.Registered,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
+                Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified ?? false
             }));
 
         customer.PreferredLocationIds.AddRange(src.PreferredLocations.Select(item => item.Id));
@@ -344,7 +333,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToIdentityType();
         dest.Customer = customer;
         return dest;
     }
@@ -355,12 +343,6 @@ public class Mapper : IMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
-            Type = src.Type switch
-            {
-                IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
-                IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
-            },
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
@@ -370,12 +352,6 @@ public class Mapper : IMapper
             Id = src.Id,
             Email = src.Email.ToSafeString(),
             EmailVerified = src.EmailVerified,
-            Type = src.Type switch
-            {
-                IdentityType.Guest => global::Api.Shared.Services.Models.IdentityType.Guest,
-                IdentityType.Registered => global::Api.Shared.Services.Models.IdentityType.Registered,
-                _ => throw new ArgumentOutOfRangeException()
-            },
             Customer = new Shared.Models.Customer { Id = src.CustomerId }
         };
 
@@ -548,13 +524,11 @@ public class Mapper : IMapper
             PreferredResources = preferredResources,
             PreferredOrganizationTags = preferredOrganizationTags,
             FavouriteLocations = favouriteLocations,
-            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
+            PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
+            Type = src.Type.ToCustomerType()
         };
 
-    private static Identity MapToEntity(Shared.Models.Identity src) => new()
-    {
-        Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Type = src.Type.ToIdentityType()
-    };
+    private static Identity MapToEntity(Shared.Models.Identity src) => new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
     private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location?>? src) =>
         (src is null ? [] : src.Where(item => item is not null).Select(MapTo))!;
@@ -571,8 +545,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified,
-                Type = src.Type.ToIdentityType()
+                EmailVerified = src.EmailVerified
             };
 
     private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>
@@ -641,7 +614,7 @@ public class Mapper : IMapper
     private static IEnumerable<CustomerIdentity> MapTo(IEnumerable<Shared.Models.Identity> src) => src.Select(MapTo);
 
     private static CustomerIdentity MapTo(Shared.Models.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false, Type = src.Type };
+        new() { Id = src.Id, Email = src.Email, Verified = src.EmailVerified ?? false };
 
     private static StripeCustomer? MapTo(Shared.Database.Entities.StripeCustomer? src) =>
         src is null

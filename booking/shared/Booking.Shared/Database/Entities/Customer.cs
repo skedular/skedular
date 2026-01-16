@@ -25,6 +25,7 @@ public class Customer : ReplicatedEntityBaseWithDeleted, ICustomerPersonalDetail
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public string? Type { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }
@@ -66,6 +67,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
 
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);
@@ -76,5 +78,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasIndex(item => item.GivenName);
         builder.HasIndex(item => item.MiddleName);
         builder.HasIndex(item => item.FamilyName);
+        builder.HasIndex(item => item.Type);
     }
 }

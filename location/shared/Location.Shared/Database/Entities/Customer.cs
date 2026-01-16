@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,6 +9,7 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : ReplicatedEntityBaseWithDeleted
 {
+    public string? Type { get; set; }
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
 }
@@ -15,5 +17,12 @@ public class Customer : ReplicatedEntityBaseWithDeleted
 
 public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
 {
-    public void Configure(EntityTypeBuilder<Customer> builder) => builder.ConfigureReplicatedEntityBaseWithDeleted();
+    public void Configure(EntityTypeBuilder<Customer> builder)
+    {
+        builder.ConfigureReplicatedEntityBaseWithDeleted();
+
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
+
+        builder.HasIndex(item => item.Type);
+    }
 }

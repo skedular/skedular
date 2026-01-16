@@ -19,7 +19,7 @@ namespace Slack.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.1")
+                .HasAnnotation("ProductVersion", "10.0.2")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -189,6 +189,10 @@ namespace Slack.Shared.Database.Migrations
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
 
+                    b.Property<string>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -196,6 +200,8 @@ namespace Slack.Shared.Database.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Type");
 
                     b.ToTable("Customer");
                 });
@@ -232,10 +238,6 @@ namespace Slack.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Type")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
@@ -247,8 +249,6 @@ namespace Slack.Shared.Database.Migrations
                     b.HasIndex("EmailVerified");
 
                     b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Type");
 
                     b.ToTable("Identity");
                 });

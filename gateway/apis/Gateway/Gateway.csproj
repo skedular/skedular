@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="HotChocolate.Fusion" Version="15.1.11"/>
+        <PackageReference Include="HotChocolate.Fusion" Version="15.1.12"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0"/>
     </ItemGroup>
 

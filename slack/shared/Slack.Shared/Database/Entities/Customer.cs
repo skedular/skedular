@@ -9,6 +9,7 @@ namespace Slack.Shared.Database.Entities;
 public class Customer : ReplicatedEntityBaseWithDeleted
 {
     public string? Timezone { get; set; }
+    public string? Type { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -22,5 +23,8 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.Timezone).HasMaxLength(Api.Shared.Services.Constants.MaxTimezoneLength);
+        builder.Property(item => item.Type).HasMaxLength(Api.Shared.Services.Constants.MaxIdentityTypeLength);
+
+        builder.HasIndex(item => item.Type);
     }
 }

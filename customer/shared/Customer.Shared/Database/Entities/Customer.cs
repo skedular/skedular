@@ -24,6 +24,7 @@ public class Customer : EntityBaseWithDeleted, ICustomerPersonalDetails
     public virtual StripeCustomer? StripeCustomer { get; set; }
     public virtual CustomerBillingDetails? BillingDetails { get; set; }
     public string PersonalInformationVisibility { get; set; }
+    public string Type { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Name { get; set; }
@@ -67,6 +68,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength).HasDefaultValue(CustomerTypeConstants.Registered);
 
         builder
             .Property(item => item.PersonalInformationVisibility)
@@ -91,5 +93,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasIndex(item => item.Locale);
         builder.HasIndex(item => item.PhoneNumber);
         builder.HasIndex(item => item.PersonalInformationVisibility);
+        builder.HasIndex(item => item.Type);
     }
 }

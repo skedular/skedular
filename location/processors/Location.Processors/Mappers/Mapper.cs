@@ -4,9 +4,9 @@ using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
 using Customer = Location.Shared.Models.Customer;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Location.Shared.Database.Entities.Identity;
-using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Location.Shared.Models.Organization;
 using OrganizationMember = Location.Shared.Database.Entities.OrganizationMember;
@@ -84,19 +84,14 @@ public class Mapper : IMapper
             Id = customer.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Type = customer.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -200,6 +195,7 @@ public class Mapper : IMapper
     public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
+        dest.Type = src.Type.ToNullableCustomerType();
         dest.Identities = identities;
         return dest;
     }
@@ -212,7 +208,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

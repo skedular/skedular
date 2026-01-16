@@ -99,6 +99,7 @@ message Admin_AddInput {
   string phoneNumber = 22;
   bool isOnboardingDone = 23;
   PersonalInformationVisibility personalInformationVisibility = 24;
+  CustomerType type = 25;
 }
 
 message Customer {
@@ -128,13 +129,13 @@ message Customer {
   bool isOnboardingDone = 24;
   string displayableName = 25;
   PersonalInformationVisibility personalInformationVisibility = 26;
+  CustomerType type = 27;
 }
 
 message Identity {
   string id = 1;
   string email = 2;
   bool emailVerified = 3;
-  IdentityType type = 4;
 }
 
 message Organization {
@@ -152,7 +153,6 @@ message Admin_AddIdentityInput {
   string id = 2;
   string email = 3;
   bool emailVerified = 4;
-  IdentityType type = 5;
 }
 
 message Admin_UpdateIdentityInput {
@@ -160,7 +160,6 @@ message Admin_UpdateIdentityInput {
   string id = 2;
   string email = 3;
   bool emailVerified = 4;
-  IdentityType type = 5;
 }
 
 message Admin_SetDefaultOrganizationInput {
@@ -228,7 +227,7 @@ enum PersonalInformationVisibility {
   PersonalInformationVisibility_Redacted = 1;
 }
 
-enum IdentityType {
-  IdentityType_Guest = 0;
-  IdentityType_Registered = 1;
+enum CustomerType {
+  CustomerType_Guest = 0;
+  CustomerType_Registered = 1;
 }

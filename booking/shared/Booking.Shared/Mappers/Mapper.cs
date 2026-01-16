@@ -299,13 +299,14 @@ public class Mapper : IMapper
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
+                Type = src.Type.ToNullableCustomerType(),
                 Identities = MapTo(src.Identities).ToList()
             };
 
     private static IEnumerable<Identity> MapTo(IEnumerable<Database.Entities.Identity> src) => src.Select(MapTo);
 
     private static Identity MapTo(Database.Entities.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified, Type = src.Type.ToNullableIdentityType() };
+        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 

@@ -66,6 +66,7 @@ type CustomerDetails {
   timezone: String
   locale: String
   phoneNumber: String
+  type: CustomerType!
   isOnboardingDone: Boolean!
   personalInformationVisibility: PersonalInformationVisibilityDetails!
   id: ID!
@@ -79,7 +80,6 @@ type CustomerEdge {
 type CustomerIdentity {
   email: String
   verified: Boolean!
-  type: IdentityType!
   id: ID!
 }
 
@@ -337,15 +337,15 @@ enum CustomerOrderField {
   PHONE_NUMBER
 }
 
+enum CustomerType {
+  GUEST
+  REGISTERED
+}
+
 enum FeedbackChannelType {
   WEB
   SLACK
   MS_TEAMS
-}
-
-enum IdentityType {
-  GUEST
-  REGISTERED
 }
 
 enum OrderDirection {

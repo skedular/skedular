@@ -21,6 +21,7 @@ public class Customer : ModelBaseWithDeleted, ICustomerPersonalDetails
     public CustomerBillingDetails? BillingDetails { get; set; }
     public string DisplayableName => this.ToDisplayableName();
     public PersonalInformationVisibility PersonalInformationVisibility { get; set; }
+    public CustomerType Type { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }
     public string? Timezone { get; set; }

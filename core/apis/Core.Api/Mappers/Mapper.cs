@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Api.Shared.Services.OpenApi.Skedular.Core.V1;
 using Core.Shared.Models;
 using Enterprise.Shared;
@@ -29,7 +30,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Timezone = src.Timezone
+                Type = src.Type.ToNullableCustomerType()
             };
 
     public CdnFile MapTo(Shared.Database.Entities.CdnFile src) =>

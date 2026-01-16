@@ -58,7 +58,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Timezone = src.Timezone
+                Type = src.Type.ToNullableCustomerType()
             };
 
     public Product MapTo(Shared.Database.Entities.Product src) =>

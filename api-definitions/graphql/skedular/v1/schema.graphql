@@ -255,6 +255,7 @@ type CustomerDetails {
   preferredZones: [OrganizationTagDetails!]!
   timezone: String
   title: String
+  type: CustomerType!
 }
 
 type CustomerEdge {
@@ -265,7 +266,6 @@ type CustomerEdge {
 type CustomerIdentity {
   email: String
   id: ID!
-  type: IdentityType!
   verified: Boolean!
 }
 
@@ -2557,6 +2557,11 @@ enum CustomerOrderField {
   TITLE
 }
 
+enum CustomerType {
+  GUEST
+  REGISTERED
+}
+
 enum FeedbackChannelType {
   MS_TEAMS
   SLACK
@@ -2565,11 +2570,6 @@ enum FeedbackChannelType {
 
 enum FloorPlanOrderField {
   NAME
-}
-
-enum IdentityType {
-  GUEST
-  REGISTERED
 }
 
 enum InvitationStatus {

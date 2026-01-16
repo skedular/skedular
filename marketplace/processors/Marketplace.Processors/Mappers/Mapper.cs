@@ -5,8 +5,8 @@ using Marketplace.Shared.Database.Entities;
 using NetTopologySuite.Geometries;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = Marketplace.Shared.Models.Customer;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Identity = Marketplace.Shared.Database.Entities.Identity;
-using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Location = Marketplace.Shared.Models.Location;
 using LocationPhysicalAddress = Marketplace.Shared.Models.LocationPhysicalAddress;
 using Offering = Api.Shared.Services.Models.Offering;
@@ -84,19 +84,14 @@ public class Mapper : IMapper
             Id = customer.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Type = customer.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Identities = customer.Identities
-                .Select(item => new Shared.Models.Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email,
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                })
+                .Select(item => new Shared.Models.Identity { Id = item.Id, Email = item.Email, EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -105,7 +100,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Timezone = src.Timezone;
+        dest.Type = src.Type.ToNullableCustomerType();
         dest.Identities = identities;
 
         return dest;
@@ -121,7 +116,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Customer.Api.GraphQL.Payment;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
@@ -33,6 +34,7 @@ public class CustomerDetails : Node
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("locale")] public string? Locale { get; set; }
     [GraphQLName("phoneNumber")] public string? PhoneNumber { get; set; }
+    [GraphQLName("type")] public CustomerType Type { get; set; }
     [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
     [GraphQLName("defaultOrganizationId")] public string? DefaultOrganizationId { get; set; }
 

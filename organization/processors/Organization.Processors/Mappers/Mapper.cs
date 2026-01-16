@@ -8,7 +8,7 @@ using Location = Organization.Shared.Models.Location;
 using Team = Organization.Shared.Models.Team;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
-using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 using OrganizationOffering = Organization.Shared.Database.Entities.OrganizationOffering;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
@@ -78,19 +78,14 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
+            Type = customer.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Identities = customer.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                })
+                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -161,6 +156,7 @@ public class Mapper : IMapper
         dest.PhotoUrl192 = src.PhotoUrl192;
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.PhoneNumber = src.PhoneNumber;
+        dest.Type = src.Type.ToNullableCustomerType();
         dest.Identities = identities;
         return dest;
     }
@@ -176,7 +172,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;
@@ -317,6 +312,7 @@ public class Mapper : IMapper
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
+                Type = src.Type.ToNullableCustomerType(),
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -330,8 +326,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified,
-            Type = src.Type.ToNullableIdentityType()
+            EmailVerified = src.EmailVerified
         };
 
     private static TermsOfUse? MapTo(Shared.Database.Entities.TermsOfUse? src) =>

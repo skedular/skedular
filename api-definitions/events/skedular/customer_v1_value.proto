@@ -56,13 +56,13 @@ message Customer {
   string phoneNumber = 25;
   CustomerBillingDetails billingDetails = 26;
   PersonalInformationVisibility personalInformationVisibility = 27;
+  CustomerType type = 28;
 }
 
 message Identity {
   string id = 1;
   string email = 2;
   bool emailVerified = 3;
-  IdentityType type = 4;
 }
 
 message Settings {
@@ -114,7 +114,7 @@ enum PersonalInformationVisibility {
   PersonalInformationVisibility_Redacted = 1;
 }
 
-enum IdentityType {
-  IdentityType_Guest = 0;
-  IdentityType_Registered = 1;
+enum CustomerType {
+  CustomerType_Guest = 0;
+  CustomerType_Registered = 1;
 }

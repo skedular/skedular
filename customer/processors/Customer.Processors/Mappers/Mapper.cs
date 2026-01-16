@@ -182,7 +182,8 @@ public class Mapper : IMapper
                 PreferredResources = MapTo(src.PreferredResources).ToList(),
                 PreferredOrganizationTags = MapTo(src.PreferredOrganizationTags).ToList(),
                 FavouriteLocations = MapTo(src.FavouriteLocations).ToList(),
-                PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility()
+                PersonalInformationVisibility = src.PersonalInformationVisibility.ToPersonalInformationVisibility(),
+                Type = src.Type.ToCustomerType()
             };
 
     public Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest)
@@ -288,8 +289,7 @@ public class Mapper : IMapper
                 CreatedAt = src.CreatedAt,
                 ModifiedAt = src.ModifiedAt,
                 Email = src.Email,
-                EmailVerified = src.EmailVerified,
-                Type = src.Type.ToIdentityType()
+                EmailVerified = src.EmailVerified
             };
 
     private static Organization? MapTo(Shared.Database.Entities.Organization? src) =>

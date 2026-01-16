@@ -6,9 +6,9 @@ using Location = Slack.Shared.Models.Location;
 using Team = Slack.Shared.Models.Team;
 using Organization = Slack.Shared.Models.Organization;
 using Customer = Slack.Shared.Models.Customer;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Slack.Shared.Models.Identity;
-using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
@@ -72,19 +72,14 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Timezone = customer.Timezone.ToSafeString(),
+            Type = customer.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Identities = customer.Identities
-                .Select(item => new Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                })
+                .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
         };
     }
@@ -97,6 +92,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.Timezone = src.Timezone;
+        dest.Type = src.Type.ToNullableCustomerType();
         dest.Identities = identities;
 
         return dest;
@@ -113,7 +109,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

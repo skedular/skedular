@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Organization.Shared.Models;
@@ -24,4 +25,5 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
     public string? PhoneNumber { get; set; }
+    public CustomerType? Type { get; set; }
 }

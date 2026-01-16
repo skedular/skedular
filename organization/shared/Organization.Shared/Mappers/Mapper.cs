@@ -8,8 +8,8 @@ using Microsoft.Graph.Models;
 using Organization.Shared.Models;
 using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
+using CustomerType = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType;
 using Identity = Organization.Shared.Models.Identity;
-using IdentityType = Api.Shared.Services.Grpc.Skedular.Customer.V1.IdentityType;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
@@ -217,24 +217,10 @@ public class Mapper : IMapper
     }
 
     Admin_AddIdentityInput IMapper.MapTo(Database.Entities.AzureTenantMember src, string customerId) =>
-        new()
-        {
-            Id = src.Id,
-            Email = src.Email.ToSafeString(),
-            EmailVerified = true,
-            CustomerId = customerId,
-            Type = IdentityType.Registered
-        };
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId) =>
-        new()
-        {
-            Id = src.Id,
-            Email = src.Email.ToSafeString(),
-            EmailVerified = true,
-            CustomerId = customerId,
-            Type = IdentityType.Registered
-        };
+        new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
     public Admin_AddInput MapTo(
         Database.Entities.AzureTenantMember src,
@@ -250,7 +236,8 @@ public class Mapper : IMapper
             FamilyName = src.FamilyName.ToSafeString(),
             IsOnboardingDone = true,
             DefaultOrganizationId = defaultOrganization.Id,
-            PersonalInformationVisibility = PersonalInformationVisibility.Visible
+            PersonalInformationVisibility = PersonalInformationVisibility.Visible,
+            Type = CustomerType.Registered
         };
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
@@ -378,6 +365,7 @@ public class Mapper : IMapper
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
+                Type = src.Type.ToNullableCustomerType(),
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -391,8 +379,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified,
-            Type = src.Type.ToNullableIdentityType()
+            EmailVerified = src.EmailVerified
         };
 
     private static IEnumerable<OrganizationOffering> MapTo(

@@ -1,10 +1,11 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace MsTeams.Shared.Models;
 
 public class Customer : ReplicatedModelBaseWithDeleted
 {
-    public string? Timezone { get; set; }
+    public CustomerType? Type { get; set; }
 
     public ICollection<Identity> Identities { get; set; } = [];
 }

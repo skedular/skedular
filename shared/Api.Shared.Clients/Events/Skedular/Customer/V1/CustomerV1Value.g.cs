@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "U291cmNlGAIgASgJEhEKCWFwcFNvdXJjZRgDIAEoCRIcCgR0eXBlGAQgASgO",
             "Mg4uY3VzdG9tZXIuVHlwZRIoCgR0aW1lGAUgASgLMhouZ29vZ2xlLnByb3Rv",
             "YnVmLlRpbWVzdGFtcBIVCg1jb3JyZWxhdGlvbklkGAYgASgJIiwKBERhdGES",
-            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciK8BgoIQ3Vz",
+            "JAoIY3VzdG9tZXIYASABKAsyEi5jdXN0b21lci5DdXN0b21lciLiBgoIQ3Vz",
             "dG9tZXISCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xl",
             "LnByb3RvYnVmLlRpbWVzdGFtcBImCgppZGVudGl0aWVzGAMgAygLMhIuY3Vz",
             "dG9tZXIuSWRlbnRpdHkSEwoLZGVzaWduYXRpb24YBCABKAkSDQoFdGl0bGUY",
@@ -50,9 +50,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "bWJlchgZIAEoCRI4Cg5iaWxsaW5nRGV0YWlscxgaIAEoCzIgLmN1c3RvbWVy",
             "LkN1c3RvbWVyQmlsbGluZ0RldGFpbHMSTgodcGVyc29uYWxJbmZvcm1hdGlv",
             "blZpc2liaWxpdHkYGyABKA4yJy5jdXN0b21lci5QZXJzb25hbEluZm9ybWF0",
-            "aW9uVmlzaWJpbGl0eSJiCghJZGVudGl0eRIKCgJpZBgBIAEoCRINCgVlbWFp",
-            "bBgCIAEoCRIVCg1lbWFpbFZlcmlmaWVkGAMgASgIEiQKBHR5cGUYBCABKA4y",
-            "Fi5jdXN0b21lci5JZGVudGl0eVR5cGUiMAoIU2V0dGluZ3MSCgoCaWQYASAB",
+            "aW9uVmlzaWJpbGl0eRIkCgR0eXBlGBwgASgOMhYuY3VzdG9tZXIuQ3VzdG9t",
+            "ZXJUeXBlIjwKCElkZW50aXR5EgoKAmlkGAEgASgJEg0KBWVtYWlsGAIgASgJ",
+            "EhUKDWVtYWlsVmVyaWZpZWQYAyABKAgiMAoIU2V0dGluZ3MSCgoCaWQYASAB",
             "KAkSGAoQaXNPbmJvYXJkaW5nRG9uZRgCIAEoCCIuCghMb2NhdGlvbhIKCgJp",
             "ZBgBIAEoCRIWCg5vcmdhbml6YXRpb25JZBgCIAEoCSIqCghSZXNvdXJjZRIK",
             "CgJpZBgBIAEoCRISCgpsb2NhdGlvbklkGAIgASgJIjUKD09yZ2FuaXphdGlv",
@@ -69,18 +69,18 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             "Q3VzdG9tZXJVcHNlcnRlZBAAEhgKFFR5cGVfQ3VzdG9tZXJEZWxldGVkEAEq",
             "dgodUGVyc29uYWxJbmZvcm1hdGlvblZpc2liaWxpdHkSKQolUGVyc29uYWxJ",
             "bmZvcm1hdGlvblZpc2liaWxpdHlfVmlzaWJsZRAAEioKJlBlcnNvbmFsSW5m",
-            "b3JtYXRpb25WaXNpYmlsaXR5X1JlZGFjdGVkEAEqQwoMSWRlbnRpdHlUeXBl",
-            "EhYKEklkZW50aXR5VHlwZV9HdWVzdBAAEhsKF0lkZW50aXR5VHlwZV9SZWdp",
+            "b3JtYXRpb25WaXNpYmlsaXR5X1JlZGFjdGVkEAEqQwoMQ3VzdG9tZXJUeXBl",
+            "EhYKEkN1c3RvbWVyVHlwZV9HdWVzdBAAEhsKF0N1c3RvbWVyVHlwZV9SZWdp",
             "c3RlcmVkEAFCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVs",
             "YXIuQ3VzdG9tZXIuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility), typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility), typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Data.Parser, new[]{ "Customer" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "PreferredLocations", "PreferredOrganizationId", "PreferredResources", "Settings", "PreferredOrganizationTags", "FavouriteLocations", "PhoneNumber", "BillingDetails", "PersonalInformationVisibility" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified", "Type" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Customer.Parser, new[]{ "Id", "DeletedAt", "Identities", "Designation", "Title", "Name", "GivenName", "MiddleName", "FamilyName", "PhotoUrl", "PhotoUrl24", "PhotoUrl32", "PhotoUrl48", "PhotoUrl72", "PhotoUrl192", "PhotoUrl512", "Timezone", "Locale", "PreferredLocations", "PreferredOrganizationId", "PreferredResources", "Settings", "PreferredOrganizationTags", "FavouriteLocations", "PhoneNumber", "BillingDetails", "PersonalInformationVisibility", "Type" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Identity.Parser, new[]{ "Id", "Email", "EmailVerified" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Settings.Parser, new[]{ "Id", "IsOnboardingDone" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Location.Parser, new[]{ "Id", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Resource.Parser, new[]{ "Id", "LocationId" }, null, null, null, null),
@@ -103,9 +103,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
     [pbr::OriginalName("PersonalInformationVisibility_Redacted")] Redacted = 1,
   }
 
-  public enum IdentityType {
-    [pbr::OriginalName("IdentityType_Guest")] Guest = 0,
-    [pbr::OriginalName("IdentityType_Registered")] Registered = 1,
+  public enum CustomerType {
+    [pbr::OriginalName("CustomerType_Guest")] Guest = 0,
+    [pbr::OriginalName("CustomerType_Registered")] Registered = 1,
   }
 
   #endregion
@@ -1025,6 +1025,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       phoneNumber_ = other.phoneNumber_;
       billingDetails_ = other.billingDetails_ != null ? other.billingDetails_.Clone() : null;
       personalInformationVisibility_ = other.personalInformationVisibility_;
+      type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1353,6 +1354,18 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 28;
+    private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType type_ = global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1395,6 +1408,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (PhoneNumber != other.PhoneNumber) return false;
       if (!object.Equals(BillingDetails, other.BillingDetails)) return false;
       if (PersonalInformationVisibility != other.PersonalInformationVisibility) return false;
+      if (Type != other.Type) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1429,6 +1443,7 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (PhoneNumber.Length != 0) hash ^= PhoneNumber.GetHashCode();
       if (billingDetails_ != null) hash ^= BillingDetails.GetHashCode();
       if (PersonalInformationVisibility != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible) hash ^= PersonalInformationVisibility.GetHashCode();
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest) hash ^= Type.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1540,6 +1555,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(216, 1);
         output.WriteEnum((int) PersonalInformationVisibility);
       }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest) {
+        output.WriteRawTag(224, 1);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1643,6 +1662,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(216, 1);
         output.WriteEnum((int) PersonalInformationVisibility);
       }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest) {
+        output.WriteRawTag(224, 1);
+        output.WriteEnum((int) Type);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1723,6 +1746,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (PersonalInformationVisibility != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible) {
         size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) PersonalInformationVisibility);
+      }
+      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest) {
+        size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1815,6 +1841,9 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (other.PersonalInformationVisibility != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility.Visible) {
         PersonalInformationVisibility = other.PersonalInformationVisibility;
+      }
+      if (other.Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType.Guest) {
+        Type = other.Type;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1950,6 +1979,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
           }
           case 216: {
             PersonalInformationVisibility = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility) input.ReadEnum();
+            break;
+          }
+          case 224: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType) input.ReadEnum();
             break;
           }
         }
@@ -2088,6 +2121,10 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             PersonalInformationVisibility = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.PersonalInformationVisibility) input.ReadEnum();
             break;
           }
+          case 224: {
+            Type = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2133,7 +2170,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       id_ = other.id_;
       email_ = other.email_;
       emailVerified_ = other.emailVerified_;
-      type_ = other.type_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2179,18 +2215,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "type" field.</summary>
-    public const int TypeFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType type_ = global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType Type {
-      get { return type_; }
-      set {
-        type_ = value;
-      }
-    }
-
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2209,7 +2233,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Id != other.Id) return false;
       if (Email != other.Email) return false;
       if (EmailVerified != other.EmailVerified) return false;
-      if (Type != other.Type) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2220,7 +2243,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Email.Length != 0) hash ^= Email.GetHashCode();
       if (EmailVerified != false) hash ^= EmailVerified.GetHashCode();
-      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest) hash ^= Type.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2251,10 +2273,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(24);
         output.WriteBool(EmailVerified);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest) {
-        output.WriteRawTag(32);
-        output.WriteEnum((int) Type);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2277,10 +2295,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
         output.WriteRawTag(24);
         output.WriteBool(EmailVerified);
       }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest) {
-        output.WriteRawTag(32);
-        output.WriteEnum((int) Type);
-      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2299,9 +2313,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (EmailVerified != false) {
         size += 1 + 1;
-      }
-      if (Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2323,9 +2334,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
       }
       if (other.EmailVerified != false) {
         EmailVerified = other.EmailVerified;
-      }
-      if (other.Type != global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType.Guest) {
-        Type = other.Type;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2358,10 +2366,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
             EmailVerified = input.ReadBool();
             break;
           }
-          case 32: {
-            Type = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType) input.ReadEnum();
-            break;
-          }
         }
       }
     #endif
@@ -2391,10 +2395,6 @@ namespace Api.Shared.Clients.Events.Skedular.Customer.V1.Value {
           }
           case 24: {
             EmailVerified = input.ReadBool();
-            break;
-          }
-          case 32: {
-            Type = (global::Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType) input.ReadEnum();
             break;
           }
         }

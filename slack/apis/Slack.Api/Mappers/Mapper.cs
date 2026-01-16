@@ -150,7 +150,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
-            Timezone = src.Timezone
+            Timezone = src.Timezone,
+            Type = src.Type.ToNullableCustomerType()
         };
 
         customer.Identities = MapTo(src.Identities, customer).ToList();

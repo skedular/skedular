@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Models;
 
 namespace Team.Shared.Models;
@@ -13,4 +14,5 @@ public class Customer : ReplicatedModelBaseWithDeleted
     public string? GivenName { get; set; }
     public string? MiddleName { get; set; }
     public string? FamilyName { get; set; }
+    public CustomerType? Type { get; set; }
 }

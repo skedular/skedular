@@ -342,6 +342,7 @@ public class Mapper : IMapper
                 GivenName = src.GivenName,
                 MiddleName = src.MiddleName,
                 FamilyName = src.FamilyName,
+                Type = src.Type.ToNullableCustomerType(),
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -453,8 +454,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified,
-            Type = src.Type.ToNullableIdentityType()
+            EmailVerified = src.EmailVerified
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Team team) =>

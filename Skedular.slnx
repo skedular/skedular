@@ -1,317 +1,321 @@
 <Solution>
-  <Folder Name="/.config/">
-    <File Path=".config/dotnet-tools.json" />
-  </Folder>
-  <Folder Name="/all-in-one/">
-    <Project Path="all-in-one/AllApis/AllApis.csproj" />
-    <Project Path="all-in-one/AllApisJobs/AllApisJobs.csproj" />
-    <Project Path="all-in-one/AllInfra/AllInfra.csproj" />
-    <Project Path="all-in-one/AllInOne/AllInOne.csproj" />
-    <Project Path="all-in-one/AllJobs/AllJobs.csproj" />
-    <Project Path="all-in-one/AllProcessors/AllProcessors.csproj" />
-  </Folder>
-  <Folder Name="/api-definitions/">
-    <File Path="api-definitions/generate.sh" />
-  </Folder>
-  <Folder Name="/api-definitions/events/">
-    <File Path="api-definitions/events/Dockerfile" />
-    <File Path="api-definitions/events/generate.sh" />
-  </Folder>
-  <Folder Name="/api-definitions/events/skedular/">
-    <File Path="api-definitions/events/skedular/booking_internal_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/booking_internal_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/booking_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/booking_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/customer_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/customer_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/location_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/location_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/marketplace_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/marketplace_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/organization_internal_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/organization_internal_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/organization_member_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/organization_member_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/organization_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/organization_v1_value.proto" />
-    <File Path="api-definitions/events/skedular/team_v1_key.proto" />
-    <File Path="api-definitions/events/skedular/team_v1_value.proto" />
-  </Folder>
-  <Folder Name="/api-definitions/gaphql/" />
-  <Folder Name="/api-definitions/gaphql/skedular/" />
-  <Folder Name="/api-definitions/gaphql/skedular/v1/">
-    <File Path="api-definitions/graphql/skedular/v1/schema.graphql" />
-  </Folder>
-  <Folder Name="/api-definitions/grpc/" />
-  <Folder Name="/api-definitions/grpc/skedular/">
-    <File Path="api-definitions/grpc/skedular/booking_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/core_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/customer_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/location_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/marketplace_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/msteams_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/organization_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/slack_v1.proto" />
-    <File Path="api-definitions/grpc/skedular/team_v1.proto" />
-  </Folder>
-  <Folder Name="/api-definitions/openapi/">
-    <File Path="api-definitions/openapi/clients.Dockerfile" />
-    <File Path="api-definitions/openapi/generate.sh" />
-    <File Path="api-definitions/openapi/services.Dockerfile" />
-  </Folder>
-  <Folder Name="/api-definitions/openapi/skedular/">
-    <File Path="api-definitions/openapi/skedular/booking_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/core_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/customer_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/gateway_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/location_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/marketplace_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/msteams_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/organization_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/slack_v1.yaml" />
-    <File Path="api-definitions/openapi/skedular/team_v1.yaml" />
-  </Folder>
-  <Folder Name="/booking/" />
-  <Folder Name="/booking/apis/">
-    <Project Path="booking/apis/Booking.Api.UnitTests/Booking.Api.UnitTests.csproj" />
-    <Project Path="booking/apis/Booking.Api/Booking.Api.csproj" />
-  </Folder>
-  <Folder Name="/booking/domain/">
-    <Project Path="booking/domain/Booking.Domain.AppHost/Booking.Domain.AppHost.csproj" />
-    <Project Path="booking/domain/Booking.Domain.IntegrationTests/Booking.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/booking/jobs/">
-    <Project Path="booking/jobs/Booking.Jobs.UnitTests/Booking.Jobs.UnitTests.csproj" />
-    <Project Path="booking/jobs/Booking.Jobs/Booking.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/booking/processors/">
-    <Project Path="booking/processors/Booking.Processors.UnitTests/Booking.Processors.UnitTests.csproj" />
-    <Project Path="booking/processors/Booking.Processors/Booking.Processors.csproj" />
-  </Folder>
-  <Folder Name="/booking/shared/">
-    <Project Path="booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj" />
-    <Project Path="booking/shared/Booking.Shared.UnitTests/Booking.Shared.UnitTests.csproj" />
-    <Project Path="booking/shared/Booking.Shared/Booking.Shared.csproj" />
-  </Folder>
-  <Folder Name="/core/" />
-  <Folder Name="/core/apis/">
-    <Project Path="core/apis/Core.Api.UnitTests/Core.Api.UnitTests.csproj" />
-    <Project Path="core/apis/Core.Api/Core.Api.csproj" />
-  </Folder>
-  <Folder Name="/core/domain/">
-    <Project Path="core/domain/Core.Domain.AppHost/Core.Domain.AppHost.csproj" />
-    <Project Path="core/domain/Core.Domain.IntegrationTests/Core.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/core/jobs/">
-    <Project Path="core/jobs/Core.Jobs.UnitTests/Core.Jobs.UnitTests.csproj" />
-    <Project Path="core/jobs/Core.Jobs/Core.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/core/processors/">
-    <Project Path="core/processors/Core.Processors.UnitTests/Core.Processors.UnitTests.csproj" />
-    <Project Path="core/processors/Core.Processors/Core.Processors.csproj" />
-  </Folder>
-  <Folder Name="/core/shared/">
-    <Project Path="core/shared/Core.Infrastructure/Core.Infrastructure.csproj" />
-    <Project Path="core/shared/Core.Shared.UnitTests/Core.Shared.UnitTests.csproj" />
-    <Project Path="core/shared/Core.Shared/Core.Shared.csproj" />
-  </Folder>
-  <Folder Name="/customer/" />
-  <Folder Name="/customer/apis/">
-    <Project Path="customer/apis/Customer.Api.UnitTests/Customer.Api.UnitTests.csproj" />
-    <Project Path="customer/apis/Customer.Api/Customer.Api.csproj" />
-  </Folder>
-  <Folder Name="/customer/domain/">
-    <Project Path="customer/domain/Customer.Domain.AppHost/Customer.Domain.AppHost.csproj" />
-    <Project Path="customer/domain/Customer.Domain.IntegrationTests/Customer.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/customer/jobs/">
-    <Project Path="customer/jobs/Customer.Jobs.UnitTests/Customer.Jobs.UnitTests.csproj" />
-    <Project Path="customer/jobs/Customer.Jobs/Customer.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/customer/processors/">
-    <Project Path="customer/processors/Customer.Processors.UnitTests/Customer.Processors.UnitTests.csproj" />
-    <Project Path="customer/processors/Customer.Processors/Customer.Processors.csproj" />
-  </Folder>
-  <Folder Name="/customer/shared/">
-    <Project Path="customer/shared/Customer.Infrastructure/Customer.Infrastructure.csproj" />
-    <Project Path="customer/shared/Customer.Shared.UnitTests/Customer.Shared.UnitTests.csproj" />
-    <Project Path="customer/shared/Customer.Shared/Customer.Shared.csproj" />
-  </Folder>
-  <Folder Name="/gateway/" />
-  <Folder Name="/gateway/apis/">
-    <Project Path="gateway/apis/Gateway/Gateway.csproj" />
-  </Folder>
-  <Folder Name="/location/" />
-  <Folder Name="/location/apis/">
-    <Project Path="location/apis/Location.Api.UnitTests/Location.Api.UnitTests.csproj" />
-    <Project Path="location/apis/Location.Api/Location.Api.csproj" />
-  </Folder>
-  <Folder Name="/location/domain/">
-    <Project Path="location/domain/Location.Domain.AppHost/Location.Domain.AppHost.csproj" />
-    <Project Path="location/domain/Location.Domain.IntegrationTests/Location.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/location/jobs/">
-    <Project Path="location/jobs/Location.Jobs.UnitTests/Location.Jobs.UnitTests.csproj" />
-    <Project Path="location/jobs/Location.Jobs/Location.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/location/processors/">
-    <Project Path="location/processors/Location.Processors.UnitTests/Location.Processors.UnitTests.csproj" />
-    <Project Path="location/processors/Location.Processors/Location.Processors.csproj" />
-  </Folder>
-  <Folder Name="/location/shared/">
-    <Project Path="location/shared/Location.Infrastructure/Location.Infrastructure.csproj" />
-    <Project Path="location/shared/Location.Shared.UnitTests/Location.Shared.UnitTests.csproj" />
-    <Project Path="location/shared/Location.Shared/Location.Shared.csproj" />
-  </Folder>
-  <Folder Name="/marketplace/" />
-  <Folder Name="/marketplace/apis/">
-    <Project Path="marketplace/apis/Marketplace.Api.UnitTests/Marketplace.Api.UnitTests.csproj" />
-    <Project Path="marketplace/apis/Marketplace.Api/Marketplace.Api.csproj" />
-  </Folder>
-  <Folder Name="/marketplace/domain/">
-    <Project Path="marketplace/domain/Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj" />
-    <Project Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/marketplace/jobs/">
-    <Project Path="marketplace/jobs/Marketplace.Jobs.UnitTests/Marketplace.Jobs.UnitTests.csproj" />
-    <Project Path="marketplace/jobs/Marketplace.Jobs/Marketplace.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/marketplace/processors/">
-    <Project Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj" />
-    <Project Path="marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj" />
-  </Folder>
-  <Folder Name="/marketplace/shared/">
-    <Project Path="marketplace/shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj" />
-    <Project Path="marketplace/shared/Marketplace.Shared.UnitTests/Marketplace.Shared.UnitTests.csproj" />
-    <Project Path="marketplace/shared/Marketplace.Shared/Marketplace.Shared.csproj" />
-  </Folder>
-  <Folder Name="/msteams/" />
-  <Folder Name="/msteams/apis/">
-    <Project Path="msteams/apis/MsTeams.Api.UnitTests/MsTeams.Api.UnitTests.csproj" />
-    <Project Path="msteams/apis/MsTeams.Api/MsTeams.Api.csproj" />
-  </Folder>
-  <Folder Name="/msteams/domain/">
-    <Project Path="msteams/domain/MsTeams.Domain.AppHost/MsTeams.Domain.AppHost.csproj" />
-    <Project Path="msteams/domain/MsTeams.Domain.IntegrationTests/MsTeams.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/msteams/jobs/">
-    <Project Path="msteams/jobs/MsTeams.Jobs.UnitTests/MsTeams.Jobs.UnitTests.csproj" />
-    <Project Path="msteams/jobs/MsTeams.Jobs/MsTeams.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/msteams/processors/">
-    <Project Path="msteams/processors/MsTeams.Processors.UnitTests/MsTeams.Processors.UnitTests.csproj" />
-    <Project Path="msteams/processors/MsTeams.Processors/MsTeams.Processors.csproj" />
-  </Folder>
-  <Folder Name="/msteams/shared/">
-    <Project Path="msteams/shared/MsTeams.Infrastructure/MsTeams.Infrastructure.csproj" />
-    <Project Path="msteams/shared/MsTeams.Shared.UnitTests/MsTeams.Shared.UnitTests.csproj" />
-    <Project Path="msteams/shared/MsTeams.Shared/MsTeams.Shared.csproj" />
-  </Folder>
-  <Folder Name="/organization/" />
-  <Folder Name="/organization/apis/">
-    <Project Path="organization/apis/Organization.Api.UnitTests/Organization.Api.UnitTests.csproj" />
-    <Project Path="organization/apis/Organization.Api/Organization.Api.csproj" />
-  </Folder>
-  <Folder Name="/organization/domain/">
-    <Project Path="organization/domain/Organization.Domain.AppHost/Organization.Domain.AppHost.csproj" />
-    <Project Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/organization/jobs/">
-    <Project Path="organization/jobs/Organization.Jobs.UnitTests/Organization.Jobs.UnitTests.csproj" />
-    <Project Path="organization/jobs/Organization.Jobs/Organization.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/organization/processors/">
-    <Project Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj" />
-    <Project Path="organization/processors/Organization.Processors/Organization.Processors.csproj" />
-  </Folder>
-  <Folder Name="/organization/shared/">
-    <Project Path="organization/shared/Organization.Infrastructure/Organization.Infrastructure.csproj" />
-    <Project Path="organization/shared/Organization.Shared.UnitTests/Organization.Shared.UnitTests.csproj" />
-    <Project Path="organization/shared/Organization.Shared/Organization.Shared.csproj" />
-  </Folder>
-  <Folder Name="/slack/" />
-  <Folder Name="/slack/apis/">
-    <Project Path="slack/apis/Slack.Api.UnitTests/Slack.Api.UnitTests.csproj" />
-    <Project Path="slack/apis/Slack.Api/Slack.Api.csproj" />
-  </Folder>
-  <Folder Name="/slack/domain/">
-    <Project Path="slack/domain/Slack.Domain.AppHost/Slack.Domain.AppHost.csproj" />
-    <Project Path="slack/domain/Slack.Domain.IntegrationTests/Slack.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/slack/jobs/">
-    <Project Path="slack/jobs/Slack.Jobs.UnitTests/Slack.Jobs.UnitTests.csproj" />
-    <Project Path="slack/jobs/Slack.Jobs/Slack.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/slack/processors/">
-    <Project Path="slack/processors/Slack.Processors.UnitTests/Slack.Processors.UnitTests.csproj" />
-    <Project Path="slack/processors/Slack.Processors/Slack.Processors.csproj" />
-  </Folder>
-  <Folder Name="/slack/shared/">
-    <Project Path="slack/shared/Slack.Infrastructure/Slack.Infrastructure.csproj" />
-    <Project Path="slack/shared/Slack.Shared.UnitTests/Slack.Shared.UnitTests.csproj" />
-    <Project Path="slack/shared/Slack.Shared/Slack.Shared.csproj" />
-  </Folder>
-  <Folder Name="/system/">
-    <Project Path="system/Skedular.AppHost/Skedular.AppHost.csproj" />
-    <Project Path="system/Skedular.SystemTests/Skedular.SystemTests.csproj" />
-  </Folder>
-  <Folder Name="/team/" />
-  <Folder Name="/team/apis/">
-    <Project Path="team/apis/Team.Api.UnitTests/Team.Api.UnitTests.csproj" />
-    <Project Path="team/apis/Team.Api/Team.Api.csproj" />
-  </Folder>
-  <Folder Name="/team/domain/">
-    <Project Path="team/domain/Team.Domain.AppHost/Team.Domain.AppHost.csproj" />
-    <Project Path="team/domain/Team.Domain.IntegrationTests/Team.Domain.IntegrationTests.csproj" />
-  </Folder>
-  <Folder Name="/team/jobs/">
-    <Project Path="team/jobs/Team.Jobs.UnitTests/Team.Jobs.UnitTests.csproj" />
-    <Project Path="team/jobs/Team.Jobs/Team.Jobs.csproj" />
-  </Folder>
-  <Folder Name="/team/processors/">
-    <Project Path="team/processors/Team.Processors.UnitTests/Team.Processors.UnitTests.csproj" />
-    <Project Path="team/processors/Team.Processors/Team.Processors.csproj" />
-  </Folder>
-  <Folder Name="/team/shared/">
-    <Project Path="team/shared/Team.Infrastructure/Team.Infrastructure.csproj" />
-    <Project Path="team/shared/Team.Shared.UnitTests/Team.Shared.UnitTests.csproj" />
-    <Project Path="team/shared/Team.Shared/Team.Shared.csproj" />
-  </Folder>
-  <Folder Name="/scripts/">
-    <File Path="scripts/format.sh" />
-    <File Path="scripts/generate-graphql.sh" />
-    <File Path="scripts/lint.sh" />
-    <File Path="scripts/start-dependencies-min.sh" />
-    <File Path="scripts/start-dependencies.sh" />
-  </Folder>
-  <Folder Name="/shared/">
-    <Project Path="shared/Api.Shared.Clients.UnitTests/Api.Shared.Clients.UnitTests.csproj" />
-    <Project Path="shared/Api.Shared.Clients/Api.Shared.Clients.csproj" />
-    <Project Path="shared/Api.Shared.Services.UnitTests/Api.Shared.Services.UnitTests.csproj" />
-    <Project Path="shared/Api.Shared.Services/Api.Shared.Services.csproj" />
-    <Project Path="shared/Enterprise.Shared.UnitTests/Enterprise.Shared.UnitTests.csproj" />
-    <Project Path="shared/Enterprise.Shared/Enterprise.Shared.csproj" />
-    <Project Path="shared/Infrastructure.Shared/Infrastructure.Shared.csproj" />
-    <Project Path="shared/Skedularctl/Skedularctl.csproj" />
-    <Project Path="shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj" />
-    <Project Path="shared/Testing.Shared/Testing.Shared.csproj" />
-    <Project Path="shared/WebScrapper/WebScrapper.csproj" />
-  </Folder>
-  <Folder Name="/solution-items/">
-    <File Path=".dockerignore" />
-    <File Path=".editorconfig" />
-    <File Path=".env" />
-    <File Path=".env.template" />
-    <File Path=".gitattributes" />
-    <File Path=".gitignore" />
-    <File Path="docker-compose-crm.yml" />
-    <File Path="docker-compose-min.yml" />
-    <File Path="docker-compose-production.yml" />
-    <File Path="docker-compose.yml" />
-    <File Path="GitVersion.yml" />
-    <File Path="keyckloak.json" />
-    <File Path="Makefile" />
-    <File Path="qodana.yaml" />
-    <File Path="README.md" />
-  </Folder>
+    <Folder Name="/.config/">
+        <File Path=".config/dotnet-tools.json"/>
+    </Folder>
+    <Folder Name="/all-in-one/">
+        <Project Path="all-in-one/AllApis/AllApis.csproj"/>
+        <Project Path="all-in-one/AllApisJobs/AllApisJobs.csproj"/>
+        <Project Path="all-in-one/AllInfra/AllInfra.csproj"/>
+        <Project Path="all-in-one/AllInOne/AllInOne.csproj"/>
+        <Project Path="all-in-one/AllJobs/AllJobs.csproj"/>
+        <Project Path="all-in-one/AllProcessors/AllProcessors.csproj"/>
+    </Folder>
+    <Folder Name="/api-definitions/">
+        <File Path="api-definitions/generate.sh"/>
+    </Folder>
+    <Folder Name="/api-definitions/events/">
+        <File Path="api-definitions/events/Dockerfile"/>
+        <File Path="api-definitions/events/generate.sh"/>
+    </Folder>
+    <Folder Name="/api-definitions/events/skedular/">
+        <File Path="api-definitions/events/skedular/booking_internal_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/booking_internal_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/booking_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/booking_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/customer_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/customer_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/location_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/location_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/marketplace_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/marketplace_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/organization_internal_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/organization_internal_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/organization_member_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/organization_member_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/organization_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/organization_v1_value.proto"/>
+        <File Path="api-definitions/events/skedular/team_v1_key.proto"/>
+        <File Path="api-definitions/events/skedular/team_v1_value.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/graphql/"/>
+    <Folder Name="/api-definitions/graphql/skedular/"/>
+    <Folder Name="/api-definitions/graphql/skedular/v1/">
+        <File Path="api-definitions/graphql/skedular/v1/schema.graphql"/>
+    </Folder>
+    <Folder Name="/api-definitions/grpc/"/>
+    <Folder Name="/api-definitions/grpc/skedular/">
+        <File Path="api-definitions/grpc/skedular/booking_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/core_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/customer_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/location_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/marketplace_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/msteams_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/organization_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/slack_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/team_v1.proto"/>
+    </Folder>
+    <Folder Name="/api-definitions/openapi/">
+        <File Path="api-definitions/openapi/clients.Dockerfile"/>
+        <File Path="api-definitions/openapi/generate.sh"/>
+        <File Path="api-definitions/openapi/services.Dockerfile"/>
+    </Folder>
+    <Folder Name="/api-definitions/openapi/skedular/">
+        <File Path="api-definitions/openapi/skedular/booking_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/core_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/customer_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/gateway_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/location_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/marketplace_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/msteams_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/organization_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/slack_v1.yaml"/>
+        <File Path="api-definitions/openapi/skedular/team_v1.yaml"/>
+    </Folder>
+    <Folder Name="/booking/"/>
+    <Folder Name="/booking/apis/">
+        <Project Path="booking/apis/Booking.Api.UnitTests/Booking.Api.UnitTests.csproj"/>
+        <Project Path="booking/apis/Booking.Api/Booking.Api.csproj"/>
+    </Folder>
+    <Folder Name="/booking/domain/">
+        <Project Path="booking/domain/Booking.Domain.AppHost/Booking.Domain.AppHost.csproj"/>
+        <Project Path="booking/domain/Booking.Domain.IntegrationTests/Booking.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/booking/jobs/">
+        <Project Path="booking/jobs/Booking.Jobs.UnitTests/Booking.Jobs.UnitTests.csproj"/>
+        <Project Path="booking/jobs/Booking.Jobs/Booking.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/booking/processors/">
+        <Project Path="booking/processors/Booking.Processors.UnitTests/Booking.Processors.UnitTests.csproj"/>
+        <Project Path="booking/processors/Booking.Processors/Booking.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/booking/shared/">
+        <Project Path="booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
+        <Project Path="booking/shared/Booking.Shared.UnitTests/Booking.Shared.UnitTests.csproj"/>
+        <Project Path="booking/shared/Booking.Shared/Booking.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/core/"/>
+    <Folder Name="/core/apis/">
+        <Project Path="core/apis/Core.Api.UnitTests/Core.Api.UnitTests.csproj"/>
+        <Project Path="core/apis/Core.Api/Core.Api.csproj"/>
+    </Folder>
+    <Folder Name="/core/domain/">
+        <Project Path="core/domain/Core.Domain.AppHost/Core.Domain.AppHost.csproj"/>
+        <Project Path="core/domain/Core.Domain.IntegrationTests/Core.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/core/jobs/">
+        <Project Path="core/jobs/Core.Jobs.UnitTests/Core.Jobs.UnitTests.csproj"/>
+        <Project Path="core/jobs/Core.Jobs/Core.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/core/processors/">
+        <Project Path="core/processors/Core.Processors.UnitTests/Core.Processors.UnitTests.csproj"/>
+        <Project Path="core/processors/Core.Processors/Core.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/core/shared/">
+        <Project Path="core/shared/Core.Infrastructure/Core.Infrastructure.csproj"/>
+        <Project Path="core/shared/Core.Shared.UnitTests/Core.Shared.UnitTests.csproj"/>
+        <Project Path="core/shared/Core.Shared/Core.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/customer/"/>
+    <Folder Name="/customer/apis/">
+        <Project Path="customer/apis/Customer.Api.UnitTests/Customer.Api.UnitTests.csproj"/>
+        <Project Path="customer/apis/Customer.Api/Customer.Api.csproj"/>
+    </Folder>
+    <Folder Name="/customer/domain/">
+        <Project Path="customer/domain/Customer.Domain.AppHost/Customer.Domain.AppHost.csproj"/>
+        <Project Path="customer/domain/Customer.Domain.IntegrationTests/Customer.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/customer/jobs/">
+        <Project Path="customer/jobs/Customer.Jobs.UnitTests/Customer.Jobs.UnitTests.csproj"/>
+        <Project Path="customer/jobs/Customer.Jobs/Customer.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/customer/processors/">
+        <Project Path="customer/processors/Customer.Processors.UnitTests/Customer.Processors.UnitTests.csproj"/>
+        <Project Path="customer/processors/Customer.Processors/Customer.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/customer/shared/">
+        <Project Path="customer/shared/Customer.Infrastructure/Customer.Infrastructure.csproj"/>
+        <Project Path="customer/shared/Customer.Shared.UnitTests/Customer.Shared.UnitTests.csproj"/>
+        <Project Path="customer/shared/Customer.Shared/Customer.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/gateway/"/>
+    <Folder Name="/gateway/apis/">
+        <Project Path="gateway/apis/Gateway/Gateway.csproj"/>
+    </Folder>
+    <Folder Name="/location/"/>
+    <Folder Name="/location/apis/">
+        <Project Path="location/apis/Location.Api.UnitTests/Location.Api.UnitTests.csproj"/>
+        <Project Path="location/apis/Location.Api/Location.Api.csproj"/>
+    </Folder>
+    <Folder Name="/location/domain/">
+        <Project Path="location/domain/Location.Domain.AppHost/Location.Domain.AppHost.csproj"/>
+        <Project Path="location/domain/Location.Domain.IntegrationTests/Location.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/location/jobs/">
+        <Project Path="location/jobs/Location.Jobs.UnitTests/Location.Jobs.UnitTests.csproj"/>
+        <Project Path="location/jobs/Location.Jobs/Location.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/location/processors/">
+        <Project Path="location/processors/Location.Processors.UnitTests/Location.Processors.UnitTests.csproj"/>
+        <Project Path="location/processors/Location.Processors/Location.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/location/shared/">
+        <Project Path="location/shared/Location.Infrastructure/Location.Infrastructure.csproj"/>
+        <Project Path="location/shared/Location.Shared.UnitTests/Location.Shared.UnitTests.csproj"/>
+        <Project Path="location/shared/Location.Shared/Location.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/marketplace/"/>
+    <Folder Name="/marketplace/apis/">
+        <Project Path="marketplace/apis/Marketplace.Api.UnitTests/Marketplace.Api.UnitTests.csproj"/>
+        <Project Path="marketplace/apis/Marketplace.Api/Marketplace.Api.csproj"/>
+    </Folder>
+    <Folder Name="/marketplace/domain/">
+        <Project Path="marketplace/domain/Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj"/>
+        <Project
+                Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/marketplace/jobs/">
+        <Project Path="marketplace/jobs/Marketplace.Jobs.UnitTests/Marketplace.Jobs.UnitTests.csproj"/>
+        <Project Path="marketplace/jobs/Marketplace.Jobs/Marketplace.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/marketplace/processors/">
+        <Project
+                Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj"/>
+        <Project Path="marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/marketplace/shared/">
+        <Project Path="marketplace/shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj"/>
+        <Project Path="marketplace/shared/Marketplace.Shared.UnitTests/Marketplace.Shared.UnitTests.csproj"/>
+        <Project Path="marketplace/shared/Marketplace.Shared/Marketplace.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/msteams/"/>
+    <Folder Name="/msteams/apis/">
+        <Project Path="msteams/apis/MsTeams.Api.UnitTests/MsTeams.Api.UnitTests.csproj"/>
+        <Project Path="msteams/apis/MsTeams.Api/MsTeams.Api.csproj"/>
+    </Folder>
+    <Folder Name="/msteams/domain/">
+        <Project Path="msteams/domain/MsTeams.Domain.AppHost/MsTeams.Domain.AppHost.csproj"/>
+        <Project Path="msteams/domain/MsTeams.Domain.IntegrationTests/MsTeams.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/msteams/jobs/">
+        <Project Path="msteams/jobs/MsTeams.Jobs.UnitTests/MsTeams.Jobs.UnitTests.csproj"/>
+        <Project Path="msteams/jobs/MsTeams.Jobs/MsTeams.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/msteams/processors/">
+        <Project Path="msteams/processors/MsTeams.Processors.UnitTests/MsTeams.Processors.UnitTests.csproj"/>
+        <Project Path="msteams/processors/MsTeams.Processors/MsTeams.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/msteams/shared/">
+        <Project Path="msteams/shared/MsTeams.Infrastructure/MsTeams.Infrastructure.csproj"/>
+        <Project Path="msteams/shared/MsTeams.Shared.UnitTests/MsTeams.Shared.UnitTests.csproj"/>
+        <Project Path="msteams/shared/MsTeams.Shared/MsTeams.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/organization/"/>
+    <Folder Name="/organization/apis/">
+        <Project Path="organization/apis/Organization.Api.UnitTests/Organization.Api.UnitTests.csproj"/>
+        <Project Path="organization/apis/Organization.Api/Organization.Api.csproj"/>
+    </Folder>
+    <Folder Name="/organization/domain/">
+        <Project Path="organization/domain/Organization.Domain.AppHost/Organization.Domain.AppHost.csproj"/>
+        <Project
+                Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/organization/jobs/">
+        <Project Path="organization/jobs/Organization.Jobs.UnitTests/Organization.Jobs.UnitTests.csproj"/>
+        <Project Path="organization/jobs/Organization.Jobs/Organization.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/organization/processors/">
+        <Project
+                Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj"/>
+        <Project Path="organization/processors/Organization.Processors/Organization.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/organization/shared/">
+        <Project Path="organization/shared/Organization.Infrastructure/Organization.Infrastructure.csproj"/>
+        <Project Path="organization/shared/Organization.Shared.UnitTests/Organization.Shared.UnitTests.csproj"/>
+        <Project Path="organization/shared/Organization.Shared/Organization.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/slack/"/>
+    <Folder Name="/slack/apis/">
+        <Project Path="slack/apis/Slack.Api.UnitTests/Slack.Api.UnitTests.csproj"/>
+        <Project Path="slack/apis/Slack.Api/Slack.Api.csproj"/>
+    </Folder>
+    <Folder Name="/slack/domain/">
+        <Project Path="slack/domain/Slack.Domain.AppHost/Slack.Domain.AppHost.csproj"/>
+        <Project Path="slack/domain/Slack.Domain.IntegrationTests/Slack.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/slack/jobs/">
+        <Project Path="slack/jobs/Slack.Jobs.UnitTests/Slack.Jobs.UnitTests.csproj"/>
+        <Project Path="slack/jobs/Slack.Jobs/Slack.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/slack/processors/">
+        <Project Path="slack/processors/Slack.Processors.UnitTests/Slack.Processors.UnitTests.csproj"/>
+        <Project Path="slack/processors/Slack.Processors/Slack.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/slack/shared/">
+        <Project Path="slack/shared/Slack.Infrastructure/Slack.Infrastructure.csproj"/>
+        <Project Path="slack/shared/Slack.Shared.UnitTests/Slack.Shared.UnitTests.csproj"/>
+        <Project Path="slack/shared/Slack.Shared/Slack.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/system/">
+        <Project Path="system/Skedular.AppHost/Skedular.AppHost.csproj"/>
+        <Project Path="system/Skedular.SystemTests/Skedular.SystemTests.csproj"/>
+    </Folder>
+    <Folder Name="/team/"/>
+    <Folder Name="/team/apis/">
+        <Project Path="team/apis/Team.Api.UnitTests/Team.Api.UnitTests.csproj"/>
+        <Project Path="team/apis/Team.Api/Team.Api.csproj"/>
+    </Folder>
+    <Folder Name="/team/domain/">
+        <Project Path="team/domain/Team.Domain.AppHost/Team.Domain.AppHost.csproj"/>
+        <Project Path="team/domain/Team.Domain.IntegrationTests/Team.Domain.IntegrationTests.csproj"/>
+    </Folder>
+    <Folder Name="/team/jobs/">
+        <Project Path="team/jobs/Team.Jobs.UnitTests/Team.Jobs.UnitTests.csproj"/>
+        <Project Path="team/jobs/Team.Jobs/Team.Jobs.csproj"/>
+    </Folder>
+    <Folder Name="/team/processors/">
+        <Project Path="team/processors/Team.Processors.UnitTests/Team.Processors.UnitTests.csproj"/>
+        <Project Path="team/processors/Team.Processors/Team.Processors.csproj"/>
+    </Folder>
+    <Folder Name="/team/shared/">
+        <Project Path="team/shared/Team.Infrastructure/Team.Infrastructure.csproj"/>
+        <Project Path="team/shared/Team.Shared.UnitTests/Team.Shared.UnitTests.csproj"/>
+        <Project Path="team/shared/Team.Shared/Team.Shared.csproj"/>
+    </Folder>
+    <Folder Name="/scripts/">
+        <File Path="scripts/format.sh"/>
+        <File Path="scripts/generate-graphql.sh"/>
+        <File Path="scripts/lint.sh"/>
+        <File Path="scripts/start-dependencies-min.sh"/>
+        <File Path="scripts/start-dependencies.sh"/>
+    </Folder>
+    <Folder Name="/shared/">
+        <Project Path="shared/Api.Shared.Clients.UnitTests/Api.Shared.Clients.UnitTests.csproj"/>
+        <Project Path="shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <Project Path="shared/Api.Shared.Services.UnitTests/Api.Shared.Services.UnitTests.csproj"/>
+        <Project Path="shared/Api.Shared.Services/Api.Shared.Services.csproj"/>
+        <Project Path="shared/Enterprise.Shared.UnitTests/Enterprise.Shared.UnitTests.csproj"/>
+        <Project Path="shared/Enterprise.Shared/Enterprise.Shared.csproj"/>
+        <Project Path="shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
+        <Project Path="shared/Skedularctl/Skedularctl.csproj"/>
+        <Project Path="shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <Project Path="shared/Testing.Shared/Testing.Shared.csproj"/>
+        <Project Path="shared/WebScrapper/WebScrapper.csproj"/>
+    </Folder>
+    <Folder Name="/solution-items/">
+        <File Path=".dockerignore"/>
+        <File Path=".editorconfig"/>
+        <File Path=".env"/>
+        <File Path=".env.template"/>
+        <File Path=".gitattributes"/>
+        <File Path=".gitignore"/>
+        <File Path="docker-compose-crm.yml"/>
+        <File Path="docker-compose-min.yml"/>
+        <File Path="docker-compose-production.yml"/>
+        <File Path="docker-compose.yml"/>
+        <File Path="GitVersion.yml"/>
+        <File Path="keyckloak.json"/>
+        <File Path="Makefile"/>
+        <File Path="qodana.yaml"/>
+        <File Path="README.md"/>
+    </Folder>
 </Solution>

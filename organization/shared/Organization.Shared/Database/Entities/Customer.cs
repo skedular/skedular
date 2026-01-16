@@ -21,6 +21,7 @@ public class Customer : ReplicatedEntityBaseWithDeleted
     public string? PhotoUrl192 { get; set; }
     public string? PhotoUrl512 { get; set; }
     public string? PhoneNumber { get; set; }
+    public string? Type { get; set; }
 
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
@@ -47,11 +48,13 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.PhotoUrl192).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.GivenName);
         builder.HasIndex(item => item.MiddleName);
         builder.HasIndex(item => item.FamilyName);
         builder.HasIndex(item => item.PhoneNumber);
+        builder.HasIndex(item => item.Type);
     }
 }

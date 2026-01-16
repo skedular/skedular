@@ -4,8 +4,8 @@ using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
+using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
-using IdentityType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.IdentityType;
 using Location = Booking.Shared.Models.Location;
 using Offering = Api.Shared.Services.Models.Offering;
 using Organization = Booking.Shared.Models.Organization;
@@ -117,19 +117,14 @@ public class Mapper : IMapper
             PhotoUrl192 = customer.PhotoUrl192,
             PhotoUrl512 = customer.PhotoUrl512,
             PhoneNumber = customer.PhoneNumber,
+            Type = customer.Type switch
+            {
+                CustomerType.Guest => Api.Shared.Services.Models.CustomerType.Guest,
+                CustomerType.Registered => Api.Shared.Services.Models.CustomerType.Registered,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             Identities = customer.Identities.Select(item =>
-                new Shared.Models.Identity
-                {
-                    Id = item.Id,
-                    Email = item.Email.ToSafeString(),
-                    EmailVerified = item.EmailVerified,
-                    Type = item.Type switch
-                    {
-                        IdentityType.Guest => Api.Shared.Services.Models.IdentityType.Guest,
-                        IdentityType.Registered => Api.Shared.Services.Models.IdentityType.Registered,
-                        _ => throw new ArgumentOutOfRangeException()
-                    }
-                }).ToList(),
+                new Shared.Models.Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified }).ToList(),
             DefaultOrganization = string.IsNullOrWhiteSpace(customer.PreferredOrganizationId)
                 ? null
                 : new Organization { Id = customer.PreferredOrganizationId },
@@ -492,6 +487,7 @@ public class Mapper : IMapper
         dest.PhotoUrl192 = src.PhotoUrl192;
         dest.PhotoUrl512 = src.PhotoUrl512;
         dest.PhoneNumber = src.PhoneNumber;
+        dest.Type = src.Type.ToNullableCustomerType();
         dest.Identities = identities;
         dest.DefaultOrganization = defaultOrganization;
         dest.PreferredLocations = preferredLocations;
@@ -507,7 +503,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Email = src.Email;
         dest.EmailVerified = src.EmailVerified;
-        dest.Type = src.Type.ToNullableIdentityType();
         if (customer is not null)
         {
             dest.Customer = customer;

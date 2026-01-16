@@ -360,6 +360,7 @@ public class Mapper : IMapper
                 PhotoUrl192 = src.PhotoUrl192,
                 PhotoUrl512 = src.PhotoUrl512,
                 PhoneNumber = src.PhoneNumber,
+                Type = src.Type.ToNullableCustomerType(),
                 Identities = MapTo(src.Identities).ToList()
             };
 
@@ -1606,8 +1607,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Email = src.Email,
-            EmailVerified = src.EmailVerified,
-            Type = src.Type.ToNullableIdentityType()
+            EmailVerified = src.EmailVerified
         };
 
     private static IEnumerable<OrganizationOffering> MapTo(
