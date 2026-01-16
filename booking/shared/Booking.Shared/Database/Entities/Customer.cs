@@ -67,7 +67,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.Timezone).HasMaxLength(Constants.MaxTimezoneLength);
         builder.Property(item => item.Locale).HasMaxLength(Constants.MaxLocaleLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxCustomerTypeLength);
 
         builder.HasOne(item => item.DefaultOrganization).WithMany(item => item.DefaultedByCustomers);
         builder.HasMany(item => item.PreferredLocations).WithMany(item => item.PreferredByCustomers);

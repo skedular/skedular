@@ -22,7 +22,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxCustomerTypeLength);
 
         builder.HasIndex(item => item.Type);
     }

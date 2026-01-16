@@ -48,7 +48,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.PhotoUrl192).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhotoUrl512).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.PhoneNumber).HasMaxLength(Constants.MaxPhoneNumberLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxCustomerTypeLength);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.GivenName);

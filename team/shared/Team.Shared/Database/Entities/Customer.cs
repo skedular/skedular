@@ -33,7 +33,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(item => item.GivenName).HasMaxLength(Constants.MaxGivenNameLength);
         builder.Property(item => item.MiddleName).HasMaxLength(Constants.MaxMiddleNameLength);
         builder.Property(item => item.FamilyName).HasMaxLength(Constants.MaxFamilyNameLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxIdentityTypeLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxCustomerTypeLength);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.GivenName);
