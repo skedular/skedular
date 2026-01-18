@@ -20,7 +20,7 @@ public static class Extensions
         public IServiceCollection AddJobs() =>
             services;
 
-        public IServiceCollection AddCrossDomainClients(IConfiguration configuration)
+        public IServiceCollection AddInDomainClients(IConfiguration configuration)
         {
             var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
             ArgumentNullException.ThrowIfNull(bookingConfiguration);

@@ -44,7 +44,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddSharedCrossDomainClients(configuration)
-            .AddCrossDomainClients(configuration)
+            .AddInDomainClients(configuration)
             .AddStripe(configuration)
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<GenerateLocationResourcesSlots>()
