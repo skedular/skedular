@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Team.Api.GraphQL.Member;
 using Team.Api.GraphQL.Team;
 
@@ -17,7 +16,6 @@ public class InviteCustomerToJoinTeamDetails : Node
     [GraphQLName("team")] public TeamDetails Team { get; set; } = new();
     [GraphQLName("createdById")] public string CreatedById { get; set; } = string.Empty;
     [GraphQLName("inviteeId")] public string? InviteeId { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [ObjectType<InviteCustomerToJoinTeamDetails>]

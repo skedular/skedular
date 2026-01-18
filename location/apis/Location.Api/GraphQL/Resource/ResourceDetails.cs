@@ -1,7 +1,6 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Location.Api.GraphQL.Location;
 
 namespace Location.Api.GraphQL.Resource;
@@ -26,7 +25,6 @@ public class ResourceDetails : Node
     public bool IsAvailableHoursOverridden { get; set; }
 
     [GraphQLName("availableHours")] public OpeningHours? AvailableHours { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [ObjectType<ResourceDetails>]

@@ -6,7 +6,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using CustomerBillingDetails = Customer.Api.GraphQL.Billing.CustomerBillingDetails;
 
 namespace Customer.Api.GraphQL.Customer;
@@ -49,8 +48,6 @@ public class CustomerDetails : Node
 
     [GraphQLName("personalInformationVisibility")]
     public PersonalInformationVisibilityDetails PersonalInformationVisibility { get; set; } = new();
-
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
     public async Task<bool> HasAttachedPaymentMethodAsync(

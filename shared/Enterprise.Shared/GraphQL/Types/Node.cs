@@ -1,7 +1,7 @@
 namespace Enterprise.Shared.GraphQL.Types;
 
 [GraphQLName("Node")]
-public interface Node
+public class Node(string? id = null)
 {
-    [GraphQLName("id")] [ID] string Id { get; set; }
+    [GraphQLName("id")] [ID] public string Id { get; set; } = string.IsNullOrWhiteSpace(id) ? string.Empty : id;
 }

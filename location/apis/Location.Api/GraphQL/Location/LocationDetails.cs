@@ -4,7 +4,6 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Location.Api.GraphQL.Analytics;
 using Location.Api.GraphQL.PhysicalAddress;
 using Location.Api.GraphQL.Resource;
@@ -47,8 +46,6 @@ public class LocationDetails : Node
     [GraphQLName("contactedViaCall")] public bool ContactedViaCall { get; set; }
     [GraphQLName("contactedViaWhatsapp")] public bool ContactedViaWhatsapp { get; set; }
     [GraphQLName("productIds")] public IEnumerable<string> ProductIds { get; set; } = [];
-
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
     public async Task<LocationAnalytics> AnalyticsAsync(

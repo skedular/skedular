@@ -1,6 +1,5 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
-using HotChocolate.Types.Relay;
 
 namespace Organization.Api.GraphQL.Tag;
 
@@ -11,5 +10,4 @@ public class OrganizationTagDetails : Node
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
     [GraphQLName("color")] public string? Color { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

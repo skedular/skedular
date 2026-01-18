@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Marketplace.Api.GraphQL.Product;
 
@@ -47,7 +46,6 @@ public class ProductVersionDetails : Node
     [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
 
     [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [ObjectType<ProductVersionDetails>]

@@ -4,7 +4,6 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Organization.Api.GraphQL.Analytics;
 using Organization.Api.GraphQL.Member;
 using Organization.Api.GraphQL.Offering;
@@ -66,7 +65,6 @@ public class OrganizationDetails : Node
 
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
     public async Task<Connection<OrganizationMemberEdge>> MembersAsync(

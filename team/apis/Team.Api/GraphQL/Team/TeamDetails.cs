@@ -4,7 +4,6 @@ using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using Team.Api.GraphQL.Member;
 using Team.Api.Mappers;
 using Team.Api.Services;
@@ -29,7 +28,6 @@ public class TeamDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
     [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
     public async Task<Connection<TeamMemberEdge>> MembersAsync(

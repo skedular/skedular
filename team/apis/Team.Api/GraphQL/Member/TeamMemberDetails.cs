@@ -2,7 +2,6 @@ using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Team.Api.GraphQL.Member;
 
@@ -13,7 +12,6 @@ public class TeamMemberDetails : Node
     [GraphQLName("status")] public TeamMemberStatus Status { get; set; }
     [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
     [GraphQLName("organizationMember")] public TeamOrganizationMemberDetails? OrganizationMember { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
 
 [ObjectType<TeamMemberDetails>]

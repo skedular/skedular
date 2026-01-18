@@ -5,7 +5,6 @@ using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Booking.Api.GraphQL.Booking;
 
@@ -63,10 +62,7 @@ public class BookingDetails : Node
     public BookingCheckoutSessionDetails? BookingCheckoutSession { get; set; }
 
     [GraphQLName("paymentExpiry")] public DateTimeOffset PaymentExpiry { get; set; }
-
     [GraphQLName("bookedOnMarketplace")] public bool BookedOnMarketplace { get; set; }
-
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 
     [UseResolverScope]
     public async Task<PaymentStatusDetails> PaymentStatusAsync(

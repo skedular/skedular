@@ -1,6 +1,5 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
-using HotChocolate.Types.Relay;
 
 namespace Organization.Api.GraphQL.Organization;
 
@@ -16,5 +15,4 @@ public class OrganizationPaymentMethod : Node
     [GraphQLName("cardFunding")] public string? CardFunding { get; set; }
     [GraphQLName("cardIssuer")] public string? CardIssuer { get; set; }
     [GraphQLName("cardLastFourDigit")] public string? CardLastFourDigit { get; set; }
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }

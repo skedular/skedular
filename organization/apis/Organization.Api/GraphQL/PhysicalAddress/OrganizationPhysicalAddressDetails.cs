@@ -1,6 +1,5 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
-using HotChocolate.Types.Relay;
 using Organization.Api.GraphQL.Organization;
 
 namespace Organization.Api.GraphQL.PhysicalAddress;
@@ -27,5 +26,4 @@ public class OrganizationPhysicalAddressDetails : Node
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
     [GraphQLName("countryCode")] public string? CountryCode { get; set; }
     [GraphQLName("organization")] public OrganizationDetails Organization { get; set; } = new();
-    [GraphQLName("id")] [ID] public string Id { get; set; } = string.Empty;
 }
