@@ -7,8 +7,6 @@ public record ResourceCustomersPair(Resource Resource, List<Customer> Customers)
 
 public class Booking : ModelBaseWithDeleted
 {
-    private ICollection<ResourceBookingSlot> _resourceBookingSlots = [];
-
     public DateTimeOffset From { get; set; }
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
@@ -30,15 +28,14 @@ public class Booking : ModelBaseWithDeleted
 
     public ICollection<ResourceBookingSlot> ResourceBookingSlots
     {
-        get => _resourceBookingSlots;
         set
         {
-            _resourceBookingSlots = value;
-            Resources = ResourceBookingSlots
+            field = value;
+            Resources = field
                 .GroupBy(item => item.Resource.Id)
                 .Select(item =>
                 {
-                    var slots = ResourceBookingSlots.Where(slot => slot.Resource.Id == item.Key).ToList();
+                    var slots = field.Where(slot => slot.Resource.Id == item.Key).ToList();
                     var allCustomersIncludingDuplicated = slots.SelectMany(slot => slot.Customers).ToList();
                     var customers = allCustomersIncludingDuplicated
                         .GroupBy(customer => customer.Id)
@@ -48,7 +45,7 @@ public class Booking : ModelBaseWithDeleted
                     return new ResourceCustomersPair(slots.First().Resource, customers);
                 }).ToList();
         }
-    }
+    } = [];
 
     public ICollection<ResourceCustomersPair> Resources { get; set; } = [];
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];

@@ -32,8 +32,8 @@
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.17.2"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.11"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.17.3"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.12"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.13.0"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.13.0"/>
@@ -63,25 +63,25 @@
         <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.2"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.2.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.2.0"/>
-        <PackageReference Include="Microsoft.Graph" Version="5.100.0"/>
+        <PackageReference Include="Microsoft.Graph" Version="5.101.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.3.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0"/>
         <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.1"/>
 
-        <PackageReference Include="OpenTelemetry.Api" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.14.0"/>
+        <PackageReference Include="OpenTelemetry.Api" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1"/>
-        <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.14.0-beta.2"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.14.0-beta.1"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.14.0"/>
-        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.14.0-rc.1"/>
+        <PackageReference Include="OpenTelemetry.Exporter.Zipkin" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.15.0-beta.1"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.0-rc.1"/>
 
         <PackageReference Include="Serilog" Version="4.3.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0"/>
@@ -122,9 +122,9 @@
 
         <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0"/>
         <PackageReference Include="Azure.Identity" Version="1.17.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.260108.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260108.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.260108.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.260121.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260121.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.260121.1"/>
         <PackageReference Include="OpenAI" Version="2.8.0"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
