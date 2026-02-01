@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Enterprise.Shared.Mcp.Configurations;
+using Microsoft.Agents.AI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +36,26 @@ public static class Extensions
             }
 
             return app;
+        }
+    }
+
+    extension(AgentSession session)
+    {
+        public string ToSerializedString() => JsonSerializer.Serialize(session.Serialize());
+    }
+
+    extension(string? serializedSession)
+    {
+        public async Task<AgentSession> ToAgentSessionAsync(AIAgent agent, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(serializedSession))
+            {
+                return await agent.GetNewSessionAsync(cancellationToken);
+            }
+
+            return await agent.DeserializeSessionAsync(
+                JsonSerializer.Deserialize<JsonElement>(serializedSession),
+                cancellationToken: cancellationToken);
         }
     }
 }
