@@ -1,7 +1,9 @@
 using Enterprise.Shared;
+using Enterprise.Shared.Ai;
 using Enterprise.Shared.GraphQL.Configurations;
 using Gateway.Handlers;
 using HotChocolate.Fusion.Metadata;
+using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
 
 namespace Gateway;
 
@@ -58,9 +60,12 @@ public class Program
 
         services.AddHealthChecks();
 
+        services.AddMcpServer(configuration, [typeof(Program)]);
+
         var app = builder.Build().UseWebApplicationDefaults<Program>();
 
         app.MapReverseProxy();
+        app.UseMcpServer();
 
         return app;
     }

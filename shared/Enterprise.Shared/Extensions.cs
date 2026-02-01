@@ -11,7 +11,6 @@ using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Image;
 using Enterprise.Shared.IO;
 using Enterprise.Shared.Logging;
-using Enterprise.Shared.Mcp.Configurations;
 using Enterprise.Shared.Random;
 using Enterprise.Shared.Security;
 using Enterprise.Shared.Security.Configurations;
@@ -108,16 +107,6 @@ public static class Extensions
             var applicationConfiguration = configuration.GetSection(ApplicationConfiguration.Key).Get<ApplicationConfiguration>();
             ArgumentNullException.ThrowIfNull(applicationConfiguration);
             services.AddSingleton(applicationConfiguration);
-
-            var mcpConfig = configuration.GetSection(McpConfig.Key).Get<McpConfig>();
-            if (mcpConfig is not null)
-            {
-                services
-                    .AddSingleton(mcpConfig)
-                    .AddMcpServer()
-                    .WithHttpTransport(option => option.Stateless = false)
-                    .WithToolsFromAssembly(typeof(TProgram).Assembly);
-            }
 
             var identityProvidersConfiguration = configuration.GetSection(IdentityProvidersConfiguration.Key).Get<IdentityProvidersConfiguration>();
             if (identityProvidersConfiguration is not null)
@@ -340,12 +329,6 @@ public static class Extensions
             app.UseMiddleware<ContextEnricherMiddleware>();
             app.MapGraphqlEndpoints(app.Configuration);
             app.MapControllers();
-
-            var mcpConfig = app.Services.GetService<McpConfig>();
-            if (mcpConfig is not null)
-            {
-                app.MapMcp(mcpConfig.Path);
-            }
 
             var logger = app.Services.GetRequiredService<ILogger<TProgram>>();
 
