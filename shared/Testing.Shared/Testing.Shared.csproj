@@ -5,7 +5,7 @@
         <Product>Skedular Testing.Shared</Product>
         <Description>Skedular Testing.Shared</Description>
         <Author>Skedular Team</Author>
-        <Copyright>© Skedular 2025. All rights reserved.</Copyright>
+        <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
         <RepositoryUrl>https://github.com/unityhubio/unityhubio</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -27,15 +27,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012" />
-        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012" />
-        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012" />
-        <PackageReference Include="FakeItEasy" Version="9.0.1" />
-        <PackageReference Include="GraphQL.Client" Version="6.1.0" />
-        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0" />
-        <PackageReference Include="Shouldly" Version="4.3.0" />
-        <PackageReference Include="xunit.v3" Version="3.2.2" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
+        <PackageReference Include="AutoFixture" Version="5.0.0-preview0012"/>
+        <PackageReference Include="AutoFixture.AutoFakeItEasy" Version="5.0.0-preview0012"/>
+        <PackageReference Include="AutoFixture.Xunit3" Version="5.0.0-preview0012"/>
+        <PackageReference Include="FakeItEasy" Version="9.0.1"/>
+        <PackageReference Include="GraphQL.Client" Version="6.1.0"/>
+        <PackageReference Include="GraphQL.Client.Serializer.Newtonsoft" Version="6.1.0"/>
+        <PackageReference Include="Shouldly" Version="4.3.0"/>
+        <PackageReference Include="xunit.v3" Version="3.2.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>
@@ -44,6 +44,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj" />
+        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
     </ItemGroup>
 </Project>

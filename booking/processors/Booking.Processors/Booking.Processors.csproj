@@ -6,7 +6,7 @@
         <Product>Skedular Booking Processors</Product>
         <Description>Skedular Booking Processors</Description>
         <Author>Skedular Team</Author>
-        <Copyright>© Skedular 2025. All rights reserved.</Copyright>
+        <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
         <RepositoryUrl>https://github.com/unityhubio/unityhubio</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -33,14 +33,14 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj" />
+        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json" />
+        <EmbeddedResource Include="appsettings.json"/>
     </ItemGroup>
 </Project>

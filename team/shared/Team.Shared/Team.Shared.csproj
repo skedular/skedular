@@ -5,7 +5,7 @@
         <Product>Skedular Team Shared</Product>
         <Description>Skedular Team Shared</Description>
         <Author>Skedular Team</Author>
-        <Copyright>© Skedular 2025. All rights reserved.</Copyright>
+        <Copyright>© Skedular 2026. All rights reserved.</Copyright>
         <Company>Skedular Ltd</Company>
         <RepositoryUrl>https://github.com/unityhubio/unityhubio</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -30,7 +30,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client" />
+        <Protobuf Include="../../../api-definitions/grpc/skedular/customer_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -45,14 +45,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj" />
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj" />
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.html" />
-        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.txt" />
-        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.html" />
-        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.txt" />
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamExistingCustomer\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.html"/>
+        <EmbeddedResource Include="EmailTemplates\InviteToJoinTeamNewCustomer\template.txt"/>
     </ItemGroup>
 </Project>
