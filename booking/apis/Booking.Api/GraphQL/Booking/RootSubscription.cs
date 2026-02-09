@@ -9,20 +9,21 @@ using HotChocolate.Types;
 namespace Booking.Api.GraphQL.Booking;
 
 [SubscriptionType]
-public class RootSubscription(IServiceProvider serviceProvider, IMapper mapper)
+public class RootSubscription(IMapper mapper)
 {
     public async IAsyncEnumerable<BookingDetails> OnBookingUpdated(
         string id,
         [Service] ITopicEventReceiver topicEventReceiver,
+        [Service] IServiceProvider serviceProvider,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var sourceStream = await topicEventReceiver.SubscribeAsync<string>(Constants.BookingTopicName, cancellationToken);
 
-        yield return await GetBookingByIdAsync(id, cancellationToken);
+        yield return await GetBookingByIdAsync(id, serviceProvider, cancellationToken);
 
         await foreach (var _ in sourceStream.ReadEventsAsync().Where(item => item == id).WithCancellation(cancellationToken))
         {
-            yield return await GetBookingByIdAsync(id, cancellationToken);
+            yield return await GetBookingByIdAsync(id, serviceProvider, cancellationToken);
         }
     }
 
@@ -30,7 +31,7 @@ public class RootSubscription(IServiceProvider serviceProvider, IMapper mapper)
     [Subscribe(With = nameof(OnBookingUpdated))]
     public BookingDetails Booking([EventMessage] BookingDetails item) => item;
 
-    private async Task<BookingDetails> GetBookingByIdAsync(string id, CancellationToken cancellationToken)
+    private async Task<BookingDetails> GetBookingByIdAsync(string id, IServiceProvider serviceProvider, CancellationToken cancellationToken)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
 
