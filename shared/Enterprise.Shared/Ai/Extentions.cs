@@ -39,9 +39,9 @@ public static class Extensions
         }
     }
 
-    extension(AgentSession session)
+    extension(AIAgent agent)
     {
-        public string ToSerializedString() => JsonSerializer.Serialize(session.Serialize());
+        public string ToSerializedString(AgentSession session) => JsonSerializer.Serialize(agent.SerializeSession(session));
     }
 
     extension(string? serializedSession)
@@ -50,7 +50,7 @@ public static class Extensions
         {
             if (string.IsNullOrWhiteSpace(serializedSession))
             {
-                return await agent.GetNewSessionAsync(cancellationToken);
+                return await agent.CreateSessionAsync(cancellationToken);
             }
 
             return await agent.DeserializeSessionAsync(

@@ -121,10 +121,10 @@
 
         <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0"/>
         <PackageReference Include="Azure.Identity" Version="1.17.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.260128.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260128.1"/>
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.260128.1"/>
-        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.7.0-preview.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-preview.260205.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260205.1"/>
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.260205.1"/>
+        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.8.0-preview.1"/>
         <PackageReference Include="OpenAI" Version="2.8.0"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
