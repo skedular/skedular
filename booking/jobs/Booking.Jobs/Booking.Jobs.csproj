@@ -29,18 +29,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.Tools" Version="2.76.0">
+        <PackageReference Include="Grpc.Tools" Version="2.78.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj"/>
+        <ProjectReference Include="..\..\shared\Booking.Shared\Booking.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="appsettings.json"/>
+        <EmbeddedResource Include="appsettings.json" />
     </ItemGroup>
 </Project>
