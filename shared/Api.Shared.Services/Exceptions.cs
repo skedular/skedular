@@ -95,3 +95,6 @@ public class OrganizationPhysicalAddressNotFound() : Exception("Organization phy
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");
 
 public class BookingProductWithMixedTaxSetupNotAllowed() : Exception("Booking product with different tax setup not allowed");
+
+public class MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking()
+    : Exception("More resources have been selected than are allowed for this booking");

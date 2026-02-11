@@ -113,6 +113,23 @@ public class BookingService(
             throw new BookingProductWithMixedTaxSetupNotAllowed();
         }
 
+        if (booking.LineItems.Count != 0)
+        {
+            // TODO: 20260211 : Morteza: The current implementation does not work when different products with different resources are selected, as it only validates the total quantity and ignores the requested resource types.
+            var maxAllowedResourcesToBook = booking.LineItems
+                .Select(item =>
+                {
+                    var matchedProductVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
+
+                    return item.Quantity * matchedProductVersion.NumberOfResourcesToBook;
+                }).Sum();
+
+            if (resourceIds.Count > maxAllowedResourcesToBook!.Value)
+            {
+                throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
+            }
+        }
+
         booking.BookedOnMarketplace = booking.LineItems.Count != 0;
         booking.IsPaymentRequired = booking.LineItems.Count != 0;
         booking.PaymentStatus = booking.IsPaymentRequired ? PaymentStatus.Pending : PaymentStatus.NoPaymentRequired;
