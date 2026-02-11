@@ -3,9 +3,9 @@ using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("BookingTypeDetails")]
-public class BookingTypeDetails
+[GraphQLName("BookingCategoryDetails")]
+public class BookingCategoryDetails
 {
-    [GraphQLName("type")] public BookingType Type { get; set; }
+    [GraphQLName("category")] public BookingCategory Category { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

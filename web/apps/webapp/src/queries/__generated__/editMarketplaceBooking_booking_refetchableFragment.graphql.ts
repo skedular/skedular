@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5a6b25dd1ccce6922e1dcfe74c60f267>>
+ * @generated SignedSource<<73060e1b9bdd7ca1af12833e88a46d23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,31 +40,24 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
+v3 = [
   (v1/*: any*/),
-  (v3/*: any*/)
+  (v2/*: any*/)
 ],
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v6 = [
+v5 = [
   (v1/*: any*/),
-  (v3/*: any*/),
-  (v5/*: any*/)
+  (v2/*: any*/),
+  (v4/*: any*/)
 ];
 return {
   "fragment": {
@@ -127,12 +120,18 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingTypeDetails",
+            "concreteType": "BookingCategoryDetails",
             "kind": "LinkedField",
-            "name": "type",
+            "name": "category",
             "plural": false,
             "selections": [
-              (v2/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "category",
+                "storageKey": null
+              }
             ],
             "storageKey": null
           },
@@ -145,7 +144,7 @@ return {
             "plural": true,
             "selections": [
               (v1/*: any*/),
-              (v3/*: any*/),
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -184,7 +183,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedOrganizations",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -194,7 +193,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedLocations",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -204,7 +203,7 @@ return {
             "kind": "LinkedField",
             "name": "involvedTeams",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v3/*: any*/),
             "storageKey": null
           },
           {
@@ -224,8 +223,8 @@ return {
                 "plural": false,
                 "selections": [
                   (v1/*: any*/),
-                  (v3/*: any*/),
-                  (v5/*: any*/),
+                  (v2/*: any*/),
+                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -233,7 +232,7 @@ return {
                     "kind": "LinkedField",
                     "name": "customTags",
                     "plural": true,
-                    "selections": (v6/*: any*/),
+                    "selections": (v5/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -243,7 +242,7 @@ return {
                     "kind": "LinkedField",
                     "name": "zones",
                     "plural": true,
-                    "selections": (v6/*: any*/),
+                    "selections": (v5/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -267,8 +266,14 @@ return {
             "name": "paymentStatus",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -285,16 +290,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0e8344b41fd2fe84ddd9a347f368e1ad",
+    "cacheID": "a177964fd6fd82fa5257c41e7239317f",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    type {\n      type\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      id\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n  }\n}\n"
+    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      id\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7d7e689d4da17cb49808206dcbb51186";
+(node as any).hash = "ec8872a3f18d5f0a5d474b67d457966d";
 
 export default node;

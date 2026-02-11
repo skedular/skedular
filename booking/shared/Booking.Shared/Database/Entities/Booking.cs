@@ -13,7 +13,7 @@ public class Booking : EntityBaseWithDeleted
     public DateTimeOffset From { get; set; }
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
-    public string Type { get; set; }
+    public string Category { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; }
     public string PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
@@ -53,7 +53,8 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
-        builder.Property(item => item.Type).HasMaxLength(Constants.MaxBookingTypeLength).HasDefaultValue(BookingTypeConstants.WorkingFromOffice);
+        builder.Property(item => item.Category).HasMaxLength(Constants.MaxBookingCategoryLength)
+            .HasDefaultValue(BookingCategoryConstants.WorkingFromOffice);
         builder
             .Property(item => item.PaymentStatus)
             .HasMaxLength(Constants.MaxBookingPaymentStatusLength)
@@ -89,7 +90,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.Until);
         builder.HasIndex(item => item.Notes);
-        builder.HasIndex(item => item.Type);
+        builder.HasIndex(item => item.Category);
         builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.IsPaymentRequired);
         builder.HasIndex(item => item.PaymentMethod);

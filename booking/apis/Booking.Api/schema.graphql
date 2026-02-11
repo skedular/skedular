@@ -4,6 +4,11 @@ schema {
   subscription: Subscription
 }
 
+type BookingCategoryDetails {
+  category: BookingCategory!
+  name: String!
+}
+
 type BookingCheckoutSessionDetails {
   uniqueId: ID!
   checkoutUrl: String!
@@ -23,7 +28,7 @@ type BookingDetails {
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingTypeDetails!
+  category: BookingCategoryDetails!
   bookingResources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
   paymentMethod: PaymentMethodTypeDetails
@@ -61,11 +66,6 @@ type BookingResourceDetails {
   resource: ResourceDetails!
   location: LocationDetails
   customers: [CustomerDetails!]!
-}
-
-type BookingTypeDetails {
-  type: BookingType!
-  name: String!
 }
 
 type ConnectionOfBookingEdge {
@@ -136,8 +136,8 @@ type ProductVersionDetails {
 }
 
 type Query {
-  bookingTypes: [BookingTypeDetails!]!
-  marketplaceBookingTypes: [BookingTypeDetails!]!
+  bookingCategories: [BookingCategoryDetails!]!
+  marketplaceBookingCategories: [BookingCategoryDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
   bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
@@ -187,7 +187,7 @@ input AddBookingInput {
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingType!
+  category: BookingCategory!
   resourceIds: [String!]!
   lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod
@@ -221,7 +221,7 @@ input BookingWhereInput {
   toLt: DateTime
   toLte: DateTime
   notesContains: String
-  type: BookingType
+  category: BookingCategory
   paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
@@ -275,19 +275,11 @@ input UpdateBookingInput {
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingType!
+  category: BookingCategory!
   resourceIds: [String!]!
 }
 
-enum BookingOrderField {
-  FROM
-  TO
-  NOTES
-  TYPE
-  STATUS
-}
-
-enum BookingType {
+enum BookingCategory {
   WORKING_FROM_HOME
   WORKING_FROM_OFFICE
   WORKING_FROM_COWORKING_SPACE
@@ -298,6 +290,14 @@ enum BookingType {
   VACATION
   TRAVELING_FOR_WORK
   NON_WORKING_DAY
+}
+
+enum BookingOrderField {
+  FROM
+  TO
+  NOTES
+  CATEGORY
+  STATUS
 }
 
 enum OrderDirection {

@@ -28,7 +28,7 @@ public class InvoiceIntegrations(
     IOrganizationInvoiceCounterService organizationInvoiceCounterService,
     IEmailService emailService,
     IHostEnvironment hostEnvironment,
-    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender)
+    IGraphQlTopicEventSender graphQlTopicEventSender)
 {
     [Activity]
     public async Task GenerateAndSendInvoiceAsync(GenerateAndSendInvoiceInput args)
@@ -97,7 +97,7 @@ public class InvoiceIntegrations(
 
         await SendInvoiceEmailAsync(args, booking, organizationId, pdfStream, cancellationToken);
 
-        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
     private async Task SendInvoiceEmailAsync(

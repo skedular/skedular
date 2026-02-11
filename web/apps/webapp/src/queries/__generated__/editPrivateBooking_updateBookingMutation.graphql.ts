@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d7f9993dfa644f0ccb5f0c2d2be96eb>>
+ * @generated SignedSource<<2dca5f8520c356b1bcb5ede8f6407fa6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type UpdateBookingInput = {
+  category: BookingCategory;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
@@ -20,7 +21,6 @@ export type UpdateBookingInput = {
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
-  type: BookingType;
   until: any;
 };
 export type editPrivateBooking_updateBookingMutation$variables = {
@@ -46,6 +46,10 @@ export type editPrivateBooking_updateBookingMutation$data = {
           }>;
         };
       }>;
+      readonly category: {
+        readonly category: BookingCategory;
+        readonly name: string;
+      };
       readonly from: any;
       readonly id: string;
       readonly involvedCustomers: ReadonlyArray<{
@@ -69,10 +73,6 @@ export type editPrivateBooking_updateBookingMutation$data = {
         readonly name: string;
       }>;
       readonly notes: string | null | undefined;
-      readonly type: {
-        readonly name: string;
-        readonly type: BookingType;
-      };
       readonly until: any;
     };
   };
@@ -97,6 +97,10 @@ export type editPrivateBooking_updateBookingMutation$rawResponse = {
           }>;
         };
       }>;
+      readonly category: {
+        readonly category: BookingCategory;
+        readonly name: string;
+      };
       readonly from: any;
       readonly id: string;
       readonly involvedCustomers: ReadonlyArray<{
@@ -120,10 +124,6 @@ export type editPrivateBooking_updateBookingMutation$rawResponse = {
         readonly name: string;
       }>;
       readonly notes: string | null | undefined;
-      readonly type: {
-        readonly name: string;
-        readonly type: BookingType;
-      };
       readonly until: any;
     };
   };
@@ -220,16 +220,16 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "BookingTypeDetails",
+            "concreteType": "BookingCategoryDetails",
             "kind": "LinkedField",
-            "name": "type",
+            "name": "category",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "type",
+                "name": "category",
                 "storageKey": null
               },
               (v2/*: any*/)
@@ -377,16 +377,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "fa99459aa353cf3215a5779acbcafc34",
+    "cacheID": "965abe445536e88c55b1cd9fb5429f55",
     "id": null,
     "metadata": {},
     "name": "editPrivateBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editPrivateBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      type {\n        type\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editPrivateBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bfff9d7d811b268af015ffc92243b50f";
+(node as any).hash = "712ff21e099216def6dfdf616e59d59c";
 
 export default node;

@@ -21,6 +21,11 @@ type AreaRange {
   toInSqm: String!
 }
 
+type BookingCategoryDetails {
+  category: BookingCategory!
+  name: String!
+}
+
 type BookingCheckoutSessionDetails {
   checkoutUrl: String!
   uniqueId: ID!
@@ -30,6 +35,7 @@ type BookingDetails {
   bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   bookingResources: [BookingResourceDetails!]!
+  category: BookingCategoryDetails!
   createdByCustomer: CustomerDetails
   currency: String
   currencyToDisplay: String!
@@ -60,7 +66,6 @@ type BookingDetails {
   totalAmountExcludeTax: Decimal
   totalAmountExcludeTaxToDisplay: String!
   totalAmountToDisplay: String!
-  type: BookingTypeDetails!
   until: DateTime!
 }
 
@@ -78,11 +83,6 @@ type BookingResourceDetails {
   customers: [CustomerDetails!]!
   location: LocationDetails
   resource: ResourceDetails!
-}
-
-type BookingTypeDetails {
-  name: String!
-  type: BookingType!
 }
 
 type CancelOrganizationOfferingPayload {
@@ -1014,9 +1014,9 @@ type Query {
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
   booking(id: String!): BookingDetails @cost(weight: "10")
+  bookingCategories: [BookingCategoryDetails!]!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
-  bookingTypes: [BookingTypeDetails!]!
   bookingVersion: Version!
   coreCustomerRecordSynced: Boolean! @cost(weight: "10")
   coreVersion: Version!
@@ -1042,7 +1042,7 @@ type Query {
   locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
-  marketplaceBookingTypes: [BookingTypeDetails!]!
+  marketplaceBookingCategories: [BookingCategoryDetails!]!
   marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
   marketplaceLocations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: MarketplaceLocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceVersion: Version!
@@ -1277,6 +1277,7 @@ input ActivateResourcesInput {
 }
 
 input AddBookingInput {
+  category: BookingCategory!
   clientMutationId: String
   customerIds: [String!]!
   from: DateTime!
@@ -1289,7 +1290,6 @@ input AddBookingInput {
   paymentMethod: PaymentMethod
   resourceIds: [String!]!
   teamIds: [String!]!
-  type: BookingType!
   until: DateTime!
 }
 
@@ -1595,6 +1595,7 @@ input BookingOrderInput {
 }
 
 input BookingWhereInput {
+  category: BookingCategory
   customerIds: [String!]
   fromGt: DateTime
   fromGte: DateTime
@@ -1613,7 +1614,6 @@ input BookingWhereInput {
   toGte: DateTime
   toLt: DateTime
   toLte: DateTime
-  type: BookingType
 }
 
 input CancelInvitationToJoinOrganizationInput {
@@ -2191,6 +2191,7 @@ input ToggleContactedViaWhatsappInput {
 }
 
 input UpdateBookingInput {
+  category: BookingCategory!
   clientMutationId: String
   customerIds: [String!]!
   from: DateTime!
@@ -2200,7 +2201,6 @@ input UpdateBookingInput {
   organizationUniqueAlphanumericNames: [String!]
   resourceIds: [String!]!
   teamIds: [String!]!
-  type: BookingType!
   until: DateTime!
 }
 
@@ -2519,15 +2519,7 @@ input ZoneOrganizationTagWhereInput {
   nameContains: String
 }
 
-enum BookingOrderField {
-  FROM
-  NOTES
-  STATUS
-  TO
-  TYPE
-}
-
-enum BookingType {
+enum BookingCategory {
   ANNUAL_LEAVE
   CLIENT_OFFICE
   NON_WORKING_DAY
@@ -2538,6 +2530,14 @@ enum BookingType {
   WORKING_FROM_COWORKING_SPACE
   WORKING_FROM_HOME
   WORKING_FROM_OFFICE
+}
+
+enum BookingOrderField {
+  CATEGORY
+  FROM
+  NOTES
+  STATUS
+  TO
 }
 
 enum Currency {

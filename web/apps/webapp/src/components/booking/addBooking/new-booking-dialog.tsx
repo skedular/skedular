@@ -1,5 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingType } from '@/components/booking';
+import { SingleChoiceBookingCategory } from '@/components/booking';
 import { BodyIconTypography, DefaultDialogTitle, ErrorTypography, FormFieldLabel, FormStackColumn, StackRow, TwoButtonsDialogActions } from '@/components/commons';
 import StackColumn from '@/components/commons/stack-column';
 import { CustomTags } from '@/components/customTag';
@@ -8,7 +8,7 @@ import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { getCustomerFullName, isMidnight, joinErrors, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { BookingType, newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
+import type { BookingCategory, newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
 import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
@@ -98,7 +98,7 @@ type BookingDetails = {
   team: string | undefined;
   location: string | undefined;
   resources: string[];
-  type: string;
+  category: string;
 };
 
 const bookingSchema = object({
@@ -113,7 +113,7 @@ const bookingSchema = object({
   team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
-  type: string().required('Type is required'),
+  category: string().required('Category is required'),
 });
 
 const NewBookingDialog = ({
@@ -147,7 +147,7 @@ const NewBookingDialog = ({
           }
         }
         openingHoursMinutesStep
-        ...singleChoiceBookingType_query
+        ...singleChoiceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -247,8 +247,8 @@ const NewBookingDialog = ({
           from
           until
           notes
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -307,7 +307,7 @@ const NewBookingDialog = ({
   const [teamId, setTeamId] = useState<string | undefined>();
   const [locationId, setLocationId] = useState<string | undefined>(defaultLocationId);
   const [notes, setNotes] = useState<string>('');
-  const [bookingType, setBookingType] = useState<string>('WORKING_FROM_OFFICE');
+  const [category, setCategory] = useState<string>('WORKING_FROM_OFFICE');
   const [resourceIds, setResourceIds] = useState<string[]>(defaultResourceIds ?? []);
 
   // Note: `resourceIds` is initialized from `defaultResourceIds` and thereafter controlled by the form.
@@ -436,7 +436,7 @@ const NewBookingDialog = ({
     [rootDataAvailableResources.availableResources, timeRangeValidDerived],
   );
 
-  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, type }: BookingDetails) => {
+  const handleAddClick = ({ date, allDay, member, notes, team: teamId, location: locationId, resources: resourceIds, category }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -460,7 +460,7 @@ const NewBookingDialog = ({
           from,
           until,
           notes,
-          type: type as BookingType,
+          category: category as BookingCategory,
           customerIds: [customerId],
           organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
           teamIds: teamId ? [teamId] : [],
@@ -518,8 +518,8 @@ const NewBookingDialog = ({
             from,
             until,
             notes,
-            type: {
-              type: type as BookingType,
+            category: {
+              category: category as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -589,7 +589,7 @@ const NewBookingDialog = ({
             team: teamId,
             location: locationId,
             resources: resourceIds,
-            type: bookingType,
+            category,
           }}
           validate={validate}
           render={({ handleSubmit }) => {
@@ -603,7 +603,7 @@ const NewBookingDialog = ({
                     if (values.allDay !== allDay) setAllDay(values.allDay);
                     if (values.notes !== notes) setNotes(values.notes);
                     if (JSON.stringify(values.resources) !== JSON.stringify(resourceIds)) setResourceIds(values.resources);
-                    if (values.type !== bookingType) setBookingType(values.type);
+                    if (values.category !== category) setCategory(values.category);
                   }}
                 />
                 <FormFieldLabel label="User" useWiderSpace>
@@ -663,8 +663,8 @@ const NewBookingDialog = ({
                   <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Type" useWiderSpace>
-                  <SingleChoiceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                <FormFieldLabel label="Category" useWiderSpace>
+                  <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                 </FormFieldLabel>
 
                 <FormFieldLabel label="Team" useWiderSpace>

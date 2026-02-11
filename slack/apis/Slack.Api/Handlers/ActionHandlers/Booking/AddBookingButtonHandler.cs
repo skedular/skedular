@@ -116,7 +116,7 @@ public class AddBookingButtonHandler(
         var booking = new Shared.Models.Booking
         {
             Id = randomHelper.Generate(),
-            Type = BookingType.WorkingFromOffice,
+            Category = BookingCategory.WorkingFromOffice,
             InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }]
         };
 

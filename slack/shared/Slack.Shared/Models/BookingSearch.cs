@@ -13,7 +13,7 @@ public record BookingSearchCriteria(
     DateTimeOffset? ToLte,
     string? NotesContains,
     string? NameContains,
-    BookingType? Type,
+    BookingCategory? Category,
     ICollection<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,

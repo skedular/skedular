@@ -16,7 +16,6 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
-using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -25,7 +24,7 @@ using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
 
-public interface IBookingService
+public interface IPrivateBookingService
 {
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
@@ -40,7 +39,7 @@ public interface IBookingService
         CancellationToken cancellationToken);
 }
 
-public class BookingService(
+public class PrivateBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
@@ -51,14 +50,14 @@ public class BookingService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
+    Shared.Mappers.IMapper sharedMapper,
     IContext context,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
-    IGraphQlHelperService graphQlHelperService,
     Shared.Services.IResourceService sharedResourceService,
     IProductService sharedProductService,
-    IPrivateBookingPreferenceService sharedPrivateBookingPreferenceService) : IBookingService
+    IPrivateBookingPreferenceService sharedPrivateBookingPreferenceService,
+    Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IPrivateBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -217,7 +216,7 @@ public class BookingService(
             null);
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
+        booking = sharedMapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -310,45 +309,7 @@ public class BookingService(
             }
         }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-
-        existingBooking.DeletedByCustomer = customer;
-        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(
-            repositoryFactory.BookingRepository.Remove(existingBooking),
-            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));
-
-        bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
-
-        if (existingBooking.IsPaymentRequired)
-        {
-            if (!deletedBooking.PaymentMethod.HasValue)
-            {
-                throw new PaymentMethodRequired();
-            }
-
-            switch (deletedBooking.PaymentMethod)
-            {
-                case PaymentMethod.Card:
-                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                default: throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
-
-        return deletedBooking;
+        return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -360,7 +321,7 @@ public class BookingService(
 
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
 
-        return mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
+        return sharedMapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
@@ -711,92 +672,8 @@ public class BookingService(
     {
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
         var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
-        var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
-        var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
-        if (customerEntities.Count != customerIds.Count)
-        {
-            throw new CustomerNotFound();
-        }
 
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        /********************************************************************************************************************/
-        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
-        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        /********************************************************************************************************************/
-
-        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        var resources = await sharedResourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-            booking.From,
-            booking.Until,
-            resourceIds,
-            cancellationToken);
-
-        foreach (var resource in resources)
-        {
-            var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-            if (matchingResource is null)
-            {
-                continue;
-            }
-
-            var matchingCustomerEntities = customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-            foreach (var slot in resource.ResourceBookingSlots)
-            {
-                foreach (var matchingCustomerEntity in matchingCustomerEntities
-                             .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                {
-                    slot.Customers.Add(matchingCustomerEntity);
-                }
-            }
-
-            repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-        }
-
-        booking.LineItems = existingBooking.LineItems;
-        booking.BookedOnMarketplace = existingBooking.BookedOnMarketplace;
-        booking.IsPaymentRequired = existingBooking.IsPaymentRequired;
-        booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
-        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
-        booking.InvoiceUrl = existingBooking.InvoiceUrl;
-        booking.InvoiceNumber = existingBooking.InvoiceNumber;
-        booking.TotalAmountExcludeTax = existingBooking.TotalAmountExcludeTax;
-        booking.TaxAmount = existingBooking.TaxAmount;
-        booking.TaxRatePercentage = existingBooking.TaxRatePercentage;
-        booking.TotalAmount = existingBooking.TotalAmount;
-        booking.Currency = existingBooking.Currency;
-
-        var bookingEntity = mapper.MergeTo(
-            booking,
-            existingBooking,
-            customerEntities,
-            organizations,
-            ResourcesToLocations(resources),
-            teams,
-            resources,
-            null,
-            null,
-            existingBooking.CreatedByCustomer,
-            callingCustomer,
-            null,
-            existingBooking.ProductVersions,
-            existingBooking.StripeCheckoutSession);
-
-        bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
-
-        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-        await graphQlHelperService.RaiseGraphqlChange(Constants.BookingTopicName, booking.Id, cancellationToken);
-
-        return booking;
+        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>

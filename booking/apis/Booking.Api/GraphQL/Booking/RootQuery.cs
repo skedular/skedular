@@ -16,40 +16,49 @@ namespace Booking.Api.GraphQL.Booking;
 public class RootQuery(IMapper mapper)
 {
     [UseResolverScope]
-    public IEnumerable<BookingTypeDetails> BookingTypes() =>
+    public IEnumerable<BookingCategoryDetails> BookingCategories() =>
     [
-        new() { Type = BookingType.WorkingFromHome, Name = BookingTypeConstants.WorkingFromHome.ToBookingTypeName() },
-        new() { Type = BookingType.WorkingFromOffice, Name = BookingTypeConstants.WorkingFromOffice.ToBookingTypeName() },
-        new() { Type = BookingType.WorkingFromCoworkingSpace, Name = BookingTypeConstants.WorkingFromCoworkingSpace.ToBookingTypeName() },
-        new() { Type = BookingType.SickLeave, Name = BookingTypeConstants.SickLeave.ToBookingTypeName() },
-        new() { Type = BookingType.AnnualLeave, Name = BookingTypeConstants.AnnualLeave.ToBookingTypeName() },
-        new() { Type = BookingType.WellbeingLeave, Name = BookingTypeConstants.WellbeingLeave.ToBookingTypeName() },
-        new() { Type = BookingType.ClientOffice, Name = BookingTypeConstants.ClientOffice.ToBookingTypeName() },
-        new() { Type = BookingType.Vacation, Name = BookingTypeConstants.Vacation.ToBookingTypeName() },
-        new() { Type = BookingType.TravelingForWork, Name = BookingTypeConstants.TravelingForWork.ToBookingTypeName() },
-        new() { Type = BookingType.NonWorkingDay, Name = BookingTypeConstants.NonWorkingDay.ToBookingTypeName() }
+        new() { Category = BookingCategory.WorkingFromHome, Name = BookingCategoryConstants.WorkingFromHome.ToBookingCategoryName() },
+        new() { Category = BookingCategory.WorkingFromOffice, Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName() },
+        new()
+        {
+            Category = BookingCategory.WorkingFromCoworkingSpace,
+            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName()
+        },
+        new() { Category = BookingCategory.SickLeave, Name = BookingCategoryConstants.SickLeave.ToBookingCategoryName() },
+        new() { Category = BookingCategory.AnnualLeave, Name = BookingCategoryConstants.AnnualLeave.ToBookingCategoryName() },
+        new() { Category = BookingCategory.WellbeingLeave, Name = BookingCategoryConstants.WellbeingLeave.ToBookingCategoryName() },
+        new() { Category = BookingCategory.ClientOffice, Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName() },
+        new() { Category = BookingCategory.Vacation, Name = BookingCategoryConstants.Vacation.ToBookingCategoryName() },
+        new() { Category = BookingCategory.TravelingForWork, Name = BookingCategoryConstants.TravelingForWork.ToBookingCategoryName() },
+        new() { Category = BookingCategory.NonWorkingDay, Name = BookingCategoryConstants.NonWorkingDay.ToBookingCategoryName() }
     ];
 
     [UseResolverScope]
-    public IEnumerable<BookingTypeDetails> MarketplaceBookingTypes() =>
+    public IEnumerable<BookingCategoryDetails> MarketplaceBookingCategories() =>
     [
-        new() { Type = BookingType.WorkingFromOffice, Name = BookingTypeConstants.WorkingFromOffice.ToBookingTypeName() },
-        new() { Type = BookingType.WorkingFromCoworkingSpace, Name = BookingTypeConstants.WorkingFromCoworkingSpace.ToBookingTypeName() },
-        new() { Type = BookingType.ClientOffice, Name = BookingTypeConstants.ClientOffice.ToBookingTypeName() }
+        new() { Category = BookingCategory.WorkingFromOffice, Name = BookingCategoryConstants.WorkingFromOffice.ToBookingCategoryName() },
+        new()
+        {
+            Category = BookingCategory.WorkingFromCoworkingSpace,
+            Name = BookingCategoryConstants.WorkingFromCoworkingSpace.ToBookingCategoryName()
+        },
+        new() { Category = BookingCategory.ClientOffice, Name = BookingCategoryConstants.ClientOffice.ToBookingCategoryName() }
     ];
 
     [UseResolverScope]
-    public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
+    public async Task<BookingDetails?> BookingAsync(string id, [Service] IPrivateBookingService privateBookingService,
+        CancellationToken cancellationToken) =>
+        mapper.MapTo(await privateBookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
     [Internal]
     public async Task<BookingDetails?> BookingByIdAsync(
         string id,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken) =>
-        await BookingAsync(id, bookingService, cancellationToken);
+        await BookingAsync(id, privateBookingService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<BookingEdge>> BookingsAsync(
@@ -59,7 +68,7 @@ public class RootQuery(IMapper mapper)
         int? last,
         BookingWhereInput where,
         IEnumerable<BookingOrderInput>? orderBy,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
@@ -68,7 +77,7 @@ public class RootQuery(IMapper mapper)
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
-        var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
+        var (paginatedInfo, edges, totalCount) = await privateBookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(after, first, before, last),
             new BookingSearchCriteria(
                 where.FromGt,
@@ -81,7 +90,7 @@ public class RootQuery(IMapper mapper)
                 where.ToLte,
                 where.NotesContains,
                 where.NameContains,
-                where.Type,
+                where.Category,
                 where.PaymentStatuses.ToSafeCollection(),
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
@@ -111,10 +120,10 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<IEnumerable<BookingDetails>> AllBookingsAsync(
         BookingWhereInput where,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(null, null, null, null, where, [], bookingService, cancellationToken);
+        var result = await BookingsAsync(null, null, null, null, where, [], privateBookingService, cancellationToken);
         return result.Edges.Select(item => item.Node);
     }
 }

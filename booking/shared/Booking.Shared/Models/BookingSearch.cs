@@ -14,7 +14,7 @@ public record BookingSearchCriteria(
     DateTimeOffset? ToLte,
     string? NotesContains,
     string? NameContains,
-    BookingType? Type,
+    BookingCategory? Category,
     ICollection<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
@@ -31,6 +31,6 @@ public enum BookingOrderField
     From,
     To,
     Notes,
-    Type,
+    Category,
     Status
 }

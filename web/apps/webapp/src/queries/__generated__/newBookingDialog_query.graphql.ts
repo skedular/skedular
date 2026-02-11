@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<59146f90babf51cb7993637fec99c7d4>>
+ * @generated SignedSource<<7f010a4daaddf785b445bf5184afda18>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -25,7 +25,7 @@ export type newBookingDialog_query$data = {
     readonly id: string;
   };
   readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
 export type newBookingDialog_query$key = {
@@ -155,7 +155,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceBookingType_query"
+      "name": "singleChoiceBookingCategory_query"
     }
   ],
   "type": "Query",
@@ -163,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "57f07eec22484dc2138171b52cb9450d";
+(node as any).hash = "af82f5256d9747d1d0e14bab2bf64bff";
 
 export default node;

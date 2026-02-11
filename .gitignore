@@ -838,3 +838,7 @@ pact
 
 # hotchocolate generated files
 *.fsp
+
+# Ignore malformed Windows-style build output folder names on Unix
+**/[Bb]in\\[Dd]ebug/
+**/[Bb]in\\[Rr]elease/

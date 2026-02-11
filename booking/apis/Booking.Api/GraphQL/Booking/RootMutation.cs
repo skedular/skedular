@@ -11,30 +11,30 @@ public class RootMutation(IMapper mapper)
     [UseResolverScope]
     public async Task<BookingPayload> AddBookingAsync(
         AddBookingInput input,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await bookingService.AddAsync(mapper.MapTo(input), cancellationToken);
+        var booking = await privateBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
     [UseResolverScope]
     public async Task<BookingPayload> UpdateBookingAsync(
         UpdateBookingInput input,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await bookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
+        var booking = await privateBookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 
     [UseResolverScope]
     public async Task<BookingPayload> DeleteBookingAsync(
         DeleteBookingInput input,
-        [Service] IBookingService bookingService,
+        [Service] IPrivateBookingService privateBookingService,
         CancellationToken cancellationToken)
     {
-        var booking = await bookingService.DeleteAsync(input.Id, cancellationToken);
+        var booking = await privateBookingService.DeleteAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
 }

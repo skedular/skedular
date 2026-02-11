@@ -24,20 +24,10 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<BookingDbContext>(configuration, environment, "bookingdb", true)
             .AddRepositoryFactory()
-            .AddRootLevelSharedServices()
             .AddServices()
-            .AddJobs()
-            .AddDomainSharedConfigurations(configuration)
-            .AddRootLevelSharedServices()
-            .AddDomainSharedServices()
-            .AddDomainSharedMappers()
-            .AddPublishers()
-            .AddSharedCrossDomainClients(configuration)
-            .AddStripe(configuration)
-            .AddTemporalClient(configuration, "temporal");
+            .AddJobs();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

@@ -30,7 +30,7 @@ public class StripeIntegrations(
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IRandomHelper randomHelper,
     IMapper mapper,
-    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender)
+    IGraphQlTopicEventSender graphQlTopicEventSender)
 {
     [Activity]
     public async Task<UpsertProductAndPricingResponse?> UpsertProductAndPricingAsync(UpsertProductAndPricingInput args)
@@ -201,7 +201,7 @@ public class StripeIntegrations(
         _ = repositoryFactory.BookingRepository.Update(booking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
     }

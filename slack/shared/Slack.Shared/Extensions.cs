@@ -68,14 +68,14 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedMappers() =>
             services
-                .AddSingleton<IMapper, Mapper>()
-                .AddSingleton<ITemporalService, TemporalService>();
+                .AddSingleton<IMapper, Mapper>();
 
         public IServiceCollection AddDomainSharedServices() =>
             services
                 .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalService, TemporalService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ILocationDailyUpdaterService, LocationDailyUpdaterService>()

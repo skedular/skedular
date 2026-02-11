@@ -83,8 +83,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         from
         until
         notes
-        type {
-          type
+        category {
+          category
           name
         }
         involvedCustomers {
@@ -152,8 +152,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           from
           until
           notes
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -354,7 +354,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           organizationIds: bookingDetails.involvedOrganizations.map(({ id }) => id),
           teamIds: bookingDetails.involvedTeams.map(({ id }) => id),
           resourceIds: [],
-          type: bookingDetails.type.type,
+          category: bookingDetails.category.category,
           lineItems: [],
         },
       },
@@ -406,9 +406,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
-            type: {
-              type: bookingDetails.type.type,
-              name: bookingDetails.type.name,
+            category: {
+              category: bookingDetails.category.category,
+              name: bookingDetails.category.name,
             },
             involvedCustomers: [
               {

@@ -2,6 +2,7 @@ using Api.Shared.Services.Configurations.Grpc;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Enterprise.Shared.GraphQL;
 
 namespace Booking.Api;
 
@@ -19,9 +20,9 @@ public static class Extensions
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
                 .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()
-                .AddScoped<IBookingService, BookingService>()
+                .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IResourceService, ResourceService>()
-                .AddScoped<IGraphQlHelperService, GraphQlHelperService>()
+                .AddScoped<IGraphQlTopicEventSender, GraphQlTopicEventSender>()
                 .AddScoped<IWorkaroundService, WorkaroundService>();
 
         public IServiceCollection AddJobs() =>

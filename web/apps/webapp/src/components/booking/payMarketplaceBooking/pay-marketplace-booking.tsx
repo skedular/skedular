@@ -44,8 +44,8 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
           from
           until
           notes
-          type {
-            type
+          category {
+            category
           }
           involvedCustomers {
             id

@@ -15,7 +15,7 @@ using OrganizationMember = Slack.Shared.Database.Entities.OrganizationMember;
 using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
-using BookingType = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType;
+using BookingCategory = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory;
 using CustomerType = Api.Shared.Services.Models.CustomerType;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
@@ -123,18 +123,18 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.To.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
+            Category = src.Category switch
             {
-                BookingType.WorkingFromHome => Api.Shared.Services.Models.BookingType.WorkingFromHome,
-                BookingType.WorkingFromOffice => Api.Shared.Services.Models.BookingType.WorkingFromOffice,
-                BookingType.WorkingFromCoworkingSpace => Api.Shared.Services.Models.BookingType.WorkingFromCoworkingSpace,
-                BookingType.SickLeave => Api.Shared.Services.Models.BookingType.SickLeave,
-                BookingType.AnnualLeave => Api.Shared.Services.Models.BookingType.AnnualLeave,
-                BookingType.WellbeingLeave => Api.Shared.Services.Models.BookingType.WellbeingLeave,
-                BookingType.ClientOffice => Api.Shared.Services.Models.BookingType.ClientOffice,
-                BookingType.Vacation => Api.Shared.Services.Models.BookingType.Vacation,
-                BookingType.TravelingForWork => Api.Shared.Services.Models.BookingType.TravelingForWork,
-                BookingType.NonWorkingDay => Api.Shared.Services.Models.BookingType.NonWorkingDay,
+                BookingCategory.WorkingFromHome => Api.Shared.Services.Models.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => Api.Shared.Services.Models.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => Api.Shared.Services.Models.BookingCategory.WorkingFromCoworkingSpace,
+                BookingCategory.SickLeave => Api.Shared.Services.Models.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => Api.Shared.Services.Models.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => Api.Shared.Services.Models.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => Api.Shared.Services.Models.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => Api.Shared.Services.Models.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => Api.Shared.Services.Models.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => Api.Shared.Services.Models.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Resources = src.ResourceIds.Select(item => new Resource { Id = item }).ToList(),

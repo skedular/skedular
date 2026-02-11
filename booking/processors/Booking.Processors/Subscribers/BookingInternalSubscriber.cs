@@ -17,7 +17,7 @@ namespace Booking.Processors.Subscribers;
 public class BookingInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
-    IDomainGraphQlTopicEventSender domainGraphQlTopicEventSender) : IEventSubscriber<Key, Event>
+    IGraphQlTopicEventSender graphQlTopicEventSender) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
@@ -88,7 +88,7 @@ public class BookingInternalSubscriber(
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
 
-        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -125,6 +125,6 @@ public class BookingInternalSubscriber(
             new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
             cancellationToken);
 
-        await domainGraphQlTopicEventSender.RaiseChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
     }
 }

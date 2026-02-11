@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<25ecc5de47093d6d45ca656577ef6cbf>>
+ * @generated SignedSource<<015b7061dddb3d222863457288e77a31>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -119,16 +119,6 @@ v5 = [
   (v4/*: any*/)
 ],
 v6 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v3/*: any*/)
-],
-v7 = [
   (v2/*: any*/),
   (v3/*: any*/)
 ];
@@ -307,11 +297,20 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "BookingTypeDetails",
+                    "concreteType": "BookingCategoryDetails",
                     "kind": "LinkedField",
-                    "name": "type",
+                    "name": "category",
                     "plural": false,
-                    "selections": (v6/*: any*/),
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "category",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -333,7 +332,7 @@ return {
                     "kind": "LinkedField",
                     "name": "involvedLocations",
                     "plural": true,
-                    "selections": (v7/*: any*/),
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -343,7 +342,7 @@ return {
                     "kind": "LinkedField",
                     "name": "involvedTeams",
                     "plural": true,
-                    "selections": (v7/*: any*/),
+                    "selections": (v6/*: any*/),
                     "storageKey": null
                   },
                   {
@@ -360,7 +359,16 @@ return {
                     "kind": "LinkedField",
                     "name": "paymentStatus",
                     "plural": false,
-                    "selections": (v6/*: any*/),
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
+                        "storageKey": null
+                      },
+                      (v3/*: any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -444,12 +452,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1485ceb31a013ea10206a7a776fb21ed",
+    "cacheID": "41b69b96b777d7c43da23c621a516d1b",
     "id": null,
     "metadata": {},
     "name": "floorPlans_bookings_refetchableFragment",
     "operationKind": "query",
-    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  type {\n    type\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query floorPlans_bookings_refetchableFragment(\n  $bookingsSearchCriteriaFrom: DateTime\n  $bookingsSearchCriteriaTo: DateTime\n  $count: Int = null\n  $cursor: String\n  $locationId: String!\n) {\n  ...floorPlans_bookings_query_1G22uz\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  isPaymentRequired\n  paymentStatus {\n    type\n    name\n  }\n  invoiceUrl\n}\n\nfragment floorPlans_bookings_query_1G22uz on Query {\n  bookings(first: $count, after: $cursor, where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();

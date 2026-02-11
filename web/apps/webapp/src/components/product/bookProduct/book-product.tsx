@@ -1,5 +1,5 @@
 import { LocationAvatar } from '@/components/avatars';
-import { SingleChoiceBookingPaymentMethodType, SingleChoiceMarketplaceBookingType } from '@/components/booking';
+import { SingleChoiceBookingPaymentMethodType, SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -23,7 +23,7 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { BookingType, bookProduct_addBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
+import type { BookingCategory, bookProduct_addBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
 import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
@@ -84,7 +84,7 @@ type BookingDetails = {
   notes: string;
   quantity: number;
   resources: string[];
-  type: string;
+  category: string;
   paymentMethod: string;
   invoiceEmailList: string[];
 };
@@ -116,7 +116,7 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
         return value?.length <= numberOfResourcesToBook * quantity;
       }),
     notes: string().notRequired(),
-    type: string().required('Type is required'),
+    category: string().required('Category is required'),
     paymentMethod: string().required('Payment method is required'),
     invoiceEmailList: array().notRequired(),
   });
@@ -165,7 +165,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           isPriceTaxInclusive
         }
         openingHoursMinutesStep
-        ...singleChoiceMarketplaceBookingType_query
+        ...singleChoiceMarketplaceBookingCategory_query
         ...singleChoiceBookingPaymentMethodType_query
         ...multipleChoicesUserEmails_query
       }
@@ -219,8 +219,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           from
           notes
           until
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -286,7 +286,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [notes, setNotes] = useState<string>('');
-  const [bookingType, setBookingType] = useState<string>('WORKING_FROM_COWORKING_SPACE');
+  const [category, setCategory] = useState<string>('WORKING_FROM_COWORKING_SPACE');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
 
@@ -502,7 +502,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, type, paymentMethod, invoiceEmailList }: BookingDetails) => {
+  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, category, paymentMethod, invoiceEmailList }: BookingDetails) => {
     const id = uuid();
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
@@ -530,7 +530,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
           teamIds: [],
           resourceIds,
-          type: type as BookingType,
+          category: category as BookingCategory,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
           paymentMethod: paymentMethod as PaymentMethod,
           invoiceEmailList,
@@ -583,8 +583,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             from,
             until,
             notes,
-            type: {
-              type: type as BookingType,
+            category: {
+              category: category as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -644,7 +644,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               date,
               resources: resourceIds,
               quantity,
-              type: bookingType,
+              category,
               paymentMethod,
               notes,
               invoiceEmailList,
@@ -654,7 +654,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               setDate(values!.date);
               setResourceIds(values!.resources);
               setQuantity(values!.quantity);
-              setBookingType(values!.type);
+              setCategory(values!.category);
               setPaymentMethod(values!.paymentMethod);
               setNotes(values!.notes);
               setInvoiceEmailList(values!.invoiceEmailList);
@@ -703,8 +703,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       <TextField name="quantity" required={requiredFields.quantity} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Type">
-                      <SingleChoiceMarketplaceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    <FormFieldLabel label="Category">
+                      <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Filters">

@@ -1,5 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceBookingType } from '@/components/booking';
+import { SingleChoiceBookingCategory } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, ErrorTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -14,7 +14,7 @@ import type { editPrivateBooking_customerTeams_refetchableFragment } from '@/que
 import type { editPrivateBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateBooking_organizationMembers_query.graphql';
 import type { editPrivateBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_organizationMembers_refetchableFragment.graphql';
 import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
-import type { BookingType, editPrivateBooking_updateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updateBookingMutation.graphql';
+import type { BookingCategory, editPrivateBooking_updateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -98,7 +98,7 @@ type BookingDetails = {
   team: string | undefined;
   location: string | undefined;
   resources: string[];
-  type: string;
+  category: string;
 };
 
 const bookingSchema = object({
@@ -113,7 +113,7 @@ const bookingSchema = object({
   team: string().notRequired(),
   location: string().notRequired(),
   resources: array().nullable(),
-  type: string().required('Type is required'),
+  category: string().required('Category is required'),
 });
 
 const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay, rootDataAvailableResourcesRelay }: Props) => {
@@ -135,8 +135,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           from
           until
           notes
-          type {
-            type
+          category {
+            category
           }
           involvedCustomers {
             id
@@ -177,7 +177,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           }
         }
         openingHoursMinutesStep
-        ...singleChoiceBookingType_query
+        ...singleChoiceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -277,8 +277,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           from
           until
           notes
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -503,7 +503,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, type }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = ({ date, allDay, member: memberId, notes, team: teamId, resources: resourceIds, category }: BookingDetails) => {
     if (!booking) {
       return;
     }
@@ -536,7 +536,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
           from,
           until,
           notes,
-          type: type as BookingType,
+          category: category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: teamId ? [teamId] : [],
@@ -573,8 +573,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             from,
             until,
             notes,
-            type: {
-              type: type as BookingType,
+            category: {
+              category: category as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -660,7 +660,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
               team: teamId,
               location: locationId,
               resources: booking.bookingResources ? booking.bookingResources.map(({ resource }) => resource.id) : [],
-              type: booking.type.type,
+              category: booking.category.category,
             }}
             validate={validate}
             render={({ handleSubmit }) => {
@@ -749,8 +749,8 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                       <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Type">
-                      <SingleChoiceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    <FormFieldLabel label="Category">
+                      <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Team">

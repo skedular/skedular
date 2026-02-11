@@ -1,5 +1,5 @@
 using Api.Shared.Services;
-using Booking.Api.Mappers;
+using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;

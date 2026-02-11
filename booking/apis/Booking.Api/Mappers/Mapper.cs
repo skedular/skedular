@@ -8,12 +8,11 @@ using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
+using BookingCategory = Api.Shared.Services.Models.BookingCategory;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
-using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Booking.Shared.Models.Customer;
-using Identity = Booking.Shared.Models.Identity;
 using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -28,7 +27,6 @@ namespace Booking.Api.Mappers;
 
 public interface IMapper
 {
-    Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset paymentExpiry);
     BookingDetails MapTo(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddBookingInput src);
     Shared.Models.Booking MapTo(UpdateBookingInput src);
@@ -75,49 +73,8 @@ public interface IMapper
     IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src);
 }
 
-public class Mapper : IMapper
+public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 {
-    public Shared.Models.Booking MapTo(Shared.Database.Entities.Booking src, DateTimeOffset paymentExpiry) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            From = src.From,
-            Until = src.Until,
-            Notes = src.Notes,
-            Type = src.Type.ToBookingType(),
-            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
-            IsPaymentRequired = src.IsPaymentRequired,
-            Schedules = src.Schedules,
-            LineItems = src.LineItems,
-            BookedOnMarketplace = src.BookedOnMarketplace,
-            ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            InvolvedResources = MapTo(src.InvolvedResources).ToList(),
-            PaidByCustomer = MapTo(src.PaidByCustomer),
-            PaidByOrganization = MapTo(src.PaidByOrganization),
-            CreatedByCustomer = MapTo(src.CreatedByCustomer),
-            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
-            ProductVersions = MapTo(src.ProductVersions).ToList(),
-            PaymentExpiry = paymentExpiry,
-            PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
-            TaxAmount = src.TaxAmount,
-            TaxRatePercentage = src.TaxRatePercentage,
-            TotalAmount = src.TotalAmount,
-            Currency = src.Currency,
-            InvoiceUrl = src.InvoiceUrl,
-            InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList
-        };
-
     public BookingDetails MapTo(Shared.Models.Booking src) =>
         new()
         {
@@ -125,7 +82,7 @@ public class Mapper : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Type = new BookingTypeDetails { Type = src.Type, Name = src.Type.ToBookingTypeName() },
+            Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
             IsPaymentRequired = src.IsPaymentRequired,
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
@@ -185,7 +142,7 @@ public class Mapper : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Type = src.Type,
+            Category = src.Category,
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -212,7 +169,7 @@ public class Mapper : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Type = src.Type,
+            Category = src.Category,
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -276,7 +233,7 @@ public class Mapper : IMapper
         dest.From = src.From;
         dest.Until = src.Until;
         dest.Notes = src.Notes;
-        dest.Type = src.Type.ToBookingType();
+        dest.Category = src.Category.ToBookingCategory();
         dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
@@ -315,18 +272,19 @@ public class Mapper : IMapper
             From = src.From.ToTimestamp(),
             To = src.Until.ToTimestamp(),
             Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
+            Category = src.Category switch
             {
-                BookingType.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome,
-                BookingType.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice,
-                BookingType.WorkingFromCoworkingSpace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromCoworkingSpace,
-                BookingType.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave,
-                BookingType.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave,
-                BookingType.WellbeingLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellbeingLeave,
-                BookingType.ClientOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffice,
-                BookingType.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation,
-                BookingType.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork,
-                BookingType.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay,
+                BookingCategory.WorkingFromHome => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome,
+                BookingCategory.WorkingFromOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice,
+                BookingCategory.WorkingFromCoworkingSpace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory
+                    .WorkingFromCoworkingSpace,
+                BookingCategory.SickLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave,
+                BookingCategory.AnnualLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave,
+                BookingCategory.WellbeingLeave => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave,
+                BookingCategory.ClientOffice => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice,
+                BookingCategory.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation,
+                BookingCategory.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork,
+                BookingCategory.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             PaymentStatus = src.PaymentStatus switch
@@ -389,18 +347,19 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.Until.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
+            Category = src.Category switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromCoworkingSpace => BookingType.WorkingFromCoworkingSpace,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellbeingLeave => BookingType.WellbeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffice => BookingType.ClientOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
+                    .WorkingFromCoworkingSpace,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice => BookingCategory.ClientOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation => BookingCategory.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
@@ -423,18 +382,19 @@ public class Mapper : IMapper
             From = src.From.ToDateTimeOffset(),
             Until = src.Until.ToDateTimeOffset(),
             Notes = src.Notes.ToSafeString(),
-            Type = src.Type switch
+            Category = src.Category switch
             {
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromHome => BookingType.WorkingFromHome,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromOffice => BookingType.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WorkingFromCoworkingSpace => BookingType.WorkingFromCoworkingSpace,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.SickLeave => BookingType.SickLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.AnnualLeave => BookingType.AnnualLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.WellbeingLeave => BookingType.WellbeingLeave,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.ClientOffice => BookingType.ClientOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.Vacation => BookingType.Vacation,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.TravelingForWork => BookingType.TravelingForWork,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingType.NonWorkingDay => BookingType.NonWorkingDay,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
+                    .WorkingFromCoworkingSpace,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.ClientOffice => BookingCategory.ClientOffice,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation => BookingCategory.Vacation,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork => BookingCategory.TravelingForWork,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
@@ -460,7 +420,7 @@ public class Mapper : IMapper
             };
 
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry) =>
-        new(MapTo(src.Node, paymentExpiry), src.Cursor);
+        new(sharedMapper.MapTo(src.Node, paymentExpiry), src.Cursor);
 
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
 
@@ -469,77 +429,6 @@ public class Mapper : IMapper
 
     public IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src) => src.Select(MapTo);
     public IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src) => src.Select(item => MapTo(item, []));
-
-    private static Customer? MapTo(Shared.Database.Entities.Customer? src) =>
-        src is null
-            ? null
-            : new Customer
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                Designation = src.Designation,
-                Title = src.Title,
-                Timezone = src.Timezone,
-                Locale = src.Locale,
-                Name = src.Name,
-                GivenName = src.GivenName,
-                MiddleName = src.MiddleName,
-                FamilyName = src.FamilyName,
-                PhotoUrl = src.PhotoUrl,
-                PhotoUrl24 = src.PhotoUrl24,
-                PhotoUrl32 = src.PhotoUrl32,
-                PhotoUrl48 = src.PhotoUrl48,
-                PhotoUrl72 = src.PhotoUrl72,
-                PhotoUrl192 = src.PhotoUrl192,
-                PhotoUrl512 = src.PhotoUrl512,
-                PhoneNumber = src.PhoneNumber,
-                Type = src.Type.ToNullableCustomerType(),
-                Identities = MapTo(src.Identities).ToList()
-            };
-
-    private static IEnumerable<Identity> MapTo(IEnumerable<Shared.Database.Entities.Identity> src) => src.Select(MapTo);
-
-    private static Identity MapTo(Shared.Database.Entities.Identity src) =>
-        new() { Id = src.Id, Email = src.Email, EmailVerified = src.EmailVerified };
-
-    private static IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
-
-    private static Shared.Models.Organization? MapTo(Organization? src) =>
-        src is null
-            ? null
-            : new Shared.Models.Organization
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt,
-                UniqueAlphanumericName = src.UniqueAlphanumericName,
-                Name = src.Name,
-                ContactEmail = src.ContactEmail,
-                ContactPhone = src.ContactPhone,
-                IsOwnershipVerified = src.IsOwnershipVerified,
-                LogoUrl = src.LogoUrl,
-                Offering = src.Offering,
-                Type = src.Type.ToOrganizationType()
-            };
-
-    private static IEnumerable<Shared.Models.Team> MapTo(IEnumerable<Team> src) => src.Select(MapTo)!;
-
-    private static Shared.Models.Team? MapTo(Team? src) =>
-        src is null
-            ? null
-            : new Shared.Models.Team
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                DeletedAt = src.DeletedAt,
-                ModifiedAt = src.ModifiedAt,
-                EventRaisedAt = src.EventRaisedAt
-            };
 
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
@@ -568,20 +457,6 @@ public class Mapper : IMapper
     private static IEnumerable<BookingResourceDetails> MapTo(ICollection<ResourceCustomersPair> src, ICollection<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));
 
-    private IEnumerable<ResourceBookingSlot> MapTo(IEnumerable<Shared.Database.Entities.ResourceBookingSlot> src) => src.Select(MapTo);
-
-    private ResourceBookingSlot MapTo(Shared.Database.Entities.ResourceBookingSlot src) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            Available = src.Available,
-            Start = src.Start,
-            Customers = MapTo(src.Customers).ToList(),
-            Resource = MapTo(src.Resource)
-        };
-
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule> MapToGrpcResponse(
         IEnumerable<BookingSchedule> src) =>
         src.Select(MapToGrpcResponse);
@@ -594,9 +469,6 @@ public class Mapper : IMapper
     private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
         new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
 
-    private IEnumerable<Customer> MapTo(IEnumerable<Shared.Database.Entities.Customer> src) => src.Select(MapTo)!;
-    private IEnumerable<Shared.Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;
-
     private static BookingCheckoutSessionDetails? MapTo(Shared.Models.StripeCheckoutSession? src) =>
         src is null
             ? null
@@ -606,76 +478,4 @@ public class Mapper : IMapper
         src is null
             ? null
             : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl };
-
-    private static Shared.Models.StripeCheckoutSession? MapTo(StripeCheckoutSession? src) =>
-        src is null
-            ? null
-            : new Shared.Models.StripeCheckoutSession
-            {
-                Id = src.Id,
-                CreatedAt = src.CreatedAt,
-                ModifiedAt = src.ModifiedAt,
-                DeletedAt = src.DeletedAt,
-                CheckoutUrl = src.CheckoutUrl.ToSafeString()
-            };
-
-    private static IEnumerable<Shared.Models.ProductVersion> MapTo(IEnumerable<ProductVersion> src) =>
-        src.Select(MapTo);
-
-    private static Shared.Models.ProductVersion MapTo(ProductVersion src)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(src.PriceUnit);
-
-        if (!src.PricePerMinute.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.PricePerMinute));
-        }
-
-        ArgumentException.ThrowIfNullOrWhiteSpace(src.Currency);
-
-        if (!src.BookAllLocationResources.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.BookAllLocationResources));
-        }
-
-        if (!src.RecurrenceWindowDays.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.RecurrenceWindowDays));
-        }
-
-        if (!src.RequireConsecutiveDays.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.RequireConsecutiveDays));
-        }
-
-        if (!src.NumberOfResourcesToBook.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.NumberOfResourcesToBook));
-        }
-
-        if (!src.IsPriceTaxInclusive.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.IsPriceTaxInclusive));
-        }
-
-        return new Shared.Models.ProductVersion
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            ModifiedAt = src.ModifiedAt,
-            Name = src.Name.ToSafeString(),
-            Price = src.Price ?? 0,
-            PriceUnit = src.PriceUnit.ToPriceUnit(),
-            IsPriceTaxInclusive = src.IsPriceTaxInclusive.Value,
-            PricePerMinute = src.PricePerMinute.Value,
-            Currency = src.Currency.ToCurrency(),
-            MinDurationMinutes = src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources.Value,
-            RecurrenceWindowDays = src.RecurrenceWindowDays.Value,
-            RequireConsecutiveDays = src.RequireConsecutiveDays.Value,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook.Value
-        };
-    }
 }

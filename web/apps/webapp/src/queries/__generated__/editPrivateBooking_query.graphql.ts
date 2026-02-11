@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6740f07232cdca63e50d7171855b2e8e>>
+ * @generated SignedSource<<8306e3af574378829f4330991da16060>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editPrivateBooking_query$data = {
   readonly booking: {
@@ -30,6 +30,9 @@ export type editPrivateBooking_query$data = {
         }>;
       };
     }>;
+    readonly category: {
+      readonly category: BookingCategory;
+    };
     readonly from: any;
     readonly id: string;
     readonly involvedCustomers: ReadonlyArray<{
@@ -53,9 +56,6 @@ export type editPrivateBooking_query$data = {
       readonly name: string;
     }>;
     readonly notes: string | null | undefined;
-    readonly type: {
-      readonly type: BookingType;
-    };
     readonly until: any;
   } | null | undefined;
   readonly locations: {
@@ -69,7 +69,7 @@ export type editPrivateBooking_query$data = {
     readonly totalCount: number;
   };
   readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "editPrivateBooking_query";
 };
 export type editPrivateBooking_query$key = {
@@ -234,16 +234,16 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingTypeDetails",
+          "concreteType": "BookingCategoryDetails",
           "kind": "LinkedField",
-          "name": "type",
+          "name": "category",
           "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "type",
+              "name": "category",
               "storageKey": null
             }
           ],
@@ -378,7 +378,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceBookingType_query"
+      "name": "singleChoiceBookingCategory_query"
     }
   ],
   "type": "Query",
@@ -386,6 +386,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5a798d2bc90e158de08baf4984043a1";
+(node as any).hash = "860048f313d61c0544921fbe80c038a4";
 
 export default node;

@@ -1,5 +1,5 @@
 import { CustomerAvatar } from '@/components/avatars';
-import { SingleChoiceMarketplaceBookingType } from '@/components/booking';
+import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -31,7 +31,7 @@ import type { editMarketplaceBooking_customerTeams_refetchableFragment } from '@
 import type { editMarketplaceBooking_organizationMembers_query$key } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_query.graphql';
 import type { editMarketplaceBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editMarketplaceBooking_organizationMembers_refetchableFragment.graphql';
 import type { editMarketplaceBooking_query$key } from '@/queries/__generated__/editMarketplaceBooking_query.graphql';
-import type { BookingType, editMarketplaceBooking_updateBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
+import type { BookingCategory, editMarketplaceBooking_updateBookingMutation } from '@/queries/__generated__/editMarketplaceBooking_updateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -81,14 +81,14 @@ type BookingDetails = {
   member: string;
   notes: string | null | undefined;
   team: string | undefined;
-  type: string;
+  category: string;
 };
 
 const bookingSchema = object({
   member: string().required('User is required'),
   notes: string().notRequired(),
   team: string().notRequired(),
-  type: string().required('Type is required'),
+  category: string().required('Category is required'),
 });
 
 const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataTeamsRelay, rootDataOrganizationMembersRelay }: Props) => {
@@ -96,7 +96,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     graphql`
       fragment editMarketplaceBooking_query on Query {
         openingHoursMinutesStep
-        ...singleChoiceMarketplaceBookingType_query
+        ...singleChoiceMarketplaceBookingCategory_query
       }
     `,
     rootDataRelay,
@@ -110,8 +110,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           from
           until
           notes
-          type {
-            type
+          category {
+            category
           }
           involvedCustomers {
             id
@@ -222,8 +222,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           from
           until
           notes
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -342,7 +342,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     router.back();
   };
 
-  const handleBookingDetailUpdateClick = ({ member: memberId, notes, team: teamId, type }: BookingDetails) => {
+  const handleBookingDetailUpdateClick = ({ member: memberId, notes, team: teamId, category }: BookingDetails) => {
     const booking = rootDataBooking.booking;
     if (!booking) {
       return;
@@ -367,7 +367,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
           from: booking.from,
           until: booking.until,
           notes,
-          type: type as BookingType,
+          category: category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: teamId ? [teamId] : [],
@@ -404,8 +404,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             from: booking.from,
             until: booking.until,
             notes,
-            type: {
-              type: type as BookingType,
+            category: {
+              category: category as BookingCategory,
               name: '',
             },
             involvedCustomers: [
@@ -470,7 +470,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
               member: customerId,
               notes: booking.notes,
               team: teamId,
-              type: booking.type.type,
+              category: booking.category.category,
             }}
             validate={validate}
             render={({ handleSubmit }) => (
@@ -540,8 +540,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                     <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="Type">
-                    <SingleChoiceMarketplaceBookingType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                  <FormFieldLabel label="Category">
+                    <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Team">

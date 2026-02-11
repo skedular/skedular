@@ -134,8 +134,8 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
               from
               until
               notes
-              type {
-                type
+              category {
+                category
                 name
               }
               involvedCustomers {
@@ -201,8 +201,8 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
           from
           until
           notes
-          type {
-            type
+          category {
+            category
             name
           }
           involvedCustomers {
@@ -373,7 +373,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
           teamIds: [],
           resourceIds: [],
           lineItems: [],
-          type: bookingDetails.type.type,
+          category: bookingDetails.category.category,
         },
       },
       onCompleted: (response, errors) => {
@@ -424,9 +424,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
-            type: {
-              type: bookingDetails.type.type,
-              name: bookingDetails.type.name,
+            category: {
+              category: bookingDetails.category.category,
+              name: bookingDetails.category.name,
             },
             involvedCustomers: [
               {

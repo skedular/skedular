@@ -3,6 +3,7 @@ using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.OpenApi.Skedular.Booking.V1;
 using Booking.Api.Services;
 using Booking.Shared.Publishers;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Version;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
@@ -21,7 +22,7 @@ public class BookingController(
     IBookingInternalPublisher bookingInternalPublisher,
     TimeProvider timeProvider,
     ILogger<BookingController> logger,
-    IGraphQlHelperService graphQlHelperService)
+    IGraphQlTopicEventSender graphQlTopicEventSender)
     : BookingControllerBase
 {
     private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -48,7 +49,7 @@ public class BookingController(
             return Unauthorized();
         }
 
-        await graphQlHelperService.RaiseGraphqlChange(topicName, id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(topicName, id, cancellationToken);
 
         return Ok();
     }

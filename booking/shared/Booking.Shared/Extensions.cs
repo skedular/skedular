@@ -29,14 +29,14 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedMappers() =>
             services
-                .AddSingleton<IMapper, Mapper>()
-                .AddSingleton<ITemporalService, TemporalService>();
+                .AddSingleton<IMapper, Mapper>();
 
         public IServiceCollection AddDomainSharedServices() =>
             services
                 .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
+                .AddSingleton<ITemporalService, TemporalService>()
                 .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
@@ -50,7 +50,8 @@ public static class Extensions
                 .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IProductService, ProductService>()
-                .AddScoped<IPrivateBookingPreferenceService, PrivateBookingPreferenceService>();
+                .AddScoped<IPrivateBookingPreferenceService, PrivateBookingPreferenceService>()
+                .AddScoped<IPrivateBookingService, PrivateBookingService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();

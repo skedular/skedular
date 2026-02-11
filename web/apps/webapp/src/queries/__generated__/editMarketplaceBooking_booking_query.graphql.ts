@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<61402bfdc3c21ec9ba67a20224572442>>
+ * @generated SignedSource<<81323edcdad4dbb83723f989b651b269>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BookingType = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_booking_query$data = {
@@ -31,6 +31,9 @@ export type editMarketplaceBooking_booking_query$data = {
         }>;
       };
     }>;
+    readonly category: {
+      readonly category: BookingCategory;
+    };
     readonly from: any;
     readonly id: string;
     readonly invoiceUrl: string | null | undefined;
@@ -60,9 +63,6 @@ export type editMarketplaceBooking_booking_query$data = {
       readonly name: string;
       readonly type: PaymentStatus;
     };
-    readonly type: {
-      readonly type: BookingType;
-    };
     readonly until: any;
   } | null | undefined;
   readonly " $fragmentType": "editMarketplaceBooking_booking_query";
@@ -86,31 +86,24 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v2 = [
   (v0/*: any*/),
-  (v2/*: any*/)
+  (v1/*: any*/)
 ],
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v5 = [
+v4 = [
   (v0/*: any*/),
-  (v2/*: any*/),
-  (v4/*: any*/)
+  (v1/*: any*/),
+  (v3/*: any*/)
 ];
 return {
   "argumentDefinitions": [
@@ -168,12 +161,18 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "BookingTypeDetails",
+          "concreteType": "BookingCategoryDetails",
           "kind": "LinkedField",
-          "name": "type",
+          "name": "category",
           "plural": false,
           "selections": [
-            (v1/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "category",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         },
@@ -186,7 +185,7 @@ return {
           "plural": true,
           "selections": [
             (v0/*: any*/),
-            (v2/*: any*/),
+            (v1/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -225,7 +224,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedOrganizations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -235,7 +234,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -245,7 +244,7 @@ return {
           "kind": "LinkedField",
           "name": "involvedTeams",
           "plural": true,
-          "selections": (v3/*: any*/),
+          "selections": (v2/*: any*/),
           "storageKey": null
         },
         {
@@ -265,8 +264,8 @@ return {
               "plural": false,
               "selections": [
                 (v0/*: any*/),
-                (v2/*: any*/),
-                (v4/*: any*/),
+                (v1/*: any*/),
+                (v3/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -274,7 +273,7 @@ return {
                   "kind": "LinkedField",
                   "name": "customTags",
                   "plural": true,
-                  "selections": (v5/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -284,7 +283,7 @@ return {
                   "kind": "LinkedField",
                   "name": "zones",
                   "plural": true,
-                  "selections": (v5/*: any*/),
+                  "selections": (v4/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -308,8 +307,14 @@ return {
           "name": "paymentStatus",
           "plural": false,
           "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v1/*: any*/)
           ],
           "storageKey": null
         },
@@ -329,6 +334,6 @@ return {
 };
 })();
 
-(node as any).hash = "7d7e689d4da17cb49808206dcbb51186";
+(node as any).hash = "ec8872a3f18d5f0a5d474b67d457966d";
 
 export default node;

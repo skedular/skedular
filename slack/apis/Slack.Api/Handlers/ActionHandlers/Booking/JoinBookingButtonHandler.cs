@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Random;
 using Slack.Api.Mappers;
 using Slack.Api.Pages;
@@ -10,7 +11,6 @@ using Slack.Shared.Repositories;
 using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
-using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
@@ -43,7 +43,7 @@ public class JoinBookingButtonHandler(
             Id = randomHelper.Generate(),
             From = existingBooking.From,
             Until = existingBooking.Until,
-            Type = BookingType.WorkingFromOffice,
+            Category = BookingCategory.WorkingFromOffice,
             InvolvedCustomers = [new Customer { Id = customerId }],
             InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
             InvolvedTeams = existingBooking.InvolvedTeams.Select(item => new Shared.Models.Team { Id = item.Id }).ToList()

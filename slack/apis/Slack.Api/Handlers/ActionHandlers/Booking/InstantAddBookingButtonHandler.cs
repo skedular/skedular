@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Random;
 using Slack.Api.Components;
@@ -15,7 +16,6 @@ using Slack.Shared.Services.CrossDomains;
 using SlackNet.Blocks;
 using SlackNet.Interaction;
 using SlackNet.WebApi;
-using BookingType = Api.Shared.Services.Models.BookingType;
 using Customer = Slack.Shared.Models.Customer;
 using Organization = Slack.Shared.Models.Organization;
 
@@ -89,7 +89,7 @@ public class InstantAddBookingButtonHandler(
                         Id = randomHelper.Generate(),
                         From = context.From,
                         Until = context.Until,
-                        Type = BookingType.WorkingFromOffice,
+                        Category = BookingCategory.WorkingFromOffice,
                         InvolvedCustomers = [new Customer { Id = customerId }],
                         InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
                         InvolvedTeams =
@@ -125,7 +125,7 @@ public class InstantAddBookingButtonHandler(
                     Id = randomHelper.Generate(),
                     From = context.From,
                     Until = context.Until,
-                    Type = BookingType.WorkingFromOffice,
+                    Category = BookingCategory.WorkingFromOffice,
                     InvolvedCustomers = [new Customer { Id = customerId }],
                     InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
                     InvolvedTeams =

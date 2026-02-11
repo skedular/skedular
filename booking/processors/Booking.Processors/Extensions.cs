@@ -16,7 +16,7 @@ public static class Extensions
 
         public IServiceCollection AddServices() =>
             services
-                .AddSingleton<IDomainGraphQlTopicEventSender, DomainGraphQlTopicEventSender>();
+                .AddSingleton<IGraphQlTopicEventSender, GraphQlTopicEventSender>();
 
         public IServiceCollection AddCrossDomainClients(IConfiguration configuration)
         {

@@ -18,7 +18,7 @@ public class AddBookingInput
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
-    [GraphQLName("type")] public BookingType Type { get; set; }
+    [GraphQLName("category")] public BookingCategory Category { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
     [GraphQLName("paymentMethod")] public PaymentMethod? PaymentMethod { get; set; }

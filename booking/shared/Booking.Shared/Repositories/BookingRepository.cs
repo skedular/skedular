@@ -131,15 +131,15 @@ internal static class BookingExtensions
                     !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
             }
 
-            if (searchCriteria.Type is not null)
+            if (searchCriteria.Category is not null)
             {
-                originalQuery = originalQuery.Where(item => item.Type == searchCriteria.Type.Value.ToBookingType());
+                originalQuery = originalQuery.Where(item => item.Category == searchCriteria.Category.Value.ToBookingCategory());
             }
 
             if (searchCriteria.PaymentStatuses.Count != 0)
             {
                 originalQuery = originalQuery.Where(item =>
-                    searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.Type));
+                    searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.Category));
             }
 
             if (searchCriteria.OrganizationIds.Count != 0)
@@ -209,9 +209,9 @@ internal static class BookingExtensions
                 BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Notes)
                     : originalQuery.OrderByDescending(x => x.Notes),
-                BookingOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Type)
-                    : originalQuery.OrderByDescending(x => x.Type),
+                BookingOrderField.Category => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Category)
+                    : originalQuery.OrderByDescending(x => x.Category),
                 BookingOrderField.Status => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.PaymentStatus)
                     : originalQuery.OrderByDescending(x => x.PaymentStatus),
@@ -228,9 +228,9 @@ internal static class BookingExtensions
                     BookingOrderField.Notes => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Notes)
                         : query.ThenByDescending(x => x.Notes),
-                    BookingOrderField.Type => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Type)
-                        : query.ThenByDescending(x => x.Type),
+                    BookingOrderField.Category => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Category)
+                        : query.ThenByDescending(x => x.Category),
                     BookingOrderField.Status => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.PaymentStatus)
                         : query.ThenByDescending(x => x.PaymentStatus),
