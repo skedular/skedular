@@ -115,7 +115,7 @@ public class BookingService(
 
         booking.BookedOnMarketplace = booking.LineItems.Count != 0;
         booking.IsPaymentRequired = booking.LineItems.Count != 0;
-        booking.PaymentStatus = booking.IsPaymentRequired ? PaymentStatus.Pending : PaymentStatus.Confirmed;
+        booking.PaymentStatus = booking.IsPaymentRequired ? PaymentStatus.Pending : PaymentStatus.NoPaymentRequired;
 
         if (booking.IsPaymentRequired)
         {
@@ -689,7 +689,7 @@ public class BookingService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         /********************************************************************************************************************/
-        // TODO: 20250317 : Morteza: For now first remove all existing resource as part of the transaction to make later resource availability simpler
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
