@@ -58,7 +58,7 @@ public class BookingService(
     IGraphQlHelperService graphQlHelperService,
     Shared.Services.IResourceService sharedResourceService,
     IProductService sharedProductService,
-    IPrivateBookingService sharedPrivateBookingService) : IBookingService
+    IPrivateBookingPreferenceService sharedPrivateBookingPreferenceService) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -166,9 +166,14 @@ public class BookingService(
 
         if (booking.InvolvedCustomers.Count == 1)
         {
-            (organizations, resources) = await sharedPrivateBookingService.PickResourceBasedOnCustomerPreferencesAsync(
-                booking,
+            (organizations, resources) = await sharedPrivateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
                 booking.InvolvedCustomers.First().Id,
+                booking.From,
+                booking.Until,
+                booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                    .Select(item => item.UniqueAlphanumericName!)
+                    .ToList(),
                 organizations,
                 resources,
                 cancellationToken);

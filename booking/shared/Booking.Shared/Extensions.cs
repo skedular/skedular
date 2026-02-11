@@ -50,7 +50,7 @@ public static class Extensions
                 .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IProductService, ProductService>()
-                .AddScoped<IPrivateBookingService, PrivatePrivateBookingService>();
+                .AddScoped<IPrivateBookingPreferenceService, PrivateBookingPreferenceService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();
