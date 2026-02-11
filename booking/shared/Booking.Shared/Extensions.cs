@@ -47,7 +47,10 @@ public static class Extensions
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
                 .AddScoped<IStripeCustomerService, StripeCustomerService>()
                 .AddScoped<IBookingInvoiceService, BookingInvoiceService>()
-                .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>();
+                .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>()
+                .AddScoped<IResourceService, ResourceService>()
+                .AddScoped<IProductService, ProductService>()
+                .AddScoped<IPrivateBookingService, PrivatePrivateBookingService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();

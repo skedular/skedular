@@ -20,7 +20,6 @@ using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Resource = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -56,7 +55,10 @@ public class BookingService(
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
-    IGraphQlHelperService graphQlHelperService) : IBookingService
+    IGraphQlHelperService graphQlHelperService,
+    Shared.Services.IResourceService sharedResourceService,
+    IProductService sharedProductService,
+    IPrivateBookingService sharedPrivateBookingService) : IBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
@@ -98,8 +100,14 @@ public class BookingService(
         }
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
-        var productVersions = await GetProductVersionsAsync(booking.LineItems.Select(item => item.ProductVersionId).ToList(), cancellationToken);
+        var resources = await sharedResourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+            booking.From,
+            booking.Until,
+            resourceIds,
+            cancellationToken);
+        var productVersions = await sharedProductService.GetProductVersionsAsync(
+            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
 
         var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
         if (organizationIds.Count > 1)
@@ -158,10 +166,12 @@ public class BookingService(
 
         if (booking.InvolvedCustomers.Count == 1)
         {
-            var customerEntity =
-                await repositoryFactory.CustomerRepository.GetByIdAsync(booking.InvolvedCustomers.First().Id, true, cancellationToken) ??
-                throw new CustomerNotFound();
-            (organizations, resources) = await TryToSetDefaultValuesAsync(booking, customerEntity, organizations, resources, cancellationToken);
+            (organizations, resources) = await sharedPrivateBookingService.PickResourceBasedOnCustomerPreferencesAsync(
+                booking,
+                booking.InvolvedCustomers.First().Id,
+                organizations,
+                resources,
+                cancellationToken);
         }
 
         foreach (var resource in resources)
@@ -712,7 +722,11 @@ public class BookingService(
         /********************************************************************************************************************/
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        var resources = await GetResourcesAsync(booking.From, booking.Until, resourceIds, cancellationToken);
+        var resources = await sharedResourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+            booking.From,
+            booking.Until,
+            resourceIds,
+            cancellationToken);
 
         foreach (var resource in resources)
         {
@@ -778,153 +792,6 @@ public class BookingService(
         await graphQlHelperService.RaiseGraphqlChange(Constants.BookingTopicName, booking.Id, cancellationToken);
 
         return booking;
-    }
-
-    private async Task<(ICollection<Organization>, ICollection<Resource>)> TryToSetDefaultValuesAsync(
-        Shared.Models.Booking booking,
-        Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Resource> resources,
-        CancellationToken cancellationToken)
-    {
-        if (booking.Resources.Count != 0)
-        {
-            return (organizations, resources);
-        }
-
-        var organization = booking.InvolvedOrganizations.FirstOrDefault();
-        var organizationEntity = organization is null
-            ? null
-            : await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                organization.Id,
-                organization.UniqueAlphanumericName,
-                false,
-                false,
-                cancellationToken);
-        Location? locationEntity;
-
-        if (organization is null)
-        {
-            if (customer.DefaultOrganization is null)
-            {
-                locationEntity = customer.PreferredLocations.FirstOrDefault();
-                if (locationEntity is not null)
-                {
-                    locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
-                    if (locationEntity is not null)
-                    {
-                        organizationEntity = locationEntity.Organization;
-                    }
-                }
-            }
-            else
-            {
-                organizationEntity = customer.DefaultOrganization;
-                locationEntity = customer.PreferredLocations.FirstOrDefault(item =>
-                    item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
-                if (locationEntity is not null)
-                {
-                    locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
-                }
-            }
-        }
-        else
-        {
-            locationEntity =
-                customer.PreferredLocations.FirstOrDefault(item => item.Organization is not null && item.Organization.Id == organization.Id);
-        }
-
-        if (locationEntity is null)
-        {
-            return (organizationEntity is null ? [] : [organizationEntity], resources);
-        }
-
-        resources = resources.Where(item => item.Location is { DeletedAt: null } && item.Location.Id == locationEntity.Id).ToList();
-        if (resources.Count != 0)
-        {
-            return (organizationEntity is null ? [] : [organizationEntity], resources);
-        }
-
-        var availableResources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-            null,
-            locationEntity.Id,
-            booking.From,
-            booking.Until,
-            [],
-            [],
-            [OrganizationTagTypeConstants.ResourceDesk],
-            cancellationToken);
-
-        var resource = availableResources
-            .FirstOrDefault(item => customer.PreferredResources.Select(preferredResource => preferredResource.Id).Contains(item.Id));
-        if (resource is null)
-        {
-            var preferredZones = customer.PreferredOrganizationTags
-                .Where(tag => tag.Type == OrganizationTagTypeConstants.Zone)
-                .Select(tag => tag.Id)
-                .ToList();
-            resource = availableResources.FirstOrDefault(item => item.OrganizationTags.Any(tag => preferredZones.Contains(tag.Id)));
-            if (resource is null)
-            {
-                var preferredTags = customer.PreferredOrganizationTags
-                    .Where(tag => tag.Type == OrganizationTagTypeConstants.Custom)
-                    .Select(tag => tag.Id)
-                    .ToList();
-                resource = availableResources.FirstOrDefault(item => item.OrganizationTags.Any(tag => preferredTags.Contains(tag.Id)));
-                resources = resource is null ? availableResources.Count != 0 ? [availableResources.First()] : [] : [resource];
-            }
-            else
-            {
-                resources = [resource];
-            }
-        }
-        else
-        {
-            resources = [resource];
-        }
-
-        return (organizationEntity is null ? [] : [organizationEntity], resources);
-    }
-
-    private async Task<ICollection<Resource>> GetResourcesAsync(
-        DateTimeOffset from,
-        DateTimeOffset until,
-        List<string> resourceIds,
-        CancellationToken cancellationToken)
-    {
-        if (resourceIds.Count == 0)
-        {
-            return [];
-        }
-
-        var availableResources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-            null,
-            null,
-            from,
-            until,
-            resourceIds,
-            [],
-            [],
-            cancellationToken);
-
-        return availableResources.Count != resourceIds.Count || !availableResources.All(item => resourceIds.Contains(item.Id))
-            ? throw new ResourceNotAvailable()
-            : availableResources;
-    }
-
-    private async Task<ICollection<ProductVersion>> GetProductVersionsAsync(List<string> productVersionIds, CancellationToken cancellationToken)
-    {
-        if (productVersionIds.Count == 0)
-        {
-            return [];
-        }
-
-        productVersionIds = productVersionIds.Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-
-        return productVersions.Count != productVersionIds.Count || !productVersions.All(item => productVersionIds.Contains(item.Id))
-            ? throw new ProductNotFound()
-            : productVersions;
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
