@@ -78,7 +78,7 @@ services:
       - skedular_network
 
   kowl:
-    image: docker.redpanda.com/redpandadata/console:latest
+    image: redpandadata/console:latest
     restart: unless-stopped
     depends_on:
       - kafka1
