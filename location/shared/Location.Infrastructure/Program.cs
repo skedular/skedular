@@ -1,9 +1,6 @@
-﻿using Api.Shared.Services;
-using Enterprise.Shared;
-using Enterprise.Shared.Cache;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Temporal;
 using Location.Infrastructure.Services;
 using Location.Shared;
 using Location.Shared.Database;
@@ -23,13 +20,10 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<LocationDbContext>(configuration, environment, "locationdb", true)
             .AddRepositoryFactory()
-            .AddRootLevelSharedServices()
             .AddServices()
-            .AddJobs()
-            .AddTemporalClient(configuration, "temporal");
+            .AddJobs();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

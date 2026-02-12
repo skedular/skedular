@@ -1,9 +1,6 @@
-﻿using Api.Shared.Services;
-using Enterprise.Shared;
-using Enterprise.Shared.Cache;
+﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Temporal;
 using Slack.Infrastructure.Services;
 using Slack.Shared;
 using Slack.Shared.Database;
@@ -23,13 +20,10 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<SlackDbContext>(configuration, environment, "slackdb", true)
             .AddRepositoryFactory()
-            .AddRootLevelSharedServices()
             .AddServices()
-            .AddJobs()
-            .AddTemporalClient(configuration, "temporal");
+            .AddJobs();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

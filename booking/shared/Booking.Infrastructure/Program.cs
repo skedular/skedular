@@ -1,13 +1,9 @@
-﻿using Api.Shared.Services;
-using Booking.Infrastructure.Services;
+﻿using Booking.Infrastructure.Services;
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Payment;
-using Enterprise.Shared.Temporal;
 
 namespace Booking.Infrastructure;
 

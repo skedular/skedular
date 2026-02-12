@@ -1,12 +1,9 @@
-﻿using Api.Shared.Services;
-using Customer.Infrastructure.Services;
+﻿using Customer.Infrastructure.Services;
 using Customer.Shared;
 using Customer.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Temporal;
 
 namespace Customer.Infrastructure;
 
@@ -23,13 +20,10 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<CustomerDbContext>(configuration, environment, "customerdb", true)
             .AddRepositoryFactory()
-            .AddRootLevelSharedServices()
             .AddServices()
-            .AddJobs()
-            .AddTemporalClient(configuration, "temporal");
+            .AddJobs();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

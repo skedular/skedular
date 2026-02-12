@@ -1,13 +1,9 @@
-﻿using Api.Shared.Services;
-using Core.Infrastructure.Services;
+﻿using Core.Infrastructure.Services;
 using Core.Shared;
 using Core.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.FileStorage;
 using Enterprise.Shared.Kafka;
-using Enterprise.Shared.Temporal;
 
 namespace Core.Infrastructure;
 
@@ -24,14 +20,10 @@ public class Program
         _ = services.AddKafka(configuration, "kafka");
 
         services
-            .AddRedis(configuration, "redis")
-            .AddFileStorage(configuration, CoreApiHelper.GetPublicCdnFileEndpoint(), CoreApiHelper.GetPrivateFileEndpoint())
             .WithPooledDbContextFactory<CoreDbContext>(configuration, environment, "coredb", true)
             .AddRepositoryFactory()
-            .AddRootLevelSharedServices()
             .AddServices()
-            .AddJobs()
-            .AddTemporalClient(configuration, "temporal");
+            .AddJobs();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }
