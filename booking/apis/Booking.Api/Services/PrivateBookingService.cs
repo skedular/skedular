@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
-using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -12,10 +11,7 @@ using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
-using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
-using HotChocolate.Types.Pagination;
-using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -29,21 +25,12 @@ public interface IPrivateBookingService
     Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
-
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int )> GetPaginatedBookingsAsync(
-        PaginationInputParam paginationInputParam,
-        BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken);
 }
 
 public class PrivateBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
-    ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
@@ -312,187 +299,6 @@ public class PrivateBookingService(
         }
 
         return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
-    }
-
-    public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await cachedBookingService.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-
-        await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
-
-        return sharedMapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
-    }
-
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
-        PaginationInputParam paginationInputParam,
-        BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
-        bool ignoreAuthorizationCheck,
-        CancellationToken cancellationToken)
-    {
-        Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
-        }
-
-        if (customer is not null && searchCriteria.IncludeMineOnly.HasValue)
-        {
-            searchCriteria = searchCriteria with { CustomerIds = [customer.Id] };
-        }
-
-        List<string>? organizationIds = null;
-        List<string>? organizationUniqueAlphanumericNames = null;
-        List<string>? locationIds = null;
-        List<string>? teamIds = null;
-
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationIds.Count == 0 && searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0)
-        {
-            throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
-        }
-
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationIds.Count != 0)
-        {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-            organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-
-            if (searchCriteria.CustomerIds
-                .Any(customerId => !organizationCustomerPairs.Item1.Keys.Any(item => organizationCustomerPairs.Item1[item].Contains(customerId))))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
-        {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-            organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
-
-            if (searchCriteria.CustomerIds
-                .Any(customerId => !organizationCustomerPairs.Item2.Keys.Any(item => organizationCustomerPairs.Item2[item].Contains(customerId))))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        if (customer is not null && searchCriteria.OrganizationIds.Count != 0)
-        {
-            if (organizationIds is null)
-            {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-            }
-
-            if (searchCriteria.OrganizationIds.Any(item => !organizationIds.Contains(item)))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-        else if (customer is not null && searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
-        {
-            if (organizationUniqueAlphanumericNames is null)
-            {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
-            }
-
-            if (searchCriteria.OrganizationUniqueAlphanumericNames.Any(item => !organizationUniqueAlphanumericNames.Contains(item)))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        if (customer is not null && searchCriteria.LocationIds.Count != 0)
-        {
-            var criteria = searchCriteria;
-            var locations = await repositoryFactory.LocationRepository.Query(
-                    new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
-
-            foreach (var location in locations)
-            {
-                if (organizationIds is null)
-                {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-                }
-
-                if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-        }
-
-        if (customer is not null && searchCriteria.TeamIds.Count != 0)
-        {
-            var criteria = searchCriteria;
-            var teams = await repositoryFactory.TeamRepository.Query(
-                    new Specification<Team> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
-
-            foreach (var team in teams)
-            {
-                if (organizationIds is null)
-                {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-                }
-
-                if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-        }
-
-        if (customer is not null &&
-            (!searchCriteria.IncludeMineOnly.HasValue || !searchCriteria.IncludeMineOnly.Value) &&
-            searchCriteria.OrganizationIds.Count == 0 &&
-            searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0 &&
-            searchCriteria.LocationIds.Count == 0 &&
-            searchCriteria.TeamIds.Count == 0)
-        {
-            if (organizationIds is null)
-            {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-            }
-
-            locationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
-            teamIds ??= await GetCustomerTeamIdsAsync(customer, cancellationToken);
-
-            if (organizationIds.Count == 0 && locationIds.Count == 0 && teamIds.Count == 0)
-            {
-                return (new PaginatedInfo(false, false, null, null), [], 0);
-            }
-
-            searchCriteria = searchCriteria with { OrganizationIds = organizationIds, LocationIds = locationIds, TeamIds = teamIds };
-        }
-
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.BookingRepository.GetPaginatedBookingsAsync(
-            paginationInputParam,
-            searchCriteria,
-            orderByFields,
-            cancellationToken);
-
-        return (paginatedInfo,
-            edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item.Node))).ToList(),
-            totalCount);
     }
 
     private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(

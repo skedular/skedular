@@ -47,18 +47,17 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
-    public async Task<BookingDetails?> BookingAsync(string id, [Service] IPrivateBookingService privateBookingService,
-        CancellationToken cancellationToken) =>
-        mapper.MapTo(await privateBookingService.GetByIdAsync(id, cancellationToken));
+    public async Task<BookingDetails?> BookingAsync(string id, [Service] IBookingService bookingService, CancellationToken cancellationToken) =>
+        mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
 
     [UseResolverScope]
     [Lookup]
     [Internal]
     public async Task<BookingDetails?> BookingByIdAsync(
         string id,
-        [Service] IPrivateBookingService privateBookingService,
+        [Service] IBookingService bookingService,
         CancellationToken cancellationToken) =>
-        await BookingAsync(id, privateBookingService, cancellationToken);
+        await BookingAsync(id, bookingService, cancellationToken);
 
     [UseResolverScope]
     public async Task<Connection<BookingEdge>> BookingsAsync(
@@ -68,7 +67,7 @@ public class RootQuery(IMapper mapper)
         int? last,
         BookingWhereInput where,
         IEnumerable<BookingOrderInput>? orderBy,
-        [Service] IPrivateBookingService privateBookingService,
+        [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
@@ -77,7 +76,7 @@ public class RootQuery(IMapper mapper)
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
-        var (paginatedInfo, edges, totalCount) = await privateBookingService.GetPaginatedBookingsAsync(
+        var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(after, first, before, last),
             new BookingSearchCriteria(
                 where.FromGt,
@@ -121,10 +120,10 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<IEnumerable<BookingDetails>> AllBookingsAsync(
         BookingWhereInput where,
-        [Service] IPrivateBookingService privateBookingService,
+        [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
-        var result = await BookingsAsync(null, null, null, null, where, [], privateBookingService, cancellationToken);
+        var result = await BookingsAsync(null, null, null, null, where, [], bookingService, cancellationToken);
         return result.Edges.Select(item => item.Node);
     }
 }

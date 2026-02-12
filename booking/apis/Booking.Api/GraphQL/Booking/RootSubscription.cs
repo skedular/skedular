@@ -35,7 +35,7 @@ public class RootSubscription(IMapper mapper)
     {
         await using var scope = serviceProvider.CreateAsyncScope();
 
-        var bookingService = scope.ServiceProvider.GetRequiredService<IPrivateBookingService>();
+        var bookingService = scope.ServiceProvider.GetRequiredService<IBookingService>();
         return mapper.MapTo(await bookingService.GetByIdAsync(id, cancellationToken));
     }
 }

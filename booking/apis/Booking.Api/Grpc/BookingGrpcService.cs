@@ -24,6 +24,7 @@ public class BookingGrpcService(
     IVersionService versionService,
     BookingConfiguration bookingConfiguration,
     IGrpcAuthenticator grpcAuthenticator,
+    IBookingService bookingService,
     IPrivateBookingService privateBookingService,
     IResourceService resourceService,
     IOrganizationAuthorizationService organizationAuthorizationService,
@@ -52,7 +53,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var (paginatedInfo, edges, totalCount) = await privateBookingService.GetPaginatedBookingsAsync(
+        var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new BookingSearchCriteria(
                 request.Where.FromGt?.ToDateTimeOffset(),
@@ -116,7 +117,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        var (paginatedInfo, edges, totalCount) = await privateBookingService.GetPaginatedBookingsAsync(
+        var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new BookingSearchCriteria(
                 request.Where.FromGt?.ToDateTimeOffset(),
@@ -209,7 +210,7 @@ public class BookingGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
-        return mapper.MapToGrpcResponse(await privateBookingService.GetByIdAsync(request.Id, context.CancellationToken));
+        return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(AddInput request, ServerCallContext context)
