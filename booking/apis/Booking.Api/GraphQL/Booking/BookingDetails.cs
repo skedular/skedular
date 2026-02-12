@@ -15,6 +15,7 @@ public class BookingDetails : Node
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("category")] public BookingCategoryDetails Category { get; set; } = new();
+    [GraphQLName("channel")] public BookingChannelDetails Channel { get; set; } = new();
     [GraphQLName("bookingResources")] public IEnumerable<BookingResourceDetails> BookingResources { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemDetails> LineItems { get; set; } = [];
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];

@@ -91,6 +91,7 @@ public class RootQuery(IMapper mapper)
                 where.NotesContains,
                 where.NameContains,
                 where.Category,
+                where.Channel,
                 where.PaymentStatuses.ToSafeCollection(),
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,

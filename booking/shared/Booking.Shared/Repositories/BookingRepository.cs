@@ -136,10 +136,15 @@ internal static class BookingExtensions
                 originalQuery = originalQuery.Where(item => item.Category == searchCriteria.Category.Value.ToBookingCategory());
             }
 
+            if (searchCriteria.Channel is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Channel == searchCriteria.Channel.Value.ToBookingChannel());
+            }
+
             if (searchCriteria.PaymentStatuses.Count != 0)
             {
                 originalQuery = originalQuery.Where(item =>
-                    searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.Category));
+                    searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.PaymentStatus));
             }
 
             if (searchCriteria.OrganizationIds.Count != 0)
@@ -212,9 +217,12 @@ internal static class BookingExtensions
                 BookingOrderField.Category => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Category)
                     : originalQuery.OrderByDescending(x => x.Category),
-                BookingOrderField.Status => orderByField.Direction == OrderDirection.Ascending
+                BookingOrderField.PaymentStatus => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.PaymentStatus)
                     : originalQuery.OrderByDescending(x => x.PaymentStatus),
+                BookingOrderField.Channel => orderByField.Direction == OrderDirection.Ascending
+                    ? originalQuery.OrderBy(x => x.Channel)
+                    : originalQuery.OrderByDescending(x => x.Channel),
                 _ => throw new ArgumentOutOfRangeException()
             }, (query, orderField) =>
                 orderField.Field switch
@@ -231,9 +239,12 @@ internal static class BookingExtensions
                     BookingOrderField.Category => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Category)
                         : query.ThenByDescending(x => x.Category),
-                    BookingOrderField.Status => orderField.Direction == OrderDirection.Ascending
+                    BookingOrderField.PaymentStatus => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.PaymentStatus)
                         : query.ThenByDescending(x => x.PaymentStatus),
+                    BookingOrderField.Channel => orderField.Direction == OrderDirection.Ascending
+                        ? query.ThenBy(x => x.Channel)
+                        : query.ThenByDescending(x => x.Channel),
                     _ => throw new ArgumentOutOfRangeException()
                 }).ThenBy(query => query.Id);
         }

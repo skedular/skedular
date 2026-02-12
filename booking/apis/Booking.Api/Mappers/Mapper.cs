@@ -9,6 +9,7 @@ using Enterprise.Shared.Sanitization;
 using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using BookingCategory = Api.Shared.Services.Models.BookingCategory;
+using BookingChannel = Api.Shared.Services.Models.BookingChannel;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
@@ -83,6 +84,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
+            Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
             IsPaymentRequired = src.IsPaymentRequired,
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
@@ -285,6 +287,12 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 BookingCategory.Vacation => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Channel = src.Channel switch
+            {
+                BookingChannel.Private => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel.Private,
+                BookingChannel.Marketplace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
             PaymentStatus = src.PaymentStatus switch

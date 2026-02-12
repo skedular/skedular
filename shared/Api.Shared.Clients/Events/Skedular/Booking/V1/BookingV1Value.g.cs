@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmci5QcKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcijwgKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -53,38 +53,40 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "b3VudEV4Y2x1ZGVUYXgYGCABKAESEQoJdGF4QW1vdW50GBkgASgBEhkKEXRh",
             "eFJhdGVQZXJjZW50YWdlGBogASgBEhMKC3RvdGFsQW1vdW50GBsgASgBEhAK",
             "CGN1cnJlbmN5GBwgASgJEhIKCkludm9pY2VVcmwYHSABKAkSFQoNSW52b2lj",
-            "ZU51bWJlchgeIAEoCRIYChBJbnZvaWNlRW1haWxMaXN0GB8gAygJIisKCFJl",
-            "c291cmNlEgoKAmlkGAEgASgJEhMKC2N1c3RvbWVySWRzGAIgAygJImYKD0Jv",
-            "b2tpbmdTY2hlZHVsZRIoCgRmcm9tGAEgASgLMhouZ29vZ2xlLnByb3RvYnVm",
-            "LlRpbWVzdGFtcBIpCgV1bnRpbBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXAiNgoITGluZUl0ZW0SGAoQcHJvZHVjdFZlcnNpb25JZBgBIAEo",
-            "CRIQCghxdWFudGl0eRgCIAEoBSI5ChZCb29raW5nQ2hlY2tvdXRTZXNzaW9u",
-            "EgoKAmlkGAEgASgJEhMKC2NoZWNrb3V0VXJsGAIgASgJKjkKBFR5cGUSGAoU",
-            "VHlwZV9Cb29raW5nVXBzZXJ0ZWQQABIXChNUeXBlX0Jvb2tpbmdEZWxldGVk",
-            "EAEq+QIKD0Jvb2tpbmdDYXRlZ29yeRIjCh9Cb29raW5nQ2F0ZWdvcnlfV29y",
-            "a2luZ0Zyb21Ib21lEAASJQohQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9t",
-            "T2ZmaWNlEAESLQopQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9tQ293b3Jr",
-            "aW5nU3BhY2UQAhIdChlCb29raW5nQ2F0ZWdvcnlfU2lja0xlYXZlEAMSHwob",
-            "Qm9va2luZ0NhdGVnb3J5X0FubnVhbExlYXZlEAQSIgoeQm9va2luZ0NhdGVn",
-            "b3J5X1dlbGxiZWluZ0xlYXZlEAUSIAocQm9va2luZ0NhdGVnb3J5X0NsaWVu",
-            "dE9mZmljZRAGEhwKGEJvb2tpbmdDYXRlZ29yeV9WYWNhdGlvbhAHEiQKIEJv",
-            "b2tpbmdDYXRlZ29yeV9UcmF2ZWxpbmdGb3JXb3JrEAgSIQodQm9va2luZ0Nh",
-            "dGVnb3J5X05vbldvcmtpbmdEYXkQCSrJAQoNUGF5bWVudFN0YXR1cxIZChVQ",
-            "YXltZW50U3RhdHVzX1BlbmRpbmcQABIaChZQYXltZW50U3RhdHVzX1JlamVj",
-            "dGVkEAESGwoXUGF5bWVudFN0YXR1c19Db25maXJtZWQQAhIZChVQYXltZW50",
-            "U3RhdHVzX0V4cGlyZWQQAxIkCiBQYXltZW50U3RhdHVzX1JlY29yZE5ldmVy",
-            "Q3JlYXRlZBAEEiMKH1BheW1lbnRTdGF0dXNfTm9QYXltZW50UmVxdWlyZWQQ",
-            "BSpGCg1QYXltZW50TWV0aG9kEhYKElBheW1lbnRNZXRob2RfQ2FyZBAAEh0K",
-            "GVBheW1lbnRNZXRob2RfQmFua0FjY291bnQQAUI2qgIzQXBpLlNoYXJlZC5D",
-            "bGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5nLlYxLlZhbHVlYgZwcm90",
-            "bzM="));
+            "ZU51bWJlchgeIAEoCRIYChBJbnZvaWNlRW1haWxMaXN0GB8gAygJEigKB2No",
+            "YW5uZWwYICABKA4yFy5ib29raW5nLkJvb2tpbmdDaGFubmVsIisKCFJlc291",
+            "cmNlEgoKAmlkGAEgASgJEhMKC2N1c3RvbWVySWRzGAIgAygJImYKD0Jvb2tp",
+            "bmdTY2hlZHVsZRIoCgRmcm9tGAEgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
+            "bWVzdGFtcBIpCgV1bnRpbBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
+            "c3RhbXAiNgoITGluZUl0ZW0SGAoQcHJvZHVjdFZlcnNpb25JZBgBIAEoCRIQ",
+            "CghxdWFudGl0eRgCIAEoBSI5ChZCb29raW5nQ2hlY2tvdXRTZXNzaW9uEgoK",
+            "AmlkGAEgASgJEhMKC2NoZWNrb3V0VXJsGAIgASgJKjkKBFR5cGUSGAoUVHlw",
+            "ZV9Cb29raW5nVXBzZXJ0ZWQQABIXChNUeXBlX0Jvb2tpbmdEZWxldGVkEAEq",
+            "+QIKD0Jvb2tpbmdDYXRlZ29yeRIjCh9Cb29raW5nQ2F0ZWdvcnlfV29ya2lu",
+            "Z0Zyb21Ib21lEAASJQohQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9tT2Zm",
+            "aWNlEAESLQopQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9tQ293b3JraW5n",
+            "U3BhY2UQAhIdChlCb29raW5nQ2F0ZWdvcnlfU2lja0xlYXZlEAMSHwobQm9v",
+            "a2luZ0NhdGVnb3J5X0FubnVhbExlYXZlEAQSIgoeQm9va2luZ0NhdGVnb3J5",
+            "X1dlbGxiZWluZ0xlYXZlEAUSIAocQm9va2luZ0NhdGVnb3J5X0NsaWVudE9m",
+            "ZmljZRAGEhwKGEJvb2tpbmdDYXRlZ29yeV9WYWNhdGlvbhAHEiQKIEJvb2tp",
+            "bmdDYXRlZ29yeV9UcmF2ZWxpbmdGb3JXb3JrEAgSIQodQm9va2luZ0NhdGVn",
+            "b3J5X05vbldvcmtpbmdEYXkQCSpMCg5Cb29raW5nQ2hhbm5lbBIaChZCb29r",
+            "aW5nQ2hhbm5lbF9Qcml2YXRlEAASHgoaQm9va2luZ0NoYW5uZWxfTWFya2V0",
+            "cGxhY2UQASrJAQoNUGF5bWVudFN0YXR1cxIZChVQYXltZW50U3RhdHVzX1Bl",
+            "bmRpbmcQABIaChZQYXltZW50U3RhdHVzX1JlamVjdGVkEAESGwoXUGF5bWVu",
+            "dFN0YXR1c19Db25maXJtZWQQAhIZChVQYXltZW50U3RhdHVzX0V4cGlyZWQQ",
+            "AxIkCiBQYXltZW50U3RhdHVzX1JlY29yZE5ldmVyQ3JlYXRlZBAEEiMKH1Bh",
+            "eW1lbnRTdGF0dXNfTm9QYXltZW50UmVxdWlyZWQQBSpGCg1QYXltZW50TWV0",
+            "aG9kEhYKElBheW1lbnRNZXRob2RfQ2FyZBAAEh0KGVBheW1lbnRNZXRob2Rf",
+            "QmFua0FjY291bnQQAUI2qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
+            "a2VkdWxhci5Cb29raW5nLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "PaymentStatus", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "BookingCheckoutSession", "BookedOnMarketplace", "PaymentMethod", "TotalAmountExcludeTax", "TaxAmount", "TaxRatePercentage", "TotalAmount", "Currency", "InvoiceUrl", "InvoiceNumber", "InvoiceEmailList" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "PaymentStatus", "IsPaymentRequired", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "PaidByCustomerId", "PaidByOrganizationId", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "BookingCheckoutSession", "BookedOnMarketplace", "PaymentMethod", "TotalAmountExcludeTax", "TaxAmount", "TaxRatePercentage", "TotalAmount", "Currency", "InvoiceUrl", "InvoiceNumber", "InvoiceEmailList", "Channel" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id", "CustomerIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser, new[]{ "ProductVersionId", "Quantity" }, null, null, null, null),
@@ -111,6 +113,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [pbr::OriginalName("BookingCategory_Vacation")] Vacation = 7,
     [pbr::OriginalName("BookingCategory_TravelingForWork")] TravelingForWork = 8,
     [pbr::OriginalName("BookingCategory_NonWorkingDay")] NonWorkingDay = 9,
+  }
+
+  public enum BookingChannel {
+    [pbr::OriginalName("BookingChannel_Private")] Private = 0,
+    [pbr::OriginalName("BookingChannel_Marketplace")] Marketplace = 1,
   }
 
   public enum PaymentStatus {
@@ -1048,6 +1055,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       invoiceUrl_ = other.invoiceUrl_;
       invoiceNumber_ = other.invoiceNumber_;
       invoiceEmailList_ = other.invoiceEmailList_.Clone();
+      channel_ = other.channel_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1421,6 +1429,18 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       get { return invoiceEmailList_; }
     }
 
+    /// <summary>Field number for the "channel" field.</summary>
+    public const int ChannelFieldNumber = 32;
+    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel channel_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel Channel {
+      get { return channel_; }
+      set {
+        channel_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1467,6 +1487,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (InvoiceUrl != other.InvoiceUrl) return false;
       if (InvoiceNumber != other.InvoiceNumber) return false;
       if(!invoiceEmailList_.Equals(other.invoiceEmailList_)) return false;
+      if (Channel != other.Channel) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1505,6 +1526,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (InvoiceUrl.Length != 0) hash ^= InvoiceUrl.GetHashCode();
       if (InvoiceNumber.Length != 0) hash ^= InvoiceNumber.GetHashCode();
       hash ^= invoiceEmailList_.GetHashCode();
+      if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) hash ^= Channel.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1623,6 +1645,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteString(InvoiceNumber);
       }
       invoiceEmailList_.WriteTo(output, _repeated_invoiceEmailList_codec);
+      if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
+        output.WriteRawTag(128, 2);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1733,6 +1759,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteString(InvoiceNumber);
       }
       invoiceEmailList_.WriteTo(ref output, _repeated_invoiceEmailList_codec);
+      if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
+        output.WriteRawTag(128, 2);
+        output.WriteEnum((int) Channel);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1820,6 +1850,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         size += 2 + pb::CodedOutputStream.ComputeStringSize(InvoiceNumber);
       }
       size += invoiceEmailList_.CalculateSize(_repeated_invoiceEmailList_codec);
+      if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
+        size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) Channel);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1921,6 +1954,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         InvoiceNumber = other.InvoiceNumber;
       }
       invoiceEmailList_.Add(other.invoiceEmailList_);
+      if (other.Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
+        Channel = other.Channel;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2076,6 +2112,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             invoiceEmailList_.AddEntriesFrom(input, _repeated_invoiceEmailList_codec);
             break;
           }
+          case 256: {
+            Channel = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -2229,6 +2269,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           }
           case 250: {
             invoiceEmailList_.AddEntriesFrom(ref input, _repeated_invoiceEmailList_codec);
+            break;
+          }
+          case 256: {
+            Channel = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel) input.ReadEnum();
             break;
           }
         }

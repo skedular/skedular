@@ -26,6 +26,11 @@ type BookingCategoryDetails {
   name: String!
 }
 
+type BookingChannelDetails {
+  channel: BookingChannel!
+  name: String!
+}
+
 type BookingCheckoutSessionDetails {
   checkoutUrl: String!
   uniqueId: ID!
@@ -36,6 +41,7 @@ type BookingDetails {
   bookingCheckoutSession: BookingCheckoutSessionDetails
   bookingResources: [BookingResourceDetails!]!
   category: BookingCategoryDetails!
+  channel: BookingChannelDetails!
   createdByCustomer: CustomerDetails
   currency: String
   currencyToDisplay: String!
@@ -1596,6 +1602,7 @@ input BookingOrderInput {
 
 input BookingWhereInput {
   category: BookingCategory
+  channel: BookingChannel
   customerIds: [String!]
   fromGt: DateTime
   fromGte: DateTime
@@ -2532,11 +2539,17 @@ enum BookingCategory {
   WORKING_FROM_OFFICE
 }
 
+enum BookingChannel {
+  MARKETPLACE
+  PRIVATE
+}
+
 enum BookingOrderField {
   CATEGORY
+  CHANNEL
   FROM
   NOTES
-  STATUS
+  PAYMENT_STATUS
   TO
 }
 

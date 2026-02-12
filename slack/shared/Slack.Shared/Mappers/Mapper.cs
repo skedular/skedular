@@ -16,6 +16,7 @@ using Workspace = Slack.Shared.Database.Entities.Workspace;
 using WorkspaceMember = Slack.Shared.Database.Entities.WorkspaceMember;
 using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddInput;
 using BookingCategory = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory;
+using BookingChannel = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel;
 using CustomerType = Api.Shared.Services.Models.CustomerType;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
@@ -135,6 +136,12 @@ public class Mapper : IMapper
                 BookingCategory.Vacation => Api.Shared.Services.Models.BookingCategory.Vacation,
                 BookingCategory.TravelingForWork => Api.Shared.Services.Models.BookingCategory.TravelingForWork,
                 BookingCategory.NonWorkingDay => Api.Shared.Services.Models.BookingCategory.NonWorkingDay,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            Channel = src.Channel switch
+            {
+                BookingChannel.Private => Api.Shared.Services.Models.BookingChannel.Private,
+                BookingChannel.Marketplace => Api.Shared.Services.Models.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Resources = src.ResourceIds.Select(item => new Resource { Id = item }).ToList(),

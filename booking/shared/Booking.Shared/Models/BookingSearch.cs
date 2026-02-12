@@ -15,6 +15,7 @@ public record BookingSearchCriteria(
     string? NotesContains,
     string? NameContains,
     BookingCategory? Category,
+    BookingChannel? Channel,
     ICollection<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
@@ -32,5 +33,6 @@ public enum BookingOrderField
     To,
     Notes,
     Category,
-    Status
+    PaymentStatus,
+    Channel
 }

@@ -9,6 +9,7 @@ public class Booking : ModelBase
     public DateTimeOffset Until { get; set; }
     public string? Notes { get; set; }
     public BookingCategory Category { get; set; }
+    public BookingChannel Channel { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];
     public ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public ICollection<Organization> InvolvedOrganizations { get; set; } = [];

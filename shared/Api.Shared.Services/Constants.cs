@@ -74,6 +74,7 @@ public static class Constants
 
     public const int MaxInvitationStatusLength = 32;
     public const int MaxBookingCategoryLength = 100;
+    public const int MaxBookingChannelLength = 100;
     public const int MaxBookingPaymentStatusLength = 32;
     public const int MaxBookingMethodLength = 32;
 

@@ -215,6 +215,8 @@ public class PrivateBookingService(
             productVersions,
             null);
 
+        bookingEntity.Channel = BookingChannelConstants.Private;
+
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = sharedMapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
 

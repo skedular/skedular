@@ -9,6 +9,11 @@ type BookingCategoryDetails {
   name: String!
 }
 
+type BookingChannelDetails {
+  channel: BookingChannel!
+  name: String!
+}
+
 type BookingCheckoutSessionDetails {
   uniqueId: ID!
   checkoutUrl: String!
@@ -29,6 +34,7 @@ type BookingDetails {
   until: DateTime!
   notes: String
   category: BookingCategoryDetails!
+  channel: BookingChannelDetails!
   bookingResources: [BookingResourceDetails!]!
   lineItems: [LineItemDetails!]!
   paymentMethod: PaymentMethodTypeDetails
@@ -222,6 +228,7 @@ input BookingWhereInput {
   toLte: DateTime
   notesContains: String
   category: BookingCategory
+  channel: BookingChannel
   paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
@@ -292,12 +299,18 @@ enum BookingCategory {
   NON_WORKING_DAY
 }
 
+enum BookingChannel {
+  PRIVATE
+  MARKETPLACE
+}
+
 enum BookingOrderField {
   FROM
   TO
   NOTES
   CATEGORY
-  STATUS
+  PAYMENT_STATUS
+  CHANNEL
 }
 
 enum OrderDirection {

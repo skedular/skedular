@@ -86,6 +86,12 @@ public class Mapper : IMapper
                 BookingCategory.NonWorkingDay => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory.NonWorkingDay,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            Channel = src.Channel switch
+            {
+                BookingChannel.Private => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private,
+                BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             PaymentStatus = src.PaymentStatus switch
             {
                 PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
@@ -265,6 +271,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category.ToBookingCategory(),
+            Channel = src.Channel.ToBookingChannel(),
             PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
@@ -304,6 +311,7 @@ public class Mapper : IMapper
             Until = src.Until,
             Notes = src.Notes,
             Category = src.Category.ToBookingCategory(),
+            Channel = src.Channel.ToBookingChannel(),
             PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,

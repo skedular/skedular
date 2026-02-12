@@ -88,6 +88,7 @@ message BookingWhereInput {
   bool includeFutureBookingsOnly  = 16;
   string category = 17;
   repeated string paymentStatuses = 18;
+  string channel = 19;
 }
 
 message BookingOrderInput {
@@ -100,7 +101,8 @@ enum BookingOrderField {
   BookingOrderField_To= 1;
   BookingOrderField_Notes= 2;
   BookingOrderField_Category= 3;
-  BookingOrderField_Status= 4;
+  BookingOrderField_PaymentStatus= 4;
+  BookingOrderField_Channel= 5;
 }
 
 enum BookingCategory
@@ -115,6 +117,12 @@ enum BookingCategory
   BookingCategory_Vacation = 7;
   BookingCategory_TravelingForWork = 8;
   BookingCategory_NonWorkingDay = 9;
+}
+
+enum BookingChannel
+{
+  BookingChannel_Private = 0;
+  BookingChannel_Marketplace = 1;
 }
 
 enum PaymentStatus
@@ -175,6 +183,7 @@ message Booking {
   string InvoiceUrl = 29;
   string InvoiceNumber = 30;
   repeated string InvoiceEmailList = 31;
+  BookingChannel channel = 32;
 }
 
 message GetOrganizationPermissionsInput {
