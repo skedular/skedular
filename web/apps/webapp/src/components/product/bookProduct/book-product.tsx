@@ -23,9 +23,9 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { BookingCategory, bookProduct_addBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
+import type { BookingCategory, bookProduct_bookProductMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_bookProductMutation.graphql';
 import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -211,9 +211,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     rootDataAvailableResourcesRelay,
   );
 
-  const [commitAddBooking] = useMutation<bookProduct_addBookingMutation>(graphql`
-    mutation bookProduct_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
-      addBooking(input: $input) {
+  const [commitBookProduct] = useMutation<bookProduct_bookProductMutation>(graphql`
+    mutation bookProduct_bookProductMutation($connectionIds: [ID!]!, $input: BookProductInput!) @raw_response_type {
+      bookProduct(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
@@ -517,7 +517,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const customerId = rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
-    commitAddBooking({
+    commitBookProduct({
       variables: {
         connectionIds,
         input: {
@@ -528,7 +528,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           until,
           notes,
           organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
-          teamIds: [],
           resourceIds,
           category: category as BookingCategory,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
@@ -546,7 +545,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           return;
         }
 
-        const booking = response.addBooking?.booking;
+        const booking = response.bookProduct?.booking;
 
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
@@ -568,7 +567,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           render: <NotificationContent content={message} />,
         });
 
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.addBooking!.booking.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.bookProduct!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -577,7 +576,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         });
       },
       optimisticResponse: {
-        addBooking: {
+        bookProduct: {
           booking: {
             id,
             from,

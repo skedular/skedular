@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bdd43da3f1e8368bb91319926aa6a6f9>>
+ * @generated SignedSource<<664ec10c47b6592e81c2c7648a9430db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,25 +11,31 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type AddBookingInput = {
+export type BookProductInput = {
   category: BookingCategory;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
+  invoiceEmailList: ReadonlyArray<string>;
+  lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
+  paymentMethod?: PaymentMethod | null | undefined;
   resourceIds: ReadonlyArray<string>;
-  teamIds: ReadonlyArray<string>;
   until: any;
 };
-export type bookProduct_addBookingMutation$variables = {
+export type LineItemInput = {
+  productVersionId: string;
+  quantity: number;
+};
+export type bookProduct_bookProductMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: AddBookingInput;
+  input: BookProductInput;
 };
-export type bookProduct_addBookingMutation$data = {
-  readonly addBooking: {
+export type bookProduct_bookProductMutation$data = {
+  readonly bookProduct: {
     readonly booking: {
       readonly bookingResources: ReadonlyArray<{
         readonly resource: {
@@ -76,8 +82,8 @@ export type bookProduct_addBookingMutation$data = {
     };
   };
 };
-export type bookProduct_addBookingMutation$rawResponse = {
-  readonly addBooking: {
+export type bookProduct_bookProductMutation$rawResponse = {
+  readonly bookProduct: {
     readonly booking: {
       readonly bookingResources: ReadonlyArray<{
         readonly resource: {
@@ -124,10 +130,10 @@ export type bookProduct_addBookingMutation$rawResponse = {
     };
   };
 };
-export type bookProduct_addBookingMutation = {
-  rawResponse: bookProduct_addBookingMutation$rawResponse;
-  response: bookProduct_addBookingMutation$data;
-  variables: bookProduct_addBookingMutation$variables;
+export type bookProduct_bookProductMutation = {
+  rawResponse: bookProduct_bookProductMutation$rawResponse;
+  response: bookProduct_bookProductMutation$data;
+  variables: bookProduct_bookProductMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -358,14 +364,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookProduct_addBookingMutation",
+    "name": "bookProduct_bookProductMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
-        "name": "addBooking",
+        "name": "bookProduct",
         "plural": false,
         "selections": [
           (v6/*: any*/)
@@ -380,14 +386,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookProduct_addBookingMutation",
+    "name": "bookProduct_bookProductMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
-        "name": "addBooking",
+        "name": "bookProduct",
         "plural": false,
         "selections": [
           (v6/*: any*/),
@@ -418,16 +424,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "af424bba111099f874839e9cb9cdbccd",
+    "cacheID": "f876cdf733f37f1a55ae6583f661c161",
     "id": null,
     "metadata": {},
-    "name": "bookProduct_addBookingMutation",
+    "name": "bookProduct_bookProductMutation",
     "operationKind": "mutation",
-    "text": "mutation bookProduct_addBookingMutation(\n  $input: AddBookingInput!\n) {\n  addBooking(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      invoiceEmailList\n    }\n  }\n}\n"
+    "text": "mutation bookProduct_bookProductMutation(\n  $input: BookProductInput!\n) {\n  bookProduct(input: $input) {\n    booking {\n      id\n      from\n      notes\n      until\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n      paymentMethod {\n        type\n        name\n      }\n      invoiceEmailList\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "44ad886c69658ae6ad2f33e432e5c0f5";
+(node as any).hash = "3a5f663bbd6610d978bde495aa0a08de";
 
 export default node;

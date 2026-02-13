@@ -465,7 +465,6 @@ const NewBookingDialog = ({
           organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
           teamIds: teamId ? [teamId] : [],
           resourceIds,
-          lineItems: [],
         },
       },
       onCompleted: (response, errors) => {

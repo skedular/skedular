@@ -355,7 +355,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           teamIds: bookingDetails.involvedTeams.map(({ id }) => id),
           resourceIds: [],
           category: bookingDetails.category.category,
-          lineItems: [],
         },
       },
       onCompleted: (response, errors) => {
