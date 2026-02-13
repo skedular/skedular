@@ -10,18 +10,14 @@ using Google.Protobuf.WellKnownTypes;
 using HotChocolate.Types.Pagination;
 using BookingCategory = Api.Shared.Services.Models.BookingCategory;
 using BookingChannel = Api.Shared.Services.Models.BookingChannel;
-using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using Customer = Booking.Shared.Models.Customer;
 using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
-using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
 using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
 using PaymentStatus = Api.Shared.Services.Models.PaymentStatus;
-using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
-using Team = Booking.Shared.Database.Entities.Team;
 using Resource = Booking.Shared.Models.Resource;
 
 namespace Booking.Api.Mappers;
@@ -33,38 +29,6 @@ public interface IMapper
     Shared.Models.Booking MapTo(UpdateBookingInput src);
     Shared.Models.Booking MapTo(BookProductInput src);
     Shared.Models.Location? MapTo(Location? src);
-
-    Shared.Database.Entities.Booking MapTo(
-        Shared.Models.Booking src,
-        ICollection<Shared.Database.Entities.Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources,
-        Shared.Database.Entities.Customer? paidByCustomer,
-        Organization? paidByOrganization,
-        Shared.Database.Entities.Customer? createdByCustomer,
-        Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer,
-        ICollection<ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession);
-
-    Shared.Database.Entities.Booking MergeTo(
-        Shared.Models.Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources,
-        Shared.Database.Entities.Customer? paidByCustomer,
-        Organization? paidByOrganization,
-        Shared.Database.Entities.Customer? createdByCustomer,
-        Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer,
-        ICollection<ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession);
-
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
     Shared.Models.Booking MapTo(UpdateInput src);
@@ -149,11 +113,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
                     .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                        new Organization { UniqueAlphanumericName = item }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
@@ -173,11 +137,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
                     .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                        new Organization { UniqueAlphanumericName = item }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
@@ -197,9 +161,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
                     .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                        new Organization { UniqueAlphanumericName = item }))
                     .ToList(),
             InvolvedTeams = [],
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
@@ -207,86 +171,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             PaymentMethod = src.PaymentMethod,
             InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
-    }
-
-    public Shared.Database.Entities.Booking MapTo(
-        Shared.Models.Booking src,
-        ICollection<Shared.Database.Entities.Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources,
-        Shared.Database.Entities.Customer? paidByCustomer,
-        Organization? paidByOrganization,
-        Shared.Database.Entities.Customer? createdByCustomer,
-        Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer,
-        ICollection<ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession) =>
-        MergeTo(
-            src,
-            new Shared.Database.Entities.Booking(),
-            involvedCustomers,
-            involvedOrganizations,
-            involvedLocations,
-            involvedTeams,
-            resources,
-            paidByCustomer,
-            paidByOrganization,
-            createdByCustomer,
-            lastModifiedByCustomer,
-            deletedByCustomer,
-            productVersions,
-            stripeCheckoutSession);
-
-    public Shared.Database.Entities.Booking MergeTo(
-        Shared.Models.Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Customer> involvedCustomers,
-        ICollection<Organization> involvedOrganizations,
-        ICollection<Location> involvedLocations,
-        ICollection<Team> involvedTeams,
-        ICollection<Shared.Database.Entities.Resource> resources,
-        Shared.Database.Entities.Customer? paidByCustomer,
-        Organization? paidByOrganization,
-        Shared.Database.Entities.Customer? createdByCustomer,
-        Shared.Database.Entities.Customer? lastModifiedByCustomer,
-        Shared.Database.Entities.Customer? deletedByCustomer,
-        ICollection<ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession)
-    {
-        dest.Id = src.Id;
-        dest.From = src.From;
-        dest.Until = src.Until;
-        dest.Notes = src.Notes;
-        dest.Category = src.Category.ToBookingCategory();
-        dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
-        dest.IsPaymentRequired = src.IsPaymentRequired;
-        dest.Schedules = src.Schedules;
-        dest.LineItems = src.LineItems;
-        dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
-        dest.InvolvedCustomers = involvedCustomers;
-        dest.InvolvedOrganizations = involvedOrganizations;
-        dest.InvolvedLocations = involvedLocations;
-        dest.InvolvedTeams = involvedTeams;
-        dest.InvolvedResources = resources;
-        dest.PaidByCustomer = paidByCustomer;
-        dest.PaidByOrganization = paidByOrganization;
-        dest.CreatedByCustomer = createdByCustomer;
-        dest.LastModifiedByCustomer = lastModifiedByCustomer;
-        dest.DeletedByCustomer = deletedByCustomer;
-        dest.ProductVersions = productVersions;
-        dest.StripeCheckoutSession = stripeCheckoutSession;
-        dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
-        dest.TotalAmountExcludeTax = src.TotalAmountExcludeTax;
-        dest.TaxAmount = src.TaxAmount;
-        dest.TaxRatePercentage = src.TaxRatePercentage;
-        dest.TotalAmount = src.TotalAmount;
-        dest.Currency = src.Currency;
-        dest.InvoiceUrl = src.InvoiceUrl;
-        dest.InvoiceNumber = src.InvoiceNumber;
-        dest.InvoiceEmailList = src.InvoiceEmailList;
-        return dest;
     }
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src)
@@ -394,9 +278,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             },
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
+            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
@@ -428,9 +312,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             },
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
+            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
@@ -498,12 +382,12 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
         new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
 
-    private static BookingCheckoutSessionDetails? MapTo(Shared.Models.StripeCheckoutSession? src) =>
+    private static BookingCheckoutSessionDetails? MapTo(StripeCheckoutSession? src) =>
         src is null
             ? null
             : new BookingCheckoutSessionDetails { UniqueId = src.Id, CheckoutUrl = src.CheckoutUrl };
 
-    private static BookingCheckoutSession? MapToGrpcResponse(Shared.Models.StripeCheckoutSession? src) =>
+    private static BookingCheckoutSession? MapToGrpcResponse(StripeCheckoutSession? src) =>
         src is null
             ? null
             : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl };
