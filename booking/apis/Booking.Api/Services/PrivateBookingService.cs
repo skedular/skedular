@@ -1,18 +1,10 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Models;
-using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
-using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
-using Booking.Shared.Services;
-using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using Resource = Booking.Shared.Database.Entities.Resource;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
@@ -25,20 +17,12 @@ public interface IPrivateBookingService
 }
 
 public class PrivateBookingService(
-    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
-    IBookingOutboxPublisher bookingOutboxPublisher,
-    IMapper mapper,
-    Shared.Mappers.IMapper sharedMapper,
     IContext context,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
-    ICachedBookingService cachedBookingService,
-    Shared.Services.IResourceService sharedResourceService,
-    IPrivateBookingPreferenceService sharedPrivateBookingPreferenceService,
     Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IPrivateBookingService
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
@@ -68,90 +52,8 @@ public class PrivateBookingService(
 
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
         var teams = await GetTeamAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
-        var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
-        var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
-        if (customerEntities.Count != customerIds.Count)
-        {
-            throw new CustomerNotFound();
-        }
 
-        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        var resources = await sharedResourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-            booking.From,
-            booking.Until,
-            resourceIds,
-            cancellationToken);
-
-        booking.IsPaymentRequired = false;
-        booking.PaymentStatus = PaymentStatus.NoPaymentRequired;
-
-        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
-        if (booking.InvolvedCustomers.Count == 1)
-        {
-            (organizations, resources) = await sharedPrivateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                booking.InvolvedCustomers.First().Id,
-                booking.From,
-                booking.Until,
-                booking.InvolvedOrganizations
-                    .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                    .Select(item => item.UniqueAlphanumericName!)
-                    .ToList(),
-                organizations,
-                resources,
-                cancellationToken);
-        }
-
-        foreach (var resource in resources)
-        {
-            var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-            if (matchingResource is null)
-            {
-                continue;
-            }
-
-            var matchingCustomerEntities = customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-            foreach (var slot in resource.ResourceBookingSlots)
-            {
-                foreach (var matchingCustomerEntity in matchingCustomerEntities
-                             .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                {
-                    slot.Customers.Add(matchingCustomerEntity);
-                }
-            }
-
-            repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-        }
-
-        var bookingEntity = mapper.MapTo(
-            booking,
-            customerEntities,
-            organizations,
-            ResourcesToLocations(resources),
-            teams,
-            resources,
-            booking.IsPaymentRequired ? customer : null,
-            null,
-            customer,
-            null,
-            null,
-            [],
-            null);
-
-        bookingEntity.Channel = BookingChannelConstants.Private;
-
-        bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = sharedMapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
-
-        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
-        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-        return booking;
+        return await sharedPrivateBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
@@ -235,13 +137,13 @@ public class PrivateBookingService(
             return [];
         }
 
-        var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
             organizationIds,
             uniqueAlphanumericNames,
             false,
             false,
             cancellationToken);
-        if (organizationIds.Count + uniqueAlphanumericNames.Count != organizationEntities.Count)
+        if (organizationIds.Count + uniqueAlphanumericNames.Count != organizations.Count)
         {
             throw new OrganizationNotFound();
         }
@@ -249,7 +151,7 @@ public class PrivateBookingService(
         var result = new List<Organization>();
         foreach (var organization in booking.InvolvedOrganizations)
         {
-            var organizationEntity = organizationEntities.First(item =>
+            var organizationEntity = organizations.First(item =>
                 item.Id == organization.Id || item.UniqueAlphanumericName == organization.UniqueAlphanumericName);
             if (existing)
             {
@@ -289,8 +191,8 @@ public class PrivateBookingService(
             return [];
         }
 
-        var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-        if (teamIds.Count != teamEntities.Count)
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        if (teamIds.Count != teams.Count)
         {
             throw new TeamNotFound();
         }
@@ -298,7 +200,7 @@ public class PrivateBookingService(
         var result = new List<Team>();
         foreach (var team in booking.InvolvedTeams)
         {
-            var teamEntity = teamEntities.First(item => item.Id == team.Id);
+            var teamEntity = teams.First(item => item.Id == team.Id);
             if (existing)
             {
                 if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
@@ -331,12 +233,4 @@ public class PrivateBookingService(
 
         return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
     }
-
-    private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
-        resources
-            .Where(item => item.Location is not null)
-            .Select(item => item.Location)
-            .GroupBy(item => item!.Id)
-            .Select(item => item.First())
-            .ToList()!;
 }
