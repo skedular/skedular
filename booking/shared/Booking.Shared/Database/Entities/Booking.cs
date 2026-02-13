@@ -19,7 +19,6 @@ public class Booking : EntityBaseWithDeleted
     public string PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
     public ICollection<ProductVersionLineItem> LineItems { get; set; }
-    public bool BookedOnMarketplace { get; set; }
     public string? PaymentMethod { get; set; }
     public decimal? TotalAmountExcludeTax { get; set; }
     public decimal? TaxAmount { get; set; }
@@ -68,7 +67,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
             .HasDefaultValue(PaymentStatusConstants.Confirmed);
 
         builder.Property(item => item.IsPaymentRequired).HasDefaultValue(false);
-        builder.Property(item => item.BookedOnMarketplace).HasDefaultValue(false);
         builder.Property(item => item.PaymentMethod).HasMaxLength(Constants.MaxBookingMethodLength);
         builder.Property(item => item.TotalAmountExcludeTax).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TaxAmount).HasColumnType("DECIMAL(18,4)");

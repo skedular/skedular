@@ -51,7 +51,7 @@ public class BookingDetails : Node
     [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
     [GraphQLName("invoiceNumber")] public string? InvoiceNumber { get; set; }
-    [GraphQLName("invoiceEmailList")] public IEnumerable<string>? InvoiceEmailList { get; set; }
+    [GraphQLName("invoiceEmailList")] public IEnumerable<string> InvoiceEmailList { get; set; } = [];
 
     [GraphQLName("lastModifiedByCustomerId")]
     public string? LastModifiedByCustomerId { get; set; }
@@ -63,7 +63,6 @@ public class BookingDetails : Node
     public BookingCheckoutSessionDetails? BookingCheckoutSession { get; set; }
 
     [GraphQLName("paymentExpiry")] public DateTimeOffset PaymentExpiry { get; set; }
-    [GraphQLName("bookedOnMarketplace")] public bool BookedOnMarketplace { get; set; }
 
     [UseResolverScope]
     public async Task<PaymentStatusDetails> PaymentStatusAsync(

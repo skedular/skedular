@@ -103,7 +103,6 @@ public class Mapper : IMapper
                 _ => throw new ArgumentOutOfRangeException()
             },
             IsPaymentRequired = src.IsPaymentRequired,
-            BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
             TaxAmount = src.TaxAmount.ToNullDouble(),
@@ -276,7 +275,6 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
-            BookedOnMarketplace = src.BookedOnMarketplace,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -297,7 +295,7 @@ public class Mapper : IMapper
             Currency = src.Currency,
             InvoiceUrl = src.InvoiceUrl,
             InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList
+            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
 
     public Models.Booking MapTo(Database.Entities.Booking src, DateTimeOffset paymentExpiry) =>
@@ -316,7 +314,6 @@ public class Mapper : IMapper
             IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
             LineItems = src.LineItems,
-            BookedOnMarketplace = src.BookedOnMarketplace,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -339,7 +336,7 @@ public class Mapper : IMapper
             Currency = src.Currency,
             InvoiceUrl = src.InvoiceUrl,
             InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList
+            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
 
     public Database.Entities.Booking MapTo(
@@ -397,7 +394,6 @@ public class Mapper : IMapper
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
-        dest.BookedOnMarketplace = src.BookedOnMarketplace;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;

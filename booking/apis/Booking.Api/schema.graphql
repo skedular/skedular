@@ -50,11 +50,10 @@ type BookingDetails {
   currencyToDisplay: String!
   invoiceUrl: String
   invoiceNumber: String
-  invoiceEmailList: [String!]
+  invoiceEmailList: [String!]!
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   paymentExpiry: DateTime!
-  bookedOnMarketplace: Boolean!
   id: ID!
 }
 
@@ -97,6 +96,7 @@ type Mutation {
   addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
   updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
   deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
+  bookProduct(input: BookProductInput!): BookingPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
@@ -195,9 +195,6 @@ input AddBookingInput {
   notes: String
   category: BookingCategory!
   resourceIds: [String!]!
-  lineItems: [LineItemInput!]!
-  paymentMethod: PaymentMethod
-  invoiceEmailList: [String!]
 }
 
 input AvailableResourcesWhereInput {
@@ -210,6 +207,22 @@ input AvailableResourcesWhereInput {
   zoneIds: [String!]
   resourceIdsToInclude: [String!]
   productId: String
+}
+
+input BookProductInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  category: BookingCategory!
+  resourceIds: [String!]!
+  lineItems: [LineItemInput!]!
+  paymentMethod: PaymentMethod
+  invoiceEmailList: [String!]!
 }
 
 input BookingOrderInput {

@@ -92,7 +92,7 @@ public class PrivateBookingService(
         }
 
         booking.LineItems = existingBooking.LineItems;
-        booking.BookedOnMarketplace = existingBooking.BookedOnMarketplace;
+        booking.Channel = existingBooking.Channel.ToBookingChannel();
         booking.IsPaymentRequired = existingBooking.IsPaymentRequired;
         booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
         booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();

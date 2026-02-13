@@ -33,7 +33,9 @@ const RootQuery = graphql`
   ) {
     booking(id: $bookingId) {
       from
-      bookedOnMarketplace
+      channel {
+        channel
+      }
       isPaymentRequired
       paymentStatus {
         type
@@ -98,10 +100,10 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      {rootData.booking.bookedOnMarketplace && shouldPay && (
+      {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
         <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
       )}
-      {rootData.booking.bookedOnMarketplace && !shouldPay && (
+      {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
         <EditMarketplaceBooking
           rootDataRelay={rootData}
           rootDataBookingRelay={rootData}
@@ -110,7 +112,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
           onReloadRequired={onReloadRequired}
         />
       )}
-      {!rootData.booking.bookedOnMarketplace && (
+      {rootData.booking.channel.channel === 'PRIVATE' && (
         <EditPrivateBooking
           rootDataRelay={rootData}
           rootDataTeamsRelay={rootData}

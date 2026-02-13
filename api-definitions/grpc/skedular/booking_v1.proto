@@ -173,17 +173,16 @@ message Booking {
   repeated LineItem lineItems = 19;
   BookingCheckoutSession bookingCheckoutSession = 20;
   google.protobuf.Timestamp paymentExpiry = 21;
-  bool bookedOnMarketplace = 22;
-  PaymentMethod PaymentMethod = 23;
-  double totalAmountExcludeTax = 24;
-  double taxAmount = 25;
-  double taxRatePercentage = 26;
-  double totalAmount = 27;
-  string currency = 28;
-  string InvoiceUrl = 29;
-  string InvoiceNumber = 30;
-  repeated string InvoiceEmailList = 31;
-  BookingChannel channel = 32;
+  PaymentMethod PaymentMethod = 22;
+  double totalAmountExcludeTax = 23;
+  double taxAmount = 24;
+  double taxRatePercentage = 25;
+  double totalAmount = 26;
+  string currency = 27;
+  string InvoiceUrl = 28;
+  string InvoiceNumber = 29;
+  repeated string InvoiceEmailList = 30;
+  BookingChannel channel = 31;
 }
 
 message GetOrganizationPermissionsInput {

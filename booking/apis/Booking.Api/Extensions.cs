@@ -22,6 +22,7 @@ public static class Extensions
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()
                 .AddScoped<IBookingService, BookingService>()
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
+                .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IGraphQlTopicEventSender, GraphQlTopicEventSender>()
                 .AddScoped<IWorkaroundService, WorkaroundService>();

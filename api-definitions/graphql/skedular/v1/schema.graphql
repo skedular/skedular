@@ -37,7 +37,6 @@ type BookingCheckoutSessionDetails {
 }
 
 type BookingDetails {
-  bookedOnMarketplace: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   bookingResources: [BookingResourceDetails!]!
   category: BookingCategoryDetails!
@@ -48,7 +47,7 @@ type BookingDetails {
   deletedByCustomer: CustomerDetails
   from: DateTime!
   id: ID!
-  invoiceEmailList: [String!]
+  invoiceEmailList: [String!]!
   invoiceNumber: String
   invoiceUrl: String
   involvedCustomers: [CustomerDetails!]!
@@ -484,6 +483,7 @@ type Mutation {
   addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
   addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
+  bookProduct(input: BookProductInput!): BookingPayload! @cost(weight: "10")
   cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
   cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
   cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
@@ -1288,12 +1288,9 @@ input AddBookingInput {
   customerIds: [String!]!
   from: DateTime!
   id: String
-  invoiceEmailList: [String!]
-  lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  paymentMethod: PaymentMethod
   resourceIds: [String!]!
   teamIds: [String!]!
   until: DateTime!
@@ -1593,6 +1590,22 @@ input AvailableResourcesWhereInput {
   resourceIdsToInclude: [String!]
   until: DateTime!
   zoneIds: [String!]
+}
+
+input BookProductInput {
+  category: BookingCategory!
+  clientMutationId: String
+  customerIds: [String!]!
+  from: DateTime!
+  id: String
+  invoiceEmailList: [String!]!
+  lineItems: [LineItemInput!]!
+  notes: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  paymentMethod: PaymentMethod
+  resourceIds: [String!]!
+  until: DateTime!
 }
 
 input BookingOrderInput {

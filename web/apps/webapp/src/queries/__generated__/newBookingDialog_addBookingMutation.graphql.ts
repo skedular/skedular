@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b9c0f6141e510d5b1b1b9be881f8f46>>
+ * @generated SignedSource<<051d02d42f1b8ecc7c660023b55cdeeb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,26 +10,18 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
-export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type AddBookingInput = {
   category: BookingCategory;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
-  invoiceEmailList?: ReadonlyArray<string> | null | undefined;
-  lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
-  paymentMethod?: PaymentMethod | null | undefined;
   resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
   until: any;
-};
-export type LineItemInput = {
-  productVersionId: string;
-  quantity: number;
 };
 export type newBookingDialog_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;

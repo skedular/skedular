@@ -37,4 +37,14 @@ public class RootMutation(IMapper mapper)
         var booking = await privateBookingService.DeleteAsync(input.Id, cancellationToken);
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
     }
+
+    [UseResolverScope]
+    public async Task<BookingPayload> BookProductAsync(
+        BookProductInput input,
+        [Service] IMarketplaceBookingService marketplaceBookingService,
+        CancellationToken cancellationToken)
+    {
+        var booking = await marketplaceBookingService.BookProductAsync(mapper.MapTo(input), cancellationToken);
+        return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+    }
 }

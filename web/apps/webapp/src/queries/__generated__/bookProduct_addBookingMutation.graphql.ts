@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ffb993f0c31ca82358213b00c603ac2f>>
+ * @generated SignedSource<<bdd43da3f1e8368bb91319926aa6a6f9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,19 +17,12 @@ export type AddBookingInput = {
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
-  invoiceEmailList?: ReadonlyArray<string> | null | undefined;
-  lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
-  paymentMethod?: PaymentMethod | null | undefined;
   resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
   until: any;
-};
-export type LineItemInput = {
-  productVersionId: string;
-  quantity: number;
 };
 export type bookProduct_addBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
@@ -61,7 +54,7 @@ export type bookProduct_addBookingMutation$data = {
       };
       readonly from: any;
       readonly id: string;
-      readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
+      readonly invoiceEmailList: ReadonlyArray<string>;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;
@@ -109,7 +102,7 @@ export type bookProduct_addBookingMutation$rawResponse = {
       };
       readonly from: any;
       readonly id: string;
-      readonly invoiceEmailList: ReadonlyArray<string> | null | undefined;
+      readonly invoiceEmailList: ReadonlyArray<string>;
       readonly involvedCustomers: ReadonlyArray<{
         readonly familyName: string | null | undefined;
         readonly givenName: string | null | undefined;

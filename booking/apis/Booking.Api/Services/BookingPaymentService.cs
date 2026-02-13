@@ -37,7 +37,7 @@ public class BookingPaymentService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-        if (!existingBooking.BookedOnMarketplace)
+        if (existingBooking.Channel.ToBookingChannel() == BookingChannel.Private)
         {
             return PaymentStatus.NoPaymentRequired;
         }
@@ -79,7 +79,7 @@ public class BookingPaymentService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-        if (!existingBooking.BookedOnMarketplace)
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
         {
             throw new BookingIsNotMarketplaceType();
         }

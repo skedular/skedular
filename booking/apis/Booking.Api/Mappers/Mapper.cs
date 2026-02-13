@@ -31,6 +31,7 @@ public interface IMapper
     BookingDetails MapTo(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddBookingInput src);
     Shared.Models.Booking MapTo(UpdateBookingInput src);
+    Shared.Models.Booking MapTo(BookProductInput src);
     Shared.Models.Location? MapTo(Location? src);
 
     Shared.Database.Entities.Booking MapTo(
@@ -103,7 +104,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     ProductVersionId = src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId).Id,
                     Quantity = item.Quantity
                 }),
-            BookedOnMarketplace = src.BookedOnMarketplace,
             BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
             PaymentExpiry = src.PaymentExpiry,
             PaymentMethod =
@@ -154,10 +154,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                         new Shared.Models.Organization { UniqueAlphanumericName = item }))
                     .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
-            PaymentMethod = src.PaymentMethod,
-            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
@@ -182,6 +179,33 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
             Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+        };
+    }
+
+    public Shared.Models.Booking MapTo(BookProductInput src)
+    {
+        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+
+        return new Shared.Models.Booking
+        {
+            Id = src.Id.ToSafeString(),
+            From = src.From,
+            Until = src.Until,
+            Notes = src.Notes,
+            Category = src.Category,
+            Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
+            InvolvedCustomers = customers,
+            InvolvedLocations = [],
+            InvolvedOrganizations =
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item })
+                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                        new Shared.Models.Organization { UniqueAlphanumericName = item }))
+                    .ToList(),
+            InvolvedTeams = [],
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
+            LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
+            PaymentMethod = src.PaymentMethod,
+            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
         };
     }
 
@@ -240,7 +264,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
         dest.LineItems = src.LineItems;
-        dest.BookedOnMarketplace = src.BookedOnMarketplace;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
@@ -313,7 +336,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             DeletedByCustomerId = src.DeletedByCustomer is null ? string.Empty : src.DeletedByCustomer.Id.ToSafeString(),
             BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
             PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
-            BookedOnMarketplace = src.BookedOnMarketplace,
             TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
             TaxAmount = src.TaxAmount.ToNullDouble(),
             TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
@@ -375,8 +397,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Organization { Id = item }).ToList(),
             InvolvedLocations = [],
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Shared.Models.Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            BookedOnMarketplace = false
+            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
@@ -394,8 +415,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             {
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromHome => BookingCategory.WorkingFromHome,
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromOffice => BookingCategory.WorkingFromOffice,
-                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace => BookingCategory
-                    .WorkingFromCoworkingSpace,
+                global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WorkingFromCoworkingSpace =>
+                    BookingCategory.WorkingFromCoworkingSpace,
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.SickLeave => BookingCategory.SickLeave,
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.AnnualLeave => BookingCategory.AnnualLeave,
                 global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.WellbeingLeave => BookingCategory.WellbeingLeave,

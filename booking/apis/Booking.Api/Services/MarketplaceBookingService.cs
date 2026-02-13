@@ -6,6 +6,9 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
+using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
+using Booking.Shared.Workflows.Payment.PayViaCard;
+using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
@@ -13,39 +16,49 @@ using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Resource = Booking.Shared.Database.Entities.Resource;
-using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
 
-public interface IPrivateBookingService
+public interface IMarketplaceBookingService
 {
-    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> BookProductAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
-public class PrivateBookingService(
+public class MarketplaceBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IBookingOutboxPublisher bookingOutboxPublisher,
+    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
     Shared.Mappers.IMapper sharedMapper,
     IContext context,
     IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     ICachedBookingService cachedBookingService,
     Shared.Services.IResourceService sharedResourceService,
+    IProductService sharedProductService,
     IPrivateBookingPreferenceService sharedPrivateBookingPreferenceService,
-    Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IPrivateBookingService
+    Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IMarketplaceBookingService
 {
-    public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> BookProductAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         if (booking.InvolvedCustomers.Count == 0)
         {
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
+        }
+
+        if (booking.LineItems.Count == 0)
+        {
+            throw new ArgumentException(nameof(booking.LineItems));
+        }
+
+        if (booking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
+        {
+            throw new ArgumentException(nameof(booking.LineItems));
         }
 
         var verifiableToken = context.GetVerifiableToken();
@@ -67,7 +80,6 @@ public class PrivateBookingService(
         }
 
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -81,9 +93,56 @@ public class PrivateBookingService(
             booking.Until,
             resourceIds,
             cancellationToken);
+        var productVersions = await sharedProductService.GetProductVersionsAsync(
+            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
 
-        booking.IsPaymentRequired = false;
-        booking.PaymentStatus = PaymentStatus.NoPaymentRequired;
+        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
+        if (organizationIds.Count > 1)
+        {
+            throw new CrossOrganizationProductBookingNotAllowed();
+        }
+
+        if (!productVersions.All(item => item.IsPriceTaxInclusive is null) &&
+            !productVersions.All(item => item.IsPriceTaxInclusive!.Value) &&
+            productVersions.Any(item => item.IsPriceTaxInclusive!.Value))
+        {
+            throw new BookingProductWithMixedTaxSetupNotAllowed();
+        }
+
+        // TODO: 20260211 : Morteza: The current implementation does not work when different products with different resources are selected, as it only validates the total quantity and ignores the requested resource types.
+        var maxAllowedResourcesToBook = booking.LineItems
+            .Select(item =>
+            {
+                var matchedProductVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
+
+                return item.Quantity * matchedProductVersion.NumberOfResourcesToBook;
+            }).Sum();
+
+        if (resourceIds.Count > maxAllowedResourcesToBook!.Value)
+        {
+            throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
+        }
+
+        booking.IsPaymentRequired = true;
+        booking.PaymentStatus = PaymentStatus.Pending;
+
+        if (!booking.PaymentMethod.HasValue)
+        {
+            throw new PaymentMethodRequired();
+        }
+
+        if (productVersions.Any(item =>
+                !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+        {
+            throw new BookingPaymentMethodNotAccepted();
+        }
+
+        var currencies = productVersions.Select(item => item.Currency).Distinct().ToList();
+        if (currencies.Count > 1)
+        {
+            throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
+        }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
@@ -129,22 +188,44 @@ public class PrivateBookingService(
             customerEntities,
             organizations,
             ResourcesToLocations(resources),
-            teams,
+            [],
             resources,
             booking.IsPaymentRequired ? customer : null,
             null,
             customer,
             null,
             null,
-            [],
+            productVersions,
             null);
 
-        bookingEntity.Channel = BookingChannelConstants.Private;
+        bookingEntity.Channel = BookingChannelConstants.Marketplace;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
         booking = sharedMapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        switch (booking.PaymentMethod)
+        {
+            case PaymentMethod.Card:
+                temporalOutboxService.StartWorkflowPayBookingViaCard(
+                    new PayBookingViaCardInput(
+                        booking.Id,
+                        booking.PaymentExpiry,
+                        booking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
+                break;
+
+            case PaymentMethod.BankTransfer:
+                temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
+                    new PayBookingViaBankTransferInput(
+                        booking.Id,
+                        booking.PaymentExpiry,
+                        booking.InvoiceEmailList.ToSafeCollection()),
+                    repositoryFactory.UnitOfWork);
+                break;
+
+            default: throw new ArgumentOutOfRangeException();
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -191,19 +272,6 @@ public class PrivateBookingService(
             foreach (var organization in organizations)
             {
                 if (!await organizationAuthorizationService.CanDeleteBookingAsync(organization.Id, customer.Id, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-        }
-
-        var teamIds = existingBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count != 0)
-        {
-            var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-            foreach (var team in teams)
-            {
-                if (!await teamAuthorizationService.CanDeleteBookingAsync(team, customer.Id, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -277,49 +345,6 @@ public class PrivateBookingService(
         return result;
     }
 
-    private async Task<ICollection<Team>> GetTeamAndValidatePermissionsAsync(
-        Shared.Models.Booking booking,
-        string customerId,
-        bool existing,
-        CancellationToken cancellationToken)
-    {
-        var teamIds = booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count == 0)
-        {
-            return [];
-        }
-
-        var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-        if (teamIds.Count != teamEntities.Count)
-        {
-            throw new TeamNotFound();
-        }
-
-        var result = new List<Team>();
-        foreach (var team in booking.InvolvedTeams)
-        {
-            var teamEntity = teamEntities.First(item => item.Id == team.Id);
-            if (existing)
-            {
-                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-            else
-            {
-                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-
-            result.Add(teamEntity);
-        }
-
-        return result;
-    }
-
     private async Task<Shared.Models.Booking> UpdateInternalAsync(
         Shared.Models.Booking booking,
         Shared.Database.Entities.Booking existingBooking,
@@ -327,9 +352,8 @@ public class PrivateBookingService(
         CancellationToken cancellationToken)
     {
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
 
-        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
+        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, [], cancellationToken);
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
