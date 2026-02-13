@@ -41,12 +41,13 @@ public static class Extensions
 
     extension(AIAgent agent)
     {
-        public string ToSerializedString(AgentSession session) => JsonSerializer.Serialize(agent.SerializeSession(session));
+        public async ValueTask<string> ToSerializedStringAsync(AgentSession session, CancellationToken cancellationToken) =>
+            JsonSerializer.Serialize(await agent.SerializeSessionAsync(session, cancellationToken: cancellationToken));
     }
 
     extension(string? serializedSession)
     {
-        public async Task<AgentSession> ToAgentSessionAsync(AIAgent agent, CancellationToken cancellationToken)
+        public async ValueTask<AgentSession> ToAgentSessionAsync(AIAgent agent, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(serializedSession))
             {

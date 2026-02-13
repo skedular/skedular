@@ -14,7 +14,8 @@ namespace Booking.Shared.Repositories;
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Database.Entities.Booking Add(Database.Entities.Booking booking);
     Database.Entities.Booking Update(Database.Entities.Booking booking);
     Database.Entities.Booking Remove(Database.Entities.Booking booking);
@@ -30,50 +31,50 @@ internal static class BookingExtensions
 {
     extension(IQueryable<Database.Entities.Booking> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects() =>
-            originalQuery
-                .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-                .ThenInclude(query => query.Customers)
-                .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-                .ThenInclude(query => query.Resource)
-                .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-                .ThenInclude(query => query.Resource)
-                .ThenInclude(query => query.Location)
-                .ThenInclude(query => query!.Organization)
-                .Include(query => query.InvolvedCustomers)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.InvolvedOrganizations)
-                .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-                .Include(query => query.InvolvedLocations)
-                .ThenInclude(query => query.Organization)
-                .Include(query => query.InvolvedTeams)
-                .Include(query => query.InvolvedResources)
-                .Include(query => query.PaidByCustomer)
-                .Include(query => query.PaidByOrganization)
-                .Include(query => query.CreatedByCustomer)
-                .Include(query => query.LastModifiedByCustomer)
-                .Include(query => query.DeletedByCustomer)
-                .Include(query => query.ProductVersions)
-                .Include(query => query.StripeCheckoutSession);
+        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customers)
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query!.Organization)
+            .Include(query => query.InvolvedCustomers)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.InvolvedOrganizations)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.InvolvedLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedTeams)
+            .Include(query => query.InvolvedResources)
+            .Include(query => query.PaidByCustomer)
+            .Include(query => query.PaidByOrganization)
+            .Include(query => query.CreatedByCustomer)
+            .Include(query => query.LastModifiedByCustomer)
+            .Include(query => query.DeletedByCustomer)
+            .Include(query => query.ProductVersions)
+            .Include(query => query.StripeCheckoutSession);
 
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects() =>
-            originalQuery
-                .Include(query => query.InvolvedCustomers)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.InvolvedOrganizations)
-                .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-                .Include(query => query.InvolvedLocations)
-                .ThenInclude(query => query.Organization)
-                .Include(query => query.InvolvedTeams)
-                .Include(query => query.InvolvedResources)
-                .Include(query => query.PaidByCustomer)
-                .Include(query => query.PaidByOrganization)
-                .Include(query => query.CreatedByCustomer)
-                .Include(query => query.LastModifiedByCustomer)
-                .Include(query => query.DeletedByCustomer)
-                .Include(query => query.ProductVersions)
-                .Include(query => query.StripeCheckoutSession);
+        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.InvolvedCustomers)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.InvolvedOrganizations)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .Include(query => query.InvolvedLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedTeams)
+            .Include(query => query.InvolvedResources)
+            .Include(query => query.PaidByCustomer)
+            .Include(query => query.PaidByOrganization)
+            .Include(query => query.CreatedByCustomer)
+            .Include(query => query.LastModifiedByCustomer)
+            .Include(query => query.DeletedByCustomer)
+            .Include(query => query.ProductVersions)
+            .Include(query => query.StripeCheckoutSession);
 
         internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria,
             TimeProvider timeProvider)
@@ -256,12 +257,17 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 {
     public async Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddSingleBookingDependentObjects()
+            .AddSingleBookingDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddSingleBookingDependentObjects()
+            .AddSingleBookingDependentObjects(false)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .AddSingleBookingDependentObjects(false)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Booking Add(Database.Entities.Booking booking)
@@ -293,7 +299,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         (await DbContext.Booking
             .AddSearchCriteria(searchCriteria, TimeProvider)
             .AddSortingOrders(orderByFields)
-            .AddPaginatedBookingsDependentObjects()
+            .AddPaginatedBookingsDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

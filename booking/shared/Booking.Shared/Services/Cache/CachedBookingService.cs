@@ -9,7 +9,6 @@ public interface ICachedBookingService
 {
     ValueTask<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Database.Entities.Booking> bookings, CancellationToken cancellationToken);
     ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
 }
 
@@ -22,7 +21,7 @@ public class CachedBookingService(ApplicationConfiguration applicationConfigurat
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.BookingRepository.GetByIdAsync(id, ct) ?? throw new BookingNotFound(),
+                async ct => await repositoryFactory.BookingRepository.GetByIdUntrackedAsync(id, ct) ?? throw new BookingNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -38,24 +37,11 @@ public class CachedBookingService(ApplicationConfiguration applicationConfigurat
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound(),
+            await repositoryFactory.BookingRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new BookingNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
 
-    public async ValueTask UpdateAsync(ICollection<Database.Entities.Booking> bookings, CancellationToken cancellationToken)
-    {
-        foreach (var item in bookings)
-        {
-            await RemoveByIdAsync(item.Id, cancellationToken);
-
-            await hybridCache.SetAsync(
-                CreateKeyById(item.Id),
-                item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
-        }
-    }
 
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);

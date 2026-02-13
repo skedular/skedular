@@ -38,7 +38,7 @@ public class WorkaroundService(
 
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
-        var bookings = await repositoryFactory.BookingRepository.GetAllAsync(cancellationToken);
+        var bookings = await repositoryFactory.BookingRepository.GetAllUntrackedAsync(cancellationToken);
         await bookingPublisher.PublishBookingsAsync(
             bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item))).ToList(),
             cancellationToken);
