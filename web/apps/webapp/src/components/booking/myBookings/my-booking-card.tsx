@@ -11,7 +11,7 @@ import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
-import type { myBookingCard_deleteBookingMutation } from '@/queries/__generated__/myBookingCard_deleteBookingMutation.graphql';
+import type { myBookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateBookingMutation.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -108,9 +108,9 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
     bookingDetailsRelay,
   );
 
-  const [commitDeleteBooking] = useMutation<myBookingCard_deleteBookingMutation>(graphql`
-    mutation myBookingCard_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
+  const [commitDeletePrivateBooking] = useMutation<myBookingCard_deletePrivateBookingMutation>(graphql`
+    mutation myBookingCard_deletePrivateBookingMutation($connectionIds: [ID!]!, $input: DeletePrivateBookingInput!) {
+      deletePrivateBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -162,7 +162,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
 
     const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeleteBooking({
+    commitDeletePrivateBooking({
       variables: {
         connectionIds,
         input: {

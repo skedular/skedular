@@ -16,10 +16,11 @@ namespace Booking.Shared.Services;
 
 public interface IMarketplaceBookingService
 {
-    Task<Models.Booking> BookProductAsync(
+    Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
         ICollection<Organization> organizations,
+        ICollection<Team> teams,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> UpdateAsync(
@@ -31,7 +32,7 @@ public interface IMarketplaceBookingService
         CancellationToken cancellationToken);
 
     Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking booking,
+        Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken);
 }
@@ -50,10 +51,11 @@ public class MarketplaceBookingService(
     IProductService productService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IMarketplaceBookingService
 {
-    public async Task<Models.Booking> BookProductAsync(
+    public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
         ICollection<Organization> organizations,
+        ICollection<Team> teams,
         CancellationToken cancellationToken)
     {
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -164,7 +166,7 @@ public class MarketplaceBookingService(
             customerEntities,
             organizations,
             ResourcesToLocations(resources),
-            [],
+            teams,
             resources,
             booking.IsPaymentRequired ? customer : null,
             null,
@@ -219,6 +221,11 @@ public class MarketplaceBookingService(
         ICollection<Team> teams,
         CancellationToken cancellationToken)
     {
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
+        {
+            throw new BookingIsNotMarketplace();
+        }
+
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -308,23 +315,28 @@ public class MarketplaceBookingService(
     }
 
     public async Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking booking,
+        Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken)
     {
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
+        {
+            throw new BookingIsNotMarketplace();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 
-        booking.DeletedByCustomer = deletedByCustomer;
-        booking = repositoryFactory.BookingRepository.Update(booking);
+        existingBooking.DeletedByCustomer = deletedByCustomer;
+        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(
-            repositoryFactory.BookingRepository.Remove(booking),
-            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
+            repositoryFactory.BookingRepository.Remove(existingBooking),
+            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
-        if (booking.IsPaymentRequired)
+        if (existingBooking.IsPaymentRequired)
         {
             if (!deletedBooking.PaymentMethod.HasValue)
             {

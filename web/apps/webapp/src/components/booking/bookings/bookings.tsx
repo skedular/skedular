@@ -10,10 +10,10 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
-import type { bookings_addBookingMutation } from '@/queries/__generated__/bookings_addBookingMutation.graphql';
+import type { bookings_addPrivateBookingMutation } from '@/queries/__generated__/bookings_addPrivateBookingMutation.graphql';
 import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
 import type { bookings_bookings_refetchableFragment } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
-import type { bookings_deleteBookingMutation } from '@/queries/__generated__/bookings_deleteBookingMutation.graphql';
+import type { bookings_deletePrivateBookingMutation } from '@/queries/__generated__/bookings_deletePrivateBookingMutation.graphql';
 import type { bookings_query$key } from '@/queries/__generated__/bookings_query.graphql';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
@@ -183,9 +183,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
     rootDataBookingRelay,
   );
 
-  const [commitDeleteBooking] = useMutation<bookings_deleteBookingMutation>(graphql`
-    mutation bookings_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
+  const [commitDeletePrivateBooking] = useMutation<bookings_deletePrivateBookingMutation>(graphql`
+    mutation bookings_deletePrivateBookingMutation($connectionIds: [ID!]!, $input: DeletePrivateBookingInput!) {
+      deletePrivateBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -193,9 +193,9 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
     }
   `);
 
-  const [commitAddBooking] = useMutation<bookings_addBookingMutation>(graphql`
-    mutation bookings_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
-      addBooking(input: $input) {
+  const [commitAddPrivateBooking] = useMutation<bookings_addPrivateBookingMutation>(graphql`
+    mutation bookings_addPrivateBookingMutation($connectionIds: [ID!]!, $input: AddPrivateBookingInput!) @raw_response_type {
+      addPrivateBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
@@ -318,7 +318,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
 
     const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeleteBooking({
+    commitDeletePrivateBooking({
       variables: {
         connectionIds,
         input: {
@@ -360,7 +360,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
-    commitAddBooking({
+    commitAddPrivateBooking({
       variables: {
         connectionIds,
         input: {
@@ -385,7 +385,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
           return;
         }
 
-        const booking = response.addBooking?.booking;
+        const booking = response.addPrivateBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {
@@ -417,7 +417,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlpha
         });
       },
       optimisticResponse: {
-        addBooking: {
+        addPrivateBooking: {
           booking: {
             id,
             from: bookingDetails.from,

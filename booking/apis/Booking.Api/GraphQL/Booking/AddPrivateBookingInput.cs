@@ -3,8 +3,8 @@ using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("AddBookingInput")]
-public class AddBookingInput
+[GraphQLName("AddPrivateBookingInput")]
+public class AddPrivateBookingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }

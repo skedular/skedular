@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ec9fd82314bc4ed64de841f2362c53a>>
+ * @generated SignedSource<<b07da6d7e90450db22c50c0cfa905f9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,24 +10,21 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
-export type UpdateBookingInput = {
+export type UpdateMarketplaceBookingInput = {
   category: BookingCategory;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
-  from: any;
   id: string;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
-  resourceIds: ReadonlyArray<string>;
   teamIds: ReadonlyArray<string>;
-  until: any;
 };
 export type editMarketplaceBooking_updateBookingMutation$variables = {
-  input: UpdateBookingInput;
+  input: UpdateMarketplaceBookingInput;
 };
 export type editMarketplaceBooking_updateBookingMutation$data = {
-  readonly updateBooking: {
+  readonly updateMarketplaceBooking: {
     readonly booking: {
       readonly bookingResources: ReadonlyArray<{
         readonly resource: {
@@ -78,7 +75,7 @@ export type editMarketplaceBooking_updateBookingMutation$data = {
   };
 };
 export type editMarketplaceBooking_updateBookingMutation$rawResponse = {
-  readonly updateBooking: {
+  readonly updateMarketplaceBooking: {
     readonly booking: {
       readonly bookingResources: ReadonlyArray<{
         readonly resource: {
@@ -184,7 +181,7 @@ v6 = [
     ],
     "concreteType": "BookingPayload",
     "kind": "LinkedField",
-    "name": "updateBooking",
+    "name": "updateMarketplaceBooking",
     "plural": false,
     "selections": [
       {
@@ -377,16 +374,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "dc40d7cbf3fe3a8521d69c0e860f8366",
+    "cacheID": "ea8503cd99218d05794f5c183599598b",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editMarketplaceBooking_updateBookingMutation(\n  $input: UpdateBookingInput!\n) {\n  updateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editMarketplaceBooking_updateBookingMutation(\n  $input: UpdateMarketplaceBookingInput!\n) {\n  updateMarketplaceBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "63a66ddbf7a09dfa84a2b206fedc1c4a";
+(node as any).hash = "237ba9c0a45ef696524549d7f50802f4";
 
 export default node;

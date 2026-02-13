@@ -93,10 +93,12 @@ type LocationDetails {
 }
 
 type Mutation {
-  addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
-  updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
-  deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
-  bookProduct(input: BookProductInput!): BookingPayload! @cost(weight: "10")
+  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
@@ -183,7 +185,24 @@ type Version {
   revision: Int!
 }
 
-input AddBookingInput {
+input AddMarketplaceBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  category: BookingCategory!
+  resourceIds: [String!]!
+  lineItems: [LineItemInput!]!
+  paymentMethod: PaymentMethod
+  invoiceEmailList: [String!]!
+}
+
+input AddPrivateBookingInput {
   clientMutationId: String
   id: String
   customerIds: [String!]!
@@ -207,22 +226,6 @@ input AvailableResourcesWhereInput {
   zoneIds: [String!]
   resourceIdsToInclude: [String!]
   productId: String
-}
-
-input BookProductInput {
-  clientMutationId: String
-  id: String
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
-  from: DateTime!
-  until: DateTime!
-  notes: String
-  category: BookingCategory!
-  resourceIds: [String!]!
-  lineItems: [LineItemInput!]!
-  paymentMethod: PaymentMethod
-  invoiceEmailList: [String!]!
 }
 
 input BookingOrderInput {
@@ -258,7 +261,12 @@ input ConfirmBookingPaymentInput {
   id: String!
 }
 
-input DeleteBookingInput {
+input DeleteMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeletePrivateBookingInput {
   clientMutationId: String
   id: String!
 }
@@ -285,7 +293,18 @@ input RejectBookingPaymentInput {
   id: String!
 }
 
-input UpdateBookingInput {
+input UpdateMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
+  notes: String
+  category: BookingCategory!
+}
+
+input UpdatePrivateBookingInput {
   clientMutationId: String
   id: String!
   customerIds: [String!]!

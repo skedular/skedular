@@ -25,9 +25,10 @@ namespace Booking.Api.Mappers;
 public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
-    Shared.Models.Booking MapTo(AddBookingInput src);
-    Shared.Models.Booking MapTo(UpdateBookingInput src);
-    Shared.Models.Booking MapTo(BookProductInput src);
+    Shared.Models.Booking MapTo(AddPrivateBookingInput src);
+    Shared.Models.Booking MapTo(UpdatePrivateBookingInput src);
+    Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
+    Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
     Shared.Models.Location? MapTo(Location? src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddInput src);
@@ -98,7 +99,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
         };
 
-    public Shared.Models.Booking MapTo(AddBookingInput src)
+    public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
 
@@ -122,7 +123,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
     }
 
-    public Shared.Models.Booking MapTo(UpdateBookingInput src)
+    public Shared.Models.Booking MapTo(UpdatePrivateBookingInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
 
@@ -146,7 +147,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
     }
 
-    public Shared.Models.Booking MapTo(BookProductInput src)
+    public Shared.Models.Booking MapTo(AddMarketplaceBookingInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
 
@@ -165,11 +166,31 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
                         new Organization { UniqueAlphanumericName = item }))
                     .ToList(),
-            InvolvedTeams = [],
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
             PaymentMethod = src.PaymentMethod,
             InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+        };
+    }
+
+    public Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src)
+    {
+        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+
+        return new Shared.Models.Booking
+        {
+            Id = src.Id,
+            Notes = src.Notes,
+            Category = src.Category,
+            InvolvedCustomers = customers,
+            InvolvedLocations = [],
+            InvolvedOrganizations =
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                        new Organization { UniqueAlphanumericName = item }))
+                    .ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
         };
     }
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<516eee70b3ae2e7237aadd012f98bf51>>
+ * @generated SignedSource<<95f40502daced2ffe20d64ed52f47bda>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,24 +9,24 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteBookingInput = {
+export type DeletePrivateBookingInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type bookingCard_deleteBookingMutation$variables = {
+export type bookings_deletePrivateBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;
-  input: DeleteBookingInput;
+  input: DeletePrivateBookingInput;
 };
-export type bookingCard_deleteBookingMutation$data = {
-  readonly deleteBooking: {
+export type bookings_deletePrivateBookingMutation$data = {
+  readonly deletePrivateBooking: {
     readonly booking: {
       readonly id: string;
     };
   };
 };
-export type bookingCard_deleteBookingMutation = {
-  response: bookingCard_deleteBookingMutation$data;
-  variables: bookingCard_deleteBookingMutation$variables;
+export type bookings_deletePrivateBookingMutation = {
+  response: bookings_deletePrivateBookingMutation$data;
+  variables: bookings_deletePrivateBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -61,14 +61,14 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deletePrivateBookingMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
-        "name": "deleteBooking",
+        "name": "deletePrivateBooking",
         "plural": false,
         "selections": [
           {
@@ -94,14 +94,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deletePrivateBookingMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
         "concreteType": "BookingPayload",
         "kind": "LinkedField",
-        "name": "deleteBooking",
+        "name": "deletePrivateBooking",
         "plural": false,
         "selections": [
           {
@@ -138,16 +138,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c07310e43d8352d6965ae353e8eaf0e1",
+    "cacheID": "61b3486887de4ced755a7bc996342305",
     "id": null,
     "metadata": {},
-    "name": "bookingCard_deleteBookingMutation",
+    "name": "bookings_deletePrivateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation bookings_deletePrivateBookingMutation(\n  $input: DeletePrivateBookingInput!\n) {\n  deletePrivateBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e53c9beb893166ae86b29ab01db7487a";
+(node as any).hash = "fba8d30447822f4a5b4c9f122cc44908";
 
 export default node;

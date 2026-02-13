@@ -29,7 +29,7 @@ public interface IPrivateBookingService
         CancellationToken cancellationToken);
 
     Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking booking,
+        Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken);
 }
@@ -38,9 +38,7 @@ public class PrivateBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
@@ -128,7 +126,7 @@ public class PrivateBookingService(
         bookingEntity.Channel = BookingChannelConstants.Private;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
+        booking = mapper.MapTo(bookingEntity, DateTimeOffset.MinValue);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -148,6 +146,11 @@ public class PrivateBookingService(
         ICollection<Team> teams,
         CancellationToken cancellationToken)
     {
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Private)
+        {
+            throw new BookingIsNotPrivate();
+        }
+
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -192,19 +195,6 @@ public class PrivateBookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        booking.LineItems = existingBooking.LineItems;
-        booking.Channel = existingBooking.Channel.ToBookingChannel();
-        booking.IsPaymentRequired = existingBooking.IsPaymentRequired;
-        booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
-        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
-        booking.InvoiceUrl = existingBooking.InvoiceUrl;
-        booking.InvoiceNumber = existingBooking.InvoiceNumber;
-        booking.TotalAmountExcludeTax = existingBooking.TotalAmountExcludeTax;
-        booking.TaxAmount = existingBooking.TaxAmount;
-        booking.TaxRatePercentage = existingBooking.TaxRatePercentage;
-        booking.TotalAmount = existingBooking.TotalAmount;
-        booking.Currency = existingBooking.Currency;
-
         var bookingEntity = mapper.MergeTo(
             booking,
             existingBooking,
@@ -222,7 +212,7 @@ public class PrivateBookingService(
             existingBooking.StripeCheckoutSession);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
+        booking = mapper.MapTo(bookingEntity, DateTimeOffset.MinValue);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -237,42 +227,24 @@ public class PrivateBookingService(
     }
 
     public async Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking booking,
+        Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken)
     {
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Private)
+        {
+            throw new BookingIsNotPrivate();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 
-        booking.DeletedByCustomer = deletedByCustomer;
-        booking = repositoryFactory.BookingRepository.Update(booking);
-        var deletedBooking = mapper.MapTo(
-            repositoryFactory.BookingRepository.Remove(booking),
-            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
+        existingBooking.DeletedByCustomer = deletedByCustomer;
+        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
+        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking), DateTimeOffset.MinValue);
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
-
-        if (booking.IsPaymentRequired)
-        {
-            if (!deletedBooking.PaymentMethod.HasValue)
-            {
-                throw new PaymentMethodRequired();
-            }
-
-            switch (deletedBooking.PaymentMethod)
-            {
-                case PaymentMethod.Card:
-                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                    break;
-
-                default: throw new ArgumentOutOfRangeException();
-            }
-        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

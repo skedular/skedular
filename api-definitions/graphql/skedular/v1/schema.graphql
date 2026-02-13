@@ -459,7 +459,6 @@ type Mutation {
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
   activateProducts(input: ActivateProductsInput!): ProductsPayload! @cost(weight: "10")
   activateResources(input: ActivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
-  addBooking(input: AddBookingInput!): BookingPayload! @cost(weight: "10")
   addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
   addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
   addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
@@ -470,6 +469,7 @@ type Mutation {
   addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
   addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
@@ -477,13 +477,13 @@ type Mutation {
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
+  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
   addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
   addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
   addZone(input: AddZoneInput!): OrganizationTagPayload! @cost(weight: "10")
-  bookProduct(input: BookProductInput!): BookingPayload! @cost(weight: "10")
   cancelInvitationToJoinOrganization(input: CancelInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
   cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
   cancelOrganizationOffering(input: CancelOrganizationOfferingInput!): CancelOrganizationOfferingPayload! @cost(weight: "10")
@@ -498,18 +498,19 @@ type Mutation {
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
-  deleteBooking(input: DeleteBookingInput!): BookingPayload! @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload! @cost(weight: "10")
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
+  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
+  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
   deleteProducts(input: DeleteProductsInput!): ProductsPayload! @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
@@ -543,7 +544,6 @@ type Mutation {
   toggleContactedViaEmail(input: ToggleContactedViaEmailInput!): LocationPayload! @cost(weight: "10")
   toggleContactedViaSms(input: ToggleContactedViaSmsInput!): LocationPayload! @cost(weight: "10")
   toggleContactedViaWhatsapp(input: ToggleContactedViaWhatsappInput!): LocationPayload! @cost(weight: "10")
-  updateBooking(input: UpdateBookingInput!): BookingPayload! @cost(weight: "10")
   updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateCustomTag(input: UpdateCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
   updateFloorPlan(input: UpdateFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
@@ -552,6 +552,7 @@ type Mutation {
   updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload! @cost(weight: "10")
   updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
+  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
@@ -562,6 +563,7 @@ type Mutation {
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload! @cost(weight: "10")
@@ -1282,20 +1284,6 @@ input ActivateResourcesInput {
   ids: [String!]!
 }
 
-input AddBookingInput {
-  category: BookingCategory!
-  clientMutationId: String
-  customerIds: [String!]!
-  from: DateTime!
-  id: String
-  notes: String
-  organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
-  resourceIds: [String!]!
-  teamIds: [String!]!
-  until: DateTime!
-}
-
 input AddCustomTagInput {
   clientMutationId: String
   color: String
@@ -1383,6 +1371,23 @@ input AddLocationTagInput {
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
+}
+
+input AddMarketplaceBookingInput {
+  category: BookingCategory!
+  clientMutationId: String
+  customerIds: [String!]!
+  from: DateTime!
+  id: String
+  invoiceEmailList: [String!]!
+  lineItems: [LineItemInput!]!
+  notes: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  paymentMethod: PaymentMethod
+  resourceIds: [String!]!
+  teamIds: [String!]!
+  until: DateTime!
 }
 
 input AddMyBillingDetailsInput {
@@ -1493,6 +1498,20 @@ input AddOrganizationStripeConnectAccountInput {
   redirectUrl: String!
 }
 
+input AddPrivateBookingInput {
+  category: BookingCategory!
+  clientMutationId: String
+  customerIds: [String!]!
+  from: DateTime!
+  id: String
+  notes: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  resourceIds: [String!]!
+  teamIds: [String!]!
+  until: DateTime!
+}
+
 input AddProductInput {
   acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
@@ -1590,22 +1609,6 @@ input AvailableResourcesWhereInput {
   resourceIdsToInclude: [String!]
   until: DateTime!
   zoneIds: [String!]
-}
-
-input BookProductInput {
-  category: BookingCategory!
-  clientMutationId: String
-  customerIds: [String!]!
-  from: DateTime!
-  id: String
-  invoiceEmailList: [String!]!
-  lineItems: [LineItemInput!]!
-  notes: String
-  organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
-  paymentMethod: PaymentMethod
-  resourceIds: [String!]!
-  until: DateTime!
 }
 
 input BookingOrderInput {
@@ -1752,11 +1755,6 @@ input DeactivateResourcesInput {
   ids: [String!]!
 }
 
-input DeleteBookingInput {
-  clientMutationId: String
-  id: String!
-}
-
 input DeleteCustomTagInput {
   clientMutationId: String
   id: String!
@@ -1787,6 +1785,11 @@ input DeleteLocationTagsInput {
   ids: [String!]!
 }
 
+input DeleteMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteOrganizationBankAccountInput {
   clientMutationId: String
   id: String!
@@ -1811,6 +1814,11 @@ input DeleteOrganizationStripeConnectAccountInput {
 input DeleteOrganizationStripeConnectAccountsInput {
   clientMutationId: String
   ids: [String!]!
+}
+
+input DeletePrivateBookingInput {
+  clientMutationId: String
+  id: String!
 }
 
 input DeleteProductTagInput {
@@ -2210,20 +2218,6 @@ input ToggleContactedViaWhatsappInput {
   locationId: String!
 }
 
-input UpdateBookingInput {
-  category: BookingCategory!
-  clientMutationId: String
-  customerIds: [String!]!
-  from: DateTime!
-  id: String!
-  notes: String
-  organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
-  resourceIds: [String!]!
-  teamIds: [String!]!
-  until: DateTime!
-}
-
 input UpdateCustomTagInput {
   clientMutationId: String
   color: String
@@ -2304,6 +2298,17 @@ input UpdateLocationTagInput {
   description: String
   id: String!
   name: String!
+}
+
+input UpdateMarketplaceBookingInput {
+  category: BookingCategory!
+  clientMutationId: String
+  customerIds: [String!]!
+  id: String!
+  notes: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
 }
 
 input UpdateMyBillingDetailsInput {
@@ -2432,6 +2437,20 @@ input UpdateOrganizationTaxDetailsInput {
   organizationUniqueAlphanumericName: String
   taxId: String!
   taxRatePercentage: Decimal!
+}
+
+input UpdatePrivateBookingInput {
+  category: BookingCategory!
+  clientMutationId: String
+  customerIds: [String!]!
+  from: DateTime!
+  id: String!
+  notes: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  resourceIds: [String!]!
+  teamIds: [String!]!
+  until: DateTime!
 }
 
 input UpdateProductInput {

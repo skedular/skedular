@@ -1,18 +1,17 @@
 using Api.Shared.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using Location = Booking.Shared.Database.Entities.Location;
 using Organization = Booking.Shared.Database.Entities.Organization;
-using Resource = Booking.Shared.Database.Entities.Resource;
 
 namespace Booking.Api.Services;
 
 public interface IMarketplaceBookingService
 {
-    Task<Shared.Models.Booking> BookProductAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
+    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
@@ -21,23 +20,19 @@ public class MarketplaceBookingService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
+    ITeamAuthorizationService teamAuthorizationService,
     IOrganizationOfferingService organizationOfferingService,
     IContext context,
     Shared.Services.IMarketplaceBookingService sharedMarketplaceBookingService) : IMarketplaceBookingService
 {
-    public async Task<Shared.Models.Booking> BookProductAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
         if (booking.InvolvedCustomers.Count == 0)
         {
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
         }
 
-        if (booking.LineItems.Count == 0)
-        {
-            throw new ArgumentException(nameof(booking.LineItems));
-        }
-
-        if (booking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
+        if (booking.LineItems.Count == 0 || booking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
         {
             throw new ArgumentException(nameof(booking.LineItems));
         }
@@ -61,8 +56,9 @@ public class MarketplaceBookingService(
         }
 
         var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
+        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
 
-        return await sharedMarketplaceBookingService.BookProductAsync(booking, customer, organizations, cancellationToken);
+        return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
@@ -109,6 +105,24 @@ public class MarketplaceBookingService(
         }
 
         return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
+    }
+
+    private async Task<Shared.Models.Booking> UpdateInternalAsync(
+        Shared.Models.Booking booking,
+        Shared.Database.Entities.Booking existingBooking,
+        Customer callingCustomer,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
+        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, false, cancellationToken);
+
+        return await sharedMarketplaceBookingService.UpdateAsync(
+            booking,
+            existingBooking,
+            callingCustomer,
+            organizations,
+            teams,
+            cancellationToken);
     }
 
     private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
@@ -175,22 +189,46 @@ public class MarketplaceBookingService(
         return result;
     }
 
-    private async Task<Shared.Models.Booking> UpdateInternalAsync(
+    private async Task<ICollection<Team>> GetTeamAndValidatePermissionsAsync(
         Shared.Models.Booking booking,
-        Shared.Database.Entities.Booking existingBooking,
-        Customer callingCustomer,
+        string customerId,
+        bool existing,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
+        var teamIds = booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
+        if (teamIds.Count == 0)
+        {
+            return [];
+        }
 
-        return await sharedMarketplaceBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, [], cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
+        if (teamIds.Count != teams.Count)
+        {
+            throw new TeamNotFound();
+        }
+
+        var result = new List<Team>();
+        foreach (var team in booking.InvolvedTeams)
+        {
+            var teamEntity = teams.First(item => item.Id == team.Id);
+            if (existing)
+            {
+                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+            else
+            {
+                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customerId, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+
+            result.Add(teamEntity);
+        }
+
+        return result;
     }
-
-    private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
-        resources
-            .Where(item => item.Location is not null)
-            .Select(item => item.Location)
-            .GroupBy(item => item!.Id)
-            .Select(item => item.First())
-            .ToList()!;
 }

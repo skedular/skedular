@@ -23,9 +23,9 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import type { BookingCategory, bookProduct_addMarketplaceBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
-import type { BookingCategory, bookProduct_bookProductMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_bookProductMutation.graphql';
 import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -211,9 +211,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     rootDataAvailableResourcesRelay,
   );
 
-  const [commitBookProduct] = useMutation<bookProduct_bookProductMutation>(graphql`
-    mutation bookProduct_bookProductMutation($connectionIds: [ID!]!, $input: BookProductInput!) @raw_response_type {
-      bookProduct(input: $input) {
+  const [commitAddMarketplaceBooking] = useMutation<bookProduct_addMarketplaceBookingMutation>(graphql`
+    mutation bookProduct_addMarketplaceBookingMutation($connectionIds: [ID!]!, $input: AddMarketplaceBookingInput!) @raw_response_type {
+      addMarketplaceBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
@@ -517,7 +517,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const customerId = rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
-    commitBookProduct({
+    commitAddMarketplaceBooking({
       variables: {
         connectionIds,
         input: {
@@ -528,6 +528,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           until,
           notes,
           organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+          teamIds: [],
           resourceIds,
           category: category as BookingCategory,
           lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
@@ -545,7 +546,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           return;
         }
 
-        const booking = response.bookProduct?.booking;
+        const booking = response.addMarketplaceBooking?.booking;
 
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
@@ -567,7 +568,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           render: <NotificationContent content={message} />,
         });
 
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.bookProduct!.booking.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.addMarketplaceBooking!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -576,7 +577,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         });
       },
       optimisticResponse: {
-        bookProduct: {
+        addMarketplaceBooking: {
           booking: {
             id,
             from,

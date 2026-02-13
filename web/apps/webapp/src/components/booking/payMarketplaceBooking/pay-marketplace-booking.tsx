@@ -13,7 +13,7 @@ import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinError
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_Subscription } from '@/queries/__generated__/payMarketplaceBooking_booking_Subscription.graphql';
 import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
-import type { payMarketplaceBooking_deleteBookingMutation } from '@/queries/__generated__/payMarketplaceBooking_deleteBookingMutation.graphql';
+import type { payMarketplaceBooking_deleteMarketplaceBookingMutation } from '@/queries/__generated__/payMarketplaceBooking_deleteMarketplaceBookingMutation.graphql';
 import type { payMarketplaceBooking_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/payMarketplaceBooking_makeBookingPaymentNotRequiredMutation.graphql';
 import type { payMarketplaceBooking_rejectBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_rejectBookingPaymentMutation.graphql';
 import Button from '@mui/material/Button';
@@ -145,9 +145,9 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
     ),
   );
 
-  const [commitDeleteBooking] = useMutation<payMarketplaceBooking_deleteBookingMutation>(graphql`
-    mutation payMarketplaceBooking_deleteBookingMutation($input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
+  const [commitDeleteMarketplaceBooking] = useMutation<payMarketplaceBooking_deleteMarketplaceBookingMutation>(graphql`
+    mutation payMarketplaceBooking_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
+      deleteMarketplaceBooking(input: $input) {
         booking {
           id
         }
@@ -255,7 +255,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
 
     const toastId = themedToast(<NotificationContent content={`Cancelling booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeleteBooking({
+    commitDeleteMarketplaceBooking({
       variables: {
         input: {
           clientMutationId: uuid(),

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a979317137e09aa338125c53e71be874>>
+ * @generated SignedSource<<6d5f6552a43605cdf6cfbc086151ff2b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,23 +9,23 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type DeleteBookingInput = {
+export type DeleteMarketplaceBookingInput = {
   clientMutationId?: string | null | undefined;
   id: string;
 };
-export type payMarketplaceBooking_deleteBookingMutation$variables = {
-  input: DeleteBookingInput;
+export type payMarketplaceBooking_deleteMarketplaceBookingMutation$variables = {
+  input: DeleteMarketplaceBookingInput;
 };
-export type payMarketplaceBooking_deleteBookingMutation$data = {
-  readonly deleteBooking: {
+export type payMarketplaceBooking_deleteMarketplaceBookingMutation$data = {
+  readonly deleteMarketplaceBooking: {
     readonly booking: {
       readonly id: string;
     };
   };
 };
-export type payMarketplaceBooking_deleteBookingMutation = {
-  response: payMarketplaceBooking_deleteBookingMutation$data;
-  variables: payMarketplaceBooking_deleteBookingMutation$variables;
+export type payMarketplaceBooking_deleteMarketplaceBookingMutation = {
+  response: payMarketplaceBooking_deleteMarketplaceBookingMutation$data;
+  variables: payMarketplaceBooking_deleteMarketplaceBookingMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -48,7 +48,7 @@ v1 = [
     ],
     "concreteType": "BookingPayload",
     "kind": "LinkedField",
-    "name": "deleteBooking",
+    "name": "deleteMarketplaceBooking",
     "plural": false,
     "selections": [
       {
@@ -78,7 +78,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "payMarketplaceBooking_deleteBookingMutation",
+    "name": "payMarketplaceBooking_deleteMarketplaceBookingMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -87,20 +87,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "payMarketplaceBooking_deleteBookingMutation",
+    "name": "payMarketplaceBooking_deleteMarketplaceBookingMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "dee32a185ab831b9a0d5526b65c80d34",
+    "cacheID": "71f7137c0e98c9de87c235e6f7151b5b",
     "id": null,
     "metadata": {},
-    "name": "payMarketplaceBooking_deleteBookingMutation",
+    "name": "payMarketplaceBooking_deleteMarketplaceBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation payMarketplaceBooking_deleteBookingMutation(\n  $input: DeleteBookingInput!\n) {\n  deleteBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
+    "text": "mutation payMarketplaceBooking_deleteMarketplaceBookingMutation(\n  $input: DeleteMarketplaceBookingInput!\n) {\n  deleteMarketplaceBooking(input: $input) {\n    booking {\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2b257c77647d591d31f732b630336429";
+(node as any).hash = "5946e5620f307438f389539fd0ac1658";
 
 export default node;

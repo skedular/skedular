@@ -14,7 +14,7 @@ import type { editPrivateBooking_customerTeams_refetchableFragment } from '@/que
 import type { editPrivateBooking_organizationMembers_query$key } from '@/queries/__generated__/editPrivateBooking_organizationMembers_query.graphql';
 import type { editPrivateBooking_organizationMembers_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_organizationMembers_refetchableFragment.graphql';
 import type { editPrivateBooking_query$key } from '@/queries/__generated__/editPrivateBooking_query.graphql';
-import type { BookingCategory, editPrivateBooking_updateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updateBookingMutation.graphql';
+import type { BookingCategory, editPrivateBooking_updatePrivateBookingMutation } from '@/queries/__generated__/editPrivateBooking_updatePrivateBookingMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -269,9 +269,9 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     rootDataAvailableResourcesRelay,
   );
 
-  const [commitUpdateBooking] = useMutation<editPrivateBooking_updateBookingMutation>(graphql`
-    mutation editPrivateBooking_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
-      updateBooking(input: $input) {
+  const [commitUpdatePrivateBooking] = useMutation<editPrivateBooking_updatePrivateBookingMutation>(graphql`
+    mutation editPrivateBooking_updatePrivateBookingMutation($input: UpdatePrivateBookingInput!) @raw_response_type {
+      updatePrivateBooking(input: $input) {
         booking {
           id
           from
@@ -528,7 +528,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
 
     const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitUpdateBooking({
+    commitUpdatePrivateBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
@@ -567,7 +567,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         });
       },
       optimisticResponse: {
-        updateBooking: {
+        updatePrivateBooking: {
           booking: {
             id: booking.id,
             from,

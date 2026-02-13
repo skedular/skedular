@@ -10,10 +10,10 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
-import type { bookingCard_addBookingMutation } from '@/queries/__generated__/bookingCard_addBookingMutation.graphql';
+import type { bookingCard_addPrivateBookingMutation } from '@/queries/__generated__/bookingCard_addPrivateBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_confirmBookingPaymentMutation } from '@/queries/__generated__/bookingCard_confirmBookingPaymentMutation.graphql';
-import type { bookingCard_deleteBookingMutation } from '@/queries/__generated__/bookingCard_deleteBookingMutation.graphql';
+import type { bookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/bookingCard_deletePrivateBookingMutation.graphql';
 import type { bookingCard_makeBookingPaymentNotRequiredMutation } from '@/queries/__generated__/bookingCard_makeBookingPaymentNotRequiredMutation.graphql';
 import type { bookingCard_query$key } from '@/queries/__generated__/bookingCard_query.graphql';
 import type { bookingCard_rejectBookingPaymentMutation } from '@/queries/__generated__/bookingCard_rejectBookingPaymentMutation.graphql';
@@ -134,9 +134,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
     bookingDetailsRelay,
   );
 
-  const [commitDeleteBooking] = useMutation<bookingCard_deleteBookingMutation>(graphql`
-    mutation bookingCard_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
+  const [commitDeletePrivateBooking] = useMutation<bookingCard_deletePrivateBookingMutation>(graphql`
+    mutation bookingCard_deletePrivateBookingMutation($connectionIds: [ID!]!, $input: DeletePrivateBookingInput!) {
+      deletePrivateBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -144,9 +144,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
     }
   `);
 
-  const [commitAddBooking] = useMutation<bookingCard_addBookingMutation>(graphql`
-    mutation bookingCard_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
-      addBooking(input: $input) {
+  const [commitAddPrivateBooking] = useMutation<bookingCard_addPrivateBookingMutation>(graphql`
+    mutation bookingCard_addPrivateBookingMutation($connectionIds: [ID!]!, $input: AddPrivateBookingInput!) @raw_response_type {
+      addPrivateBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
@@ -306,7 +306,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
 
     const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeleteBooking({
+    commitDeletePrivateBooking({
       variables: {
         connectionIds,
         input: {
@@ -342,7 +342,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Joining booking on '${shortDateFormatFrom}'...`} />, infoNotificationOptions);
 
-    commitAddBooking({
+    commitAddPrivateBooking({
       variables: {
         connectionIds,
         input: {
@@ -367,7 +367,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           return;
         }
 
-        const booking = response.addBooking?.booking;
+        const booking = response.addPrivateBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {
@@ -399,7 +399,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         });
       },
       optimisticResponse: {
-        addBooking: {
+        addPrivateBooking: {
           booking: {
             id,
             from: bookingDetails.from,

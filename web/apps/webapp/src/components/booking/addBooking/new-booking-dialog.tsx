@@ -8,7 +8,7 @@ import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { getCustomerFullName, isMidnight, joinErrors, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type { BookingCategory, newBookingDialog_addBookingMutation } from '@/queries/__generated__/newBookingDialog_addBookingMutation.graphql';
+import type { BookingCategory, newBookingDialog_addPrivateBookingMutation } from '@/queries/__generated__/newBookingDialog_addPrivateBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
 import type { newBookingDialog_customerTeams_query$key } from '@/queries/__generated__/newBookingDialog_customerTeams_query.graphql';
@@ -239,9 +239,9 @@ const NewBookingDialog = ({
     rootDataAvailableResourcesRelay,
   );
 
-  const [commitAddBooking] = useMutation<newBookingDialog_addBookingMutation>(graphql`
-    mutation newBookingDialog_addBookingMutation($connectionIds: [ID!]!, $input: AddBookingInput!) @raw_response_type {
-      addBooking(input: $input) {
+  const [commitAddPrivateBooking] = useMutation<newBookingDialog_addPrivateBookingMutation>(graphql`
+    mutation newBookingDialog_addPrivateBookingMutation($connectionIds: [ID!]!, $input: AddPrivateBookingInput!) @raw_response_type {
+      addPrivateBooking(input: $input) {
         booking @appendNode(connections: $connectionIds, edgeTypeName: "BookingDetails") {
           id
           from
@@ -451,7 +451,7 @@ const NewBookingDialog = ({
     const customerId = member ?? rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
-    commitAddBooking({
+    commitAddPrivateBooking({
       variables: {
         connectionIds,
         input: {
@@ -477,7 +477,7 @@ const NewBookingDialog = ({
           return;
         }
 
-        const booking = response.addBooking?.booking;
+        const booking = response.addPrivateBooking?.booking;
         let message = `Booking made for ${getCustomerFullName(booking.involvedCustomers[0])} to work`;
 
         if (booking.involvedLocations.length > 0) {
@@ -511,7 +511,7 @@ const NewBookingDialog = ({
         });
       },
       optimisticResponse: {
-        addBooking: {
+        addPrivateBooking: {
           booking: {
             id,
             from,

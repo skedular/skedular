@@ -98,3 +98,7 @@ public class BookingProductWithMixedTaxSetupNotAllowed() : Exception("Booking pr
 
 public class MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking()
     : Exception("More resources have been selected than are allowed for this booking");
+
+public class BookingIsNotPrivate() : Exception("Booking is not private");
+
+public class BookingIsNotMarketplace() : Exception("Booking is not marketplace");

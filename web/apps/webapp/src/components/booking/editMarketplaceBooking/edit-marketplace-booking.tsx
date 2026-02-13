@@ -214,9 +214,9 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
     rootDataTeamsRelay,
   );
 
-  const [commitUpdateBooking] = useMutation<editMarketplaceBooking_updateBookingMutation>(graphql`
-    mutation editMarketplaceBooking_updateBookingMutation($input: UpdateBookingInput!) @raw_response_type {
-      updateBooking(input: $input) {
+  const [commitUpdateMarketplaceBooking] = useMutation<editMarketplaceBooking_updateBookingMutation>(graphql`
+    mutation editMarketplaceBooking_updateBookingMutation($input: UpdateMarketplaceBookingInput!) @raw_response_type {
+      updateMarketplaceBooking(input: $input) {
         booking {
           id
           from
@@ -359,19 +359,16 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
 
     const toastId = themedToast(<NotificationContent content={`Updating booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitUpdateBooking({
+    commitUpdateMarketplaceBooking({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: booking.id,
-          from: booking.from,
-          until: booking.until,
           notes,
           category: category as BookingCategory,
           customerIds: [memberId],
           organizationIds: booking.involvedOrganizations.map(({ id }) => id),
           teamIds: teamId ? [teamId] : [],
-          resourceIds: booking.bookingResources.map(({ resource }) => resource.id),
         },
       },
       onCompleted: (_, errors) => {
@@ -398,7 +395,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         });
       },
       optimisticResponse: {
-        updateBooking: {
+        updateMarketplaceBooking: {
           booking: {
             id: booking.id,
             from: booking.from,

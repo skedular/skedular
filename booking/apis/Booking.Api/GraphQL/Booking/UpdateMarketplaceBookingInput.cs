@@ -3,8 +3,8 @@ using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("UpdateBookingInput")]
-public class UpdateBookingInput
+[GraphQLName("UpdateMarketplaceBookingInput")]
+public class UpdateMarketplaceBookingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
@@ -15,9 +15,6 @@ public class UpdateBookingInput
     public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
 
     [GraphQLName("teamIds")] public IEnumerable<string> TeamIds { get; set; } = [];
-    [GraphQLName("from")] public DateTimeOffset From { get; set; }
-    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("category")] public BookingCategory Category { get; set; }
-    [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
 }

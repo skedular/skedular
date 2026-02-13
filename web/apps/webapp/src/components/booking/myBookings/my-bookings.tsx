@@ -12,7 +12,7 @@ import { defaultGridStyle, defaultPadding } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
-import type { myBookings_deleteBookingMutation } from '@/queries/__generated__/myBookings_deleteBookingMutation.graphql';
+import type { myBookings_deletePrivateBookingMutation } from '@/queries/__generated__/myBookings_deletePrivateBookingMutation.graphql';
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Divider from '@mui/material/Divider';
@@ -166,9 +166,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
     rootDataBookingRelay,
   );
 
-  const [commitDeleteBooking] = useMutation<myBookings_deleteBookingMutation>(graphql`
-    mutation myBookings_deleteBookingMutation($connectionIds: [ID!]!, $input: DeleteBookingInput!) {
-      deleteBooking(input: $input) {
+  const [commitDeletePrivateBooking] = useMutation<myBookings_deletePrivateBookingMutation>(graphql`
+    mutation myBookings_deletePrivateBookingMutation($connectionIds: [ID!]!, $input: DeletePrivateBookingInput!) {
+      deletePrivateBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -270,7 +270,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
 
     const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeleteBooking({
+    commitDeletePrivateBooking({
       variables: {
         connectionIds,
         input: {

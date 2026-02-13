@@ -115,6 +115,18 @@ public class PrivateBookingService(
         return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
     }
 
+    private async Task<Shared.Models.Booking> UpdateInternalAsync(
+        Shared.Models.Booking booking,
+        Shared.Database.Entities.Booking existingBooking,
+        Customer callingCustomer,
+        CancellationToken cancellationToken)
+    {
+        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
+        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
+
+        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
+    }
+
     private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
         Shared.Models.Booking booking,
         string customerId,
@@ -220,17 +232,5 @@ public class PrivateBookingService(
         }
 
         return result;
-    }
-
-    private async Task<Shared.Models.Booking> UpdateInternalAsync(
-        Shared.Models.Booking booking,
-        Shared.Database.Entities.Booking existingBooking,
-        Customer callingCustomer,
-        CancellationToken cancellationToken)
-    {
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
-
-        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
     }
 }
