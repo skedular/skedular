@@ -21,7 +21,7 @@ public class Program
             .AddConfigurations(configuration);
 
         services
-            .AddHttpClient("Fusion", options => options.Timeout = TimeSpan.FromSeconds(30))
+            .AddHttpClient("Fusion", options => options.Timeout = TimeSpan.FromMinutes(1))
             .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
 
         services
@@ -46,7 +46,7 @@ public class Program
             .ConfigureFromFile(filename)
             .ModifyRequestOptions(options =>
             {
-                options.ExecutionTimeout = TimeSpan.FromSeconds(30);
+                options.ExecutionTimeout = TimeSpan.FromMinutes(1);
                 options.IncludeExceptionDetails = graphqlConfig.IncludeExceptionDetails;
             }).ModifyFusionOptions(options =>
             {
