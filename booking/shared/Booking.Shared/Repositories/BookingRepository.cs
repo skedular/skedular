@@ -20,7 +20,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
     Database.Entities.Booking Update(Database.Entities.Booking booking);
     Database.Entities.Booking Remove(Database.Entities.Booking booking);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
@@ -291,7 +291,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         return DbContext.Booking.Update(booking).Entity;
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Booking>>, int)> GetPaginatedBookingsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
