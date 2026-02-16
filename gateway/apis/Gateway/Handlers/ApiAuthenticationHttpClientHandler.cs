@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text;
 using Enterprise.Shared;
 
@@ -9,11 +10,13 @@ public class ApiAuthenticationHttpClientHandler(IHttpContextAccessor httpContext
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
     {
+        var stopwatch = Stopwatch.StartNew();
         string? outboundRequestSnapshot = null;
 
         try
         {
-            var httpRequest = httpContextAccessor.HttpContext?.Request;
+            var httpContext = httpContextAccessor.HttpContext;
+            var httpRequest = httpContext?.Request;
             if (httpRequest is not null)
             {
                 var authorizationHeader = httpRequest.Headers.Authorization;
@@ -40,13 +43,36 @@ public class ApiAuthenticationHttpClientHandler(IHttpContextAccessor httpContext
         }
         catch (Exception ex)
         {
-            outboundRequestSnapshot ??= await BuildRequestSnapshotAsync(httpRequestMessage, cancellationToken);
+            stopwatch.Stop();
+
+            if (outboundRequestSnapshot is null)
+            {
+                try
+                {
+                    outboundRequestSnapshot = await BuildRequestSnapshotAsync(httpRequestMessage, CancellationToken.None);
+                }
+                catch (Exception snapshotEx)
+                {
+                    outboundRequestSnapshot = $"<snapshot_failed:{snapshotEx.GetType().Name}>";
+                }
+            }
+
+            var isCancellation = ex is OperationCanceledException;
+            var handlerTokenCanceled = cancellationToken.IsCancellationRequested;
+            var requestAborted = httpContextAccessor.HttpContext?.RequestAborted.IsCancellationRequested ?? false;
 
             logger.LogError(
                 ex,
-                "Failed to run http query {RequestUri}. Outbound request snapshot: {OutboundRequestSnapshot}",
+                "Failed to run http query {RequestUri}. Outbound request snapshot: {OutboundRequestSnapshot}. IsCancellation: {IsCancellation}. HandlerTokenCanceled: {HandlerTokenCanceled}. RequestAborted: {RequestAborted}. ElapsedMs: {ElapsedMs}. ExceptionType: {ExceptionType}. InnerExceptionType: {InnerExceptionType}. InnerExceptionMessage: {InnerExceptionMessage}",
                 httpRequestMessage.RequestUri,
-                outboundRequestSnapshot);
+                outboundRequestSnapshot,
+                isCancellation,
+                handlerTokenCanceled,
+                requestAborted,
+                stopwatch.ElapsedMilliseconds,
+                ex.GetType().FullName,
+                ex.InnerException?.GetType().FullName,
+                ex.InnerException?.Message);
 
             throw;
         }
