@@ -1,8 +1,10 @@
 import { isServer } from '@/libs/utils';
 import { createClient } from 'graphql-sse';
-import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime';
 import type { FetchFunction, GraphQLResponse, SubscribeFunction } from 'relay-runtime';
+import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime';
 import { v7 as uuid } from 'uuid';
+
+const graphqlFetchTimeoutMs = Number(process.env.NEXT_PUBLIC_GRAPHQL_FETCH_TIMEOUT_MS ?? 70000);
 
 export function createNetwork(endpoint: string, token?: string | null | undefined) {
   const buildHeaders = () => {
@@ -22,14 +24,23 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
     void _cacheConfig;
     void _uploadables;
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: buildHeaders(),
-      body: JSON.stringify({
-        query: params.text,
-        variables,
-      }),
-    });
+    const abortController = new AbortController();
+    const timeoutId = setTimeout(() => abortController.abort(), graphqlFetchTimeoutMs);
+    let response: Response;
+
+    try {
+      response = await fetch(endpoint, {
+        method: 'POST',
+        headers: buildHeaders(),
+        body: JSON.stringify({
+          query: params.text,
+          variables,
+        }),
+        signal: abortController.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     return await response.json();
   };

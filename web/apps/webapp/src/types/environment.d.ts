@@ -22,6 +22,9 @@ declare global {
       AZURE_AD_CLIENT_SECRET: string;
       SLACK_CLIENT_SECRET: string;
       GATEWAY_ENDPOINT: string;
+      GATEWAY_FETCH_TIMEOUT_MS?: string;
+      NEXT_PUBLIC_GRAPHQL_FETCH_TIMEOUT_MS?: string;
+      LOG_LEVEL?: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
     }
   }
 }
