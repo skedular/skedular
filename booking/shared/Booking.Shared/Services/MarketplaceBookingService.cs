@@ -131,6 +131,10 @@ public class MarketplaceBookingService(
                 booking.From,
                 booking.Until,
                 booking.InvolvedOrganizations
+                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                    .Select(item => item.Id)
+                    .ToList(),
+                booking.InvolvedOrganizations
                     .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
                     .Select(item => item.UniqueAlphanumericName!)
                     .ToList(),

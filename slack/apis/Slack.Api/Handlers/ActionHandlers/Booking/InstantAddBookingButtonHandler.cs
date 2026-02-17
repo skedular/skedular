@@ -22,7 +22,6 @@ using Organization = Slack.Shared.Models.Organization;
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class InstantAddBookingButtonHandler(
-    ILogger<InstantAddBookingButtonHandler> logger,
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
@@ -46,15 +45,6 @@ public class InstantAddBookingButtonHandler(
         var workspace = mapper.MapTo(workspaceEntity);
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = InstantAddBookingContext.Deserialize(action.Value);
-
-        logger.LogInformation(
-            "InstantAddBookingButtonHandler: {TeamId} - {WorkspaceId} - {WorkspaceMemberId} - {OrganizationId1} - {OrganizationId2} - {InitiationSource}",
-            request.Team.Id,
-            workspaceEntity.Id,
-            workspaceMember.Id,
-            workspaceEntity.Organization.Id,
-            workspace.Organization.Id,
-            context.InitiationSource);
 
         if (context.InitiationSource == InitiationSource.App)
         {
