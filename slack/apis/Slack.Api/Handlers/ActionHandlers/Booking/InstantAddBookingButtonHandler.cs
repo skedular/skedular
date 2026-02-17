@@ -22,6 +22,7 @@ using Organization = Slack.Shared.Models.Organization;
 namespace Slack.Api.Handlers.ActionHandlers.Booking;
 
 public class InstantAddBookingButtonHandler(
+    ILogger<InstantAddBookingButtonHandler> logger,
     AsyncPageRenderingService asyncPageRenderingService,
     SlackConfigurationService slackConfigurationService,
     IRepositoryFactory repositoryFactory,
@@ -36,6 +37,7 @@ public class InstantAddBookingButtonHandler(
     {
         var workspaceEntity = await repositoryFactory.WorkspaceRepository.GetByIdAsync(request.Team.Id, cancellationToken) ??
                               throw new SlackWorkspaceNotFound();
+
         var (workspaceMemberEntity, customerId) = await workspaceMemberService.EnsureCustomerResourcesAllExistAsync(
             workspaceEntity,
             request.User.Id,
@@ -45,78 +47,16 @@ public class InstantAddBookingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = InstantAddBookingContext.Deserialize(action.Value);
 
-        if (context.InitiationSource != InitiationSource.App)
-        {
-            if (string.IsNullOrEmpty(context.CustomerId))
-            {
-                context.CustomerId = customerId;
-            }
+        logger.LogInformation(
+            "InstantAddBookingButtonHandler: {TeamId} - {WorkspaceId} - {WorkspaceMemberId} - {OrganizationId1} - {OrganizationId2} - {InitiationSource}",
+            request.Team.Id,
+            workspaceEntity.Id,
+            workspaceMember.Id,
+            workspaceEntity.Organization.Id,
+            workspace.Organization.Id,
+            context.InitiationSource);
 
-            var bookingConnection = await bookingService.GetPaginatedBookingsAsync(
-                workspaceMember.Id,
-                new BookingSearchCriteria(
-                    null,
-                    context.From,
-                    null,
-                    context.Until,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    [],
-                    true,
-                    null,
-                    [workspace.Organization.Id],
-                    string.IsNullOrWhiteSpace(context.LocationId) ? [] : [context.LocationId],
-                    string.IsNullOrWhiteSpace(context.TeamId) ? [] : [context.TeamId],
-                    []),
-                string.Empty,
-                1,
-                string.Empty,
-                ((int?)null).ToNullInt(),
-                cancellationToken);
-
-            var slackApiClient = workspace.GetApiClient();
-            if (bookingConnection.TotalCount == 0)
-            {
-                var booking = await bookingService.AddAsync(
-                    workspaceMember.Id,
-                    new Shared.Models.Booking
-                    {
-                        Id = randomHelper.Generate(),
-                        From = context.From,
-                        Until = context.Until,
-                        Category = BookingCategory.WorkingFromOffice,
-                        InvolvedCustomers = [new Customer { Id = customerId }],
-                        InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
-                        InvolvedTeams =
-                            string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
-                                ? []
-                                : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
-                    },
-                    cancellationToken);
-
-                var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
-                var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
-                blocks.AddRange(bookingCardBlocks);
-                var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
-                await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
-            }
-            else
-            {
-                var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
-                var booking = bookingConnection.Edges.Select(item => item.Node).First();
-                var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
-                blocks.AddRange(bookingCardBlocks);
-
-                var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
-                await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
-            }
-        }
-        else
+        if (context.InitiationSource == InitiationSource.App)
         {
             _ = await bookingService.AddAsync(
                 workspaceMember.Id,
@@ -128,10 +68,9 @@ public class InstantAddBookingButtonHandler(
                     Category = BookingCategory.WorkingFromOffice,
                     InvolvedCustomers = [new Customer { Id = customerId }],
                     InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
-                    InvolvedTeams =
-                        string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
-                            ? []
-                            : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                    InvolvedTeams = string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
+                        ? []
+                        : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
                 },
                 cancellationToken);
 
@@ -141,6 +80,76 @@ public class InstantAddBookingButtonHandler(
                 new CommonPageContext(context.PageContext),
                 request.View.Hash,
                 cancellationToken);
+
+            return;
+        }
+
+        if (string.IsNullOrEmpty(context.CustomerId))
+        {
+            context.CustomerId = customerId;
+        }
+
+        var bookingConnection = await bookingService.GetPaginatedBookingsAsync(
+            workspaceMember.Id,
+            new BookingSearchCriteria(
+                null,
+                context.From,
+                null,
+                context.Until,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                [],
+                true,
+                null,
+                [workspace.Organization.Id],
+                string.IsNullOrWhiteSpace(context.LocationId) ? [] : [context.LocationId],
+                string.IsNullOrWhiteSpace(context.TeamId) ? [] : [context.TeamId],
+                []),
+            string.Empty,
+            1,
+            string.Empty,
+            ((int?)null).ToNullInt(),
+            cancellationToken);
+
+        var slackApiClient = workspace.GetApiClient();
+        if (bookingConnection.TotalCount == 0)
+        {
+            var booking = await bookingService.AddAsync(
+                workspaceMember.Id,
+                new Shared.Models.Booking
+                {
+                    Id = randomHelper.Generate(),
+                    From = context.From,
+                    Until = context.Until,
+                    Category = BookingCategory.WorkingFromOffice,
+                    InvolvedCustomers = [new Customer { Id = customerId }],
+                    InvolvedOrganizations = [new Organization { Id = workspace.Organization.Id }],
+                    InvolvedTeams = string.IsNullOrWhiteSpace(context.TeamId.ToSafeString())
+                        ? []
+                        : [new Shared.Models.Team { Id = context.TeamId.ToSafeString() }]
+                },
+                cancellationToken);
+
+            var blocks = new List<Block> { new SectionBlock { Text = "Your booking on is now confirmed.".ToMarkdown() } };
+            var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
+            blocks.AddRange(bookingCardBlocks);
+            var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+            await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
+        }
+        else
+        {
+            var blocks = new List<Block> { new SectionBlock { Text = "Found a matching booking".ToMarkdown() } };
+            var booking = bookingConnection.Edges.Select(item => item.Node).First();
+            var bookingCardBlocks = bookingComponents.GetBookingCard(workspace, booking, [], customerId, false, context.PageContext);
+            blocks.AddRange(bookingCardBlocks);
+
+            var message = new Message { Channel = request.Channel.Id, Blocks = blocks };
+            await slackApiClient.Chat.PostEphemeral(workspaceMember.Id, message, cancellationToken);
         }
     }
 
