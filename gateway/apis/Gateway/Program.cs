@@ -1,7 +1,7 @@
 using Enterprise.Shared;
 using Enterprise.Shared.Ai;
 using Enterprise.Shared.GraphQL.Configurations;
-using Gateway.Handlers;
+using Enterprise.Shared.GraphQL.Handlers;
 using HotChocolate.Fusion.Metadata;
 using WebApplication = Microsoft.AspNetCore.Builder.WebApplication;
 
@@ -22,11 +22,11 @@ public class Program
 
         services
             .AddHttpClient("Fusion", options => options.Timeout = TimeSpan.FromMinutes(1))
-            .AddHttpMessageHandler<ApiAuthenticationHttpClientHandler>();
+            .AddHttpMessageHandler<RequestContextPropagationHandler>();
 
         services
             .AddSingleton<IConfigurationRewriter, ServiceDiscoveryConfigurationRewrite>()
-            .AddScoped<ApiAuthenticationHttpClientHandler>();
+            .AddScoped<RequestContextPropagationHandler>();
 
         var filename = Path.GetTempFileName();
         using (var embeddedGatewayFileStream = typeof(Program).Assembly.GetManifestResourceStream($"{typeof(Program).Namespace}.gateway.fgp"))

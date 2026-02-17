@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Text;
-using Enterprise.Shared;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
-namespace Gateway.Handlers;
+namespace Enterprise.Shared.GraphQL.Handlers;
 
-public class ApiAuthenticationHttpClientHandler(IHttpContextAccessor httpContextAccessor, ILogger<ApiAuthenticationHttpClientHandler> logger)
+public class RequestContextPropagationHandler(IHttpContextAccessor httpContextAccessor, ILogger<RequestContextPropagationHandler> logger)
     : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
