@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<021447acf90e2745a145bc87878d1e63>>
+ * @generated SignedSource<<acdd9116d8380ae313e3ffd8934dac69>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
@@ -32,6 +33,10 @@ export type bookingCard_BookingDetails$data = {
   }>;
   readonly category: {
     readonly category: BookingCategory;
+    readonly name: string;
+  };
+  readonly channel: {
+    readonly channel: BookingChannel;
     readonly name: string;
   };
   readonly from: any;
@@ -142,6 +147,25 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "category",
+          "storageKey": null
+        },
+        (v1/*: any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingChannelDetails",
+      "kind": "LinkedField",
+      "name": "channel",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "channel",
           "storageKey": null
         },
         (v1/*: any*/)
@@ -305,6 +329,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd10e1c9cb8f036abafa76f6ca784c43";
+(node as any).hash = "4d066bdc9f18ff20c9a391808295bfce";
 
 export default node;

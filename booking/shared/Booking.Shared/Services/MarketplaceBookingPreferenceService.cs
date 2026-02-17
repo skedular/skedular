@@ -1,0 +1,130 @@
+using Api.Shared.Services;
+using Api.Shared.Services.Models;
+using Booking.Shared.Database.Entities;
+using Booking.Shared.Repositories;
+
+namespace Booking.Shared.Services;
+
+public interface IMarketplaceBookingPreferenceService
+{
+    Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
+        Customer? customer,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ProductVersion productVersion,
+        int quantity,
+        CancellationToken cancellationToken);
+}
+
+public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFactory) : IMarketplaceBookingPreferenceService
+{
+    public async Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
+        Customer? customer,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ProductVersion productVersion,
+        int quantity,
+        CancellationToken cancellationToken)
+    {
+        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.ProductTags, cancellationToken);
+        if (availableResources.Count < quantity)
+        {
+            throw new NoResourceAvailable();
+        }
+
+        if (customer is null)
+        {
+            return availableResources.Take(quantity).ToList();
+        }
+
+        var customerPreferredResourceIds = customer.PreferredResources.Select(item => item.Id).ToList();
+        var customerPreferredLocationIds = customer.PreferredLocations.Select(item => item.Id).ToList();
+        var customerPreferredZoneTagIds = customer.PreferredOrganizationTags
+            .Where(item => !string.IsNullOrWhiteSpace(item.Type) && item.Type.ToOrganizationTagType() == OrganizationTagType.Zone)
+            .Select(item => item.Id).ToList();
+        var customerPreferredCustomTagIds = customer.PreferredOrganizationTags
+            .Where(item => !string.IsNullOrWhiteSpace(item.Type) && item.Type.ToOrganizationTagType() == OrganizationTagType.Custom)
+            .Select(item => item.Id).ToList();
+
+        var resources = new List<Resource>();
+        foreach (var resource in availableResources.Where(item => customerPreferredResourceIds.Any(resourceId => resourceId == item.Id)))
+        {
+            resources.Add(resource);
+            if (resources.Count == quantity)
+            {
+                break;
+            }
+        }
+
+        if (resources.Count == quantity)
+        {
+            return resources;
+        }
+
+        foreach (var resource in availableResources.Where(item =>
+                     item.Location is not null && customerPreferredLocationIds.Any(locationId => locationId == item.Location.Id)))
+        {
+            resources.Add(resource);
+            if (resources.Count == quantity)
+            {
+                break;
+            }
+        }
+
+        if (resources.Count == quantity)
+        {
+            return resources;
+        }
+
+
+        foreach (var resource in availableResources.Where(item =>
+                     customerPreferredZoneTagIds.Any(tagId => item.OrganizationTags.Any(tag => tagId == tag.Id))))
+        {
+            resources.Add(resource);
+            if (resources.Count == quantity)
+            {
+                break;
+            }
+        }
+
+        if (resources.Count == quantity)
+        {
+            return resources;
+        }
+
+        foreach (var resource in availableResources.Where(item =>
+                     customerPreferredCustomTagIds.Any(tagId => item.OrganizationTags.Any(tag => tagId == tag.Id))))
+        {
+            resources.Add(resource);
+            if (resources.Count == quantity)
+            {
+                break;
+            }
+        }
+
+        if (resources.Count == quantity)
+        {
+            return resources;
+        }
+
+        var selectedResourceIds = resources.Select(item => item.Id).ToList();
+        var unselectedResources = availableResources.Where(item => !selectedResourceIds.Contains(item.Id)).ToList();
+
+        return resources.Concat(unselectedResources.Take(quantity - resources.Count)).ToList();
+    }
+
+    private async Task<ICollection<Resource>> GetAvailableResourcesAsync(
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<OrganizationTag> productTags,
+        CancellationToken cancellationToken) =>
+        await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+            null,
+            null,
+            from,
+            until,
+            [],
+            productTags.Select(item => item.Id).ToList(),
+            [],
+            cancellationToken);
+}

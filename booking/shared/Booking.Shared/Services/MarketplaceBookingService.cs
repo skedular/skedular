@@ -47,7 +47,7 @@ public class MarketplaceBookingService(
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
-    IPrivateBookingPreferenceService privateBookingPreferenceService,
+    IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
     IProductService productService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IMarketplaceBookingService
 {
@@ -66,14 +66,21 @@ public class MarketplaceBookingService(
         }
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        var productVersions = await productService.GetProductVersionsAsync(
+            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
         var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
             booking.From,
             booking.Until,
             resourceIds,
+            // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+            productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
             cancellationToken);
-        var productVersions = await productService.GetProductVersionsAsync(
-            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
-            cancellationToken);
+
+        if (productVersions.Any(item => item.ProductTags.Count == 0))
+        {
+            throw new ProductMissingProductTag();
+        }
 
         var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
         if (organizationIds.Count > 1)
@@ -124,22 +131,15 @@ public class MarketplaceBookingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        if (booking.InvolvedCustomers.Count == 1)
+        if (resources.Count == 0)
         {
-            (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                booking.InvolvedCustomers.First().Id,
+            resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
                 booking.From,
                 booking.Until,
-                booking.InvolvedOrganizations
-                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                    .Select(item => item.Id)
-                    .ToList(),
-                booking.InvolvedOrganizations
-                    .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                    .Select(item => item.UniqueAlphanumericName!)
-                    .ToList(),
-                organizations,
-                resources,
+                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                productVersions.Single(),
+                booking.LineItems.First().Quantity,
                 cancellationToken);
         }
 
@@ -245,11 +245,17 @@ public class MarketplaceBookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
 
+        var productVersions = await productService.GetProductVersionsAsync(
+            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
+
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
             booking.From,
             booking.Until,
             resourceIds,
+            // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+            productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
             cancellationToken);
 
         foreach (var resource in resources)

@@ -10,6 +10,7 @@ public interface IResourceService
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> resourceIds,
+        ICollection<string> tagIds,
         CancellationToken cancellationToken);
 }
 
@@ -19,6 +20,7 @@ public class ResourceService(IRepositoryFactory repositoryFactory) : IResourceSe
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> resourceIds,
+        ICollection<string> tagIds,
         CancellationToken cancellationToken)
     {
         if (resourceIds.Count == 0)
@@ -32,7 +34,7 @@ public class ResourceService(IRepositoryFactory repositoryFactory) : IResourceSe
             from,
             until,
             resourceIds,
-            [],
+            tagIds,
             [],
             cancellationToken);
 

@@ -56,6 +56,7 @@ internal static class BookingExtensions
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer)
             .Include(query => query.ProductVersions)
+            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.StripeCheckoutSession);
 
         internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects(bool isTracked) =>

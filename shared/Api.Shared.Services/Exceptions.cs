@@ -45,6 +45,10 @@ public class NoMoreInteractionAllowed()
 
 public class ResourceNotAvailable() : Exception("Resource not available");
 
+public class NoResourceAvailable() : Exception("No resource available");
+
+public class ProductMissingProductTag() : Exception("Product missing product tag");
+
 public class SlackWorkspaceNotFound() : Exception("Slack workspace not found");
 
 public class SlackWorkspaceMemberTypeNotSupported() : Exception("Slack workspace member type not supported");

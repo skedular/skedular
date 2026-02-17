@@ -104,17 +104,17 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
       })
       .required('Date is required'),
     quantity: number().min(1, 'At least one resource is required').required('Quantity is required'),
-    resources: array()
-      .min(1, 'At least one resource is required')
-      .required('Resource is required')
-      .test('less-equal-number-of-resources-to-book', `You have selected more resources than allowed for this product.`, function (value) {
-        const { quantity } = this.parent;
-        if (!quantity) {
-          return true;
-        }
+    resources: array().test('less-equal-number-of-resources-to-book', `You have selected more resources than allowed for this product.`, function (value) {
+      if (!value) {
+        return true;
+      }
+      const { quantity } = this.parent;
+      if (!quantity) {
+        return true;
+      }
 
-        return value?.length <= numberOfResourcesToBook * quantity;
-      }),
+      return value?.length <= numberOfResourcesToBook * quantity;
+    }),
     notes: string().notRequired(),
     category: string().required('Category is required'),
     paymentMethod: string().required('Payment method is required'),

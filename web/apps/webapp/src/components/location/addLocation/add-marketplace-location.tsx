@@ -95,7 +95,7 @@ const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
-  category: string().required('Category is required'),
+  type: string().required('Type is required'),
   locationTagIds: array().nullable(),
   locationSpaceTypeIds: array().nullable(),
   contactPeople: string().nullable(),

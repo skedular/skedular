@@ -51,6 +51,7 @@ public static class Extensions
                 .AddScoped<IResourceService, ResourceService>()
                 .AddScoped<IProductService, ProductService>()
                 .AddScoped<IPrivateBookingPreferenceService, PrivateBookingPreferenceService>()
+                .AddScoped<IMarketplaceBookingPreferenceService, MarketplaceBookingPreferenceService>()
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>();
 

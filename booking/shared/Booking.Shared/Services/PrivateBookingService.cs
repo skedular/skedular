@@ -64,6 +64,7 @@ public class PrivateBookingService(
             booking.From,
             booking.Until,
             resourceIds,
+            [],
             cancellationToken);
 
         booking.IsPaymentRequired = false;
@@ -73,21 +74,22 @@ public class PrivateBookingService(
 
         if (booking.InvolvedCustomers.Count == 1)
         {
-            (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                booking.InvolvedCustomers.First().Id,
-                booking.From,
-                booking.Until,
-                booking.InvolvedOrganizations
-                    .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                    .Select(item => item.Id)
-                    .ToList(),
-                booking.InvolvedOrganizations
-                    .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                    .Select(item => item.UniqueAlphanumericName!)
-                    .ToList(),
-                organizations,
-                resources,
-                cancellationToken);
+            if (resources.Count == 0)
+            {
+                (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    customerEntities.First(),
+                    booking.From,
+                    booking.Until,
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                        .Select(item => item.Id)
+                        .ToList(),
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                        .Select(item => item.UniqueAlphanumericName!)
+                        .ToList(),
+                    cancellationToken);
+            }
         }
 
         foreach (var resource in resources)
@@ -175,6 +177,7 @@ public class PrivateBookingService(
             booking.From,
             booking.Until,
             resourceIds,
+            [],
             cancellationToken);
 
         foreach (var resource in resources)

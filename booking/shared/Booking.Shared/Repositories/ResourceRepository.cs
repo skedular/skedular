@@ -113,9 +113,11 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
                              (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&
-                            (tagIds.Count == 0 || tagIds.All(tagId => query.Resource.OrganizationTags.Select(tag => tag.Id).Contains(tagId))) &&
+                            (tagIds.Count == 0 || tagIds.All(tagId =>
+                                query.Resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue).Select(tag => tag.Id).Contains(tagId))) &&
                             (tagTypes.Count == 0 ||
-                             tagTypes.All(tagType => query.Resource.OrganizationTags.Select(tag => tag.Type).Contains(tagType))))
+                             tagTypes.All(tagType =>
+                                 query.Resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue).Select(tag => tag.Type).Contains(tagType))))
             .Include(query => query.Bookings)
             .Include(query => query.Resource)
             .AsNoTracking()
@@ -135,7 +137,8 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .ThenInclude(query => query.Bookings)
             .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
             .ThenInclude(query => query.Customers)
-            .Include(query => query.OrganizationTags)
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.Location)
             .OrderBy(query => query.Id)
             .ToListAsync(cancellationToken);
 

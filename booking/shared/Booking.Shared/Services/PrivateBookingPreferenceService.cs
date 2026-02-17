@@ -1,4 +1,3 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -9,34 +8,24 @@ namespace Booking.Shared.Services;
 public interface IPrivateBookingPreferenceService
 {
     Task<(ICollection<Organization>, ICollection<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
-        string customerId,
+        Customer customer,
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> involvedOrganizationIds,
         ICollection<string> involvedOrganizationUniqueAlphanumericNames,
-        ICollection<Organization> organizations,
-        ICollection<Resource> resources,
         CancellationToken cancellationToken);
 }
 
 public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactory) : IPrivateBookingPreferenceService
 {
     public async Task<(ICollection<Organization>, ICollection<Resource>)> PickResourceBasedOnCustomerPreferencesAsync(
-        string customerId,
+        Customer customer,
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> involvedOrganizationIds,
         ICollection<string> involvedOrganizationUniqueAlphanumericNames,
-        ICollection<Organization> organizations,
-        ICollection<Resource> resources,
         CancellationToken cancellationToken)
     {
-        if (resources.Count != 0)
-        {
-            return (organizations, resources);
-        }
-
-        var customer = await GetCustomerAsync(customerId, cancellationToken);
         var (organization, location) = await ResolveOrganizationAndLocationAsync(
             involvedOrganizationIds.FirstOrDefault(),
             involvedOrganizationUniqueAlphanumericNames.FirstOrDefault(),
@@ -44,17 +33,14 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             cancellationToken);
         if (location is null)
         {
-            return (ToOrganizations(organization), resources);
+            return (ToOrganizations(organization), []);
         }
 
         var availableResources = await GetAvailableDeskResourcesAsync(from, until, location.Id, cancellationToken);
-        resources = SelectResourcesByCustomerPreferences(customer, availableResources);
+        var resources = SelectResourcesByCustomerPreferences(customer, availableResources);
 
         return (ToOrganizations(organization), resources);
     }
-
-    private async Task<CustomerEntity> GetCustomerAsync(string customerId, CancellationToken cancellationToken) =>
-        await repositoryFactory.CustomerRepository.GetByIdAsync(customerId, true, cancellationToken) ?? throw new CustomerNotFound();
 
     private async Task<(Organization?, Location?)> ResolveOrganizationAndLocationAsync(
         string? organizationId,
