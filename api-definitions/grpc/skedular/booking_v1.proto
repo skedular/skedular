@@ -15,9 +15,9 @@ service BookingService {
   rpc GetOrganizationPermissions (GetOrganizationPermissionsInput) returns (OrganizationPermissions);
   rpc GetTeamPermissions (GetTeamPermissionsInput) returns (TeamPermissions);
   rpc Get (GetInput) returns (Booking);
-  rpc Add (AddInput) returns (Booking);
-  rpc Update (UpdateInput) returns (Booking);
-  rpc Delete (DeleteInput) returns (Booking);
+  rpc AddPrivate (AddPrivateInput) returns (Booking);
+  rpc UpdatePrivate (UpdatePrivateInput) returns (Booking);
+  rpc DeletePrivate (DeletePrivateInput) returns (Booking);
   rpc GetAvailableResources (GetAvailableResourcesInput) returns (AvailableResources);
 }
 
@@ -211,7 +211,7 @@ message GetInput {
   string id = 1;
 }
 
-message AddInput {
+message AddPrivateInput {
   string id = 1;
   google.protobuf.Timestamp from = 2;
   google.protobuf.Timestamp until = 3;
@@ -223,7 +223,7 @@ message AddInput {
   repeated string resourceIds = 9;
 }
 
-message UpdateInput {
+message UpdatePrivateInput {
   string id = 1;
   google.protobuf.Timestamp from = 2;
   google.protobuf.Timestamp until = 3;
@@ -235,7 +235,7 @@ message UpdateInput {
   repeated string resourceIds = 9;
 }
 
-message DeleteInput {
+message DeletePrivateInput {
   string id = 1;
 }
 

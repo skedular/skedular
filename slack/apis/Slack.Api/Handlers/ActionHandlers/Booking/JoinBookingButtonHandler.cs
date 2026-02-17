@@ -49,7 +49,7 @@ public class JoinBookingButtonHandler(
             InvolvedTeams = existingBooking.InvolvedTeams.Select(item => new Shared.Models.Team { Id = item.Id }).ToList()
         };
 
-        await bookingService.AddAsync(workspaceMember.Id, booking, cancellationToken);
+        await bookingService.AddPrivateAsync(workspaceMember.Id, booking, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

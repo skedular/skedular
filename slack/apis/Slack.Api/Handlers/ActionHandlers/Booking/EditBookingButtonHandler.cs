@@ -241,7 +241,7 @@ public class EditBookingButtonHandler(
             throw new InvalidOperationException("notes block is missing");
         }
 
-        await bookingService.UpdateAsync(workspaceMember.Id, booking, cancellationToken);
+        await bookingService.UpdatePrivateAsync(workspaceMember.Id, booking, cancellationToken);
 
         await pageNavigator.BackAsync(workspace, workspaceMember, new CommonPageContext(context.PageContext), viewSubmission.Hash, cancellationToken);
 

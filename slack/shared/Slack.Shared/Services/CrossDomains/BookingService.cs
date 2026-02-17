@@ -29,9 +29,9 @@ public interface IBookingService
         CancellationToken cancellationToken);
 
     Task<Booking> GetAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken);
-    Task<Booking> AddAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken);
-    Task<Booking> UpdateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken);
-    Task RemoveAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken);
+    Task<Booking> AddPrivateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken);
+    Task<Booking> UpdatePrivateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken);
+    Task DeletePrivateAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken);
 
     Task<Connection<BookingEdge>> GetPaginatedBookingsAsync(
         string workspaceMemberId,
@@ -149,9 +149,9 @@ public class BookingService(
                 _cacheEntryOptions))!,
             cancellationToken);
 
-    public async Task<Booking> AddAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken)
+    public async Task<Booking> AddPrivateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken)
     {
-        var addInput = new AddInput
+        var addInput = new AddPrivateInput
         {
             Id = booking.Id,
             From = booking.From.ToTimestamp(),
@@ -179,7 +179,7 @@ public class BookingService(
         addInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
         var mappedBooking = mapper.MapTo(
-            await bookingServiceClient.AddAsync(
+            await bookingServiceClient.AddPrivateAsync(
                 addInput,
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -189,9 +189,9 @@ public class BookingService(
         return await EnrichAsync(workspaceMemberId, mappedBooking, cancellationToken);
     }
 
-    public async Task<Booking> UpdateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken)
+    public async Task<Booking> UpdatePrivateAsync(string workspaceMemberId, Booking booking, CancellationToken cancellationToken)
     {
-        var updateInput = new UpdateInput
+        var updateInput = new UpdatePrivateInput
         {
             Id = booking.Id,
             From = booking.From.ToTimestamp(),
@@ -219,7 +219,7 @@ public class BookingService(
         updateInput.ResourceIds.AddRange(booking.Resources.Select(item => item.Id));
 
         var mappedBooking = mapper.MapTo(
-            await bookingServiceClient.UpdateAsync(
+            await bookingServiceClient.UpdatePrivateAsync(
                 updateInput,
                 bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
                 cancellationToken: cancellationToken));
@@ -229,10 +229,10 @@ public class BookingService(
         return await EnrichAsync(workspaceMemberId, mappedBooking, cancellationToken);
     }
 
-    public async Task RemoveAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken)
+    public async Task DeletePrivateAsync(string workspaceMemberId, string bookingId, CancellationToken cancellationToken)
     {
-        await bookingServiceClient.DeleteAsync(
-            new DeleteInput { Id = bookingId },
+        await bookingServiceClient.DeletePrivateAsync(
+            new DeletePrivateInput { Id = bookingId },
             bookingConfiguration.ApiKey.CreateMetadata(workspaceMemberId),
             cancellationToken: cancellationToken);
 

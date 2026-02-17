@@ -48,7 +48,7 @@ public class InstantAddBookingButtonHandler(
 
         if (context.InitiationSource == InitiationSource.App)
         {
-            _ = await bookingService.AddAsync(
+            _ = await bookingService.AddPrivateAsync(
                 workspaceMember.Id,
                 new Shared.Models.Booking
                 {
@@ -109,7 +109,7 @@ public class InstantAddBookingButtonHandler(
         var slackApiClient = workspace.GetApiClient();
         if (bookingConnection.TotalCount == 0)
         {
-            var booking = await bookingService.AddAsync(
+            var booking = await bookingService.AddPrivateAsync(
                 workspaceMember.Id,
                 new Shared.Models.Booking
                 {

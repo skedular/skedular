@@ -31,8 +31,8 @@ public interface IMapper
     Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
     Shared.Models.Location? MapTo(Location? src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
-    Shared.Models.Booking MapTo(AddInput src);
-    Shared.Models.Booking MapTo(UpdateInput src);
+    Shared.Models.Booking MapTo(AddPrivateInput src);
+    Shared.Models.Booking MapTo(UpdatePrivateInput src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
@@ -272,7 +272,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         return booking;
     }
 
-    public Shared.Models.Booking MapTo(AddInput src)
+    public Shared.Models.Booking MapTo(AddPrivateInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
 
@@ -306,7 +306,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
     }
 
-    public Shared.Models.Booking MapTo(UpdateInput src)
+    public Shared.Models.Booking MapTo(UpdatePrivateInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
 

@@ -220,7 +220,7 @@ public class AddBookingButtonHandler(
             throw new InvalidOperationException("notes block is missing");
         }
 
-        await bookingService.AddAsync(workspaceMember.Id, booking, cancellationToken);
+        await bookingService.AddPrivateAsync(workspaceMember.Id, booking, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

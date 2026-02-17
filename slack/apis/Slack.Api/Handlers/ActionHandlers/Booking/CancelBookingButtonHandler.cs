@@ -33,7 +33,7 @@ public class CancelBookingButtonHandler(
         var workspaceMember = mapper.MapTo(workspaceMemberEntity, workspace);
         var context = CancelBookingContext.Deserialize(action.Value);
 
-        await bookingService.RemoveAsync(workspaceMember.Id, context.BookingId, cancellationToken);
+        await bookingService.DeletePrivateAsync(workspaceMember.Id, context.BookingId, cancellationToken);
 
         await pageNavigator.BackAsync(
             workspace,

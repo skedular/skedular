@@ -213,21 +213,27 @@ public class BookingGrpcService(
         return mapper.MapToGrpcResponse(await bookingService.GetByIdAsync(request.Id, context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Add(AddInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> AddPrivate(
+        AddPrivateInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await privateBookingService.AddAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Update(UpdateInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> UpdatePrivate(
+        UpdatePrivateInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
         return mapper.MapToGrpcResponse(await privateBookingService.UpdateAsync(mapper.MapTo(request), context.CancellationToken));
     }
 
-    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> Delete(DeleteInput request, ServerCallContext context)
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking> DeletePrivate(
+        DeletePrivateInput request,
+        ServerCallContext context)
     {
         grpcAuthenticator.VerifyAndEnrich(bookingConfiguration.ApiKey);
 
