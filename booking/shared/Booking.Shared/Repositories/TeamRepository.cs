@@ -2,6 +2,7 @@
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace Booking.Shared.Repositories;
 
@@ -9,10 +10,28 @@ public interface ITeamRepository : IRepository<Team>
 {
     Task<Team> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
+    Task<Team?> GetByIdUntrackedAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Task<ICollection<Team>> GetByIdsAsync(ICollection<string> ids, bool includeDeletedTeamMembers, CancellationToken cancellationToken);
     Team Update(Team team);
     Team Remove(Team team);
     Task<ICollection<Team>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+}
+
+internal static class TeamExtensions
+{
+    extension(IQueryable<Team> originalQuery)
+    {
+        internal IIncludableQueryable<Team, Customer> AddDependentObjects(
+            bool isTracked,
+            bool includeDeletedTeamMembers) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.Organization)
+            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer);
+    }
 }
 
 public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -27,12 +46,12 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
 
     public async Task<Team?> GetByIdAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken) =>
         await DbContext.Team
-            .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.Organization)
-            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
+            .AddDependentObjects(true, includeDeletedTeamMembers)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<Team?> GetByIdUntrackedAsync(string id, bool includeDeletedTeamMembers, CancellationToken cancellationToken) =>
+        await DbContext.Team
+            .AddDependentObjects(false, includeDeletedTeamMembers)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Team>> GetByIdsAsync(
@@ -41,12 +60,7 @@ public class TeamRepository(BookingDbContext dbContext, TimeProvider timeProvide
         CancellationToken cancellationToken) =>
         await DbContext.Team
             .Where(query => ids.Contains(query.Id))
-            .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
-            .ThenInclude(query => query.Identities)
-            .Include(query => query.Organization)
-            .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customer)
+            .AddDependentObjects(true, includeDeletedTeamMembers)
             .ToListAsync(cancellationToken);
 
     public Team Update(Team team)

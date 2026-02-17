@@ -22,7 +22,7 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.TeamRepository.GetByIdAsync(id, false, ct) ?? throw new TeamNotFound(),
+                async ct => await repositoryFactory.TeamRepository.GetByIdUntrackedAsync(id, false, ct) ?? throw new TeamNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -38,7 +38,7 @@ public class CachedTeamService(ApplicationConfiguration applicationConfiguration
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.TeamRepository.GetByIdAsync(id, false, cancellationToken) ?? throw new TeamNotFound(),
+            await repositoryFactory.TeamRepository.GetByIdUntrackedAsync(id, false, cancellationToken) ?? throw new TeamNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }

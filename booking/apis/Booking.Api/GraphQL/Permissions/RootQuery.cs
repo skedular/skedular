@@ -14,13 +14,16 @@ public class RootQuery
         [Service] IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
         {
             return new OrganizationBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
         }
 
-        var permissions =
-            await organizationAuthorizationService.GetPermissionsAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken);
+        var permissions = await organizationAuthorizationService.GetPermissionsAsync(
+            organizationId,
+            organizationUniqueAlphanumericName,
+            cancellationToken);
+
         return new OrganizationBookingPermissions
         {
             CanViewBookings = permissions.CanViewBookings,

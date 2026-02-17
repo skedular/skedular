@@ -25,6 +25,13 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
+    Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken);
+
     Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
         ICollection<string>? ids,
         ICollection<string>? uniqueAlphanumericNames,
@@ -41,19 +48,20 @@ internal static class OrganizationExtensions
     extension(IQueryable<Organization> originalQuery)
     {
         internal IIncludableQueryable<Organization, IEnumerable<Customer>> AddDependentObjects(
+            bool isTracked,
             bool includeDeletedOrganizationMembers,
             bool includeDeletedOrganizationTags) =>
-            originalQuery
-                .Include(query => query.OrganizationSsoSettings)
-                .Include(query =>
-                    query.OrganizationMembers.Where(organizationMember =>
-                        includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
-                .ThenInclude(query => query.Customer)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
-                .Include(query => query.Locations)
-                .Include(query => query.Teams)
-                .Include(query => query.DefaultedByCustomers);
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.OrganizationSsoSettings)
+            .Include(query =>
+                query.OrganizationMembers.Where(organizationMember =>
+                    includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
+            .Include(query => query.Locations)
+            .Include(query => query.Teams)
+            .Include(query => query.DefaultedByCustomers);
     }
 }
 
@@ -77,7 +85,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 query.OrganizationMembers
                     .Where(item => includeDeletedOrganizationMembers || (!item.DeletedAt.HasValue && item.CustomerId == customerId))
                     .Select(item => item.Customer.Id).Contains(customerId))
-            .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+            .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
             .ToListAsync(cancellationToken);
 
     public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
@@ -90,14 +98,40 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         if (!string.IsNullOrWhiteSpace(id))
         {
             return await DbContext.Organization
-                .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
         if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
         {
             return await DbContext.Organization
-                .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .FirstOrDefaultAsync(
+                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    cancellationToken);
+        }
+
+        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+    }
+
+    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        bool includeDeletedOrganizationMembers,
+        bool includeDeletedOrganizationTags,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(id))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+        }
+
+        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        {
+            return await DbContext.Organization
+                .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(
                     query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
                     cancellationToken);
@@ -122,7 +156,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
             return await DbContext.Organization
                 .Where(query => ids.Contains(query.Id) && query.UniqueAlphanumericName != null &&
                                 uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
-                .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .ToListAsync(cancellationToken);
         }
 
@@ -132,7 +166,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
 
             return await DbContext.Organization
                 .Where(query => ids.Contains(query.Id))
-                .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .ToListAsync(cancellationToken);
         }
 
@@ -142,7 +176,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
 
             return await DbContext.Organization
                 .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
-                .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
+                .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .ToListAsync(cancellationToken);
         }
 
@@ -162,15 +196,4 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         organization.DeletedAt = now;
         return DbContext.Organization.Update(organization).Entity;
     }
-
-    public async Task<Organization?> GetByUniqueAlphanumericNameAsync(
-        string uniqueAlphanumericName,
-        bool includeDeletedOrganizationMembers,
-        bool includeDeletedOrganizationTags,
-        CancellationToken cancellationToken) =>
-        await DbContext.Organization
-            .AddDependentObjects(includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
-            .FirstOrDefaultAsync(
-                query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
-                cancellationToken);
 }
