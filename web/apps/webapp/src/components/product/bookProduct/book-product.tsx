@@ -252,11 +252,13 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               }
             }
           }
-          paymentMethod {
-            type
-            name
+          marketplaceBooking {
+            paymentMethod {
+              type
+              name
+            }
+            invoiceEmailList
           }
-          invoiceEmailList
         }
       }
     }
@@ -599,11 +601,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             ],
             involvedOrganizations: [],
             bookingResources: [],
-            paymentMethod: {
-              type: paymentMethod as PaymentMethod,
-              name: '',
+            marketplaceBooking: {
+              id: uuid(),
+              paymentMethod: {
+                type: paymentMethod as PaymentMethod,
+                name: '',
+              },
+              invoiceEmailList,
             },
-            invoiceEmailList,
           },
         },
       },

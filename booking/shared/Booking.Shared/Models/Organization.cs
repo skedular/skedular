@@ -21,7 +21,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public ICollection<Product> Products { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<Booking> PaidBookings { get; set; } = [];
+    public ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public ICollection<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
 }

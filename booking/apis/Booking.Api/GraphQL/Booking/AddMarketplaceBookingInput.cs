@@ -21,6 +21,6 @@ public class AddMarketplaceBookingInput
     [GraphQLName("category")] public BookingCategory Category { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string> ResourceIds { get; set; } = [];
     [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
-    [GraphQLName("paymentMethod")] public PaymentMethod? PaymentMethod { get; set; }
+    [GraphQLName("paymentMethod")] public PaymentMethod PaymentMethod { get; set; }
     [GraphQLName("invoiceEmailList")] public IEnumerable<string> InvoiceEmailList { get; set; } = [];
 }

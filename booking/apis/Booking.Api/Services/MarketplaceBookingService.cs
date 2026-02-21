@@ -27,14 +27,18 @@ public class MarketplaceBookingService(
 {
     public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
     {
+        var marketplaceBooking = booking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
         if (booking.InvolvedCustomers.Count == 0)
         {
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
         }
 
-        if (booking.LineItems.Count == 0 || booking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
+        if (marketplaceBooking.LineItems.Count == 0 ||
+            marketplaceBooking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
         {
-            throw new ArgumentException(nameof(booking.LineItems));
+            throw new ArgumentException(nameof(marketplaceBooking.LineItems));
         }
 
         var verifiableToken = context.GetVerifiableToken();

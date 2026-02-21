@@ -50,14 +50,18 @@ internal static class BookingExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedTeams)
             .Include(query => query.InvolvedResources)
-            .Include(query => query.PaidByCustomer)
-            .Include(query => query.PaidByOrganization)
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer)
-            .Include(query => query.ProductVersions)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.PaidByCustomer)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.PaidByOrganization)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.ProductVersions)
             .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.StripeCheckoutSession);
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.StripeCheckoutSession);
 
         internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
@@ -69,13 +73,17 @@ internal static class BookingExtensions
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedTeams)
             .Include(query => query.InvolvedResources)
-            .Include(query => query.PaidByCustomer)
-            .Include(query => query.PaidByOrganization)
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer)
-            .Include(query => query.ProductVersions)
-            .Include(query => query.StripeCheckoutSession);
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.PaidByCustomer)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.PaidByOrganization)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.ProductVersions)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.StripeCheckoutSession);
 
         internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria,
             TimeProvider timeProvider)
@@ -146,7 +154,8 @@ internal static class BookingExtensions
             if (searchCriteria.PaymentStatuses.Count != 0)
             {
                 originalQuery = originalQuery.Where(item =>
-                    searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus()).Contains(item.PaymentStatus));
+                    item.MarketplaceBooking != null && searchCriteria.PaymentStatuses.Select(paymentStatus => paymentStatus.ToPaymentStatus())
+                        .Contains(item.MarketplaceBooking.PaymentStatus));
             }
 
             if (searchCriteria.OrganizationIds.Count != 0)
@@ -219,9 +228,6 @@ internal static class BookingExtensions
                 BookingOrderField.Category => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Category)
                     : originalQuery.OrderByDescending(x => x.Category),
-                BookingOrderField.PaymentStatus => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.PaymentStatus)
-                    : originalQuery.OrderByDescending(x => x.PaymentStatus),
                 BookingOrderField.Channel => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Channel)
                     : originalQuery.OrderByDescending(x => x.Channel),
@@ -241,9 +247,6 @@ internal static class BookingExtensions
                     BookingOrderField.Category => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Category)
                         : query.ThenByDescending(x => x.Category),
-                    BookingOrderField.PaymentStatus => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.PaymentStatus)
-                        : query.ThenByDescending(x => x.PaymentStatus),
                     BookingOrderField.Channel => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Channel)
                         : query.ThenByDescending(x => x.Channel),

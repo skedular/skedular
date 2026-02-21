@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<133e524fbdce4dcc2e6e8ff339551408>>
+ * @generated SignedSource<<4ef40a17b253ec9963b2a1c03238d857>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,6 @@ export type myBookingCard_BookingDetails$data = {
   }>;
   readonly from: any;
   readonly id: string;
-  readonly invoiceUrl: string | null | undefined;
   readonly involvedCustomers: ReadonlyArray<{
     readonly familyName: string | null | undefined;
     readonly givenName: string | null | undefined;
@@ -48,12 +47,15 @@ export type myBookingCard_BookingDetails$data = {
     readonly id: string;
     readonly name: string;
   }>;
-  readonly isPaymentRequired: boolean;
+  readonly marketplaceBooking: {
+    readonly invoiceUrl: string | null | undefined;
+    readonly isPaymentRequired: boolean;
+    readonly paymentStatus: {
+      readonly name: string;
+      readonly type: PaymentStatus;
+    };
+  } | null | undefined;
   readonly notes: string | null | undefined;
-  readonly paymentStatus: {
-    readonly name: string;
-    readonly type: PaymentStatus;
-  };
   readonly until: any;
   readonly " $fragmentType": "myBookingCard_BookingDetails";
 };
@@ -230,34 +232,45 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "isPaymentRequired",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PaymentStatusDetails",
+      "concreteType": "MarketplaceBookingDetails",
       "kind": "LinkedField",
-      "name": "paymentStatus",
+      "name": "marketplaceBooking",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "type",
+          "name": "isPaymentRequired",
           "storageKey": null
         },
-        (v1/*: any*/)
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PaymentStatusDetails",
+          "kind": "LinkedField",
+          "name": "paymentStatus",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "invoiceUrl",
+          "storageKey": null
+        }
       ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "invoiceUrl",
       "storageKey": null
     }
   ],
@@ -266,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc81499b0da4f4539d4b4fad4c550813";
+(node as any).hash = "da43797ce526d2506351e78384e3e6d3";
 
 export default node;

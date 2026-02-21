@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3a9a6bdd7313c39aa6701c7f7edf3a09>>
+ * @generated SignedSource<<12495d8f53346dd07f3886dc7f22d184>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,10 +21,12 @@ export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation$data = {
   readonly makeBookingPaymentNotRequired: {
     readonly booking: {
       readonly id: string;
-      readonly paymentStatus: {
-        readonly name: string;
-        readonly type: PaymentStatus;
-      };
+      readonly marketplaceBooking: {
+        readonly paymentStatus: {
+          readonly name: string;
+          readonly type: PaymentStatus;
+        };
+      } | null | undefined;
     };
   };
 };
@@ -32,10 +34,13 @@ export type payMarketplaceBooking_makeBookingPaymentNotRequiredMutation$rawRespo
   readonly makeBookingPaymentNotRequired: {
     readonly booking: {
       readonly id: string;
-      readonly paymentStatus: {
-        readonly name: string;
-        readonly type: PaymentStatus;
-      };
+      readonly marketplaceBooking: {
+        readonly id: string;
+        readonly paymentStatus: {
+          readonly name: string;
+          readonly type: PaymentStatus;
+        };
+      } | null | undefined;
     };
   };
 };
@@ -55,54 +60,77 @@ var v0 = [
 ],
 v1 = [
   {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "BookingPayload",
-    "kind": "LinkedField",
-    "name": "makeBookingPaymentNotRequired",
-    "plural": false,
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PaymentStatusDetails",
+  "kind": "LinkedField",
+  "name": "paymentStatus",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "type",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "payMarketplaceBooking_makeBookingPaymentNotRequiredMutation",
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "BookingDetails",
+        "args": (v1/*: any*/),
+        "concreteType": "BookingPayload",
         "kind": "LinkedField",
-        "name": "booking",
+        "name": "makeBookingPaymentNotRequired",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PaymentStatusDetails",
+            "concreteType": "BookingDetails",
             "kind": "LinkedField",
-            "name": "paymentStatus",
+            "name": "booking",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
+                "concreteType": "MarketplaceBookingDetails",
+                "kind": "LinkedField",
+                "name": "marketplaceBooking",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/)
+                ],
                 "storageKey": null
               }
             ],
@@ -112,16 +140,6 @@ v1 = [
         "storageKey": null
       }
     ],
-    "storageKey": null
-  }
-];
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "payMarketplaceBooking_makeBookingPaymentNotRequiredMutation",
-    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -130,19 +148,56 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "payMarketplaceBooking_makeBookingPaymentNotRequiredMutation",
-    "selections": (v1/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "BookingPayload",
+        "kind": "LinkedField",
+        "name": "makeBookingPaymentNotRequired",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "BookingDetails",
+            "kind": "LinkedField",
+            "name": "booking",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MarketplaceBookingDetails",
+                "kind": "LinkedField",
+                "name": "marketplaceBooking",
+                "plural": false,
+                "selections": [
+                  (v3/*: any*/),
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "430e5d218572a51c32ff5280ef965617",
+    "cacheID": "4f387e62134b30b214ca067608094009",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_makeBookingPaymentNotRequiredMutation",
     "operationKind": "mutation",
-    "text": "mutation payMarketplaceBooking_makeBookingPaymentNotRequiredMutation(\n  $input: MakeBookingPaymentNotRequiredInput!\n) {\n  makeBookingPaymentNotRequired(input: $input) {\n    booking {\n      id\n      paymentStatus {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation payMarketplaceBooking_makeBookingPaymentNotRequiredMutation(\n  $input: MakeBookingPaymentNotRequiredInput!\n) {\n  makeBookingPaymentNotRequired(input: $input) {\n    booking {\n      id\n      marketplaceBooking {\n        paymentStatus {\n          type\n          name\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1b9b971e8e2b0d29e36c52589769152c";
+(node as any).hash = "eb948467f1a671e531b9dc657a4edb7c";
 
 export default node;

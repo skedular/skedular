@@ -10,6 +10,8 @@ using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
+using Enterprise.Shared.Random;
+using Enterprise.Shared.Time;
 using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Services;
@@ -43,13 +45,14 @@ public class MarketplaceBookingService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
     IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
     IProductService productService,
-    IGraphQlTopicEventSender graphQlTopicEventSender) : IMarketplaceBookingService
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    TimeProvider timeProvider,
+    IRandomHelper randomHelper) : IMarketplaceBookingService
 {
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
@@ -65,9 +68,12 @@ public class MarketplaceBookingService(
             throw new CustomerNotFound();
         }
 
+        var marketplaceBooking = booking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
         var productVersions = await productService.GetProductVersionsAsync(
-            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
             cancellationToken);
         var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
             booking.From,
@@ -96,7 +102,7 @@ public class MarketplaceBookingService(
         }
 
         // TODO: 20260211 : Morteza: The current implementation does not work when different products with different resources are selected, as it only validates the total quantity and ignores the requested resource types.
-        var maxAllowedResourcesToBook = booking.LineItems
+        var maxAllowedResourcesToBook = marketplaceBooking.LineItems
             .Select(item =>
             {
                 var matchedProductVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
@@ -109,16 +115,12 @@ public class MarketplaceBookingService(
             throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
         }
 
-        booking.IsPaymentRequired = true;
-        booking.PaymentStatus = PaymentStatus.Pending;
-
-        if (!booking.PaymentMethod.HasValue)
-        {
-            throw new PaymentMethodRequired();
-        }
+        marketplaceBooking.Id = randomHelper.Generate();
+        marketplaceBooking.IsPaymentRequired = true;
+        marketplaceBooking.PaymentStatus = PaymentStatus.Pending;
 
         if (productVersions.Any(item =>
-                !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(booking.PaymentMethod.Value.ToPaymentMethod())))
+                !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(marketplaceBooking.PaymentMethod.ToPaymentMethod())))
         {
             throw new BookingPaymentMethodNotAccepted();
         }
@@ -139,7 +141,7 @@ public class MarketplaceBookingService(
                 booking.Until,
                 // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
                 productVersions.Single(),
-                booking.LineItems.First().Quantity,
+                marketplaceBooking.LineItems.First().Quantity,
                 cancellationToken);
         }
 
@@ -165,6 +167,22 @@ public class MarketplaceBookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
+        var marketplaceBookingEntity = mapper.MapTo(
+            marketplaceBooking,
+            customer,
+            null,
+            productVersions,
+            null);
+
+        var paymentExpiry = timeProvider
+            .GetUtcNow()
+            .TrimAllAfterSeconds()
+            .AddMinutes(GetBookingPaymentExpiryInMinutes(productVersions, marketplaceBooking.PaymentMethod));
+
+        marketplaceBookingEntity.PaymentExpiry = paymentExpiry;
+
+        marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
+
         var bookingEntity = mapper.MapTo(
             booking,
             customerEntities,
@@ -172,37 +190,35 @@ public class MarketplaceBookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            booking.IsPaymentRequired ? customer : null,
-            null,
             customer,
             null,
             null,
-            productVersions,
-            null);
+            marketplaceBookingEntity);
 
         bookingEntity.Channel = BookingChannelConstants.Marketplace;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
+
+        booking = mapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
-        switch (booking.PaymentMethod)
+        switch (marketplaceBooking.PaymentMethod)
         {
             case PaymentMethod.Card:
                 temporalOutboxService.StartWorkflowPayBookingViaCard(
                     new PayBookingViaCardInput(
                         booking.Id,
-                        booking.PaymentExpiry,
-                        booking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
+                        paymentExpiry,
+                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
                 break;
 
             case PaymentMethod.BankTransfer:
                 temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
                     new PayBookingViaBankTransferInput(
                         booking.Id,
-                        booking.PaymentExpiry,
-                        booking.InvoiceEmailList.ToSafeCollection()),
+                        paymentExpiry,
+                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
                     repositoryFactory.UnitOfWork);
                 break;
 
@@ -245,8 +261,11 @@ public class MarketplaceBookingService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
 
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
         var productVersions = await productService.GetProductVersionsAsync(
-            booking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
             cancellationToken);
 
         var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
@@ -280,19 +299,6 @@ public class MarketplaceBookingService(
             repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
         }
 
-        booking.LineItems = existingBooking.LineItems;
-        booking.Channel = existingBooking.Channel.ToBookingChannel();
-        booking.IsPaymentRequired = existingBooking.IsPaymentRequired;
-        booking.PaymentStatus = existingBooking.PaymentStatus.ToPaymentStatus();
-        booking.PaymentMethod = existingBooking.PaymentMethod.ToNullablePaymentMethod();
-        booking.InvoiceUrl = existingBooking.InvoiceUrl;
-        booking.InvoiceNumber = existingBooking.InvoiceNumber;
-        booking.TotalAmountExcludeTax = existingBooking.TotalAmountExcludeTax;
-        booking.TaxAmount = existingBooking.TaxAmount;
-        booking.TaxRatePercentage = existingBooking.TaxRatePercentage;
-        booking.TotalAmount = existingBooking.TotalAmount;
-        booking.Currency = existingBooking.Currency;
-
         var bookingEntity = mapper.MergeTo(
             booking,
             existingBooking,
@@ -301,16 +307,13 @@ public class MarketplaceBookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            null,
-            null,
             existingBooking.CreatedByCustomer,
             lastModifiedByCustomer,
             null,
-            existingBooking.ProductVersions,
-            existingBooking.StripeCheckoutSession);
+            existingBooking.MarketplaceBooking);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(bookingEntity));
+        booking = mapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -340,20 +343,16 @@ public class MarketplaceBookingService(
 
         existingBooking.DeletedByCustomer = deletedByCustomer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(
-            repositoryFactory.BookingRepository.Remove(existingBooking),
-            bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));
+        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
-        if (existingBooking.IsPaymentRequired)
-        {
-            if (!deletedBooking.PaymentMethod.HasValue)
-            {
-                throw new PaymentMethodRequired();
-            }
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-            switch (deletedBooking.PaymentMethod)
+        if (marketplaceBooking.IsPaymentRequired)
+        {
+            switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
             {
                 case PaymentMethod.Card:
                     temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
@@ -382,4 +381,19 @@ public class MarketplaceBookingService(
             .GroupBy(item => item!.Id)
             .Select(item => item.First())
             .ToList()!;
+
+    private static int GetBookingPaymentExpiryInMinutes(ICollection<ProductVersion> productVersions, PaymentMethod paymentMethod) =>
+        productVersions.Count == 0
+            ? paymentMethod switch
+            {
+                PaymentMethod.Card => Api.Shared.Services.Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard,
+                PaymentMethod.BankTransfer => Api.Shared.Services.Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer,
+                _ => throw new ArgumentOutOfRangeException()
+            }
+            : paymentMethod switch
+            {
+                PaymentMethod.Card => productVersions.Select(item => item.MaxAllowedResourcesLockTimePaidViaCard).Min(),
+                PaymentMethod.BankTransfer => productVersions.Select(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer).Min(),
+                _ => throw new ArgumentOutOfRangeException()
+            };
 }

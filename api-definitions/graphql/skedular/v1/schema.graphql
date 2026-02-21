@@ -37,40 +37,20 @@ type BookingCheckoutSessionDetails {
 }
 
 type BookingDetails {
-  bookingCheckoutSession: BookingCheckoutSessionDetails
   bookingResources: [BookingResourceDetails!]!
   category: BookingCategoryDetails!
   channel: BookingChannelDetails!
   createdByCustomer: CustomerDetails
-  currency: String
-  currencyToDisplay: String!
   deletedByCustomer: CustomerDetails
   from: DateTime!
   id: ID!
-  invoiceEmailList: [String!]!
-  invoiceNumber: String
-  invoiceUrl: String
   involvedCustomers: [CustomerDetails!]!
   involvedLocations: [LocationDetails!]!
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
-  isPaymentRequired: Boolean!
   lastModifiedByCustomer: CustomerDetails
-  lineItems: [LineItemDetails!]!
+  marketplaceBooking: MarketplaceBookingDetails
   notes: String
-  paidByCustomer: CustomerDetails
-  paidByOrganization: OrganizationDetails
-  paymentExpiry: DateTime!
-  paymentMethod: PaymentMethodTypeDetails
-  paymentStatus: PaymentStatusDetails! @cost(weight: "10")
-  taxAmount: Decimal
-  taxAmountToDisplay: String!
-  taxRatePercentage: Decimal
-  taxRatePercentageToDisplay: String!
-  totalAmount: Decimal
-  totalAmountExcludeTax: Decimal
-  totalAmountExcludeTaxToDisplay: String!
-  totalAmountToDisplay: String!
   until: DateTime!
 }
 
@@ -447,6 +427,31 @@ type LocationPhysicalAddressDetails {
 type LocationTypeDetails {
   name: String!
   type: LocationType!
+}
+
+type MarketplaceBookingDetails {
+  bookingCheckoutSession: BookingCheckoutSessionDetails
+  currency: String
+  currencyToDisplay: String!
+  id: ID!
+  invoiceEmailList: [String!]!
+  invoiceNumber: String
+  invoiceUrl: String
+  isPaymentRequired: Boolean!
+  lineItems: [LineItemDetails!]!
+  paidByCustomer: CustomerDetails
+  paidByOrganization: OrganizationDetails
+  paymentExpiry: DateTime!
+  paymentMethod: PaymentMethodTypeDetails!
+  paymentStatus: PaymentStatusDetails!
+  taxAmount: Decimal
+  taxAmountToDisplay: String!
+  taxRatePercentage: Decimal
+  taxRatePercentageToDisplay: String!
+  totalAmount: Decimal
+  totalAmountExcludeTax: Decimal
+  totalAmountExcludeTaxToDisplay: String!
+  totalAmountToDisplay: String!
 }
 
 type Marketplace_PaymentMethodTypeDetails {
@@ -1384,7 +1389,7 @@ input AddMarketplaceBookingInput {
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod!
   resourceIds: [String!]!
   teamIds: [String!]!
   until: DateTime!
@@ -2581,7 +2586,6 @@ enum BookingOrderField {
   CHANNEL
   FROM
   NOTES
-  PAYMENT_STATUS
   TO
 }
 

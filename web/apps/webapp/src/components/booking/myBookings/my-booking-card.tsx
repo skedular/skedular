@@ -97,12 +97,14 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
             }
           }
         }
-        isPaymentRequired
-        paymentStatus {
-          type
-          name
+        marketplaceBooking {
+          isPaymentRequired
+          paymentStatus {
+            type
+            name
+          }
+          invoiceUrl
         }
-        invoiceUrl
       }
     `,
     bookingDetailsRelay,
@@ -237,11 +239,11 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
           }
         />
         <CardContent>
-          {bookingDetails.isPaymentRequired && (
+          {bookingDetails.marketplaceBooking?.isPaymentRequired && (
             <>
-              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-              {bookingDetails.invoiceUrl && (
-                <Link component={NextLink} href={bookingDetails.invoiceUrl} target="_blank" rel="noopener noreferrer">
+              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.marketplaceBooking.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              {bookingDetails.marketplaceBooking?.invoiceUrl && (
+                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                   <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
                 </Link>
               )}

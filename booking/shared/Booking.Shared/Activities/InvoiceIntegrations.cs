@@ -35,19 +35,21 @@ public class InvoiceIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted())
+        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
         {
             return;
         }
 
-        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var marketplaceBooking = booking.MarketplaceBooking;
+        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         var organizationId = productVersions.First().Product.Organization.Id;
 
-        if (string.IsNullOrWhiteSpace(booking.InvoiceNumber))
+        if (string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceNumber))
         {
             await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-            booking.InvoiceNumber = await organizationInvoiceCounterService.GetNextInvoiceNumberIdAsync(organizationId, cancellationToken);
+            marketplaceBooking.InvoiceNumber =
+                await organizationInvoiceCounterService.GetNextInvoiceNumberIdAsync(organizationId, cancellationToken);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
         }
@@ -83,8 +85,8 @@ public class InvoiceIntegrations(
         await call.RequestStream.CompleteAsync();
 
         var fileUploadResponse = await call.ResponseAsync;
-        booking.InvoiceUrl = fileUploadResponse.Original.Url;
-        repositoryFactory.BookingRepository.Update(booking);
+        marketplaceBooking.InvoiceUrl = fileUploadResponse.Original.Url;
+        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         if (hostEnvironment.IsDevelopment())
@@ -107,6 +109,9 @@ public class InvoiceIntegrations(
         MemoryStream pdfStream,
         CancellationToken cancellationToken)
     {
+        var marketplaceBooking = booking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
         if (args.InvoiceEmailList.Count == 0)
         {
             return;
@@ -134,19 +139,19 @@ public class InvoiceIntegrations(
 
         html = html
             .Replace("{{COMPANY_NAME}}", organization.Name)
-            .Replace("{{INVOICE_NUMBER}}", booking.InvoiceNumber)
+            .Replace("{{INVOICE_NUMBER}}", marketplaceBooking.InvoiceNumber)
             .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
 
         text = text
             .Replace("{{COMPANY_NAME}}", organization.Name)
-            .Replace("{{INVOICE_NUMBER}}", booking.InvoiceNumber)
+            .Replace("{{INVOICE_NUMBER}}", marketplaceBooking.InvoiceNumber)
             .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
 
-        var attachments = new List<EmailAttachment> { new(pdfStream, $"{booking.InvoiceNumber}.pdf", "application/pdf") };
+        var attachments = new List<EmailAttachment> { new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf") };
 
         var subject = args.FullyPaid
-            ? $"Invoice #{booking.InvoiceNumber} from {organization.Name}"
-            : $"Invoice #{booking.InvoiceNumber} from {organization.Name} is due";
+            ? $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}"
+            : $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name} is due";
 
         await emailService.SendRawEmailAsync(
             subject,

@@ -87,7 +87,6 @@ public class BookingGrpcService(
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.PaymentStatus => BookingOrderField.PaymentStatus,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException()
                 };
@@ -151,7 +150,6 @@ public class BookingGrpcService(
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.To => BookingOrderField.To,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Notes => BookingOrderField.Notes,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Category => BookingOrderField.Category,
-                    global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.PaymentStatus => BookingOrderField.PaymentStatus,
                     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingOrderField.Channel => BookingOrderField.Channel,
                     _ => throw new ArgumentOutOfRangeException()
                 };

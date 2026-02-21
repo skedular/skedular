@@ -53,14 +53,16 @@ public class BookingInternalSubscriber(
         var session = stripeEvent.Data.Object as Session;
         ArgumentNullException.ThrowIfNull(session);
 
-        var stripeCheckoutSession =
-            await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(session.Id, cancellationToken);
+        var stripeCheckoutSession = await repositoryFactory.StripeCheckoutSessionRepository.GetByStripeCheckoutSessionIdAsync(
+            session.Id,
+            cancellationToken);
         if (stripeCheckoutSession is null)
         {
             return;
         }
 
-        stripeCheckoutSession.Booking.PaymentStatus = session.PaymentStatus switch
+        var marketplaceBooking = stripeCheckoutSession.MarketplaceBooking;
+        marketplaceBooking.PaymentStatus = session.PaymentStatus switch
         {
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
             "paid" => PaymentStatusConstants.Confirmed,
@@ -68,27 +70,25 @@ public class BookingInternalSubscriber(
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        stripeCheckoutSession.Booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
-        stripeCheckoutSession.Booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
-        stripeCheckoutSession.Booking.TaxAmount =
-            stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null && stripeCheckoutSession.Booking.TotalAmount is not null
-                ? stripeCheckoutSession.Booking.TotalAmount - stripeCheckoutSession.Booking.TotalAmountExcludeTax
-                : null;
-        stripeCheckoutSession.Booking.TaxRatePercentage =
-            stripeCheckoutSession.Booking.TaxAmount is not null && stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null
-                ? (stripeCheckoutSession.Booking.TaxAmount.Value * 100 / stripeCheckoutSession.Booking.TotalAmountExcludeTax.Value).RoundedDecimal()
-                : null;
-        stripeCheckoutSession.Booking.Currency = session.Currency;
-        _ = repositoryFactory.BookingRepository.Update(stripeCheckoutSession.Booking);
+        marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
+        marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
+            ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
+            : null;
+        marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
+            ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
+            : null;
+        marketplaceBooking.Currency = session.Currency;
+        _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await temporalService.SignalPayBookingViaCardWorkflowAsync(
-            stripeCheckoutSession.Booking.Id,
-            new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
+            marketplaceBooking.Booking.Id,
+            new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
             cancellationToken);
 
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -103,28 +103,27 @@ public class BookingInternalSubscriber(
             return;
         }
 
-        stripeCheckoutSession.Booking.PaymentStatus = PaymentStatusConstants.Expired;
-        stripeCheckoutSession.Booking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
-        stripeCheckoutSession.Booking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
-        stripeCheckoutSession.Booking.TaxAmount =
-            stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null && stripeCheckoutSession.Booking.TotalAmount is not null
-                ? stripeCheckoutSession.Booking.TotalAmount - stripeCheckoutSession.Booking.TotalAmountExcludeTax
-                : null;
-        stripeCheckoutSession.Booking.TaxRatePercentage =
-            stripeCheckoutSession.Booking.TaxAmount is not null && stripeCheckoutSession.Booking.TotalAmountExcludeTax is not null
-                ? (stripeCheckoutSession.Booking.TaxAmount.Value * 100 / stripeCheckoutSession.Booking.TotalAmountExcludeTax.Value).RoundedDecimal()
-                : null;
+        var marketplaceBooking = stripeCheckoutSession.MarketplaceBooking;
+        marketplaceBooking.PaymentStatus = PaymentStatusConstants.Expired;
+        marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
+        marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+        marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
+            ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
+            : null;
+        marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
+            ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
+            : null;
 
-        stripeCheckoutSession.Booking.Currency = session.Currency;
-        _ = repositoryFactory.BookingRepository.Update(stripeCheckoutSession.Booking);
+        marketplaceBooking.Currency = session.Currency;
+        _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await temporalService.SignalPayBookingViaCardWorkflowAsync(
-            stripeCheckoutSession.Booking.Id,
-            new SetPaymentStatusArgs(stripeCheckoutSession.Booking.PaymentStatus),
+            marketplaceBooking.Booking.Id,
+            new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
             cancellationToken);
 
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, stripeCheckoutSession.Booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
     }
 }

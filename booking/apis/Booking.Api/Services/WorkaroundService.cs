@@ -20,7 +20,6 @@ public class WorkaroundService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IBookingPublisher bookingPublisher,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     ITemporalService temporalService) : IWorkaroundService
 {
     public async Task RepublishBookingAsync(string bookingId, CancellationToken cancellationToken)
@@ -31,17 +30,13 @@ public class WorkaroundService(
             return;
         }
 
-        await bookingPublisher.PublishBookingsAsync(
-            [mapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking))],
-            cancellationToken);
+        await bookingPublisher.PublishBookingsAsync([mapper.MapTo(booking)], cancellationToken);
     }
 
     public async Task RepublishAllBookingsAsync(CancellationToken cancellationToken)
     {
         var bookings = await repositoryFactory.BookingRepository.GetAllUntrackedAsync(cancellationToken);
-        await bookingPublisher.PublishBookingsAsync(
-            bookings.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item))).ToList(),
-            cancellationToken);
+        await bookingPublisher.PublishBookingsAsync(bookings.Select(mapper.MapTo).ToList(), cancellationToken);
     }
 
     public async Task GenerateLocationResourcesSlotsAsync(string locationId, CancellationToken cancellationToken)

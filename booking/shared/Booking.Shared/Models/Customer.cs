@@ -14,7 +14,7 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
-    public ICollection<Booking> PaidBookings { get; set; } = [];
+    public ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public ICollection<Booking> CreatedBookings { get; set; } = [];
     public ICollection<Booking> LastModifiedBookings { get; set; } = [];
     public ICollection<Booking> DeletedBookings { get; set; } = [];

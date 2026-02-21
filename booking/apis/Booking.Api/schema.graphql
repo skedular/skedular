@@ -21,39 +21,19 @@ type BookingCheckoutSessionDetails {
 
 type BookingDetails {
   involvedCustomers: [CustomerDetails!]!
-  paidByCustomer: CustomerDetails
   createdByCustomer: CustomerDetails
   lastModifiedByCustomer: CustomerDetails
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
-  paidByOrganization: OrganizationDetails
   involvedLocations: [LocationDetails!]!
   involvedTeams: [TeamDetails!]!
-  paymentStatus: PaymentStatusDetails! @cost(weight: "10")
   from: DateTime!
   until: DateTime!
   notes: String
   category: BookingCategoryDetails!
   channel: BookingChannelDetails!
   bookingResources: [BookingResourceDetails!]!
-  lineItems: [LineItemDetails!]!
-  paymentMethod: PaymentMethodTypeDetails
-  totalAmountExcludeTax: Decimal
-  totalAmountExcludeTaxToDisplay: String!
-  taxAmount: Decimal
-  taxAmountToDisplay: String!
-  taxRatePercentage: Decimal
-  taxRatePercentageToDisplay: String!
-  totalAmount: Decimal
-  totalAmountToDisplay: String!
-  currency: String
-  currencyToDisplay: String!
-  invoiceUrl: String
-  invoiceNumber: String
-  invoiceEmailList: [String!]!
-  isPaymentRequired: Boolean!
-  bookingCheckoutSession: BookingCheckoutSessionDetails
-  paymentExpiry: DateTime!
+  marketplaceBooking: MarketplaceBookingDetails
   id: ID!
 }
 
@@ -89,6 +69,31 @@ type LineItemDetails {
 }
 
 type LocationDetails {
+  id: ID!
+}
+
+type MarketplaceBookingDetails {
+  paidByCustomer: CustomerDetails
+  paidByOrganization: OrganizationDetails
+  lineItems: [LineItemDetails!]!
+  paymentMethod: PaymentMethodTypeDetails!
+  totalAmountExcludeTax: Decimal
+  totalAmountExcludeTaxToDisplay: String!
+  taxAmount: Decimal
+  taxAmountToDisplay: String!
+  taxRatePercentage: Decimal
+  taxRatePercentageToDisplay: String!
+  totalAmount: Decimal
+  totalAmountToDisplay: String!
+  currency: String
+  currencyToDisplay: String!
+  invoiceUrl: String
+  invoiceNumber: String
+  invoiceEmailList: [String!]!
+  isPaymentRequired: Boolean!
+  bookingCheckoutSession: BookingCheckoutSessionDetails
+  paymentExpiry: DateTime!
+  paymentStatus: PaymentStatusDetails!
   id: ID!
 }
 
@@ -198,7 +203,7 @@ input AddMarketplaceBookingInput {
   category: BookingCategory!
   resourceIds: [String!]!
   lineItems: [LineItemInput!]!
-  paymentMethod: PaymentMethod
+  paymentMethod: PaymentMethod!
   invoiceEmailList: [String!]!
 }
 
@@ -341,7 +346,6 @@ enum BookingOrderField {
   TO
   NOTES
   CATEGORY
-  PAYMENT_STATUS
   CHANNEL
 }
 

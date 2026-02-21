@@ -32,7 +32,7 @@ public class ProductVersion : EntityBase
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
-    public virtual ICollection<Booking> Bookings { get; set; } = [];
+    public virtual ICollection<MarketplaceBooking> MarketplaceBookings { get; set; } = [];
     public virtual StripeProduct? StripeProduct { get; set; }
     public virtual StripePrice? StripePrice { get; set; }
 }

@@ -17,8 +17,8 @@ public class StripeCheckoutSession : EntityBaseWithDeleted
     public virtual StripeCustomer StripeCustomer { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string BookingId { get; set; }
-    public virtual Booking Booking { get; set; }
+    public string MarketplaceBookingId { get; set; }
+    public virtual MarketplaceBooking MarketplaceBooking { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -36,7 +36,10 @@ public class StripeCheckoutSessionConfiguration : IEntityTypeConfiguration<Strip
             .WithMany(item => item.StripeCheckoutSessions)
             .HasForeignKey(item => item.StripeCustomerCustomerId);
 
-        builder.HasOne(item => item.Booking).WithOne(item => item.StripeCheckoutSession).HasForeignKey<StripeCheckoutSession>(item => item.BookingId);
+        builder
+            .HasOne(item => item.MarketplaceBooking)
+            .WithOne(item => item.StripeCheckoutSession)
+            .HasForeignKey<StripeCheckoutSession>(item => item.MarketplaceBookingId);
 
         builder.HasIndex(item => item.StripeCheckoutSessionId);
     }

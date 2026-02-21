@@ -101,8 +101,7 @@ enum BookingOrderField {
   BookingOrderField_To= 1;
   BookingOrderField_Notes= 2;
   BookingOrderField_Category= 3;
-  BookingOrderField_PaymentStatus= 4;
-  BookingOrderField_Channel= 5;
+  BookingOrderField_Channel= 4;
 }
 
 enum BookingCategory
@@ -156,33 +155,38 @@ message Booking {
   google.protobuf.Timestamp from = 2;
   google.protobuf.Timestamp to = 3;
   string notes = 4;
-  repeated string resourceIds = 5;
+  repeated Resource resources = 5;
   BookingCategory category = 6;
-  PaymentStatus paymentStatus = 7;
-  bool isPaymentRequired = 8;
-  repeated string involvedCustomerIds = 9;
-  repeated string involvedOrganizationIds = 10;
-  repeated string involvedLocationIds = 11;
-  repeated string involvedTeamIds = 12;
-  repeated BookingSchedule Schedules = 13;
-  string paidByCustomerId = 14;
-  string paidByOrganizationId = 15;
-  string createdByCustomerId = 16;
-  string lastModifiedByCustomerId = 17;
-  string deletedByCustomerId = 18;
-  repeated LineItem lineItems = 19;
-  BookingCheckoutSession bookingCheckoutSession = 20;
-  google.protobuf.Timestamp paymentExpiry = 21;
-  PaymentMethod PaymentMethod = 22;
-  double totalAmountExcludeTax = 23;
-  double taxAmount = 24;
-  double taxRatePercentage = 25;
-  double totalAmount = 26;
-  string currency = 27;
-  string InvoiceUrl = 28;
-  string InvoiceNumber = 29;
-  repeated string InvoiceEmailList = 30;
-  BookingChannel channel = 31;
+  repeated string involvedCustomerIds = 7;
+  repeated string involvedOrganizationIds = 8;
+  repeated string involvedLocationIds = 9;
+  repeated string involvedTeamIds = 10;
+  repeated BookingSchedule Schedules = 11;
+  string createdByCustomerId = 12;
+  string lastModifiedByCustomerId = 13;
+  string deletedByCustomerId = 14;
+  BookingChannel channel = 15;
+  MarketplaceBooking marketplaceBooking = 16;
+}
+
+message MarketplaceBooking {
+  string id = 1;
+  PaymentStatus paymentStatus = 2;
+  bool isPaymentRequired = 3;
+  string paidByCustomerId = 4;
+  string paidByOrganizationId = 5;
+  repeated LineItem lineItems = 6;
+  BookingCheckoutSession bookingCheckoutSession = 7;
+  PaymentMethod PaymentMethod = 8;
+  double totalAmountExcludeTax = 9;
+  double taxAmount = 10;
+  double taxRatePercentage = 11;
+  double totalAmount = 12;
+  string currency = 13;
+  string InvoiceUrl = 14;
+  string InvoiceNumber = 15;
+  repeated string InvoiceEmailList = 16;
+  google.protobuf.Timestamp paymentExpiry = 17;
 }
 
 message GetOrganizationPermissionsInput {
@@ -268,3 +272,8 @@ message BookingCheckoutSession {
   string id = 1;
   string checkoutUrl = 2;
 }
+
+message Resource {
+  string id = 1;
+}
+

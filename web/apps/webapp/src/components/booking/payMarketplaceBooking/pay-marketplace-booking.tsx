@@ -84,29 +84,31 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               }
             }
           }
-          totalAmountExcludeTaxToDisplay
-          taxAmountToDisplay
-          totalAmountToDisplay
-          paymentMethod {
-            type
-          }
-          bookingCheckoutSession {
-            checkoutUrl
-          }
-          paymentExpiry
-          invoiceUrl
-          lineItems {
-            quantity
-            productVersion {
-              id
-              name
-              priceToDisplay
+          marketplaceBooking {
+            totalAmountExcludeTaxToDisplay
+            taxAmountToDisplay
+            totalAmountToDisplay
+            paymentMethod {
+              type
             }
-          }
-          isPaymentRequired
-          paymentStatus {
-            type
-            name
+            bookingCheckoutSession {
+              checkoutUrl
+            }
+            paymentExpiry
+            invoiceUrl
+            lineItems {
+              quantity
+              productVersion {
+                id
+                name
+                priceToDisplay
+              }
+            }
+            isPaymentRequired
+            paymentStatus {
+              type
+              name
+            }
           }
         }
         organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
@@ -128,14 +130,16 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         subscription: graphql`
           subscription payMarketplaceBooking_booking_Subscription($bookingId: String!) {
             booking(id: $bookingId) {
-              paymentExpiry
-              invoiceUrl
-              bookingCheckoutSession {
-                checkoutUrl
-              }
-              paymentStatus {
-                type
-                name
+              marketplaceBooking {
+                paymentExpiry
+                invoiceUrl
+                bookingCheckoutSession {
+                  checkoutUrl
+                }
+                paymentStatus {
+                  type
+                  name
+                }
               }
             }
           }
@@ -160,9 +164,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
       confirmBookingPayment(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -174,9 +180,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
       rejectBookingPayment(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -188,9 +196,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
       makeBookingPaymentNotRequired(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -226,11 +236,13 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.from)),
     toOpeningHoursFromTime(getOpeningHoursFromDateTime(rootData.booking?.until)),
   ]);
-  const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() => (rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.paymentExpiry) : null));
+  const [timeLeftToPayInSeconds, setTimeLeftToPayInSeconds] = useState(() =>
+    rootData.booking?.marketplaceBooking ? getTimeLeftToPayInSeconds(rootData.booking.marketplaceBooking.paymentExpiry) : null,
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeftToPayInSeconds(rootData.booking ? getTimeLeftToPayInSeconds(rootData.booking.paymentExpiry) : null);
+      setTimeLeftToPayInSeconds(rootData.booking?.marketplaceBooking ? getTimeLeftToPayInSeconds(rootData.booking.marketplaceBooking.paymentExpiry) : null);
     }, 1000);
 
     return () => clearInterval(interval);
@@ -335,9 +347,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         confirmBookingPayment: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'CONFIRMED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+              paymentStatus: {
+                type: 'CONFIRMED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+              },
             },
           },
         },
@@ -392,9 +407,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         rejectBookingPayment: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'REJECTED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+              paymentStatus: {
+                type: 'REJECTED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+              },
             },
           },
         },
@@ -449,9 +467,13 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
         makeBookingPaymentNotRequired: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'NO_PAYMENT_REQUIRED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+
+              paymentStatus: {
+                type: 'NO_PAYMENT_REQUIRED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+              },
             },
           },
         },
@@ -524,20 +546,20 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             )}
 
             <FormFieldLabel label="Total Exclude GST/VAT">
-              <BodyIconTypography label={`${booking.totalAmountExcludeTaxToDisplay}`} />
+              <BodyIconTypography label={`${booking.marketplaceBooking?.totalAmountExcludeTaxToDisplay}`} />
             </FormFieldLabel>
 
             <FormFieldLabel label="Total GST/VAT">
-              <BodyIconTypography label={`${booking.taxAmountToDisplay}`} />
+              <BodyIconTypography label={`${booking.marketplaceBooking?.taxAmountToDisplay}`} />
             </FormFieldLabel>
 
             <FormFieldLabel label="Total Amount">
-              <BodyIconTypography label={`${booking.totalAmountToDisplay}`} />
+              <BodyIconTypography label={`${booking.marketplaceBooking?.totalAmountToDisplay}`} />
             </FormFieldLabel>
 
-            {booking.invoiceUrl && (
+            {booking.marketplaceBooking?.invoiceUrl && (
               <FormFieldLabel label="">
-                <Link component={NextLink} href={booking.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                   <BodyIconTypography label="Download Invoice" startElement={<PdfIcon />} />
                 </Link>
               </FormFieldLabel>
@@ -549,8 +571,8 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               </StackRow>
 
               <StackRow>
-                {booking.bookingCheckoutSession?.checkoutUrl && (
-                  <Button LinkComponent={Link} variant="contained" href={booking.bookingCheckoutSession.checkoutUrl}>
+                {booking.marketplaceBooking?.bookingCheckoutSession?.checkoutUrl && (
+                  <Button LinkComponent={Link} variant="contained" href={booking.marketplaceBooking.bookingCheckoutSession.checkoutUrl}>
                     Pay
                   </Button>
                 )}
@@ -560,10 +582,11 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               </StackRow>
 
               {rootData.organizationBookingPermissions.canModifyPaymentMethod &&
-                booking.isPaymentRequired &&
-                booking.paymentStatus.type !== 'REJECTED' &&
-                booking.paymentStatus.type !== 'EXPIRED' &&
-                booking.paymentStatus.type !== 'RECORD_NEVER_CREATED' && (
+                booking.marketplaceBooking &&
+                booking.marketplaceBooking.isPaymentRequired &&
+                booking.marketplaceBooking.paymentStatus.type !== 'REJECTED' &&
+                booking.marketplaceBooking.paymentStatus.type !== 'EXPIRED' &&
+                booking.marketplaceBooking.paymentStatus.type !== 'RECORD_NEVER_CREATED' && (
                   <StackRow>
                     <Button variant="contained" onClick={handleConfirmPaymentClick}>
                       Confirm Payment

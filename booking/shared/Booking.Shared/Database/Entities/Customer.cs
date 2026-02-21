@@ -10,7 +10,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Customer : ReplicatedEntityBaseWithDeleted, ICustomerPersonalDetails
 {
-    public virtual ICollection<Booking> PaidBookings { get; set; } = [];
+    public virtual ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public virtual ICollection<Booking> CreatedBookings { get; set; } = [];
     public virtual ICollection<Booking> LastModifiedBookings { get; set; } = [];
     public virtual ICollection<Booking> DeletedBookings { get; set; } = [];

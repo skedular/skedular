@@ -9,6 +9,7 @@ public interface IRepositoryFactory
     BookingDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     IBookingRepository BookingRepository { get; }
+    IMarketplaceBookingRepository MarketplaceBookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IOrganizationRepository OrganizationRepository { get; }
@@ -36,6 +37,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         _dbContext = dbContextFactory.CreateDbContext();
 
         BookingRepository = new BookingRepository(_dbContext, timeProvider);
+        MarketplaceBookingRepository = new MarketplaceBookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         OrganizationRepository = new OrganizationRepository(_dbContext, timeProvider);
@@ -57,6 +59,7 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     }
 
     public IBookingRepository BookingRepository { get; }
+    public IMarketplaceBookingRepository MarketplaceBookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IOrganizationRepository OrganizationRepository { get; }

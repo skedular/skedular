@@ -15,6 +15,7 @@ using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using Customer = Booking.Shared.Models.Customer;
 using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
+using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
 using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
 using PaymentStatus = Api.Shared.Services.Models.PaymentStatus;
@@ -33,7 +34,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Booking MapToGrpcResponse(Shared.Models.Booking src);
     Shared.Models.Booking MapTo(AddPrivateInput src);
     Shared.Models.Booking MapTo(UpdatePrivateInput src);
-    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry);
+    Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
@@ -51,52 +52,15 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Notes = src.Notes,
             Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
             Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
-            IsPaymentRequired = src.IsPaymentRequired,
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.UniqueAlphanumericName.ToSafeString())),
             InvolvedLocationIds = src.InvolvedLocations.Select(item => item.Id),
             InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
-            PaidByCustomerId = src.PaidByCustomer?.Id,
-            PaidByOrganizationId = src.PaidByOrganization?.Id,
-            PaidByOrganizationUniqueAlphanumericName = src.PaidByOrganization?.UniqueAlphanumericName,
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
-            LineItems =
-                src.LineItems.Select(item => new LineItemDetails
-                {
-                    ProductVersionId = src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId).Id,
-                    Quantity = item.Quantity
-                }),
-            BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
-            PaymentExpiry = src.PaymentExpiry,
-            PaymentMethod =
-                src.PaymentMethod is null
-                    ? null
-                    : new PaymentMethodTypeDetails { Type = src.PaymentMethod.Value, Name = src.PaymentMethod.Value.ToPaymentMethodName() },
-            InvoiceUrl = src.InvoiceUrl,
-            InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList,
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
-            TotalAmountExcludeTaxToDisplay =
-                src.TotalAmountExcludeTax is null || string.IsNullOrWhiteSpace(src.Currency)
-                    ? "N/A"
-                    : src.TotalAmountExcludeTax.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
-            TaxAmount = src.TaxAmount,
-            TaxAmountToDisplay =
-                src.TaxAmount is null || string.IsNullOrWhiteSpace(src.Currency)
-                    ? "N/A"
-                    : src.TaxAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
-            TaxRatePercentage = src.TaxRatePercentage,
-            TaxRatePercentageToDisplay = src.TaxRatePercentage is null ? "N/A" : src.TaxRatePercentage.Value.ToRoundedDecimal(),
-            TotalAmount = src.TotalAmount,
-            TotalAmountToDisplay =
-                src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
-                    ? "N/A"
-                    : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
-            Currency = src.Currency,
-            CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)
         };
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
@@ -161,16 +125,19 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                        new Organization { UniqueAlphanumericName = item }))
-                    .ToList(),
+            InvolvedOrganizations = src.OrganizationIds
+                .ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                    new Organization { UniqueAlphanumericName = item }))
+                .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
-            LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
-            PaymentMethod = src.PaymentMethod,
-            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
+                PaymentMethod = src.PaymentMethod,
+                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+            }
         };
     }
 
@@ -223,51 +190,20 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 BookingChannel.Marketplace => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PaymentStatus = src.PaymentStatus switch
-            {
-                PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
-                PaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Rejected,
-                PaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Confirmed,
-                PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
-                PaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.RecordNeverCreated,
-                PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            IsPaymentRequired = src.IsPaymentRequired,
-            PaidByCustomerId = src.PaidByCustomer is null ? string.Empty : src.PaidByCustomer.Id.ToSafeString(),
-            PaidByOrganizationId = src.PaidByOrganization is null ? string.Empty : src.PaidByOrganization.Id.ToSafeString(),
+            MarketplaceBooking = MapToGrpcResponse(src.MarketplaceBooking),
             CreatedByCustomerId = src.CreatedByCustomer is null ? string.Empty : src.CreatedByCustomer.Id.ToSafeString(),
             LastModifiedByCustomerId = src.LastModifiedByCustomer is null ? string.Empty : src.LastModifiedByCustomer.Id.ToSafeString(),
-            DeletedByCustomerId = src.DeletedByCustomer is null ? string.Empty : src.DeletedByCustomer.Id.ToSafeString(),
-            BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
-            PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
-            TaxAmount = src.TaxAmount.ToNullDouble(),
-            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
-            TotalAmount = src.TotalAmount.ToNullDouble(),
-            Currency = src.Currency.ToSafeString(),
-            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
-            InvoiceNumber = src.InvoiceNumber.ToSafeString()
+            DeletedByCustomerId = src.DeletedByCustomer is null ? string.Empty : src.DeletedByCustomer.Id.ToSafeString()
         };
-
-        if (src.PaymentMethod is not null)
-        {
-            booking.PaymentMethod = src.PaymentMethod switch
-            {
-                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
-                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
 
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
         booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
-        booking.ResourceIds.AddRange(src.InvolvedResources.Select(item => item.Id));
+        booking.Resources.AddRange(src.InvolvedResources.Select(item =>
+            new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource { Id = item.Id }));
+
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
-        booking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
-        booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
 
         return booking;
     }
@@ -353,8 +289,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 
-    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src, DateTimeOffset paymentExpiry) =>
-        new(sharedMapper.MapTo(src.Node, paymentExpiry), src.Cursor);
+    public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(sharedMapper.MapTo(src.Node), src.Cursor);
 
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
 
@@ -412,4 +347,91 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         src is null
             ? null
             : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl };
+
+    private static MarketplaceBookingDetails? MapTo(MarketplaceBooking? src) =>
+        src is null
+            ? null
+            : new MarketplaceBookingDetails
+            {
+                Id = src.Id,
+                IsPaymentRequired = src.IsPaymentRequired,
+                PaidByCustomerId = src.PaidByCustomer?.Id,
+                PaidByOrganizationId = src.PaidByOrganization?.Id,
+                PaidByOrganizationUniqueAlphanumericName = src.PaidByOrganization?.UniqueAlphanumericName,
+                LineItems =
+                    src.LineItems.Select(item => new LineItemDetails
+                    {
+                        ProductVersionId = src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId).Id,
+                        Quantity = item.Quantity
+                    }),
+                BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
+                PaymentExpiry = src.PaymentExpiry,
+                PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
+                PaymentMethod = new PaymentMethodTypeDetails { Type = src.PaymentMethod, Name = src.PaymentMethod.ToPaymentMethodName() },
+                InvoiceUrl = src.InvoiceUrl,
+                InvoiceNumber = src.InvoiceNumber,
+                InvoiceEmailList = src.InvoiceEmailList,
+                TotalAmountExcludeTax = src.TotalAmountExcludeTax,
+                TotalAmountExcludeTaxToDisplay = src.TotalAmountExcludeTax is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TotalAmountExcludeTax.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                TaxAmount = src.TaxAmount,
+                TaxAmountToDisplay = src.TaxAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TaxAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                TaxRatePercentage = src.TaxRatePercentage,
+                TaxRatePercentageToDisplay = src.TaxRatePercentage is null ? "N/A" : src.TaxRatePercentage.Value.ToRoundedDecimal(),
+                TotalAmount = src.TotalAmount,
+                TotalAmountToDisplay = src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                    ? "N/A"
+                    : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                Currency = src.Currency,
+                CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
+            };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.MarketplaceBooking? MapToGrpcResponse(MarketplaceBooking? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var marketplaceBooking = new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.MarketplaceBooking
+        {
+            Id = src.Id,
+            PaymentStatus = src.PaymentStatus switch
+            {
+                PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
+                PaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Rejected,
+                PaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Confirmed,
+                PaymentStatus.Expired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Expired,
+                PaymentStatus.RecordNeverCreated => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NoPaymentRequired,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            IsPaymentRequired = src.IsPaymentRequired,
+            PaidByCustomerId = src.PaidByCustomer is null ? string.Empty : src.PaidByCustomer.Id.ToSafeString(),
+            PaidByOrganizationId = src.PaidByOrganization is null ? string.Empty : src.PaidByOrganization.Id.ToSafeString(),
+            BookingCheckoutSession = MapToGrpcResponse(src.StripeCheckoutSession),
+            PaymentExpiry = src.PaymentExpiry.ToTimestamp(),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
+            TaxAmount = src.TaxAmount.ToNullDouble(),
+            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
+            TotalAmount = src.TotalAmount.ToNullDouble(),
+            Currency = src.Currency.ToSafeString(),
+            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            InvoiceNumber = src.InvoiceNumber.ToSafeString(),
+            PaymentMethod = src.PaymentMethod switch
+            {
+                PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
+                PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+        };
+
+        marketplaceBooking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
+        marketplaceBooking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
+
+        return marketplaceBooking;
+    }
 }

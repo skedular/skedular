@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<388e91eba9c764dc52c2230e2e19748e>>
+ * @generated SignedSource<<a9c81724a9c051e53e37096c4a827268>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,6 @@ export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "P
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
-    readonly bookingCheckoutSession: {
-      readonly checkoutUrl: string;
-    } | null | undefined;
     readonly bookingResources: ReadonlyArray<{
       readonly resource: {
         readonly color: string | null | undefined;
@@ -40,7 +37,6 @@ export type payMarketplaceBooking_booking_query$data = {
     };
     readonly from: any;
     readonly id: string;
-    readonly invoiceUrl: string | null | undefined;
     readonly involvedCustomers: ReadonlyArray<{
       readonly familyName: string | null | undefined;
       readonly givenName: string | null | undefined;
@@ -61,27 +57,33 @@ export type payMarketplaceBooking_booking_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
-    readonly isPaymentRequired: boolean;
-    readonly lineItems: ReadonlyArray<{
-      readonly productVersion: {
-        readonly id: string;
-        readonly name: string;
-        readonly priceToDisplay: string;
+    readonly marketplaceBooking: {
+      readonly bookingCheckoutSession: {
+        readonly checkoutUrl: string;
+      } | null | undefined;
+      readonly invoiceUrl: string | null | undefined;
+      readonly isPaymentRequired: boolean;
+      readonly lineItems: ReadonlyArray<{
+        readonly productVersion: {
+          readonly id: string;
+          readonly name: string;
+          readonly priceToDisplay: string;
+        };
+        readonly quantity: number;
+      }>;
+      readonly paymentExpiry: any;
+      readonly paymentMethod: {
+        readonly type: PaymentMethod;
       };
-      readonly quantity: number;
-    }>;
-    readonly notes: string | null | undefined;
-    readonly paymentExpiry: any;
-    readonly paymentMethod: {
-      readonly type: PaymentMethod;
+      readonly paymentStatus: {
+        readonly name: string;
+        readonly type: PaymentStatus;
+      };
+      readonly taxAmountToDisplay: string;
+      readonly totalAmountExcludeTaxToDisplay: string;
+      readonly totalAmountToDisplay: string;
     } | null | undefined;
-    readonly paymentStatus: {
-      readonly name: string;
-      readonly type: PaymentStatus;
-    };
-    readonly taxAmountToDisplay: string;
-    readonly totalAmountExcludeTaxToDisplay: string;
-    readonly totalAmountToDisplay: string;
+    readonly notes: string | null | undefined;
     readonly until: any;
   } | null | undefined;
   readonly organizationBookingPermissions: {
@@ -328,121 +330,132 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "totalAmountExcludeTaxToDisplay",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "taxAmountToDisplay",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "totalAmountToDisplay",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PaymentMethodTypeDetails",
+          "concreteType": "MarketplaceBookingDetails",
           "kind": "LinkedField",
-          "name": "paymentMethod",
-          "plural": false,
-          "selections": [
-            (v5/*: any*/)
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "BookingCheckoutSessionDetails",
-          "kind": "LinkedField",
-          "name": "bookingCheckoutSession",
+          "name": "marketplaceBooking",
           "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "checkoutUrl",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "paymentExpiry",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "invoiceUrl",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "LineItemDetails",
-          "kind": "LinkedField",
-          "name": "lineItems",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "quantity",
+              "name": "totalAmountExcludeTaxToDisplay",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
-              "concreteType": "ProductVersionDetails",
+              "kind": "ScalarField",
+              "name": "taxAmountToDisplay",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "totalAmountToDisplay",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "PaymentMethodTypeDetails",
               "kind": "LinkedField",
-              "name": "productVersion",
+              "name": "paymentMethod",
               "plural": false,
               "selections": [
-                (v0/*: any*/),
-                (v1/*: any*/),
+                (v5/*: any*/)
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "BookingCheckoutSessionDetails",
+              "kind": "LinkedField",
+              "name": "bookingCheckoutSession",
+              "plural": false,
+              "selections": [
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "priceToDisplay",
+                  "name": "checkoutUrl",
                   "storageKey": null
                 }
               ],
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "paymentExpiry",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "invoiceUrl",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LineItemDetails",
+              "kind": "LinkedField",
+              "name": "lineItems",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "quantity",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "ProductVersionDetails",
+                  "kind": "LinkedField",
+                  "name": "productVersion",
+                  "plural": false,
+                  "selections": [
+                    (v0/*: any*/),
+                    (v1/*: any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "priceToDisplay",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isPaymentRequired",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "PaymentStatusDetails",
+              "kind": "LinkedField",
+              "name": "paymentStatus",
+              "plural": false,
+              "selections": (v6/*: any*/),
+              "storageKey": null
             }
           ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isPaymentRequired",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PaymentStatusDetails",
-          "kind": "LinkedField",
-          "name": "paymentStatus",
-          "plural": false,
-          "selections": (v6/*: any*/),
           "storageKey": null
         }
       ],
@@ -488,6 +501,6 @@ return {
 };
 })();
 
-(node as any).hash = "f10fcb3a6ccadb1b99d3336e612b734f";
+(node as any).hash = "41140f27f2a7e7c65fbef59de44bf770";
 
 export default node;

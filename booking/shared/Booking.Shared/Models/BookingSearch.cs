@@ -33,6 +33,5 @@ public enum BookingOrderField
     To,
     Notes,
     Category,
-    PaymentStatus,
     Channel
 }

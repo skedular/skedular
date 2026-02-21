@@ -10,8 +10,9 @@ namespace Booking.Shared.Database;
 public class BookingDbContext(DbContextOptions<BookingDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<BookingDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
-    public DbSet<Entities.Booking> Booking { get; set; }
     public DbSet<BookingRecurrence> BookingRecurrence { get; set; }
+    public DbSet<Entities.Booking> Booking { get; set; }
+    public DbSet<MarketplaceBooking> MarketplaceBooking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<Location> Location { get; set; }

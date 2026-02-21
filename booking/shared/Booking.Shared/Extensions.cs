@@ -37,7 +37,6 @@ public static class Extensions
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
-                .AddSingleton<IBookingCheckoutSessionHelperService, BookingCheckoutSessionHelperService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedTeamService, CachedTeamService>()
@@ -61,6 +60,7 @@ public static class Extensions
         public IServiceCollection AddRepositories() =>
             services
                 .AddScoped<IBookingRepository, BookingRepository>()
+                .AddScoped<IMarketplaceBookingRepository, MarketplaceBookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IIdentityRepository, IdentityRepository>()
                 .AddScoped<IOrganizationRepository, OrganizationRepository>()

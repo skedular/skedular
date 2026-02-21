@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6142e6e18a5951a1db114eed3232d23>>
+ * @generated SignedSource<<9f67ba849628722b6bfcd8f340384e33>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,15 +15,17 @@ export type payMarketplaceBooking_booking_Subscription$variables = {
 };
 export type payMarketplaceBooking_booking_Subscription$data = {
   readonly booking: {
-    readonly bookingCheckoutSession: {
-      readonly checkoutUrl: string;
+    readonly marketplaceBooking: {
+      readonly bookingCheckoutSession: {
+        readonly checkoutUrl: string;
+      } | null | undefined;
+      readonly invoiceUrl: string | null | undefined;
+      readonly paymentExpiry: any;
+      readonly paymentStatus: {
+        readonly name: string;
+        readonly type: PaymentStatus;
+      };
     } | null | undefined;
-    readonly invoiceUrl: string | null | undefined;
-    readonly paymentExpiry: any;
-    readonly paymentStatus: {
-      readonly name: string;
-      readonly type: PaymentStatus;
-    };
   };
 };
 export type payMarketplaceBooking_booking_Subscription = {
@@ -102,6 +104,13 @@ v5 = {
     }
   ],
   "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -118,10 +127,21 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplaceBookingDetails",
+            "kind": "LinkedField",
+            "name": "marketplaceBooking",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
@@ -143,33 +163,39 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
-          (v4/*: any*/),
-          (v5/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "id",
+            "concreteType": "MarketplaceBookingDetails",
+            "kind": "LinkedField",
+            "name": "marketplaceBooking",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/),
+              (v6/*: any*/)
+            ],
             "storageKey": null
-          }
+          },
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "bf774610a8a2c28fb343e29a26220246",
+    "cacheID": "94bd2ccea302aa60af1ae0021b002483",
     "id": null,
     "metadata": {},
     "name": "payMarketplaceBooking_booking_Subscription",
     "operationKind": "subscription",
-    "text": "subscription payMarketplaceBooking_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    paymentExpiry\n    invoiceUrl\n    bookingCheckoutSession {\n      checkoutUrl\n    }\n    paymentStatus {\n      type\n      name\n    }\n    id\n  }\n}\n"
+    "text": "subscription payMarketplaceBooking_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    marketplaceBooking {\n      paymentExpiry\n      invoiceUrl\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9d05dc1f9111fa5b247bea338cf0e974";
+(node as any).hash = "dee25fe342a7e9483a33352a54271774";
 
 export default node;

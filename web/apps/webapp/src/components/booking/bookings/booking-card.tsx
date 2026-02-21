@@ -128,12 +128,14 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             }
           }
         }
-        isPaymentRequired
-        paymentStatus {
-          type
-          name
+        marketplaceBooking {
+          isPaymentRequired
+          paymentStatus {
+            type
+            name
+          }
+          invoiceUrl
         }
-        invoiceUrl
       }
     `,
     bookingDetailsRelay,
@@ -214,9 +216,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
       confirmBookingPayment(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -228,9 +232,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
       rejectBookingPayment(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -242,9 +248,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
       makeBookingPaymentNotRequired(input: $input) {
         booking {
           id
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -266,10 +274,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
 
   if (
     rootData.organizationBookingPermissions.canModifyPaymentMethod &&
-    bookingDetails.isPaymentRequired &&
-    bookingDetails.paymentStatus.type !== 'REJECTED' &&
-    bookingDetails.paymentStatus.type !== 'EXPIRED' &&
-    bookingDetails.paymentStatus.type !== 'RECORD_NEVER_CREATED'
+    bookingDetails.marketplaceBooking &&
+    bookingDetails.marketplaceBooking.isPaymentRequired &&
+    bookingDetails.marketplaceBooking.paymentStatus.type !== 'REJECTED' &&
+    bookingDetails.marketplaceBooking.paymentStatus.type !== 'EXPIRED' &&
+    bookingDetails.marketplaceBooking.paymentStatus.type !== 'RECORD_NEVER_CREATED'
   ) {
     moreActionsOption.push(
       moreActionsMenuAllOptions[MoreActionsMenuOptionType.ConfirmBookingPayment],
@@ -518,9 +527,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         confirmBookingPayment: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'CONFIRMED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+              paymentStatus: {
+                type: 'CONFIRMED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'CONFIRMED')!.name,
+              },
             },
           },
         },
@@ -570,9 +582,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         rejectBookingPayment: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'REJECTED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+              paymentStatus: {
+                type: 'REJECTED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'REJECTED')!.name,
+              },
             },
           },
         },
@@ -622,9 +637,12 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         makeBookingPaymentNotRequired: {
           booking: {
             id: bookingDetails.id,
-            paymentStatus: {
-              type: 'NO_PAYMENT_REQUIRED',
-              name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+            marketplaceBooking: {
+              id: uuid(),
+              paymentStatus: {
+                type: 'NO_PAYMENT_REQUIRED',
+                name: rootData.paymentStatuses.find((status) => status.type === 'NO_PAYMENT_REQUIRED')!.name,
+              },
             },
           },
         },
@@ -686,11 +704,11 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           }
         />
         <CardContent>
-          {bookingDetails.isPaymentRequired && (
+          {bookingDetails.marketplaceBooking?.isPaymentRequired && (
             <>
-              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
-              {bookingDetails.invoiceUrl && (
-                <Link component={NextLink} href={bookingDetails.invoiceUrl} target="_blank" rel="noopener noreferrer">
+              <SmallIconTypography startElement={<PaymentStatusIcon />} label={bookingDetails.marketplaceBooking.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+              {bookingDetails.marketplaceBooking.invoiceUrl && (
+                <Link component={NextLink} href={bookingDetails.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                   <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
                 </Link>
               )}

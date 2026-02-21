@@ -144,7 +144,7 @@ public class Mapper : IMapper
                 BookingChannel.Marketplace => Api.Shared.Services.Models.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            Resources = src.ResourceIds.Select(item => new Resource { Id = item }).ToList(),
+            Resources = src.Resources.Select(item => new Resource { Id = item.Id }).ToList(),
             InvolvedCustomers = src.InvolvedCustomerIds.Select(item => new Customer { Id = item }).ToList(),
             InvolvedOrganizations = src.InvolvedOrganizationIds.Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = src.InvolvedLocationIds.Select(item => new Location { Id = item }).ToList(),

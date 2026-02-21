@@ -33,31 +33,38 @@ message Booking {
   google.protobuf.Timestamp until = 4;
   string notes = 5;
   BookingCategory category = 6;
-  PaymentStatus paymentStatus = 7;
-  bool isPaymentRequired = 8;
-  repeated string involvedCustomerIds = 9;
-  repeated string involvedOrganizationIds = 10;
-  repeated string involvedLocationIds = 11;
-  repeated string involvedTeamIds = 12;
-  repeated Resource resources = 13;
-  repeated BookingSchedule Schedules = 14;
-  string paidByCustomerId = 15;
-  string paidByOrganizationId = 16;
-  string createdByCustomerId = 17;
-  string lastModifiedByCustomerId = 18;
-  string deletedByCustomerId = 19;
-  repeated LineItem lineItems = 20;
-  BookingCheckoutSession bookingCheckoutSession = 21;
-  PaymentMethod PaymentMethod = 22;
-  double totalAmountExcludeTax = 23;
-  double taxAmount = 24;
-  double taxRatePercentage = 25;
-  double totalAmount = 26;
-  string currency = 27;
-  string InvoiceUrl = 28;
-  string InvoiceNumber = 29;
-  repeated string InvoiceEmailList = 30;
-  BookingChannel channel = 31;
+  repeated string involvedCustomerIds = 7;
+  repeated string involvedOrganizationIds = 8;
+  repeated string involvedLocationIds = 9;
+  repeated string involvedTeamIds = 10;
+  repeated Resource resources = 11;
+  repeated BookingSchedule Schedules = 12;
+  string createdByCustomerId = 13;
+  string lastModifiedByCustomerId = 14;
+  string deletedByCustomerId = 15;
+  repeated LineItem lineItems = 16;
+  BookingChannel channel = 17;
+  MarketplaceBooking marketplaceBooking = 18;
+}
+
+message MarketplaceBooking {
+  string id = 1;
+  PaymentStatus paymentStatus = 2;
+  bool isPaymentRequired = 3;
+  string paidByCustomerId = 4;
+  string paidByOrganizationId = 5;
+  repeated LineItem lineItems = 6;
+  BookingCheckoutSession bookingCheckoutSession = 7;
+  PaymentMethod PaymentMethod = 8;
+  double totalAmountExcludeTax = 9;
+  double taxAmount = 10;
+  double taxRatePercentage = 11;
+  double totalAmount = 12;
+  string currency = 13;
+  string InvoiceUrl = 14;
+  string InvoiceNumber = 15;
+  repeated string InvoiceEmailList = 16;
+  google.protobuf.Timestamp paymentExpiry = 17;
 }
 
 enum BookingCategory
@@ -82,7 +89,6 @@ enum BookingChannel
 
 message Resource {
   string id = 1;
-  repeated string customerIds = 2;
 }
 
 message BookingSchedule {

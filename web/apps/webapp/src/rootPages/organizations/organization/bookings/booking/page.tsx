@@ -36,9 +36,11 @@ const RootQuery = graphql`
       channel {
         channel
       }
-      isPaymentRequired
-      paymentStatus {
-        type
+      marketplaceBooking {
+        isPaymentRequired
+        paymentStatus {
+          type
+        }
       }
     }
     ...editPrivateBooking_query
@@ -63,15 +65,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const shouldPay = useMemo(() => {
-    if (!rootData.booking) {
+    if (!rootData.booking?.marketplaceBooking) {
       return false;
     }
 
-    if (rootData.booking.isPaymentRequired && !rootData.booking.paymentStatus) {
-      return true;
-    }
-
-    return rootData.booking.isPaymentRequired && rootData.booking.paymentStatus && rootData.booking.paymentStatus.type === 'PENDING';
+    const marketplaceBooking = rootData.booking.marketplaceBooking;
+    return marketplaceBooking.isPaymentRequired && (!marketplaceBooking.paymentStatus || marketplaceBooking.paymentStatus.type === 'PENDING');
   }, [rootData.booking]);
 
   const handleBackClick = () => {

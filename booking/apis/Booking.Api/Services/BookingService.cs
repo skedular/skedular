@@ -3,7 +3,6 @@ using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
@@ -34,7 +33,6 @@ public class BookingService(
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
     Shared.Mappers.IMapper sharedMapper,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     ICachedBookingService cachedBookingService) : IBookingService
 {
     public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
@@ -46,7 +44,7 @@ public class BookingService(
 
         await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
 
-        return sharedMapper.MapTo(booking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking));
+        return sharedMapper.MapTo(booking);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
@@ -213,9 +211,7 @@ public class BookingService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo,
-            edges.Select(item => mapper.MapTo(item, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(item.Node))).ToList(),
-            totalCount);
+        return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
 
     private async Task<(IDictionary<string, List<string>>, IDictionary<string, List<string>>)> GetCustomerOrganizationIdsAsync(

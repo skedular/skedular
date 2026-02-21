@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73060e1b9bdd7ca1af12833e88a46d23>>
+ * @generated SignedSource<<167f9a5fb58319455e540479eddc14e8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -254,34 +254,46 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "isPaymentRequired",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PaymentStatusDetails",
+            "concreteType": "MarketplaceBookingDetails",
             "kind": "LinkedField",
-            "name": "paymentStatus",
+            "name": "marketplaceBooking",
             "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "type",
+                "name": "isPaymentRequired",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PaymentStatusDetails",
+                "kind": "LinkedField",
+                "name": "paymentStatus",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  (v2/*: any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "invoiceUrl",
+                "storageKey": null
+              },
+              (v1/*: any*/)
             ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "invoiceUrl",
             "storageKey": null
           }
         ],
@@ -290,16 +302,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a177964fd6fd82fa5257c41e7239317f",
+    "cacheID": "046f0c1766842b571a43b09693c43803",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_booking_refetchableFragment",
     "operationKind": "query",
-    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      id\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n  }\n}\n"
+    "text": "query editMarketplaceBooking_booking_refetchableFragment(\n  $bookingId: String!\n) {\n  ...editMarketplaceBooking_booking_query\n}\n\nfragment editMarketplaceBooking_booking_query on Query {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    notes\n    category {\n      category\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n      photoUrl\n    }\n    involvedOrganizations {\n      id\n      name\n    }\n    involvedLocations {\n      id\n      name\n    }\n    involvedTeams {\n      id\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n        color\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n      }\n    }\n    marketplaceBooking {\n      isPaymentRequired\n      paymentStatus {\n        type\n        name\n      }\n      invoiceUrl\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ec8872a3f18d5f0a5d474b67d457966d";
+(node as any).hash = "733dde15600862754f7dc9aa1fff7b31";
 
 export default node;

@@ -15,7 +15,6 @@ namespace Booking.Api.Services;
 
 public interface IBookingPaymentService
 {
-    Task<PaymentStatus> GetPaymentStatusAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> RejectPaymentAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Booking> MakePaymentNotRequiredAsync(string id, CancellationToken cancellationToken);
@@ -29,39 +28,9 @@ public class BookingPaymentService(
     IBookingOutboxPublisher bookingOutboxPublisher,
     ITemporalOutboxService temporalOutboxService,
     IMapper mapper,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IBookingPaymentService
 {
-    public async Task<PaymentStatus> GetPaymentStatusAsync(string id, CancellationToken cancellationToken)
-    {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-        if (existingBooking.Channel.ToBookingChannel() == BookingChannel.Private)
-        {
-            return PaymentStatus.NoPaymentRequired;
-        }
-
-        var productVersionIds = existingBooking.ProductVersions.Select(item => item.Id).ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).ToList();
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
-            organizationIds,
-            null,
-            false,
-            false,
-            cancellationToken);
-        foreach (var organization in organizations)
-        {
-            if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customer.Id, cancellationToken))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        return existingBooking.PaymentStatus.ToPaymentStatus();
-    }
-
     public async Task<Shared.Models.Booking> ConfirmPaymentAsync(string id, CancellationToken cancellationToken) =>
         await UpdatePaymentStatusInternalAsync(id, PaymentStatus.Confirmed, false, cancellationToken);
 
@@ -79,12 +48,13 @@ public class BookingPaymentService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace || marketplaceBooking is null)
         {
             throw new BookingIsNotMarketplaceType();
         }
 
-        var productVersionIds = existingBooking.ProductVersions.Select(item => item.Id).ToList();
+        var productVersionIds = marketplaceBooking.ProductVersions.Select(item => item.Id).ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         var organizationIds = productVersions.Select(item => item.Product.Organization.Id).ToList();
         var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
@@ -108,32 +78,31 @@ public class BookingPaymentService(
             bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
         }
 
-        existingBooking.PaymentStatus = paymentStatus.ToPaymentStatus();
+        marketplaceBooking.PaymentStatus = paymentStatus.ToPaymentStatus();
 
-        if (!string.IsNullOrWhiteSpace(existingBooking.PaymentMethod))
+        switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
         {
-            switch (existingBooking.PaymentMethod.ToPaymentMethod())
-            {
-                case PaymentMethod.Card:
-                    temporalOutboxService.SignalWorkflowPayBookingViaCardSetPaymentStatus(
-                        existingBooking.Id,
-                        new SetPaymentStatusArgs(existingBooking.PaymentStatus),
-                        repositoryFactory.UnitOfWork);
-                    break;
+            case PaymentMethod.Card:
+                temporalOutboxService.SignalWorkflowPayBookingViaCardSetPaymentStatus(
+                    existingBooking.Id,
+                    new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                    repositoryFactory.UnitOfWork);
+                break;
 
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
-                        existingBooking.Id,
-                        new SetPaymentStatusArgs(existingBooking.PaymentStatus),
-                        repositoryFactory.UnitOfWork);
-                    break;
+            case PaymentMethod.BankTransfer:
+                temporalOutboxService.SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(
+                    existingBooking.Id,
+                    new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                    repositoryFactory.UnitOfWork);
+                break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            default:
+                throw new ArgumentOutOfRangeException();
         }
 
-        var booking = mapper.MapTo(existingBooking, bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(existingBooking));
+        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+
+        var booking = mapper.MapTo(existingBooking);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 

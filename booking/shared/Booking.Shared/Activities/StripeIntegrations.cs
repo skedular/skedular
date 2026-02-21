@@ -37,12 +37,13 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted())
+        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
         {
             return null;
         }
 
-        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var marketplaceBooking = booking.MarketplaceBooking;
+        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         if (productVersions.Count != productVersionIds.Count)
         {
@@ -94,24 +95,26 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted())
+        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
         {
             return null;
         }
 
         StripeCustomer stripeCustomer;
-        if (booking.PaidByCustomer is not null)
+        var marketplaceBooking = booking.MarketplaceBooking;
+        if (marketplaceBooking.PaidByCustomer is not null)
         {
-            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(booking.PaidByCustomer.Id, true, cancellationToken) ??
+            var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(marketplaceBooking.PaidByCustomer.Id, true,
+                               cancellationToken) ??
                            throw new CustomerNotFound();
             stripeCustomer = await stripeCustomerService.AddCustomerAsync(customer, args.StripeConnectAccountId, cancellationToken);
 
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
-        else if (booking.PaidByOrganization is not null)
+        else if (marketplaceBooking.PaidByOrganization is not null)
         {
             var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                                   booking.PaidByOrganization.Id,
+                                   marketplaceBooking.PaidByOrganization.Id,
                                    null,
                                    false,
                                    false,
@@ -134,14 +137,15 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted())
+        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
         {
             return null;
         }
 
-        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var marketplaceBooking = booking.MarketplaceBooking;
+        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        var lineItems = booking.LineItems.SelectMany(item =>
+        var lineItems = marketplaceBooking.LineItems.SelectMany(item =>
         {
             var productVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
 
@@ -158,9 +162,9 @@ public class StripeIntegrations(
             });
         }).ToList();
 
-        if (booking.StripeCheckoutSession is not null)
+        if (marketplaceBooking.StripeCheckoutSession is not null)
         {
-            return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
+            return new CreateCheckoutSessionAsyncResponse(marketplaceBooking.PaymentStatus);
         }
 
         var session = await sessionCreateService.CreateAsync(
@@ -189,8 +193,8 @@ public class StripeIntegrations(
         };
 
         stripeCheckoutSession = repositoryFactory.StripeCheckoutSessionRepository.Add(stripeCheckoutSession);
-        booking.StripeCheckoutSession = stripeCheckoutSession;
-        booking.PaymentStatus = session.PaymentStatus switch
+        marketplaceBooking.StripeCheckoutSession = stripeCheckoutSession;
+        marketplaceBooking.PaymentStatus = session.PaymentStatus switch
         {
             "no_payment_required" => PaymentStatusConstants.NoPaymentRequired,
             "unpaid" => PaymentStatusConstants.Pending,
@@ -198,11 +202,11 @@ public class StripeIntegrations(
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        _ = repositoryFactory.BookingRepository.Update(booking);
+        _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
 
-        return new CreateCheckoutSessionAsyncResponse(booking.PaymentStatus);
+        return new CreateCheckoutSessionAsyncResponse(marketplaceBooking.PaymentStatus);
     }
 }

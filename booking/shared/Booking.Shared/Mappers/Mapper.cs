@@ -8,6 +8,7 @@ using BookingSchedule = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Book
 using Customer = Booking.Shared.Database.Entities.Customer;
 using LineItem = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
+using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod;
 using Product = Booking.Shared.Models.Product;
@@ -26,7 +27,6 @@ public interface IMapper
     CustomerCreateOptions MapToCustomerCreateOption(Organization src);
     CustomerCreateOptions MapToCustomerCreateOption(Customer src);
     Models.Booking MapTo(Database.Entities.Booking src);
-    Models.Booking MapTo(Database.Entities.Booking src, DateTimeOffset paymentExpiry);
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
@@ -35,13 +35,10 @@ public interface IMapper
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
         ICollection<Database.Entities.Resource> resources,
-        Customer? paidByCustomer,
-        Organization? paidByOrganization,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        ICollection<Database.Entities.ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession);
+        MarketplaceBooking? marketplaceBooking);
 
     Database.Entities.Booking MergeTo(
         Models.Booking src,
@@ -51,11 +48,15 @@ public interface IMapper
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
         ICollection<Database.Entities.Resource> resources,
-        Customer? paidByCustomer,
-        Organization? paidByOrganization,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
+        MarketplaceBooking? marketplaceBooking);
+
+    MarketplaceBooking MapTo(
+        Models.MarketplaceBooking src,
+        Customer? paidByCustomer,
+        Organization? paidByOrganization,
         ICollection<Database.Entities.ProductVersion> productVersions,
         StripeCheckoutSession? stripeCheckoutSession);
 }
@@ -92,46 +93,8 @@ public class Mapper : IMapper
                 BookingChannel.Marketplace => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            PaymentStatus = src.PaymentStatus switch
-            {
-                PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
-                PaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Rejected,
-                PaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Confirmed,
-                PaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Expired,
-                PaymentStatus.RecordNeverCreated => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.RecordNeverCreated,
-                PaymentStatus.NoPaymentRequired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired,
-                _ => throw new ArgumentOutOfRangeException()
-            },
-            IsPaymentRequired = src.IsPaymentRequired,
-            BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
-            TaxAmount = src.TaxAmount.ToNullDouble(),
-            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
-            TotalAmount = src.TotalAmount.ToNullDouble(),
-            Currency = src.Currency.ToSafeString(),
-            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
-            InvoiceNumber = src.InvoiceNumber.ToSafeString()
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)
         };
-
-        if (src.PaymentMethod is not null)
-        {
-            booking.PaymentMethod = src.PaymentMethod switch
-            {
-                Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
-                Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankAccount,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
-
-        if (src.PaidByCustomer is not null)
-        {
-            booking.PaidByCustomerId = src.PaidByCustomer.Id;
-        }
-
-        if (src.PaidByOrganization is not null)
-        {
-            booking.PaidByOrganizationId = src.PaidByOrganization.Id;
-        }
 
         if (src.CreatedByCustomer is not null)
         {
@@ -150,12 +113,10 @@ public class Mapper : IMapper
 
         booking.Resources.AddRange(MapTo(src.Resources));
         booking.Schedules.AddRange(MapTo(src.Schedules));
-        booking.LineItems.AddRange(MapTo(src.LineItems));
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
         booking.InvolvedOrganizationIds.AddRange(src.InvolvedOrganizations.Select(item => item.Id));
         booking.InvolvedLocationIds.AddRange(src.InvolvedLocations.Select(item => item.Id));
         booking.InvolvedTeamIds.AddRange(src.InvolvedTeams.Select(item => item.Id));
-        booking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
 
         return booking;
     }
@@ -271,72 +232,17 @@ public class Mapper : IMapper
             Notes = src.Notes,
             Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
-            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
-            IsPaymentRequired = src.IsPaymentRequired,
             Schedules = src.Schedules,
-            LineItems = src.LineItems,
             ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
             InvolvedResources = MapTo(src.InvolvedResources).ToList(),
-            PaidByCustomer = MapTo(src.PaidByCustomer),
-            PaidByOrganization = MapTo(src.PaidByOrganization),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            ProductVersions = MapTo(src.ProductVersions).ToList(),
-            PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
-            TaxAmount = src.TaxAmount,
-            TaxRatePercentage = src.TaxRatePercentage,
-            TotalAmount = src.TotalAmount,
-            Currency = src.Currency,
-            InvoiceUrl = src.InvoiceUrl,
-            InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
-        };
-
-    public Models.Booking MapTo(Database.Entities.Booking src, DateTimeOffset paymentExpiry) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            From = src.From,
-            Until = src.Until,
-            Notes = src.Notes,
-            Category = src.Category.ToBookingCategory(),
-            Channel = src.Channel.ToBookingChannel(),
-            PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
-            IsPaymentRequired = src.IsPaymentRequired,
-            Schedules = src.Schedules,
-            LineItems = src.LineItems,
-            ResourceBookingSlots = MapTo(src.ResourceBookingSlots).ToList(),
-            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
-            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
-            InvolvedLocations = MapTo(src.InvolvedLocations).ToList(),
-            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            InvolvedResources = MapTo(src.InvolvedResources).ToList(),
-            PaidByCustomer = MapTo(src.PaidByCustomer),
-            PaidByOrganization = MapTo(src.PaidByOrganization),
-            CreatedByCustomer = MapTo(src.CreatedByCustomer),
-            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
-            DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
-            ProductVersions = MapTo(src.ProductVersions).ToList(),
-            PaymentExpiry = paymentExpiry,
-            PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod(),
-            TotalAmountExcludeTax = src.TotalAmountExcludeTax,
-            TaxAmount = src.TaxAmount,
-            TaxRatePercentage = src.TaxRatePercentage,
-            TotalAmount = src.TotalAmount,
-            Currency = src.Currency,
-            InvoiceUrl = src.InvoiceUrl,
-            InvoiceNumber = src.InvoiceNumber,
-            InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)
         };
 
     public Database.Entities.Booking MapTo(
@@ -346,13 +252,10 @@ public class Mapper : IMapper
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
         ICollection<Database.Entities.Resource> resources,
-        Customer? paidByCustomer,
-        Organization? paidByOrganization,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        ICollection<Database.Entities.ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession) =>
+        MarketplaceBooking? marketplaceBooking) =>
         MergeTo(
             src,
             new Database.Entities.Booking(),
@@ -361,13 +264,10 @@ public class Mapper : IMapper
             involvedLocations,
             involvedTeams,
             resources,
-            paidByCustomer,
-            paidByOrganization,
             createdByCustomer,
             lastModifiedByCustomer,
             deletedByCustomer,
-            productVersions,
-            stripeCheckoutSession);
+            marketplaceBooking);
 
     public Database.Entities.Booking MergeTo(
         Models.Booking src,
@@ -377,37 +277,88 @@ public class Mapper : IMapper
         ICollection<Location> involvedLocations,
         ICollection<Team> involvedTeams,
         ICollection<Database.Entities.Resource> resources,
-        Customer? paidByCustomer,
-        Organization? paidByOrganization,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        ICollection<Database.Entities.ProductVersion> productVersions,
-        StripeCheckoutSession? stripeCheckoutSession)
+        MarketplaceBooking? marketplaceBooking)
     {
         dest.Id = src.Id;
         dest.From = src.From;
         dest.Until = src.Until;
         dest.Notes = src.Notes;
         dest.Category = src.Category.ToBookingCategory();
-        dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
-        dest.IsPaymentRequired = src.IsPaymentRequired;
         dest.Schedules = src.Schedules;
-        dest.LineItems = src.LineItems;
         dest.ResourceBookingSlots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedLocations = involvedLocations;
         dest.InvolvedTeams = involvedTeams;
         dest.InvolvedResources = resources;
-        dest.PaidByCustomer = paidByCustomer;
-        dest.PaidByOrganization = paidByOrganization;
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
+        dest.MarketplaceBooking = marketplaceBooking;
+        return dest;
+    }
+
+    public MarketplaceBooking MapTo(
+        Models.MarketplaceBooking src,
+        Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        ICollection<Database.Entities.ProductVersion> productVersions,
+        StripeCheckoutSession? stripeCheckoutSession) =>
+        MergeTo(
+            src,
+            new MarketplaceBooking(),
+            paidByCustomer,
+            paidByOrganization,
+            productVersions,
+            stripeCheckoutSession);
+
+    public Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
+        src is null
+            ? null
+            : new Models.MarketplaceBooking
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                PaymentStatus = src.PaymentStatus.ToPaymentStatus(),
+                IsPaymentRequired = src.IsPaymentRequired,
+                LineItems = src.LineItems,
+                PaidByCustomer = MapTo(src.PaidByCustomer),
+                PaidByOrganization = MapTo(src.PaidByOrganization),
+                ProductVersions = MapTo(src.ProductVersions).ToList(),
+                PaymentMethod = src.PaymentMethod.ToPaymentMethod(),
+                TotalAmountExcludeTax = src.TotalAmountExcludeTax,
+                TaxAmount = src.TaxAmount,
+                TaxRatePercentage = src.TaxRatePercentage,
+                TotalAmount = src.TotalAmount,
+                Currency = src.Currency,
+                InvoiceUrl = src.InvoiceUrl,
+                InvoiceNumber = src.InvoiceNumber,
+                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
+                PaymentExpiry = src.PaymentExpiry
+            };
+
+    private static MarketplaceBooking MergeTo(
+        Models.MarketplaceBooking src,
+        MarketplaceBooking dest,
+        Customer? paidByCustomer,
+        Organization? paidByOrganization,
+        ICollection<Database.Entities.ProductVersion> productVersions,
+        StripeCheckoutSession? stripeCheckoutSession)
+    {
+        dest.Id = src.Id;
+        dest.PaymentStatus = src.PaymentStatus.ToPaymentStatus();
+        dest.IsPaymentRequired = src.IsPaymentRequired;
+        dest.LineItems = src.LineItems;
+        dest.PaidByCustomer = paidByCustomer;
+        dest.PaidByOrganization = paidByOrganization;
         dest.ProductVersions = productVersions;
         dest.StripeCheckoutSession = stripeCheckoutSession;
-        dest.PaymentMethod = src.PaymentMethod.ToNullablePaymentMethod();
+        dest.PaymentMethod = src.PaymentMethod.ToPaymentMethod();
         dest.TotalAmountExcludeTax = src.TotalAmountExcludeTax;
         dest.TaxAmount = src.TaxAmount;
         dest.TaxRatePercentage = src.TaxRatePercentage;
@@ -416,7 +367,62 @@ public class Mapper : IMapper
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
         dest.InvoiceEmailList = src.InvoiceEmailList;
+        dest.PaymentExpiry = src.PaymentExpiry;
         return dest;
+    }
+
+    private static Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking? MapTo(Models.MarketplaceBooking? src)
+    {
+        if (src is null)
+        {
+            return null;
+        }
+
+        var marketplaceBooking = new Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking
+        {
+            Id = src.Id,
+            PaymentStatus = src.PaymentStatus switch
+            {
+                PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
+                PaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Rejected,
+                PaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Confirmed,
+                PaymentStatus.Expired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Expired,
+                PaymentStatus.RecordNeverCreated => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.RecordNeverCreated,
+                PaymentStatus.NoPaymentRequired => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NoPaymentRequired,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            PaymentMethod = src.PaymentMethod switch
+            {
+                Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
+                Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankAccount,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            IsPaymentRequired = src.IsPaymentRequired,
+            BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
+            TotalAmountExcludeTax = src.TotalAmountExcludeTax.ToNullDouble(),
+            TaxAmount = src.TaxAmount.ToNullDouble(),
+            TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
+            TotalAmount = src.TotalAmount.ToNullDouble(),
+            Currency = src.Currency.ToSafeString(),
+            InvoiceUrl = src.InvoiceUrl.ToSafeString(),
+            InvoiceNumber = src.InvoiceNumber.ToSafeString(),
+            PaymentExpiry = src.PaymentExpiry.ToTimestamp()
+        };
+
+        if (src.PaidByCustomer is not null)
+        {
+            marketplaceBooking.PaidByCustomerId = src.PaidByCustomer.Id;
+        }
+
+        if (src.PaidByOrganization is not null)
+        {
+            marketplaceBooking.PaidByOrganizationId = src.PaidByOrganization.Id;
+        }
+
+        marketplaceBooking.LineItems.AddRange(MapTo(src.LineItems));
+        marketplaceBooking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
+
+        return marketplaceBooking;
     }
 
     private static Models.StripeCheckoutSession? MapTo(StripeCheckoutSession? src) =>
@@ -554,23 +560,14 @@ public class Mapper : IMapper
             OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
-    private IEnumerable<ProductVersion> MapTo(IEnumerable<Database.Entities.ProductVersion> src) =>
-        src.Select(MapTo);
+    private IEnumerable<ProductVersion> MapTo(IEnumerable<Database.Entities.ProductVersion> src) => src.Select(MapTo);
 
     private static BookingCheckoutSession? MapTo(Models.StripeCheckoutSession? src) =>
         src is null
             ? null
             : new BookingCheckoutSession { Id = src.Id, CheckoutUrl = src.CheckoutUrl.ToSafeString() };
 
-    private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) =>
-        src.Select(item =>
-        {
-            var resource = new Resource { Id = item.Resource.Id };
-
-            resource.CustomerIds.AddRange(item.Customers.Select(customer => customer.Id));
-
-            return resource;
-        });
+    private static IEnumerable<Resource> MapTo(IEnumerable<ResourceCustomersPair> src) => src.Select(item => new Resource { Id = item.Resource.Id });
 
     private static IEnumerable<BookingSchedule> MapTo(IEnumerable<Api.Shared.Services.Models.BookingSchedule> src) => src.Select(MapTo);
 

@@ -150,12 +150,14 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
               }
             }
           }
-          isPaymentRequired
-          paymentStatus {
-            type
-            name
+          marketplaceBooking {
+            isPaymentRequired
+            paymentStatus {
+              type
+              name
+            }
+            invoiceUrl
           }
-          invoiceUrl
         }
       }
     `,
@@ -480,7 +482,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                   <FormFieldLabel label="Payment Status">
-                    <SmallIconTypography label={booking.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
+                    <SmallIconTypography label={booking.marketplaceBooking?.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Date/Time">
@@ -492,8 +494,8 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Invoice">
-                    {booking.invoiceUrl && (
-                      <Link component={NextLink} href={booking.invoiceUrl} target="_blank" rel="noopener noreferrer">
+                    {booking.marketplaceBooking?.invoiceUrl && (
+                      <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                         <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
                       </Link>
                     )}
@@ -567,7 +569,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                   </FormFieldLabel>
                 </StackColumn>
 
-                {(booking.paymentStatus.type === 'NO_PAYMENT_REQUIRED' || booking.paymentStatus.type === 'CONFIRMED') && (
+                {(booking.marketplaceBooking?.paymentStatus.type === 'NO_PAYMENT_REQUIRED' || booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED') && (
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                     <StackRow>
                       <Button variant="contained" type="submit" sx={defaultButtonStyle}>

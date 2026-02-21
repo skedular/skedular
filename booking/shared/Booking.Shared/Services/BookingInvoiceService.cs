@@ -22,18 +22,18 @@ public interface IBookingInvoiceService
 public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IBookingCheckoutSessionHelperService bookingCheckoutSessionHelperService) : IBookingInvoiceService
+    OrganizationService.OrganizationServiceClient organizationServiceClient) : IBookingInvoiceService
 {
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
     {
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted())
+        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
         {
             return null;
         }
 
-        var productVersionIds = booking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
+        var marketplaceBooking = booking.MarketplaceBooking;
+        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
         var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
         if (productVersions.Count != productVersionIds.Count)
         {
@@ -59,9 +59,7 @@ public class BookingInvoiceService(
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 
-        var dueDate = bookingCheckoutSessionHelperService.GetBookingPaymentExpiry(booking);
-
-        return new InvoiceDocument(booking, bankAccount, organization, productVersions, dueDate, fullyPaid);
+        return new InvoiceDocument(booking, bankAccount, organization, productVersions, marketplaceBooking.PaymentExpiry, fullyPaid);
     }
 
     private class InvoiceDocument(
@@ -96,14 +94,17 @@ public class BookingInvoiceService(
 
                 row.RelativeItem().AlignRight().Column(column =>
                 {
+                    var marketplaceBooking = booking.MarketplaceBooking;
+                    ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
                     column.Item().Text("Invoice Date").SemiBold().FontSize(13);
                     column.Item().Text(booking.CreatedAt.ToShortDate()).FontSize(10);
 
-                    if (!string.IsNullOrWhiteSpace(booking.InvoiceNumber))
+                    if (!string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceNumber))
                     {
                         column.Item().Text(string.Empty);
                         column.Item().Text("Invoice Number").SemiBold().FontSize(13);
-                        column.Item().Text(booking.InvoiceNumber).FontSize(10);
+                        column.Item().Text(marketplaceBooking.InvoiceNumber).FontSize(10);
                     }
 
                     var taxDetails = organization.TaxDetails;
@@ -134,7 +135,11 @@ public class BookingInvoiceService(
                 column.Item().Element(ComposeTable);
                 column.Item().Component(new TotalExcludeGstComponent(booking));
                 column.Item().Component(new TotalAmountComponent(booking, productVersions, fullyPaid));
-                if (booking.PaymentMethod == PaymentMethodConstants.BankTransfer)
+
+                var marketplaceBooking = booking.MarketplaceBooking;
+                ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+                if (marketplaceBooking.PaymentMethod == PaymentMethodConstants.BankTransfer)
                 {
                     column.Item().Component(new DueDateSection(dueDate, bankAccount));
                 }
@@ -163,7 +168,10 @@ public class BookingInvoiceService(
                     header.Cell().BorderBottom(1).PaddingBottom(3).AlignRight().Text($"Amount {currency.ToInvoiceCurrencyName()}").Bold();
                 });
 
-                foreach (var lineItem in booking.LineItems)
+                var marketplaceBooking = booking.MarketplaceBooking;
+                ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+                foreach (var lineItem in marketplaceBooking.LineItems)
                 {
                     var productVersion = productVersions.First(item => item.Id == lineItem.ProductVersionId);
                     ArgumentNullException.ThrowIfNull(productVersion.Price);
@@ -215,6 +223,9 @@ public class BookingInvoiceService(
             public void Compose(IContainer container) =>
                 container.Table(table =>
                 {
+                    var marketplaceBooking = booking.MarketplaceBooking;
+                    ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
                     table.ColumnsDefinition(columns =>
                     {
                         columns.RelativeColumn(5);
@@ -222,10 +233,10 @@ public class BookingInvoiceService(
                     });
 
                     table.Cell().AlignRight().Text("Subtotal");
-                    table.Cell().PaddingBottom(5).AlignRight().Text(booking.TotalAmountExcludeTax!.Value.ToRoundedPrice());
+                    table.Cell().PaddingBottom(5).AlignRight().Text(marketplaceBooking.TotalAmountExcludeTax!.Value.ToRoundedPrice());
 
-                    table.Cell().AlignRight().Text($"TOTAL GST {booking.TaxRatePercentage!.Value.RoundedDecimal()}%");
-                    table.Cell().PaddingBottom(5).AlignRight().Text(booking.TaxAmount!.Value.ToRoundedPrice());
+                    table.Cell().AlignRight().Text($"TOTAL GST {marketplaceBooking.TaxRatePercentage!.Value.RoundedDecimal()}%");
+                    table.Cell().PaddingBottom(5).AlignRight().Text(marketplaceBooking.TaxAmount!.Value.ToRoundedPrice());
 
                     table.Cell().PaddingLeft(300).LineHorizontal(1);
                     table.Cell().LineHorizontal(1);
@@ -240,6 +251,9 @@ public class BookingInvoiceService(
                 var currency = productVersions.First().Currency;
                 ArgumentException.ThrowIfNullOrWhiteSpace(currency);
 
+                var marketplaceBooking = booking.MarketplaceBooking;
+                ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
                 container.Table(table =>
                 {
                     table.ColumnsDefinition(columns =>
@@ -248,7 +262,7 @@ public class BookingInvoiceService(
                         columns.RelativeColumn();
                     });
 
-                    var totalAmount = booking.TotalAmount!.Value.ToRoundedPrice();
+                    var totalAmount = marketplaceBooking.TotalAmount!.Value.ToRoundedPrice();
                     table.Cell().AlignRight().Text($"TOTAL {currency.ToInvoiceCurrencyName()}").Bold();
                     table.Cell().PaddingBottom(5).AlignRight().Text(totalAmount);
 

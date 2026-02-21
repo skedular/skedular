@@ -67,9 +67,6 @@ public class PrivateBookingService(
             [],
             cancellationToken);
 
-        booking.IsPaymentRequired = false;
-        booking.PaymentStatus = PaymentStatus.NoPaymentRequired;
-
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         if (booking.InvolvedCustomers.Count == 1)
@@ -121,18 +118,15 @@ public class PrivateBookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            booking.IsPaymentRequired ? customer : null,
-            null,
             customer,
             null,
             null,
-            [],
             null);
 
         bookingEntity.Channel = BookingChannelConstants.Private;
 
         bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, DateTimeOffset.MinValue);
+        booking = mapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -210,16 +204,13 @@ public class PrivateBookingService(
             ResourcesToLocations(resources),
             teams,
             resources,
-            null,
-            null,
             existingBooking.CreatedByCustomer,
             lastModifiedByCustomer,
             null,
-            existingBooking.ProductVersions,
-            existingBooking.StripeCheckoutSession);
+            null);
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-        booking = mapper.MapTo(bookingEntity, DateTimeOffset.MinValue);
+        booking = mapper.MapTo(bookingEntity);
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
@@ -249,7 +240,7 @@ public class PrivateBookingService(
 
         existingBooking.DeletedByCustomer = deletedByCustomer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking), DateTimeOffset.MinValue);
+        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
         bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
