@@ -115,11 +115,6 @@ public static class OpenTelemetryExtensions
                             tracing.AddConsoleExporter();
                         }
 
-                        if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.ZipkinEndpoint))
-                        {
-                            tracing.AddZipkinExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.ZipkinEndpoint));
-                        }
-
                         if (!string.IsNullOrWhiteSpace(openTelemetryConfiguration.JaegerEndpoint))
                         {
                             tracing.AddJaegerExporter(options => options.Endpoint = new Uri(openTelemetryConfiguration.JaegerEndpoint));

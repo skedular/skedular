@@ -192,7 +192,6 @@ services:
       AWS_ACCESS_KEY_ID: ${STAGING_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${STAGING_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OpenTelemetry__OtlpExporterEndpoint: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -302,7 +301,6 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -406,7 +404,6 @@ services:
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       Email__BookingInvoiceEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -506,7 +503,6 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@staging.skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -577,7 +573,6 @@ services:
       AWS_ACCESS_KEY_ID: ${PRODUCTION_AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${PRODUCTION_AWS_SECRET_ACCESS_KEY}
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -688,7 +683,6 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -792,7 +786,6 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
@@ -892,7 +885,6 @@ services:
       Email__EnableNewOrganizationJoinedEmail: true
       Email__NewOrganizationJoinedEmailSender: "Skedular <no-reply@skedular.app>"
       OpenTelemetry__ConsoleEnabled: false
-      OpenTelemetry__ZipkinEndpoint: ""
       OpenTelemetry__JaegerEndpoint: ""
       OTEL_EXPORTER_OTLP_ENDPOINT: ""
       OpenTelemetry__MetricsIngestEnabled: true
