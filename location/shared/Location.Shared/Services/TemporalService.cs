@@ -31,7 +31,8 @@ public class TemporalService(
                 Id = temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
@@ -44,7 +45,8 @@ public class TemporalService(
                 Id = temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{args.OrganizationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 }

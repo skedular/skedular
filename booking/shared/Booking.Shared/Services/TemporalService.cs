@@ -30,7 +30,8 @@ public class TemporalService(
                 Id = temporalHelperService.ToId($"{Constants.GenerateLocationResourcesSlotsPrefix}-{args.LocationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
@@ -44,7 +45,8 @@ public class TemporalService(
                 Id = temporalHelperService.ToId($"{Constants.GenerateResourcesSlotsPrefix}-{locationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 

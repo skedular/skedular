@@ -24,7 +24,8 @@ public class TemporalService(
                 Id = temporalHelperService.ToId($"{Constants.ReSyncMsTeamsPrefix}-{args.TenantId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 }

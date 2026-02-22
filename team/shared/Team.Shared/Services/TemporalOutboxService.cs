@@ -37,7 +37,8 @@ public class TemporalOutboxService(
                 Id = temporalHelperService.ToId(args.JoinInvitationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.TerminateIfRunning
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
             },
             unitOfWork);
 
