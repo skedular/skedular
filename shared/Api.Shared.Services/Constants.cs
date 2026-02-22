@@ -134,6 +134,6 @@ public static class Constants
 
     public const string SkedularPublicLocationsUniqueAlphanumericName = "skedularpubliclocations";
 
-    public const int MaxBookingRecurrenceFrequencyLength = 10;
-    public const int MaxBookingRecurrenceEndTypeLength = 10;
+    public const int MaxRecurringBookingFrequencyLength = 10;
+    public const int MaxRecurringBookingEndTypeLength = 10;
 }

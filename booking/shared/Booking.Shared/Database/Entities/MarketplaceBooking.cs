@@ -25,8 +25,12 @@ public class MarketplaceBooking : EntityBase
     public ICollection<string> InvoiceEmailList { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string BookingId { get; set; }
-    public virtual Booking Booking { get; set; }
+    public string? BookingId { get; set; }
+    public virtual Booking? Booking { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? RecurringBookingId { get; set; }
+    public virtual RecurringBooking? RecurringBooking { get; set; }
 
     public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
     public virtual Customer? PaidByCustomer { get; set; }
@@ -63,6 +67,12 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
             .HasOne(item => item.Booking)
             .WithOne(item => item.MarketplaceBooking)
             .HasForeignKey<MarketplaceBooking>(item => item.BookingId);
+
+        builder
+            .HasOne(item => item.RecurringBooking)
+            .WithOne(item => item.MarketplaceBooking)
+            .HasForeignKey<MarketplaceBooking>(item => item.RecurringBookingId);
+
         builder.HasMany(item => item.ProductVersions).WithMany(item => item.MarketplaceBookings);
         builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidMarketplaceBookings);
         builder.HasOne(item => item.PaidByOrganization).WithMany(item => item.PaidMarketplaceBookings);

@@ -59,6 +59,7 @@ public static class Extensions
 
         public IServiceCollection AddRepositories() =>
             services
+                .AddScoped<IRecurringBookingRepository, RecurringBookingRepository>()
                 .AddScoped<IBookingRepository, BookingRepository>()
                 .AddScoped<IMarketplaceBookingRepository, MarketplaceBookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()

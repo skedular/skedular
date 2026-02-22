@@ -27,7 +27,7 @@ public class Booking : EntityBaseWithDeleted
     public virtual Customer? CreatedByCustomer { get; set; }
     public virtual Customer? LastModifiedByCustomer { get; set; }
     public virtual Customer? DeletedByCustomer { get; set; }
-    public virtual BookingRecurrence? BookingRecurrence { get; set; }
+    public virtual RecurringBooking? RecurringBooking { get; set; }
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -58,7 +58,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedBookings);
         builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedBookings);
         builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedBookings);
-        builder.HasOne(item => item.BookingRecurrence).WithMany(item => item.Bookings);
+        builder.HasOne(item => item.RecurringBooking).WithMany(item => item.Bookings);
 
         builder.HasIndex(item => item.From);
         builder.HasIndex(item => item.Until);

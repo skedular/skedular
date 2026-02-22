@@ -83,6 +83,9 @@ public class BookingInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
+        // TODO: 20260222 - Morteza: Need to revisit this part once implementing booking recurrence
+        ArgumentNullException.ThrowIfNull(marketplaceBooking.Booking);
+
         await temporalService.SignalPayBookingViaCardWorkflowAsync(
             marketplaceBooking.Booking.Id,
             new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
@@ -118,6 +121,9 @@ public class BookingInternalSubscriber(
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        // TODO: 20260222 - Morteza: Need to revisit this part once implementing booking recurrence
+        ArgumentNullException.ThrowIfNull(marketplaceBooking.Booking);
 
         await temporalService.SignalPayBookingViaCardWorkflowAsync(
             marketplaceBooking.Booking.Id,

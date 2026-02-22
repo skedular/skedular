@@ -18,7 +18,8 @@ public class MarketplaceBooking : ModelBase
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
     public ICollection<string> InvoiceEmailList { get; set; } = [];
-    public Booking Booking { get; set; } = new();
+    public Booking? Booking { get; set; }
+    public RecurringBooking? RecurringBooking { get; set; }
     public ICollection<ProductVersion> ProductVersions { get; set; } = [];
     public Customer? PaidByCustomer { get; set; }
     public Organization? PaidByOrganization { get; set; }

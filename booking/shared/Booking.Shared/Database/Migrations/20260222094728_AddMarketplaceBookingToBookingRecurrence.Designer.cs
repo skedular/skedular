@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
@@ -14,9 +15,11 @@ using Temporalio.Client;
 namespace Booking.Shared.Database.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260222094728_AddMarketplaceBookingToBookingRecurrence")]
+    partial class AddMarketplaceBookingToBookingRecurrence
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +37,9 @@ namespace Booking.Shared.Database.Migrations
                 {
                     b.Property<string>("Id")
                         .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("BookingRecurrenceId")
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("Category")
@@ -81,9 +87,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
-                    b.Property<string>("RecurringBookingId")
-                        .HasColumnType("character varying(100)");
-
                     b.Property<ICollection<BookingSchedule>>("Schedules")
                         .IsRequired()
                         .HasColumnType("jsonb");
@@ -92,6 +95,8 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BookingRecurrenceId");
 
                     b.HasIndex("Category");
 
@@ -113,11 +118,85 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("Notes");
 
-                    b.HasIndex("RecurringBookingId");
-
                     b.HasIndex("Until");
 
                     b.ToTable("Booking");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.BookingRecurrence", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int?>("ByMonthDay")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("BySetPosition")
+                        .HasColumnType("integer");
+
+                    b.PrimitiveCollection<string>("ByWeekDays")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("EndType")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("Frequency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("OccurrenceCount")
+                        .HasColumnType("integer");
+
+                    b.PrimitiveCollection<string>("SkippedDates")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<DateTimeOffset>("Start")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("Until")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("EndType");
+
+                    b.HasIndex("Frequency");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("Start");
+
+                    b.HasIndex("Until");
+
+                    b.ToTable("BookingRecurrence");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
@@ -337,6 +416,9 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("BookingId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("BookingRecurrenceId")
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -395,9 +477,6 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(32)")
                         .HasDefaultValue("CONFIRMED");
 
-                    b.Property<string>("RecurringBookingId")
-                        .HasColumnType("character varying(100)");
-
                     b.Property<decimal?>("TaxAmount")
                         .HasColumnType("DECIMAL(18,4)");
 
@@ -413,6 +492,9 @@ namespace Booking.Shared.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.HasIndex("BookingRecurrenceId")
                         .IsUnique();
 
                     b.HasIndex("CreatedAt");
@@ -432,9 +514,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("PaymentMethod");
 
                     b.HasIndex("PaymentStatus");
-
-                    b.HasIndex("RecurringBookingId")
-                        .IsUnique();
 
                     b.HasIndex("TaxAmount");
 
@@ -867,82 +946,6 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductVersion");
-                });
-
-            modelBuilder.Entity("Booking.Shared.Database.Entities.RecurringBooking", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int?>("ByMonthDay")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("BySetPosition")
-                        .HasColumnType("integer");
-
-                    b.PrimitiveCollection<string>("ByWeekDays")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("EndType")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<string>("Frequency")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<int>("Interval")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int?>("OccurrenceCount")
-                        .HasColumnType("integer");
-
-                    b.PrimitiveCollection<string>("SkippedDates")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<DateTimeOffset>("Start")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("Until")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("EndType");
-
-                    b.HasIndex("Frequency");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Start");
-
-                    b.HasIndex("Until");
-
-                    b.ToTable("RecurringBooking");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Resource", b =>
@@ -1734,6 +1737,10 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Booking", b =>
                 {
+                    b.HasOne("Booking.Shared.Database.Entities.BookingRecurrence", "BookingRecurrence")
+                        .WithMany("Bookings")
+                        .HasForeignKey("BookingRecurrenceId");
+
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "CreatedByCustomer")
                         .WithMany("CreatedBookings")
                         .HasForeignKey("CreatedByCustomerId");
@@ -1746,17 +1753,13 @@ namespace Booking.Shared.Database.Migrations
                         .WithMany("LastModifiedBookings")
                         .HasForeignKey("LastModifiedByCustomerId");
 
-                    b.HasOne("Booking.Shared.Database.Entities.RecurringBooking", "RecurringBooking")
-                        .WithMany("Bookings")
-                        .HasForeignKey("RecurringBookingId");
+                    b.Navigation("BookingRecurrence");
 
                     b.Navigation("CreatedByCustomer");
 
                     b.Navigation("DeletedByCustomer");
 
                     b.Navigation("LastModifiedByCustomer");
-
-                    b.Navigation("RecurringBooking");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
@@ -1794,6 +1797,10 @@ namespace Booking.Shared.Database.Migrations
                         .WithOne("MarketplaceBooking")
                         .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "BookingId");
 
+                    b.HasOne("Booking.Shared.Database.Entities.BookingRecurrence", "BookingRecurrence")
+                        .WithOne("MarketplaceBooking")
+                        .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "BookingRecurrenceId");
+
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "PaidByCustomer")
                         .WithMany("PaidMarketplaceBookings")
                         .HasForeignKey("PaidByCustomerId");
@@ -1802,17 +1809,13 @@ namespace Booking.Shared.Database.Migrations
                         .WithMany("PaidMarketplaceBookings")
                         .HasForeignKey("PaidByOrganizationId");
 
-                    b.HasOne("Booking.Shared.Database.Entities.RecurringBooking", "RecurringBooking")
-                        .WithOne("MarketplaceBooking")
-                        .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "RecurringBookingId");
-
                     b.Navigation("Booking");
+
+                    b.Navigation("BookingRecurrence");
 
                     b.Navigation("PaidByCustomer");
 
                     b.Navigation("PaidByOrganization");
-
-                    b.Navigation("RecurringBooking");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationInvoiceCounter", b =>
@@ -2225,6 +2228,13 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("MarketplaceBooking");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.BookingRecurrence", b =>
+                {
+                    b.Navigation("Bookings");
+
+                    b.Navigation("MarketplaceBooking");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
                 {
                     b.Navigation("CreatedBookings");
@@ -2287,13 +2297,6 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("StripePrice");
 
                     b.Navigation("StripeProduct");
-                });
-
-            modelBuilder.Entity("Booking.Shared.Database.Entities.RecurringBooking", b =>
-                {
-                    b.Navigation("Bookings");
-
-                    b.Navigation("MarketplaceBooking");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Resource", b =>
