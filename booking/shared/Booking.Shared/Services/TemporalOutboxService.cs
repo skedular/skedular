@@ -1,8 +1,5 @@
 using System.Text.Json;
 using Booking.Shared.Workflows;
-using Booking.Shared.Workflows.Payment;
-using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
-using Booking.Shared.Workflows.Payment.PayViaCard;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
@@ -18,10 +15,13 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 {
     void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork);
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
+    void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+    void SignalWorkflowBookPrivateRecurringResourcesUpdated(string recurringBookingId, IUnitOfWork unitOfWork);
+    void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
@@ -33,6 +33,7 @@ public class TemporalOutboxService(
 {
     private static readonly string s_payBookingViaCard = typeof(PayBookingViaCard).ToWorkflowType();
     private static readonly string s_payBookingViaBankTransfer = typeof(PayBookingViaBankTransfer).ToWorkflowType();
+    private static readonly string s_bookPrivateRecurringResources = typeof(BookPrivateRecurringResources).ToWorkflowType();
 
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
@@ -45,6 +46,12 @@ public class TemporalOutboxService(
 
     private static readonly string s_payBookingViaBankTransferDeleteBookingAsync =
         typeof(PayBookingViaBankTransfer).GetMethod(nameof(PayBookingViaBankTransfer.DeleteBookingAsync))!.ToWorkflowSignalType();
+
+    private static readonly string s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync =
+        typeof(BookPrivateRecurringResources).GetMethod(nameof(BookPrivateRecurringResources.RecurringBookingUpdatedAsync))!.ToWorkflowSignalType();
+
+    private static readonly string s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync =
+        typeof(BookPrivateRecurringResources).GetMethod(nameof(BookPrivateRecurringResources.RecurringBookingDeletedAsync))!.ToWorkflowSignalType();
 
     public void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<PayBookingViaCard, PayBookingViaCardInput>(
@@ -67,6 +74,19 @@ public class TemporalOutboxService(
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<BookPrivateRecurringResources, BookPrivateRecurringResourcesInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId(args.RecurringBookingId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
             },
             unitOfWork);
 
@@ -106,6 +126,20 @@ public class TemporalOutboxService(
             new WorkflowSignalOptions(),
             unitOfWork);
 
+    public void SignalWorkflowBookPrivateRecurringResourcesUpdated(string recurringBookingId, IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId(recurringBookingId),
+            s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId(recurringBookingId),
+            s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
     public async Task StartWorkflowAsync(
         string workflowType,
         string? executionArgs,
@@ -137,6 +171,22 @@ public class TemporalOutboxService(
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync((PayBookingViaBankTransfer workflow) => workflow.ExecuteAsync(input), workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_bookPrivateRecurringResources)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<BookPrivateRecurringResourcesInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (BookPrivateRecurringResources workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
             {
@@ -204,6 +254,28 @@ public class TemporalOutboxService(
             await temporalClient
                 .GetWorkflowHandle<PayBookingViaBankTransfer>(workflowId)
                 .SignalAsync(workflow => workflow.DeleteBookingAsync(), workflowSignalOptions);
+        }
+        else if (signalType == s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
+                .SignalAsync(workflow => workflow.RecurringBookingUpdatedAsync(), workflowSignalOptions);
+        }
+        else if (signalType == s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
+                .SignalAsync(workflow => workflow.RecurringBookingDeletedAsync(), workflowSignalOptions);
         }
     }
 }

@@ -2,7 +2,7 @@ using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
-using Customer.Shared.Workflows.CustomerFeedback;
+using Customer.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 

@@ -1,7 +1,7 @@
 using Enterprise.Shared.Database;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
-using Slack.Shared.Workflows.ReSyncSlackWorkspace;
+using Slack.Shared.Workflows;
 
 namespace Slack.Api.Services;
 

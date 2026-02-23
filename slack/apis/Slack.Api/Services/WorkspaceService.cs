@@ -4,8 +4,7 @@ using Slack.Api.Mappers;
 using Slack.Shared.Configurations;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
-using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
-using Slack.Shared.Workflows.ReSyncSlackWorkspace;
+using Slack.Shared.Workflows;
 using SlackNet;
 
 namespace Slack.Api.Services;

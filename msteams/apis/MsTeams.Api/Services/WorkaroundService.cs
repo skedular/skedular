@@ -1,7 +1,7 @@
 using Enterprise.Shared.Database;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
-using MsTeams.Shared.Workflows.ReSyncMsTeams;
+using MsTeams.Shared.Workflows;
 
 namespace MsTeams.Api.Services;
 

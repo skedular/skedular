@@ -20,6 +20,18 @@ using StripeCustomer = Booking.Shared.Database.Entities.StripeCustomer;
 
 namespace Booking.Shared.Activities;
 
+public record CreateCheckoutSessionAsyncInput(string BookingId, string StripeConnectAccountId, string StripeCustomerId);
+
+public record UpsertBookingRelatedStripeCustomerInput(string BookingId, string StripeConnectAccountId);
+
+public record UpsertProductAndPricingInput(string BookingId);
+
+public record CreateCheckoutSessionAsyncResponse(string PaymentStatus);
+
+public record UpsertBookingRelatedStripeCustomerResponse(string StripeCustomerId);
+
+public record UpsertProductAndPricingResponse(string StripeConnectAccountId);
+
 public class StripeIntegrations(
     ApplicationConfiguration applicationConfiguration,
     IRepositoryFactory repositoryFactory,

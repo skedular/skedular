@@ -8,9 +8,7 @@ using Enterprise.Shared.Temporal;
 using Location.Shared;
 using Location.Shared.Activities;
 using Location.Shared.Database;
-using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
-using Location.Shared.Workflows.NewLocationJoined;
-using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
+using Location.Shared.Workflows;
 using Temporalio.Extensions.Hosting;
 
 namespace Location.Jobs;

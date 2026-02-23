@@ -1,7 +1,5 @@
 using System.Text.Json;
 using Customer.Shared.Workflows;
-using Customer.Shared.Workflows.CustomerFeedback;
-using Customer.Shared.Workflows.NewCustomerJoined;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;

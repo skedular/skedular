@@ -7,8 +7,7 @@ using Slack.Shared.Models;
 using Slack.Shared.Repositories;
 using Slack.Shared.Services;
 using Slack.Shared.Services.CrossDomains;
-using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
-using Slack.Shared.Workflows.ReSyncSlackWorkspace;
+using Slack.Shared.Workflows;
 using SlackNet.WebApi;
 using Organization = Slack.Shared.Database.Entities.Organization;
 

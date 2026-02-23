@@ -1,4 +1,4 @@
-using Customer.Shared.Workflows.AddPayment;
+using Customer.Shared.Workflows;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;

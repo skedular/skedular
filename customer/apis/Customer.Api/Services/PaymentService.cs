@@ -3,7 +3,7 @@ using Customer.Api.Mappers;
 using Customer.Shared.Models;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
-using Customer.Shared.Workflows.AddPayment;
+using Customer.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Stripe;
 

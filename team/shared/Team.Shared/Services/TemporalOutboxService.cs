@@ -4,7 +4,7 @@ using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
-using Team.Shared.Workflows.InviteToJoinTeam;
+using Team.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 using Temporalio.Exceptions;

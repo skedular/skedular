@@ -6,7 +6,7 @@ using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
-using Booking.Shared.Workflows.Payment;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Constants = Booking.Shared.GraphQL.Constants;

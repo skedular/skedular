@@ -3,8 +3,7 @@ using Organization.Api.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
+using Organization.Shared.Workflows;
 
 namespace Organization.Api.Services;
 

@@ -4,7 +4,7 @@ using Enterprise.Shared.Kafka.Consume;
 using Location.Shared.Database.Entities;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
-using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
+using Location.Shared.Workflows;
 using IMapper = Location.Processors.Mappers.IMapper;
 using Product = Location.Shared.Models.Product;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;

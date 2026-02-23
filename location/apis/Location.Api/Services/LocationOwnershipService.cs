@@ -6,7 +6,8 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
 using Location.Shared.Services.Cache;
-using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Location.Api.Services;
 

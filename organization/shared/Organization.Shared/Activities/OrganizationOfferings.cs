@@ -7,11 +7,15 @@ using Organization.Shared.Mappers;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows;
 using Stripe;
 using Temporalio.Activities;
 
 namespace Organization.Shared.Activities;
+
+public record PayForOrganizationOffering(string OrganizationOfferingId);
+
+public record RenewAutoRenewableOrganizationOfferingAsyncInput(string OrganizationId, string OrganizationOfferingId);
 
 public class OrganizationOfferings(
     IRepositoryFactory repositoryFactory,

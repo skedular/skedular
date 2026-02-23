@@ -6,7 +6,7 @@ using MsTeams.Shared.Models;
 using MsTeams.Shared.Repositories;
 using MsTeams.Shared.Services;
 using MsTeams.Shared.Services.Cache;
-using MsTeams.Shared.Workflows.ReSyncMsTeams;
+using MsTeams.Shared.Workflows;
 using AzureTenant = MsTeams.Shared.Database.Entities.AzureTenant;
 using Organization = MsTeams.Shared.Database.Entities.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;

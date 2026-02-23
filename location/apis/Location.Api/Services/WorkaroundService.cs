@@ -1,10 +1,10 @@
-using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Location.Api.Mappers;
 using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
-using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
+using Location.Shared.Workflows;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Location.Api.Services;
 

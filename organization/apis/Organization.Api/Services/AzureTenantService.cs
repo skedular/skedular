@@ -10,7 +10,7 @@ using Microsoft.VisualBasic;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
+using Organization.Shared.Workflows;
 using Constants = Enterprise.Shared.Constants;
 
 namespace Organization.Api.Services;

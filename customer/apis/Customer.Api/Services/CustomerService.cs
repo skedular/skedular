@@ -6,7 +6,7 @@ using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Customer.Shared.Services;
 using Customer.Shared.Services.Cache;
-using Customer.Shared.Workflows.NewCustomerJoined;
+using Customer.Shared.Workflows;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;

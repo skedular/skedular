@@ -1,10 +1,10 @@
-using Api.Shared.Services;
 using Booking.Shared.Mappers;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows.ResourcesSlots;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Booking.Api.Services;
 

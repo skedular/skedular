@@ -7,8 +7,7 @@ using Organization.Api.Services.Authorization;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.AddPayment;
-using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows;
 using Stripe;
 
 namespace Organization.Api.Services;

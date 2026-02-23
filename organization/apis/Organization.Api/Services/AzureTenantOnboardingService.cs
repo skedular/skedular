@@ -9,8 +9,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.OrganizationOfferingRenewal;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
+using Organization.Shared.Workflows;
 using Location = Organization.Shared.Database.Entities.Location;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 

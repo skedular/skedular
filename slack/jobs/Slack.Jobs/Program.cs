@@ -8,8 +8,7 @@ using Enterprise.Shared.Temporal;
 using Slack.Shared;
 using Slack.Shared.Activities;
 using Slack.Shared.Database;
-using Slack.Shared.Workflows.NewSlackWorkspaceJoined;
-using Slack.Shared.Workflows.ReSyncSlackWorkspace;
+using Slack.Shared.Workflows;
 using Temporalio.Extensions.Hosting;
 
 namespace Slack.Jobs;

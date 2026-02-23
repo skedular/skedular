@@ -1,8 +1,6 @@
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
-using Location.Shared.Workflows.GenerateLocationDailyAnalytics;
-using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 

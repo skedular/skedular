@@ -11,7 +11,7 @@ using Location.Shared.Publishers;
 using Location.Shared.Repositories;
 using Location.Shared.Services;
 using Location.Shared.Services.Cache;
-using Location.Shared.Workflows.PrecomputeLocationProductRelationships;
+using Location.Shared.Workflows;
 using Microsoft.EntityFrameworkCore;
 using Customer = Location.Shared.Database.Entities.Customer;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;

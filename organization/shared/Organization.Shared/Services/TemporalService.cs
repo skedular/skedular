@@ -1,9 +1,6 @@
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Workflows;
-using Organization.Shared.Workflows.AddPayment;
-using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 

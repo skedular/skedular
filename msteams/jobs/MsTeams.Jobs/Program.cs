@@ -8,7 +8,7 @@ using Enterprise.Shared.Temporal;
 using MsTeams.Shared;
 using MsTeams.Shared.Activities;
 using MsTeams.Shared.Database;
-using MsTeams.Shared.Workflows.ReSyncMsTeams;
+using MsTeams.Shared.Workflows;
 using Temporalio.Extensions.Hosting;
 
 namespace MsTeams.Jobs;

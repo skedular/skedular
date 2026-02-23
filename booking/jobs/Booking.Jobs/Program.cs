@@ -2,9 +2,7 @@ using Api.Shared.Services;
 using Booking.Shared;
 using Booking.Shared.Activities;
 using Booking.Shared.Database;
-using Booking.Shared.Workflows.Payment.PayViaBankTransfer;
-using Booking.Shared.Workflows.Payment.PayViaCard;
-using Booking.Shared.Workflows.ResourcesSlots;
+using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database;
@@ -51,6 +49,7 @@ public class Program
             .AddWorkflow<GenerateResourcesSlots>()
             .AddWorkflow<PayBookingViaCard>()
             .AddWorkflow<PayBookingViaBankTransfer>()
+            .AddWorkflow<BookPrivateRecurringResources>()
             .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>()

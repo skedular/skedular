@@ -9,7 +9,7 @@ using Organization.Shared.Database.Entities;
 using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
-using Organization.Shared.Workflows.OrganizationOfferingRenewal;
+using Organization.Shared.Workflows;
 
 namespace Organization.Api.Services;
 

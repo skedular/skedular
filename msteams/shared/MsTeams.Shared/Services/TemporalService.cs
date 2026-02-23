@@ -1,7 +1,6 @@
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using MsTeams.Shared.Workflows;
-using MsTeams.Shared.Workflows.ReSyncMsTeams;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 

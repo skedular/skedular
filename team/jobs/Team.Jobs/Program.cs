@@ -8,7 +8,7 @@ using Enterprise.Shared.Temporal;
 using Team.Shared;
 using Team.Shared.Activities;
 using Team.Shared.Database;
-using Team.Shared.Workflows.InviteToJoinTeam;
+using Team.Shared.Workflows;
 using Temporalio.Extensions.Hosting;
 
 namespace Team.Jobs;

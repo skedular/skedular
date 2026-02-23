@@ -13,6 +13,10 @@ using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;
 
+public record ReleaseBookingResourcesInput(string BookingId);
+
+public record CalculateBookingDifferentAmountsInput(string BookingId);
+
 public class BookingIntegrations(
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,

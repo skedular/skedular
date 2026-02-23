@@ -3,6 +3,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using RecurringBooking = Booking.Shared.Models.RecurringBooking;
 
@@ -34,7 +35,8 @@ public interface IPrivateRecurringBookingService
 public class PrivateRecurringBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
-    IMapper mapper) : IPrivateRecurringBookingService
+    IMapper mapper,
+    ITemporalOutboxService temporalOutboxService) : IPrivateRecurringBookingService
 {
     public async Task<RecurringBooking> AddAsync(
         RecurringBooking recurringBooking,
@@ -58,6 +60,10 @@ public class PrivateRecurringBookingService(
 
         recurringBookingEntity = repositoryFactory.RecurringBookingRepository.Add(recurringBookingEntity);
         recurringBooking = mapper.MapTo(recurringBookingEntity);
+
+        temporalOutboxService.StartBookPrivateRecurringResources(
+            new BookPrivateRecurringResourcesInput(recurringBooking.Id),
+            repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -101,6 +107,8 @@ public class PrivateRecurringBookingService(
         recurringBookingEntity = repositoryFactory.RecurringBookingRepository.Update(recurringBookingEntity);
         recurringBooking = mapper.MapTo(recurringBookingEntity);
 
+        temporalOutboxService.SignalWorkflowBookPrivateRecurringResourcesUpdated(recurringBooking.Id, repositoryFactory.UnitOfWork);
+
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
@@ -122,6 +130,8 @@ public class PrivateRecurringBookingService(
         existingRecurringBooking.DeletedByCustomer = deletedByCustomer;
         existingRecurringBooking = repositoryFactory.RecurringBookingRepository.Update(existingRecurringBooking);
         var deletedRecurringBooking = mapper.MapTo(repositoryFactory.RecurringBookingRepository.Remove(existingRecurringBooking));
+
+        temporalOutboxService.SignalWorkflowBookPrivateRecurringResourcesDeleted(existingRecurringBooking.Id, repositoryFactory.UnitOfWork);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

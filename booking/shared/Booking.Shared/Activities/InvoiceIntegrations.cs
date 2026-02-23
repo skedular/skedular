@@ -18,6 +18,8 @@ using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Activities;
 
+public record GenerateAndSendInvoiceInput(string BookingId, bool FullyPaid, ICollection<string> InvoiceEmailList);
+
 public class InvoiceIntegrations(
     EmailConfiguration emailConfiguration,
     CoreConfiguration coreConfiguration,

@@ -9,12 +9,7 @@ using Enterprise.Shared.Temporal;
 using Organization.Shared;
 using Organization.Shared.Activities;
 using Organization.Shared.Database;
-using Organization.Shared.Workflows.AddPayment;
-using Organization.Shared.Workflows.GenerateOrganizationDailyAnalytics;
-using Organization.Shared.Workflows.InviteToJoinOrganization;
-using Organization.Shared.Workflows.NewOrganizationJoined;
-using Organization.Shared.Workflows.OrganizationOfferingRenewal;
-using Organization.Shared.Workflows.ReSyncAzureTenant;
+using Organization.Shared.Workflows;
 using Temporalio.Extensions.Hosting;
 
 namespace Organization.Jobs;

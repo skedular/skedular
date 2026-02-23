@@ -1,7 +1,4 @@
 using Booking.Shared.Workflows;
-using Booking.Shared.Workflows.Payment;
-using Booking.Shared.Workflows.Payment.PayViaCard;
-using Booking.Shared.Workflows.ResourcesSlots;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;

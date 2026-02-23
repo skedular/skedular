@@ -11,7 +11,7 @@ using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
 using Team.Shared.Services.Cache;
-using Team.Shared.Workflows.InviteToJoinTeam;
+using Team.Shared.Workflows;
 using Customer = Team.Shared.Database.Entities.Customer;
 using TeamMember = Team.Shared.Database.Entities.TeamMember;
 

@@ -2,7 +2,7 @@ using Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Booking.Shared.Workflows.Payment;
+using Booking.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Kafka.Consume;
