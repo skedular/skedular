@@ -1,11 +1,9 @@
 using Api.Shared.Services;
 using Booking.Api.Services.Authorization;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.Services;
 
@@ -21,7 +19,6 @@ public class MarketplaceBookingService(
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
-    IOrganizationOfferingService organizationOfferingService,
     IContext context,
     Shared.Services.IMarketplaceBookingService sharedMarketplaceBookingService) : IMarketplaceBookingService
 {
@@ -59,8 +56,25 @@ public class MarketplaceBookingService(
             booking.Id = randomHelper.Generate();
         }
 
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, customer.Id, false, cancellationToken);
+        var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
+            booking.InvolvedOrganizations
+                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                .Select(item => item.Id)
+                .Distinct()
+                .ToList(),
+            booking.InvolvedOrganizations
+                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                .Select(item => item.UniqueAlphanumericName!)
+                .Distinct()
+                .ToList(),
+            customer.Id,
+            false,
+            cancellationToken);
+        var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
+            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            customer.Id,
+            false,
+            cancellationToken);
 
         return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
     }
@@ -117,8 +131,25 @@ public class MarketplaceBookingService(
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
-        var organizations = await GetOrganizationsAndValidatePermissionsAsync(booking, callingCustomer.Id, true, cancellationToken);
-        var teams = await GetTeamAndValidatePermissionsAsync(booking, callingCustomer.Id, false, cancellationToken);
+        var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
+            booking.InvolvedOrganizations
+                .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                .Select(item => item.Id)
+                .Distinct()
+                .ToList(),
+            booking.InvolvedOrganizations
+                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                .Select(item => item.UniqueAlphanumericName!)
+                .Distinct()
+                .ToList(),
+            callingCustomer.Id,
+            true,
+            cancellationToken);
+        var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
+            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            callingCustomer.Id,
+            true,
+            cancellationToken);
 
         return await sharedMarketplaceBookingService.UpdateAsync(
             booking,
@@ -127,112 +158,5 @@ public class MarketplaceBookingService(
             organizations,
             teams,
             cancellationToken);
-    }
-
-    private async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
-        Shared.Models.Booking booking,
-        string customerId,
-        bool existing,
-        CancellationToken cancellationToken)
-    {
-        var organizationIds = booking.InvolvedOrganizations
-            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-            .Select(item => item.Id)
-            .Distinct()
-            .ToList();
-        var uniqueAlphanumericNames = booking.InvolvedOrganizations
-            .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-            .Select(item => item.UniqueAlphanumericName!)
-            .Distinct()
-            .ToList();
-
-        if (organizationIds.Count == 0 && uniqueAlphanumericNames.Count == 0)
-        {
-            return [];
-        }
-
-        var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
-            organizationIds,
-            uniqueAlphanumericNames,
-            false,
-            false,
-            cancellationToken);
-        if (organizationIds.Count + uniqueAlphanumericNames.Count != organizationEntities.Count)
-        {
-            throw new OrganizationNotFound();
-        }
-
-        var result = new List<Organization>();
-        foreach (var organization in booking.InvolvedOrganizations)
-        {
-            var organizationEntity = organizationEntities.First(item =>
-                item.Id == organization.Id || item.UniqueAlphanumericName == organization.UniqueAlphanumericName);
-            if (existing)
-            {
-                if (!await organizationAuthorizationService.CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-            else
-            {
-                if (!await organizationAuthorizationService.CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-
-                if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customerId, cancellationToken))
-                {
-                    throw new NoMoreInteractionAllowed();
-                }
-            }
-
-            result.Add(organizationEntity);
-        }
-
-        return result;
-    }
-
-    private async Task<ICollection<Team>> GetTeamAndValidatePermissionsAsync(
-        Shared.Models.Booking booking,
-        string customerId,
-        bool existing,
-        CancellationToken cancellationToken)
-    {
-        var teamIds = booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
-        if (teamIds.Count == 0)
-        {
-            return [];
-        }
-
-        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
-        if (teamIds.Count != teams.Count)
-        {
-            throw new TeamNotFound();
-        }
-
-        var result = new List<Team>();
-        foreach (var team in booking.InvolvedTeams)
-        {
-            var teamEntity = teams.First(item => item.Id == team.Id);
-            if (existing)
-            {
-                if (!await teamAuthorizationService.CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-            else
-            {
-                if (!await teamAuthorizationService.CanAddBookingAsync(teamEntity, customerId, cancellationToken))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-
-            result.Add(teamEntity);
-        }
-
-        return result;
     }
 }

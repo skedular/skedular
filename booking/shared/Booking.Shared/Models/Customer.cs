@@ -14,10 +14,14 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<OrganizationTag> PreferredOrganizationTags { get; set; } = [];
     public ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
     public ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public ICollection<Booking> CreatedBookings { get; set; } = [];
     public ICollection<Booking> LastModifiedBookings { get; set; } = [];
     public ICollection<Booking> DeletedBookings { get; set; } = [];
+    public ICollection<RecurringBooking> CreatedRecurringBookings { get; set; } = [];
+    public ICollection<RecurringBooking> LastModifiedRecurringBookings { get; set; } = [];
+    public ICollection<RecurringBooking> DeletedRecurringBookings { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public string DisplayableName => this.ToDisplayableName();
     public CustomerType? Type { get; set; }

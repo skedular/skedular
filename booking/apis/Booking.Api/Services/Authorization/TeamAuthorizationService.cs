@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Booking.Shared.Models;
+using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -12,9 +13,16 @@ public interface ITeamAuthorizationService
     ValueTask<bool> CanUpdateBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanDeleteBookingAsync(Team team, string customerId, CancellationToken cancellationToken);
     ValueTask<TeamPermissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken);
+
+    Task<ICollection<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
+        ICollection<string> ids,
+        string customerId,
+        bool existing,
+        CancellationToken cancellationToken);
 }
 
 public class TeamAuthorizationService(
+    IRepositoryFactory repositoryFactory,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ICachedTeamService cachedTeamService,
     ICachedCustomerService cachedCustomerService)
@@ -50,5 +58,47 @@ public class TeamAuthorizationService(
             CanUpdateBooking = await CanUpdateBookingAsync(team, customer.Id, cancellationToken),
             CanDeleteBooking = await CanDeleteBookingAsync(team, customer.Id, cancellationToken)
         };
+    }
+
+    public async Task<ICollection<Team>> GetBookingInvolvedTeamAndValidatePermissionsAsync(
+        ICollection<string> ids,
+        string customerId,
+        bool existing,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0)
+        {
+            return [];
+        }
+
+        var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(ids, false, cancellationToken);
+        if (ids.Count != teams.Count)
+        {
+            throw new TeamNotFound();
+        }
+
+        var result = new List<Team>();
+        foreach (var id in ids)
+        {
+            var teamEntity = teams.First(item => item.Id == id);
+            if (existing)
+            {
+                if (!await CanUpdateBookingAsync(teamEntity, customerId, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+            else
+            {
+                if (!await CanAddBookingAsync(teamEntity, customerId, cancellationToken))
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+
+            result.Add(teamEntity);
+        }
+
+        return result;
     }
 }

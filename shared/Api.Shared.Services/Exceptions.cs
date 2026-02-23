@@ -40,6 +40,8 @@ public class PaymentMethodRequired() : Exception("Payment method required");
 
 public class BookingNotFound() : Exception("Booking not found");
 
+public class RecurringBookingNotFound() : Exception("Recurring booking not found");
+
 public class NoMoreInteractionAllowed()
     : Exception("You have exceeded your free tier limit, please upgrade to 'Pay as you go' tier to have full access to all features.");
 

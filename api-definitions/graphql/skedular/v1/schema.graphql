@@ -59,9 +59,19 @@ type BookingEdge {
   node: BookingDetails!
 }
 
+type BookingFrequencyDetails {
+  frequency: BookingFrequency!
+  name: String!
+}
+
 type BookingPayload {
   booking: BookingDetails!
   clientMutationId: String
+}
+
+type BookingRecurrenceEndTypeDetails {
+  endType: RecurringBookingEndType!
+  name: String!
 }
 
 type BookingResourceDetails {
@@ -270,6 +280,11 @@ type CustomerPaymentMethod {
   cardIssuer: String
   cardLastFourDigit: String
   id: ID!
+}
+
+type DayOfWeekDetails {
+  dayOfWeek: DayOfWeek!
+  name: String!
 }
 
 type DesksOccupancyPercentage {
@@ -483,6 +498,7 @@ type Mutation {
   addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationStripeConnectAccount(input: AddOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
   addProductTag(input: AddProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   addResource(input: AddResourceInput!): ResourcePayload! @cost(weight: "10")
@@ -1110,6 +1126,34 @@ type Query {
   zone(id: String!): OrganizationTagDetails @cost(weight: "10")
 }
 
+type RecurringBookingDetails {
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeekDetails!]!
+  channel: BookingChannelDetails!
+  createdByCustomer: CustomerDetails
+  deletedByCustomer: CustomerDetails
+  endDate: DateTime
+  endType: BookingRecurrenceEndTypeDetails!
+  frequency: BookingFrequencyDetails!
+  from: DateTime!
+  id: ID!
+  interval: Int!
+  involvedCustomers: [CustomerDetails!]!
+  involvedOrganizations: [OrganizationDetails!]!
+  involvedTeams: [TeamDetails!]!
+  lastModifiedByCustomer: CustomerDetails
+  occurrenceCount: Int
+  skippedDates: [DateTime!]!
+  startDate: DateTime!
+  until: DateTime!
+}
+
+type RecurringBookingPayload {
+  clientMutationId: String
+  recurringBooking: RecurringBookingDetails!
+}
+
 type RemoveCustomerPaymentMethodPayload {
   clientMutationId: String
 }
@@ -1513,6 +1557,27 @@ input AddPrivateBookingInput {
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   resourceIds: [String!]!
+  teamIds: [String!]!
+  until: DateTime!
+}
+
+input AddPrivateRecurringBookingInput {
+  byMonthDay: Int!
+  bySetPosition: Int!
+  byWeekDays: [DayOfWeek!]!
+  clientMutationId: String
+  customerIds: [String!]!
+  endDate: DateTime
+  endType: RecurringBookingEndType!
+  frequency: BookingFrequency!
+  from: DateTime!
+  id: String
+  interval: Int!
+  occurrenceCount: Int!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  skippedDates: [DateTime!]!
+  startDate: DateTime!
   teamIds: [String!]!
   until: DateTime!
 }
@@ -2581,6 +2646,12 @@ enum BookingChannel {
   PRIVATE
 }
 
+enum BookingFrequency {
+  DAILY
+  MONTHLY
+  WEEKLY
+}
+
 enum BookingOrderField {
   CATEGORY
   CHANNEL
@@ -2609,6 +2680,16 @@ enum CustomerOrderField {
 enum CustomerType {
   GUEST
   REGISTERED
+}
+
+enum DayOfWeek {
+  FRIDAY
+  MONDAY
+  SATURDAY
+  SUNDAY
+  THURSDAY
+  TUESDAY
+  WEDNESDAY
 }
 
 enum FeedbackChannelType {
@@ -2749,6 +2830,12 @@ enum PriceUnit {
 
 enum ProductOrderField {
   NAME
+}
+
+enum RecurringBookingEndType {
+  AFTER_OCCURRENCES
+  NEVER
+  UNTIL_DATE
 }
 
 enum ResourceOrderField {

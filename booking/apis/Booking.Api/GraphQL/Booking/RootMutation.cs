@@ -39,6 +39,16 @@ public class RootMutation(IMapper mapper)
     }
 
     [UseResolverScope]
+    public async Task<RecurringBookingPayload> AddPrivateRecurringBookingAsync(
+        AddPrivateRecurringBookingInput input,
+        [Service] IPrivateRecurringBookingService privateRecurringBookingService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await privateRecurringBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+    }
+
+    [UseResolverScope]
     public async Task<BookingPayload> AddMarketplaceBookingAsync(
         AddMarketplaceBookingInput input,
         [Service] IMarketplaceBookingService marketplaceBookingService,

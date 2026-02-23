@@ -26,7 +26,9 @@ namespace Booking.Api.Mappers;
 public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
+    RecurringBookingDetails MapTo(RecurringBooking src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
+    RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
     Shared.Models.Booking MapTo(UpdatePrivateBookingInput src);
     Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
     Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
@@ -63,6 +65,31 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             MarketplaceBooking = MapTo(src.MarketplaceBooking)
         };
 
+    public RecurringBookingDetails MapTo(RecurringBooking src) =>
+        new()
+        {
+            Id = src.Id,
+            From = src.From,
+            Until = src.Until,
+            Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
+            Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
+            Interval = src.Interval,
+            ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails { DayOfWeek = item, Name = item.ToDayOfWeekName() }),
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
+            EndType = new BookingRecurrenceEndTypeDetails { EndType = src.EndType, Name = src.EndType.ToRecurringBookingEndTypeName() },
+            StartDate = src.StartDate,
+            EndDate = src.EndDate,
+            OccurrenceCount = src.OccurrenceCount,
+            SkippedDates = src.SkippedDates,
+            InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
+            InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.UniqueAlphanumericName.ToSafeString())),
+            InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
+            CreatedByCustomerId = src.CreatedByCustomer?.Id,
+            LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
+            DeletedByCustomerId = src.DeletedByCustomer?.Id
+        };
+
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
@@ -77,13 +104,40 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                    .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                        new Organization { UniqueAlphanumericName = item }))
-                    .ToList(),
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                    new Organization { UniqueAlphanumericName = item }))
+                .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+        };
+    }
+
+    public RecurringBooking MapTo(AddPrivateRecurringBookingInput src)
+    {
+        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+
+        return new RecurringBooking
+        {
+            Id = src.Id.ToSafeString(),
+            From = src.From,
+            Until = src.Until,
+            Frequency = src.Frequency,
+            Interval = src.Interval,
+            ByWeekDays = src.ByWeekDays,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
+            EndType = src.EndType,
+            StartDate = src.StartDate,
+            EndDate = src.EndDate,
+            OccurrenceCount = src.OccurrenceCount,
+            SkippedDates = src.SkippedDates,
+            InvolvedCustomers = customers,
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                    new Organization { UniqueAlphanumericName = item }))
+                .ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
         };
     }
 
@@ -426,7 +480,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
                 PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
-            },
+            }
         };
 
         marketplaceBooking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));

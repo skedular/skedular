@@ -1,7 +1,9 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
+using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.Services.Authorization;
 
@@ -18,12 +20,21 @@ public interface IOrganizationAuthorizationService
         string? organizationId,
         string? organizationUniqueAlphanumericName,
         CancellationToken cancellationToken);
+
+    Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
+        ICollection<string> ids,
+        ICollection<string> uniqueAlphanumericNames,
+        string customerId,
+        bool existing,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationAuthorizationService(
+    IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     ICachedOrganizationService cachedOrganizationService,
-    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService)
+    IOrganizationSsoAuthorizationService organizationSsoAuthorizationService,
+    IOrganizationOfferingService organizationOfferingService)
     : IOrganizationAuthorizationService
 {
     public async ValueTask<bool> CanViewOrganizationDetailsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
@@ -117,5 +128,101 @@ public class OrganizationAuthorizationService(
             CanDeleteBooking = await CanDeleteBookingAsync(organization.Id, customer.Id, cancellationToken),
             CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken)
         };
+    }
+
+    public async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
+        ICollection<string> ids,
+        ICollection<string> uniqueAlphanumericNames,
+        string customerId,
+        bool existing,
+        CancellationToken cancellationToken)
+    {
+        if (ids.Count == 0 && uniqueAlphanumericNames.Count == 0)
+        {
+            return [];
+        }
+
+        var result = new List<Organization>();
+
+        if (ids.Count != 0)
+        {
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+                ids,
+                null,
+                false,
+                false,
+                cancellationToken);
+            if (ids.Count + uniqueAlphanumericNames.Count != organizations.Count)
+            {
+                throw new OrganizationNotFound();
+            }
+
+            foreach (var id in ids)
+            {
+                var organizationEntity = organizations.First(item => item.Id == id);
+                if (existing)
+                {
+                    if (!await CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                }
+                else
+                {
+                    if (!await CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new NoMoreInteractionAllowed();
+                    }
+                }
+
+                result.Add(organizationEntity);
+            }
+        }
+        else if (uniqueAlphanumericNames.Count != 0)
+        {
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+                null,
+                uniqueAlphanumericNames,
+                false,
+                false,
+                cancellationToken);
+            if (ids.Count + uniqueAlphanumericNames.Count != organizations.Count)
+            {
+                throw new OrganizationNotFound();
+            }
+
+            foreach (var uniqueAlphanumericName in uniqueAlphanumericNames)
+            {
+                var organizationEntity = organizations.First(item => item.UniqueAlphanumericName == uniqueAlphanumericName);
+                if (existing)
+                {
+                    if (!await CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+                }
+                else
+                {
+                    if (!await CanAddBookingAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new UnauthorizedAccessException();
+                    }
+
+                    if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organizationEntity.Id, customerId, cancellationToken))
+                    {
+                        throw new NoMoreInteractionAllowed();
+                    }
+                }
+
+                result.Add(organizationEntity);
+            }
+        }
+
+        return result;
     }
 }

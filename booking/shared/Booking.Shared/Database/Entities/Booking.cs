@@ -39,10 +39,7 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Notes).HasMaxLength(Constants.MaxBookingNotesLength);
-        builder.Property(item => item.Category)
-            .HasMaxLength(Constants.MaxBookingCategoryLength)
-            .HasDefaultValue(BookingCategoryConstants.WorkingFromOffice);
-
+        builder.Property(item => item.Category).HasMaxLength(Constants.MaxBookingCategoryLength);
         builder.Property(item => item.Channel).HasMaxLength(Constants.MaxBookingChannelLength);
         builder.Property(item => item.Schedules).HasColumnType("jsonb");
 

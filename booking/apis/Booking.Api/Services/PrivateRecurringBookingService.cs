@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
@@ -7,26 +8,26 @@ using Customer = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Api.Services;
 
-public interface IPrivateBookingService
+public interface IPrivateRecurringBookingService
 {
-    Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken);
-    Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken);
+    Task<RecurringBooking> AddAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
+    Task<RecurringBooking> UpdateAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
+    Task<RecurringBooking> DeleteAsync(string id, CancellationToken cancellationToken);
 }
 
-public class PrivateBookingService(
+public class PrivateRecurringBookingService(
     IRepositoryFactory repositoryFactory,
     IRandomHelper randomHelper,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IContext context,
-    Shared.Services.IPrivateBookingService sharedPrivateBookingService) : IPrivateBookingService
+    Shared.Services.IPrivateRecurringBookingService sharedPrivateRecurringBookingService) : IPrivateRecurringBookingService
 {
-    public async Task<Shared.Models.Booking> AddAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+    public async Task<RecurringBooking> AddAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
     {
-        if (booking.InvolvedCustomers.Count == 0)
+        if (recurringBooking.InvolvedCustomers.Count == 0)
         {
-            throw new ArgumentException(nameof(booking.InvolvedCustomers));
+            throw new ArgumentException(nameof(recurringBooking.InvolvedCustomers));
         }
 
         var verifiableToken = context.GetVerifiableToken();
@@ -34,26 +35,26 @@ public class PrivateBookingService(
 
         var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
                        throw new CustomerNotFound();
-        if (!string.IsNullOrWhiteSpace(booking.Id))
+        if (!string.IsNullOrWhiteSpace(recurringBooking.Id))
         {
-            var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
+            var existingBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken);
             if (existingBooking is not null)
             {
-                return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+                return await UpdateInternalAsync(recurringBooking, existingBooking, customer, cancellationToken);
             }
         }
         else
         {
-            booking.Id = randomHelper.Generate();
+            recurringBooking.Id = randomHelper.Generate();
         }
 
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
-            booking.InvolvedOrganizations
+            recurringBooking.InvolvedOrganizations
                 .Where(item => !string.IsNullOrWhiteSpace(item.Id))
                 .Select(item => item.Id)
                 .Distinct()
                 .ToList(),
-            booking.InvolvedOrganizations
+            recurringBooking.InvolvedOrganizations
                 .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
                 .Select(item => item.UniqueAlphanumericName!)
                 .Distinct()
@@ -63,29 +64,31 @@ public class PrivateBookingService(
             cancellationToken);
 
         var teams = await teamAuthorizationService.GetBookingInvolvedTeamAndValidatePermissionsAsync(
-            booking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
+            recurringBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList(),
             customer.Id,
             false,
             cancellationToken);
 
-        return await sharedPrivateBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
+        return await sharedPrivateRecurringBookingService.AddAsync(recurringBooking, customer, organizations, teams, cancellationToken);
     }
 
-    public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
+
+    public async Task<RecurringBooking> UpdateAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(booking.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(recurringBooking.Id);
 
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
         var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
                        throw new CustomerNotFound();
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken) ?? throw new BookingNotFound();
+        var existingRecurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken) ??
+                                       throw new RecurringBookingNotFound();
 
-        return await UpdateInternalAsync(booking, existingBooking, customer, cancellationToken);
+        return await UpdateInternalAsync(recurringBooking, existingRecurringBooking, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Booking> DeleteAsync(string id, CancellationToken cancellationToken)
+    public async Task<RecurringBooking> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -94,8 +97,9 @@ public class PrivateBookingService(
 
         var customer = await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, true, cancellationToken) ??
                        throw new CustomerNotFound();
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
-        var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
+        var existingRecurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(id, cancellationToken) ??
+                                       throw new RecurringBookingNotFound();
+        var organizationIds = existingRecurringBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
             var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
@@ -114,7 +118,7 @@ public class PrivateBookingService(
             }
         }
 
-        var teamIds = existingBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
+        var teamIds = existingRecurringBooking.InvolvedTeams.Select(item => item.Id).Distinct().ToList();
         if (teamIds.Count != 0)
         {
             var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
@@ -127,12 +131,12 @@ public class PrivateBookingService(
             }
         }
 
-        return await sharedPrivateBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
+        return await sharedPrivateRecurringBookingService.DeleteAsync(existingRecurringBooking, customer, cancellationToken);
     }
 
-    private async Task<Shared.Models.Booking> UpdateInternalAsync(
-        Shared.Models.Booking booking,
-        Shared.Database.Entities.Booking existingBooking,
+    private async Task<RecurringBooking> UpdateInternalAsync(
+        RecurringBooking booking,
+        Shared.Database.Entities.RecurringBooking existingRecurringBooking,
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
@@ -156,6 +160,12 @@ public class PrivateBookingService(
             true,
             cancellationToken);
 
-        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
+        return await sharedPrivateRecurringBookingService.UpdateAsync(
+            booking,
+            existingRecurringBooking,
+            callingCustomer,
+            organizations,
+            teams,
+            cancellationToken);
     }
 }

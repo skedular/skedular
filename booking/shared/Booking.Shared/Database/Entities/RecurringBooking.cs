@@ -25,6 +25,12 @@ public class RecurringBooking : EntityBaseWithDeleted
 
     public virtual ICollection<Booking> Bookings { get; set; } = [];
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
+    public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
+    public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
+    public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual Customer? CreatedByCustomer { get; set; }
+    public virtual Customer? LastModifiedByCustomer { get; set; }
+    public virtual Customer? DeletedByCustomer { get; set; }
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -41,6 +47,13 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
         builder.Property(item => item.ByWeekDays).HasColumnType("jsonb");
         builder.Property(item => item.EndType).HasMaxLength(Constants.MaxRecurringBookingEndTypeLength);
         builder.Property(item => item.SkippedDates).HasColumnType("jsonb");
+
+        builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedRecurringBooking);
+        builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedRecurringBooking);
+        builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedRecurringBooking);
+        builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedRecurringBookings);
+        builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedRecurringBookings);
+        builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedRecurringBookings);
 
         builder.HasIndex(item => item.Channel);
         builder.HasIndex(item => item.Frequency);

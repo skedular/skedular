@@ -27,6 +27,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual OrganizationSsoSetting? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Product> Products { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public virtual ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
     public virtual ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public virtual ICollection<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
