@@ -1,7 +1,7 @@
 using Booking.Shared.Models;
 using HotChocolate;
 
-namespace Booking.Api.GraphQL.Booking;
+namespace Booking.Api.GraphQL.RecurringBooking;
 
 [GraphQLName("BookingFrequencyDetails")]
 public class BookingFrequencyDetails

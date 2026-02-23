@@ -1,8 +1,9 @@
+using Booking.Api.GraphQL.Booking;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
 
-namespace Booking.Api.GraphQL.Booking;
+namespace Booking.Api.GraphQL.RecurringBooking;
 
 [GraphQLName("RecurringBookingDetails")]
 public class RecurringBookingDetails : Node
@@ -12,6 +13,8 @@ public class RecurringBookingDetails : Node
     [GraphQLName("channel")] public BookingChannelDetails Channel { get; set; } = new();
     [GraphQLName("frequency")] public BookingFrequencyDetails Frequency { get; set; } = new();
     [GraphQLName("interval")] public int Interval { get; set; }
+    [GraphQLName("byMonthDay")] public int? ByMonthDay { get; set; }
+    [GraphQLName("bySetPosition")] public int? BySetPosition { get; set; }
     [GraphQLName("byWeekDays")] public IEnumerable<DayOfWeekDetails> ByWeekDays { get; set; } = [];
     [GraphQLName("endType")] public BookingRecurrenceEndTypeDetails EndType { get; set; } = new();
     [GraphQLName("startDate")] public DateTimeOffset StartDate { get; set; }

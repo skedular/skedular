@@ -14,6 +14,8 @@ public class RecurringBooking : EntityBaseWithDeleted
     public string Channel { get; set; }
     public string Frequency { get; set; }
     public int Interval { get; set; }
+    public int? ByMonthDay { get; set; }
+    public int? BySetPosition { get; set; }
     public ICollection<string> ByWeekDays { get; set; } = [];
     public string EndType { get; set; }
     public DateTimeOffset StartDate { get; set; }
@@ -42,6 +44,8 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
         builder.Property(item => item.Channel).HasMaxLength(Constants.MaxBookingChannelLength);
         builder.Property(item => item.Frequency).HasMaxLength(Constants.MaxRecurringBookingFrequencyLength);
         builder.Property(item => item.Interval);
+        builder.Property(item => item.ByMonthDay);
+        builder.Property(item => item.BySetPosition);
         builder.Property(item => item.ByWeekDays).HasColumnType("jsonb");
         builder.Property(item => item.EndType).HasMaxLength(Constants.MaxRecurringBookingEndTypeLength);
         builder.Property(item => item.SkippedDates).HasColumnType("jsonb");

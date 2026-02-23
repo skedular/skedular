@@ -53,7 +53,8 @@ public class Program
             .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>()
-            .AddScopedActivities<InvoiceIntegrations>();
+            .AddScopedActivities<InvoiceIntegrations>()
+            .AddScopedActivities<PrivateRecurringBookingIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
     }

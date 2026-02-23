@@ -279,6 +279,8 @@ public class Mapper : IMapper
             Channel = src.Channel.ToBookingChannel(),
             Frequency = src.Frequency.ToBookingFrequency(),
             Interval = src.Interval,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
             ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList(),
             EndType = src.EndType.ToRecurringBookingEndType(),
             StartDate = src.StartDate,
@@ -386,6 +388,8 @@ public class Mapper : IMapper
         dest.Until = src.Until;
         dest.Frequency = src.Frequency.ToBookingFrequency();
         dest.Interval = src.Interval;
+        dest.ByMonthDay = src.ByMonthDay;
+        dest.BySetPosition = src.BySetPosition;
         dest.ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList();
         dest.EndType = src.EndType.ToRecurringBookingEndType();
         dest.StartDate = src.StartDate;

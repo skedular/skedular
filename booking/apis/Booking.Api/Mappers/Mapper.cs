@@ -3,6 +3,7 @@ using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.Payment;
+using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
@@ -29,6 +30,7 @@ public interface IMapper
     RecurringBookingDetails MapTo(RecurringBooking src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
+    RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src);
     Shared.Models.Booking MapTo(UpdatePrivateBookingInput src);
     Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
     Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
@@ -74,6 +76,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
             Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
             Interval = src.Interval,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
             ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails { DayOfWeek = item, Name = item.ToDayOfWeekName() }),
             EndType = new BookingRecurrenceEndTypeDetails { EndType = src.EndType, Name = src.EndType.ToRecurringBookingEndTypeName() },
             StartDate = src.StartDate,
@@ -122,6 +126,36 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Until = src.Until,
             Frequency = src.Frequency,
             Interval = src.Interval,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
+            ByWeekDays = src.ByWeekDays,
+            EndType = src.EndType,
+            StartDate = src.StartDate,
+            EndDate = src.EndDate,
+            OccurrenceCount = src.OccurrenceCount,
+            SkippedDates = src.SkippedDates,
+            InvolvedCustomers = customers,
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                    new Organization { UniqueAlphanumericName = item }))
+                .ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
+        };
+    }
+
+    public RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src)
+    {
+        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+
+        return new RecurringBooking
+        {
+            Id = src.Id,
+            From = src.From,
+            Until = src.Until,
+            Frequency = src.Frequency,
+            Interval = src.Interval,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
             ByWeekDays = src.ByWeekDays,
             EndType = src.EndType,
             StartDate = src.StartDate,

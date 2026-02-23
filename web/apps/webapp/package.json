@@ -75,7 +75,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/eslintrc": "^3.3.4",
     "@types/leaflet": "^1.9.21",
     "@types/logrocket-react": "^3.0.3",
     "@types/node": "^25.3.0",
@@ -87,7 +87,7 @@
     "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.6",
-    "graphql": "^16.12.0",
+    "graphql": "^16.13.0",
     "prettier": "^3.8.1",
     "relay-compiler": "^20.1.1",
     "relay-compiler-language-typescript": "^15.0.1",

@@ -532,6 +532,7 @@ type Mutation {
   deleteOrganizationStripeConnectAccount(input: DeleteOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   deleteOrganizationStripeConnectAccounts(input: DeleteOrganizationStripeConnectAccountsInput!): OrganizationStripeConnectAccountsPayload! @cost(weight: "10")
   deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   deleteProducts(input: DeleteProductsInput!): ProductsPayload! @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
@@ -585,6 +586,7 @@ type Mutation {
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   updateResource(input: UpdateResourceInput!): ResourcePayload! @cost(weight: "10")
@@ -1127,6 +1129,8 @@ type Query {
 }
 
 type RecurringBookingDetails {
+  byMonthDay: Int
+  bySetPosition: Int
   byWeekDays: [DayOfWeekDetails!]!
   channel: BookingChannelDetails!
   createdByCustomer: CustomerDetails
@@ -1560,6 +1564,8 @@ input AddPrivateBookingInput {
 }
 
 input AddPrivateRecurringBookingInput {
+  byMonthDay: Int
+  bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
   clientMutationId: String
   customerIds: [String!]!
@@ -1883,6 +1889,11 @@ input DeleteOrganizationStripeConnectAccountsInput {
 }
 
 input DeletePrivateBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeletePrivateRecurringBookingInput {
   clientMutationId: String
   id: String!
 }
@@ -2515,6 +2526,27 @@ input UpdatePrivateBookingInput {
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   resourceIds: [String!]!
+  teamIds: [String!]!
+  until: DateTime!
+}
+
+input UpdatePrivateRecurringBookingInput {
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  clientMutationId: String
+  customerIds: [String!]!
+  endDate: DateTime
+  endType: RecurringBookingEndType!
+  frequency: BookingFrequency!
+  from: DateTime!
+  id: String!
+  interval: Int!
+  occurrenceCount: Int!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  skippedDates: [DateTime!]!
+  startDate: DateTime!
   teamIds: [String!]!
   until: DateTime!
 }

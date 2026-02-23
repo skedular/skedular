@@ -1,7 +1,7 @@
 using FakeItEasy;
 using Organization.Shared.Activities;
 using Organization.Shared.UnitTests.Fixtures;
-using Organization.Shared.Workflows.InviteToJoinOrganization;
+using Organization.Shared.Workflows;
 using Temporalio.Client;
 using Temporalio.Testing;
 using Temporalio.Worker;

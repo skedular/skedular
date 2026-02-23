@@ -1,13 +1,13 @@
 using Booking.Shared.Models;
 using HotChocolate;
 
-namespace Booking.Api.GraphQL.Booking;
+namespace Booking.Api.GraphQL.RecurringBooking;
 
-[GraphQLName("AddPrivateRecurringBookingInput")]
-public class AddPrivateRecurringBookingInput
+[GraphQLName("UpdatePrivateRecurringBookingInput")]
+public class UpdatePrivateRecurringBookingInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("id")] public string? Id { get; set; }
+    [GraphQLName("id")] public string Id { get; set; } = string.Empty;
     [GraphQLName("customerIds")] public IEnumerable<string> CustomerIds { get; set; } = [];
     [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
 
@@ -19,6 +19,8 @@ public class AddPrivateRecurringBookingInput
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("frequency")] public BookingFrequency Frequency { get; set; }
     [GraphQLName("interval")] public int Interval { get; set; }
+    [GraphQLName("byMonthDay")] public int? ByMonthDay { get; set; }
+    [GraphQLName("bySetPosition")] public int? BySetPosition { get; set; }
     [GraphQLName("byWeekDays")] public ICollection<DayOfWeek> ByWeekDays { get; set; } = [];
     [GraphQLName("endType")] public RecurringBookingEndType EndType { get; set; }
     [GraphQLName("startDate")] public DateTimeOffset StartDate { get; set; }

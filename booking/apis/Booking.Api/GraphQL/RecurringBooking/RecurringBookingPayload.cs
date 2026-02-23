@@ -1,6 +1,6 @@
 using HotChocolate;
 
-namespace Booking.Api.GraphQL.Booking;
+namespace Booking.Api.GraphQL.RecurringBooking;
 
 [GraphQLName("RecurringBookingPayload")]
 public class RecurringBookingPayload

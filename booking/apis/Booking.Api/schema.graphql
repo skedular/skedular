@@ -116,13 +116,15 @@ type Mutation {
   addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
   deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
+  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
 }
 
 type OrganizationAvailableResources {
@@ -193,6 +195,8 @@ type RecurringBookingDetails {
   channel: BookingChannelDetails!
   frequency: BookingFrequencyDetails!
   interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
   byWeekDays: [DayOfWeekDetails!]!
   endType: BookingRecurrenceEndTypeDetails!
   startDate: DateTime!
@@ -274,6 +278,8 @@ input AddPrivateRecurringBookingInput {
   until: DateTime!
   frequency: BookingFrequency!
   interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
   endType: RecurringBookingEndType!
   startDate: DateTime!
@@ -337,6 +343,11 @@ input DeletePrivateBookingInput {
   id: String!
 }
 
+input DeletePrivateRecurringBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
 input LineItemInput {
   productVersionId: String!
   quantity: Int!
@@ -382,6 +393,27 @@ input UpdatePrivateBookingInput {
   notes: String
   category: BookingCategory!
   resourceIds: [String!]!
+}
+
+input UpdatePrivateRecurringBookingInput {
+  clientMutationId: String
+  id: String!
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]!
+  from: DateTime!
+  until: DateTime!
+  frequency: BookingFrequency!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  endType: RecurringBookingEndType!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int!
+  skippedDates: [DateTime!]!
 }
 
 enum BookingCategory {

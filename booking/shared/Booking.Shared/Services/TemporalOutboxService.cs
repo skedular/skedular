@@ -130,6 +130,7 @@ public class TemporalOutboxService(
         temporalSignalOutboxWorkflowExecutor.Signal(
             temporalHelperService.ToId(recurringBookingId),
             s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync,
+            new RecurringBookingUpdatedArgs(recurringBookingId),
             new WorkflowSignalOptions(),
             unitOfWork);
 
@@ -137,6 +138,7 @@ public class TemporalOutboxService(
         temporalSignalOutboxWorkflowExecutor.Signal(
             temporalHelperService.ToId(recurringBookingId),
             s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync,
+            new RecurringBookingDeletedArgs(recurringBookingId),
             new WorkflowSignalOptions(),
             unitOfWork);
 
@@ -257,25 +259,57 @@ public class TemporalOutboxService(
         }
         else if (signalType == s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync)
         {
-            if (!await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
-            {
-                return;
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+            var input = JsonSerializer.Deserialize<RecurringBookingUpdatedArgs>(executionArgs);
+            ArgumentNullException.ThrowIfNull(input);
 
-            await temporalClient
-                .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
-                .SignalAsync(workflow => workflow.RecurringBookingUpdatedAsync(), workflowSignalOptions);
+            if (await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
+            {
+                await temporalClient
+                    .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
+                    .SignalAsync(workflow => workflow.RecurringBookingUpdatedAsync(input), workflowSignalOptions);
+            }
+            else
+            {
+                _ = await temporalClient.StartWorkflowAsync(
+                    (BookPrivateRecurringResources workflow) =>
+                        workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
+                    new WorkflowOptions
+                    {
+                        Id = temporalHelperService.ToId(input.RecurringBookingId),
+                        TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                        RetryPolicy = null,
+                        IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                    });
+            }
         }
         else if (signalType == s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync)
         {
-            if (!await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
-            {
-                return;
-            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+            var input = JsonSerializer.Deserialize<RecurringBookingDeletedArgs>(executionArgs);
+            ArgumentNullException.ThrowIfNull(input);
 
-            await temporalClient
-                .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
-                .SignalAsync(workflow => workflow.RecurringBookingDeletedAsync(), workflowSignalOptions);
+            if (await temporalHelperService.IsRunningAsync<BookPrivateRecurringResources>(workflowId, cancellationToken))
+            {
+                await temporalClient
+                    .GetWorkflowHandle<BookPrivateRecurringResources>(workflowId)
+                    .SignalAsync(workflow => workflow.RecurringBookingDeletedAsync(input), workflowSignalOptions);
+            }
+            else
+            {
+                _ = await temporalClient.StartWorkflowAsync(
+                    (BookPrivateRecurringResources workflow) =>
+                        workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
+                    new WorkflowOptions
+                    {
+                        Id = temporalHelperService.ToId(input.RecurringBookingId),
+                        TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                        RetryPolicy = null,
+                        IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                    });
+            }
         }
     }
 }
