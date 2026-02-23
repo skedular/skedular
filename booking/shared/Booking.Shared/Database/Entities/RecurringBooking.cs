@@ -9,14 +9,17 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class RecurringBooking : EntityBaseWithDeleted
 {
+    public DateTimeOffset From { get; set; }
+    public DateTimeOffset Until { get; set; }
+    public string Channel { get; set; }
     public string Frequency { get; set; }
     public int Interval { get; set; }
     public ICollection<string> ByWeekDays { get; set; } = [];
     public int? ByMonthDay { get; set; }
     public int? BySetPosition { get; set; }
     public string EndType { get; set; }
-    public DateTimeOffset Start { get; set; }
-    public DateTimeOffset? Until { get; set; }
+    public DateTimeOffset StartDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
     public int? OccurrenceCount { get; set; }
     public ICollection<DateTimeOffset> SkippedDates { get; set; } = [];
 
@@ -32,15 +35,17 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
     {
         builder.ConfigureEntityBaseWithDeleted();
 
+        builder.Property(item => item.Channel).HasMaxLength(Constants.MaxBookingChannelLength);
         builder.Property(item => item.Frequency).HasMaxLength(Constants.MaxRecurringBookingFrequencyLength);
         builder.Property(item => item.Interval);
         builder.Property(item => item.ByWeekDays).HasColumnType("jsonb");
         builder.Property(item => item.EndType).HasMaxLength(Constants.MaxRecurringBookingEndTypeLength);
         builder.Property(item => item.SkippedDates).HasColumnType("jsonb");
 
+        builder.HasIndex(item => item.Channel);
         builder.HasIndex(item => item.Frequency);
         builder.HasIndex(item => item.EndType);
-        builder.HasIndex(item => item.Start);
-        builder.HasIndex(item => item.Until);
+        builder.HasIndex(item => item.StartDate);
+        builder.HasIndex(item => item.EndDate);
     }
 }
