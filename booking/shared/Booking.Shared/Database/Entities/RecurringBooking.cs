@@ -15,8 +15,6 @@ public class RecurringBooking : EntityBaseWithDeleted
     public string Frequency { get; set; }
     public int Interval { get; set; }
     public ICollection<string> ByWeekDays { get; set; } = [];
-    public int? ByMonthDay { get; set; }
-    public int? BySetPosition { get; set; }
     public string EndType { get; set; }
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset? EndDate { get; set; }

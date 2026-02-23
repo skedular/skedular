@@ -13,8 +13,6 @@ public class RecurringBookingDetails : Node
     [GraphQLName("frequency")] public BookingFrequencyDetails Frequency { get; set; } = new();
     [GraphQLName("interval")] public int Interval { get; set; }
     [GraphQLName("byWeekDays")] public IEnumerable<DayOfWeekDetails> ByWeekDays { get; set; } = [];
-    [GraphQLName("byMonthDay")] public int? ByMonthDay { get; set; }
-    [GraphQLName("bySetPosition")] public int? BySetPosition { get; set; }
     [GraphQLName("endType")] public BookingRecurrenceEndTypeDetails EndType { get; set; } = new();
     [GraphQLName("startDate")] public DateTimeOffset StartDate { get; set; }
     [GraphQLName("endDate")] public DateTimeOffset? EndDate { get; set; }

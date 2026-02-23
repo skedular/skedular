@@ -194,8 +194,6 @@ type RecurringBookingDetails {
   frequency: BookingFrequencyDetails!
   interval: Int!
   byWeekDays: [DayOfWeekDetails!]!
-  byMonthDay: Int
-  bySetPosition: Int
   endType: BookingRecurrenceEndTypeDetails!
   startDate: DateTime!
   endDate: DateTime
@@ -277,8 +275,6 @@ input AddPrivateRecurringBookingInput {
   frequency: BookingFrequency!
   interval: Int!
   byWeekDays: [DayOfWeek!]!
-  byMonthDay: Int!
-  bySetPosition: Int!
   endType: RecurringBookingEndType!
   startDate: DateTime!
   endDate: DateTime

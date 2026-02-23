@@ -1127,8 +1127,6 @@ type Query {
 }
 
 type RecurringBookingDetails {
-  byMonthDay: Int
-  bySetPosition: Int
   byWeekDays: [DayOfWeekDetails!]!
   channel: BookingChannelDetails!
   createdByCustomer: CustomerDetails
@@ -1562,8 +1560,6 @@ input AddPrivateBookingInput {
 }
 
 input AddPrivateRecurringBookingInput {
-  byMonthDay: Int!
-  bySetPosition: Int!
   byWeekDays: [DayOfWeek!]!
   clientMutationId: String
   customerIds: [String!]!

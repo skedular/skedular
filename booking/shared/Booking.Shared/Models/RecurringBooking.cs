@@ -11,8 +11,6 @@ public class RecurringBooking : ModelBaseWithDeleted
     public BookingFrequency Frequency { get; set; } // (Daily, Weekly, Monthly, etc.)
     public int Interval { get; set; } // (every N units, e.g. every 2 weeks)
     public ICollection<DayOfWeek> ByWeekDays { get; set; } = []; // (for weekly patterns, e.g. Mon/Wed/Fri)
-    public int? ByMonthDay { get; set; } // (for monthly “day 15” style)
-    public int? BySetPosition { get; set; } // (for “first Monday”, “last Friday” patterns)
     public RecurringBookingEndType EndType { get; set; } // (Never, UntilDate, AfterOccurrences)
     public DateTimeOffset StartDate { get; set; }
     public DateTimeOffset? EndDate { get; set; }
