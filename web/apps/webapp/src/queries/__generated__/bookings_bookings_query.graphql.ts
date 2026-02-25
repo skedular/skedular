@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<73ced33962e8b9f00232d7b2313450a0>>
+ * @generated SignedSource<<f7583e6eabd80a95049e1d02574fe9cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookings_bookings_query$data = {
   readonly bookings: {
@@ -36,6 +37,9 @@ export type bookings_bookings_query$data = {
         readonly category: {
           readonly category: BookingCategory;
           readonly name: string;
+        };
+        readonly channel: {
+          readonly channel: BookingChannel;
         };
         readonly from: any;
         readonly id: string;
@@ -279,6 +283,24 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "concreteType": "BookingChannelDetails",
+                  "kind": "LinkedField",
+                  "name": "channel",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "channel",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "BookingCategoryDetails",
                   "kind": "LinkedField",
                   "name": "category",
@@ -484,6 +506,6 @@ return {
 };
 })();
 
-(node as any).hash = "a5f0021ab0122c3432c6a33cbba8bcf8";
+(node as any).hash = "9c2ea6b930802f0afd1f192e3a41ed37";
 
 export default node;

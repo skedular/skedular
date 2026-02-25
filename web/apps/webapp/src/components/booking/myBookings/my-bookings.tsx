@@ -12,6 +12,7 @@ import { defaultGridStyle, defaultPadding } from '@/libs/theme';
 import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
+import type { myBookings_deleteMarketplaceBookingMutation } from '@/queries/__generated__/myBookings_deleteMarketplaceBookingMutation.graphql';
 import type { myBookings_deletePrivateBookingMutation } from '@/queries/__generated__/myBookings_deletePrivateBookingMutation.graphql';
 import type { myBookings_query$key } from '@/queries/__generated__/myBookings_query.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -124,6 +125,9 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
               from
               until
               notes
+              channel {
+                channel
+              }
               involvedCustomers {
                 id
                 name
@@ -169,6 +173,16 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
   const [commitDeletePrivateBooking] = useMutation<myBookings_deletePrivateBookingMutation>(graphql`
     mutation myBookings_deletePrivateBookingMutation($connectionIds: [ID!]!, $input: DeletePrivateBookingInput!) {
       deletePrivateBooking(input: $input) {
+        booking {
+          id @deleteEdge(connections: $connectionIds)
+        }
+      }
+    }
+  `);
+
+  const [commitDeleteMarketplaceBooking] = useMutation<myBookings_deleteMarketplaceBookingMutation>(graphql`
+    mutation myBookings_deleteMarketplaceBookingMutation($connectionIds: [ID!]!, $input: DeleteMarketplaceBookingInput!) {
+      deleteMarketplaceBooking(input: $input) {
         booking {
           id @deleteEdge(connections: $connectionIds)
         }
@@ -270,36 +284,69 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
 
     const toastId = themedToast(<NotificationContent content={`Removing booking '${bookingDetailsInfo}'...`} />, infoNotificationOptions);
 
-    commitDeletePrivateBooking({
-      variables: {
-        connectionIds,
-        input: {
-          clientMutationId: uuid(),
-          id: bookingDetails.id,
+    if (bookingDetails.channel.channel === 'PRIVATE') {
+      commitDeletePrivateBooking({
+        variables: {
+          connectionIds,
+          input: {
+            clientMutationId: uuid(),
+            id: bookingDetails.id,
+          },
         },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+          });
+        },
+        onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
           });
+        },
+      });
+    } else {
+      commitDeleteMarketplaceBooking({
+        variables: {
+          connectionIds,
+          input: {
+            clientMutationId: uuid(),
+            id: bookingDetails.id,
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            });
 
-          return;
-        }
+            return;
+          }
 
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
-        });
-      },
-    });
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Booking ${bookingDetailsInfo} removed.`} />,
+          });
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+          });
+        },
+      });
+    }
   };
 
   const rows: RowType[] = myBookings.map((myBooking) => {

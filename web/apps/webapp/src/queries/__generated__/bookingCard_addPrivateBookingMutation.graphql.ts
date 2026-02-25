@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<242ba6d3d55ad5eee7303044ec81020a>>
+ * @generated SignedSource<<e1c6926c3fbd362058f140b832628bf6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
+export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddPrivateBookingInput = {
   category: BookingCategory;
   clientMutationId?: string | null | undefined;
@@ -50,6 +51,9 @@ export type bookingCard_addPrivateBookingMutation$data = {
       readonly category: {
         readonly category: BookingCategory;
         readonly name: string;
+      };
+      readonly channel: {
+        readonly channel: BookingChannel;
       };
       readonly from: any;
       readonly id: string;
@@ -97,6 +101,9 @@ export type bookingCard_addPrivateBookingMutation$rawResponse = {
       readonly category: {
         readonly category: BookingCategory;
         readonly name: string;
+      };
+      readonly channel: {
+        readonly channel: BookingChannel;
       };
       readonly from: any;
       readonly id: string;
@@ -205,6 +212,24 @@ v7 = {
       "args": null,
       "kind": "ScalarField",
       "name": "notes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingChannelDetails",
+      "kind": "LinkedField",
+      "name": "channel",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "channel",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -400,16 +425,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1cb111724f90e7687d571b3da34f4e76",
+    "cacheID": "39c6c347db1da6ca730935dab8bfbd41",
     "id": null,
     "metadata": {},
     "name": "bookingCard_addPrivateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      channel {\n        channel\n      }\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4dd4360f5323cbae1ce8ca634e019563";
+(node as any).hash = "aceb762053d571487a18361c5dde7714";
 
 export default node;

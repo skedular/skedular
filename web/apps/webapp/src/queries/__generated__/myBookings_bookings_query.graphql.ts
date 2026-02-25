@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e3d767500309dd50d34b1e0498cc9596>>
+ * @generated SignedSource<<fe6245279a4831adff6730d6eae335f0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookings_bookings_query$data = {
   readonly bookings: {
@@ -32,6 +33,9 @@ export type myBookings_bookings_query$data = {
             }>;
           };
         }>;
+        readonly channel: {
+          readonly channel: BookingChannel;
+        };
         readonly from: any;
         readonly id: string;
         readonly involvedCustomers: ReadonlyArray<{
@@ -262,6 +266,24 @@ return {
                 {
                   "alias": null,
                   "args": null,
+                  "concreteType": "BookingChannelDetails",
+                  "kind": "LinkedField",
+                  "name": "channel",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "channel",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
                   "concreteType": "CustomerDetails",
                   "kind": "LinkedField",
                   "name": "involvedCustomers",
@@ -436,6 +458,6 @@ return {
 };
 })();
 
-(node as any).hash = "061fb8fee7cd747793a0be17911fa103";
+(node as any).hash = "8d6976f2dbb448cb1cf5868036a2db3f";
 
 export default node;

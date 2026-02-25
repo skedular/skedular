@@ -169,6 +169,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           from
           until
           notes
+          channel {
+            channel
+          }
           category {
             category
             name
@@ -462,6 +465,9 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
             from: bookingDetails.from,
             until: bookingDetails.until,
             notes: null,
+            channel: {
+              channel: 'PRIVATE',
+            },
             category: {
               category: bookingDetails.category.category,
               name: bookingDetails.category.name,

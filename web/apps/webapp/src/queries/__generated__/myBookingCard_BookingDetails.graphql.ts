@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ef40a17b253ec9963b2a1c03238d857>>
+ * @generated SignedSource<<bdcc567a4310b63d9120568065cf46a4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
@@ -29,6 +30,9 @@ export type myBookingCard_BookingDetails$data = {
       }>;
     };
   }>;
+  readonly channel: {
+    readonly channel: BookingChannel;
+  };
   readonly from: any;
   readonly id: string;
   readonly involvedCustomers: ReadonlyArray<{
@@ -121,6 +125,24 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "notes",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingChannelDetails",
+      "kind": "LinkedField",
+      "name": "channel",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "channel",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -279,6 +301,6 @@ return {
 };
 })();
 
-(node as any).hash = "da43797ce526d2506351e78384e3e6d3";
+(node as any).hash = "858bb4a9602ff6d2f18a03f75e90410d";
 
 export default node;
