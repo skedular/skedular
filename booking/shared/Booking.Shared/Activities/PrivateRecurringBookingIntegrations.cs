@@ -12,9 +12,11 @@ public record AdjustRequiredResourcesForRecurringBookingAsyncResponse(bool Delet
 public record ReleaseRecurringBookingResourcesInput(string RecurringBookingId);
 
 public class PrivateRecurringBookingIntegrations(
+    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     TimeProvider timeProvider,
-    IRecurringBookingScheduleService recurringBookingScheduleService)
+    IRecurringBookingScheduleService recurringBookingScheduleService,
+    IPrivateBookingService privateBookingService)
 {
     [Activity]
     public async Task<AdjustRequiredResourcesForRecurringBookingAsyncResponse> AdjustRequiredResourcesForRecurringBookingAsync(
@@ -81,5 +83,30 @@ public class PrivateRecurringBookingIntegrations(
     [Activity]
     public async Task ReleaseRecurringBookingResourcesAsync(ReleaseRecurringBookingResourcesInput args)
     {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
+        if (recurringBooking is null)
+        {
+            return;
+        }
+
+        var now = timeProvider.GetUtcNow();
+        var from = new DateTimeOffset(now.UtcDateTime.Date, TimeSpan.Zero);
+
+        // Pull all future bookings for this recurrence (no upper bound).
+        var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
+            recurringBooking.Id,
+            from,
+            null,
+            cancellationToken);
+
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        foreach (var existingBooking in existingBookings)
+        {
+            await privateBookingService.DeleteAsync(false, existingBooking, recurringBooking.DeletedByCustomer, cancellationToken);
+        }
+
+        await transaction.CommitAsync(cancellationToken);
     }
 }
