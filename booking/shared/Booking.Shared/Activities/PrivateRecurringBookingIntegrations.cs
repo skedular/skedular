@@ -43,7 +43,8 @@ public class PrivateRecurringBookingIntegrations(
             cancellationToken);
 
         // Compute the required days for the near horizon and detect missing booking days.
-        var requiredBookingDays = recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, until).ToHashSet();
+        var requiredBookingDaysResponse = recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredBookingDays = requiredBookingDaysResponse.Days.ToHashSet();
         var existingBookingDays = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).ToHashSet();
         var missingBookingDays = requiredBookingDays.Where(day => !existingBookingDays.Contains(day)).ToList();
 
@@ -55,7 +56,8 @@ public class PrivateRecurringBookingIntegrations(
             // Expand expected days up to the furthest booked day so we can validate all future bookings returned above.
             var maxBookingDay = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).Max();
             var evaluationUntil = new DateTimeOffset(maxBookingDay.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
-            var expectedBookingDays = recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, evaluationUntil).ToHashSet();
+            var expectedBookingDays =
+                recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, evaluationUntil).Days.ToHashSet();
             var groupedByDay = existingBookings.GroupBy(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date));
 
             foreach (var dayGroup in groupedByDay)
@@ -73,11 +75,17 @@ public class PrivateRecurringBookingIntegrations(
             }
         }
 
-        if (missingBookingDays.Count == 0)
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        foreach (var existingBooking in bookingsToRemove)
         {
+            await privateBookingService.DeleteAsync(false, existingBooking, null, cancellationToken);
         }
 
-        return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, false);
+        await transaction.CommitAsync(cancellationToken);
+
+        // If recurrence has no future valid booking days, the workflow can terminate.
+        return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, !requiredBookingDaysResponse.HasMoreRequiredBookingDays);
     }
 
     [Activity]

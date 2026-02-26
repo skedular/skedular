@@ -10,9 +10,12 @@ namespace Booking.Shared.Services;
 public interface IRecurringBookingScheduleService
 {
     /// <summary>
-    ///     Calculates which calendar days should exist in the given window.
+    ///     Calculates which calendar days should exist in the given window and whether any valid days remain from `from` onward.
     /// </summary>
-    ICollection<DateOnly> GetRequiredBookingDays(RecurringBooking recurringBooking, DateTimeOffset from, DateTimeOffset until);
+    (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+        RecurringBooking recurringBooking,
+        DateTimeOffset from,
+        DateTimeOffset until);
 }
 
 /// <summary>
@@ -20,7 +23,10 @@ public interface IRecurringBookingScheduleService
 /// </summary>
 public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 {
-    public ICollection<DateOnly> GetRequiredBookingDays(RecurringBooking recurringBooking, DateTimeOffset from, DateTimeOffset until)
+    public (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+        RecurringBooking recurringBooking,
+        DateTimeOffset from,
+        DateTimeOffset until)
     {
         // Normalize all boundaries to DateOnly for day-based recurrence matching.
         var windowStart = DateOnly.FromDateTime(from.UtcDateTime.Date);
@@ -68,7 +74,17 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             cursor = cursor.AddDays(1);
         }
 
-        return days;
+        var hasMoreRequiredBookingDays = HasAnyRequiredBookingDayOnOrAfter(
+            recurringBooking,
+            windowStart,
+            recurrenceStart,
+            recurrenceEnd,
+            skippedDays,
+            interval,
+            recurringBookingEndType,
+            occurrenceLimit);
+
+        return (days, hasMoreRequiredBookingDays);
     }
 
     private static bool IsRecurringOnDate(RecurringBooking recurringBooking, DateOnly recurrenceStart, DateOnly date, int interval)
@@ -189,5 +205,55 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         var index = bySetPosition > 0 ? bySetPosition - 1 : matchingDays.Count + bySetPosition;
 
         return index >= 0 && index < matchingDays.Count ? matchingDays[index].Day : null;
+    }
+
+    private static bool HasAnyRequiredBookingDayOnOrAfter(
+        RecurringBooking recurringBooking,
+        DateOnly windowStart,
+        DateOnly recurrenceStart,
+        DateOnly? recurrenceEnd,
+        HashSet<DateOnly> skippedDays,
+        int interval,
+        RecurringBookingEndType recurringBookingEndType,
+        int? occurrenceLimit)
+    {
+        // A "never" recurrence is unbounded; with finite skipped days there is always a future valid booking day.
+        if (recurringBookingEndType == RecurringBookingEndType.Never)
+        {
+            return true;
+        }
+
+        var cursor = recurrenceStart;
+        var occurrenceCount = 0;
+
+        while (true)
+        {
+            if (IsRecurringOnDate(recurringBooking, recurrenceStart, cursor, interval))
+            {
+                occurrenceCount++;
+
+                var isAfterStart = cursor >= windowStart;
+                var isBeforeExplicitEnd = !recurrenceEnd.HasValue || cursor <= recurrenceEnd.Value;
+                var isUntilDateValid = recurringBookingEndType != RecurringBookingEndType.UntilDate || isBeforeExplicitEnd;
+                var isWithinOccurrenceLimit = !occurrenceLimit.HasValue || occurrenceCount <= occurrenceLimit.Value;
+
+                if (isAfterStart && isUntilDateValid && isWithinOccurrenceLimit && !skippedDays.Contains(cursor))
+                {
+                    return true;
+                }
+
+                if (occurrenceLimit.HasValue && occurrenceCount >= occurrenceLimit.Value)
+                {
+                    return false;
+                }
+            }
+
+            if (recurringBookingEndType == RecurringBookingEndType.UntilDate && recurrenceEnd.HasValue && cursor >= recurrenceEnd.Value)
+            {
+                return false;
+            }
+
+            cursor = cursor.AddDays(1);
+        }
     }
 }

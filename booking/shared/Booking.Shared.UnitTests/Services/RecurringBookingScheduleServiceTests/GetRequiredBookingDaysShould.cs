@@ -17,7 +17,7 @@ public class GetRequiredBookingDaysShould
         var interval = Math.Abs(intervalSeed % 4) + 1;
         var recurringBooking = CreateRecurringBooking(BookingFrequencyConstants.Daily, RecurringBookingEndTypeConstants.Never, from, interval);
         var expectedDays = GetDailyExpectedDays(from, until, DateOnly.FromDateTime(from.UtcDateTime.Date), interval);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ToHashSet().SetEquals(expectedDays.ToHashSet()).ShouldBeTrue();
     }
@@ -38,7 +38,7 @@ public class GetRequiredBookingDaysShould
             Math.Abs(intervalSeed % 3) + 1,
             [startDay.ToDayOfWeek(), secondDay.ToDayOfWeek()]);
 
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldNotBeEmpty();
         requiredDays.All(day => new[] { startDay, secondDay }.Contains(day.DayOfWeek)).ShouldBeTrue();
@@ -51,7 +51,7 @@ public class GetRequiredBookingDaysShould
         var until = from.AddMonths(1);
         var startDate = from.AddDays(-7);
         var recurringBooking = CreateRecurringBooking(BookingFrequencyConstants.Weekly, RecurringBookingEndTypeConstants.Never, startDate, 1, []);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldNotBeEmpty();
         requiredDays.All(day => day.DayOfWeek == startDate.DayOfWeek).ShouldBeTrue();
@@ -67,7 +67,7 @@ public class GetRequiredBookingDaysShould
         var skippedDate = from.AddDays(skipOffset);
         recurringBooking.SkippedDates = [skippedDate];
 
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldNotContain(DateOnly.FromDateTime(skippedDate.UtcDateTime.Date));
     }
@@ -84,7 +84,7 @@ public class GetRequiredBookingDaysShould
             from,
             1,
             endDate: endDate);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldNotBeEmpty();
         requiredDays.All(day => day <= DateOnly.FromDateTime(endDate.UtcDateTime.Date)).ShouldBeTrue();
@@ -102,7 +102,7 @@ public class GetRequiredBookingDaysShould
             from,
             1,
             occurrenceCount: occurrenceCount);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.Count.ShouldBe(occurrenceCount);
     }
@@ -115,7 +115,7 @@ public class GetRequiredBookingDaysShould
         var safeDay = Math.Abs(startDaySeed % 28) + 1;
         var startDate = new DateTimeOffset(from.Year, from.Month, safeDay, 0, 0, 0, TimeSpan.Zero);
         var recurringBooking = CreateRecurringBooking(BookingFrequencyConstants.Monthly, RecurringBookingEndTypeConstants.Never, startDate, 1);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.Count.ShouldBeInRange(0, 1);
         requiredDays.All(day => day.Day == safeDay).ShouldBeTrue();
@@ -135,7 +135,7 @@ public class GetRequiredBookingDaysShould
             from.AddMonths(-1),
             1,
             byMonthDay: byMonthDay);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldHaveSingleItem();
         requiredDays.Single().Day.ShouldBe(byMonthDay);
@@ -154,7 +154,7 @@ public class GetRequiredBookingDaysShould
             from.AddMonths(-1),
             1,
             byMonthDay: -1);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldHaveSingleItem();
         requiredDays.Single().Day.ShouldBe(expectedDay);
@@ -175,10 +175,48 @@ public class GetRequiredBookingDaysShould
             1,
             [dayOfWeek.ToDayOfWeek()],
             bySetPosition: bySetPosition);
-        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredDays = sut.GetRequiredBookingDays(recurringBooking, from, until).Days;
 
         requiredDays.ShouldHaveSingleItem();
         requiredDays.Single().DayOfWeek.ShouldBe(dayOfWeek);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_HasMoreRequiredBookingDays_As_False_When_UntilDate_Is_In_Past(RecurringBookingScheduleService sut, DateTimeOffset from)
+    {
+        var normalizedFrom = new DateTimeOffset(from.UtcDateTime.Date, TimeSpan.Zero);
+        var recurringBooking = CreateRecurringBooking(
+            BookingFrequencyConstants.Daily,
+            RecurringBookingEndTypeConstants.UntilDate,
+            normalizedFrom.AddDays(-10),
+            1,
+            endDate: normalizedFrom.AddDays(-1));
+
+        var result = sut.GetRequiredBookingDays(recurringBooking, normalizedFrom, normalizedFrom.AddMonths(1));
+
+        result.Days.ShouldBeEmpty();
+        result.HasMoreRequiredBookingDays.ShouldBeFalse();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_HasMoreRequiredBookingDays_As_False_When_AfterOccurrences_Already_Exhausted(
+        RecurringBookingScheduleService sut,
+        DateTimeOffset from)
+    {
+        var normalizedFrom = new DateTimeOffset(from.UtcDateTime.Date, TimeSpan.Zero);
+        var recurringBooking = CreateRecurringBooking(
+            BookingFrequencyConstants.Daily,
+            RecurringBookingEndTypeConstants.AfterOccurrences,
+            normalizedFrom.AddDays(-10),
+            1,
+            occurrenceCount: 3);
+
+        var result = sut.GetRequiredBookingDays(recurringBooking, normalizedFrom, normalizedFrom.AddMonths(1));
+
+        result.Days.ShouldBeEmpty();
+        result.HasMoreRequiredBookingDays.ShouldBeFalse();
     }
 
     private static List<DateOnly> GetDailyExpectedDays(DateTimeOffset from, DateTimeOffset until, DateOnly recurrenceStart, int interval)
