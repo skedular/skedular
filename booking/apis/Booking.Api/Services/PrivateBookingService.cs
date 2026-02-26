@@ -156,7 +156,11 @@ public class PrivateBookingService(
             true,
             cancellationToken);
 
-        if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
+        if (booking.HasRecurringInstanceOverrides == true)
+        {
+            // Do nothing
+        }
+        else if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
         {
             booking.HasRecurringInstanceOverrides = true;
         }
@@ -168,6 +172,7 @@ public class PrivateBookingService(
             organizations,
             teams,
             null,
+            true,
             cancellationToken);
     }
 }

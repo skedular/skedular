@@ -236,7 +236,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 
     private static bool HasAnyRequiredBookingDayOnOrAfter(
         RecurringBooking recurringBooking,
-        DateOnly windowStart,
+        DateOnly thresholdStart,
         DateOnly recurrenceStart,
         DateOnly? recurrenceEnd,
         HashSet<DateOnly> skippedDays,
@@ -259,7 +259,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             {
                 occurrenceCount++;
 
-                var isAfterStart = cursor >= windowStart;
+                var isAfterStart = cursor >= thresholdStart;
                 var isBeforeExplicitEnd = !recurrenceEnd.HasValue || cursor <= recurrenceEnd.Value;
                 var isUntilDateValid = recurringBookingEndType != RecurringBookingEndType.UntilDate || isBeforeExplicitEnd;
                 var isWithinOccurrenceLimit = !occurrenceLimit.HasValue || occurrenceCount <= occurrenceLimit.Value;
@@ -285,7 +285,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
     }
 
     /// <summary>
-    ///     Calculates which calendar days should exist in the given window and whether any valid days remain from `from` onward.
+    ///     Calculates required calendar days in the current window and whether valid days still exist after this window.
     /// </summary>
     public (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
         RecurringBooking recurringBooking,
@@ -338,9 +338,10 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             cursor = cursor.AddDays(1);
         }
 
+        // "HasMoreRequiredBookingDays" means we still have recurrence work after the current planning window.
         var hasMoreRequiredBookingDays = HasAnyRequiredBookingDayOnOrAfter(
             recurringBooking,
-            windowStart,
+            windowEndExclusive,
             recurrenceStart,
             recurrenceEnd,
             skippedDays,

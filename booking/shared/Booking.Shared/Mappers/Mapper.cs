@@ -30,7 +30,7 @@ public interface IMapper
     Models.Booking MapTo(Database.Entities.Booking src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
-    Models.Booking MapTo(Database.Entities.RecurringBooking src, Database.Entities.Booking booking, DateOnly date);
+    Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, DateOnly date);
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
@@ -327,7 +327,7 @@ public class Mapper : IMapper
         };
     }
 
-    public Models.Booking MapTo(Database.Entities.RecurringBooking src, Database.Entities.Booking booking, DateOnly date)
+    public Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, DateOnly date)
     {
         var from = date.ToDateTimeOffset(src.From.TimeOfDay);
         var until = date.ToDateTimeOffset(src.Until.TimeOfDay);
@@ -343,7 +343,8 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
-            CreatedByCustomer = MapTo(src.CreatedByCustomer)
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            Resources = booking.Resources
         };
     }
 

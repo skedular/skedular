@@ -37,6 +37,7 @@ public interface IPrivateBookingService
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> UpdateAsync(
@@ -47,6 +48,7 @@ public interface IPrivateBookingService
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> DeleteAsync(
@@ -199,8 +201,18 @@ public class PrivateBookingService(
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken) =>
-        await UpdateAsync(true, booking, existingBooking, lastModifiedByCustomer, organizations, teams, recurringBooking, cancellationToken);
+        await UpdateAsync(
+            true,
+            booking,
+            existingBooking,
+            lastModifiedByCustomer,
+            organizations,
+            teams,
+            recurringBooking,
+            bookResourceIfNoResourceProvidedOrAvailable,
+            cancellationToken);
 
     public async Task<Models.Booking> UpdateAsync(
         bool runInTransaction,
@@ -210,6 +222,7 @@ public class PrivateBookingService(
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Private)

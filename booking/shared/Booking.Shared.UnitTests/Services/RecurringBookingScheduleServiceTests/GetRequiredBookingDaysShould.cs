@@ -219,6 +219,50 @@ public class GetRequiredBookingDaysShould
         result.HasMoreRequiredBookingDays.ShouldBeFalse();
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_HasMoreRequiredBookingDays_As_False_When_UntilDate_Is_Inside_Current_Window(
+        RecurringBookingScheduleService sut,
+        DateTimeOffset from)
+    {
+        var normalizedFrom = new DateTimeOffset(from.UtcDateTime.Date, TimeSpan.Zero);
+        var normalizedUntil = normalizedFrom.AddMonths(1);
+        var recurringBooking = CreateRecurringBooking(
+            BookingFrequencyConstants.Weekly,
+            RecurringBookingEndTypeConstants.UntilDate,
+            normalizedFrom,
+            1,
+            [DayOfWeek.Monday.ToDayOfWeek(), DayOfWeek.Tuesday.ToDayOfWeek(), DayOfWeek.Friday.ToDayOfWeek()],
+            endDate: normalizedFrom.AddDays(10));
+
+        var result = sut.GetRequiredBookingDays(recurringBooking, normalizedFrom, normalizedUntil);
+
+        result.Days.ShouldNotBeEmpty();
+        result.HasMoreRequiredBookingDays.ShouldBeFalse();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_HasMoreRequiredBookingDays_As_True_When_UntilDate_Is_After_Current_Window(
+        RecurringBookingScheduleService sut,
+        DateTimeOffset from)
+    {
+        var normalizedFrom = new DateTimeOffset(from.UtcDateTime.Date, TimeSpan.Zero);
+        var normalizedUntil = normalizedFrom.AddMonths(1);
+        var recurringBooking = CreateRecurringBooking(
+            BookingFrequencyConstants.Weekly,
+            RecurringBookingEndTypeConstants.UntilDate,
+            normalizedFrom,
+            1,
+            [DayOfWeek.Monday.ToDayOfWeek(), DayOfWeek.Tuesday.ToDayOfWeek(), DayOfWeek.Friday.ToDayOfWeek()],
+            endDate: normalizedUntil.AddDays(10));
+
+        var result = sut.GetRequiredBookingDays(recurringBooking, normalizedFrom, normalizedUntil);
+
+        result.Days.ShouldNotBeEmpty();
+        result.HasMoreRequiredBookingDays.ShouldBeTrue();
+    }
+
     private static List<DateOnly> GetDailyExpectedDays(DateTimeOffset from, DateTimeOffset until, DateOnly recurrenceStart, int interval)
     {
         var expectedDays = new List<DateOnly>();
