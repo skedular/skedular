@@ -1,8 +1,15 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Services;
+
+public record RecurringBookingReconciliationPlan(
+    ICollection<DateOnly> RequiredBookingDays,
+    ICollection<DateOnly> MissingBookingDays,
+    ICollection<BookingEntity> BookingsToRemove,
+    bool HasMoreRequiredBookingDays);
 
 /// <summary>
 ///     Provides recurring-schedule utilities for any recurring booking type.
@@ -10,12 +17,13 @@ namespace Booking.Shared.Services;
 public interface IRecurringBookingScheduleService
 {
     /// <summary>
-    ///     Calculates which calendar days should exist in the given window and whether any valid days remain from `from` onward.
+    ///     Produces a reusable reconciliation plan for recurring bookings in a given window.
     /// </summary>
-    (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+    RecurringBookingReconciliationPlan GetReconciliationPlan(
         RecurringBooking recurringBooking,
         DateTimeOffset from,
-        DateTimeOffset until);
+        DateTimeOffset until,
+        ICollection<BookingEntity> existingBookings);
 }
 
 /// <summary>
@@ -23,68 +31,52 @@ public interface IRecurringBookingScheduleService
 /// </summary>
 public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 {
-    public (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+    public RecurringBookingReconciliationPlan GetReconciliationPlan(
         RecurringBooking recurringBooking,
         DateTimeOffset from,
-        DateTimeOffset until)
+        DateTimeOffset until,
+        ICollection<BookingEntity> existingBookings)
     {
-        // Normalize all boundaries to DateOnly for day-based recurrence matching.
-        var windowStart = DateOnly.FromDateTime(from.UtcDateTime.Date);
-        var windowEndExclusive = DateOnly.FromDateTime(until.UtcDateTime.Date);
-        var recurrenceStart = DateOnly.FromDateTime(recurringBooking.StartDate.UtcDateTime.Date);
-        var recurrenceEnd = recurringBooking.EndDate.HasValue
-            ? DateOnly.FromDateTime(recurringBooking.EndDate.Value.UtcDateTime.Date)
-            : (DateOnly?)null;
-        var skippedDays = recurringBooking.SkippedDates.Select(item => DateOnly.FromDateTime(item.UtcDateTime.Date)).ToHashSet();
-        var interval = Math.Max(1, recurringBooking.Interval);
-        var recurringBookingEndType = recurringBooking.EndType.ToRecurringBookingEndType();
-        var occurrenceLimit = recurringBookingEndType == RecurringBookingEndType.AfterOccurrences ? recurringBooking.OccurrenceCount : null;
-        var occurrenceCount = 0;
-        var days = new HashSet<DateOnly>();
-        var cursor = recurrenceStart;
+        // Compute required days in the requested planning horizon.
+        var requiredBookingDaysResponse = GetRequiredBookingDays(recurringBooking, from, until);
+        var requiredBookingDays = requiredBookingDaysResponse.Days.ToHashSet();
 
-        while (cursor < windowEndExclusive)
+        // Required days without an existing booking are candidates to add.
+        var existingBookingDays = existingBookings
+            .Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date))
+            .ToHashSet();
+        var missingBookingDays = requiredBookingDays
+            .Where(day => !existingBookingDays.Contains(day))
+            .ToList();
+
+        // Existing bookings can become stale when recurrence rules change.
+        // We evaluate up to the furthest existing booking day so we can remove
+        // both obsolete days and duplicate bookings on valid days.
+        var bookingsToRemove = new List<BookingEntity>();
+        if (existingBookings.Count > 0)
         {
-            if (IsRecurringOnDate(recurringBooking, recurrenceStart, cursor, interval))
+            var maxBookingDay = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).Max();
+            var evaluationUntil = new DateTimeOffset(maxBookingDay.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
+            var expectedBookingDays = GetRequiredBookingDays(recurringBooking, from, evaluationUntil).Days.ToHashSet();
+            var groupedByDay = existingBookings.GroupBy(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date));
+
+            foreach (var dayGroup in groupedByDay)
             {
-                occurrenceCount++;
-
-                var isAfterStart = cursor >= windowStart;
-                var isBeforeExplicitEnd = !recurrenceEnd.HasValue || cursor <= recurrenceEnd.Value;
-                var isNotSkipped = !skippedDays.Contains(cursor);
-                var isUntilDateValid = recurringBookingEndType != RecurringBookingEndType.UntilDate || isBeforeExplicitEnd;
-                var isWithinOccurrenceLimit = !occurrenceLimit.HasValue || occurrenceCount <= occurrenceLimit.Value;
-
-                if (isAfterStart && isUntilDateValid && isWithinOccurrenceLimit && isNotSkipped)
+                if (!expectedBookingDays.Contains(dayGroup.Key))
                 {
-                    days.Add(cursor);
+                    bookingsToRemove.AddRange(dayGroup);
+                    continue;
                 }
 
-                if (occurrenceLimit.HasValue && occurrenceCount >= occurrenceLimit.Value)
-                {
-                    break;
-                }
+                bookingsToRemove.AddRange(dayGroup.OrderBy(booking => booking.From).Skip(1));
             }
-
-            if (recurringBookingEndType == RecurringBookingEndType.UntilDate && recurrenceEnd.HasValue && cursor >= recurrenceEnd.Value)
-            {
-                break;
-            }
-
-            cursor = cursor.AddDays(1);
         }
 
-        var hasMoreRequiredBookingDays = HasAnyRequiredBookingDayOnOrAfter(
-            recurringBooking,
-            windowStart,
-            recurrenceStart,
-            recurrenceEnd,
-            skippedDays,
-            interval,
-            recurringBookingEndType,
-            occurrenceLimit);
-
-        return (days, hasMoreRequiredBookingDays);
+        return new RecurringBookingReconciliationPlan(
+            requiredBookingDays,
+            missingBookingDays,
+            bookingsToRemove,
+            requiredBookingDaysResponse.HasMoreRequiredBookingDays);
     }
 
     private static bool IsRecurringOnDate(RecurringBooking recurringBooking, DateOnly recurrenceStart, DateOnly date, int interval)
@@ -255,5 +247,72 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 
             cursor = cursor.AddDays(1);
         }
+    }
+
+    /// <summary>
+    ///     Calculates which calendar days should exist in the given window and whether any valid days remain from `from` onward.
+    /// </summary>
+    public (ICollection<DateOnly> Days, bool HasMoreRequiredBookingDays) GetRequiredBookingDays(
+        RecurringBooking recurringBooking,
+        DateTimeOffset from,
+        DateTimeOffset until)
+    {
+        // Normalize all boundaries to DateOnly for day-based recurrence matching.
+        var windowStart = DateOnly.FromDateTime(from.UtcDateTime.Date);
+        var windowEndExclusive = DateOnly.FromDateTime(until.UtcDateTime.Date);
+        var recurrenceStart = DateOnly.FromDateTime(recurringBooking.StartDate.UtcDateTime.Date);
+        var recurrenceEnd = recurringBooking.EndDate.HasValue
+            ? DateOnly.FromDateTime(recurringBooking.EndDate.Value.UtcDateTime.Date)
+            : (DateOnly?)null;
+        var skippedDays = recurringBooking.SkippedDates.Select(item => DateOnly.FromDateTime(item.UtcDateTime.Date)).ToHashSet();
+        var interval = Math.Max(1, recurringBooking.Interval);
+        var recurringBookingEndType = recurringBooking.EndType.ToRecurringBookingEndType();
+        var occurrenceLimit = recurringBookingEndType == RecurringBookingEndType.AfterOccurrences ? recurringBooking.OccurrenceCount : null;
+        var occurrenceCount = 0;
+        var days = new HashSet<DateOnly>();
+        var cursor = recurrenceStart;
+
+        while (cursor < windowEndExclusive)
+        {
+            if (IsRecurringOnDate(recurringBooking, recurrenceStart, cursor, interval))
+            {
+                occurrenceCount++;
+
+                var isAfterStart = cursor >= windowStart;
+                var isBeforeExplicitEnd = !recurrenceEnd.HasValue || cursor <= recurrenceEnd.Value;
+                var isNotSkipped = !skippedDays.Contains(cursor);
+                var isUntilDateValid = recurringBookingEndType != RecurringBookingEndType.UntilDate || isBeforeExplicitEnd;
+                var isWithinOccurrenceLimit = !occurrenceLimit.HasValue || occurrenceCount <= occurrenceLimit.Value;
+
+                if (isAfterStart && isUntilDateValid && isWithinOccurrenceLimit && isNotSkipped)
+                {
+                    days.Add(cursor);
+                }
+
+                if (occurrenceLimit.HasValue && occurrenceCount >= occurrenceLimit.Value)
+                {
+                    break;
+                }
+            }
+
+            if (recurringBookingEndType == RecurringBookingEndType.UntilDate && recurrenceEnd.HasValue && cursor >= recurrenceEnd.Value)
+            {
+                break;
+            }
+
+            cursor = cursor.AddDays(1);
+        }
+
+        var hasMoreRequiredBookingDays = HasAnyRequiredBookingDayOnOrAfter(
+            recurringBooking,
+            windowStart,
+            recurrenceStart,
+            recurrenceEnd,
+            skippedDays,
+            interval,
+            recurringBookingEndType,
+            occurrenceLimit);
+
+        return (days, hasMoreRequiredBookingDays);
     }
 }

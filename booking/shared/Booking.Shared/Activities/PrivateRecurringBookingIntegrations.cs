@@ -45,45 +45,19 @@ public class PrivateRecurringBookingIntegrations(
             null,
             cancellationToken);
 
-        // Compute the required days for the near horizon and detect missing booking days.
-        var requiredBookingDaysResponse = recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, until);
-        var requiredBookingDays = requiredBookingDaysResponse.Days.ToHashSet();
-        var existingBookingDays = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).ToHashSet();
-        var missingBookingDays = requiredBookingDays.Where(day => !existingBookingDays.Contains(day)).ToList();
+        // Build a reusable recurrence plan with missing/obsolete booking decisions.
+        var reconciliationPlan = recurringBookingScheduleService.GetReconciliationPlan(
+            recurringBooking,
+            from,
+            until,
+            existingBookings);
 
-        // Collect existing bookings that should no longer exist.
-        var bookingsToRemove = new List<Database.Entities.Booking>();
-
-        if (existingBookings.Count > 0)
-        {
-            // Expand expected days up to the furthest booked day so we can validate all future bookings returned above.
-            var maxBookingDay = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).Max();
-            var evaluationUntil = new DateTimeOffset(maxBookingDay.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
-            var expectedBookingDays =
-                recurringBookingScheduleService.GetRequiredBookingDays(recurringBooking, from, evaluationUntil).Days.ToHashSet();
-            var groupedByDay = existingBookings.GroupBy(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date));
-
-            foreach (var dayGroup in groupedByDay)
-            {
-                // Remove all bookings on days that are no longer part of the recurrence.
-                if (!expectedBookingDays.Contains(dayGroup.Key))
-                {
-                    bookingsToRemove.AddRange(dayGroup);
-
-                    continue;
-                }
-
-                // Keep one booking per expected day and mark extras for removal.
-                bookingsToRemove.AddRange(dayGroup.OrderBy(booking => booking.From).Skip(1));
-            }
-        }
-
-        foreach (var existingBooking in bookingsToRemove)
+        foreach (var existingBooking in reconciliationPlan.BookingsToRemove)
         {
             await privateBookingService.DeleteAsync(existingBooking, null, cancellationToken);
         }
 
-        foreach (var booking in missingBookingDays.Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay)))
+        foreach (var booking in reconciliationPlan.MissingBookingDays.Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay)))
         {
             booking.Id = randomHelper.Generate();
 
@@ -96,7 +70,7 @@ public class PrivateRecurringBookingIntegrations(
         }
 
         // If recurrence has no future valid booking days, the workflow can terminate.
-        return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, !requiredBookingDaysResponse.HasMoreRequiredBookingDays);
+        return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, !reconciliationPlan.HasMoreRequiredBookingDays);
     }
 
     [Activity]
