@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
+using Enterprise.Shared.Time;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
@@ -9,6 +10,7 @@ public record RecurringBookingReconciliationPlan(
     ICollection<DateOnly> RequiredBookingDays,
     ICollection<DateOnly> MissingBookingDays,
     ICollection<BookingEntity> BookingsToRemove,
+    ICollection<BookingEntity> BookingsToUpdate,
     bool HasMoreRequiredBookingDays);
 
 /// <summary>
@@ -41,7 +43,8 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         var requiredBookingDaysResponse = GetRequiredBookingDays(recurringBooking, from, until);
         var requiredBookingDays = requiredBookingDaysResponse.Days.ToHashSet();
 
-        // Required days without an existing booking are candidates to add.
+        // Required days without any existing booking are candidates to add.
+        // Customized instances still count as existing for this check so we do not create duplicates.
         var existingBookingDays = existingBookings
             .Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date))
             .ToHashSet();
@@ -53,6 +56,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         // We evaluate up to the furthest existing booking day so we can remove
         // both obsolete days and duplicate bookings on valid days.
         var bookingsToRemove = new List<BookingEntity>();
+        var bookingsToUpdate = new List<BookingEntity>();
         if (existingBookings.Count > 0)
         {
             var maxBookingDay = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).Max();
@@ -62,13 +66,33 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 
             foreach (var dayGroup in groupedByDay)
             {
-                if (!expectedBookingDays.Contains(dayGroup.Key))
+                // Customized instances are intentionally not touched by recurrence reconciliation.
+                var regularInstances = dayGroup
+                    .Where(booking => booking.HasRecurringInstanceOverrides != true)
+                    .ToList();
+                if (regularInstances.Count == 0)
                 {
-                    bookingsToRemove.AddRange(dayGroup);
                     continue;
                 }
 
-                bookingsToRemove.AddRange(dayGroup.OrderBy(booking => booking.From).Skip(1));
+                if (!expectedBookingDays.Contains(dayGroup.Key))
+                {
+                    bookingsToRemove.AddRange(regularInstances);
+
+                    continue;
+                }
+
+                var orderedRegularInstances = regularInstances.OrderBy(booking => booking.From).ToList();
+                var bookingToKeep = orderedRegularInstances.First();
+
+                // Keep one regular instance and remove duplicate regular instances for the same day.
+                bookingsToRemove.AddRange(orderedRegularInstances.Skip(1));
+
+                // Keep booking identity, but sync temporal/config values with the current recurrence definition.
+                if (NeedsUpdateFromRecurring(bookingToKeep, recurringBooking, dayGroup.Key))
+                {
+                    bookingsToUpdate.Add(bookingToKeep);
+                }
             }
         }
 
@@ -76,7 +100,19 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             requiredBookingDays,
             missingBookingDays,
             bookingsToRemove,
+            bookingsToUpdate,
             requiredBookingDaysResponse.HasMoreRequiredBookingDays);
+    }
+
+    private static bool NeedsUpdateFromRecurring(BookingEntity booking, RecurringBooking recurringBooking, DateOnly day)
+    {
+        var expectedFrom = day.ToDateTimeOffset(recurringBooking.From.TimeOfDay);
+        var expectedUntil = day.ToDateTimeOffset(recurringBooking.Until.TimeOfDay);
+
+        return booking.From != expectedFrom ||
+               booking.Until != expectedUntil ||
+               booking.Category != recurringBooking.Category ||
+               booking.Channel != recurringBooking.Channel;
     }
 
     private static bool IsRecurringOnDate(RecurringBooking recurringBooking, DateOnly recurrenceStart, DateOnly date, int interval)

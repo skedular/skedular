@@ -57,6 +57,22 @@ public class PrivateRecurringBookingIntegrations(
             await privateBookingService.DeleteAsync(existingBooking, null, cancellationToken);
         }
 
+        // Update non-customized existing instances when recurrence-generated values changed.
+        var updatedByCustomer = recurringBooking.LastModifiedByCustomer ?? recurringBooking.CreatedByCustomer ?? null;
+        foreach (var existingBooking in reconciliationPlan.BookingsToUpdate)
+        {
+            var bookingDate = DateOnly.FromDateTime(existingBooking.From.UtcDateTime.Date);
+            var expectedBooking = mapper.MapTo(recurringBooking, bookingDate);
+
+            await privateBookingService.UpdateAsync(
+                expectedBooking,
+                existingBooking,
+                updatedByCustomer,
+                recurringBooking.InvolvedOrganizations,
+                recurringBooking.InvolvedTeams,
+                cancellationToken);
+        }
+
         foreach (var booking in reconciliationPlan.MissingBookingDays.Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay)))
         {
             booking.Id = randomHelper.Generate();

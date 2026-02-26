@@ -31,7 +31,7 @@ public interface IPrivateBookingService
     Task<Models.Booking> UpdateAsync(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
+        Customer? lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         CancellationToken cancellationToken);
@@ -40,7 +40,7 @@ public interface IPrivateBookingService
         bool runInTransaction,
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
+        Customer? lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         CancellationToken cancellationToken);
@@ -188,7 +188,7 @@ public class PrivateBookingService(
     public async Task<Models.Booking> UpdateAsync(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
+        Customer? lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         CancellationToken cancellationToken) =>
@@ -198,7 +198,7 @@ public class PrivateBookingService(
         bool runInTransaction,
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
+        Customer? lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         CancellationToken cancellationToken)
