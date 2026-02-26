@@ -43,6 +43,7 @@ type BookingDetails {
   createdByCustomer: CustomerDetails
   deletedByCustomer: CustomerDetails
   from: DateTime!
+  hasRecurringInstanceOverrides: Boolean
   id: ID!
   involvedCustomers: [CustomerDetails!]!
   involvedLocations: [LocationDetails!]!

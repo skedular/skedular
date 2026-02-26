@@ -64,7 +64,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)
+            MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };
 
     public RecurringBookingDetails MapTo(RecurringBooking src) =>
@@ -291,6 +292,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             new global::Api.Shared.Services.Grpc.Skedular.Booking.V1.Resource { Id = item.Id }));
 
         booking.Schedules.AddRange(MapToGrpcResponse(src.Schedules));
+
+        if (src.HasRecurringInstanceOverrides.HasValue)
+        {
+            booking.HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides.Value;
+        }
 
         return booking;
     }

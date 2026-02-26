@@ -135,6 +135,11 @@ public class Mapper : IMapper
             booking.DeletedByCustomerId = src.DeletedByCustomer.Id;
         }
 
+        if (src.HasRecurringInstanceOverrides.HasValue)
+        {
+            booking.HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides.Value;
+        }
+
         booking.Resources.AddRange(MapTo(src.Resources));
         booking.Schedules.AddRange(MapTo(src.Schedules));
         booking.InvolvedCustomerIds.AddRange(src.InvolvedCustomers.Select(item => item.Id));
@@ -266,7 +271,8 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)
+            MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };
 
     public RecurringBooking MapTo(Database.Entities.RecurringBooking src) =>
@@ -371,6 +377,7 @@ public class Mapper : IMapper
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
         dest.MarketplaceBooking = marketplaceBooking;
+        dest.HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides;
         return dest;
     }
 

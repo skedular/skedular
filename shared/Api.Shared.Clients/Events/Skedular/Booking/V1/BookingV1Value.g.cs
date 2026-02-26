@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcigAUKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcipwUKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -45,51 +45,52 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "bWVySWQYDiABKAkSGwoTZGVsZXRlZEJ5Q3VzdG9tZXJJZBgPIAEoCRIkCgls",
             "aW5lSXRlbXMYECADKAsyES5ib29raW5nLkxpbmVJdGVtEigKB2NoYW5uZWwY",
             "ESABKA4yFy5ib29raW5nLkJvb2tpbmdDaGFubmVsEjcKEm1hcmtldHBsYWNl",
-            "Qm9va2luZxgSIAEoCzIbLmJvb2tpbmcuTWFya2V0cGxhY2VCb29raW5nIqQE",
-            "ChJNYXJrZXRwbGFjZUJvb2tpbmcSCgoCaWQYASABKAkSLQoNcGF5bWVudFN0",
-            "YXR1cxgCIAEoDjIWLmJvb2tpbmcuUGF5bWVudFN0YXR1cxIZChFpc1BheW1l",
-            "bnRSZXF1aXJlZBgDIAEoCBIYChBwYWlkQnlDdXN0b21lcklkGAQgASgJEhwK",
-            "FHBhaWRCeU9yZ2FuaXphdGlvbklkGAUgASgJEiQKCWxpbmVJdGVtcxgGIAMo",
-            "CzIRLmJvb2tpbmcuTGluZUl0ZW0SPwoWYm9va2luZ0NoZWNrb3V0U2Vzc2lv",
-            "bhgHIAEoCzIfLmJvb2tpbmcuQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhItCg1Q",
-            "YXltZW50TWV0aG9kGAggASgOMhYuYm9va2luZy5QYXltZW50TWV0aG9kEh0K",
-            "FXRvdGFsQW1vdW50RXhjbHVkZVRheBgJIAEoARIRCgl0YXhBbW91bnQYCiAB",
-            "KAESGQoRdGF4UmF0ZVBlcmNlbnRhZ2UYCyABKAESEwoLdG90YWxBbW91bnQY",
-            "DCABKAESEAoIY3VycmVuY3kYDSABKAkSEgoKSW52b2ljZVVybBgOIAEoCRIV",
-            "Cg1JbnZvaWNlTnVtYmVyGA8gASgJEhgKEEludm9pY2VFbWFpbExpc3QYECAD",
-            "KAkSMQoNcGF5bWVudEV4cGlyeRgRIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
-            "aW1lc3RhbXAiFgoIUmVzb3VyY2USCgoCaWQYASABKAkiZgoPQm9va2luZ1Nj",
-            "aGVkdWxlEigKBGZyb20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0",
-            "YW1wEikKBXVudGlsGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFt",
-            "cCI2CghMaW5lSXRlbRIYChBwcm9kdWN0VmVyc2lvbklkGAEgASgJEhAKCHF1",
-            "YW50aXR5GAIgASgFIjkKFkJvb2tpbmdDaGVja291dFNlc3Npb24SCgoCaWQY",
-            "ASABKAkSEwoLY2hlY2tvdXRVcmwYAiABKAkqOQoEVHlwZRIYChRUeXBlX0Jv",
-            "b2tpbmdVcHNlcnRlZBAAEhcKE1R5cGVfQm9va2luZ0RlbGV0ZWQQASr5AgoP",
-            "Qm9va2luZ0NhdGVnb3J5EiMKH0Jvb2tpbmdDYXRlZ29yeV9Xb3JraW5nRnJv",
-            "bUhvbWUQABIlCiFCb29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21PZmZpY2UQ",
-            "ARItCilCb29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21Db3dvcmtpbmdTcGFj",
-            "ZRACEh0KGUJvb2tpbmdDYXRlZ29yeV9TaWNrTGVhdmUQAxIfChtCb29raW5n",
-            "Q2F0ZWdvcnlfQW5udWFsTGVhdmUQBBIiCh5Cb29raW5nQ2F0ZWdvcnlfV2Vs",
-            "bGJlaW5nTGVhdmUQBRIgChxCb29raW5nQ2F0ZWdvcnlfQ2xpZW50T2ZmaWNl",
-            "EAYSHAoYQm9va2luZ0NhdGVnb3J5X1ZhY2F0aW9uEAcSJAogQm9va2luZ0Nh",
-            "dGVnb3J5X1RyYXZlbGluZ0ZvcldvcmsQCBIhCh1Cb29raW5nQ2F0ZWdvcnlf",
-            "Tm9uV29ya2luZ0RheRAJKkwKDkJvb2tpbmdDaGFubmVsEhoKFkJvb2tpbmdD",
-            "aGFubmVsX1ByaXZhdGUQABIeChpCb29raW5nQ2hhbm5lbF9NYXJrZXRwbGFj",
-            "ZRABKskBCg1QYXltZW50U3RhdHVzEhkKFVBheW1lbnRTdGF0dXNfUGVuZGlu",
-            "ZxAAEhoKFlBheW1lbnRTdGF0dXNfUmVqZWN0ZWQQARIbChdQYXltZW50U3Rh",
-            "dHVzX0NvbmZpcm1lZBACEhkKFVBheW1lbnRTdGF0dXNfRXhwaXJlZBADEiQK",
-            "IFBheW1lbnRTdGF0dXNfUmVjb3JkTmV2ZXJDcmVhdGVkEAQSIwofUGF5bWVu",
-            "dFN0YXR1c19Ob1BheW1lbnRSZXF1aXJlZBAFKkYKDVBheW1lbnRNZXRob2QS",
-            "FgoSUGF5bWVudE1ldGhvZF9DYXJkEAASHQoZUGF5bWVudE1ldGhvZF9CYW5r",
-            "QWNjb3VudBABQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1",
-            "bGFyLkJvb2tpbmcuVjEuVmFsdWViBnByb3RvMw=="));
+            "Qm9va2luZxgSIAEoCzIbLmJvb2tpbmcuTWFya2V0cGxhY2VCb29raW5nEiUK",
+            "HWhhc1JlY3VycmluZ0luc3RhbmNlT3ZlcnJpZGVzGBMgASgIIqQEChJNYXJr",
+            "ZXRwbGFjZUJvb2tpbmcSCgoCaWQYASABKAkSLQoNcGF5bWVudFN0YXR1cxgC",
+            "IAEoDjIWLmJvb2tpbmcuUGF5bWVudFN0YXR1cxIZChFpc1BheW1lbnRSZXF1",
+            "aXJlZBgDIAEoCBIYChBwYWlkQnlDdXN0b21lcklkGAQgASgJEhwKFHBhaWRC",
+            "eU9yZ2FuaXphdGlvbklkGAUgASgJEiQKCWxpbmVJdGVtcxgGIAMoCzIRLmJv",
+            "b2tpbmcuTGluZUl0ZW0SPwoWYm9va2luZ0NoZWNrb3V0U2Vzc2lvbhgHIAEo",
+            "CzIfLmJvb2tpbmcuQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhItCg1QYXltZW50",
+            "TWV0aG9kGAggASgOMhYuYm9va2luZy5QYXltZW50TWV0aG9kEh0KFXRvdGFs",
+            "QW1vdW50RXhjbHVkZVRheBgJIAEoARIRCgl0YXhBbW91bnQYCiABKAESGQoR",
+            "dGF4UmF0ZVBlcmNlbnRhZ2UYCyABKAESEwoLdG90YWxBbW91bnQYDCABKAES",
+            "EAoIY3VycmVuY3kYDSABKAkSEgoKSW52b2ljZVVybBgOIAEoCRIVCg1JbnZv",
+            "aWNlTnVtYmVyGA8gASgJEhgKEEludm9pY2VFbWFpbExpc3QYECADKAkSMQoN",
+            "cGF5bWVudEV4cGlyeRgRIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
+            "bXAiFgoIUmVzb3VyY2USCgoCaWQYASABKAkiZgoPQm9va2luZ1NjaGVkdWxl",
+            "EigKBGZyb20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEikK",
+            "BXVudGlsGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCI2CghM",
+            "aW5lSXRlbRIYChBwcm9kdWN0VmVyc2lvbklkGAEgASgJEhAKCHF1YW50aXR5",
+            "GAIgASgFIjkKFkJvb2tpbmdDaGVja291dFNlc3Npb24SCgoCaWQYASABKAkS",
+            "EwoLY2hlY2tvdXRVcmwYAiABKAkqOQoEVHlwZRIYChRUeXBlX0Jvb2tpbmdV",
+            "cHNlcnRlZBAAEhcKE1R5cGVfQm9va2luZ0RlbGV0ZWQQASr5AgoPQm9va2lu",
+            "Z0NhdGVnb3J5EiMKH0Jvb2tpbmdDYXRlZ29yeV9Xb3JraW5nRnJvbUhvbWUQ",
+            "ABIlCiFCb29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21PZmZpY2UQARItCilC",
+            "b29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21Db3dvcmtpbmdTcGFjZRACEh0K",
+            "GUJvb2tpbmdDYXRlZ29yeV9TaWNrTGVhdmUQAxIfChtCb29raW5nQ2F0ZWdv",
+            "cnlfQW5udWFsTGVhdmUQBBIiCh5Cb29raW5nQ2F0ZWdvcnlfV2VsbGJlaW5n",
+            "TGVhdmUQBRIgChxCb29raW5nQ2F0ZWdvcnlfQ2xpZW50T2ZmaWNlEAYSHAoY",
+            "Qm9va2luZ0NhdGVnb3J5X1ZhY2F0aW9uEAcSJAogQm9va2luZ0NhdGVnb3J5",
+            "X1RyYXZlbGluZ0ZvcldvcmsQCBIhCh1Cb29raW5nQ2F0ZWdvcnlfTm9uV29y",
+            "a2luZ0RheRAJKkwKDkJvb2tpbmdDaGFubmVsEhoKFkJvb2tpbmdDaGFubmVs",
+            "X1ByaXZhdGUQABIeChpCb29raW5nQ2hhbm5lbF9NYXJrZXRwbGFjZRABKskB",
+            "Cg1QYXltZW50U3RhdHVzEhkKFVBheW1lbnRTdGF0dXNfUGVuZGluZxAAEhoK",
+            "FlBheW1lbnRTdGF0dXNfUmVqZWN0ZWQQARIbChdQYXltZW50U3RhdHVzX0Nv",
+            "bmZpcm1lZBACEhkKFVBheW1lbnRTdGF0dXNfRXhwaXJlZBADEiQKIFBheW1l",
+            "bnRTdGF0dXNfUmVjb3JkTmV2ZXJDcmVhdGVkEAQSIwofUGF5bWVudFN0YXR1",
+            "c19Ob1BheW1lbnRSZXF1aXJlZBAFKkYKDVBheW1lbnRNZXRob2QSFgoSUGF5",
+            "bWVudE1ldGhvZF9DYXJkEAASHQoZUGF5bWVudE1ldGhvZF9CYW5rQWNjb3Vu",
+            "dBABQjaqAjNBcGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkJv",
+            "b2tpbmcuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "Channel", "MarketplaceBooking" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "Channel", "MarketplaceBooking", "HasRecurringInstanceOverrides" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking.Parser, new[]{ "Id", "PaymentStatus", "IsPaymentRequired", "PaidByCustomerId", "PaidByOrganizationId", "LineItems", "BookingCheckoutSession", "PaymentMethod", "TotalAmountExcludeTax", "TaxAmount", "TaxRatePercentage", "TotalAmount", "Currency", "InvoiceUrl", "InvoiceNumber", "InvoiceEmailList", "PaymentExpiry" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
@@ -1046,6 +1047,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       lineItems_ = other.lineItems_.Clone();
       channel_ = other.channel_;
       marketplaceBooking_ = other.marketplaceBooking_ != null ? other.marketplaceBooking_.Clone() : null;
+      hasRecurringInstanceOverrides_ = other.hasRecurringInstanceOverrides_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1264,6 +1266,18 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "hasRecurringInstanceOverrides" field.</summary>
+    public const int HasRecurringInstanceOverridesFieldNumber = 19;
+    private bool hasRecurringInstanceOverrides_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRecurringInstanceOverrides {
+      get { return hasRecurringInstanceOverrides_; }
+      set {
+        hasRecurringInstanceOverrides_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1297,6 +1311,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if(!lineItems_.Equals(other.lineItems_)) return false;
       if (Channel != other.Channel) return false;
       if (!object.Equals(MarketplaceBooking, other.MarketplaceBooking)) return false;
+      if (HasRecurringInstanceOverrides != other.HasRecurringInstanceOverrides) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1322,6 +1337,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       hash ^= lineItems_.GetHashCode();
       if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) hash ^= Channel.GetHashCode();
       if (marketplaceBooking_ != null) hash ^= MarketplaceBooking.GetHashCode();
+      if (HasRecurringInstanceOverrides != false) hash ^= HasRecurringInstanceOverrides.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1391,6 +1407,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(146, 1);
         output.WriteMessage(MarketplaceBooking);
       }
+      if (HasRecurringInstanceOverrides != false) {
+        output.WriteRawTag(152, 1);
+        output.WriteBool(HasRecurringInstanceOverrides);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1452,6 +1472,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(146, 1);
         output.WriteMessage(MarketplaceBooking);
       }
+      if (HasRecurringInstanceOverrides != false) {
+        output.WriteRawTag(152, 1);
+        output.WriteBool(HasRecurringInstanceOverrides);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1501,6 +1525,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
       if (marketplaceBooking_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(MarketplaceBooking);
+      }
+      if (HasRecurringInstanceOverrides != false) {
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1565,6 +1592,9 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
           MarketplaceBooking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking();
         }
         MarketplaceBooking.MergeFrom(other.MarketplaceBooking);
+      }
+      if (other.HasRecurringInstanceOverrides != false) {
+        HasRecurringInstanceOverrides = other.HasRecurringInstanceOverrides;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1669,6 +1699,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             input.ReadMessage(MarketplaceBooking);
             break;
           }
+          case 152: {
+            HasRecurringInstanceOverrides = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -1770,6 +1804,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
               MarketplaceBooking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking();
             }
             input.ReadMessage(MarketplaceBooking);
+            break;
+          }
+          case 152: {
+            HasRecurringInstanceOverrides = input.ReadBool();
             break;
           }
         }

@@ -45,6 +45,7 @@ message Booking {
   repeated LineItem lineItems = 16;
   BookingChannel channel = 17;
   MarketplaceBooking marketplaceBooking = 18;
+  bool hasRecurringInstanceOverrides = 19;
 }
 
 message MarketplaceBooking {

@@ -16,6 +16,7 @@ public class Booking : EntityBaseWithDeleted
     public string Category { get; set; }
     public string Channel { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; }
+    public bool? HasRecurringInstanceOverrides { get; set; }
 
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
@@ -59,5 +60,6 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder.HasIndex(item => item.Notes);
         builder.HasIndex(item => item.Category);
         builder.HasIndex(item => item.Channel);
+        builder.HasIndex(item => item.HasRecurringInstanceOverrides);
     }
 }

@@ -167,6 +167,7 @@ message Booking {
   string deletedByCustomerId = 14;
   BookingChannel channel = 15;
   MarketplaceBooking marketplaceBooking = 16;
+  bool hasRecurringInstanceOverrides = 17;
 }
 
 message MarketplaceBooking {

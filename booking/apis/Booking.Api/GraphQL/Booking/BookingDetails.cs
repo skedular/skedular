@@ -27,6 +27,9 @@ public class BookingDetails : Node
 
     [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
     [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
+
+    [GraphQLName("hasRecurringInstanceOverrides")]
+    public bool? HasRecurringInstanceOverrides { get; set; }
 }
 
 [ObjectType<BookingDetails>]
