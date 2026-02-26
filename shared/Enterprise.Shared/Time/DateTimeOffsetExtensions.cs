@@ -44,4 +44,18 @@ public static class DateTimeOffsetExtensions
             }
         }
     }
+
+    extension(DateOnly date)
+    {
+        public DateTimeOffset ToDateTimeOffset(TimeSpan timeSpan) => new(
+            date.Year,
+            date.Month,
+            date.Day,
+            timeSpan.Hours,
+            timeSpan.Minutes,
+            timeSpan.Seconds,
+            timeSpan.Milliseconds,
+            timeSpan.Microseconds,
+            TimeSpan.Zero);
+    }
 }

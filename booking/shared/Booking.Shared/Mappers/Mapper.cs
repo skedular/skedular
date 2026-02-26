@@ -1,6 +1,7 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared;
+using Enterprise.Shared.Time;
 using Google.Protobuf.WellKnownTypes;
 using Stripe;
 using BookingCheckoutSession = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession;
@@ -28,6 +29,7 @@ public interface IMapper
     CustomerCreateOptions MapToCustomerCreateOption(Customer src);
     Models.Booking MapTo(Database.Entities.Booking src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
+    Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
@@ -296,6 +298,25 @@ public class Mapper : IMapper
             MarketplaceBooking = MapTo(src.MarketplaceBooking)
         };
 
+    public Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date)
+    {
+        var from = date.ToDateTimeOffset(src.From.TimeOfDay);
+        var until = date.ToDateTimeOffset(src.Until.TimeOfDay);
+
+        return new Models.Booking
+        {
+            From = from,
+            Until = until,
+            Channel = src.Channel.ToBookingChannel(),
+            Category = BookingCategory.WorkingFromOffice,
+            Schedules = [new Api.Shared.Services.Models.BookingSchedule(from, until)],
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer)
+        };
+    }
+
     public Database.Entities.Booking MapTo(
         Models.Booking src,
         ICollection<Customer> involvedCustomers,
@@ -420,7 +441,7 @@ public class Mapper : IMapper
             productVersions,
             stripeCheckoutSession);
 
-    public Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
+    private Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
         src is null
             ? null
             : new Models.MarketplaceBooking

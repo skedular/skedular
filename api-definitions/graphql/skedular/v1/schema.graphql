@@ -1575,7 +1575,7 @@ input AddPrivateRecurringBookingInput {
   from: DateTime!
   id: String
   interval: Int!
-  occurrenceCount: Int!
+  occurrenceCount: Int
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   skippedDates: [DateTime!]!
@@ -2542,7 +2542,7 @@ input UpdatePrivateRecurringBookingInput {
   from: DateTime!
   id: String!
   interval: Int!
-  occurrenceCount: Int!
+  occurrenceCount: Int
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   skippedDates: [DateTime!]!

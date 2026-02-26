@@ -13,7 +13,7 @@ public class Booking : ModelBaseWithDeleted
     public BookingCategory Category { get; set; }
     public BookingChannel Channel { get; set; }
     public ICollection<BookingSchedule> Schedules { get; set; } = [];
-    public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
+    public MarketplaceBooking? MarketplaceBooking { get; set; }
     public ICollection<ResourceCustomersPair> Resources { get; set; } = [];
     public ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public ICollection<Organization> InvolvedOrganizations { get; set; } = [];

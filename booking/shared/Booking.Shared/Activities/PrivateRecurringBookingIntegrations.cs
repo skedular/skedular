@@ -1,6 +1,8 @@
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Random;
 using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;
@@ -12,11 +14,12 @@ public record AdjustRequiredResourcesForRecurringBookingAsyncResponse(bool Delet
 public record ReleaseRecurringBookingResourcesInput(string RecurringBookingId);
 
 public class PrivateRecurringBookingIntegrations(
-    IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     TimeProvider timeProvider,
     IRecurringBookingScheduleService recurringBookingScheduleService,
-    IPrivateBookingService privateBookingService)
+    IPrivateBookingService privateBookingService,
+    IMapper mapper,
+    IRandomHelper randomHelper)
 {
     [Activity]
     public async Task<AdjustRequiredResourcesForRecurringBookingAsyncResponse> AdjustRequiredResourcesForRecurringBookingAsync(
@@ -75,14 +78,22 @@ public class PrivateRecurringBookingIntegrations(
             }
         }
 
-        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
         foreach (var existingBooking in bookingsToRemove)
         {
-            await privateBookingService.DeleteAsync(false, existingBooking, null, cancellationToken);
+            await privateBookingService.DeleteAsync(existingBooking, null, cancellationToken);
         }
 
-        await transaction.CommitAsync(cancellationToken);
+        foreach (var booking in missingBookingDays.Select(missingBookingDay => mapper.MapTo(recurringBooking, missingBookingDay)))
+        {
+            booking.Id = randomHelper.Generate();
+
+            await privateBookingService.AddAsync(
+                booking,
+                recurringBooking.InvolvedCustomers.First(),
+                recurringBooking.InvolvedOrganizations,
+                recurringBooking.InvolvedTeams,
+                cancellationToken);
+        }
 
         // If recurrence has no future valid booking days, the workflow can terminate.
         return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, !requiredBookingDaysResponse.HasMoreRequiredBookingDays);
@@ -108,13 +119,9 @@ public class PrivateRecurringBookingIntegrations(
             null,
             cancellationToken);
 
-        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
-
         foreach (var existingBooking in existingBookings)
         {
-            await privateBookingService.DeleteAsync(false, existingBooking, recurringBooking.DeletedByCustomer, cancellationToken);
+            await privateBookingService.DeleteAsync(existingBooking, recurringBooking.DeletedByCustomer, cancellationToken);
         }
-
-        await transaction.CommitAsync(cancellationToken);
     }
 }
