@@ -288,7 +288,7 @@ input AddPrivateRecurringBookingInput {
   endDate: DateTime
   occurrenceCount: Int
   skippedDates: [DateTime!]
-  category: BookingCategory!
+  category: BookingCategory
 }
 
 input AvailableResourcesWhereInput {
@@ -417,7 +417,7 @@ input UpdatePrivateRecurringBookingInput {
   endDate: DateTime
   occurrenceCount: Int
   skippedDates: [DateTime!]
-  category: BookingCategory!
+  category: BookingCategory
 }
 
 enum BookingCategory {

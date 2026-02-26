@@ -28,5 +28,5 @@ public class AddPrivateRecurringBookingInput
     [GraphQLName("endDate")] public DateTimeOffset? EndDate { get; set; }
     [GraphQLName("occurrenceCount")] public int? OccurrenceCount { get; set; }
     [GraphQLName("skippedDates")] public ICollection<DateTimeOffset>? SkippedDates { get; set; } = [];
-    [GraphQLName("category")] public BookingCategory Category { get; set; }
+    [GraphQLName("category")] public BookingCategory? Category { get; set; }
 }

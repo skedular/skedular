@@ -1569,7 +1569,7 @@ input AddPrivateRecurringBookingInput {
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   endDate: DateTime
@@ -2537,7 +2537,7 @@ input UpdatePrivateRecurringBookingInput {
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   endDate: DateTime

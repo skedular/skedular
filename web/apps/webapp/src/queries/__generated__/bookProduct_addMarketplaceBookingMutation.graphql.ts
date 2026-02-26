@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f06550a1275b7039bb3d90197ccf5ce5>>
+ * @generated SignedSource<<5c16cc69d5b70cbf65cdd25ff9dd5a10>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,19 @@ import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type AddMarketplaceBookingInput = {
-  category: BookingCategory;
+  category?: BookingCategory | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
   id?: string | null | undefined;
-  invoiceEmailList: ReadonlyArray<string>;
+  invoiceEmailList?: ReadonlyArray<string> | null | undefined;
   lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   paymentMethod: PaymentMethod;
-  resourceIds: ReadonlyArray<string>;
-  teamIds: ReadonlyArray<string>;
+  resourceIds?: ReadonlyArray<string> | null | undefined;
+  teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;
 };
 export type LineItemInput = {

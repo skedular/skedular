@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1275fa2a5a110be9844d3983ba70904f>>
+ * @generated SignedSource<<481a87951a9b59becc3999968ffcfcb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type AddPrivateBookingInput = {
-  category: BookingCategory;
+  category?: BookingCategory | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;
@@ -19,8 +19,8 @@ export type AddPrivateBookingInput = {
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
-  resourceIds: ReadonlyArray<string>;
-  teamIds: ReadonlyArray<string>;
+  resourceIds?: ReadonlyArray<string> | null | undefined;
+  teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;
 };
 export type bookings_addPrivateBookingMutation$variables = {
