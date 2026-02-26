@@ -68,7 +68,7 @@ public class PrivateBookingService(
             false,
             cancellationToken);
 
-        return await sharedPrivateBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
+        return await sharedPrivateBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
@@ -161,6 +161,13 @@ public class PrivateBookingService(
             booking.HasRecurringInstanceOverrides = true;
         }
 
-        return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
+        return await sharedPrivateBookingService.UpdateAsync(
+            booking,
+            existingBooking,
+            callingCustomer,
+            organizations,
+            teams,
+            null,
+            cancellationToken);
     }
 }

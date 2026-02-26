@@ -22,6 +22,7 @@ public interface IMarketplaceBookingService
         Customer customer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> AddAsync(
@@ -30,6 +31,7 @@ public interface IMarketplaceBookingService
         Customer customer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> UpdateAsync(
@@ -38,6 +40,7 @@ public interface IMarketplaceBookingService
         Customer lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> UpdateAsync(
@@ -47,6 +50,7 @@ public interface IMarketplaceBookingService
         Customer lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> DeleteAsync(
@@ -81,8 +85,9 @@ public class MarketplaceBookingService(
         Customer customer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken) =>
-        await AddAsync(true, booking, customer, organizations, teams, cancellationToken);
+        await AddAsync(true, booking, customer, organizations, teams, recurringBooking, cancellationToken);
 
     public async Task<Models.Booking> AddAsync(
         bool runInTransaction,
@@ -90,6 +95,7 @@ public class MarketplaceBookingService(
         Customer customer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -227,7 +233,8 @@ public class MarketplaceBookingService(
                 customer,
                 null,
                 null,
-                marketplaceBookingEntity);
+                marketplaceBookingEntity,
+                recurringBooking);
 
             bookingEntity.Channel = BookingChannelConstants.Marketplace;
 
@@ -285,8 +292,9 @@ public class MarketplaceBookingService(
         Customer lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken) =>
-        await UpdateAsync(true, booking, existingBooking, lastModifiedByCustomer, organizations, teams, cancellationToken);
+        await UpdateAsync(true, booking, existingBooking, lastModifiedByCustomer, organizations, teams, recurringBooking, cancellationToken);
 
     public async Task<Models.Booking> UpdateAsync(
         bool runInTransaction,
@@ -295,6 +303,7 @@ public class MarketplaceBookingService(
         Customer lastModifiedByCustomer,
         ICollection<Organization> organizations,
         ICollection<Team> teams,
+        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
@@ -369,7 +378,8 @@ public class MarketplaceBookingService(
                 existingBooking.CreatedByCustomer,
                 lastModifiedByCustomer,
                 null,
-                existingBooking.MarketplaceBooking);
+                existingBooking.MarketplaceBooking,
+                recurringBooking);
 
             bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
             booking = mapper.MapTo(bookingEntity);

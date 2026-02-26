@@ -61,8 +61,7 @@ public class PrivateRecurringBookingIntegrations(
         var updatedByCustomer = recurringBooking.LastModifiedByCustomer ?? recurringBooking.CreatedByCustomer ?? null;
         foreach (var existingBooking in reconciliationPlan.BookingsToUpdate)
         {
-            var bookingDate = DateOnly.FromDateTime(existingBooking.From.UtcDateTime.Date);
-            var expectedBooking = mapper.MapTo(recurringBooking, bookingDate);
+            var expectedBooking = mapper.MapTo(recurringBooking, existingBooking, DateOnly.FromDateTime(existingBooking.From.UtcDateTime.Date));
 
             await privateBookingService.UpdateAsync(
                 expectedBooking,
@@ -70,6 +69,7 @@ public class PrivateRecurringBookingIntegrations(
                 updatedByCustomer,
                 recurringBooking.InvolvedOrganizations,
                 recurringBooking.InvolvedTeams,
+                recurringBooking,
                 cancellationToken);
         }
 
@@ -82,6 +82,7 @@ public class PrivateRecurringBookingIntegrations(
                 recurringBooking.InvolvedCustomers.First(),
                 recurringBooking.InvolvedOrganizations,
                 recurringBooking.InvolvedTeams,
+                recurringBooking,
                 cancellationToken);
         }
 

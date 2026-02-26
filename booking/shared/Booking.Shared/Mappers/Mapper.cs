@@ -30,6 +30,7 @@ public interface IMapper
     Models.Booking MapTo(Database.Entities.Booking src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
+    Models.Booking MapTo(Database.Entities.RecurringBooking src, Database.Entities.Booking booking, DateOnly date);
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
@@ -41,7 +42,8 @@ public interface IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        MarketplaceBooking? marketplaceBooking);
+        MarketplaceBooking? marketplaceBooking,
+        Database.Entities.RecurringBooking? recurringBooking);
 
     Database.Entities.Booking MergeTo(
         Models.Booking src,
@@ -54,7 +56,8 @@ public interface IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        MarketplaceBooking? marketplaceBooking);
+        MarketplaceBooking? marketplaceBooking,
+        Database.Entities.RecurringBooking? recurringBooking);
 
     Database.Entities.RecurringBooking MapTo(
         RecurringBooking src,
@@ -324,6 +327,26 @@ public class Mapper : IMapper
         };
     }
 
+    public Models.Booking MapTo(Database.Entities.RecurringBooking src, Database.Entities.Booking booking, DateOnly date)
+    {
+        var from = date.ToDateTimeOffset(src.From.TimeOfDay);
+        var until = date.ToDateTimeOffset(src.Until.TimeOfDay);
+
+        return new Models.Booking
+        {
+            Id = booking.Id,
+            From = from,
+            Until = until,
+            Category = src.Category.ToBookingCategory(),
+            Channel = src.Channel.ToBookingChannel(),
+            Schedules = [new Api.Shared.Services.Models.BookingSchedule(from, until)],
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer)
+        };
+    }
+
     public Database.Entities.Booking MapTo(
         Models.Booking src,
         ICollection<Customer> involvedCustomers,
@@ -334,7 +357,8 @@ public class Mapper : IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        MarketplaceBooking? marketplaceBooking) =>
+        MarketplaceBooking? marketplaceBooking,
+        Database.Entities.RecurringBooking? recurringBooking) =>
         MergeTo(
             src,
             new Database.Entities.Booking(),
@@ -346,7 +370,8 @@ public class Mapper : IMapper
             createdByCustomer,
             lastModifiedByCustomer,
             deletedByCustomer,
-            marketplaceBooking);
+            marketplaceBooking,
+            recurringBooking);
 
     public Database.Entities.Booking MergeTo(
         Models.Booking src,
@@ -359,7 +384,8 @@ public class Mapper : IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
-        MarketplaceBooking? marketplaceBooking)
+        MarketplaceBooking? marketplaceBooking,
+        Database.Entities.RecurringBooking? recurringBooking)
     {
         dest.Id = src.Id;
         dest.From = src.From;
@@ -378,6 +404,7 @@ public class Mapper : IMapper
         dest.DeletedByCustomer = deletedByCustomer;
         dest.MarketplaceBooking = marketplaceBooking;
         dest.HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides;
+        dest.RecurringBooking = recurringBooking;
         return dest;
     }
 

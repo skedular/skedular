@@ -76,7 +76,7 @@ public class MarketplaceBookingService(
             false,
             cancellationToken);
 
-        return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, cancellationToken);
+        return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
     }
 
     public async Task<Shared.Models.Booking> UpdateAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
@@ -162,6 +162,7 @@ public class MarketplaceBookingService(
             callingCustomer,
             organizations,
             teams,
+            null,
             cancellationToken);
     }
 }
