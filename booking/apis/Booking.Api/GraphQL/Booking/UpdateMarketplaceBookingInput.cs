@@ -14,7 +14,7 @@ public class UpdateMarketplaceBookingInput
     [GraphQLName("organizationUniqueAlphanumericNames")]
     public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
 
-    [GraphQLName("teamIds")] public IEnumerable<string> TeamIds { get; set; } = [];
+    [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; } = [];
     [GraphQLName("notes")] public string? Notes { get; set; }
-    [GraphQLName("category")] public BookingCategory Category { get; set; }
+    [GraphQLName("category")] public BookingCategory? Category { get; set; }
 }

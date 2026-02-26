@@ -278,6 +278,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             From = src.From,
             Until = src.Until,
+            Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
             Frequency = src.Frequency.ToBookingFrequency(),
             Interval = src.Interval,
@@ -307,8 +308,8 @@ public class Mapper : IMapper
         {
             From = from,
             Until = until,
+            Category = src.Category.ToBookingCategory(),
             Channel = src.Channel.ToBookingChannel(),
-            Category = BookingCategory.WorkingFromOffice,
             Schedules = [new Api.Shared.Services.Models.BookingSchedule(from, until)],
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
@@ -407,6 +408,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.From = src.From;
         dest.Until = src.Until;
+        dest.Category = src.Category.ToBookingCategory();
         dest.Frequency = src.Frequency.ToBookingFrequency();
         dest.Interval = src.Interval;
         dest.ByMonthDay = src.ByMonthDay;

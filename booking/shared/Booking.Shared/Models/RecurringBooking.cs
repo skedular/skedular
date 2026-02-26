@@ -7,6 +7,7 @@ public class RecurringBooking : ModelBaseWithDeleted
 {
     public DateTimeOffset From { get; set; }
     public DateTimeOffset Until { get; set; }
+    public BookingCategory Category { get; set; }
     public BookingChannel Channel { get; set; }
     public BookingFrequency Frequency { get; set; } // (Daily, Weekly, Monthly, etc.)
     public int Interval { get; set; } // (every N units, e.g. every 2 weeks)

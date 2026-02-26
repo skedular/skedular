@@ -11,6 +11,7 @@ public class RecurringBooking : EntityBaseWithDeleted
 {
     public DateTimeOffset From { get; set; }
     public DateTimeOffset Until { get; set; }
+    public string Category { get; set; }
     public string Channel { get; set; }
     public string Frequency { get; set; }
     public int Interval { get; set; }
@@ -41,6 +42,7 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
     {
         builder.ConfigureEntityBaseWithDeleted();
 
+        builder.Property(item => item.Category).HasMaxLength(Constants.MaxBookingCategoryLength);
         builder.Property(item => item.Channel).HasMaxLength(Constants.MaxBookingChannelLength);
         builder.Property(item => item.Frequency).HasMaxLength(Constants.MaxRecurringBookingFrequencyLength);
         builder.Property(item => item.Interval);
@@ -57,6 +59,7 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
         builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedRecurringBookings);
         builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedRecurringBookings);
 
+        builder.HasIndex(item => item.Category);
         builder.HasIndex(item => item.Channel);
         builder.HasIndex(item => item.Frequency);
         builder.HasIndex(item => item.EndType);

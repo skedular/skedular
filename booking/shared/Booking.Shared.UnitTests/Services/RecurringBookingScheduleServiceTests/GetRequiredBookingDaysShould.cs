@@ -248,6 +248,7 @@ public class GetRequiredBookingDaysShould
         int? occurrenceCount = null) =>
         new()
         {
+            Category = BookingCategoryConstants.WorkingFromOffice,
             Frequency = frequency,
             EndType = endType,
             StartDate = startDate,

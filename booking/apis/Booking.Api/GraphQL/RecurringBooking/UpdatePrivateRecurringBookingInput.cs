@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using HotChocolate;
 
@@ -14,7 +15,7 @@ public class UpdatePrivateRecurringBookingInput
     [GraphQLName("organizationUniqueAlphanumericNames")]
     public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
 
-    [GraphQLName("teamIds")] public IEnumerable<string> TeamIds { get; set; } = [];
+    [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; } = [];
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("frequency")] public BookingFrequency Frequency { get; set; }
@@ -26,5 +27,6 @@ public class UpdatePrivateRecurringBookingInput
     [GraphQLName("startDate")] public DateTimeOffset StartDate { get; set; }
     [GraphQLName("endDate")] public DateTimeOffset? EndDate { get; set; }
     [GraphQLName("occurrenceCount")] public int? OccurrenceCount { get; set; }
-    [GraphQLName("skippedDates")] public ICollection<DateTimeOffset> SkippedDates { get; set; } = [];
+    [GraphQLName("skippedDates")] public ICollection<DateTimeOffset>? SkippedDates { get; set; } = [];
+    [GraphQLName("category")] public BookingCategory Category { get; set; }
 }

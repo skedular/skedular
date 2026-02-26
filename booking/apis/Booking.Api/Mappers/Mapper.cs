@@ -73,6 +73,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Id = src.Id,
             From = src.From,
             Until = src.Until,
+            Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
             Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
             Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
             Interval = src.Interval,
@@ -102,7 +103,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Category = src.Category,
+            Category = src.Category ?? BookingCategory.WorkingFromOffice,
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -111,7 +112,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     new Organization { UniqueAlphanumericName = item }))
                 .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
@@ -124,6 +125,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Id = src.Id.ToSafeString(),
             From = src.From,
             Until = src.Until,
+            Category = src.Category,
             Frequency = src.Frequency,
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
@@ -133,7 +135,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates,
+            SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
                 .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
@@ -152,6 +154,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Id = src.Id,
             From = src.From,
             Until = src.Until,
+            Category = src.Category,
             Frequency = src.Frequency,
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
@@ -161,7 +164,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             StartDate = src.StartDate,
             EndDate = src.EndDate,
             OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates,
+            SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
             InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
                 .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
@@ -181,7 +184,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Category = src.Category,
+            Category = src.Category ?? BookingCategory.WorkingFromOffice,
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -205,7 +208,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             From = src.From,
             Until = src.Until,
             Notes = src.Notes,
-            Category = src.Category,
+            Category = src.Category ?? BookingCategory.WorkingFromCoworkingSpace,
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
@@ -215,7 +218,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     new Organization { UniqueAlphanumericName = item }))
                 .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
+            Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
                 LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
@@ -233,7 +236,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         {
             Id = src.Id,
             Notes = src.Notes,
-            Category = src.Category,
+            Category = src.Category ?? BookingCategory.WorkingFromCoworkingSpace,
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =

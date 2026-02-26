@@ -1132,6 +1132,7 @@ type RecurringBookingDetails {
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeekDetails!]!
+  category: BookingCategoryDetails!
   channel: BookingChannelDetails!
   createdByCustomer: CustomerDetails
   deletedByCustomer: CustomerDetails
@@ -1425,19 +1426,19 @@ input AddLocationTagInput {
 }
 
 input AddMarketplaceBookingInput {
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   from: DateTime!
   id: String
-  invoiceEmailList: [String!]!
+  invoiceEmailList: [String!]
   lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   paymentMethod: PaymentMethod!
-  resourceIds: [String!]!
-  teamIds: [String!]!
+  resourceIds: [String!]
+  teamIds: [String!]
   until: DateTime!
 }
 
@@ -1550,7 +1551,7 @@ input AddOrganizationStripeConnectAccountInput {
 }
 
 input AddPrivateBookingInput {
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   from: DateTime!
@@ -1558,8 +1559,8 @@ input AddPrivateBookingInput {
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  resourceIds: [String!]!
-  teamIds: [String!]!
+  resourceIds: [String!]
+  teamIds: [String!]
   until: DateTime!
 }
 
@@ -1567,6 +1568,7 @@ input AddPrivateRecurringBookingInput {
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
+  category: BookingCategory!
   clientMutationId: String
   customerIds: [String!]!
   endDate: DateTime
@@ -1578,9 +1580,9 @@ input AddPrivateRecurringBookingInput {
   occurrenceCount: Int
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  skippedDates: [DateTime!]!
+  skippedDates: [DateTime!]
   startDate: DateTime!
-  teamIds: [String!]!
+  teamIds: [String!]
   until: DateTime!
 }
 
@@ -2378,14 +2380,14 @@ input UpdateLocationTagInput {
 }
 
 input UpdateMarketplaceBookingInput {
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   id: String!
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
 }
 
 input UpdateMyBillingDetailsInput {
@@ -2517,7 +2519,7 @@ input UpdateOrganizationTaxDetailsInput {
 }
 
 input UpdatePrivateBookingInput {
-  category: BookingCategory!
+  category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
   from: DateTime!
@@ -2525,8 +2527,8 @@ input UpdatePrivateBookingInput {
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  resourceIds: [String!]!
-  teamIds: [String!]!
+  resourceIds: [String!]
+  teamIds: [String!]
   until: DateTime!
 }
 
@@ -2534,6 +2536,7 @@ input UpdatePrivateRecurringBookingInput {
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
+  category: BookingCategory!
   clientMutationId: String
   customerIds: [String!]!
   endDate: DateTime
@@ -2545,9 +2548,9 @@ input UpdatePrivateRecurringBookingInput {
   occurrenceCount: Int
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  skippedDates: [DateTime!]!
+  skippedDates: [DateTime!]
   startDate: DateTime!
-  teamIds: [String!]!
+  teamIds: [String!]
   until: DateTime!
 }
 

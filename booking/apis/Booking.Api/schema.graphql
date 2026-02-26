@@ -192,6 +192,7 @@ type RecurringBookingDetails {
   involvedTeams: [TeamDetails!]!
   from: DateTime!
   until: DateTime!
+  category: BookingCategoryDetails!
   channel: BookingChannelDetails!
   frequency: BookingFrequencyDetails!
   interval: Int!
@@ -242,15 +243,15 @@ input AddMarketplaceBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   notes: String
-  category: BookingCategory!
-  resourceIds: [String!]!
+  category: BookingCategory
+  resourceIds: [String!]
   lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod!
-  invoiceEmailList: [String!]!
+  invoiceEmailList: [String!]
 }
 
 input AddPrivateBookingInput {
@@ -259,12 +260,12 @@ input AddPrivateBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   notes: String
-  category: BookingCategory!
-  resourceIds: [String!]!
+  category: BookingCategory
+  resourceIds: [String!]
 }
 
 input AddPrivateRecurringBookingInput {
@@ -273,7 +274,7 @@ input AddPrivateRecurringBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   frequency: BookingFrequency!
@@ -285,7 +286,8 @@ input AddPrivateRecurringBookingInput {
   startDate: DateTime!
   endDate: DateTime
   occurrenceCount: Int
-  skippedDates: [DateTime!]!
+  skippedDates: [DateTime!]
+  category: BookingCategory!
 }
 
 input AvailableResourcesWhereInput {
@@ -376,9 +378,9 @@ input UpdateMarketplaceBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   notes: String
-  category: BookingCategory!
+  category: BookingCategory
 }
 
 input UpdatePrivateBookingInput {
@@ -387,12 +389,12 @@ input UpdatePrivateBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   notes: String
-  category: BookingCategory!
-  resourceIds: [String!]!
+  category: BookingCategory
+  resourceIds: [String!]
 }
 
 input UpdatePrivateRecurringBookingInput {
@@ -401,7 +403,7 @@ input UpdatePrivateRecurringBookingInput {
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   frequency: BookingFrequency!
@@ -413,7 +415,8 @@ input UpdatePrivateRecurringBookingInput {
   startDate: DateTime!
   endDate: DateTime
   occurrenceCount: Int
-  skippedDates: [DateTime!]!
+  skippedDates: [DateTime!]
+  category: BookingCategory!
 }
 
 enum BookingCategory {

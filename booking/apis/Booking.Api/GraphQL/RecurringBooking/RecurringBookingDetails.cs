@@ -10,6 +10,7 @@ public class RecurringBookingDetails : Node
 {
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
+    [GraphQLName("category")] public BookingCategoryDetails Category { get; set; } = new();
     [GraphQLName("channel")] public BookingChannelDetails Channel { get; set; } = new();
     [GraphQLName("frequency")] public BookingFrequencyDetails Frequency { get; set; } = new();
     [GraphQLName("interval")] public int Interval { get; set; }
