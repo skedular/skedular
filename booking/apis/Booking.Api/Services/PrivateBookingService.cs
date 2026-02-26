@@ -156,6 +156,11 @@ public class PrivateBookingService(
             true,
             cancellationToken);
 
+        if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
+        {
+            booking.HasRecurringInstanceOverrides = true;
+        }
+
         return await sharedPrivateBookingService.UpdateAsync(booking, existingBooking, callingCustomer, organizations, teams, cancellationToken);
     }
 }

@@ -151,6 +151,11 @@ public class MarketplaceBookingService(
             true,
             cancellationToken);
 
+        if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
+        {
+            booking.HasRecurringInstanceOverrides = true;
+        }
+
         return await sharedMarketplaceBookingService.UpdateAsync(
             booking,
             existingBooking,

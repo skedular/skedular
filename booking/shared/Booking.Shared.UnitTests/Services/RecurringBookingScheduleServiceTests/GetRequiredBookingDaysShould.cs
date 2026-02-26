@@ -3,7 +3,7 @@ using Booking.Shared.Models;
 using Booking.Shared.Services;
 using Shouldly;
 using Testing.Shared;
-using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.UnitTests.Services.RecurringBookingScheduleServiceTests;
 
@@ -236,7 +236,7 @@ public class GetRequiredBookingDaysShould
         return expectedDays;
     }
 
-    private static RecurringBookingEntity CreateRecurringBooking(
+    private static RecurringBooking CreateRecurringBooking(
         string frequency,
         string endType,
         DateTimeOffset startDate,

@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Enterprise.Shared.Time;
-using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Services;
@@ -9,8 +8,8 @@ namespace Booking.Shared.Services;
 public record RecurringBookingReconciliationPlan(
     ICollection<DateOnly> RequiredBookingDays,
     ICollection<DateOnly> MissingBookingDays,
-    ICollection<BookingEntity> BookingsToRemove,
-    ICollection<BookingEntity> BookingsToUpdate,
+    ICollection<Database.Entities.Booking> BookingsToRemove,
+    ICollection<Database.Entities.Booking> BookingsToUpdate,
     bool HasMoreRequiredBookingDays);
 
 /// <summary>
@@ -25,7 +24,7 @@ public interface IRecurringBookingScheduleService
         RecurringBooking recurringBooking,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<BookingEntity> existingBookings);
+        ICollection<Database.Entities.Booking> existingBookings);
 }
 
 /// <summary>
@@ -37,7 +36,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         RecurringBooking recurringBooking,
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<BookingEntity> existingBookings)
+        ICollection<Database.Entities.Booking> existingBookings)
     {
         // Compute required days in the requested planning horizon.
         var requiredBookingDaysResponse = GetRequiredBookingDays(recurringBooking, from, until);
@@ -55,8 +54,8 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         // Existing bookings can become stale when recurrence rules change.
         // We evaluate up to the furthest existing booking day so we can remove
         // both obsolete days and duplicate bookings on valid days.
-        var bookingsToRemove = new List<BookingEntity>();
-        var bookingsToUpdate = new List<BookingEntity>();
+        var bookingsToRemove = new List<Database.Entities.Booking>();
+        var bookingsToUpdate = new List<Database.Entities.Booking>();
         if (existingBookings.Count > 0)
         {
             var maxBookingDay = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).Max();
@@ -104,7 +103,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
             requiredBookingDaysResponse.HasMoreRequiredBookingDays);
     }
 
-    private static bool NeedsUpdateFromRecurring(BookingEntity booking, RecurringBooking recurringBooking, DateOnly day)
+    private static bool NeedsUpdateFromRecurring(Database.Entities.Booking booking, RecurringBooking recurringBooking, DateOnly day)
     {
         var expectedFrom = day.ToDateTimeOffset(recurringBooking.From.TimeOfDay);
         var expectedUntil = day.ToDateTimeOffset(recurringBooking.Until.TimeOfDay);
