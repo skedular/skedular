@@ -126,12 +126,13 @@ enum BookingChannel
 
 enum PaymentStatus
 {
-  PaymentStatus_Pending = 0;
-  PaymentStatus_Rejected = 1;
-  PaymentStatus_Confirmed = 2;
-  PaymentStatus_Expired = 3;
-  PaymentStatus_RecordNeverCreated = 4;
-  PaymentStatus_NoPaymentRequired = 5;
+  PaymentStatus_Template = 0;
+  PaymentStatus_Pending = 1;
+  PaymentStatus_Rejected = 2;
+  PaymentStatus_Confirmed = 3;
+  PaymentStatus_Expired = 4;
+  PaymentStatus_RecordNeverCreated = 5;
+  PaymentStatus_NoPaymentRequired = 6;
 }
 
 enum PaymentMethod {

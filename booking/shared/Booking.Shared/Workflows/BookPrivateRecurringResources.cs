@@ -8,9 +8,9 @@ public record BookPrivateRecurringResourcesInput(string RecurringBookingId);
 
 public record BookPrivateRecurringResourcesState(ICollection<bool> UpdateQueue, bool RecurringBookingDeleted);
 
-public record RecurringBookingUpdatedArgs(string RecurringBookingId);
+public record PrivateRecurringBookingUpdatedArgs(string RecurringBookingId);
 
-public record RecurringBookingDeletedArgs(string RecurringBookingId);
+public record PrivateRecurringBookingDeletedArgs(string RecurringBookingId);
 
 [Workflow]
 public class BookPrivateRecurringResources
@@ -28,7 +28,8 @@ public class BookPrivateRecurringResources
             {
                 await Workflow.ExecuteActivityAsync(
                     (PrivateRecurringBookingIntegrations activity) =>
-                        activity.ReleaseRecurringBookingResourcesAsync(new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
+                        activity.ReleasePrivateRecurringBookingResourcesAsync(
+                            new ReleasePrivateRecurringBookingResourcesInput(args.RecurringBookingId)),
                     new ActivityOptions
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
@@ -41,8 +42,8 @@ public class BookPrivateRecurringResources
 
             var response = await Workflow.ExecuteActivityAsync(
                 (PrivateRecurringBookingIntegrations activity) =>
-                    activity.AdjustRequiredResourcesForRecurringBookingAsync(
-                        new AdjustRequiredResourcesForRecurringBookingInput(args.RecurringBookingId)),
+                    activity.AdjustRequiredResourcesForPrivateRecurringBookingAsync(
+                        new AdjustRequiredResourcesForPrivateRecurringBookingInput(args.RecurringBookingId)),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(30),
@@ -54,7 +55,8 @@ public class BookPrivateRecurringResources
             {
                 await Workflow.ExecuteActivityAsync(
                     (PrivateRecurringBookingIntegrations activity) =>
-                        activity.ReleaseRecurringBookingResourcesAsync(new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
+                        activity.ReleasePrivateRecurringBookingResourcesAsync(
+                            new ReleasePrivateRecurringBookingResourcesInput(args.RecurringBookingId)),
                     new ActivityOptions
                     {
                         StartToCloseTimeout = TimeSpan.FromMinutes(30),
@@ -75,7 +77,7 @@ public class BookPrivateRecurringResources
     }
 
     [WorkflowSignal]
-    public Task RecurringBookingUpdatedAsync(RecurringBookingUpdatedArgs args)
+    public Task RecurringBookingUpdatedAsync(PrivateRecurringBookingUpdatedArgs args)
     {
         ArgumentNullException.ThrowIfNull(_state);
 
@@ -85,7 +87,7 @@ public class BookPrivateRecurringResources
     }
 
     [WorkflowSignal]
-    public Task RecurringBookingDeletedAsync(RecurringBookingDeletedArgs args)
+    public Task RecurringBookingDeletedAsync(PrivateRecurringBookingDeletedArgs args)
     {
         ArgumentNullException.ThrowIfNull(_state);
 

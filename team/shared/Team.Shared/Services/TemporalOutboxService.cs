@@ -14,6 +14,7 @@ namespace Team.Shared.Services;
 public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSignalOutboxExecutor
 {
     void StartWorkflowInviteToJoin(InviteToJoinTeamInput args, IUnitOfWork unitOfWork);
+
     void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork);
 }
 

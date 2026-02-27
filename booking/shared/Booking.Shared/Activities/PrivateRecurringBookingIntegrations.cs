@@ -7,11 +7,11 @@ using Temporalio.Activities;
 
 namespace Booking.Shared.Activities;
 
-public record AdjustRequiredResourcesForRecurringBookingInput(string RecurringBookingId);
+public record AdjustRequiredResourcesForPrivateRecurringBookingInput(string RecurringBookingId);
 
-public record AdjustRequiredResourcesForRecurringBookingAsyncResponse(bool Deleted, bool Ended);
+public record AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(bool Deleted, bool Ended);
 
-public record ReleaseRecurringBookingResourcesInput(string RecurringBookingId);
+public record ReleasePrivateRecurringBookingResourcesInput(string RecurringBookingId);
 
 public class PrivateRecurringBookingIntegrations(
     IRepositoryFactory repositoryFactory,
@@ -22,15 +22,15 @@ public class PrivateRecurringBookingIntegrations(
     IRandomHelper randomHelper)
 {
     [Activity]
-    public async Task<AdjustRequiredResourcesForRecurringBookingAsyncResponse> AdjustRequiredResourcesForRecurringBookingAsync(
-        AdjustRequiredResourcesForRecurringBookingInput args)
+    public async Task<AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse> AdjustRequiredResourcesForPrivateRecurringBookingAsync(
+        AdjustRequiredResourcesForPrivateRecurringBookingInput args)
     {
         // Load recurring booking and stop if it no longer exists.
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
         if (recurringBooking is null || recurringBooking.IsDeleted())
         {
-            return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(true, false);
+            return new AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(true, false);
         }
 
         // We reconcile from "today" onward.
@@ -101,11 +101,11 @@ public class PrivateRecurringBookingIntegrations(
         }
 
         // If recurrence has no future valid booking days, the workflow can terminate.
-        return new AdjustRequiredResourcesForRecurringBookingAsyncResponse(false, !reconciliationPlan.HasMoreRequiredBookingDays);
+        return new AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(false, !reconciliationPlan.HasMoreRequiredBookingDays);
     }
 
     [Activity]
-    public async Task ReleaseRecurringBookingResourcesAsync(ReleaseRecurringBookingResourcesInput args)
+    public async Task ReleasePrivateRecurringBookingResourcesAsync(ReleasePrivateRecurringBookingResourcesInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);

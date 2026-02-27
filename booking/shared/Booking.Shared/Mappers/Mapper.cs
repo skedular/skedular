@@ -546,6 +546,7 @@ public class Mapper : IMapper
             Id = src.Id,
             PaymentStatus = src.PaymentStatus switch
             {
+                PaymentStatus.Template => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template,
                 PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
                 PaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Rejected,
                 PaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Confirmed,
