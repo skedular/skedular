@@ -64,7 +64,7 @@
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.3.0"/>
         <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.3.0"/>
         <PackageReference Include="Microsoft.Graph" Version="5.103.0"/>
-        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.3.0"/>
+        <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.4.0"/>
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.0"/>
@@ -124,7 +124,7 @@
         <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260225.1"/>
         <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc2"/>
         <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.0.0"/>
-        <PackageReference Include="OpenAI" Version="2.8.0"/>
+        <PackageReference Include="OpenAI" Version="2.9.0"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
             <PrivateAssets>all</PrivateAssets>

@@ -126,6 +126,8 @@ type Mutation {
   addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  addMarketplaceRecurringBooking(input: AddMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  deleteMarketplaceRecurringBooking(input: DeleteMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
 }
 
 type OrganizationAvailableResources {
@@ -255,6 +257,31 @@ input AddMarketplaceBookingInput {
   invoiceEmailList: [String!]
 }
 
+input AddMarketplaceRecurringBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  from: DateTime!
+  until: DateTime!
+  frequency: BookingFrequency!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  endType: RecurringBookingEndType!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int
+  skippedDates: [DateTime!]
+  category: BookingCategory
+  lineItems: [LineItemInput!]!
+  paymentMethod: PaymentMethod!
+  invoiceEmailList: [String!]
+}
+
 input AddPrivateBookingInput {
   clientMutationId: String
   id: String
@@ -337,6 +364,11 @@ input ConfirmBookingPaymentInput {
 }
 
 input DeleteMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteMarketplaceRecurringBookingInput {
   clientMutationId: String
   id: String!
 }
@@ -473,6 +505,7 @@ enum PaymentMethod {
 }
 
 enum PaymentStatus {
+  TEMPLATE
   PENDING
   REJECTED
   CONFIRMED

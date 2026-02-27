@@ -491,6 +491,7 @@ type Mutation {
   addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  addMarketplaceRecurringBooking(input: AddMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
@@ -527,6 +528,7 @@ type Mutation {
   deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  deleteMarketplaceRecurringBooking(input: DeleteMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganizationBankAccount(input: DeleteOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   deleteOrganizationBankAccounts(input: DeleteOrganizationBankAccountsInput!): OrganizationBankAccountsPayload! @cost(weight: "10")
@@ -1443,6 +1445,31 @@ input AddMarketplaceBookingInput {
   until: DateTime!
 }
 
+input AddMarketplaceRecurringBookingInput {
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  category: BookingCategory
+  clientMutationId: String
+  customerIds: [String!]!
+  endDate: DateTime
+  endType: RecurringBookingEndType!
+  frequency: BookingFrequency!
+  from: DateTime!
+  id: String
+  interval: Int!
+  invoiceEmailList: [String!]
+  lineItems: [LineItemInput!]!
+  occurrenceCount: Int
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  paymentMethod: PaymentMethod!
+  skippedDates: [DateTime!]
+  startDate: DateTime!
+  teamIds: [String!]
+  until: DateTime!
+}
+
 input AddMyBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
@@ -1861,6 +1888,11 @@ input DeleteLocationTagsInput {
 }
 
 input DeleteMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteMarketplaceRecurringBookingInput {
   clientMutationId: String
   id: String!
 }
@@ -2847,6 +2879,7 @@ enum PaymentStatus {
   PENDING
   RECORD_NEVER_CREATED
   REJECTED
+  TEMPLATE
 }
 
 enum PersonalInformationVisibility {

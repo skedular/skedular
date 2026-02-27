@@ -116,17 +116,17 @@ public class TeamService(
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!string.IsNullOrWhiteSpace(team.Id))
+        if (string.IsNullOrWhiteSpace(team.Id))
+        {
+            team.Id = randomHelper.Generate();
+        }
+        else
         {
             var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(team.Id, cancellationToken);
             if (existingTeam is not null)
             {
                 return await UpdateInternalAsync(team, existingTeam, customer, organization, primaryLocation, true, cancellationToken);
             }
-        }
-        else
-        {
-            team.Id = randomHelper.Generate();
         }
 
         var teamEntity = mapper.MapTo(team, organization, primaryLocation);

@@ -75,17 +75,17 @@ public class TagService(
             (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(tag.Id))
+        if (string.IsNullOrWhiteSpace(tag.Id))
+        {
+            tag.Id = randomHelper.Generate();
+        }
+        else
         {
             var existingTag = await repositoryFactory.TagRepository.GetByIdAsync(tag.Id, cancellationToken);
             if (existingTag is not null)
             {
                 return await UpdateInternalAsync(tag, existingTag, customer, cancellationToken);
             }
-        }
-        else
-        {
-            tag.Id = randomHelper.Generate();
         }
 
         var existingOrganization =

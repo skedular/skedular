@@ -37,4 +37,24 @@ public class RootMutation(IMapper mapper)
         var recurringBooking = await privateRecurringBookingService.DeleteAsync(input.Id, cancellationToken);
         return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
     }
+
+    [UseResolverScope]
+    public async Task<RecurringBookingPayload> AddMarketplaceRecurringBookingAsync(
+        AddMarketplaceRecurringBookingInput input,
+        [Service] IMarketplaceRecurringBookingService marketplaceRecurringBookingService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await marketplaceRecurringBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+    }
+
+    [UseResolverScope]
+    public async Task<RecurringBookingPayload> DeleteMarketplaceRecurringBookingAsync(
+        DeleteMarketplaceRecurringBookingInput input,
+        [Service] IMarketplaceRecurringBookingService marketplaceRecurringBookingService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await marketplaceRecurringBookingService.DeleteAsync(input.Id, cancellationToken);
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+    }
 }

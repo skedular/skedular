@@ -63,17 +63,17 @@ public class ResourceService(
             customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(resource.Id))
+        if (string.IsNullOrWhiteSpace(resource.Id))
+        {
+            resource.Id = randomHelper.Generate();
+        }
+        else
         {
             var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
             if (existingResource is not null)
             {
                 return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
             }
-        }
-        else
-        {
-            resource.Id = randomHelper.Generate();
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??

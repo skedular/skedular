@@ -105,7 +105,11 @@ public class LocationService(
             }
         }
 
-        if (!string.IsNullOrWhiteSpace(location.Id))
+        if (string.IsNullOrWhiteSpace(location.Id))
+        {
+            location.Id = randomHelper.Generate();
+        }
+        else
         {
             var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, cancellationToken);
             if (existingLocation is not null)
@@ -117,10 +121,6 @@ public class LocationService(
 
                 return await UpdateInternalAsync(location, existingLocation, customer, cancellationToken);
             }
-        }
-        else
-        {
-            location.Id = randomHelper.Generate();
         }
 
         if (location.ExtraMetadata is not null)
