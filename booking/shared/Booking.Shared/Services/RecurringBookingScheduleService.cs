@@ -41,16 +41,12 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
         var requiredBookingDays = requiredBookingDaysResponse.Days.ToHashSet();
 
         // Required days without any existing booking are candidates to add.
-        // Customized instances still count as existing for this check so we do not create duplicates.
-        var existingBookingDays = existingBookings
-            .Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date))
-            .ToHashSet();
-        var missingBookingDays = requiredBookingDays
-            .Where(day => !existingBookingDays.Contains(day))
-            .ToList();
+        // Customized instances still count as existing for this check, so we do not create duplicates.
+        var existingBookingDays = existingBookings.Select(booking => DateOnly.FromDateTime(booking.From.UtcDateTime.Date)).ToHashSet();
+        var missingBookingDays = requiredBookingDays.Where(day => !existingBookingDays.Contains(day)).ToList();
 
         // Existing bookings can become stale when recurrence rules change.
-        // We evaluate up to the furthest existing booking day so we can remove
+        // We evaluate up to the furthest existing booking day, so we can remove
         // both obsolete days and duplicate bookings on valid days.
         var bookingsToRemove = new List<Database.Entities.Booking>();
         if (existingBookings.Count > 0)
@@ -114,9 +110,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 
     private static bool IsWeeklyRecurringOnDate(RecurringBooking recurringBooking, DateOnly recurrenceStart, DateOnly date, int interval)
     {
-        var byWeekDays = recurringBooking.ByWeekDays
-            .Select(item => item.ToDayOfWeek())
-            .ToHashSet();
+        var byWeekDays = recurringBooking.ByWeekDays.Select(item => item.ToDayOfWeek()).ToHashSet();
 
         // Fallback to start weekday if none is provided.
         if (byWeekDays.Count == 0)
@@ -168,7 +162,7 @@ public class RecurringBookingScheduleService : IRecurringBookingScheduleService
 
     private static int? ResolveDayInMonth(int year, int month, int byMonthDay)
     {
-        // Positive: exact day; negative: from month end (-1 is last day).
+        // Positive: exact day; negative: from the month end (-1 is last day).
         var daysInMonth = DateTime.DaysInMonth(year, month);
         switch (byMonthDay)
         {

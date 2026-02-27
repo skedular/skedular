@@ -41,6 +41,7 @@ public interface IMarketplaceBookingService
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> UpdateAsync(
@@ -51,6 +52,7 @@ public interface IMarketplaceBookingService
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
     Task<Models.Booking> DeleteAsync(
@@ -293,8 +295,18 @@ public class MarketplaceBookingService(
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken) =>
-        await UpdateAsync(true, booking, existingBooking, lastModifiedByCustomer, organizations, teams, recurringBooking, cancellationToken);
+        await UpdateAsync(
+            true,
+            booking,
+            existingBooking,
+            lastModifiedByCustomer,
+            organizations,
+            teams,
+            recurringBooking,
+            bookResourceIfNoResourceProvidedOrAvailable,
+            cancellationToken);
 
     public async Task<Models.Booking> UpdateAsync(
         bool runInTransaction,
@@ -304,6 +316,7 @@ public class MarketplaceBookingService(
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
+        bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
@@ -336,13 +349,49 @@ public class MarketplaceBookingService(
                 cancellationToken);
 
             var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-            var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                booking.From,
-                booking.Until,
-                resourceIds,
-                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
-                cancellationToken);
+            ICollection<Resource> resources;
+
+            // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
+            // In that mode we first try resources provided on the booking model, and only if none are
+            // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
+            if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
+            {
+                resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+                    null,
+                    null,
+                    booking.From,
+                    booking.Until,
+                    resourceIds,
+                    [],
+                    [],
+                    cancellationToken);
+
+                // If no requested resource is available, try to auto-pick one by customer preference.
+                if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
+                {
+                    resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                        customerEntities.First(),
+                        booking.From,
+                        booking.Until,
+                        // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                        productVersions.Single(),
+                        marketplaceBooking.LineItems.First().Quantity,
+                        cancellationToken);
+                }
+            }
+            else
+            {
+                // Non-recurring or customized instances keep strict behavior:
+                // caller-provided resources must all be available.
+                resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                    booking.From,
+                    booking.Until,
+                    resourceIds,
+                    // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                    productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
+                    cancellationToken);
+            }
+
 
             foreach (var resource in resources)
             {
