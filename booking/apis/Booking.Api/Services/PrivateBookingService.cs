@@ -172,7 +172,7 @@ public class PrivateBookingService(
             organizations,
             teams,
             null,
-            true,
+            false,
             cancellationToken);
     }
 }

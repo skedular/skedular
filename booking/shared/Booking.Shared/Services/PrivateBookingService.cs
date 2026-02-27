@@ -248,12 +248,52 @@ public class PrivateBookingService(
             /********************************************************************************************************************/
 
             var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-            var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                booking.From,
-                booking.Until,
-                resourceIds,
-                [],
-                cancellationToken);
+            ICollection<Resource> resources;
+
+            // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
+            // In that mode we first try resources provided on the booking model, and only if none are
+            // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
+            if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
+            {
+                resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+                    null,
+                    null,
+                    booking.From,
+                    booking.Until,
+                    resourceIds,
+                    [],
+                    [],
+                    cancellationToken);
+
+                // If no requested resource is available, try to auto-pick one by customer preference.
+                if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
+                {
+                    (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                        customerEntities.First(),
+                        booking.From,
+                        booking.Until,
+                        booking.InvolvedOrganizations
+                            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                            .Select(item => item.Id)
+                            .ToList(),
+                        booking.InvolvedOrganizations
+                            .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                            .Select(item => item.UniqueAlphanumericName!)
+                            .ToList(),
+                        cancellationToken);
+                }
+            }
+            else
+            {
+                // Non-recurring or customized instances keep strict behavior:
+                // caller-provided resources must all be available.
+                resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                    booking.From,
+                    booking.Until,
+                    resourceIds,
+                    [],
+                    cancellationToken);
+            }
 
             foreach (var resource in resources)
             {
