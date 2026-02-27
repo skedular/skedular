@@ -57,9 +57,19 @@ public class PrivateRecurringBookingIntegrations(
             await privateBookingService.DeleteAsync(existingBooking, null, cancellationToken);
         }
 
-        // Update non-customized existing instances when recurrence-generated values changed.
+        // Refresh all non-customized existing instances that remain in the series.
+        // Even if recurrence-generated values did not change, UpdateAsync can now re-adjust resources
+        // when previously assigned resources are no longer available.
         var updatedByCustomer = recurringBooking.LastModifiedByCustomer ?? recurringBooking.CreatedByCustomer ?? null;
-        foreach (var existingBooking in reconciliationPlan.BookingsToUpdate)
+        var bookingsToRemoveIds = reconciliationPlan.BookingsToRemove
+            .Select(item => item.Id)
+            .ToHashSet();
+
+        var existingBookingsToRefresh = existingBookings
+            .Where(item => !bookingsToRemoveIds.Contains(item.Id))
+            .Where(item => item.HasRecurringInstanceOverrides != true);
+
+        foreach (var existingBooking in existingBookingsToRefresh)
         {
             var expectedBooking = mapper.MapTo(
                 recurringBooking,

@@ -27,7 +27,6 @@ public class GetReconciliationPlanShould
         result.RequiredBookingDays.Count.ShouldBe(4);
         result.MissingBookingDays.Count.ShouldBe(3);
         result.BookingsToRemove.ShouldBeEmpty();
-        result.BookingsToUpdate.ShouldBeEmpty();
         result.HasMoreRequiredBookingDays.ShouldBeTrue();
     }
 
@@ -55,12 +54,11 @@ public class GetReconciliationPlanShould
         var removedIds = result.BookingsToRemove.Select(item => item.Id).ToHashSet();
 
         removedIds.SetEquals(["dup-day1", "obsolete-day3"]).ShouldBeTrue();
-        result.BookingsToUpdate.ShouldBeEmpty();
     }
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Booking_To_Update_When_Recurring_Time_Has_Changed(RecurringBookingScheduleService sut, DateTimeOffset from)
+    public void Not_Remove_Booking_When_Recurring_Time_Has_Changed(RecurringBookingScheduleService sut, DateTimeOffset from)
     {
         var normalizedFrom = new DateTimeOffset(from.UtcDateTime.Date, TimeSpan.Zero);
         var until = normalizedFrom.AddDays(2);
@@ -74,7 +72,6 @@ public class GetReconciliationPlanShould
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
 
-        result.BookingsToUpdate.Select(item => item.Id).ShouldBe(["update-me"]);
         result.BookingsToRemove.ShouldBeEmpty();
         result.MissingBookingDays.Count.ShouldBe(1);
     }
@@ -103,7 +100,6 @@ public class GetReconciliationPlanShould
 
         var result = sut.GetReconciliationPlan(recurringBooking, normalizedFrom, until, existingBookings);
 
-        result.BookingsToUpdate.ShouldBeEmpty();
         result.BookingsToRemove.ShouldBeEmpty();
         result.MissingBookingDays.ShouldContain(DateOnly.FromDateTime(normalizedFrom.UtcDateTime.Date));
     }
