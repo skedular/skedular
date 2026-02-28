@@ -60,7 +60,6 @@ public class RootQuery(IMapper mapper)
             new ProductSearchCriteria(
                 where.OrganizationUniqueAlphanumericNames.ToSafeCollection(),
                 where.ProductIds.ToSafeCollection(),
-                where.NameContains,
                 where.IncludeInactive),
             orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);

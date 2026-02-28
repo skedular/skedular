@@ -9,6 +9,5 @@ public class ProductWhereInput
     public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
 
     [GraphQLName("productIds")] public IEnumerable<string>? ProductIds { get; set; } = [];
-    [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("includeInactive")] public bool IncludeInactive { get; set; }
 }

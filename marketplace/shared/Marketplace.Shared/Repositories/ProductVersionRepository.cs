@@ -8,7 +8,7 @@ namespace Marketplace.Shared.Repositories;
 
 public interface IProductVersionRepository : IRepository<ProductVersion>
 {
-    Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ProductVersion?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     ProductVersion Add(ProductVersion productVersion);
 }
 
@@ -16,21 +16,21 @@ internal static class ProductVersionExtensions
 {
     extension(IQueryable<ProductVersion> originalQuery)
     {
-        internal IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects() =>
-            originalQuery
-                .Include(query => query.Product)
-                .ThenInclude(query => query.Organization)
-                .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
+        internal IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Product)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
     }
 }
 
 public class ProductVersionRepository(MarketplaceDbContext dbContext, TimeProvider timeProvider)
     : RepositoryBase<MarketplaceDbContext, ProductVersion>(dbContext, timeProvider), IProductVersionRepository
 {
-    public async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+    public async Task<ProductVersion?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.ProductVersion
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public ProductVersion Add(ProductVersion productVersion)

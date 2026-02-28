@@ -15,14 +15,15 @@ namespace Marketplace.Shared.Repositories;
 public interface IProductRepository : IRepository<Product>
 {
     Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<Product?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<Product>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
-    Task<ICollection<Product>> GetAllAsync(CancellationToken cancellationToken);
+    Task<ICollection<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken);
     Product Add(Product product);
     Product Update(Product product);
     void RemoveRange(ICollection<Product> products);
 
-    Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
         ICollection<ProductOrder> orderByFields,
@@ -33,18 +34,16 @@ internal static class ProductExtensions
 {
     extension(IQueryable<Product> originalQuery)
     {
-        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects() =>
-            originalQuery
-                .Include(query => query.Organization)
-                .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
-                .ThenInclude(query => query.Customer)
-                .ThenInclude(query => query.Identities)
-                .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-                .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-                .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
+        internal IIncludableQueryable<Product, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.Organization)
+            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customer)
+            .ThenInclude(query => query.Identities)
+            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt).Take(1))
+            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt).Take(1))
+            .ThenInclude(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue));
 
         internal IQueryable<Product> AddSearchCriteria(ProductSearchCriteria searchCriteria)
         {
@@ -64,37 +63,11 @@ internal static class ProductExtensions
                 originalQuery = originalQuery.Where(item => searchCriteria.ProductIds.Contains(item.Id));
             }
 
-            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
-            {
-                originalQuery = originalQuery.Where(item => EF.Functions.ILike(item.Name, $"%{searchCriteria.NameContains}%"));
-            }
-
             return originalQuery;
         }
 
-        internal IQueryable<Product> AddSortingOrders(ICollection<ProductOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                ProductOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    ProductOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
+        internal IQueryable<Product> AddSortingOrders(ICollection<ProductOrder> orderByFields) =>
+            originalQuery.OrderBy(query => query.Id).ThenBy(query => query.Id);
     }
 }
 
@@ -103,25 +76,30 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
 {
     public async Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Product
-            .AddDependentObjects()
+            .AddDependentObjects(true)
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
+
+    public async Task<Product?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.Product
+            .AddDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Product>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => ids.Contains(query.Id))
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Product>> GetAllByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
-            .AddDependentObjects()
+            .AddDependentObjects(true)
             .ToListAsync(cancellationToken);
 
-    public async Task<ICollection<Product>> GetAllAsync(CancellationToken cancellationToken) =>
+    public async Task<ICollection<Product>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Product
             .Where(query => !query.DeletedAt.HasValue)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken);
 
     public Product Add(Product product)
@@ -145,7 +123,7 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         DbContext.Product.UpdateRange(products);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
         ICollection<ProductOrder> orderByFields,
@@ -153,7 +131,7 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         (await DbContext.Product
             .AddSearchCriteria(searchCriteria)
             .AddSortingOrders(orderByFields)
-            .AddDependentObjects()
+            .AddDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

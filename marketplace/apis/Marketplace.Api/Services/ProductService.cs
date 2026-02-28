@@ -289,7 +289,7 @@ public class ProductService(
         ICollection<ProductOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.ProductRepository.GetPaginatedProductsUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
@@ -329,7 +329,7 @@ public class ProductService(
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
 
         _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags, locationTags));
-        existingProduct = mapper.MergeTo(productVersion, existingProduct, existingProduct.Organization, productTags, locationTags);
+        existingProduct = mapper.MergeTo(existingProduct, existingProduct.Organization);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));
 

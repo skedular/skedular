@@ -25,7 +25,7 @@ public class CachedProductVersionService(
         {
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
-                async ct => await repositoryFactory.ProductVersionRepository.GetByIdAsync(id, ct) ?? throw new ProductVersionNotFound(),
+                async ct => await repositoryFactory.ProductVersionRepository.GetByIdUntrackedAsync(id, ct) ?? throw new ProductVersionNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
@@ -41,7 +41,7 @@ public class CachedProductVersionService(
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.ProductVersionRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductVersionNotFound(),
+            await repositoryFactory.ProductVersionRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new ProductVersionNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }

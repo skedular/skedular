@@ -28,12 +28,7 @@ public interface IMapper
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags);
 
-    Shared.Database.Entities.Product MergeTo(
-        ProductVersion src,
-        Shared.Database.Entities.Product dest,
-        Organization organization,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags);
+    Shared.Database.Entities.Product MergeTo(Shared.Database.Entities.Product dest, Organization organization);
 
     ProductEdge MapTo(Edge<Product> src);
     Product MapTo(Shared.Database.Entities.Product src, Shared.Models.Organization organization);
@@ -69,22 +64,6 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
-            Name = src.Name,
-            Description = src.Description,
-            Price = src.Price,
-            PriceUnit = src.PriceUnit.ToPriceUnit(),
-            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
-            Currency = src.Currency.ToCurrency(),
-            MinDurationMinutes = src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            FeatureImages = src.FeatureImages.ToSafeCollection(),
-            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
-            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
-            ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = MapTo(src.Organization),
             ProductVersions = MapTo(src.ProductVersions).ToList()
         };
@@ -157,36 +136,38 @@ public class Mapper : IMapper
 
     public ProductDetails? MapTo(Product? src)
     {
-        if (src is null)
+        if (src is null || src.ProductVersions.Count == 0)
         {
             return null;
         }
 
-        var roundedPrice = src.Price.ToRoundedPrice();
+        var productVersion = src.ProductVersions.First();
+
+        var roundedPrice = productVersion.Price.ToRoundedPrice();
 
         return new ProductDetails
         {
             Id = src.Id,
             Inactive = src.Inactive,
-            Name = src.Name,
-            Description = src.Description,
+            Name = productVersion.Name,
+            Description = productVersion.Description,
             Price = roundedPrice,
-            PriceToDisplay = roundedPrice.ToPriceToDisplay(src.Currency),
-            CurrencyToDisplay = src.Currency.ToCurrencyToDisplay(),
-            PriceUnit = new PriceUnitDetails { Type = src.PriceUnit, Name = src.PriceUnit.ToPriceUnitName() },
-            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
-            Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
-            MinDurationMinutes = src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            FeatureImages = src.FeatureImages,
-            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
-            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods
+            PriceToDisplay = roundedPrice.ToPriceToDisplay(productVersion.Currency),
+            CurrencyToDisplay = productVersion.Currency.ToCurrencyToDisplay(),
+            PriceUnit = new PriceUnitDetails { Type = productVersion.PriceUnit, Name = productVersion.PriceUnit.ToPriceUnitName() },
+            IsPriceTaxInclusive = productVersion.IsPriceTaxInclusive,
+            Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
+            MinDurationMinutes = productVersion.MinDurationMinutes,
+            MaxDurationMinutes = productVersion.MaxDurationMinutes,
+            BookAllLocationResources = productVersion.BookAllLocationResources,
+            NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook,
+            FeatureImages = productVersion.FeatureImages,
+            MaxAllowedResourcesLockTimePaidViaCard = productVersion.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = productVersion.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            AcceptedBookingPaymentMethods = productVersion.AcceptedBookingPaymentMethods
                 .Select(item => new PaymentMethodTypeDetails { Type = item, Name = item.ToPaymentMethodName() }),
-            ProductTagIds = src.ProductTags.Select(item => item.Id),
-            LocationTagIds = src.LocationTags.Select(item => item.Id),
+            ProductTagIds = productVersion.ProductTags.Select(item => item.Id),
+            LocationTagIds = productVersion.LocationTags.Select(item => item.Id),
             OrganizationId = src.Organization.Id,
             OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
@@ -241,30 +222,9 @@ public class Mapper : IMapper
             productTags,
             locationTags);
 
-    public Shared.Database.Entities.Product MergeTo(
-        ProductVersion src,
-        Shared.Database.Entities.Product dest,
-        Organization organization,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags)
+    public Shared.Database.Entities.Product MergeTo(Shared.Database.Entities.Product dest, Organization organization)
     {
         dest.Organization = organization;
-        dest.Name = src.Name;
-        dest.Description = src.Description;
-        dest.Price = src.Price;
-        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
-        dest.IsPriceTaxInclusive = src.IsPriceTaxInclusive;
-        dest.Currency = src.Currency.ToCurrency();
-        dest.MinDurationMinutes = src.MinDurationMinutes;
-        dest.MaxDurationMinutes = src.MaxDurationMinutes;
-        dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.FeatureImages = src.FeatureImages;
-        dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
-        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
-        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
-        dest.ProductTags = productTags;
-        dest.LocationTags = locationTags;
         return dest;
     }
 
@@ -278,22 +238,6 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
-            Name = src.Name,
-            Description = src.Description,
-            Price = src.Price,
-            PriceUnit = src.PriceUnit.ToPriceUnit(),
-            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
-            Currency = src.Currency.ToCurrency(),
-            MinDurationMinutes = src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            FeatureImages = src.FeatureImages.ToSafeCollection(),
-            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
-            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
-            ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList(),
             Organization = organization,
             ProductVersions = MapTo(src.ProductVersions).ToList()
         };
@@ -344,23 +288,6 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.Inactive = src.Inactive;
         dest.Organization = organization;
-
-        dest.Name = productVersion.Name;
-        dest.Description = productVersion.Description;
-        dest.Price = productVersion.Price;
-        dest.PriceUnit = productVersion.PriceUnit.ToPriceUnit();
-        dest.IsPriceTaxInclusive = productVersion.IsPriceTaxInclusive;
-        dest.Currency = productVersion.Currency.ToCurrency();
-        dest.MinDurationMinutes = productVersion.MinDurationMinutes;
-        dest.MaxDurationMinutes = productVersion.MaxDurationMinutes;
-        dest.BookAllLocationResources = productVersion.BookAllLocationResources;
-        dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
-        dest.FeatureImages = productVersion.FeatureImages;
-        dest.MaxAllowedResourcesLockTimePaidViaCard = productVersion.MaxAllowedResourcesLockTimePaidViaCard;
-        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = productVersion.MaxAllowedResourcesLockTimePaidViaBankTransfer;
-        dest.AcceptedBookingPaymentMethods = productVersion.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
-        dest.ProductTags = productTags;
-        dest.LocationTags = locationTags;
         return dest;
     }
 
