@@ -351,18 +351,6 @@ public class ProductService(
                 nameof(productVersion.AcceptedBookingPaymentMethods));
         }
 
-        if (productVersion.RecurrenceWindowDays <= 0)
-        {
-            throw new ArgumentException("RecurrenceWindowDays must be greater than 0", nameof(productVersion.RecurrenceWindowDays));
-        }
-
-        if (productVersion is { RequireConsecutiveDays: true, MaxBookingSpreadDays: not null })
-        {
-            throw new ArgumentException(
-                "MaxBookingSpreadDays can't be set if ForceContinuousSlots is set",
-                nameof(productVersion.MaxBookingSpreadDays));
-        }
-
         if (productVersion.MinDurationMinutes is not null && productVersion.MaxDurationMinutes is not null)
         {
             if (productVersion.MinDurationMinutes <= 0)

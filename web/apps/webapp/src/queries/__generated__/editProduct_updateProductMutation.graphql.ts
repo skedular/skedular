@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<749019940e9124d5c9fcd28c2cab5924>>
+ * @generated SignedSource<<0809b24f6fb0d7c8d6ebb64993b87062>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,6 @@ export type UpdateProductInput = {
   locationTagIds: ReadonlyArray<string>;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
   maxAllowedResourcesLockTimePaidViaCard: number;
-  maxBookingSpreadDays?: number | null | undefined;
   maxDurationMinutes?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
   name: string;
@@ -32,8 +31,6 @@ export type UpdateProductInput = {
   price: string;
   priceUnit: PriceUnit;
   productTagIds: ReadonlyArray<string>;
-  recurrenceWindowDays: number;
-  requireConsecutiveDays: boolean;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -81,7 +78,6 @@ export type editProduct_updateProductMutation$data = {
       }>;
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
-      readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
@@ -96,8 +92,6 @@ export type editProduct_updateProductMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
-      readonly recurrenceWindowDays: number;
-      readonly requireConsecutiveDays: boolean;
     };
   };
 };
@@ -135,7 +129,6 @@ export type editProduct_updateProductMutation$rawResponse = {
       }>;
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
-      readonly maxBookingSpreadDays: number | null | undefined;
       readonly maxDurationMinutes: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
@@ -150,8 +143,6 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly id: string;
         readonly name: string;
       }>;
-      readonly recurrenceWindowDays: number;
-      readonly requireConsecutiveDays: boolean;
     };
   };
 };
@@ -325,27 +316,6 @@ v7 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "recurrenceWindowDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "requireConsecutiveDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxBookingSpreadDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
@@ -452,16 +422,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "798e98ac385b2b752a8420e9046f8b72",
+    "cacheID": "351b95f06adf580ebb0fe1b73cb6b67a",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      recurrenceWindowDays\n      requireConsecutiveDays\n      maxBookingSpreadDays\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3daccd21c8035827f112ddbbf40dc3a4";
+(node as any).hash = "d7c1b9ed8553d5e73d19d6883ac7e5be";
 
 export default node;

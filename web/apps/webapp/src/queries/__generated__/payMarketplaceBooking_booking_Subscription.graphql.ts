@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f67ba849628722b6bfcd8f340384e33>>
+ * @generated SignedSource<<5c953f4ad9ab7c7248ff92c61e76f1a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type payMarketplaceBooking_booking_Subscription$variables = {
   bookingId: string;
 };

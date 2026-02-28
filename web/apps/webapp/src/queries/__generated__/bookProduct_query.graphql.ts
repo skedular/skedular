@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86ecc60542ebb8e045dd29c1417f0efb>>
+ * @generated SignedSource<<fcf583db4a9f5c205b699a1028144828>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,7 +39,6 @@ export type bookProduct_query$data = {
     readonly id: string;
     readonly isPriceTaxInclusive: boolean;
     readonly latestProductVersionId: string;
-    readonly maxBookingSpreadDays: number | null | undefined;
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
     readonly name: string;
@@ -49,8 +48,6 @@ export type bookProduct_query$data = {
       readonly name: string;
       readonly type: PriceUnit;
     };
-    readonly recurrenceWindowDays: number;
-    readonly requireConsecutiveDays: boolean;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingCategory_query">;
   readonly " $fragmentType": "bookProduct_query";
@@ -251,27 +248,6 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "recurrenceWindowDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "requireConsecutiveDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "maxBookingSpreadDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "latestProductVersionId",
           "storageKey": null
         },
@@ -325,6 +301,6 @@ return {
 };
 })();
 
-(node as any).hash = "7f1a9c4c8784592a6e8b883341498a36";
+(node as any).hash = "10d621c96e5d3214b13591bc366d71a1";
 
 export default node;

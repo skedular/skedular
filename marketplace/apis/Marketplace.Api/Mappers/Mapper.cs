@@ -78,9 +78,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -107,9 +104,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -131,9 +125,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -155,9 +146,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -191,9 +179,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -231,9 +216,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -276,9 +258,6 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
         dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
-        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
-        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.FeatureImages = src.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
@@ -308,9 +287,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
@@ -378,9 +354,6 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = productVersion.MinDurationMinutes;
         dest.MaxDurationMinutes = productVersion.MaxDurationMinutes;
         dest.BookAllLocationResources = productVersion.BookAllLocationResources;
-        dest.RecurrenceWindowDays = productVersion.RecurrenceWindowDays;
-        dest.RequireConsecutiveDays = productVersion.RequireConsecutiveDays;
-        dest.MaxBookingSpreadDays = productVersion.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = productVersion.NumberOfResourcesToBook;
         dest.FeatureImages = productVersion.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = productVersion.MaxAllowedResourcesLockTimePaidViaCard;
@@ -408,9 +381,6 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
         dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
-        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
-        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.FeatureImages = src.FeatureImages;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;

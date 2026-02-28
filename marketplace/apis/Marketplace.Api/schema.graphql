@@ -78,9 +78,6 @@ type ProductDetails {
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
   latestProductVersionId: String!
   featureImages: [CdnImageFile!]!
@@ -115,9 +112,6 @@ type ProductVersionDetails {
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
   bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
   featureImages: [CdnImageFile!]!
   id: ID!
@@ -171,9 +165,6 @@ input AddProductInput {
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!
@@ -228,9 +219,6 @@ input UpdateProductInput {
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   acceptedBookingPaymentMethods: [PaymentMethod!]!
   bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
   numberOfResourcesToBook: Int!
   productTagIds: [String!]!
   locationTagIds: [String!]!

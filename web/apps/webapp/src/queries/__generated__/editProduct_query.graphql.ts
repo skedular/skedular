@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a08bc2cfc2504a6d6a19ba9208cc408c>>
+ * @generated SignedSource<<c80c96e0dfc24877c8e6243b47f09fb2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,7 +49,6 @@ export type editProduct_query$data = {
     }>;
     readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
     readonly maxAllowedResourcesLockTimePaidViaCard: number;
-    readonly maxBookingSpreadDays: number | null | undefined;
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
     readonly name: string;
@@ -67,8 +66,6 @@ export type editProduct_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
-    readonly recurrenceWindowDays: number;
-    readonly requireConsecutiveDays: boolean;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
   readonly " $fragmentType": "editProduct_query";
@@ -237,27 +234,6 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "recurrenceWindowDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "requireConsecutiveDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "maxBookingSpreadDays",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
           "name": "productTags",
@@ -406,6 +382,6 @@ return {
 };
 })();
 
-(node as any).hash = "b0ff87c6319daf718adb5ec65a7eb581";
+(node as any).hash = "db728cffa13ceab086a40698f7aca73d";
 
 export default node;

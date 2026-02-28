@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9a0152788fc1f98f1cc6a078428c1eb1>>
+ * @generated SignedSource<<34320b79c7303ef30c012b9f91f09c79>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
-export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
   readonly bookingResources: ReadonlyArray<{

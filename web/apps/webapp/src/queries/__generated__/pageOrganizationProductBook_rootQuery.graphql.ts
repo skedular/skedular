@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03b94540426005c08742ccdfbe2c20b1>>
+ * @generated SignedSource<<aecb0e6b72224d68d929f23b42005988>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -223,27 +223,6 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "recurrenceWindowDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "requireConsecutiveDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxBookingSpreadDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "latestProductVersionId",
             "storageKey": null
           },
@@ -455,12 +434,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a124a8bb60589ea7ead2e7d5ef673218",
+    "cacheID": "70ac9ead4a980d5122174824ffa08458",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    latestProductVersionId\n    acceptedBookingPaymentMethods {\n      type\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoiceBookingPaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currencyToDisplay\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    latestProductVersionId\n    acceptedBookingPaymentMethods {\n      type\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoiceBookingPaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n"
   }
 };
 })();

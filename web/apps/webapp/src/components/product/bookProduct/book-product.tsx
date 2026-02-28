@@ -155,9 +155,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           minDurationMinutes
           maxDurationMinutes
           bookAllLocationResources
-          recurrenceWindowDays
-          requireConsecutiveDays
-          maxBookingSpreadDays
           latestProductVersionId
           acceptedBookingPaymentMethods {
             type

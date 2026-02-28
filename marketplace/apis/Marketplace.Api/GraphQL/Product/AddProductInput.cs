@@ -34,13 +34,6 @@ public class AddProductInput
     [GraphQLName("bookAllLocationResources")]
     public bool BookAllLocationResources { get; set; }
 
-    [GraphQLName("recurrenceWindowDays")] public int RecurrenceWindowDays { get; set; }
-
-    [GraphQLName("requireConsecutiveDays")]
-    public bool RequireConsecutiveDays { get; set; }
-
-    [GraphQLName("maxBookingSpreadDays")] public int? MaxBookingSpreadDays { get; set; }
-
     [GraphQLName("numberOfResourcesToBook")]
     public int NumberOfResourcesToBook { get; set; }
 

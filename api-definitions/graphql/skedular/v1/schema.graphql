@@ -986,7 +986,6 @@ type ProductDetails {
   locationTags: [OrganizationTagDetails!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
   name: String!
@@ -996,8 +995,6 @@ type ProductDetails {
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   productTags: [OrganizationTagDetails!]!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
 }
 
 type ProductEdge {
@@ -1023,7 +1020,6 @@ type ProductVersionDetails {
   locationTags: [OrganizationTagDetails!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
   name: String!
@@ -1032,8 +1028,6 @@ type ProductVersionDetails {
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
   productTags: [OrganizationTagDetails!]!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
 }
 
 type ProductsPayload {
@@ -1626,7 +1620,6 @@ input AddProductInput {
   locationTagIds: [String!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
   name: String!
@@ -1636,8 +1629,6 @@ input AddProductInput {
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
 }
 
 input AddProductTagInput {
@@ -2599,7 +2590,6 @@ input UpdateProductInput {
   locationTagIds: [String!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxBookingSpreadDays: Int
   maxDurationMinutes: Int
   minDurationMinutes: Int
   name: String!
@@ -2607,8 +2597,6 @@ input UpdateProductInput {
   price: String!
   priceUnit: PriceUnit!
   productTagIds: [String!]!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
 }
 
 input UpdateProductTagInput {

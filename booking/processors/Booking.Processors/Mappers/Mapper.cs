@@ -361,9 +361,6 @@ public class Mapper : IMapper
         dest.MinDurationMinutes = src.MinDurationMinutes;
         dest.MaxDurationMinutes = src.MaxDurationMinutes;
         dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.RecurrenceWindowDays = src.RecurrenceWindowDays;
-        dest.RequireConsecutiveDays = src.RequireConsecutiveDays;
-        dest.MaxBookingSpreadDays = src.MaxBookingSpreadDays;
         dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
         dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
         dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
@@ -581,9 +578,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes == -1 ? null : src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes == -1 ? null : src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
-            RecurrenceWindowDays = src.RecurrenceWindowDays,
-            RequireConsecutiveDays = src.RequireConsecutiveDays,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays == -1 ? null : src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,

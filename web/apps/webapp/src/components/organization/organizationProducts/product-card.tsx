@@ -60,8 +60,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         numberOfResourcesToBook
         minDurationMinutes
         maxDurationMinutes
-        requireConsecutiveDays
-        maxBookingSpreadDays
         organization {
           id
         }
@@ -356,16 +354,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
           <StackRow>
             <BodyIconTypography label="Max duration:" />
             <SmallIconTypography label={productDetails.maxDurationMinutes ? `${productDetails.maxDurationMinutes} minutes` : 'No limit'} />
-          </StackRow>
-
-          <StackRow>
-            <BodyIconTypography label="Must book consecutive days:" />
-            <SmallIconTypography label={productDetails.requireConsecutiveDays ? 'Yes' : 'No'} />
-          </StackRow>
-
-          <StackRow>
-            <BodyIconTypography label="Max booking spread days:" />
-            <SmallIconTypography label={productDetails.maxBookingSpreadDays ? productDetails.maxBookingSpreadDays.toString() : 'No limit'} />
           </StackRow>
         </CardContent>
       </Card>

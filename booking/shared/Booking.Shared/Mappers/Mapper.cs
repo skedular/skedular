@@ -194,16 +194,6 @@ public class Mapper : IMapper
             throw new ArgumentNullException(nameof(src.BookAllLocationResources));
         }
 
-        if (!src.RecurrenceWindowDays.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.RecurrenceWindowDays));
-        }
-
-        if (!src.RequireConsecutiveDays.HasValue)
-        {
-            throw new ArgumentNullException(nameof(src.RequireConsecutiveDays));
-        }
-
         if (!src.NumberOfResourcesToBook.HasValue)
         {
             throw new ArgumentNullException(nameof(src.NumberOfResourcesToBook));
@@ -228,9 +218,6 @@ public class Mapper : IMapper
             MinDurationMinutes = src.MinDurationMinutes,
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources.Value,
-            RecurrenceWindowDays = src.RecurrenceWindowDays.Value,
-            RequireConsecutiveDays = src.RequireConsecutiveDays.Value,
-            MaxBookingSpreadDays = src.MaxBookingSpreadDays,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook.Value
         };
     }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bdcc567a4310b63d9120568065cf46a4>>
+ * @generated SignedSource<<bd0d7e9eecf0f6013e669f770511da0b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
-export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type myBookingCard_BookingDetails$data = {
   readonly bookingResources: ReadonlyArray<{

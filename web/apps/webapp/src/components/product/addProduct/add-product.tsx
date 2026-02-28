@@ -63,9 +63,6 @@ type ProductDetails = {
   minDurationMinutes: string | null;
   maxDurationMinutes: string | null;
   bookAllLocationResources: boolean;
-  recurrenceWindowDays: string;
-  requireConsecutiveDays: boolean;
-  maxBookingSpreadDays: string | null;
   productTagIds: string[];
   locationTagIds: string[];
   maxAllowedResourcesLockTimePaidViaCard: string;
@@ -178,58 +175,6 @@ const productSchema = (openingHoursMinutesStep: number) =>
         return maxDurationMinutes % 60 === 0;
       }),
     mustBookAllLocationResources: boolean(),
-    recurrenceWindowDays: string()
-      .test('is-required', 'Recurrence window days is required.', function (value) {
-        const { bookAllLocationResources } = this.parent;
-        if (bookAllLocationResources) {
-          return true;
-        }
-
-        return !!value;
-      })
-      .test('is-greater-than-zero', 'Recurrence window days must be greater than 0.', function (value) {
-        const { bookAllLocationResources } = this.parent;
-        if (bookAllLocationResources) {
-          return true;
-        }
-
-        return Number(value) > 0;
-      }),
-    requireConsecutiveDays: boolean(),
-    maxBookingSpreadDays: string()
-      .nullable()
-      .test('is-greater-than-recurrence', 'Max booking spread days must be greater than or equal to recurrence window days.', function (value) {
-        const { bookAllLocationResources, requireConsecutiveDays, recurrenceWindowDays: recurrenceWindowDaysStr } = this.parent;
-
-        if (bookAllLocationResources || requireConsecutiveDays) {
-          return true;
-        }
-
-        const maxBookingSpreadDays = Number(value);
-        if (isNaN(maxBookingSpreadDays)) {
-          return true;
-        }
-
-        const recurrenceWindowDays = Number(recurrenceWindowDaysStr);
-        if (isNaN(recurrenceWindowDaysStr)) {
-          return true;
-        }
-
-        return maxBookingSpreadDays >= recurrenceWindowDays;
-      })
-      .test('is-greater-than-zero', 'Max booking spread days must be greater than 0.', function (value) {
-        const { bookAllLocationResources, requireConsecutiveDays } = this.parent;
-        if (bookAllLocationResources || requireConsecutiveDays) {
-          return true;
-        }
-
-        const maxBookingSpreadDays = Number(value);
-        if (isNaN(maxBookingSpreadDays)) {
-          return true;
-        }
-
-        return maxBookingSpreadDays > 0;
-      }),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
     locationTagIds: array().nullable(),
     maxAllowedResourcesLockTimePaidViaCard: string()
@@ -293,9 +238,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           minDurationMinutes
           maxDurationMinutes
           bookAllLocationResources
-          recurrenceWindowDays
-          requireConsecutiveDays
-          maxBookingSpreadDays
           productTags {
             id
             name
@@ -360,15 +302,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
   const [bookAllLocationResources, setBookAllLocationResources] = useState(false);
   const debounceSetBookAllLocationResources = useDebounceCallback(setBookAllLocationResources, keyboardTextFieldDebounceTimeout);
 
-  const [recurrenceWindowDays, setRecurrenceWindowDays] = useState('1');
-  const debounceSetRecurrenceWindowDays = useDebounceCallback(setRecurrenceWindowDays, keyboardTextFieldDebounceTimeout);
-
-  const [requireConsecutiveDays, setRequireConsecutiveDays] = useState(false);
-  const debounceSetRequireConsecutiveDays = useDebounceCallback(setRequireConsecutiveDays, keyboardTextFieldDebounceTimeout);
-
-  const [maxBookingSpreadDays, setMaxBookingSpreadDays] = useState<string | null>('1');
-  const debounceSetMaxBookingSpreadDays = useDebounceCallback(setMaxBookingSpreadDays, keyboardTextFieldDebounceTimeout);
-
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
 
@@ -407,9 +340,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     minDurationMinutes: minDurationMinutesStr,
     maxDurationMinutes: maxDurationMinutesStr,
     bookAllLocationResources,
-    recurrenceWindowDays: recurrenceWindowDaysStr,
-    requireConsecutiveDays,
-    maxBookingSpreadDays: maxBookingSpreadDaysStr,
     productTagIds,
     locationTagIds,
     maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
@@ -421,8 +351,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
     const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
     const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
-    const recurrenceWindowDays = recurrenceWindowDaysStr ? Number(recurrenceWindowDaysStr) : 1;
-    const maxBookingSpreadDays = maxBookingSpreadDaysStr ? Number(maxBookingSpreadDaysStr) : null;
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
@@ -450,9 +378,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           bookAllLocationResources,
           minDurationMinutes,
           maxDurationMinutes,
-          recurrenceWindowDays,
-          requireConsecutiveDays,
-          maxBookingSpreadDays,
           productTagIds,
           locationTagIds,
           organizationUniqueAlphanumericName,
@@ -507,9 +432,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             bookAllLocationResources,
             minDurationMinutes,
             maxDurationMinutes,
-            recurrenceWindowDays,
-            requireConsecutiveDays,
-            maxBookingSpreadDays,
             productTags: [],
             locationTags: [],
             featureImages: finalFeatureImages,
@@ -559,9 +481,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               minDurationMinutes,
               maxDurationMinutes,
               bookAllLocationResources,
-              requireConsecutiveDays,
-              recurrenceWindowDays,
-              maxBookingSpreadDays,
               numberOfResourcesToBook,
               productTagIds,
               locationTagIds,
@@ -580,9 +499,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               debounceSetMinDurationMinutes(values!.minDurationMinutes);
               debounceSetMaxDurationMinutes(values!.maxDurationMinutes);
               debounceSetBookAllLocationResources(values!.bookAllLocationResources);
-              debounceSetRequireConsecutiveDays(values!.requireConsecutiveDays);
-              debounceSetRecurrenceWindowDays(values!.recurrenceWindowDays);
-              debounceSetMaxBookingSpreadDays(values!.maxBookingSpreadDays);
               debounceSetNumberOfResourcesToBook(values!.numberOfResourcesToBook);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetLocationTagIds(values!.locationTagIds);
@@ -718,29 +634,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                     {!bookAllLocationResources && (
                       <FormFieldLabel label="Number of Resources to Book">
                         <TextField name="numberOfResourcesToBook" required={requiredFields.numberOfResourcesToBook} />
-                      </FormFieldLabel>
-                    )}
-
-                    {!bookAllLocationResources && (
-                      <FormFieldLabel label="Recurrence Window Days">
-                        <TextField name="recurrenceWindowDays" required={requiredFields.recurrenceWindowDays} />
-                      </FormFieldLabel>
-                    )}
-
-                    {!bookAllLocationResources && (
-                      <FormFieldLabel>
-                        <Switches
-                          name="requireConsecutiveDays"
-                          required={requiredFields.requireConsecutiveDays}
-                          data={{ label: 'Must book consecutive days', value: 'requireConsecutiveDays' }}
-                          helperText="If checked, only consecutive days booking allowed for this product."
-                        />
-                      </FormFieldLabel>
-                    )}
-
-                    {!bookAllLocationResources && !requireConsecutiveDays && (
-                      <FormFieldLabel label="Max Booking Spread Days">
-                        <TextField name="maxBookingSpreadDays" required={requiredFields.maxBookingSpreadDays} />
                       </FormFieldLabel>
                     )}
 

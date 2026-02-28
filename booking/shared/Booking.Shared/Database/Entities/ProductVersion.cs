@@ -18,9 +18,6 @@ public class ProductVersion : EntityBase
     public int? MinDurationMinutes { get; set; }
     public int? MaxDurationMinutes { get; set; }
     public bool? BookAllLocationResources { get; set; }
-    public int? RecurrenceWindowDays { get; set; }
-    public bool? RequireConsecutiveDays { get; set; }
-    public int? MaxBookingSpreadDays { get; set; }
     public int? NumberOfResourcesToBook { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
@@ -50,7 +47,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.PricePerMinute).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
         builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
-        builder.Property(item => item.RequireConsecutiveDays).HasDefaultValue(false);
         builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
         builder.Property(item => item.MaxAllowedResourcesLockTimePaidViaCard)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard);

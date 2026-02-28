@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e45dbc1370d3fe3a6974482f8d6b594>>
+ * @generated SignedSource<<48eb75180e893dd31f6d35532f9dcb02>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -349,27 +349,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "recurrenceWindowDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "requireConsecutiveDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxBookingSpreadDays",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
             "name": "productTags",
@@ -576,12 +555,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "855058de23e2900470ad57a50c921d2c",
+    "cacheID": "181dde8eeaacddabd9960f78e3a9019b",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProduct_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    recurrenceWindowDays\n    requireConsecutiveDays\n    maxBookingSpreadDays\n    productTags {\n      id\n      name\n      color\n    }\n    locationTags {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    maxAllowedResourcesLockTimePaidViaCard\n    maxAllowedResourcesLockTimePaidViaBankTransfer\n    acceptedBookingPaymentMethods {\n      type\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationTags(orderBy: $multipleChoicesLocationTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    description\n    price\n    priceUnit {\n      type\n      name\n    }\n    currency {\n      type\n      name\n    }\n    numberOfResourcesToBook\n    minDurationMinutes\n    maxDurationMinutes\n    bookAllLocationResources\n    productTags {\n      id\n      name\n      color\n    }\n    locationTags {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    maxAllowedResourcesLockTimePaidViaCard\n    maxAllowedResourcesLockTimePaidViaBankTransfer\n    acceptedBookingPaymentMethods {\n      type\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    isPriceTaxInclusive\n  }\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationTags(orderBy: $multipleChoicesLocationTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d5e4cbf0eb56b64a59203f5ff51cac2f>>
+ * @generated SignedSource<<bb697276ef6ef746409f62d7e4adac7d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type MakeBookingPaymentNotRequiredInput = {
   clientMutationId?: string | null | undefined;
   id: string;

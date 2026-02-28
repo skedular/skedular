@@ -49,16 +49,13 @@ message ProductVersion {
   int32 minDurationMinutes = 8;
   int32 maxDurationMinutes = 9;
   bool bookAllLocationResources = 10;
-  int32 recurrenceWindowDays = 11;
-  bool requireConsecutiveDays = 12;
-  int32 maxBookingSpreadDays = 13;
-  int32 numberOfResourcesToBook = 14;
-  repeated string productTagIds = 15;
-  repeated string locationTagIds = 16;
-  repeated CdnImageFile featureImages = 17;
-  int32 maxAllowedResourcesLockTimePaidViaCard = 18;
-  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 19;
-  repeated string acceptedBookingPaymentMethods = 20;
+  int32 numberOfResourcesToBook = 11;
+  repeated string productTagIds = 12;
+  repeated string locationTagIds = 13;
+  repeated CdnImageFile featureImages = 14;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 15;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 16;
+  repeated string acceptedBookingPaymentMethods = 17;
 }
 
 message CdnImageFile {

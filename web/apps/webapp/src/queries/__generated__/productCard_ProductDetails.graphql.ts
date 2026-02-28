@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56851f7b151f768811c52a1059626768>>
+ * @generated SignedSource<<6cbb671dd1937b233b4c3de462530494>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,6 @@ export type productCard_ProductDetails$data = {
   readonly id: string;
   readonly inactive: boolean;
   readonly isPriceTaxInclusive: boolean;
-  readonly maxBookingSpreadDays: number | null | undefined;
   readonly maxDurationMinutes: number | null | undefined;
   readonly minDurationMinutes: number | null | undefined;
   readonly name: string;
@@ -34,7 +33,6 @@ export type productCard_ProductDetails$data = {
   readonly priceUnit: {
     readonly name: string;
   };
-  readonly requireConsecutiveDays: boolean;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
 export type productCard_ProductDetails$key = {
@@ -122,20 +120,6 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "requireConsecutiveDays",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "maxBookingSpreadDays",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
       "concreteType": "OrganizationDetails",
       "kind": "LinkedField",
       "name": "organization",
@@ -201,6 +185,6 @@ return {
 };
 })();
 
-(node as any).hash = "647481268230ba6c139d7b20cfc4d437";
+(node as any).hash = "a23dce4ea4696fa021f09fdc8f901525";
 
 export default node;
