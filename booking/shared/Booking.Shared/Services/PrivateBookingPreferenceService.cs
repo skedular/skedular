@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
-using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Shared.Services;
 
@@ -45,7 +44,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
     private async Task<(Organization?, Location?)> ResolveOrganizationAndLocationAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
-        CustomerEntity customer,
+        Customer customer,
         CancellationToken cancellationToken)
     {
         var organizationEntity = await ResolveBookingOrganizationAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken);
@@ -73,7 +72,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             cancellationToken);
 
     private async Task<(Organization?, Location? )> ResolveWithoutBookingOrganizationAsync(
-        CustomerEntity customer,
+        Customer customer,
         CancellationToken cancellationToken)
     {
         Location? locationEntity;
@@ -114,7 +113,7 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             cancellationToken);
 
     private static ICollection<Resource> SelectResourcesByCustomerPreferences(
-        CustomerEntity customer,
+        Customer customer,
         ICollection<Resource> availableResources)
     {
         var selectedResource = FindByPreferredResource(customer, availableResources) ??
@@ -129,13 +128,13 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
         return availableResources.Count != 0 ? [availableResources.First()] : [];
     }
 
-    private static Resource? FindByPreferredResource(CustomerEntity customer, IEnumerable<Resource> availableResources)
+    private static Resource? FindByPreferredResource(Customer customer, IEnumerable<Resource> availableResources)
     {
         var preferredResourceIds = customer.PreferredResources.Select(item => item.Id).ToHashSet();
         return availableResources.FirstOrDefault(item => preferredResourceIds.Contains(item.Id));
     }
 
-    private static Resource? FindByPreferredTagType(CustomerEntity customer, ICollection<Resource> availableResources, string tagType)
+    private static Resource? FindByPreferredTagType(Customer customer, ICollection<Resource> availableResources, string tagType)
     {
         var preferredTagIds = customer.PreferredOrganizationTags
             .Where(tag => tag.Type == tagType)

@@ -30,7 +30,7 @@ public class PrivateRecurringBookingIntegrations(
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
         if (recurringBooking is null || recurringBooking.IsDeleted())
         {
-            return new AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(true, false);
+            return new AdjustRequiredResourcesForPrivateRecurringBookingAsyncResponse(true, true);
         }
 
         // We reconcile from "today" onward.
@@ -61,9 +61,7 @@ public class PrivateRecurringBookingIntegrations(
         // Even if recurrence-generated values did not change, UpdateAsync can now re-adjust resources
         // when previously assigned resources are no longer available.
         var updatedByCustomer = recurringBooking.LastModifiedByCustomer ?? recurringBooking.CreatedByCustomer ?? null;
-        var bookingsToRemoveIds = reconciliationPlan.BookingsToRemove
-            .Select(item => item.Id)
-            .ToHashSet();
+        var bookingsToRemoveIds = reconciliationPlan.BookingsToRemove.Select(item => item.Id).ToHashSet();
 
         var existingBookingsToRefresh = existingBookings
             .Where(item => !bookingsToRemoveIds.Contains(item.Id))
@@ -74,6 +72,7 @@ public class PrivateRecurringBookingIntegrations(
             var expectedBooking = mapper.MapTo(
                 recurringBooking,
                 mapper.MapTo(existingBooking),
+                null,
                 DateOnly.FromDateTime(existingBooking.From.UtcDateTime.Date));
 
             await privateBookingService.UpdateAsync(

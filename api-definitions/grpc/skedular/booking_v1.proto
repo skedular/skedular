@@ -126,7 +126,7 @@ enum BookingChannel
 
 enum PaymentStatus
 {
-  PaymentStatus_Template = 0;
+  PaymentStatus_NotSet = 0;
   PaymentStatus_Pending = 1;
   PaymentStatus_Rejected = 2;
   PaymentStatus_Confirmed = 3;

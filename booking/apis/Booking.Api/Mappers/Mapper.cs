@@ -530,7 +530,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Id = src.Id,
             PaymentStatus = src.PaymentStatus switch
             {
-                PaymentStatus.Template => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Template,
+                PaymentStatus.NotSet => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.NotSet,
                 PaymentStatus.Pending => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Pending,
                 PaymentStatus.Rejected => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Rejected,
                 PaymentStatus.Confirmed => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentStatus.Confirmed,

@@ -25,27 +25,7 @@ public interface IMarketplaceBookingService
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> AddAsync(
-        bool runInTransaction,
-        Models.Booking booking,
-        Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        CancellationToken cancellationToken);
-
     Task<Models.Booking> UpdateAsync(
-        Models.Booking booking,
-        Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        bool bookResourceIfNoResourceProvidedOrAvailable,
-        CancellationToken cancellationToken);
-
-    Task<Models.Booking> UpdateAsync(
-        bool runInTransaction,
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer lastModifiedByCustomer,
@@ -60,11 +40,7 @@ public interface IMarketplaceBookingService
         Customer? deletedByCustomer,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> DeleteAsync(
-        bool runInTransaction,
-        Database.Entities.Booking existingBooking,
-        Customer? deletedByCustomer,
-        CancellationToken cancellationToken);
+    Task AdjustRequiredResourcesAsync(Database.Entities.Booking booking, CancellationToken cancellationToken);
 }
 
 public class MarketplaceBookingService(
@@ -83,16 +59,6 @@ public class MarketplaceBookingService(
     IRandomHelper randomHelper) : IMarketplaceBookingService
 {
     public async Task<Models.Booking> AddAsync(
-        Models.Booking booking,
-        Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        CancellationToken cancellationToken) =>
-        await AddAsync(true, booking, customer, organizations, teams, recurringBooking, cancellationToken);
-
-    public async Task<Models.Booking> AddAsync(
-        bool runInTransaction,
         Models.Booking booking,
         Customer customer,
         ICollection<Organization> organizations,
@@ -170,146 +136,99 @@ public class MarketplaceBookingService(
             throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
         }
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
+        if (resources.Count == 0)
         {
-            if (resources.Count == 0)
-            {
-                resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                    booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
-                    booking.From,
-                    booking.Until,
-                    // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                    productVersions.Single(),
-                    marketplaceBooking.LineItems.First().Quantity,
-                    cancellationToken);
-            }
-
-            foreach (var resource in resources)
-            {
-                var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-                if (matchingResource is null)
-                {
-                    continue;
-                }
-
-                var matchingCustomerEntities =
-                    customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-                foreach (var slot in resource.ResourceBookingSlots)
-                {
-                    foreach (var matchingCustomerEntity in matchingCustomerEntities
-                                 .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                    {
-                        slot.Customers.Add(matchingCustomerEntity);
-                    }
-                }
-
-                repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-            }
-
-            var marketplaceBookingEntity = mapper.MapTo(
-                marketplaceBooking,
-                customer,
-                null,
-                productVersions,
-                null);
-
-            var paymentExpiry = timeProvider
-                .GetUtcNow()
-                .TrimAllAfterSeconds()
-                .AddMinutes(GetBookingPaymentExpiryInMinutes(productVersions, marketplaceBooking.PaymentMethod));
-
-            marketplaceBookingEntity.PaymentExpiry = paymentExpiry;
-
-            marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
-
-            var bookingEntity = mapper.MapTo(
-                booking,
-                customerEntities,
-                organizations,
-                ResourcesToLocations(resources),
-                teams,
-                resources,
-                customer,
-                null,
-                null,
-                marketplaceBookingEntity,
-                recurringBooking);
-
-            bookingEntity.Channel = BookingChannelConstants.Marketplace;
-
-            bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-
-            booking = mapper.MapTo(bookingEntity);
-
-            bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-            switch (marketplaceBooking.PaymentMethod)
-            {
-                case PaymentMethod.Card:
-                    temporalOutboxService.StartWorkflowPayBookingViaCard(
-                        new PayBookingViaCardInput(
-                            booking.Id,
-                            paymentExpiry,
-                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
-                    break;
-
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
-                        new PayBookingViaBankTransferInput(
-                            booking.Id,
-                            paymentExpiry,
-                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
-                        repositoryFactory.UnitOfWork);
-                    break;
-
-                default: throw new ArgumentOutOfRangeException();
-            }
-
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (runInTransaction)
-            {
-                await transaction!.CommitAsync(cancellationToken);
-            }
-
-            await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-            return booking;
+            resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
+                booking.From,
+                booking.Until,
+                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                productVersions.Single(),
+                marketplaceBooking.LineItems.First().Quantity,
+                cancellationToken);
         }
-        finally
+
+        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        foreach (var slot in slots)
         {
-            if (runInTransaction)
+            foreach (var matchingCustomerEntity in customerEntities)
             {
-                await transaction!.DisposeAsync();
+                slot.Customers.Add(matchingCustomerEntity);
             }
         }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+
+        var marketplaceBookingEntity = mapper.MapTo(
+            marketplaceBooking,
+            customer,
+            null,
+            productVersions,
+            null);
+
+        var paymentExpiry = timeProvider
+            .GetUtcNow()
+            .TrimAllAfterSeconds()
+            .AddMinutes(GetBookingPaymentExpiryInMinutes(productVersions, marketplaceBooking.PaymentMethod));
+
+        marketplaceBookingEntity.PaymentExpiry = paymentExpiry;
+
+        marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
+
+        var bookingEntity = mapper.MapTo(
+            booking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            customer,
+            null,
+            null,
+            marketplaceBookingEntity,
+            recurringBooking);
+
+        bookingEntity.Channel = BookingChannelConstants.Marketplace;
+
+        bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
+
+        booking = mapper.MapTo(bookingEntity);
+
+        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        switch (marketplaceBooking.PaymentMethod)
+        {
+            case PaymentMethod.Card:
+                temporalOutboxService.StartWorkflowPayBookingViaCard(
+                    new PayBookingViaCardInput(
+                        booking.Id,
+                        paymentExpiry,
+                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
+                break;
+
+            case PaymentMethod.BankTransfer:
+                temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
+                    new PayBookingViaBankTransferInput(
+                        booking.Id,
+                        paymentExpiry,
+                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
+                    repositoryFactory.UnitOfWork);
+                break;
+
+            default: throw new ArgumentOutOfRangeException();
+        }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        return booking;
     }
 
     public async Task<Models.Booking> UpdateAsync(
-        Models.Booking booking,
-        Database.Entities.Booking existingBooking,
-        Customer lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        bool bookResourceIfNoResourceProvidedOrAvailable,
-        CancellationToken cancellationToken) =>
-        await UpdateAsync(
-            true,
-            booking,
-            existingBooking,
-            lastModifiedByCustomer,
-            organizations,
-            teams,
-            recurringBooking,
-            bookResourceIfNoResourceProvidedOrAvailable,
-            cancellationToken);
-
-    public async Task<Models.Booking> UpdateAsync(
-        bool runInTransaction,
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer lastModifiedByCustomer,
@@ -331,140 +250,106 @@ public class MarketplaceBookingService(
             throw new CustomerNotFound();
         }
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
+        /********************************************************************************************************************/
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        /********************************************************************************************************************/
+
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var productVersions = await productService.GetProductVersionsAsync(
+            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
+
+        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        ICollection<Resource> resources;
+
+        // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
+        // In that mode we first try resources provided on the booking model, and only if none are
+        // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
+        if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
         {
-            /********************************************************************************************************************/
-            // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
-            bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-            /********************************************************************************************************************/
-
-            var marketplaceBooking = existingBooking.MarketplaceBooking;
-            ArgumentNullException.ThrowIfNull(marketplaceBooking);
-
-            var productVersions = await productService.GetProductVersionsAsync(
-                marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+                null,
+                null,
+                booking.From,
+                booking.Until,
+                resourceIds,
+                [],
+                [],
                 cancellationToken);
 
-            var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-            ICollection<Resource> resources;
-
-            // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
-            // In that mode we first try resources provided on the booking model, and only if none are
-            // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
-            if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
+            // If no requested resource is available, try to auto-pick one by customer preference.
+            if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
             {
-                resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                    null,
-                    null,
+                resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    customerEntities.First(),
                     booking.From,
                     booking.Until,
-                    resourceIds,
-                    [],
-                    [],
-                    cancellationToken);
-
-                // If no requested resource is available, try to auto-pick one by customer preference.
-                if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
-                {
-                    resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                        customerEntities.First(),
-                        booking.From,
-                        booking.Until,
-                        // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                        productVersions.Single(),
-                        marketplaceBooking.LineItems.First().Quantity,
-                        cancellationToken);
-                }
-            }
-            else
-            {
-                // Non-recurring or customized instances keep strict behavior:
-                // caller-provided resources must all be available.
-                resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                    booking.From,
-                    booking.Until,
-                    resourceIds,
                     // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                    productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
+                    productVersions.Single(),
+                    marketplaceBooking.LineItems.First().Quantity,
                     cancellationToken);
             }
-
-
-            foreach (var resource in resources)
-            {
-                var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-                if (matchingResource is null)
-                {
-                    continue;
-                }
-
-                var matchingCustomerEntities =
-                    customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-                foreach (var slot in resource.ResourceBookingSlots)
-                {
-                    foreach (var matchingCustomerEntity in matchingCustomerEntities
-                                 .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                    {
-                        slot.Customers.Add(matchingCustomerEntity);
-                    }
-                }
-
-                repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-            }
-
-            var bookingEntity = mapper.MergeTo(
-                booking,
-                existingBooking,
-                customerEntities,
-                organizations,
-                ResourcesToLocations(resources),
-                teams,
-                resources,
-                existingBooking.CreatedByCustomer,
-                lastModifiedByCustomer,
-                null,
-                existingBooking.MarketplaceBooking,
-                recurringBooking);
-
-            bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-            booking = mapper.MapTo(bookingEntity);
-
-            bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (runInTransaction)
-            {
-                await transaction!.CommitAsync(cancellationToken);
-            }
-
-            await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
-
-            return booking;
         }
-        finally
+        else
         {
-            if (runInTransaction)
+            // Non-recurring or customized instances keep strict behavior:
+            // caller-provided resources must all be available.
+            resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                booking.From,
+                booking.Until,
+                resourceIds,
+                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
+                cancellationToken);
+        }
+
+        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        foreach (var slot in slots)
+        {
+            foreach (var matchingCustomerEntity in customerEntities)
             {
-                await transaction!.DisposeAsync();
+                slot.Customers.Add(matchingCustomerEntity);
             }
         }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+
+        var bookingEntity = mapper.MergeTo(
+            booking,
+            existingBooking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            existingBooking.CreatedByCustomer,
+            lastModifiedByCustomer,
+            null,
+            existingBooking.MarketplaceBooking,
+            recurringBooking);
+
+        bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
+        booking = mapper.MapTo(bookingEntity);
+
+        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+
+        return booking;
     }
 
     public async Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking existingBooking,
-        Customer? deletedByCustomer,
-        CancellationToken cancellationToken) =>
-        await DeleteAsync(true, existingBooking, deletedByCustomer, cancellationToken);
-
-    public async Task<Models.Booking> DeleteAsync(
-        bool runInTransaction,
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken)
@@ -474,55 +359,112 @@ public class MarketplaceBookingService(
             throw new BookingIsNotMarketplace();
         }
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+
+        existingBooking.DeletedByCustomer = deletedByCustomer;
+        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
+        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+
+        bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
+
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        if (marketplaceBooking.IsPaymentRequired)
         {
-            bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-
-            existingBooking.DeletedByCustomer = deletedByCustomer;
-            existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-            var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
-
-            bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
-
-            var marketplaceBooking = existingBooking.MarketplaceBooking;
-            ArgumentNullException.ThrowIfNull(marketplaceBooking);
-
-            if (marketplaceBooking.IsPaymentRequired)
+            switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
             {
-                switch (marketplaceBooking.PaymentMethod.ToPaymentMethod())
-                {
-                    case PaymentMethod.Card:
-                        temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                        break;
+                case PaymentMethod.Card:
+                    temporalOutboxService.SignalWorkflowPayBookingViaCardDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
 
-                    case PaymentMethod.BankTransfer:
-                        temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
-                        break;
+                case PaymentMethod.BankTransfer:
+                    temporalOutboxService.SignalWorkflowPayBookingViaBankTransferDeleteBooking(deletedBooking.Id, repositoryFactory.UnitOfWork);
+                    break;
 
-                    default: throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (runInTransaction)
-            {
-                await transaction!.CommitAsync(cancellationToken);
-            }
-
-            await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
-
-            return deletedBooking;
-        }
-        finally
-        {
-            if (runInTransaction)
-            {
-                await transaction!.DisposeAsync();
+                default: throw new ArgumentOutOfRangeException();
             }
         }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
+
+        return deletedBooking;
+    }
+
+    public async Task AdjustRequiredResourcesAsync(Database.Entities.Booking booking, CancellationToken cancellationToken)
+    {
+        var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
+        var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
+        if (customerEntities.Count != customerIds.Count)
+        {
+            throw new CustomerNotFound();
+        }
+
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        /********************************************************************************************************************/
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        /********************************************************************************************************************/
+
+        var marketplaceBooking = booking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var productVersions = await productService.GetProductVersionsAsync(
+            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
+            cancellationToken);
+
+        var resourceIds = booking.InvolvedResources.Select(item => item.Id).ToList();
+        var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
+            null,
+            null,
+            booking.From,
+            booking.Until,
+            resourceIds,
+            [],
+            [],
+            cancellationToken);
+
+        // If no requested resource is available, try to auto-pick one by customer preference.
+        if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
+        {
+            resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                customerEntities.First(),
+                booking.From,
+                booking.Until,
+                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
+                productVersions.Single(),
+                marketplaceBooking.LineItems.First().Quantity,
+                cancellationToken);
+        }
+
+        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        foreach (var slot in slots)
+        {
+            foreach (var matchingCustomerEntity in customerEntities)
+            {
+                slot.Customers.Add(matchingCustomerEntity);
+            }
+        }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+
+        _ = repositoryFactory.BookingRepository.Update(booking);
+
+        bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>

@@ -21,15 +21,6 @@ public interface IPrivateBookingService
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> AddAsync(
-        bool runInTransaction,
-        Models.Booking booking,
-        Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        CancellationToken cancellationToken);
-
     Task<Models.Booking> UpdateAsync(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
@@ -40,24 +31,7 @@ public interface IPrivateBookingService
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> UpdateAsync(
-        bool runInTransaction,
-        Models.Booking booking,
-        Database.Entities.Booking existingBooking,
-        Customer? lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        bool bookResourceIfNoResourceProvidedOrAvailable,
-        CancellationToken cancellationToken);
-
     Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking existingBooking,
-        Customer? deletedByCustomer,
-        CancellationToken cancellationToken);
-
-    Task<Models.Booking> DeleteAsync(
-        bool runInTransaction,
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken);
@@ -80,16 +54,6 @@ public class PrivateBookingService(
         ICollection<Organization> organizations,
         ICollection<Team> teams,
         RecurringBooking? recurringBooking,
-        CancellationToken cancellationToken) =>
-        await AddAsync(true, booking, customer, organizations, teams, recurringBooking, cancellationToken);
-
-    public async Task<Models.Booking> AddAsync(
-        bool runInTransaction,
-        Models.Booking booking,
-        Customer customer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -107,115 +71,68 @@ public class PrivateBookingService(
             [],
             cancellationToken);
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
+        if (booking.InvolvedCustomers.Count == 1)
         {
-            if (booking.InvolvedCustomers.Count == 1)
+            if (resources.Count == 0)
             {
-                if (resources.Count == 0)
-                {
-                    (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                        customerEntities.First(),
-                        booking.From,
-                        booking.Until,
-                        booking.InvolvedOrganizations
-                            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                            .Select(item => item.Id)
-                            .ToList(),
-                        booking.InvolvedOrganizations
-                            .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                            .Select(item => item.UniqueAlphanumericName!)
-                            .ToList(),
-                        cancellationToken);
-                }
-            }
-
-            foreach (var resource in resources)
-            {
-                var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-                if (matchingResource is null)
-                {
-                    continue;
-                }
-
-                var matchingCustomerEntities =
-                    customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-                foreach (var slot in resource.ResourceBookingSlots)
-                {
-                    foreach (var matchingCustomerEntity in matchingCustomerEntities
-                                 .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                    {
-                        slot.Customers.Add(matchingCustomerEntity);
-                    }
-                }
-
-                repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-            }
-
-            var bookingEntity = mapper.MapTo(
-                booking,
-                customerEntities,
-                organizations,
-                ResourcesToLocations(resources),
-                teams,
-                resources,
-                customer,
-                null,
-                null,
-                null,
-                recurringBooking);
-
-            bookingEntity.Channel = BookingChannelConstants.Private;
-
-            bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
-            booking = mapper.MapTo(bookingEntity);
-
-            bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (runInTransaction)
-            {
-                await transaction!.CommitAsync(cancellationToken);
-            }
-
-            await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-            return booking;
-        }
-        finally
-        {
-            if (runInTransaction)
-            {
-                await transaction!.DisposeAsync();
+                (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    customerEntities.First(),
+                    booking.From,
+                    booking.Until,
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                        .Select(item => item.Id)
+                        .ToList(),
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                        .Select(item => item.UniqueAlphanumericName!)
+                        .ToList(),
+                    cancellationToken);
             }
         }
+
+        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        foreach (var slot in slots)
+        {
+            foreach (var matchingCustomerEntity in customerEntities)
+            {
+                slot.Customers.Add(matchingCustomerEntity);
+            }
+        }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+
+        var bookingEntity = mapper.MapTo(
+            booking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            customer,
+            null,
+            null,
+            null,
+            recurringBooking);
+
+        bookingEntity.Channel = BookingChannelConstants.Private;
+
+        bookingEntity = repositoryFactory.BookingRepository.Add(bookingEntity);
+        booking = mapper.MapTo(bookingEntity);
+
+        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        return booking;
     }
 
     public async Task<Models.Booking> UpdateAsync(
-        Models.Booking booking,
-        Database.Entities.Booking existingBooking,
-        Customer? lastModifiedByCustomer,
-        ICollection<Organization> organizations,
-        ICollection<Team> teams,
-        RecurringBooking? recurringBooking,
-        bool bookResourceIfNoResourceProvidedOrAvailable,
-        CancellationToken cancellationToken) =>
-        await UpdateAsync(
-            true,
-            booking,
-            existingBooking,
-            lastModifiedByCustomer,
-            organizations,
-            teams,
-            recurringBooking,
-            bookResourceIfNoResourceProvidedOrAvailable,
-            cancellationToken);
-
-    public async Task<Models.Booking> UpdateAsync(
-        bool runInTransaction,
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
         Customer? lastModifiedByCustomer,
@@ -237,136 +154,103 @@ public class PrivateBookingService(
             throw new CustomerNotFound();
         }
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
+        /********************************************************************************************************************/
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        /********************************************************************************************************************/
+
+        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        ICollection<Resource> resources;
+
+        // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
+        // In that mode we first try resources provided on the booking model, and only if none are
+        // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
+        if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
         {
-            /********************************************************************************************************************/
-            // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
-            bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-            /********************************************************************************************************************/
-
-            var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-            ICollection<Resource> resources;
-
-            // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
-            // In that mode we first try resources provided on the booking model, and only if none are
-            // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
-            if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
-            {
-                resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
-                    null,
-                    null,
-                    booking.From,
-                    booking.Until,
-                    resourceIds,
-                    [],
-                    [],
-                    cancellationToken);
-
-                // If no requested resource is available, try to auto-pick one by customer preference.
-                if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
-                {
-                    (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                        customerEntities.First(),
-                        booking.From,
-                        booking.Until,
-                        booking.InvolvedOrganizations
-                            .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                            .Select(item => item.Id)
-                            .ToList(),
-                        booking.InvolvedOrganizations
-                            .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                            .Select(item => item.UniqueAlphanumericName!)
-                            .ToList(),
-                        cancellationToken);
-                }
-            }
-            else
-            {
-                // Non-recurring or customized instances keep strict behavior:
-                // caller-provided resources must all be available.
-                resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                    booking.From,
-                    booking.Until,
-                    resourceIds,
-                    [],
-                    cancellationToken);
-            }
-
-            foreach (var resource in resources)
-            {
-                var matchingResource = booking.Resources.FirstOrDefault(item => item.Resource.Id == resource.Id);
-                if (matchingResource is null)
-                {
-                    continue;
-                }
-
-                var matchingCustomerEntities =
-                    customerEntities.Where(item => matchingResource.Customers.Select(x => x.Id).Contains(item.Id)).ToList();
-
-                foreach (var slot in resource.ResourceBookingSlots)
-                {
-                    foreach (var matchingCustomerEntity in matchingCustomerEntities
-                                 .Where(matchingCustomerEntity => !slot.Customers.Select(item => item.Id).Contains(matchingCustomerEntity.Id)))
-                    {
-                        slot.Customers.Add(matchingCustomerEntity);
-                    }
-                }
-
-                repositoryFactory.ResourceBookingSlotRepository.UpdateRange(resource.ResourceBookingSlots);
-            }
-
-            var bookingEntity = mapper.MergeTo(
-                booking,
-                existingBooking,
-                customerEntities,
-                organizations,
-                ResourcesToLocations(resources),
-                teams,
-                resources,
-                existingBooking.CreatedByCustomer,
-                lastModifiedByCustomer,
+            resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
                 null,
                 null,
-                recurringBooking);
+                booking.From,
+                booking.Until,
+                resourceIds,
+                [],
+                [],
+                cancellationToken);
 
-            bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
-            booking = mapper.MapTo(bookingEntity);
-
-            bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
-
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-            if (runInTransaction)
+            // If no requested resource is available, try to auto-pick one by customer preference.
+            if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
             {
-                await transaction!.CommitAsync(cancellationToken);
+                (organizations, resources) = await privateBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    customerEntities.First(),
+                    booking.From,
+                    booking.Until,
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.Id))
+                        .Select(item => item.Id)
+                        .ToList(),
+                    booking.InvolvedOrganizations
+                        .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                        .Select(item => item.UniqueAlphanumericName!)
+                        .ToList(),
+                    cancellationToken);
             }
-
-            await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-
-            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
-
-            return booking;
         }
-        finally
+        else
         {
-            if (runInTransaction)
+            // Non-recurring or customized instances keep strict behavior:
+            // caller-provided resources must all be available.
+            resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                booking.From,
+                booking.Until,
+                resourceIds,
+                [],
+                cancellationToken);
+        }
+
+        var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
+        foreach (var slot in slots)
+        {
+            foreach (var matchingCustomerEntity in customerEntities)
             {
-                await transaction!.DisposeAsync();
+                slot.Customers.Add(matchingCustomerEntity);
             }
         }
+
+        repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
+
+        var bookingEntity = mapper.MergeTo(
+            booking,
+            existingBooking,
+            customerEntities,
+            organizations,
+            ResourcesToLocations(resources),
+            teams,
+            resources,
+            existingBooking.CreatedByCustomer,
+            lastModifiedByCustomer,
+            null,
+            null,
+            recurringBooking);
+
+        bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
+        booking = mapper.MapTo(bookingEntity);
+
+        bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+
+        return booking;
     }
 
     public async Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking existingBooking,
-        Customer? deletedByCustomer,
-        CancellationToken cancellationToken) =>
-        await DeleteAsync(true, existingBooking, deletedByCustomer, cancellationToken);
-
-    public async Task<Models.Booking> DeleteAsync(
-        bool runInTransaction,
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         CancellationToken cancellationToken)
@@ -376,36 +260,22 @@ public class PrivateBookingService(
             throw new BookingIsNotPrivate();
         }
 
-        var transaction = runInTransaction ? await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken) : null;
+        var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        try
-        {
-            bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
+        bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 
-            existingBooking.DeletedByCustomer = deletedByCustomer;
-            existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
-            var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
+        existingBooking.DeletedByCustomer = deletedByCustomer;
+        existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
+        var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));
 
-            bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
+        bookingOutboxPublisher.PublishBookings([deletedBooking], repositoryFactory.UnitOfWork);
 
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
-            if (runInTransaction)
-            {
-                await transaction!.CommitAsync(cancellationToken);
-            }
+        await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
 
-            await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
-
-            return deletedBooking;
-        }
-        finally
-        {
-            if (runInTransaction)
-            {
-                await transaction!.DisposeAsync();
-            }
-        }
+        return deletedBooking;
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>

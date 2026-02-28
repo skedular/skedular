@@ -2876,10 +2876,10 @@ enum PaymentStatus {
   CONFIRMED
   EXPIRED
   NO_PAYMENT_REQUIRED
+  NOT_SET
   PENDING
   RECORD_NEVER_CREATED
   REJECTED
-  TEMPLATE
 }
 
 enum PersonalInformationVisibility {

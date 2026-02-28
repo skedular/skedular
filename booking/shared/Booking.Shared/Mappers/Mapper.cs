@@ -30,7 +30,7 @@ public interface IMapper
     Models.Booking MapTo(Database.Entities.Booking src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
-    Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, DateOnly date);
+    Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, MarketplaceBooking? marketplaceBooking, DateOnly? date);
 
     Database.Entities.Booking MapTo(
         Models.Booking src,
@@ -86,6 +86,8 @@ public interface IMapper
         Organization? paidByOrganization,
         ICollection<Database.Entities.ProductVersion> productVersions,
         StripeCheckoutSession? stripeCheckoutSession);
+
+    Models.MarketplaceBooking? MapTo(MarketplaceBooking? src);
 }
 
 public class Mapper : IMapper
@@ -327,10 +329,14 @@ public class Mapper : IMapper
         };
     }
 
-    public Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, DateOnly date)
+    public Models.Booking MapTo(
+        Database.Entities.RecurringBooking src,
+        Models.Booking booking,
+        MarketplaceBooking? marketplaceBooking,
+        DateOnly? date)
     {
-        var from = date.ToDateTimeOffset(src.From.TimeOfDay);
-        var until = date.ToDateTimeOffset(src.Until.TimeOfDay);
+        var from = date?.ToDateTimeOffset(src.From.TimeOfDay) ?? booking.From;
+        var until = date?.ToDateTimeOffset(src.Until.TimeOfDay) ?? booking.Until;
 
         return new Models.Booking
         {
@@ -344,7 +350,8 @@ public class Mapper : IMapper
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
-            Resources = booking.Resources
+            Resources = booking.Resources,
+            MarketplaceBooking = MapTo(marketplaceBooking)
         };
     }
 
@@ -478,7 +485,7 @@ public class Mapper : IMapper
             productVersions,
             stripeCheckoutSession);
 
-    private Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
+    public Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
         src is null
             ? null
             : new Models.MarketplaceBooking
@@ -546,7 +553,7 @@ public class Mapper : IMapper
             Id = src.Id,
             PaymentStatus = src.PaymentStatus switch
             {
-                PaymentStatus.Template => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template,
+                PaymentStatus.NotSet => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet,
                 PaymentStatus.Pending => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Pending,
                 PaymentStatus.Rejected => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Rejected,
                 PaymentStatus.Confirmed => Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Confirmed,

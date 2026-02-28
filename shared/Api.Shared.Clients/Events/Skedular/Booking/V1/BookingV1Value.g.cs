@@ -75,16 +75,16 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Qm9va2luZ0NhdGVnb3J5X1ZhY2F0aW9uEAcSJAogQm9va2luZ0NhdGVnb3J5",
             "X1RyYXZlbGluZ0ZvcldvcmsQCBIhCh1Cb29raW5nQ2F0ZWdvcnlfTm9uV29y",
             "a2luZ0RheRAJKkwKDkJvb2tpbmdDaGFubmVsEhoKFkJvb2tpbmdDaGFubmVs",
-            "X1ByaXZhdGUQABIeChpCb29raW5nQ2hhbm5lbF9NYXJrZXRwbGFjZRABKuUB",
-            "Cg1QYXltZW50U3RhdHVzEhoKFlBheW1lbnRTdGF0dXNfVGVtcGxhdGUQABIZ",
-            "ChVQYXltZW50U3RhdHVzX1BlbmRpbmcQARIaChZQYXltZW50U3RhdHVzX1Jl",
-            "amVjdGVkEAISGwoXUGF5bWVudFN0YXR1c19Db25maXJtZWQQAxIZChVQYXlt",
-            "ZW50U3RhdHVzX0V4cGlyZWQQBBIkCiBQYXltZW50U3RhdHVzX1JlY29yZE5l",
-            "dmVyQ3JlYXRlZBAFEiMKH1BheW1lbnRTdGF0dXNfTm9QYXltZW50UmVxdWly",
-            "ZWQQBipGCg1QYXltZW50TWV0aG9kEhYKElBheW1lbnRNZXRob2RfQ2FyZBAA",
-            "Eh0KGVBheW1lbnRNZXRob2RfQmFua0FjY291bnQQAUI2qgIzQXBpLlNoYXJl",
-            "ZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29raW5nLlYxLlZhbHVlYgZw",
-            "cm90bzM="));
+            "X1ByaXZhdGUQABIeChpCb29raW5nQ2hhbm5lbF9NYXJrZXRwbGFjZRABKuMB",
+            "Cg1QYXltZW50U3RhdHVzEhgKFFBheW1lbnRTdGF0dXNfTm90U2V0EAASGQoV",
+            "UGF5bWVudFN0YXR1c19QZW5kaW5nEAESGgoWUGF5bWVudFN0YXR1c19SZWpl",
+            "Y3RlZBACEhsKF1BheW1lbnRTdGF0dXNfQ29uZmlybWVkEAMSGQoVUGF5bWVu",
+            "dFN0YXR1c19FeHBpcmVkEAQSJAogUGF5bWVudFN0YXR1c19SZWNvcmROZXZl",
+            "ckNyZWF0ZWQQBRIjCh9QYXltZW50U3RhdHVzX05vUGF5bWVudFJlcXVpcmVk",
+            "EAYqRgoNUGF5bWVudE1ldGhvZBIWChJQYXltZW50TWV0aG9kX0NhcmQQABId",
+            "ChlQYXltZW50TWV0aG9kX0JhbmtBY2NvdW50EAFCNqoCM0FwaS5TaGFyZWQu",
+            "Q2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -127,7 +127,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
   }
 
   public enum PaymentStatus {
-    [pbr::OriginalName("PaymentStatus_Template")] Template = 0,
+    [pbr::OriginalName("PaymentStatus_NotSet")] NotSet = 0,
     [pbr::OriginalName("PaymentStatus_Pending")] Pending = 1,
     [pbr::OriginalName("PaymentStatus_Rejected")] Rejected = 2,
     [pbr::OriginalName("PaymentStatus_Confirmed")] Confirmed = 3,
@@ -1894,7 +1894,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
 
     /// <summary>Field number for the "paymentStatus" field.</summary>
     public const int PaymentStatusFieldNumber = 2;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus paymentStatus_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template;
+    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus paymentStatus_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus PaymentStatus {
@@ -2122,7 +2122,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template) hash ^= PaymentStatus.GetHashCode();
+      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) hash ^= PaymentStatus.GetHashCode();
       if (IsPaymentRequired != false) hash ^= IsPaymentRequired.GetHashCode();
       if (PaidByCustomerId.Length != 0) hash ^= PaidByCustomerId.GetHashCode();
       if (PaidByOrganizationId.Length != 0) hash ^= PaidByOrganizationId.GetHashCode();
@@ -2160,7 +2160,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template) {
+      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
         output.WriteRawTag(16);
         output.WriteEnum((int) PaymentStatus);
       }
@@ -2232,7 +2232,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(Id);
       }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template) {
+      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
         output.WriteRawTag(16);
         output.WriteEnum((int) PaymentStatus);
       }
@@ -2303,7 +2303,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (Id.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
       }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template) {
+      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PaymentStatus);
       }
       if (IsPaymentRequired != false) {
@@ -2362,7 +2362,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (other.Id.Length != 0) {
         Id = other.Id;
       }
-      if (other.PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.Template) {
+      if (other.PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
         PaymentStatus = other.PaymentStatus;
       }
       if (other.IsPaymentRequired != false) {

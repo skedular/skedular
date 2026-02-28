@@ -2,7 +2,7 @@ namespace Api.Shared.Services.Models;
 
 public enum PaymentStatus
 {
-    Template,
+    NotSet,
     Pending,
     Rejected,
     Confirmed,
@@ -13,7 +13,7 @@ public enum PaymentStatus
 
 public static class PaymentStatusConstants
 {
-    public const string Template = "TEMPLATE";
+    public const string NotSet = "NOTSET";
     public const string Pending = "PENDING";
     public const string Rejected = "REJECTED";
     public const string Confirmed = "CONFIRMED";
@@ -29,7 +29,7 @@ public static class PaymentStatusExtensions
         public PaymentStatus ToPaymentStatus() =>
             src switch
             {
-                PaymentStatusConstants.Template => PaymentStatus.Template,
+                PaymentStatusConstants.NotSet => PaymentStatus.NotSet,
                 PaymentStatusConstants.Pending => PaymentStatus.Pending,
                 PaymentStatusConstants.Rejected => PaymentStatus.Rejected,
                 PaymentStatusConstants.Confirmed => PaymentStatus.Confirmed,
@@ -42,7 +42,7 @@ public static class PaymentStatusExtensions
         public string ToPaymentStatusName() =>
             src switch
             {
-                PaymentStatusConstants.Template => "Template",
+                PaymentStatusConstants.NotSet => "Not set",
                 PaymentStatusConstants.Pending => "Pending Payment",
                 PaymentStatusConstants.Rejected => "Payment Rejected",
                 PaymentStatusConstants.Confirmed => "Payment Confirmed",
@@ -58,7 +58,7 @@ public static class PaymentStatusExtensions
         public string ToPaymentStatus() =>
             src switch
             {
-                PaymentStatus.Template => PaymentStatusConstants.Template,
+                PaymentStatus.NotSet => PaymentStatusConstants.NotSet,
                 PaymentStatus.Pending => PaymentStatusConstants.Pending,
                 PaymentStatus.Rejected => PaymentStatusConstants.Rejected,
                 PaymentStatus.Confirmed => PaymentStatusConstants.Confirmed,
@@ -71,7 +71,7 @@ public static class PaymentStatusExtensions
         public string ToPaymentStatusName() =>
             src switch
             {
-                PaymentStatus.Template => "Template",
+                PaymentStatus.NotSet => "Not set",
                 PaymentStatus.Pending => "Pending Payment",
                 PaymentStatus.Rejected => "Payment Rejected",
                 PaymentStatus.Confirmed => "Payment Confirmed",

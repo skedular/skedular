@@ -26,6 +26,8 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         int quantity,
         CancellationToken cancellationToken)
     {
+        quantity *= productVersion.NumberOfResourcesToBook ?? 1;
+
         var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.ProductTags, cancellationToken);
         if (availableResources.Count < quantity)
         {

@@ -505,7 +505,7 @@ enum PaymentMethod {
 }
 
 enum PaymentStatus {
-  TEMPLATE
+  NOT_SET
   PENDING
   REJECTED
   CONFIRMED

@@ -75,7 +75,7 @@ public class MarketplaceRecurringBookingService(
 
         marketplaceBooking.Id = randomHelper.Generate();
         marketplaceBooking.IsPaymentRequired = true;
-        marketplaceBooking.PaymentStatus = PaymentStatus.Template;
+        marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;
 
         if (productVersions.Any(item =>
                 !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(marketplaceBooking.PaymentMethod.ToPaymentMethod())))

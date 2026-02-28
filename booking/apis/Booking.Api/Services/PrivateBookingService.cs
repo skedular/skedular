@@ -136,6 +136,15 @@ public class PrivateBookingService(
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
+        if (booking.HasRecurringInstanceOverrides == true)
+        {
+            // Do nothing
+        }
+        else if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
+        {
+            booking.HasRecurringInstanceOverrides = true;
+        }
+
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
             booking.InvolvedOrganizations
                 .Where(item => !string.IsNullOrWhiteSpace(item.Id))
@@ -155,15 +164,6 @@ public class PrivateBookingService(
             callingCustomer.Id,
             true,
             cancellationToken);
-
-        if (booking.HasRecurringInstanceOverrides == true)
-        {
-            // Do nothing
-        }
-        else if (existingBooking.RecurringBooking is not null && (existingBooking.From != booking.From || existingBooking.Until != booking.Until))
-        {
-            booking.HasRecurringInstanceOverrides = true;
-        }
 
         return await sharedPrivateBookingService.UpdateAsync(
             booking,
