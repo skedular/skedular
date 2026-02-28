@@ -12,10 +12,6 @@ public class StripePrice : EntityBaseWithDeleted
     public string StripePriceId { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
-    public string? ProductVersionId { get; set; }
-    public virtual ProductVersion ProductVersion { get; set; }
-
-    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? StripeProductId { get; set; }
     public virtual StripeProduct StripeProduct { get; set; }
 }
@@ -29,7 +25,6 @@ public class StripePriceConfiguration : IEntityTypeConfiguration<StripePrice>
 
         builder.Property(item => item.StripePriceId).HasMaxLength(Constants.MaxStripePriceIdLength);
 
-        builder.HasOne(item => item.ProductVersion).WithOne(item => item.StripePrice).HasForeignKey<StripePrice>(item => item.ProductVersionId);
         builder.HasOne(item => item.StripeProduct).WithOne(item => item.StripePrice).HasForeignKey<StripePrice>(item => item.StripeProductId);
     }
 }

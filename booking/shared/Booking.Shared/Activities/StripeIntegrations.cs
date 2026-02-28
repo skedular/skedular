@@ -80,19 +80,18 @@ public class StripeIntegrations(
 
         foreach (var productVersion in productVersions)
         {
-            if (productVersion.StripeProduct is not null && productVersion.StripePrice is not null)
+            if (productVersion.StripeProducts.FirstOrDefault()?.StripePrice is not null)
             {
                 continue;
             }
 
-            var (stripeProduct, stripePrice) = await stripeProductPricingService.UpsertProductPricingAsync(
+            var stripeProduct = await stripeProductPricingService.UpsertProductPricingAsync(
                 mapper.MapTo(productVersion),
                 productVersion,
                 stripeConnectAccountId,
                 cancellationToken);
 
-            productVersion.StripeProduct = stripeProduct;
-            productVersion.StripePrice = stripePrice;
+            productVersion.StripeProducts = [stripeProduct];
             _ = repositoryFactory.ProductVersionRepository.Update(productVersion);
         }
 
@@ -163,7 +162,7 @@ public class StripeIntegrations(
 
             return booking.Schedules.Select(schedule => new SessionLineItemOptions
             {
-                Price = productVersion.StripePrice!.StripePriceId,
+                Price = productVersion.StripeProducts.First().StripePrice!.StripePriceId,
                 Quantity = productVersion.PriceUnit switch
                 {
                     PriceUnitConstants.PerMinute => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * item.Quantity,

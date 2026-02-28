@@ -2,8 +2,8 @@ namespace Api.Shared.Services.Models;
 
 public enum Currency
 {
-    Nzd,
-    Usd
+    Nzd = 0,
+    Usd = 1
 }
 
 public static class CurrencyConstants

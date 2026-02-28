@@ -46,7 +46,8 @@ public class ProductDetails : Node
     [GraphQLName("organizationUniqueAlphanumericName")]
     public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
 
-    [GraphQLName("featureImages")] public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("pricingOptions")] public IEnumerable<ProductVersionPricingOptions> PricingOptions { get; set; } = [];
 }
 
 [ObjectType<ProductDetails>]

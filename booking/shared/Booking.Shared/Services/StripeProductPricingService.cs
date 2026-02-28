@@ -10,7 +10,7 @@ namespace Booking.Shared.Services;
 
 public interface IStripeProductPricingService
 {
-    Task<(StripeProduct, StripePrice)> UpsertProductPricingAsync(
+    Task<StripeProduct> UpsertProductPricingAsync(
         ProductVersion productVersion,
         Database.Entities.ProductVersion productVersionEntity,
         string stripeAccountId,
@@ -24,14 +24,14 @@ public class StripeProductPricingService(
     ICreatable<Product, ProductCreateOptions> productCreateService,
     ICreatable<Price, PriceCreateOptions> priceCreateService) : IStripeProductPricingService
 {
-    public async Task<(StripeProduct, StripePrice)> UpsertProductPricingAsync(
+    public async Task<StripeProduct> UpsertProductPricingAsync(
         ProductVersion productVersion,
         Database.Entities.ProductVersion productVersionEntity,
         string stripeAccountId,
         CancellationToken cancellationToken)
     {
         StripeProduct stripeProductEntity;
-        if (productVersionEntity.StripeProduct is null)
+        if (productVersionEntity.StripeProducts.Count == 0)
         {
             var stripeProduct = await productCreateService.CreateAsync(
                 mapper.MapTo(productVersion, productVersion.Product, productVersion.Product.Organization.Id),
@@ -48,27 +48,22 @@ public class StripeProductPricingService(
         }
         else
         {
-            stripeProductEntity = productVersionEntity.StripeProduct;
+            stripeProductEntity = productVersionEntity.StripeProducts.First();
         }
 
-        StripePrice stripePriceEntity;
-        if (productVersionEntity.StripePrice is null)
+        if (stripeProductEntity.StripePrice is null)
         {
             var stripePrice = await priceCreateService.CreateAsync(
                 mapper.MapTo(productVersion, productVersion.Product, productVersion.Product.Organization.Id, stripeProductEntity.StripeProductId),
                 new RequestOptions { IdempotencyKey = $"{productVersion.Id}-price", StripeAccount = stripeAccountId },
                 cancellationToken);
 
-            stripePriceEntity = repositoryFactory.StripePriceRepository.Add(new StripePrice
+            _ = repositoryFactory.StripePriceRepository.Add(new StripePrice
             {
-                Id = randomHelper.Generate(), StripePriceId = stripePrice.Id, ProductVersion = productVersionEntity
+                Id = randomHelper.Generate(), StripePriceId = stripePrice.Id, StripeProduct = stripeProductEntity
             });
         }
-        else
-        {
-            stripePriceEntity = productVersionEntity.StripePrice;
-        }
 
-        return (stripeProductEntity, stripePriceEntity);
+        return stripeProductEntity;
     }
 }

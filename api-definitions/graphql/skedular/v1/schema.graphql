@@ -994,6 +994,7 @@ type ProductDetails {
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
+  pricingOptions: [ProductVersionPricingOptions!]!
   productTags: [OrganizationTagDetails!]!
 }
 
@@ -1005,6 +1006,16 @@ type ProductEdge {
 type ProductPayload {
   clientMutationId: String
   product: ProductDetails!
+}
+
+type ProductVersionDailyPricingV1 {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
 }
 
 type ProductVersionDetails {
@@ -1027,7 +1038,57 @@ type ProductVersionDetails {
   price: String!
   priceToDisplay: String!
   priceUnit: PriceUnitDetails!
+  pricingOptions: [ProductVersionPricingOptions!]!
   productTags: [OrganizationTagDetails!]!
+}
+
+type ProductVersionMonthlyPricingV1 {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+type ProductVersionOneTimePricingV1 {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+type ProductVersionPerMinutePricingV1 {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+type ProductVersionPricingOptions {
+  cadence: ProductVersionPricingCadence!
+  dailyV1: ProductVersionDailyPricingV1
+  monthlyV1: ProductVersionMonthlyPricingV1
+  oneTimeV1: ProductVersionOneTimePricingV1
+  perMinuteV1: ProductVersionPerMinutePricingV1
+  weeklyV1: ProductVersionWeeklyPricingV1
+}
+
+type ProductVersionWeeklyPricingV1 {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
 }
 
 type ProductsPayload {
@@ -1628,6 +1689,7 @@ input AddProductInput {
   organizationUniqueAlphanumericName: String
   price: String!
   priceUnit: PriceUnit!
+  pricingOptions: [ProductVersionPricingOptionsInput!]!
   productTagIds: [String!]!
 }
 
@@ -2159,9 +2221,67 @@ input ProductTagOrganizationTagWhereInput {
   nameContains: String
 }
 
+input ProductVersionDailyPricingV1Input {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+input ProductVersionMonthlyPricingV1Input {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+input ProductVersionOneTimePricingV1Input {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+input ProductVersionPerMinutePricingV1Input {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
+input ProductVersionPricingOptionsInput {
+  cadence: ProductVersionPricingCadence!
+  dailyV1: ProductVersionDailyPricingV1Input
+  monthlyV1: ProductVersionMonthlyPricingV1Input
+  oneTimeV1: ProductVersionOneTimePricingV1Input
+  perMinuteV1: ProductVersionPerMinutePricingV1Input
+  weeklyV1: ProductVersionWeeklyPricingV1Input
+}
+
+input ProductVersionWeeklyPricingV1Input {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  currency: Currency!
+  description: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  name: String!
+  price: Decimal!
+}
+
 input ProductWhereInput {
   includeInactive: Boolean!
-  nameContains: String
   organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
 }
@@ -2596,6 +2716,7 @@ input UpdateProductInput {
   numberOfResourcesToBook: Int!
   price: String!
   priceUnit: PriceUnit!
+  pricingOptions: [ProductVersionPricingOptionsInput!]!
   productTagIds: [String!]!
 }
 
@@ -2883,6 +3004,14 @@ enum PriceUnit {
 
 enum ProductOrderField {
   NAME
+}
+
+enum ProductVersionPricingCadence {
+  DAILY_V1
+  MONTHLY_V1
+  ONE_TIME_V1
+  PER_MINUTE_V1
+  WEEKLY_V1
 }
 
 enum RecurringBookingEndType {

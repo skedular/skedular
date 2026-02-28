@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0809b24f6fb0d7c8d6ebb64993b87062>>
+ * @generated SignedSource<<3be0df9d4d1c21710b21dba423333c71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
+export type ProductVersionPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "ONE_TIME_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 export type UpdateProductInput = {
   acceptedBookingPaymentMethods: ReadonlyArray<PaymentMethod>;
   bookAllLocationResources: boolean;
@@ -30,6 +31,7 @@ export type UpdateProductInput = {
   numberOfResourcesToBook: number;
   price: string;
   priceUnit: PriceUnit;
+  pricingOptions: ReadonlyArray<ProductVersionPricingOptionsInput>;
   productTagIds: ReadonlyArray<string>;
 };
 export type CdnImageFileInput = {
@@ -40,6 +42,59 @@ export type CdnFileInput = {
   height?: number | null | undefined;
   url: string;
   width?: number | null | undefined;
+};
+export type ProductVersionPricingOptionsInput = {
+  cadence: ProductVersionPricingCadence;
+  dailyV1?: ProductVersionDailyPricingV1Input | null | undefined;
+  monthlyV1?: ProductVersionMonthlyPricingV1Input | null | undefined;
+  oneTimeV1?: ProductVersionOneTimePricingV1Input | null | undefined;
+  perMinuteV1?: ProductVersionPerMinutePricingV1Input | null | undefined;
+  weeklyV1?: ProductVersionWeeklyPricingV1Input | null | undefined;
+};
+export type ProductVersionDailyPricingV1Input = {
+  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  currency: Currency;
+  description: string;
+  index: number;
+  isTaxInclusive: boolean;
+  name: string;
+  price: any;
+};
+export type ProductVersionMonthlyPricingV1Input = {
+  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  currency: Currency;
+  description: string;
+  index: number;
+  isTaxInclusive: boolean;
+  name: string;
+  price: any;
+};
+export type ProductVersionOneTimePricingV1Input = {
+  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  currency: Currency;
+  description: string;
+  index: number;
+  isTaxInclusive: boolean;
+  name: string;
+  price: any;
+};
+export type ProductVersionPerMinutePricingV1Input = {
+  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  currency: Currency;
+  description: string;
+  index: number;
+  isTaxInclusive: boolean;
+  name: string;
+  price: any;
+};
+export type ProductVersionWeeklyPricingV1Input = {
+  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  currency: Currency;
+  description: string;
+  index: number;
+  isTaxInclusive: boolean;
+  name: string;
+  price: any;
 };
 export type editProduct_updateProductMutation$variables = {
   input: UpdateProductInput;

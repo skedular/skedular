@@ -89,7 +89,8 @@ public class Mapper : IMapper
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
             ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList()
+            LocationTags = MapTo(src.LocationTags).ToList(),
+            PricingOptions = src.PricingOptions
         };
 
     public ProductVersion MapTo(AddProductInput src) =>
@@ -105,12 +106,13 @@ public class Mapper : IMapper
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToList(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            PricingOptions = src.PricingOptions.ToList()
         };
 
     public ProductVersion MapTo(UpdateProductInput src) =>
@@ -126,12 +128,13 @@ public class Mapper : IMapper
             MaxDurationMinutes = src.MaxDurationMinutes,
             BookAllLocationResources = src.BookAllLocationResources,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToList(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList()
+            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            PricingOptions = src.PricingOptions.ToList()
         };
 
     public ProductDetails? MapTo(Product? src)
@@ -170,7 +173,8 @@ public class Mapper : IMapper
             LocationTagIds = productVersion.LocationTags.Select(item => item.Id),
             OrganizationId = src.Organization.Id,
             OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
-            LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id
+            LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
+            PricingOptions = productVersion.PricingOptions
         };
     }
 
@@ -204,7 +208,8 @@ public class Mapper : IMapper
             AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods
                 .Select(item => new PaymentMethodTypeDetails { Type = item, Name = item.ToPaymentMethodName() }),
             ProductTagIds = src.ProductTags.Select(item => item.Id),
-            LocationTagIds = src.LocationTags.Select(item => item.Id)
+            LocationTagIds = src.LocationTags.Select(item => item.Id),
+            PricingOptions = src.PricingOptions
         };
     }
 
@@ -214,13 +219,7 @@ public class Mapper : IMapper
         Organization organization,
         ICollection<OrganizationTag> productTags,
         ICollection<OrganizationTag> locationTags) =>
-        MergeTo(
-            src,
-            productVersion,
-            new Shared.Database.Entities.Product(),
-            organization,
-            productTags,
-            locationTags);
+        MergeTo(src, new Shared.Database.Entities.Product(), organization);
 
     public Shared.Database.Entities.Product MergeTo(Shared.Database.Entities.Product dest, Organization organization)
     {
@@ -277,13 +276,7 @@ public class Mapper : IMapper
 
     private IEnumerable<ProductVersion> MapTo(IEnumerable<Shared.Database.Entities.ProductVersion> src) => src.Select(MapTo);
 
-    private static Shared.Database.Entities.Product MergeTo(
-        Product src,
-        ProductVersion productVersion,
-        Shared.Database.Entities.Product dest,
-        Organization organization,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags)
+    private static Shared.Database.Entities.Product MergeTo(Product src, Shared.Database.Entities.Product dest, Organization organization)
     {
         dest.Id = src.Id;
         dest.Inactive = src.Inactive;
@@ -316,6 +309,7 @@ public class Mapper : IMapper
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
         dest.Product = product;
+        dest.PricingOptions = src.PricingOptions;
         return dest;
     }
 }

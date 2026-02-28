@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -22,6 +23,7 @@ public class ProductVersion : EntityBase
     public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
     public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
     public ICollection<string>? AcceptedBookingPaymentMethods { get; set; } = [];
+    public ICollection<ProductVersionPricingOptions>? PricingOptions { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
@@ -30,8 +32,7 @@ public class ProductVersion : EntityBase
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
     public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public virtual ICollection<MarketplaceBooking> MarketplaceBookings { get; set; } = [];
-    public virtual StripeProduct? StripeProduct { get; set; }
-    public virtual StripePrice? StripePrice { get; set; }
+    public virtual ICollection<StripeProduct> StripeProducts { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
@@ -54,6 +55,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
             .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
             .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
         builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb");
+        builder.Property(item => item.PricingOptions).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);

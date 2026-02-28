@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
@@ -14,9 +15,11 @@ using Temporalio.Client;
 namespace Booking.Shared.Database.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260228214834_AddPricingOptionsToProductVersion")]
+    partial class AddPricingOptionsToProductVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -839,6 +842,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(16)");
 
                     b.Property<ICollection<ProductVersionPricingOptions>>("PricingOptions")
+                        .IsRequired()
                         .HasColumnType("jsonb");
 
                     b.Property<string>("ProductId")
@@ -1222,6 +1226,9 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("ProductVersionId")
+                        .HasColumnType("character varying(100)");
+
                     b.Property<string>("StripePriceId")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1237,6 +1244,9 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("DeletedAt");
 
                     b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("ProductVersionId")
+                        .IsUnique();
 
                     b.HasIndex("StripeProductId")
                         .IsUnique();
@@ -1265,13 +1275,7 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("PricingCadence")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
                     b.Property<string>("ProductVersionId")
-                        .IsRequired()
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("StripeAccountId")
@@ -1292,13 +1296,10 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasIndex("ModifiedAt");
 
-                    b.HasIndex("PricingCadence");
-
-                    b.HasIndex("ProductVersionId");
+                    b.HasIndex("ProductVersionId")
+                        .IsUnique();
 
                     b.HasIndex("StripeAccountId");
-
-                    b.HasIndex("StripeProductId");
 
                     b.ToTable("StripeProduct");
                 });
@@ -2042,9 +2043,15 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.StripePrice", b =>
                 {
+                    b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
+                        .WithOne("StripePrice")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripePrice", "ProductVersionId");
+
                     b.HasOne("Booking.Shared.Database.Entities.StripeProduct", "StripeProduct")
                         .WithOne("StripePrice")
                         .HasForeignKey("Booking.Shared.Database.Entities.StripePrice", "StripeProductId");
+
+                    b.Navigation("ProductVersion");
 
                     b.Navigation("StripeProduct");
                 });
@@ -2052,10 +2059,8 @@ namespace Booking.Shared.Database.Migrations
             modelBuilder.Entity("Booking.Shared.Database.Entities.StripeProduct", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.ProductVersion", "ProductVersion")
-                        .WithMany("StripeProducts")
-                        .HasForeignKey("ProductVersionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("StripeProduct")
+                        .HasForeignKey("Booking.Shared.Database.Entities.StripeProduct", "ProductVersionId");
 
                     b.Navigation("ProductVersion");
                 });
@@ -2428,7 +2433,9 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.ProductVersion", b =>
                 {
-                    b.Navigation("StripeProducts");
+                    b.Navigation("StripePrice");
+
+                    b.Navigation("StripeProduct");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.RecurringBooking", b =>

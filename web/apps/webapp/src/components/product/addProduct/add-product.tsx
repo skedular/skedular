@@ -385,6 +385,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
           acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
+          pricingOptions: [],
         },
       },
       onCompleted: (_, errors) => {

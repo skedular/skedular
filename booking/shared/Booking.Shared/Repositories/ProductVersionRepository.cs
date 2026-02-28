@@ -9,7 +9,6 @@ namespace Booking.Shared.Repositories;
 public interface IProductVersionRepository : IRepository<ProductVersion>
 {
     Task<ProductVersion> UpsertNakedAsync(string id, Product? product, CancellationToken cancellationToken);
-    Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken);
     ProductVersion Update(ProductVersion product);
 }
@@ -24,8 +23,8 @@ internal static class ProductVersionExtensions
                 .ThenInclude(query => query.Organization)
                 .Include(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
                 .Include(query => query.LocationTags.Where(tag => !tag.DeletedAt.HasValue))
-                .Include(query => query.StripeProduct)
-                .Include(query => query.StripePrice);
+                .Include(query => query.StripeProducts)
+                .ThenInclude(query => query.StripePrice);
     }
 }
 
@@ -39,11 +38,6 @@ public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider t
         return (await GetByIdAsync(id, cancellationToken))!;
     }
 
-    public async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.ProductVersion
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
     public async Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken) =>
         await DbContext.ProductVersion
             .Where(query => ids.Contains(query.Id))
@@ -56,4 +50,9 @@ public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider t
         product.ModifiedAt = now;
         return DbContext.ProductVersion.Update(product).Entity;
     }
+
+    private async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
+        await DbContext.ProductVersion
+            .AddDependentObjects()
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

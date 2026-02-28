@@ -459,6 +459,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           maxAllowedResourcesLockTimePaidViaCard,
           maxAllowedResourcesLockTimePaidViaBankTransfer,
           acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
+          pricingOptions: [],
         },
       },
       onCompleted: (_, errors) => {

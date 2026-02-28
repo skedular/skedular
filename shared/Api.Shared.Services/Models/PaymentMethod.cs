@@ -2,8 +2,8 @@ namespace Api.Shared.Services.Models;
 
 public enum PaymentMethod
 {
-    Card,
-    BankTransfer
+    Card = 0,
+    BankTransfer = 1
 }
 
 public static class PaymentMethodConstants

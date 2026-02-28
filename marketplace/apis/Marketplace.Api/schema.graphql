@@ -81,6 +81,7 @@ type ProductDetails {
   numberOfResourcesToBook: Int!
   latestProductVersionId: String!
   featureImages: [CdnImageFile!]!
+  pricingOptions: [ProductVersionPricingOptions!]!
   id: ID!
 }
 
@@ -92,6 +93,16 @@ type ProductEdge {
 type ProductPayload {
   clientMutationId: String
   product: ProductDetails!
+}
+
+type ProductVersionDailyPricingV1 {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
 }
 
 type ProductVersionDetails {
@@ -114,7 +125,57 @@ type ProductVersionDetails {
   bookAllLocationResources: Boolean!
   numberOfResourcesToBook: Int!
   featureImages: [CdnImageFile!]!
+  pricingOptions: [ProductVersionPricingOptions!]!
   id: ID!
+}
+
+type ProductVersionMonthlyPricingV1 {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+type ProductVersionOneTimePricingV1 {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+type ProductVersionPerMinutePricingV1 {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+type ProductVersionPricingOptions {
+  cadence: ProductVersionPricingCadence!
+  oneTimeV1: ProductVersionOneTimePricingV1
+  perMinuteV1: ProductVersionPerMinutePricingV1
+  dailyV1: ProductVersionDailyPricingV1
+  weeklyV1: ProductVersionWeeklyPricingV1
+  monthlyV1: ProductVersionMonthlyPricingV1
+}
+
+type ProductVersionWeeklyPricingV1 {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
 }
 
 type ProductsPayload {
@@ -169,6 +230,7 @@ input AddProductInput {
   productTagIds: [String!]!
   locationTagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
+  pricingOptions: [ProductVersionPricingOptionsInput!]!
 }
 
 input CdnFileInput {
@@ -197,10 +259,68 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
+input ProductVersionDailyPricingV1Input {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+input ProductVersionMonthlyPricingV1Input {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+input ProductVersionOneTimePricingV1Input {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+input ProductVersionPerMinutePricingV1Input {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
+input ProductVersionPricingOptionsInput {
+  cadence: ProductVersionPricingCadence!
+  oneTimeV1: ProductVersionOneTimePricingV1Input
+  perMinuteV1: ProductVersionPerMinutePricingV1Input
+  dailyV1: ProductVersionDailyPricingV1Input
+  weeklyV1: ProductVersionWeeklyPricingV1Input
+  monthlyV1: ProductVersionMonthlyPricingV1Input
+}
+
+input ProductVersionWeeklyPricingV1Input {
+  index: Int!
+  name: String!
+  description: String!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  currency: Currency!
+  acceptedPaymentMethods: [PaymentMethod!]!
+}
+
 input ProductWhereInput {
   organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
-  nameContains: String
   includeInactive: Boolean!
 }
 
@@ -223,6 +343,7 @@ input UpdateProductInput {
   productTagIds: [String!]!
   locationTagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
+  pricingOptions: [ProductVersionPricingOptionsInput!]!
 }
 
 enum Currency {
@@ -250,9 +371,20 @@ enum ProductOrderField {
   NAME
 }
 
+enum ProductVersionPricingCadence {
+  ONE_TIME_V1
+  PER_MINUTE_V1
+  DAILY_V1
+  WEEKLY_V1
+  MONTHLY_V1
+}
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
 
 directive @internal on FIELD_DEFINITION
 
 directive @lookup on FIELD_DEFINITION
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal
