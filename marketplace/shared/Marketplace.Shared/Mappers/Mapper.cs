@@ -110,7 +110,11 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
-            Currency = MapTo(src.Currency)
+            Currency = MapTo(src.Currency),
+            MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
+            MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         pricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
@@ -132,7 +136,11 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
-            Currency = MapTo(src.Currency)
+            Currency = MapTo(src.Currency),
+            MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
+            MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         pricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
@@ -154,7 +162,11 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
-            Currency = MapTo(src.Currency)
+            Currency = MapTo(src.Currency),
+            MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
+            MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         pricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
@@ -176,7 +188,11 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
-            Currency = MapTo(src.Currency)
+            Currency = MapTo(src.Currency),
+            MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
+            MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         pricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
@@ -198,7 +214,11 @@ public class Mapper : IMapper
             Description = src.Description.ToSafeString(),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
-            Currency = MapTo(src.Currency)
+            Currency = MapTo(src.Currency),
+            MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
+            MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
+            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
+            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer
         };
 
         pricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));

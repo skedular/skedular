@@ -628,7 +628,11 @@ public class Mapper : IMapper
                 Convert.ToDecimal(src.Price),
                 src.IsTaxInclusive,
                 MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList());
+                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+                src.MinDurationMinutes.FromNullInt(),
+                src.MaxDurationMinutes.FromNullInt(),
+                src.MaxAllowedResourcesLockTimePaidViaCard,
+                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
     private static Api.Shared.Services.Models.ProductVersionPerMinutePricingV1? MapTo(ProductVersionPerMinutePricingV1? src) =>
         src is null
@@ -640,7 +644,11 @@ public class Mapper : IMapper
                 Convert.ToDecimal(src.Price),
                 src.IsTaxInclusive,
                 MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList());
+                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+                src.MinDurationMinutes.FromNullInt(),
+                src.MaxDurationMinutes.FromNullInt(),
+                src.MaxAllowedResourcesLockTimePaidViaCard,
+                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
     private static Api.Shared.Services.Models.ProductVersionDailyPricingV1? MapTo(ProductVersionDailyPricingV1? src) =>
         src is null
@@ -652,7 +660,11 @@ public class Mapper : IMapper
                 Convert.ToDecimal(src.Price),
                 src.IsTaxInclusive,
                 MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList());
+                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+                src.MinDurationMinutes.FromNullInt(),
+                src.MaxDurationMinutes.FromNullInt(),
+                src.MaxAllowedResourcesLockTimePaidViaCard,
+                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
     private static Api.Shared.Services.Models.ProductVersionWeeklyPricingV1? MapTo(ProductVersionWeeklyPricingV1? src) =>
         src is null
@@ -664,7 +676,11 @@ public class Mapper : IMapper
                 Convert.ToDecimal(src.Price),
                 src.IsTaxInclusive,
                 MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList());
+                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+                src.MinDurationMinutes.FromNullInt(),
+                src.MaxDurationMinutes.FromNullInt(),
+                src.MaxAllowedResourcesLockTimePaidViaCard,
+                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
     private static Api.Shared.Services.Models.ProductVersionMonthlyPricingV1? MapTo(ProductVersionMonthlyPricingV1? src) =>
         src is null
@@ -676,7 +692,11 @@ public class Mapper : IMapper
                 Convert.ToDecimal(src.Price),
                 src.IsTaxInclusive,
                 MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList());
+                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+                src.MinDurationMinutes.FromNullInt(),
+                src.MaxDurationMinutes.FromNullInt(),
+                src.MaxAllowedResourcesLockTimePaidViaCard,
+                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
     private static IEnumerable<Api.Shared.Services.Models.PaymentMethod> MapTo(IEnumerable<PaymentMethod> src) =>
         src.Select(MapTo);

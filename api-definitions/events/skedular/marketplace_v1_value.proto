@@ -96,6 +96,10 @@ message ProductVersionOneTimePricingV1 {
   bool isTaxInclusive = 5;
   Currency currency = 6;
   repeated PaymentMethod acceptedBookingPaymentMethods = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 10;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 11;
 }
 
 message ProductVersionPerMinutePricingV1 {
@@ -106,6 +110,10 @@ message ProductVersionPerMinutePricingV1 {
   bool isTaxInclusive = 5;
   Currency currency = 6;
   repeated PaymentMethod acceptedBookingPaymentMethods = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 10;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 11;
 }
 
 message ProductVersionDailyPricingV1 {
@@ -116,6 +124,10 @@ message ProductVersionDailyPricingV1 {
   bool isTaxInclusive = 5;
   Currency currency = 6;
   repeated PaymentMethod acceptedBookingPaymentMethods = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 10;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 11;
 }
 
 message ProductVersionWeeklyPricingV1 {
@@ -126,6 +138,10 @@ message ProductVersionWeeklyPricingV1 {
   bool isTaxInclusive = 5;
   Currency currency = 6;
   repeated PaymentMethod acceptedBookingPaymentMethods = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 10;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 11;
 }
 
 message ProductVersionMonthlyPricingV1 {
@@ -136,6 +152,10 @@ message ProductVersionMonthlyPricingV1 {
   bool isTaxInclusive = 5;
   Currency currency = 6;
   repeated PaymentMethod acceptedBookingPaymentMethods = 7;
+  int32 minDurationMinutes = 8;
+  int32 maxDurationMinutes = 9;
+  int32 maxAllowedResourcesLockTimePaidViaCard = 10;
+  int32 maxAllowedResourcesLockTimePaidViaBankTransfer = 11;
 }
 
 message ProductVersionPricingOptions {

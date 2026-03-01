@@ -19,11 +19,11 @@ public class ProductVersion : EntityBase
     public string Currency { get; set; }
     public int? MinDurationMinutes { get; set; }
     public int? MaxDurationMinutes { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
+    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
     public bool BookAllLocationResources { get; set; }
     public int NumberOfResourcesToBook { get; set; }
     public ICollection<CdnImageFile>? FeatureImages { get; set; }
-    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
-    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
     public ICollection<string> AcceptedBookingPaymentMethods { get; set; } = [];
     public ICollection<ProductVersionPricingOptions> PricingOptions { get; set; } = [];
 

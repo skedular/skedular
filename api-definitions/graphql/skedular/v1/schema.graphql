@@ -1014,6 +1014,10 @@ type ProductVersionDailyPricingV1 {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -1048,6 +1052,10 @@ type ProductVersionMonthlyPricingV1 {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -1058,6 +1066,10 @@ type ProductVersionOneTimePricingV1 {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -1068,6 +1080,10 @@ type ProductVersionPerMinutePricingV1 {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -1087,6 +1103,10 @@ type ProductVersionWeeklyPricingV1 {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -2227,6 +2247,10 @@ input ProductVersionDailyPricingV1Input {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -2237,6 +2261,10 @@ input ProductVersionMonthlyPricingV1Input {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -2247,6 +2275,10 @@ input ProductVersionOneTimePricingV1Input {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -2257,6 +2289,10 @@ input ProductVersionPerMinutePricingV1Input {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }
@@ -2276,6 +2312,10 @@ input ProductVersionWeeklyPricingV1Input {
   description: String!
   index: Int!
   isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
   name: String!
   price: Decimal!
 }

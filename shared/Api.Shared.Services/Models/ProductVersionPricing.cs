@@ -7,7 +7,11 @@ public record ProductVersionOneTimePricingV1(
     decimal Price,
     bool IsTaxInclusive,
     Currency Currency,
-    ICollection<PaymentMethod> AcceptedPaymentMethods);
+    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    int? MinDurationMinutes,
+    int? MaxDurationMinutes,
+    int MaxAllowedResourcesLockTimePaidViaCard,
+    int MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
 public record ProductVersionPerMinutePricingV1(
     int Index,
@@ -16,7 +20,11 @@ public record ProductVersionPerMinutePricingV1(
     decimal Price,
     bool IsTaxInclusive,
     Currency Currency,
-    ICollection<PaymentMethod> AcceptedPaymentMethods);
+    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    int? MinDurationMinutes,
+    int? MaxDurationMinutes,
+    int MaxAllowedResourcesLockTimePaidViaCard,
+    int MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
 public record ProductVersionDailyPricingV1(
     int Index,
@@ -25,7 +33,11 @@ public record ProductVersionDailyPricingV1(
     decimal Price,
     bool IsTaxInclusive,
     Currency Currency,
-    ICollection<PaymentMethod> AcceptedPaymentMethods);
+    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    int? MinDurationMinutes,
+    int? MaxDurationMinutes,
+    int MaxAllowedResourcesLockTimePaidViaCard,
+    int MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
 public record ProductVersionWeeklyPricingV1(
     int Index,
@@ -34,7 +46,11 @@ public record ProductVersionWeeklyPricingV1(
     decimal Price,
     bool IsTaxInclusive,
     Currency Currency,
-    ICollection<PaymentMethod> AcceptedPaymentMethods);
+    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    int? MinDurationMinutes,
+    int? MaxDurationMinutes,
+    int MaxAllowedResourcesLockTimePaidViaCard,
+    int MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
 public record ProductVersionMonthlyPricingV1(
     int Index,
@@ -43,7 +59,11 @@ public record ProductVersionMonthlyPricingV1(
     decimal Price,
     bool IsTaxInclusive,
     Currency Currency,
-    ICollection<PaymentMethod> AcceptedPaymentMethods);
+    ICollection<PaymentMethod> AcceptedPaymentMethods,
+    int? MinDurationMinutes,
+    int? MaxDurationMinutes,
+    int MaxAllowedResourcesLockTimePaidViaCard,
+    int MaxAllowedResourcesLockTimePaidViaBankTransfer);
 
 public record ProductVersionPricingOptions(
     ProductVersionPricingCadence Cadence,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3be0df9d4d1c21710b21dba423333c71>>
+ * @generated SignedSource<<0bcbbd3be3b24de645fc24497f8c9f43>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,6 +57,10 @@ export type ProductVersionDailyPricingV1Input = {
   description: string;
   index: number;
   isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
+  maxDurationMinutes?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
   name: string;
   price: any;
 };
@@ -66,6 +70,10 @@ export type ProductVersionMonthlyPricingV1Input = {
   description: string;
   index: number;
   isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
+  maxDurationMinutes?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
   name: string;
   price: any;
 };
@@ -75,6 +83,10 @@ export type ProductVersionOneTimePricingV1Input = {
   description: string;
   index: number;
   isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
+  maxDurationMinutes?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
   name: string;
   price: any;
 };
@@ -84,6 +96,10 @@ export type ProductVersionPerMinutePricingV1Input = {
   description: string;
   index: number;
   isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
+  maxDurationMinutes?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
   name: string;
   price: any;
 };
@@ -93,6 +109,10 @@ export type ProductVersionWeeklyPricingV1Input = {
   description: string;
   index: number;
   isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+  maxAllowedResourcesLockTimePaidViaCard: number;
+  maxDurationMinutes?: number | null | undefined;
+  minDurationMinutes?: number | null | undefined;
   name: string;
   price: any;
 };
