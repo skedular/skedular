@@ -1,20 +1,16 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Random;
 using Stripe;
 using Product = Stripe.Product;
-using ProductVersion = Booking.Shared.Models.ProductVersion;
 
 namespace Booking.Shared.Services;
 
 public interface IStripeProductPricingService
 {
-    Task<StripeProduct> UpsertProductPricingAsync(
-        ProductVersion productVersion,
-        Database.Entities.ProductVersion productVersionEntity,
-        string stripeAccountId,
-        CancellationToken cancellationToken);
+    ValueTask UpsertProductPricingAsync(ProductVersion productVersion, string stripeAccountId, CancellationToken cancellationToken);
 }
 
 public class StripeProductPricingService(
@@ -22,48 +18,56 @@ public class StripeProductPricingService(
     IMapper mapper,
     IRandomHelper randomHelper,
     ICreatable<Product, ProductCreateOptions> productCreateService,
-    ICreatable<Price, PriceCreateOptions> priceCreateService) : IStripeProductPricingService
+    ICreatable<Price, PriceCreateOptions> priceCreateService,
+    IProductVersionHelperService productVersionHelperService) : IStripeProductPricingService
 {
-    public async Task<StripeProduct> UpsertProductPricingAsync(
-        ProductVersion productVersion,
-        Database.Entities.ProductVersion productVersionEntity,
-        string stripeAccountId,
-        CancellationToken cancellationToken)
+    public async ValueTask UpsertProductPricingAsync(ProductVersion productVersion, string stripeAccountId, CancellationToken cancellationToken)
     {
-        StripeProduct stripeProductEntity;
-        if (productVersionEntity.StripeProducts.Count == 0)
-        {
-            var stripeProduct = await productCreateService.CreateAsync(
-                mapper.MapTo(productVersion, productVersion.Product, productVersion.Product.Organization.Id),
-                new RequestOptions { IdempotencyKey = productVersion.Id, StripeAccount = stripeAccountId },
-                cancellationToken);
+        var pricingOptions = productVersion.PricingOptions;
+        ArgumentNullException.ThrowIfNull(pricingOptions);
 
-            stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
+        foreach (var pricing in pricingOptions)
+        {
+            var stripeProductEntity = productVersionHelperService.FindMatchingPricing(productVersion.StripeProducts, pricing);
+            if (stripeProductEntity is null)
             {
-                Id = randomHelper.Generate(),
-                StripeProductId = stripeProduct.Id,
-                StripeAccountId = stripeAccountId,
-                ProductVersion = productVersionEntity
-            });
-        }
-        else
-        {
-            stripeProductEntity = productVersionEntity.StripeProducts.First();
-        }
+                var productId = randomHelper.Generate();
+                var stripeProduct = await productCreateService.CreateAsync(
+                    mapper.MapTo(pricing, productVersion),
+                    new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{productId}", StripeAccount = stripeAccountId },
+                    cancellationToken);
 
-        if (stripeProductEntity.StripePrice is null)
-        {
+                stripeProductEntity = repositoryFactory.StripeProductRepository.Add(new StripeProduct
+                {
+                    Id = productId,
+                    ProductPricingId = pricing.Id,
+                    PricingCadence = pricing.Cadence.ToProductPricingCadence(),
+                    NumberOfResourcesToBook = pricing.NumberOfResourcesToBook,
+                    StripeProductId = stripeProduct.Id,
+                    StripeAccountId = stripeAccountId,
+                    ProductVersion = productVersion
+                });
+
+                await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            }
+
+            if (stripeProductEntity.StripePrice is not null)
+            {
+                continue;
+            }
+
+            var priceId = randomHelper.Generate();
             var stripePrice = await priceCreateService.CreateAsync(
-                mapper.MapTo(productVersion, productVersion.Product, productVersion.Product.Organization.Id, stripeProductEntity.StripeProductId),
-                new RequestOptions { IdempotencyKey = $"{productVersion.Id}-price", StripeAccount = stripeAccountId },
+                mapper.MapTo(pricing, stripeProductEntity),
+                new RequestOptions { IdempotencyKey = $"{productVersion.Id}-{priceId}-price", StripeAccount = stripeAccountId },
                 cancellationToken);
 
             _ = repositoryFactory.StripePriceRepository.Add(new StripePrice
             {
-                Id = randomHelper.Generate(), StripePriceId = stripePrice.Id, StripeProduct = stripeProductEntity
+                Id = priceId, StripePriceId = stripePrice.Id, StripeProduct = stripeProductEntity
             });
-        }
 
-        return stripeProductEntity;
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
     }
 }

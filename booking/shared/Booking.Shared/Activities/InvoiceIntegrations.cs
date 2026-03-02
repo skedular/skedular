@@ -37,15 +37,17 @@ public class InvoiceIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
+        if (booking is null || booking.IsDeleted())
         {
             return;
         }
 
         var marketplaceBooking = booking.MarketplaceBooking;
-        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        var organizationId = productVersions.First().Product.Organization.Id;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        var organizationId = productVersion.Product.Organization.Id;
 
         if (string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceNumber))
         {

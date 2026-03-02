@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e854c106b87f333952a5db72337fcd87>>
+ * @generated SignedSource<<491b8eceabfbec86765fc4ffaf03ca73>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,14 +63,6 @@ export type payMarketplaceBooking_booking_query$data = {
       } | null | undefined;
       readonly invoiceUrl: string | null | undefined;
       readonly isPaymentRequired: boolean;
-      readonly lineItems: ReadonlyArray<{
-        readonly productVersion: {
-          readonly id: string;
-          readonly name: string;
-          readonly priceToDisplay: string;
-        };
-        readonly quantity: number;
-      }>;
       readonly paymentExpiry: any;
       readonly paymentMethod: {
         readonly type: PaymentMethod;
@@ -79,6 +71,11 @@ export type payMarketplaceBooking_booking_query$data = {
         readonly name: string;
         readonly type: PaymentStatus;
       };
+      readonly productPricing: {
+        readonly name: string;
+        readonly price: any;
+      };
+      readonly quantity: number;
       readonly taxAmountToDisplay: string;
       readonly totalAmountExcludeTaxToDisplay: string;
       readonly totalAmountToDisplay: string;
@@ -403,36 +400,24 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "LineItemDetails",
+              "kind": "ScalarField",
+              "name": "quantity",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ProductPricing",
               "kind": "LinkedField",
-              "name": "lineItems",
-              "plural": true,
+              "name": "productPricing",
+              "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "quantity",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "ProductVersionDetails",
-                  "kind": "LinkedField",
-                  "name": "productVersion",
-                  "plural": false,
-                  "selections": [
-                    (v0/*: any*/),
-                    (v1/*: any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "priceToDisplay",
-                      "storageKey": null
-                    }
-                  ],
+                  "name": "price",
                   "storageKey": null
                 }
               ],
@@ -501,6 +486,6 @@ return {
 };
 })();
 
-(node as any).hash = "41140f27f2a7e7c65fbef59de44bf770";
+(node as any).hash = "7e21aebb5bd9495c8055cc2ab2166447";
 
 export default node;

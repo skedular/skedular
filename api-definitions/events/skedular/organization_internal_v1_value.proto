@@ -17,10 +17,10 @@ message Event {
 }
 
 message Metadata {
-  string id = 1;
-  string domainSource = 2;
-  string appSource = 3;
-  Type type = 4;
-  google.protobuf.Timestamp time = 5;
-  string correlationId = 6;
+  string                    id            = 1;
+  string                    domainSource  = 2;
+  string                    appSource     = 3;
+  Type                      type          = 4;
+  google.protobuf.Timestamp time          = 5;
+  string                    correlationId = 6;
 }

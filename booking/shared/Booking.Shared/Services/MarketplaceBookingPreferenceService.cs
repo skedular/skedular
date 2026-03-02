@@ -12,7 +12,7 @@ public interface IMarketplaceBookingPreferenceService
         DateTimeOffset from,
         DateTimeOffset until,
         ProductVersion productVersion,
-        int quantity,
+        int numberOfResourcesToBook,
         CancellationToken cancellationToken);
 }
 
@@ -23,20 +23,18 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         DateTimeOffset from,
         DateTimeOffset until,
         ProductVersion productVersion,
-        int quantity,
+        int numberOfResourcesToBook,
         CancellationToken cancellationToken)
     {
-        quantity *= productVersion.NumberOfResourcesToBook ?? 1;
-
         var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.ProductTags, cancellationToken);
-        if (availableResources.Count < quantity)
+        if (availableResources.Count < numberOfResourcesToBook)
         {
             throw new NoResourceAvailable();
         }
 
         if (customer is null)
         {
-            return availableResources.Take(quantity).ToList();
+            return availableResources.Take(numberOfResourcesToBook).ToList();
         }
 
         var customerPreferredResourceIds = customer.PreferredResources.Select(item => item.Id).ToList();
@@ -52,67 +50,46 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         foreach (var resource in availableResources.Where(item => customerPreferredResourceIds.Any(resourceId => resourceId == item.Id)))
         {
             resources.Add(resource);
-            if (resources.Count == quantity)
+            if (resources.Count == numberOfResourcesToBook)
             {
-                break;
+                return resources;
             }
-        }
-
-        if (resources.Count == quantity)
-        {
-            return resources;
         }
 
         foreach (var resource in availableResources.Where(item =>
                      item.Location is not null && customerPreferredLocationIds.Any(locationId => locationId == item.Location.Id)))
         {
             resources.Add(resource);
-            if (resources.Count == quantity)
+            if (resources.Count == numberOfResourcesToBook)
             {
-                break;
+                return resources;
             }
         }
-
-        if (resources.Count == quantity)
-        {
-            return resources;
-        }
-
 
         foreach (var resource in availableResources.Where(item =>
                      customerPreferredZoneTagIds.Any(tagId => item.OrganizationTags.Any(tag => tagId == tag.Id))))
         {
             resources.Add(resource);
-            if (resources.Count == quantity)
+            if (resources.Count == numberOfResourcesToBook)
             {
-                break;
+                return resources;
             }
-        }
-
-        if (resources.Count == quantity)
-        {
-            return resources;
         }
 
         foreach (var resource in availableResources.Where(item =>
                      customerPreferredCustomTagIds.Any(tagId => item.OrganizationTags.Any(tag => tagId == tag.Id))))
         {
             resources.Add(resource);
-            if (resources.Count == quantity)
+            if (resources.Count == numberOfResourcesToBook)
             {
-                break;
+                return resources;
             }
-        }
-
-        if (resources.Count == quantity)
-        {
-            return resources;
         }
 
         var selectedResourceIds = resources.Select(item => item.Id).ToList();
         var unselectedResources = availableResources.Where(item => !selectedResourceIds.Contains(item.Id)).ToList();
 
-        return resources.Concat(unselectedResources.Take(quantity - resources.Count)).ToList();
+        return resources.Concat(unselectedResources.Take(numberOfResourcesToBook - resources.Count)).ToList();
     }
 
     private async Task<ICollection<Resource>> GetAvailableResourcesAsync(

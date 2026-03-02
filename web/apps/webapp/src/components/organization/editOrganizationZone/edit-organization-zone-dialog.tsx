@@ -149,15 +149,15 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
                 <LeadIconTypography label="Edit zone details" />
                 <SmallIconTypography label="Enter the name of the zone to update." />
 
-                <FormFieldLabel label="Name" useWiderSpace>
+                <FormFieldLabel label="Name">
                   <TextField name="name" required={requiredFields.name} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Description" useWiderSpace>
+                <FormFieldLabel label="Description">
                   <TextField name="description" required={requiredFields.description} multiline rows={3} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Color" useWiderSpace>
+                <FormFieldLabel label="Color">
                   <ColorPicker onChange={handleColorChange} defaultColor={rootData.zone?.color} />
                 </FormFieldLabel>
 

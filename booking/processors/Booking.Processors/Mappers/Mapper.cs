@@ -14,16 +14,11 @@ using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
-using ProductVersionPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionPricingCadence;
+using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence;
 using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
-using ProductVersionOneTimePricingV1 = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionOneTimePricingV1;
-using ProductVersionPerMinutePricingV1 = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionPerMinutePricingV1;
-using ProductVersionDailyPricingV1 = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionDailyPricingV1;
-using ProductVersionWeeklyPricingV1 = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionWeeklyPricingV1;
-using ProductVersionMonthlyPricingV1 = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionMonthlyPricingV1;
-using ProductVersionPricingOptions = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersionPricingOptions;
+using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
 
@@ -362,18 +357,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
-        dest.Price = src.Price;
-        dest.PriceUnit = src.PriceUnit.ToPriceUnit();
-        dest.IsPriceTaxInclusive = src.IsPriceTaxInclusive;
-        dest.PricePerMinute = src.Price;
         dest.Currency = src.Currency.ToCurrency();
-        dest.MinDurationMinutes = src.MinDurationMinutes;
-        dest.MaxDurationMinutes = src.MaxDurationMinutes;
-        dest.BookAllLocationResources = src.BookAllLocationResources;
-        dest.NumberOfResourcesToBook = src.NumberOfResourcesToBook;
-        dest.MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard;
-        dest.MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer;
-        dest.AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList();
         dest.Product = product;
         dest.ProductTags = productTags;
         dest.LocationTags = locationTags;
@@ -572,131 +556,45 @@ public class Mapper : IMapper
             string.IsNullOrWhiteSpace(src.From) ? null : TimeOnly.Parse(src.From),
             string.IsNullOrWhiteSpace(src.Until) ? null : TimeOnly.Parse(src.Until));
 
-    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product)
-    {
-        var price = Convert.ToDecimal(src.Price);
-
-        return new ProductVersion
+    private static ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
+        new()
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            Price = price,
-            IsPriceTaxInclusive = src.IsPriceTaxInclusive,
-            PriceUnit = src.PriceUnit.ToPriceUnit(),
-            PricePerMinute = price,
-            Currency = src.Currency.ToCurrency(),
-            MinDurationMinutes = src.MinDurationMinutes == -1 ? null : src.MinDurationMinutes,
-            MaxDurationMinutes = src.MaxDurationMinutes == -1 ? null : src.MaxDurationMinutes,
-            BookAllLocationResources = src.BookAllLocationResources,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
-            MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
-            MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            AcceptedBookingPaymentMethods = src.AcceptedBookingPaymentMethods.Select(item => item.ToPaymentMethod()).ToList(),
+            Currency = MapTo(src.Currency),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product,
             PricingOptions = MapTo(src.PricingOptions).ToList()
         };
-    }
 
-    private static IEnumerable<Api.Shared.Services.Models.ProductVersionPricingOptions> MapTo(IEnumerable<ProductVersionPricingOptions> src) =>
+    private static IEnumerable<Api.Shared.Services.Models.ProductPricing> MapTo(IEnumerable<ProductPricing> src) =>
         src.Select(MapTo);
 
-    private static Api.Shared.Services.Models.ProductVersionPricingOptions MapTo(ProductVersionPricingOptions src) =>
-        new(src.Cadence switch
+    private static Api.Shared.Services.Models.ProductPricing MapTo(ProductPricing src) =>
+        new(
+            src.Id,
+            src.Index,
+            src.Name.ToSafeString(),
+            src.Description.ToSafeString(),
+            src.Cadence switch
             {
-                ProductVersionPricingCadence.OneTimeV1 => Api.Shared.Services.Models.ProductVersionPricingCadence.OneTimeV1,
-                ProductVersionPricingCadence.PerMinuteV1 => Api.Shared.Services.Models.ProductVersionPricingCadence.PerMinuteV1,
-                ProductVersionPricingCadence.DailyV1 => Api.Shared.Services.Models.ProductVersionPricingCadence.DailyV1,
-                ProductVersionPricingCadence.WeeklyV1 => Api.Shared.Services.Models.ProductVersionPricingCadence.WeeklyV1,
-                ProductVersionPricingCadence.MonthlyV1 => Api.Shared.Services.Models.ProductVersionPricingCadence.MonthlyV1,
+                ProductPricingCadence.OneTimeV1 => Api.Shared.Services.Models.ProductPricingCadence.OneTimeV1,
+                ProductPricingCadence.PerMinuteV1 => Api.Shared.Services.Models.ProductPricingCadence.PerMinuteV1,
+                ProductPricingCadence.PerHourV1 => Api.Shared.Services.Models.ProductPricingCadence.PerHourV1,
+                ProductPricingCadence.DailyV1 => Api.Shared.Services.Models.ProductPricingCadence.DailyV1,
+                ProductPricingCadence.WeeklyV1 => Api.Shared.Services.Models.ProductPricingCadence.WeeklyV1,
+                ProductPricingCadence.MonthlyV1 => Api.Shared.Services.Models.ProductPricingCadence.MonthlyV1,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            MapTo(src.OneTimeV1),
-            MapTo(src.PerMinuteV1),
-            MapTo(src.DailyV1),
-            MapTo(src.WeeklyV1),
-            MapTo(src.MonthlyV1));
-
-    private static Api.Shared.Services.Models.ProductVersionOneTimePricingV1? MapTo(ProductVersionOneTimePricingV1? src) =>
-        src is null
-            ? null
-            : new Api.Shared.Services.Models.ProductVersionOneTimePricingV1(
-                src.Index,
-                src.Name.ToSafeString(),
-                src.Description.ToSafeString(),
-                Convert.ToDecimal(src.Price),
-                src.IsTaxInclusive,
-                MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-                src.MinDurationMinutes.FromNullInt(),
-                src.MaxDurationMinutes.FromNullInt(),
-                src.MaxAllowedResourcesLockTimePaidViaCard,
-                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
-
-    private static Api.Shared.Services.Models.ProductVersionPerMinutePricingV1? MapTo(ProductVersionPerMinutePricingV1? src) =>
-        src is null
-            ? null
-            : new Api.Shared.Services.Models.ProductVersionPerMinutePricingV1(
-                src.Index,
-                src.Name.ToSafeString(),
-                src.Description.ToSafeString(),
-                Convert.ToDecimal(src.Price),
-                src.IsTaxInclusive,
-                MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-                src.MinDurationMinutes.FromNullInt(),
-                src.MaxDurationMinutes.FromNullInt(),
-                src.MaxAllowedResourcesLockTimePaidViaCard,
-                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
-
-    private static Api.Shared.Services.Models.ProductVersionDailyPricingV1? MapTo(ProductVersionDailyPricingV1? src) =>
-        src is null
-            ? null
-            : new Api.Shared.Services.Models.ProductVersionDailyPricingV1(
-                src.Index,
-                src.Name.ToSafeString(),
-                src.Description.ToSafeString(),
-                Convert.ToDecimal(src.Price),
-                src.IsTaxInclusive,
-                MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-                src.MinDurationMinutes.FromNullInt(),
-                src.MaxDurationMinutes.FromNullInt(),
-                src.MaxAllowedResourcesLockTimePaidViaCard,
-                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
-
-    private static Api.Shared.Services.Models.ProductVersionWeeklyPricingV1? MapTo(ProductVersionWeeklyPricingV1? src) =>
-        src is null
-            ? null
-            : new Api.Shared.Services.Models.ProductVersionWeeklyPricingV1(
-                src.Index,
-                src.Name.ToSafeString(),
-                src.Description.ToSafeString(),
-                Convert.ToDecimal(src.Price),
-                src.IsTaxInclusive,
-                MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-                src.MinDurationMinutes.FromNullInt(),
-                src.MaxDurationMinutes.FromNullInt(),
-                src.MaxAllowedResourcesLockTimePaidViaCard,
-                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
-
-    private static Api.Shared.Services.Models.ProductVersionMonthlyPricingV1? MapTo(ProductVersionMonthlyPricingV1? src) =>
-        src is null
-            ? null
-            : new Api.Shared.Services.Models.ProductVersionMonthlyPricingV1(
-                src.Index,
-                src.Name.ToSafeString(),
-                src.Description.ToSafeString(),
-                Convert.ToDecimal(src.Price),
-                src.IsTaxInclusive,
-                MapTo(src.Currency),
-                MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-                src.MinDurationMinutes.FromNullInt(),
-                src.MaxDurationMinutes.FromNullInt(),
-                src.MaxAllowedResourcesLockTimePaidViaCard,
-                src.MaxAllowedResourcesLockTimePaidViaBankTransfer);
+            Convert.ToDecimal(src.Price),
+            src.IsTaxInclusive,
+            MapTo(src.AcceptedBookingPaymentMethods).ToList(),
+            src.MinDurationMinutes.FromNullInt(),
+            src.MaxDurationMinutes.FromNullInt(),
+            src.MaxAllowedResourcesLockTimePaidViaCard,
+            src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            src.NumberOfResourcesToBook);
 
     private static IEnumerable<Api.Shared.Services.Models.PaymentMethod> MapTo(IEnumerable<PaymentMethod> src) =>
         src.Select(MapTo);

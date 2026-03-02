@@ -16,6 +16,7 @@ import type { productCard_query$key } from '@/queries/__generated__/productCard_
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
@@ -41,6 +42,14 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           canModify
         }
+        productPricingCadences {
+          type
+          name
+        }
+        currencies {
+          type
+          name
+        }
       }
     `,
     rootDataRelay,
@@ -53,13 +62,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         inactive
         name
         description
-        priceToDisplay
-        priceUnit {
-          name
-        }
-        numberOfResourcesToBook
-        minDurationMinutes
-        maxDurationMinutes
         organization {
           id
         }
@@ -70,7 +72,16 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
             width
           }
         }
-        isPriceTaxInclusive
+        currency {
+          type
+        }
+        pricingOptions {
+          index
+          name
+          cadence
+          price
+          isTaxInclusive
+        }
       }
     `,
     productDetailsRelay,
@@ -279,6 +290,9 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
     });
   };
 
+  const pricingOptions = [...productDetails.pricingOptions].sort((left, right) => left.index - right.index);
+  const currency = rootData.currencies.find((currency) => currency.type === productDetails.currency.type)?.name;
+
   return (
     <>
       <Card sx={{ width: { xs: '100%', sm: 600 } }}>
@@ -337,24 +351,40 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         <CardContent>
           <BodyIconTypography label={productDetails.description} />
 
-          <StackRow>
-            <BodyIconTypography label="Price:" />
-            <SmallIconTypography
-              label={`${productDetails.priceToDisplay} - ${productDetails.priceUnit.name}, ${productDetails.isPriceTaxInclusive ? 'Tax Included' : 'Tax Excluded'}`}
-            />
+          <StackRow sx={{ marginTop: 1 }}>
+            <BodyIconTypography label="Pricing Options" />
           </StackRow>
 
-          {productDetails.minDurationMinutes && (
-            <StackRow>
-              <BodyIconTypography label="Min duration:" />
-              <SmallIconTypography label={productDetails.minDurationMinutes ? `${productDetails.minDurationMinutes} minutes` : 'No limit'} />
-            </StackRow>
+          {pricingOptions.length === 0 ? (
+            <SmallIconTypography label="No pricing options configured." />
+          ) : (
+            pricingOptions.map((pricingOption) => {
+              const cadence = rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence;
+
+              return (
+                <Box
+                  key={`${productDetails.id}-${pricingOption.index}`}
+                  sx={{
+                    border: 1,
+                    borderColor: 'divider',
+                    borderRadius: 2,
+                    padding: 1.5,
+                    marginTop: 1,
+                  }}
+                >
+                  <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                    <BodyIconTypography label={pricingOption.name || `Option ${pricingOption.index + 1}`} />
+                    <Chip size="small" label={cadence} />
+                  </StackRow>
+
+                  <StackRow>
+                    <BodyIconTypography label="Price:" />
+                    <SmallIconTypography label={`${currency}${pricingOption.price} (${pricingOption.isTaxInclusive ? 'Tax Included' : 'Tax Excluded'})`} />
+                  </StackRow>
+                </Box>
+              );
+            })
           )}
-
-          <StackRow>
-            <BodyIconTypography label="Max duration:" />
-            <SmallIconTypography label={productDetails.maxDurationMinutes ? `${productDetails.maxDurationMinutes} minutes` : 'No limit'} />
-          </StackRow>
         </CardContent>
       </Card>
 

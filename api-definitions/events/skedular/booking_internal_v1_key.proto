@@ -4,5 +4,5 @@ package bookinginternal;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key";
 
 message Key {
-    string stripeConnectAccountWebhookKey = 1;
+  string stripeConnectAccountWebhookKey = 1;
 }

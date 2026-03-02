@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7f010a4daaddf785b445bf5184afda18>>
+ * @generated SignedSource<<a1ccb11147584f65443d3296c484571a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type newBookingDialog_query$data = {
+  readonly bookingSlotSizeInMinutes: number;
   readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -24,7 +25,6 @@ export type newBookingDialog_query$data = {
   readonly me: {
     readonly id: string;
   };
-  readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "newBookingDialog_query";
 };
@@ -149,7 +149,7 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
+      "name": "bookingSlotSizeInMinutes",
       "storageKey": null
     },
     {
@@ -163,6 +163,6 @@ return {
 };
 })();
 
-(node as any).hash = "af82f5256d9747d1d0e14bab2bf64bff";
+(node as any).hash = "391205ef4d67b07f7e56af3bd69aa67a";
 
 export default node;

@@ -15,7 +15,7 @@ public class CustomerDetails : Node
 {
     [GraphQLName("createdAt")] public DateTimeOffset CreatedAt { get; set; }
     [GraphQLName("email")] public string? Email { get; set; }
-    [GraphQLName("emails")] public ICollection<string> Emails { get; set; } = [];
+    [GraphQLName("emails")] public IEnumerable<string> Emails { get; set; } = [];
     [GraphQLName("identities")] public IEnumerable<CustomerIdentity> Identities { get; set; } = [];
     [GraphQLName("designation")] public string? Designation { get; set; }
     [GraphQLName("title")] public string? Title { get; set; }

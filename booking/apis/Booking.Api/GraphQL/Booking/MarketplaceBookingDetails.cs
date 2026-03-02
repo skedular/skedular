@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
@@ -9,7 +10,9 @@ namespace Booking.Api.GraphQL.Booking;
 [GraphQLName("MarketplaceBookingDetails")]
 public class MarketplaceBookingDetails : Node
 {
-    [GraphQLName("lineItems")] public IEnumerable<LineItemDetails> LineItems { get; set; } = [];
+    [GraphQLName("quantity")] public int Quantity { get; set; }
+    [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
+    [GraphQLName("productPricing")] public required ProductPricing ProductPricing { get; set; }
     [GraphQLName("paidByCustomerId")] public string? PaidByCustomerId { get; set; }
     [GraphQLName("paidByOrganizationId")] public string? PaidByOrganizationId { get; set; }
 
@@ -53,6 +56,7 @@ public static partial class MarketplaceBookingDetailsType
         descriptor.Ignore(item => item.PaidByCustomerId);
         descriptor.Ignore(item => item.PaidByOrganizationId);
         descriptor.Ignore(item => item.PaidByOrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.ProductVersionId);
     }
 
     public static CustomerDetails? GetPaidByCustomer([Parent] MarketplaceBookingDetails item) => string.IsNullOrWhiteSpace(item.PaidByCustomerId)
@@ -63,4 +67,6 @@ public static partial class MarketplaceBookingDetailsType
         string.IsNullOrWhiteSpace(item.PaidByOrganizationId)
             ? null
             : new OrganizationDetails(item.PaidByOrganizationId, item.PaidByOrganizationUniqueAlphanumericName.ToSafeString());
+
+    public static ProductVersionDetails GetProductVersion([Parent] MarketplaceBookingDetails item) => new(item.ProductVersionId);
 }

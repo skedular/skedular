@@ -236,7 +236,7 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
               <SmallIconTypography label="Enter the name of the resource to add to this location." />
 
               {!locationId && (
-                <FormFieldLabel label="Location" useWiderSpace>
+                <FormFieldLabel label="Location">
                   <Autocomplete
                     name="location"
                     multiple={false}
@@ -261,15 +261,15 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="Resource Type" useWiderSpace>
+              <FormFieldLabel label="Resource Type">
                 <SingleChoiceResourceType rootDataRelay={rootData} name="resourceTypeId" required={requiredFields.resourceTypeId} />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Name" useWiderSpace>
+              <FormFieldLabel label="Name">
                 <TextField name="name" required={requiredFields.name} helperText="Add your resource name" />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Tags" useWiderSpace>
+              <FormFieldLabel label="Tags">
                 <MultipleChoicesCustomTags
                   rootDataRelay={rootData}
                   name="customTagIds"
@@ -278,7 +278,7 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
                 />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Zones" useWiderSpace>
+              <FormFieldLabel label="Zones">
                 <MultipleChoicesZones
                   rootDataRelay={rootData}
                   name="zoneIds"
@@ -288,7 +288,7 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
               </FormFieldLabel>
 
               {rootData.organization?.type.type === 'MARKETPLACE' && (
-                <FormFieldLabel label="Product Tags" useWiderSpace>
+                <FormFieldLabel label="Product Tags">
                   <MultipleChoicesProductTags
                     rootDataRelay={rootData}
                     name="productTagIds"
@@ -298,11 +298,11 @@ const AddResourceDialog = ({ queryReference, organizationUniqueAlphanumericName,
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="Color" useWiderSpace>
+              <FormFieldLabel label="Color">
                 <ColorPicker onChange={handleColorChange} />
               </FormFieldLabel>
 
-              <FormFieldLabel label="Capacity" useWiderSpace>
+              <FormFieldLabel label="Capacity">
                 <TextField name="capacity" required={requiredFields.capacity} />
               </FormFieldLabel>
 

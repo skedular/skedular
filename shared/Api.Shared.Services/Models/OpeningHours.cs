@@ -2,7 +2,7 @@
 
 public record OpeningHoursDetails
 {
-    public static readonly int OpeningHoursSlotSizeInMinutes = 15;
+    public static readonly int BookingSlotSizeInMinutes = 15;
     public static readonly OpeningHoursDetails Default = new(false, true);
 
     public OpeningHoursDetails(bool closed, bool openAllDay, TimeOnly? from = null, TimeOnly? until = null)
@@ -30,7 +30,7 @@ public record OpeningHoursDetails
 
         if (!IsMultipleOfOpeningHoursSlotSize(from.Value) || !IsMultipleOfOpeningHoursSlotSize(until.Value))
         {
-            throw new ArgumentException($"Both from and until must be in {OpeningHoursSlotSizeInMinutes}-minute increments.");
+            throw new ArgumentException($"Both from and until must be in {BookingSlotSizeInMinutes}-minute increments.");
         }
 
         From = from.Value;
@@ -42,7 +42,7 @@ public record OpeningHoursDetails
     public TimeOnly? From { get; }
     public TimeOnly? Until { get; }
 
-    private static bool IsMultipleOfOpeningHoursSlotSize(TimeOnly time) => time.Minute % OpeningHoursSlotSizeInMinutes == 0;
+    private static bool IsMultipleOfOpeningHoursSlotSize(TimeOnly time) => time.Minute % BookingSlotSizeInMinutes == 0;
 }
 
 public record WeekOpeningHours(

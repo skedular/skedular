@@ -26,7 +26,7 @@ import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHours
 import type { BookingCategory, bookProduct_addMarketplaceBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
-import type { bookProduct_query$key } from '@/queries/__generated__/bookProduct_query.graphql';
+import type { bookProduct_query$key, ProductPricingCadence } from '@/queries/__generated__/bookProduct_query.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -80,6 +80,7 @@ type ResourceDetails = {
 };
 
 type BookingDetails = {
+  pricingOptionId: string;
   date: Dayjs;
   notes: string;
   quantity: number;
@@ -96,8 +97,14 @@ type DateRangeValidationResult = {
   errorMessage: string;
 };
 
+type PricingOptionChoice = {
+  id: string;
+  name: string;
+};
+
 const bookingSchema = (numberOfResourcesToBook: number) =>
   object({
+    pricingOptionId: string().required('Pricing option is required'),
     date: mixed<Dayjs>()
       .test('is-dayjs', 'Date must be a valid Dayjs object', (value) => {
         return value != null && dayjs.isDayjs(value);
@@ -141,27 +148,32 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           name
           description
-          price
-          priceUnit {
-            type
-            name
-          }
-          currencyToDisplay
           currency {
             type
             name
           }
-          numberOfResourcesToBook
-          minDurationMinutes
-          maxDurationMinutes
-          bookAllLocationResources
           latestProductVersionId
-          acceptedBookingPaymentMethods {
-            type
+          pricingOptions {
+            id
+            index
+            name
+            description
+            cadence
+            price
+            numberOfResourcesToBook
+            minDurationMinutes
+            maxDurationMinutes
+            isTaxInclusive
+            maxAllowedResourcesLockTimePaidViaCard
+            maxAllowedResourcesLockTimePaidViaBankTransfer
+            acceptedPaymentMethods
           }
-          isPriceTaxInclusive
         }
-        openingHoursMinutesStep
+        currencies {
+          type
+          name
+        }
+        bookingSlotSizeInMinutes
         ...singleChoiceMarketplaceBookingCategory_query
         ...singleChoiceBookingPaymentMethodType_query
         ...multipleChoicesUserEmails_query
@@ -266,14 +278,33 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [, startTransition] = useTransition();
+  const sortedPricingOptions = useMemo(() => [...(rootData.product?.pricingOptions ?? [])].sort((left, right) => left.index - right.index), [rootData.product?.pricingOptions]);
+  const currencyDisplayName = useMemo(
+    () => rootData.currencies.find((currency) => currency.type === rootData.product?.currency.type)?.name ?? rootData.product?.currency.type ?? '',
+    [rootData.currencies, rootData.product?.currency.type],
+  );
+  const pricingOptionChoices = useMemo<PricingOptionChoice[]>(() => {
+    return sortedPricingOptions.map((pricingOption) => {
+      return {
+        id: pricingOption.id,
+        name: `${pricingOption.name} - ${currencyDisplayName} ${pricingOption.price}`,
+      };
+    });
+  }, [sortedPricingOptions, currencyDisplayName]);
+  const [selectedPricingOptionId, setSelectedPricingOptionId] = useState<string>(sortedPricingOptions[0] ? sortedPricingOptions[0].id : '');
+  const selectedPricingOption = useMemo(
+    () => sortedPricingOptions.find((pricingOption) => pricingOption.id === selectedPricingOptionId) ?? sortedPricingOptions[0],
+    [sortedPricingOptions, selectedPricingOptionId],
+  );
   const [date, setDate] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>(() => {
     const start = toOpeningHoursFromTime('08:00');
 
-    if (rootData.product?.minDurationMinutes) {
-      return [start, start!.add(rootData.product?.minDurationMinutes, 'minutes')];
-    } else if (rootData.product?.maxDurationMinutes) {
-      return [start, start!.add(rootData.product?.maxDurationMinutes, 'minutes')];
+    const initialPricingOption = sortedPricingOptions[0];
+    if (initialPricingOption?.minDurationMinutes) {
+      return [start, start!.add(initialPricingOption.minDurationMinutes, 'minutes')];
+    } else if (initialPricingOption?.maxDurationMinutes) {
+      return [start, start!.add(initialPricingOption.maxDurationMinutes, 'minutes')];
     } else {
       return [start, toOpeningHoursFromTime('17:00')];
     }
@@ -281,6 +312,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
   const [quantity, setQuantity] = useState(1);
   const filterResource = createFilterOptions<ResourceDetails>();
+  const filterPricingOption = createFilterOptions<PricingOptionChoice>();
   const [selectedLocationId, setSelectedLocationId] = useState<string>(allId);
   const [selectedCustomTagId, setSelectedCustomTagId] = useState<string>(allId);
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
@@ -289,8 +321,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
 
-  const validate = makeValidate(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
-  const requiredFields = makeRequired(bookingSchema(rootData.product?.numberOfResourcesToBook ?? 1));
+  const validate = makeValidate(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1));
+  const requiredFields = makeRequired(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1));
 
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
@@ -311,7 +343,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
   const getDateRange = useCallback(
     (date: Dayjs | Date, { timeFrom, timeUntil }: { timeFrom: Dayjs | null; timeUntil: Dayjs | null }): DateRangeValidationResult => {
-      const product = rootData.product;
+      const pricingOption = selectedPricingOption;
       const allDayFrom = dayjs(date).utc();
       const allDayUntil = dayjs(date).utc().add(1, 'day');
       const invalidResult = (errorMessage: string): DateRangeValidationResult => ({
@@ -321,7 +353,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         errorMessage,
       });
 
-      if (!product) {
+      if (!pricingOption) {
         return invalidResult('');
       }
 
@@ -330,8 +362,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
       }
 
       if (isMidnight(timeFrom) && isMidnight(timeUntil)) {
-        if (product.maxDurationMinutes && allDayUntil.diff(allDayFrom, 'minutes') > product.maxDurationMinutes) {
-          return invalidResult(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
+        if (pricingOption.maxDurationMinutes && allDayUntil.diff(allDayFrom, 'minutes') > pricingOption.maxDurationMinutes) {
+          return invalidResult(`You can only book resources for a maximum duration of ${pricingOption.maxDurationMinutes} minutes for this product.`);
         }
 
         return { valid: true, from: allDayFrom, until: allDayUntil, errorMessage: '' };
@@ -346,16 +378,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
       }
 
       const durationInMinutes = until.diff(from, 'minutes');
-      if (product.minDurationMinutes && durationInMinutes < product.minDurationMinutes) {
-        return invalidResult(`You can only book resources for a minimum duration of ${product.minDurationMinutes} minutes for this product.`);
+      if (pricingOption.minDurationMinutes && durationInMinutes < pricingOption.minDurationMinutes) {
+        return invalidResult(`You can only book resources for a minimum duration of ${pricingOption.minDurationMinutes} minutes for this product.`);
       }
 
-      if (product.maxDurationMinutes && durationInMinutes > product.maxDurationMinutes) {
-        return invalidResult(`You can only book resources for a maximum duration of ${product.maxDurationMinutes} minutes for this product.`);
-      }
-
-      if (rootData.product?.priceUnit.type === 'PER_HOUR' && durationInMinutes % 60 !== 0) {
-        return invalidResult('You can only book resources for a duration that is a multiple of hours for this product.');
+      if (pricingOption.maxDurationMinutes && durationInMinutes > pricingOption.maxDurationMinutes) {
+        return invalidResult(`You can only book resources for a maximum duration of ${pricingOption.maxDurationMinutes} minutes for this product.`);
       }
 
       return {
@@ -365,7 +393,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         errorMessage: '',
       };
     },
-    [rootData.product],
+    [selectedPricingOption],
   );
 
   const dateRangeValidation = useMemo(() => {
@@ -429,11 +457,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     return filtered;
   }, [resources, selectedLocationId, selectedCustomTagId, selectedZoneId]);
 
-  const [resourceIds, setResourceIds] = useState<string[]>(filteredResources.slice(0, (rootData.product?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.id));
+  const [resourceIds, setResourceIds] = useState<string[]>(
+    filteredResources.slice(0, (selectedPricingOption?.numberOfResourcesToBook ?? 1) * quantity).map((resource) => resource.id),
+  );
 
   const { totalAmountExcludeTax, totalAmount, taxAmount } = useMemo(() => {
     const product = rootData.product;
-    if (!product || quantity < 1) {
+    const pricingOption = selectedPricingOption;
+    if (!product || !pricingOption || quantity < 1) {
       return {
         totalAmountExcludeTax: '',
         totalAmount: 'N/A',
@@ -454,17 +485,18 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
     const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
     let totalPrice = 0.0;
-    switch (product.priceUnit.type) {
-      case 'PER_MINUTE':
-        totalPrice = parseFloat(product.price) * quantity * totalMinutes;
+    const price = Number(pricingOption.price);
+    switch (pricingOption.cadence as ProductPricingCadence) {
+      case 'PER_MINUTE_V1':
+        totalPrice = price * quantity * totalMinutes;
         break;
 
-      case 'PER_HOUR':
-        totalPrice = (parseFloat(product.price) / 60) * quantity * totalMinutes;
+      case 'PER_HOUR_V1':
+        totalPrice = (price / 60) * quantity * totalMinutes;
         break;
 
-      case 'PER_USE':
-        totalPrice = parseFloat(product.price) * quantity;
+      default:
+        totalPrice = price * quantity;
         break;
     }
 
@@ -472,7 +504,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     if (!taxRatePercentageStr) {
       return {
         totalAmountExcludeTax: '',
-        totalAmount: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
+        totalAmount: `${currencyDisplayName}${totalPrice.toFixed(2)}`,
         taxAmount: '',
       };
     }
@@ -480,22 +512,22 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const taxRatePercentage = parseFloat(taxRatePercentageStr);
     const taxToPay = (totalPrice * taxRatePercentage) / 100;
 
-    if (product.isPriceTaxInclusive) {
+    if (pricingOption.isTaxInclusive) {
       const totalAmountExcludeTax = (totalPrice * 100) / (100 + taxRatePercentage);
 
       return {
-        totalAmount: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
-        totalAmountExcludeTax: `${product.currencyToDisplay}${totalAmountExcludeTax.toFixed(2)}`,
-        taxAmount: `${product.currencyToDisplay}${(totalPrice - totalAmountExcludeTax).toFixed(2)}`,
+        totalAmount: `${currencyDisplayName}${totalPrice.toFixed(2)}`,
+        totalAmountExcludeTax: `${currencyDisplayName}${totalAmountExcludeTax.toFixed(2)}`,
+        taxAmount: `${currencyDisplayName}${(totalPrice - totalAmountExcludeTax).toFixed(2)}`,
       };
     } else {
       return {
-        totalAmountExcludeTax: `${product.currencyToDisplay}${totalPrice.toFixed(2)}`,
-        taxAmount: `${product.currencyToDisplay}${((totalPrice * taxRatePercentage) / 100).toFixed(2)}`,
-        totalAmount: `${product.currencyToDisplay}${(totalPrice + taxToPay).toFixed(2)}`,
+        totalAmountExcludeTax: `${currencyDisplayName}${totalPrice.toFixed(2)}`,
+        taxAmount: `${currencyDisplayName}${((totalPrice * taxRatePercentage) / 100).toFixed(2)}`,
+        totalAmount: `${currencyDisplayName}${(totalPrice + taxToPay).toFixed(2)}`,
       };
     }
-  }, [getDateRange, rootData.product, quantity, date, timeRange, rootData.organization?.taxDetails?.taxRatePercentage]);
+  }, [getDateRange, rootData.product, selectedPricingOption, quantity, date, timeRange, rootData.organization?.taxDetails?.taxRatePercentage, currencyDisplayName]);
 
   const handleCloseClick = () => {
     router.back();
@@ -503,6 +535,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
   const handleAddClick = ({ date, notes, quantity, resources: resourceIds, category, paymentMethod, invoiceEmailList }: BookingDetails) => {
     const id = uuid();
+    if (!selectedPricingOption) {
+      return;
+    }
     const start = date as unknown as Dayjs;
     const [timeFrom, timeUntil] = timeRange;
     const dateRange = getDateRange(start, { timeFrom, timeUntil });
@@ -530,7 +565,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           teamIds: [],
           resourceIds,
           category: category as BookingCategory,
-          lineItems: [{ productVersionId: product.latestProductVersionId, quantity: Number(quantity) }],
+          productVersionId: product.latestProductVersionId,
+          pricingId: selectedPricingOption.id,
+          quantity: Number(quantity),
           paymentMethod: paymentMethod as PaymentMethod,
           invoiceEmailList,
         },
@@ -643,6 +680,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           <Form
             onSubmit={handleAddClick}
             initialValues={{
+              pricingOptionId: selectedPricingOptionId,
               date,
               resources: resourceIds,
               quantity,
@@ -653,6 +691,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             }}
             validate={validate}
             render={({ handleSubmit, values }) => {
+              setSelectedPricingOptionId(values!.pricingOptionId);
               setDate(values!.date);
               setResourceIds(values!.resources);
               setQuantity(values!.quantity);
@@ -682,15 +721,39 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       paddingTop: defaultPadding,
                     }}
                   >
+                    <FormFieldLabel label="Pricing Option">
+                      <Box sx={{ width: { xs: '100%', sm: 380 } }}>
+                        <Autocomplete
+                          name="pricingOptionId"
+                          required={requiredFields.pricingOptionId}
+                          multiple={false}
+                          options={pricingOptionChoices}
+                          getOptionValue={(option) => (option as PricingOptionChoice).id}
+                          getOptionLabel={(option: string | PricingOptionChoice) => (option as PricingOptionChoice).name}
+                          renderOption={(props, option) => {
+                            const castedOption = option as PricingOptionChoice;
+
+                            return (
+                              <li {...props} key={castedOption.id}>
+                                <BodyIconTypography label={castedOption.name} />
+                              </li>
+                            );
+                          }}
+                          filterOptions={(options, params) => filterPricingOption(options as PricingOptionChoice[], params)}
+                          selectOnFocus
+                          clearOnBlur
+                          handleHomeEndKeys
+                        />
+                      </Box>
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Date/Time">
-                      <StackColumn>
-                        <StackRow>
-                          <Box sx={{ width: 'fit-content' }}>
-                            <DatePicker name="date" required={requiredFields.date} />
-                          </Box>
-                          <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} defaultValue={timeRange} onChange={setTimeRange} />
-                        </StackRow>
-                      </StackColumn>
+                      <StackRow>
+                        <Box sx={{ width: 'fit-content' }}>
+                          <DatePicker name="date" required={requiredFields.date} />
+                        </Box>
+                        <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} defaultValue={timeRange} onChange={setTimeRange} />
+                      </StackRow>
                     </FormFieldLabel>
 
                     <FormFieldLabel>
@@ -831,7 +894,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
                     <FormFieldLabel label="Resources">
                       {filteredResources.length > 0 && quantity > 0 && (
-                        <BodyIconTypography label={`Feel free to choose up to ${product.numberOfResourcesToBook * quantity} resources from the list below!`} />
+                        <BodyIconTypography
+                          label={`Feel free to choose up to ${(selectedPricingOption?.numberOfResourcesToBook ?? 1) * quantity} resources from the list below!`}
+                        />
                       )}
                       {filteredResources.length > 0 && (
                         <Autocomplete
@@ -870,7 +935,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                         rootDataRelay={rootData}
                         name="paymentMethod"
                         required={requiredFields.paymentMethod}
-                        acceptedBookingPaymentMethods={rootData.product?.acceptedBookingPaymentMethods.map(({ type }) => type)}
+                        acceptedBookingPaymentMethods={selectedPricingOption?.acceptedPaymentMethods.map((method) => method as PaymentMethod) ?? []}
                       />
                     </FormFieldLabel>
 
@@ -880,17 +945,17 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
                     {taxAmount && (
                       <>
-                        <FormFieldLabel label={`Total Exclude GST/VAT`}>
+                        <FormFieldLabel label="Total Exclude GST/VAT" stackLabelOnTop>
                           <BodyIconTypography label={totalAmountExcludeTax} />
                         </FormFieldLabel>
 
-                        <FormFieldLabel label={`Total GST/VAT ${rootData.organization?.taxDetails?.taxRatePercentage}%`}>
+                        <FormFieldLabel label={`Total GST/VAT ${rootData.organization?.taxDetails?.taxRatePercentage}%`} stackLabelOnTop>
                           <BodyIconTypography label={taxAmount} />
                         </FormFieldLabel>
                       </>
                     )}
 
-                    <FormFieldLabel label="Total Amount">
+                    <FormFieldLabel label="Total Amount" stackLabelOnTop>
                       <BodyIconTypography label={totalAmount} />
                     </FormFieldLabel>
                   </StackColumn>

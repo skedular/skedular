@@ -717,7 +717,7 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
-                    b.Property<ICollection<ProductVersionPricingOptions>>("PricingOptions")
+                    b.Property<ICollection<ProductPricing>>("PricingOptions")
                         .IsRequired()
                         .HasColumnType("jsonb");
 

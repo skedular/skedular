@@ -141,7 +141,7 @@ namespace Booking.Shared.Database.Migrations
                     Id = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     PaymentStatus = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false, defaultValue: "CONFIRMED"),
                     IsPaymentRequired = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    LineItems = table.Column<ICollection<ProductVersionLineItem>>(type: "jsonb", nullable: false),
+                    LineItems = table.Column<ICollection<ProductLineItem>>(type: "jsonb", nullable: false),
                     PaymentMethod = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     PaymentExpiry = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     TotalAmountExcludeTax = table.Column<decimal>(type: "numeric(18,4)", nullable: true),
@@ -346,7 +346,7 @@ namespace Booking.Shared.Database.Migrations
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<ICollection<ProductVersionLineItem>>(
+            migrationBuilder.AddColumn<ICollection<ProductLineItem>>(
                 name: "LineItems",
                 table: "Booking",
                 type: "jsonb",

@@ -68,6 +68,8 @@ public class TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization()
 
 public class ProductNotFound() : Exception("Product not found");
 
+public class ProductPricingNotFound() : Exception("Product pricing not found");
+
 public class ProductVersionNotFound() : Exception("Product version not found");
 
 public class OrganizationStripeConnectAccountNotFound() : Exception("Organization Stripe Connect Account not found");
@@ -75,8 +77,6 @@ public class OrganizationStripeConnectAccountNotFound() : Exception("Organizatio
 public class OrganizationStripeConnectAccountRefreshCodeNotFound() : Exception("Organization Stripe Connect Account refresh code not found");
 
 public class OrganizationStripeCustomerRelationshipIsNotSetYet() : Exception("Organization Stripe customer relationship is not set yet");
-
-public class CrossOrganizationProductBookingNotAllowed() : Exception("Cross organization product booking not allowed");
 
 public class InvalidSsoConfiguration() : Exception("Invalid SSO configuration");
 
@@ -92,15 +92,11 @@ public class OrganizationBankAccountNotFound() : Exception("Organization Bank Ac
 
 public class BookingPaymentMethodNotAccepted() : Exception("Booking payment method not accepted");
 
-public class BookingsProductsWithMultipleCurrenciesAreNotSupported() : Exception("Bookings products with multiple currencies are not supported");
-
 public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");
 
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");
-
-public class BookingProductWithMixedTaxSetupNotAllowed() : Exception("Booking product with different tax setup not allowed");
 
 public class MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking()
     : Exception("More resources have been selected than are allowed for this booking");
@@ -114,5 +110,3 @@ public class RecurringBookingIsNotPrivate() : Exception("Recurring booking is no
 public class RecurringBookingIsNotMarketplace() : Exception("Recurring booking is not marketplace");
 
 public class MarketplaceRecurringBookingCannotBeUpdated() : Exception("Marketplace recurring booking cannot be updated");
-
-public class MarketplaceBookingDatesCannotBeChanged() : Exception("Marketplace booking date cannot be changed");

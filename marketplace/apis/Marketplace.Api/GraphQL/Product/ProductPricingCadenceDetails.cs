@@ -3,9 +3,9 @@ using HotChocolate;
 
 namespace Marketplace.Api.GraphQL.Product;
 
-[GraphQLName("PriceUnitDetails")]
-public class PriceUnitDetails
+[GraphQLName("ProductPricingCadenceDetails")]
+public class ProductPricingCadenceDetails
 {
-    [GraphQLName("type")] public PriceUnit Type { get; set; }
+    [GraphQLName("type")] public ProductPricingCadence Type { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
 }

@@ -54,7 +54,7 @@ public class ProductService(
         ProductVersion productVersion,
         CancellationToken cancellationToken)
     {
-        Validate(productVersion);
+        Validate(productVersion.PricingOptions);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(id))
@@ -117,12 +117,7 @@ public class ProductService(
 
         var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
         var locationTags = organizationTags.Where(item => locationTagIds.Contains(item.Id)).ToList();
-        var productEntity = mapper.MapTo(
-            new Product { Id = id, Inactive = true },
-            productVersion,
-            existingOrganization,
-            productTags,
-            locationTags);
+        var productEntity = mapper.MapTo(new Product { Id = id, Inactive = true }, existingOrganization);
 
         var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags, locationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
@@ -143,7 +138,7 @@ public class ProductService(
     public async Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        Validate(productVersion);
+        Validate(productVersion.PricingOptions);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound();
@@ -343,73 +338,80 @@ public class ProductService(
         return product;
     }
 
-    private static void Validate(ProductVersion productVersion)
+    private static void Validate(ICollection<ProductPricing> options)
     {
-        if (productVersion.AcceptedBookingPaymentMethods.Count <= 0)
+        foreach (var option in options)
         {
-            throw new ArgumentException("At least one accepted booking payment method must be selected",
-                nameof(productVersion.AcceptedBookingPaymentMethods));
+            Validate(option);
+        }
+    }
+
+    private static void Validate(ProductPricing pricing)
+    {
+        if (pricing.AcceptedPaymentMethods.Count <= 0)
+        {
+            throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(pricing.AcceptedPaymentMethods));
         }
 
-        if (productVersion.MinDurationMinutes is not null && productVersion.MaxDurationMinutes is not null)
+        if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)
         {
-            if (productVersion.MinDurationMinutes <= 0)
+            if (pricing.MinDurationMinutes <= 0)
             {
-                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(productVersion.MinDurationMinutes));
+                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
             }
 
-            if (productVersion.MinDurationMinutes % OpeningHoursDetails.OpeningHoursSlotSizeInMinutes != 0)
-            {
-                throw new ArgumentException(
-                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.OpeningHoursSlotSizeInMinutes}-minute increments",
-                    nameof(productVersion.MinDurationMinutes));
-            }
-
-            if (productVersion.MaxDurationMinutes <= 0)
-            {
-                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(productVersion.MaxDurationMinutes));
-            }
-
-            if (productVersion.MaxDurationMinutes % OpeningHoursDetails.OpeningHoursSlotSizeInMinutes != 0)
+            if (pricing.MinDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
             {
                 throw new ArgumentException(
-                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.OpeningHoursSlotSizeInMinutes}-minute increments",
-                    nameof(productVersion.MaxDurationMinutes));
+                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
+                    nameof(pricing.MinDurationMinutes));
             }
 
-            if (productVersion.MaxDurationMinutes < productVersion.MinDurationMinutes)
+            if (pricing.MaxDurationMinutes <= 0)
+            {
+                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
+            }
+
+            if (pricing.MaxDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
+            {
+                throw new ArgumentException(
+                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
+                    nameof(pricing.MaxDurationMinutes));
+            }
+
+            if (pricing.MaxDurationMinutes < pricing.MinDurationMinutes)
             {
                 throw new ArgumentException(
                     "MaxDurationMinutes must be greater or equal than productVersion.MinDurationMinutes",
-                    nameof(productVersion.MaxDurationMinutes));
+                    nameof(pricing.MaxDurationMinutes));
             }
         }
-        else if (productVersion.MinDurationMinutes is not null && productVersion.MaxDurationMinutes is null)
+        else if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is null)
         {
-            if (productVersion.MinDurationMinutes <= 0)
+            if (pricing.MinDurationMinutes <= 0)
             {
-                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(productVersion.MinDurationMinutes));
+                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
             }
 
-            if (productVersion.MinDurationMinutes % OpeningHoursDetails.OpeningHoursSlotSizeInMinutes != 0)
+            if (pricing.MinDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
             {
                 throw new ArgumentException(
-                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.OpeningHoursSlotSizeInMinutes}-minute increments",
-                    nameof(productVersion.MinDurationMinutes));
+                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
+                    nameof(pricing.MinDurationMinutes));
             }
         }
-        else if (productVersion.MinDurationMinutes is null && productVersion.MaxDurationMinutes is not null)
+        else if (pricing.MinDurationMinutes is null && pricing.MaxDurationMinutes is not null)
         {
-            if (productVersion.MaxDurationMinutes <= 0)
+            if (pricing.MaxDurationMinutes <= 0)
             {
-                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(productVersion.MaxDurationMinutes));
+                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
             }
 
-            if (productVersion.MaxDurationMinutes % OpeningHoursDetails.OpeningHoursSlotSizeInMinutes != 0)
+            if (pricing.MaxDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
             {
                 throw new ArgumentException(
-                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.OpeningHoursSlotSizeInMinutes}-minute increments",
-                    nameof(productVersion.MaxDurationMinutes));
+                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
+                    nameof(pricing.MaxDurationMinutes));
             }
         }
     }

@@ -22,7 +22,7 @@ public partial class Metadata : IMetadata { }
     retryTopicPartitionCount: 3,
     deadLetterTopicName: "location.v1.event.deadletter",
     deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package location;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Location.V1.Key\";message Key {  string locationId = 1;  string locationJoinInvitationId = 2;}")]
+    protobufSchema: "syntax = \"proto3\";package location;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Location.V1.Key\";message Key {  string locationId               = 1;  string locationJoinInvitationId = 2;}")]
 public partial class Key : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

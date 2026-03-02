@@ -31,7 +31,7 @@ service LocationService {
 
 message RaiseGraphqlChangeInput {
   string topicName = 1;
-  string id = 2;
+  string id        = 2;
 }
 
 message RaiseGraphqlChangeResponse {
@@ -41,111 +41,111 @@ message VersionInput {
 }
 
 message Version {
-  int32 major = 1;
-  int32 minor = 2;
-  int32 build = 3;
+  int32 major    = 1;
+  int32 minor    = 2;
+  int32 build    = 3;
   int32 revision = 4;
 }
 
 enum OrderDirection {
-  OrderDirection_Ascending = 0;
+  OrderDirection_Ascending  = 0;
   OrderDirection_Descending = 1;
 }
 
 message PageInfo {
-  bool hasNextPage = 1;
-  bool hasPreviousPage =2;
-  string startCursor =3;
-  string endCursor =4;
+  bool   hasNextPage     = 1;
+  bool   hasPreviousPage = 2;
+  string startCursor     = 3;
+  string endCursor       = 4;
 }
 
 message Customer {
-  string id = 1;
-  string name = 2;
-  string givenName = 3;
-  string middleName = 4;
-  string familyName = 5;
-  string photoUrl = 6;
-  string photoUrl24 = 7;
-  string photoUrl32 = 8;
-  string photoUrl48 = 9;
-  string photoUrl72 = 10;
-  string photoUrl192 = 11;
-  string photoUrl512 = 12;
-  repeated Identity identities = 13;
+  string            id          = 1;
+  string            name        = 2;
+  string            givenName   = 3;
+  string            middleName  = 4;
+  string            familyName  = 5;
+  string            photoUrl    = 6;
+  string            photoUrl24  = 7;
+  string            photoUrl32  = 8;
+  string            photoUrl48  = 9;
+  string            photoUrl72  = 10;
+  string            photoUrl192 = 11;
+  string            photoUrl512 = 12;
+  repeated Identity identities  = 13;
 }
 
 message Identity {
-  string id = 1;
-  string email = 2;
-  bool emailVerified = 3;
+  string id            = 1;
+  string email         = 2;
+  bool   emailVerified = 3;
 }
 
 enum LocationType {
-  LocationType_Private = 0;
+  LocationType_Private     = 0;
   LocationType_Marketplace = 1;
 }
 
 message Admin_AddInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated string locationTagIds = 6;
-  repeated CdnImageFile featureImages = 7;
-  LocationType type = 8;
-  ExtraMetadata ExtraMetadata = 9;
-  PhysicalAddress physicalAddress = 10;
-  string uniqueClaimCode = 11;
+  string                id              = 1;
+  string                name            = 2;
+  string                about           = 3;
+  string                organizationId  = 4;
+  string                timezone        = 5;
+  repeated string       locationTagIds  = 6;
+  repeated CdnImageFile featureImages   = 7;
+  LocationType          type            = 8;
+  ExtraMetadata         ExtraMetadata   = 9;
+  PhysicalAddress       physicalAddress = 10;
+  string                uniqueClaimCode = 11;
 }
 
 message Admin_UpdateInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated string locationTagIds = 6;
-  repeated CdnImageFile featureImages = 7;
-  LocationType type = 8;
-  ExtraMetadata ExtraMetadata = 9;
-  PhysicalAddress physicalAddress = 10;
-  string uniqueClaimCode = 11;
+  string                id              = 1;
+  string                name            = 2;
+  string                about           = 3;
+  string                organizationId  = 4;
+  string                timezone        = 5;
+  repeated string       locationTagIds  = 6;
+  repeated CdnImageFile featureImages   = 7;
+  LocationType          type            = 8;
+  ExtraMetadata         ExtraMetadata   = 9;
+  PhysicalAddress       physicalAddress = 10;
+  string                uniqueClaimCode = 11;
 }
 
 message LocationConnection {
-  PageInfo pageInfo = 1;
-  repeated LocationEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo              pageInfo   = 1;
+  repeated LocationEdge edges      = 2;
+  int32                 totalCount = 3;
 }
 
 message LocationEdge {
-  Location node = 1;
-  string cursor = 2;
+  Location node   = 1;
+  string   cursor = 2;
 }
 
 message Location {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated Resource resources = 6;
-  Permissions permissions = 7;
-  repeated string customTagIds = 8;
-  repeated string zoneIds = 9;
-  repeated string locationTagIds = 10;
-  OpeningHours openingHours = 11;
-  repeated CdnImageFile featureImages = 12;
-  LocationType type = 13;
-  ExtraMetadata ExtraMetadata = 14;
-  PhysicalAddress physicalAddress = 15;
-  string uniqueClaimCode = 16;
-  bool contactedViaEmail = 17;
-  bool contactedViaSms = 18;
-  bool contactedViaCall = 19;
-  bool contactedViaWhatsapp = 20;
+  string                id                   = 1;
+  string                name                 = 2;
+  string                about                = 3;
+  string                organizationId       = 4;
+  string                timezone             = 5;
+  repeated Resource     resources            = 6;
+  Permissions           permissions          = 7;
+  repeated string       customTagIds         = 8;
+  repeated string       zoneIds              = 9;
+  repeated string       locationTagIds       = 10;
+  OpeningHours          openingHours         = 11;
+  repeated CdnImageFile featureImages        = 12;
+  LocationType          type                 = 13;
+  ExtraMetadata         ExtraMetadata        = 14;
+  PhysicalAddress       physicalAddress      = 15;
+  string                uniqueClaimCode      = 16;
+  bool                  contactedViaEmail    = 17;
+  bool                  contactedViaSms      = 18;
+  bool                  contactedViaCall     = 19;
+  bool                  contactedViaWhatsapp = 20;
 }
 
 message Admin_GetInput {
@@ -157,41 +157,41 @@ message GetInput {
 }
 
 message Admin_GetPaginatedLocationsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  LocationWhereInput where = 5;
+  string                      after   = 1;
+  int32                       first   = 2;
+  string                      before  = 3;
+  int32                       last    = 4;
+  LocationWhereInput          where   = 5;
   repeated LocationOrderInput orderBy = 6;
 }
 
 message GetPaginatedLocationsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  LocationWhereInput where = 5;
+  string                      after   = 1;
+  int32                       first   = 2;
+  string                      before  = 3;
+  int32                       last    = 4;
+  LocationWhereInput          where   = 5;
   repeated LocationOrderInput orderBy = 6;
 }
 
 message LocationWhereInput {
-  string organizationId = 1;
-  string organizationUniqueAlphanumericName = 2;
-  repeated string locationIds = 3;
-  string nameContains = 4;
-  repeated string tagIds = 5;
-  repeated LocationType types = 6;
-  bool notContactedYet = 7;
+  string                organizationId                     = 1;
+  string                organizationUniqueAlphanumericName = 2;
+  repeated string       locationIds                        = 3;
+  string                nameContains                       = 4;
+  repeated string       tagIds                             = 5;
+  repeated LocationType types                              = 6;
+  bool                  notContactedYet                    = 7;
 }
 
 message LocationOrderInput {
-  OrderDirection direction = 1;
-  LocationOrderField field = 2;
+  OrderDirection     direction = 1;
+  LocationOrderField field     = 2;
 }
 
 enum LocationOrderField {
-  LocationOrderField_Name = 0;
-  LocationOrderField_About = 1;
+  LocationOrderField_Name     = 0;
+  LocationOrderField_About    = 1;
   LocationOrderField_Timezone = 2;
 }
 
@@ -200,38 +200,38 @@ message GetPermissionsInput {
 }
 
 message Permissions {
-  bool canView = 1;
-  bool canModify = 2;
-  bool canDelete = 3;
+  bool canView          = 1;
+  bool canModify        = 2;
+  bool canDelete        = 3;
   bool canViewAnalytics = 4;
 }
 
 message AddInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated string locationTagIds = 6;
-  repeated CdnImageFile featureImages = 7;
-  LocationType type = 8;
-  ExtraMetadata ExtraMetadata = 9;
-  PhysicalAddress physicalAddress = 10;
-  string uniqueClaimCode = 11;
+  string                id              = 1;
+  string                name            = 2;
+  string                about           = 3;
+  string                organizationId  = 4;
+  string                timezone        = 5;
+  repeated string       locationTagIds  = 6;
+  repeated CdnImageFile featureImages   = 7;
+  LocationType          type            = 8;
+  ExtraMetadata         ExtraMetadata   = 9;
+  PhysicalAddress       physicalAddress = 10;
+  string                uniqueClaimCode = 11;
 }
 
 message UpdateInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated string locationTagIds = 6;
-  repeated CdnImageFile featureImages = 7;
-  LocationType type = 8;
-  ExtraMetadata ExtraMetadata = 9;
-  PhysicalAddress physicalAddress = 10;
-  string uniqueClaimCode = 11;
+  string                id              = 1;
+  string                name            = 2;
+  string                about           = 3;
+  string                organizationId  = 4;
+  string                timezone        = 5;
+  repeated string       locationTagIds  = 6;
+  repeated CdnImageFile featureImages   = 7;
+  LocationType          type            = 8;
+  ExtraMetadata         ExtraMetadata   = 9;
+  PhysicalAddress       physicalAddress = 10;
+  string                uniqueClaimCode = 11;
 }
 
 message RemoveInput {
@@ -239,50 +239,50 @@ message RemoveInput {
 }
 
 message Resource {
-  string id = 1;
-  string name = 2;
-  bool inactive = 3;
-  bool requireBookingApproval = 4;
-  repeated string organizationCustomTagIds = 5;
-  repeated string organizationZoneIds = 6;
-  repeated string organizationProductTagIds = 7;
-  string color = 8;
-  bool isAvailableHoursOverridden = 9;
-  OpeningHours availableHours = 10;
-  string resourceTypeId = 11;
-  int32 capacity = 12;
+  string          id                         = 1;
+  string          name                       = 2;
+  bool            inactive                   = 3;
+  bool            requireBookingApproval     = 4;
+  repeated string organizationCustomTagIds   = 5;
+  repeated string organizationZoneIds        = 6;
+  repeated string organizationProductTagIds  = 7;
+  string          color                      = 8;
+  bool            isAvailableHoursOverridden = 9;
+  OpeningHours    availableHours             = 10;
+  string          resourceTypeId             = 11;
+  int32           capacity                   = 12;
 }
 
 message ResourceConnection {
-  PageInfo pageInfo = 1;
-  repeated ResourceEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo              pageInfo   = 1;
+  repeated ResourceEdge edges      = 2;
+  int32                 totalCount = 3;
 }
 
 message ResourceEdge {
-  Resource node = 1;
-  string cursor = 2;
+  Resource node   = 1;
+  string   cursor = 2;
 }
 
 message GetPaginatedResourcesInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  ResourceWhereInput where = 5;
+  string                      after   = 1;
+  int32                       first   = 2;
+  string                      before  = 3;
+  int32                       last    = 4;
+  ResourceWhereInput          where   = 5;
   repeated ResourceOrderInput orderBy = 6;
 }
 
 message ResourceWhereInput {
-  string locationId = 1;
-  string nameContains = 2;
-  repeated string tagIds = 3;
-  string floorPlanId = 4;
+  string          locationId   = 1;
+  string          nameContains = 2;
+  repeated string tagIds       = 3;
+  string          floorPlanId  = 4;
 }
 
 message ResourceOrderInput {
-  OrderDirection direction = 1;
-  ResourceOrderField field = 2;
+  OrderDirection     direction = 1;
+  ResourceOrderField field     = 2;
 }
 
 enum ResourceOrderField {
@@ -298,24 +298,24 @@ message GetResourceInput {
 }
 
 message AddResourceInput {
-  string id = 1;
-  string locationId = 2;
-  string name = 3;
-  bool inactive = 4;
-  bool requireBookingApproval = 5;
-  repeated string tagIds = 6;
-  string color = 7;
-  int32 capacity = 8;
+  string          id                     = 1;
+  string          locationId             = 2;
+  string          name                   = 3;
+  bool            inactive               = 4;
+  bool            requireBookingApproval = 5;
+  repeated string tagIds                 = 6;
+  string          color                  = 7;
+  int32           capacity               = 8;
 }
 
 message UpdateResourceInput {
-  string id = 1;
-  string name = 2;
-  bool inactive = 3;
-  bool requireBookingApproval = 4;
-  repeated string tagIds = 5;
-  string color = 6;
-  int32 capacity = 7;
+  string          id                     = 1;
+  string          name                   = 2;
+  bool            inactive               = 3;
+  bool            requireBookingApproval = 4;
+  repeated string tagIds                 = 5;
+  string          color                  = 6;
+  int32           capacity               = 7;
 }
 
 message RemoveResourceInput {
@@ -323,42 +323,42 @@ message RemoveResourceInput {
 }
 
 message OpeningHours {
-  WeekOpeningHours weekOpeningHours = 1;
-  repeated google.protobuf.Timestamp closedDates = 2;
-  repeated VariedDateOpeningHours DatesWithVariedOpeningHours = 3;
+  WeekOpeningHours                   weekOpeningHours            = 1;
+  repeated google.protobuf.Timestamp closedDates                 = 2;
+  repeated VariedDateOpeningHours    DatesWithVariedOpeningHours = 3;
 }
 
 message WeekOpeningHours {
-  OpeningHoursDetails monday = 1;
-  OpeningHoursDetails tuesday = 2;
+  OpeningHoursDetails monday    = 1;
+  OpeningHoursDetails tuesday   = 2;
   OpeningHoursDetails wednesday = 3;
-  OpeningHoursDetails thursday = 4;
-  OpeningHoursDetails friday = 5;
-  OpeningHoursDetails saturday = 6;
-  OpeningHoursDetails sunday = 7;
+  OpeningHoursDetails thursday  = 4;
+  OpeningHoursDetails friday    = 5;
+  OpeningHoursDetails saturday  = 6;
+  OpeningHoursDetails sunday    = 7;
 }
 
 message VariedDateOpeningHours {
-  google.protobuf.Timestamp date = 1;
-  OpeningHoursDetails openingHoursDetails = 2;
+  google.protobuf.Timestamp date                = 1;
+  OpeningHoursDetails       openingHoursDetails = 2;
 }
 
 message OpeningHoursDetails {
-  bool closed = 1;
-  bool openAllDay = 2;
-  string from = 3;
-  string until = 4;
+  bool   closed     = 1;
+  bool   openAllDay = 2;
+  string from       = 3;
+  string until      = 4;
 }
 
 message CdnImageFile {
-  CdnFile original = 1;
+  CdnFile original  = 1;
   CdnFile thumbnail = 2;
 }
 
 message CdnFile {
-  string url = 1;
-  int32 height = 2;
-  int32 width = 3;
+  string url    = 1;
+  int32  height = 2;
+  int32  width  = 3;
 }
 
 message ContactDetails {
@@ -369,42 +369,42 @@ message ContactDetails {
 
 message AreaRange {
   string fromInSqm = 1;
-  string toInSqm = 2;
+  string toInSqm   = 2;
 }
 
 message PeopleCapacity {
   string from = 1;
-  string to = 2;
+  string to   = 2;
 }
 
 message ExtraMetadata {
-  ContactDetails contactDetails = 1;
-  AreaRange areaRange = 2;
-  PeopleCapacity peopleCapacity = 3;
-  string website = 4;
+  ContactDetails  contactDetails    = 1;
+  AreaRange       areaRange         = 2;
+  PeopleCapacity  peopleCapacity    = 3;
+  string          website           = 4;
   repeated string RelatedImageLinks = 5;
   repeated string RelatedVideoLinks = 6;
-  repeated string OtherLinks = 7;
+  repeated string OtherLinks        = 7;
 }
 
 message PhysicalAddress {
-  string id = 1;
-  string addressLine1 = 2;
-  string addressLine2 = 3;
-  string suburb = 4;
-  string city = 5;
-  string province = 6;
-  string zipcode = 7;
-  string country = 8;
-  string countryCode = 9;
-  string formattedAddress = 10;
-  string osmType = 11;
-  string osmId = 12;
-  string placeId = 13;
-  Coordinates coordinates = 14;
+  string      id               = 1;
+  string      addressLine1     = 2;
+  string      addressLine2     = 3;
+  string      suburb           = 4;
+  string      city             = 5;
+  string      province         = 6;
+  string      zipcode          = 7;
+  string      country          = 8;
+  string      countryCode      = 9;
+  string      formattedAddress = 10;
+  string      osmType          = 11;
+  string      osmId            = 12;
+  string      placeId          = 13;
+  Coordinates coordinates      = 14;
 }
 
 message Coordinates {
   double longitude = 1;
-  double latitude = 2;
+  double latitude  = 2;
 }

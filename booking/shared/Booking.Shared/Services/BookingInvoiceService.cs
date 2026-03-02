@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Repositories;
@@ -22,7 +23,8 @@ public interface IBookingInvoiceService
 public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
-    OrganizationService.OrganizationServiceClient organizationServiceClient) : IBookingInvoiceService
+    OrganizationService.OrganizationServiceClient organizationServiceClient,
+    IProductVersionHelperService productVersionHelperService) : IBookingInvoiceService
 {
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
     {
@@ -33,14 +35,15 @@ public class BookingInvoiceService(
         }
 
         var marketplaceBooking = booking.MarketplaceBooking;
-        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        if (productVersions.Count != productVersionIds.Count)
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken);
+        if (productVersion is null)
         {
-            throw new InvalidOperationException();
+            throw new ProductVersionNotFound();
         }
 
-        var organizationId = productVersions.First().Product.Organization.Id;
+        var organizationId = productVersion.Product.Organization.Id;
         var bankAccountConnection = await organizationServiceClient.Admin_GetBankAccountsAsync(
             new Admin_GetBankAccountsInput
             {
@@ -59,16 +62,24 @@ public class BookingInvoiceService(
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 
-        return new InvoiceDocument(booking, bankAccount, organization, productVersions, marketplaceBooking.PaymentExpiry, fullyPaid);
+        return new InvoiceDocument(
+            booking,
+            bankAccount,
+            organization,
+            productVersion,
+            marketplaceBooking.PaymentExpiry,
+            fullyPaid,
+            productVersionHelperService);
     }
 
     private class InvoiceDocument(
         Database.Entities.Booking booking,
         BankAccount bankAccount,
         Organization organization,
-        ICollection<ProductVersion> productVersions,
+        ProductVersion productVersion,
         DateTimeOffset dueDate,
-        bool fullyPaid) : IDocument
+        bool fullyPaid,
+        IProductVersionHelperService productVersionHelperService) : IDocument
     {
         public void Compose(IDocumentContainer container) =>
             container
@@ -134,7 +145,7 @@ public class BookingInvoiceService(
 
                 column.Item().Element(ComposeTable);
                 column.Item().Component(new TotalExcludeGstComponent(booking));
-                column.Item().Component(new TotalAmountComponent(booking, productVersions, fullyPaid));
+                column.Item().Component(new TotalAmountComponent(booking, productVersion, fullyPaid));
 
                 var marketplaceBooking = booking.MarketplaceBooking;
                 ArgumentNullException.ThrowIfNull(marketplaceBooking);
@@ -162,7 +173,7 @@ public class BookingInvoiceService(
                     header.Cell().BorderBottom(1).PaddingBottom(3).AlignRight().Text("Quantity").Bold();
                     header.Cell().BorderBottom(1).PaddingBottom(3).AlignRight().Text("Unit Price").Bold();
 
-                    var currency = productVersions.First().Currency;
+                    var currency = productVersion.Currency;
                     ArgumentException.ThrowIfNullOrWhiteSpace(currency);
 
                     header.Cell().BorderBottom(1).PaddingBottom(3).AlignRight().Text($"Amount {currency.ToInvoiceCurrencyName()}").Bold();
@@ -171,46 +182,54 @@ public class BookingInvoiceService(
                 var marketplaceBooking = booking.MarketplaceBooking;
                 ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-                foreach (var lineItem in marketplaceBooking.LineItems)
+                ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
+
+                var pricing = productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions,
+                    marketplaceBooking.ProductPricing);
+
+                ArgumentNullException.ThrowIfNull(pricing);
+
+                table.Cell().Element(CellStyle).Padding(8)
+                    .Text(
+                        $"{productVersion.Name}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}");
+
+                var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
+                var quantity = pricing.Cadence switch
                 {
-                    var productVersion = productVersions.First(item => item.Id == lineItem.ProductVersionId);
-                    ArgumentNullException.ThrowIfNull(productVersion.Price);
-                    ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.PriceUnit);
+                    ProductPricingCadence.OneTimeV1 => marketplaceBooking.Quantity,
+                    ProductPricingCadence.PerMinuteV1 => marketplaceBooking.Quantity * totalMinutes,
+                    ProductPricingCadence.PerHourV1 => marketplaceBooking.Quantity * (totalMinutes / 60),
+                    // TODO: 20260302 : Morteza: Implement other cadence 
+                    // ProductVersionPricingCadence.DailyV1 => expr,
+                    // ProductVersionPricingCadence.WeeklyV1 => expr,
+                    // ProductVersionPricingCadence.MonthlyV1 => expr,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                    table.Cell().Element(CellStyle).Padding(8)
-                        .Text(
-                            $"{productVersion.Name}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}");
+                table.Cell().Element(CellStyle).AlignRight().Text(quantity.ToString());
 
-                    var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
-                    var quantity = productVersion.PriceUnit.ToPriceUnit() switch
-                    {
-                        PriceUnit.PerMinute => lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerHour => lineItem.Quantity * (totalMinutes / 60),
-                        PriceUnit.PerUse => lineItem.Quantity,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
+                var price = organization.TaxDetails is null
+                    ? pricing.Price
+                    : pricing.IsTaxInclusive
+                        ? pricing.Price * 100 / (Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage) + 100)
+                        : pricing.Price;
 
-                    table.Cell().Element(CellStyle).AlignRight().Text(quantity.ToString());
+                table.Cell().Element(CellStyle).AlignRight()
+                    .Text($"{price.ToRoundedPrice()} {pricing.Cadence.ToInvoicePriceUnitName()}");
 
-                    var price = organization.TaxDetails is null
-                        ? productVersion.Price.Value
-                        : productVersion.IsPriceTaxInclusive!.Value
-                            ? productVersion.Price.Value * 100 / (Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage) + 100)
-                            : productVersion.Price.Value;
+                var totalPrice = pricing.Cadence switch
+                {
+                    ProductPricingCadence.OneTimeV1 => price * marketplaceBooking.Quantity,
+                    ProductPricingCadence.PerMinuteV1 => price * marketplaceBooking.Quantity * totalMinutes,
+                    ProductPricingCadence.PerHourV1 => price / 60 * marketplaceBooking.Quantity * totalMinutes,
+                    // TODO: 20260302 : Morteza: Implement other cadence 
+                    // ProductVersionPricingCadence.DailyV1 => expr,
+                    // ProductVersionPricingCadence.WeeklyV1 => expr,
+                    // ProductVersionPricingCadence.MonthlyV1 => expr,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
 
-                    table.Cell().Element(CellStyle).AlignRight()
-                        .Text($"{price.ToRoundedPrice()} {productVersion.PriceUnit.ToInvoicePriceUnitName()}");
-
-                    var totalPrice = productVersion.PriceUnit.ToPriceUnit() switch
-                    {
-                        PriceUnit.PerMinute => price * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerHour => price / 60 * lineItem.Quantity * totalMinutes,
-                        PriceUnit.PerUse => price * lineItem.Quantity,
-                        _ => throw new ArgumentOutOfRangeException()
-                    };
-
-                    table.Cell().Element(CellStyle).AlignRight().Text(totalPrice.ToRoundedPrice());
-                }
+                table.Cell().Element(CellStyle).AlignRight().Text(totalPrice.ToRoundedPrice());
 
                 static IContainer CellStyle(IContainer container)
                 {
@@ -243,12 +262,12 @@ public class BookingInvoiceService(
                 });
         }
 
-        private class TotalAmountComponent(Database.Entities.Booking booking, ICollection<ProductVersion> productVersions, bool fullyPaid)
+        private class TotalAmountComponent(Database.Entities.Booking booking, ProductVersion productVersion, bool fullyPaid)
             : IComponent
         {
             public void Compose(IContainer container)
             {
-                var currency = productVersions.First().Currency;
+                var currency = productVersion.Currency;
                 ArgumentException.ThrowIfNullOrWhiteSpace(currency);
 
                 var marketplaceBooking = booking.MarketplaceBooking;

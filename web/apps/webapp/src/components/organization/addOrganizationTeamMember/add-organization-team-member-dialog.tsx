@@ -191,7 +191,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
                 <LeadIconTypography label="Add member to this team" />
                 <SmallIconTypography label="Enter a name to invite them to this team. Please note, you can only invite members from your organization." />
 
-                <FormFieldLabel label="Member" useWiderSpace sx={{ paddingTop: 2 }}>
+                <FormFieldLabel label="Member" sx={{ paddingTop: 2 }}>
                   <Autocomplete
                     name="member"
                     multiple={false}

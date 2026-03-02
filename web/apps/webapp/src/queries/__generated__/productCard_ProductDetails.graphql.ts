@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cbb671dd1937b233b4c3de462530494>>
+ * @generated SignedSource<<a415c077fa9b71d5236058a6daae9b7e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,13 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type Currency = "NZD" | "USD" | "%future added value";
+export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_ProductDetails$data = {
+  readonly currency: {
+    readonly type: Currency;
+  };
   readonly description: string | null | undefined;
   readonly featureImages: ReadonlyArray<{
     readonly thumbnail: {
@@ -21,18 +26,17 @@ export type productCard_ProductDetails$data = {
   }>;
   readonly id: string;
   readonly inactive: boolean;
-  readonly isPriceTaxInclusive: boolean;
-  readonly maxDurationMinutes: number | null | undefined;
-  readonly minDurationMinutes: number | null | undefined;
   readonly name: string;
-  readonly numberOfResourcesToBook: number;
   readonly organization: {
     readonly id: string;
   };
-  readonly priceToDisplay: string;
-  readonly priceUnit: {
+  readonly pricingOptions: ReadonlyArray<{
+    readonly cadence: ProductPricingCadence;
+    readonly index: number;
+    readonly isTaxInclusive: boolean;
     readonly name: string;
-  };
+    readonly price: any;
+  }>;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
 export type productCard_ProductDetails$key = {
@@ -75,46 +79,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "description",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "priceToDisplay",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PriceUnitDetails",
-      "kind": "LinkedField",
-      "name": "priceUnit",
-      "plural": false,
-      "selections": [
-        (v1/*: any*/)
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "numberOfResourcesToBook",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "minDurationMinutes",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "maxDurationMinutes",
       "storageKey": null
     },
     {
@@ -175,8 +139,59 @@ return {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "isPriceTaxInclusive",
+      "concreteType": "CurrencyDetails",
+      "kind": "LinkedField",
+      "name": "currency",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "type",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ProductPricing",
+      "kind": "LinkedField",
+      "name": "pricingOptions",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "index",
+          "storageKey": null
+        },
+        (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "cadence",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "price",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isTaxInclusive",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -185,6 +200,6 @@ return {
 };
 })();
 
-(node as any).hash = "a23dce4ea4696fa021f09fdc8f901525";
+(node as any).hash = "c88a4f2c20223cdca8887401878460ef";
 
 export default node;

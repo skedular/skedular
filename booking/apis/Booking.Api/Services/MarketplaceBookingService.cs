@@ -32,10 +32,14 @@ public class MarketplaceBookingService(
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
         }
 
-        if (marketplaceBooking.LineItems.Count == 0 ||
-            marketplaceBooking.LineItems.Any(item => item.Quantity <= 0 || string.IsNullOrWhiteSpace(item.ProductVersionId)))
+        if (marketplaceBooking.Quantity <= 0)
         {
-            throw new ArgumentException(nameof(marketplaceBooking.LineItems));
+            throw new ArgumentException(nameof(marketplaceBooking.Quantity));
+        }
+
+        if (string.IsNullOrWhiteSpace(marketplaceBooking.ProductVersion.Id))
+        {
+            throw new ArgumentException(nameof(marketplaceBooking.ProductVersion));
         }
 
         var verifiableToken = context.GetVerifiableToken();
@@ -131,11 +135,6 @@ public class MarketplaceBookingService(
         Customer callingCustomer,
         CancellationToken cancellationToken)
     {
-        if (existingBooking.From != booking.From || existingBooking.Until != booking.Until)
-        {
-            throw new MarketplaceBookingDatesCannotBeChanged();
-        }
-
         var organizations = await organizationAuthorizationService.GetOrganizationsAndValidatePermissionsAsync(
             booking.InvolvedOrganizations
                 .Where(item => !string.IsNullOrWhiteSpace(item.Id))

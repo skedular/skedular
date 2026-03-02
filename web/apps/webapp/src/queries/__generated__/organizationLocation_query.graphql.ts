@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e56106d53d014480f92aaf92561fb8f6>>
+ * @generated SignedSource<<0aefb14fc5fdeccacb211f2104674470>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -135,7 +135,6 @@ export type organizationLocation_query$data = {
       readonly id: string;
     }>;
   };
-  readonly openingHoursMinutesStep: number;
   readonly organization: {
     readonly type: {
       readonly type: OrganizationType;
@@ -733,13 +732,6 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesLocationTags_query"
@@ -775,6 +767,6 @@ return {
 };
 })();
 
-(node as any).hash = "30189b44834a4d41984ceb30707ff9d1";
+(node as any).hash = "7892ff514664cba8852c446a4657e7e4";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fcf583db4a9f5c205b699a1028144828>>
+ * @generated SignedSource<<e21a32068c0952d2d7fc5fbe17175708>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,18 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
+export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
+  readonly bookingSlotSizeInMinutes: number;
+  readonly currencies: ReadonlyArray<{
+    readonly name: string;
+    readonly type: Currency;
+  }>;
   readonly me: {
     readonly emails: ReadonlyArray<string>;
     readonly id: string;
   };
-  readonly openingHoursMinutesStep: number;
   readonly organization: {
     readonly taxDetails: {
       readonly taxId: string;
@@ -26,28 +30,29 @@ export type bookProduct_query$data = {
     } | null | undefined;
   } | null | undefined;
   readonly product: {
-    readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-      readonly type: PaymentMethod;
-    }>;
-    readonly bookAllLocationResources: boolean;
     readonly currency: {
       readonly name: string;
       readonly type: Currency;
     };
-    readonly currencyToDisplay: string;
     readonly description: string | null | undefined;
     readonly id: string;
-    readonly isPriceTaxInclusive: boolean;
     readonly latestProductVersionId: string;
-    readonly maxDurationMinutes: number | null | undefined;
-    readonly minDurationMinutes: number | null | undefined;
     readonly name: string;
-    readonly numberOfResourcesToBook: number;
-    readonly price: string;
-    readonly priceUnit: {
+    readonly pricingOptions: ReadonlyArray<{
+      readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+      readonly cadence: ProductPricingCadence;
+      readonly description: string;
+      readonly id: string;
+      readonly index: number;
+      readonly isTaxInclusive: boolean;
+      readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+      readonly maxAllowedResourcesLockTimePaidViaCard: number;
+      readonly maxDurationMinutes: number | null | undefined;
+      readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
-      readonly type: PriceUnit;
-    };
+      readonly numberOfResourcesToBook: number;
+      readonly price: any;
+    }>;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingCategory_query">;
   readonly " $fragmentType": "bookProduct_query";
@@ -76,11 +81,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "description",
   "storageKey": null
 },
 v3 = [
-  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
   (v1/*: any*/)
 ];
 return {
@@ -175,37 +186,7 @@ return {
       "selections": [
         (v0/*: any*/),
         (v1/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "description",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "price",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PriceUnitDetails",
-          "kind": "LinkedField",
-          "name": "priceUnit",
-          "plural": false,
-          "selections": (v3/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "currencyToDisplay",
-          "storageKey": null
-        },
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -220,54 +201,91 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "numberOfResourcesToBook",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "minDurationMinutes",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "maxDurationMinutes",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "bookAllLocationResources",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "latestProductVersionId",
           "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Marketplace_PaymentMethodTypeDetails",
+          "concreteType": "ProductPricing",
           "kind": "LinkedField",
-          "name": "acceptedBookingPaymentMethods",
+          "name": "pricingOptions",
           "plural": true,
           "selections": [
-            (v2/*: any*/)
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "index",
+              "storageKey": null
+            },
+            (v1/*: any*/),
+            (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cadence",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "price",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "numberOfResourcesToBook",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "minDurationMinutes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxDurationMinutes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isTaxInclusive",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxAllowedResourcesLockTimePaidViaCard",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "acceptedPaymentMethods",
+              "storageKey": null
+            }
           ],
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isPriceTaxInclusive",
           "storageKey": null
         }
       ],
@@ -276,8 +294,18 @@ return {
     {
       "alias": null,
       "args": null,
+      "concreteType": "CurrencyDetails",
+      "kind": "LinkedField",
+      "name": "currencies",
+      "plural": true,
+      "selections": (v3/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
+      "name": "bookingSlotSizeInMinutes",
       "storageKey": null
     },
     {
@@ -301,6 +329,6 @@ return {
 };
 })();
 
-(node as any).hash = "10d621c96e5d3214b13591bc366d71a1";
+(node as any).hash = "0e2b746ab2000b90a1e0d276091d0929";
 
 export default node;

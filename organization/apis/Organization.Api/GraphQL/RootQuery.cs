@@ -18,7 +18,7 @@ public class RootQuery(IVersionService versionService)
     }
 
     [UseResolverScope]
-    public int OpeningHoursMinutesStep() => OpeningHoursDetails.OpeningHoursSlotSizeInMinutes;
+    public int BookingSlotSizeInMinutes() => OpeningHoursDetails.BookingSlotSizeInMinutes;
 
     [UseResolverScope]
     public IEnumerable<OrganizationTagTypeDetails> ResourceTypes() =>

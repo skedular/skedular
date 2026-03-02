@@ -4,7 +4,6 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;
-using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using RecurringBooking = Booking.Shared.Models.RecurringBooking;
@@ -30,9 +29,9 @@ public class MarketplaceRecurringBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
-    IProductService productService,
     IRandomHelper randomHelper,
-    ITemporalOutboxService temporalOutboxService) : IMarketplaceRecurringBookingService
+    ITemporalOutboxService temporalOutboxService,
+    IProductVersionHelperService productVersionHelperService) : IMarketplaceRecurringBookingService
 {
     public async Task<RecurringBooking> AddAsync(
         RecurringBooking recurringBooking,
@@ -51,42 +50,26 @@ public class MarketplaceRecurringBookingService(
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-        var productVersions = await productService.GetProductVersionsAsync(
-            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
-            cancellationToken);
-
-        if (productVersions.Any(item => item.ProductTags.Count == 0))
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        if (productVersion.ProductTags.Count == 0)
         {
             throw new ProductMissingProductTag();
         }
 
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-        if (organizationIds.Count > 1)
-        {
-            throw new CrossOrganizationProductBookingNotAllowed();
-        }
+        ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
-        if (!productVersions.All(item => item.IsPriceTaxInclusive is null) &&
-            !productVersions.All(item => item.IsPriceTaxInclusive!.Value) &&
-            productVersions.Any(item => item.IsPriceTaxInclusive!.Value))
-        {
-            throw new BookingProductWithMixedTaxSetupNotAllowed();
-        }
+        marketplaceBooking.ProductPricing =
+            productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
+            throw new ProductPricingNotFound();
 
         marketplaceBooking.Id = randomHelper.Generate();
         marketplaceBooking.IsPaymentRequired = true;
         marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;
 
-        if (productVersions.Any(item =>
-                !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(marketplaceBooking.PaymentMethod.ToPaymentMethod())))
+        if (!marketplaceBooking.ProductPricing.AcceptedPaymentMethods.Contains(marketplaceBooking.PaymentMethod))
         {
             throw new BookingPaymentMethodNotAccepted();
-        }
-
-        var currencies = productVersions.Select(item => item.Currency).Distinct().ToList();
-        if (currencies.Count > 1)
-        {
-            throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -95,7 +78,7 @@ public class MarketplaceRecurringBookingService(
             marketplaceBooking,
             customer,
             null,
-            productVersions,
+            productVersion,
             null);
 
         marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);

@@ -11,19 +11,8 @@ namespace Booking.Shared.Database.Entities;
 public class ProductVersion : EntityBase
 {
     public string? Name { get; set; }
-    public decimal? Price { get; set; }
-    public string? PriceUnit { get; set; }
-    public bool? IsPriceTaxInclusive { get; set; }
-    public decimal? PricePerMinute { get; set; }
     public string? Currency { get; set; }
-    public int? MinDurationMinutes { get; set; }
-    public int? MaxDurationMinutes { get; set; }
-    public bool? BookAllLocationResources { get; set; }
-    public int? NumberOfResourcesToBook { get; set; }
-    public int MaxAllowedResourcesLockTimePaidViaCard { get; set; }
-    public int MaxAllowedResourcesLockTimePaidViaBankTransfer { get; set; }
-    public ICollection<string>? AcceptedBookingPaymentMethods { get; set; } = [];
-    public ICollection<ProductVersionPricingOptions>? PricingOptions { get; set; } = [];
+    public ICollection<ProductPricing>? PricingOptions { get; set; } = [];
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
@@ -43,18 +32,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.ConfigureEntityBase();
 
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxProductNameLength);
-        builder.Property(item => item.PriceUnit).HasMaxLength(Constants.MaxProductPriceUnitLength);
-        builder.Property(item => item.Price).HasColumnType("DECIMAL(18,4)");
-        builder.Property(item => item.PricePerMinute).HasColumnType("DECIMAL(18,4)");
-        builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
-        builder.Property(item => item.BookAllLocationResources).HasDefaultValue(false);
-        builder.Property(item => item.NumberOfResourcesToBook).HasDefaultValue(1);
-        builder.Property(item => item.MaxAllowedResourcesLockTimePaidViaCard)
-            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard);
-        builder
-            .Property(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer)
-            .HasDefaultValue(Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer);
-        builder.Property(item => item.AcceptedBookingPaymentMethods).HasColumnType("jsonb");
+        builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.PricingOptions).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
@@ -62,7 +40,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
 
         builder.HasIndex(item => item.Name);
-        builder.HasIndex(item => item.PricePerMinute);
         builder.HasIndex(item => item.Currency);
     }
 }

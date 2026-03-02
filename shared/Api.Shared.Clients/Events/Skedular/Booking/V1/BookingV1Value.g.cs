@@ -31,7 +31,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "Y2UYAiABKAkSEQoJYXBwU291cmNlGAMgASgJEhsKBHR5cGUYBCABKA4yDS5i",
             "b29raW5nLlR5cGUSKAoEdGltZRgFIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5U",
             "aW1lc3RhbXASFQoNY29ycmVsYXRpb25JZBgGIAEoCSIpCgREYXRhEiEKB2Jv",
-            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmcipwUKB0Jvb2tpbmcSCgoC",
+            "b2tpbmcYASABKAsyEC5ib29raW5nLkJvb2tpbmciyAQKB0Jvb2tpbmcSCgoC",
             "aWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29vZ2xlLnByb3RvYnVm",
             "LlRpbWVzdGFtcBIoCgRmcm9tGAMgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRp",
             "bWVzdGFtcBIpCgV1bnRpbBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1l",
@@ -42,61 +42,34 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             "EiQKCXJlc291cmNlcxgLIAMoCzIRLmJvb2tpbmcuUmVzb3VyY2USKwoJU2No",
             "ZWR1bGVzGAwgAygLMhguYm9va2luZy5Cb29raW5nU2NoZWR1bGUSGwoTY3Jl",
             "YXRlZEJ5Q3VzdG9tZXJJZBgNIAEoCRIgChhsYXN0TW9kaWZpZWRCeUN1c3Rv",
-            "bWVySWQYDiABKAkSGwoTZGVsZXRlZEJ5Q3VzdG9tZXJJZBgPIAEoCRIkCgls",
-            "aW5lSXRlbXMYECADKAsyES5ib29raW5nLkxpbmVJdGVtEigKB2NoYW5uZWwY",
-            "ESABKA4yFy5ib29raW5nLkJvb2tpbmdDaGFubmVsEjcKEm1hcmtldHBsYWNl",
-            "Qm9va2luZxgSIAEoCzIbLmJvb2tpbmcuTWFya2V0cGxhY2VCb29raW5nEiUK",
-            "HWhhc1JlY3VycmluZ0luc3RhbmNlT3ZlcnJpZGVzGBMgASgIIqQEChJNYXJr",
-            "ZXRwbGFjZUJvb2tpbmcSCgoCaWQYASABKAkSLQoNcGF5bWVudFN0YXR1cxgC",
-            "IAEoDjIWLmJvb2tpbmcuUGF5bWVudFN0YXR1cxIZChFpc1BheW1lbnRSZXF1",
-            "aXJlZBgDIAEoCBIYChBwYWlkQnlDdXN0b21lcklkGAQgASgJEhwKFHBhaWRC",
-            "eU9yZ2FuaXphdGlvbklkGAUgASgJEiQKCWxpbmVJdGVtcxgGIAMoCzIRLmJv",
-            "b2tpbmcuTGluZUl0ZW0SPwoWYm9va2luZ0NoZWNrb3V0U2Vzc2lvbhgHIAEo",
-            "CzIfLmJvb2tpbmcuQm9va2luZ0NoZWNrb3V0U2Vzc2lvbhItCg1QYXltZW50",
-            "TWV0aG9kGAggASgOMhYuYm9va2luZy5QYXltZW50TWV0aG9kEh0KFXRvdGFs",
-            "QW1vdW50RXhjbHVkZVRheBgJIAEoARIRCgl0YXhBbW91bnQYCiABKAESGQoR",
-            "dGF4UmF0ZVBlcmNlbnRhZ2UYCyABKAESEwoLdG90YWxBbW91bnQYDCABKAES",
-            "EAoIY3VycmVuY3kYDSABKAkSEgoKSW52b2ljZVVybBgOIAEoCRIVCg1JbnZv",
-            "aWNlTnVtYmVyGA8gASgJEhgKEEludm9pY2VFbWFpbExpc3QYECADKAkSMQoN",
-            "cGF5bWVudEV4cGlyeRgRIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
-            "bXAiFgoIUmVzb3VyY2USCgoCaWQYASABKAkiZgoPQm9va2luZ1NjaGVkdWxl",
-            "EigKBGZyb20YASABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEikK",
-            "BXVudGlsGAIgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcCI2CghM",
-            "aW5lSXRlbRIYChBwcm9kdWN0VmVyc2lvbklkGAEgASgJEhAKCHF1YW50aXR5",
-            "GAIgASgFIjkKFkJvb2tpbmdDaGVja291dFNlc3Npb24SCgoCaWQYASABKAkS",
-            "EwoLY2hlY2tvdXRVcmwYAiABKAkqOQoEVHlwZRIYChRUeXBlX0Jvb2tpbmdV",
-            "cHNlcnRlZBAAEhcKE1R5cGVfQm9va2luZ0RlbGV0ZWQQASr5AgoPQm9va2lu",
-            "Z0NhdGVnb3J5EiMKH0Jvb2tpbmdDYXRlZ29yeV9Xb3JraW5nRnJvbUhvbWUQ",
-            "ABIlCiFCb29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21PZmZpY2UQARItCilC",
-            "b29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21Db3dvcmtpbmdTcGFjZRACEh0K",
-            "GUJvb2tpbmdDYXRlZ29yeV9TaWNrTGVhdmUQAxIfChtCb29raW5nQ2F0ZWdv",
-            "cnlfQW5udWFsTGVhdmUQBBIiCh5Cb29raW5nQ2F0ZWdvcnlfV2VsbGJlaW5n",
-            "TGVhdmUQBRIgChxCb29raW5nQ2F0ZWdvcnlfQ2xpZW50T2ZmaWNlEAYSHAoY",
-            "Qm9va2luZ0NhdGVnb3J5X1ZhY2F0aW9uEAcSJAogQm9va2luZ0NhdGVnb3J5",
-            "X1RyYXZlbGluZ0ZvcldvcmsQCBIhCh1Cb29raW5nQ2F0ZWdvcnlfTm9uV29y",
-            "a2luZ0RheRAJKkwKDkJvb2tpbmdDaGFubmVsEhoKFkJvb2tpbmdDaGFubmVs",
-            "X1ByaXZhdGUQABIeChpCb29raW5nQ2hhbm5lbF9NYXJrZXRwbGFjZRABKuMB",
-            "Cg1QYXltZW50U3RhdHVzEhgKFFBheW1lbnRTdGF0dXNfTm90U2V0EAASGQoV",
-            "UGF5bWVudFN0YXR1c19QZW5kaW5nEAESGgoWUGF5bWVudFN0YXR1c19SZWpl",
-            "Y3RlZBACEhsKF1BheW1lbnRTdGF0dXNfQ29uZmlybWVkEAMSGQoVUGF5bWVu",
-            "dFN0YXR1c19FeHBpcmVkEAQSJAogUGF5bWVudFN0YXR1c19SZWNvcmROZXZl",
-            "ckNyZWF0ZWQQBRIjCh9QYXltZW50U3RhdHVzX05vUGF5bWVudFJlcXVpcmVk",
-            "EAYqRgoNUGF5bWVudE1ldGhvZBIWChJQYXltZW50TWV0aG9kX0NhcmQQABId",
-            "ChlQYXltZW50TWV0aG9kX0JhbmtBY2NvdW50EAFCNqoCM0FwaS5TaGFyZWQu",
-            "Q2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQm9va2luZy5WMS5WYWx1ZWIGcHJv",
-            "dG8z"));
+            "bWVySWQYDiABKAkSGwoTZGVsZXRlZEJ5Q3VzdG9tZXJJZBgPIAEoCRIoCgdj",
+            "aGFubmVsGBEgASgOMhcuYm9va2luZy5Cb29raW5nQ2hhbm5lbBIlCh1oYXNS",
+            "ZWN1cnJpbmdJbnN0YW5jZU92ZXJyaWRlcxgSIAEoCCIWCghSZXNvdXJjZRIK",
+            "CgJpZBgBIAEoCSJmCg9Cb29raW5nU2NoZWR1bGUSKAoEZnJvbRgBIAEoCzIa",
+            "Lmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASKQoFdW50aWwYAiABKAsyGi5n",
+            "b29nbGUucHJvdG9idWYuVGltZXN0YW1wKjkKBFR5cGUSGAoUVHlwZV9Cb29r",
+            "aW5nVXBzZXJ0ZWQQABIXChNUeXBlX0Jvb2tpbmdEZWxldGVkEAEq+QIKD0Jv",
+            "b2tpbmdDYXRlZ29yeRIjCh9Cb29raW5nQ2F0ZWdvcnlfV29ya2luZ0Zyb21I",
+            "b21lEAASJQohQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9tT2ZmaWNlEAES",
+            "LQopQm9va2luZ0NhdGVnb3J5X1dvcmtpbmdGcm9tQ293b3JraW5nU3BhY2UQ",
+            "AhIdChlCb29raW5nQ2F0ZWdvcnlfU2lja0xlYXZlEAMSHwobQm9va2luZ0Nh",
+            "dGVnb3J5X0FubnVhbExlYXZlEAQSIgoeQm9va2luZ0NhdGVnb3J5X1dlbGxi",
+            "ZWluZ0xlYXZlEAUSIAocQm9va2luZ0NhdGVnb3J5X0NsaWVudE9mZmljZRAG",
+            "EhwKGEJvb2tpbmdDYXRlZ29yeV9WYWNhdGlvbhAHEiQKIEJvb2tpbmdDYXRl",
+            "Z29yeV9UcmF2ZWxpbmdGb3JXb3JrEAgSIQodQm9va2luZ0NhdGVnb3J5X05v",
+            "bldvcmtpbmdEYXkQCSpMCg5Cb29raW5nQ2hhbm5lbBIaChZCb29raW5nQ2hh",
+            "bm5lbF9Qcml2YXRlEAASHgoaQm9va2luZ0NoYW5uZWxfTWFya2V0cGxhY2UQ",
+            "AUI2qgIzQXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Cb29r",
+            "aW5nLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCategory), typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Data.Parser, new[]{ "Booking" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "LineItems", "Channel", "MarketplaceBooking", "HasRecurringInstanceOverrides" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking.Parser, new[]{ "Id", "PaymentStatus", "IsPaymentRequired", "PaidByCustomerId", "PaidByOrganizationId", "LineItems", "BookingCheckoutSession", "PaymentMethod", "TotalAmountExcludeTax", "TaxAmount", "TaxRatePercentage", "TotalAmount", "Currency", "InvoiceUrl", "InvoiceNumber", "InvoiceEmailList", "PaymentExpiry" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking.Parser, new[]{ "Id", "DeletedAt", "From", "Until", "Notes", "Category", "InvolvedCustomerIds", "InvolvedOrganizationIds", "InvolvedLocationIds", "InvolvedTeamIds", "Resources", "Schedules", "CreatedByCustomerId", "LastModifiedByCustomerId", "DeletedByCustomerId", "Channel", "HasRecurringInstanceOverrides" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource.Parser, new[]{ "Id" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser, new[]{ "ProductVersionId", "Quantity" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession.Parser, new[]{ "Id", "CheckoutUrl" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule), global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingSchedule.Parser, new[]{ "From", "Until" }, null, null, null, null)
           }));
     }
     #endregion
@@ -124,21 +97,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
   public enum BookingChannel {
     [pbr::OriginalName("BookingChannel_Private")] Private = 0,
     [pbr::OriginalName("BookingChannel_Marketplace")] Marketplace = 1,
-  }
-
-  public enum PaymentStatus {
-    [pbr::OriginalName("PaymentStatus_NotSet")] NotSet = 0,
-    [pbr::OriginalName("PaymentStatus_Pending")] Pending = 1,
-    [pbr::OriginalName("PaymentStatus_Rejected")] Rejected = 2,
-    [pbr::OriginalName("PaymentStatus_Confirmed")] Confirmed = 3,
-    [pbr::OriginalName("PaymentStatus_Expired")] Expired = 4,
-    [pbr::OriginalName("PaymentStatus_RecordNeverCreated")] RecordNeverCreated = 5,
-    [pbr::OriginalName("PaymentStatus_NoPaymentRequired")] NoPaymentRequired = 6,
-  }
-
-  public enum PaymentMethod {
-    [pbr::OriginalName("PaymentMethod_Card")] Card = 0,
-    [pbr::OriginalName("PaymentMethod_BankAccount")] BankAccount = 1,
   }
 
   #endregion
@@ -1046,9 +1004,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       createdByCustomerId_ = other.createdByCustomerId_;
       lastModifiedByCustomerId_ = other.lastModifiedByCustomerId_;
       deletedByCustomerId_ = other.deletedByCustomerId_;
-      lineItems_ = other.lineItems_.Clone();
       channel_ = other.channel_;
-      marketplaceBooking_ = other.marketplaceBooking_ != null ? other.marketplaceBooking_.Clone() : null;
       hasRecurringInstanceOverrides_ = other.hasRecurringInstanceOverrides_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
@@ -1233,17 +1189,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "lineItems" field.</summary>
-    public const int LineItemsFieldNumber = 16;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> _repeated_lineItems_codec
-        = pb::FieldCodec.ForMessage(130, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> lineItems_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> LineItems {
-      get { return lineItems_; }
-    }
-
     /// <summary>Field number for the "channel" field.</summary>
     public const int ChannelFieldNumber = 17;
     private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel channel_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private;
@@ -1256,20 +1201,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "marketplaceBooking" field.</summary>
-    public const int MarketplaceBookingFieldNumber = 18;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking marketplaceBooking_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking MarketplaceBooking {
-      get { return marketplaceBooking_; }
-      set {
-        marketplaceBooking_ = value;
-      }
-    }
-
     /// <summary>Field number for the "hasRecurringInstanceOverrides" field.</summary>
-    public const int HasRecurringInstanceOverridesFieldNumber = 19;
+    public const int HasRecurringInstanceOverridesFieldNumber = 18;
     private bool hasRecurringInstanceOverrides_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -1310,9 +1243,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId != other.CreatedByCustomerId) return false;
       if (LastModifiedByCustomerId != other.LastModifiedByCustomerId) return false;
       if (DeletedByCustomerId != other.DeletedByCustomerId) return false;
-      if(!lineItems_.Equals(other.lineItems_)) return false;
       if (Channel != other.Channel) return false;
-      if (!object.Equals(MarketplaceBooking, other.MarketplaceBooking)) return false;
       if (HasRecurringInstanceOverrides != other.HasRecurringInstanceOverrides) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -1336,9 +1267,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (CreatedByCustomerId.Length != 0) hash ^= CreatedByCustomerId.GetHashCode();
       if (LastModifiedByCustomerId.Length != 0) hash ^= LastModifiedByCustomerId.GetHashCode();
       if (DeletedByCustomerId.Length != 0) hash ^= DeletedByCustomerId.GetHashCode();
-      hash ^= lineItems_.GetHashCode();
       if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) hash ^= Channel.GetHashCode();
-      if (marketplaceBooking_ != null) hash ^= MarketplaceBooking.GetHashCode();
       if (HasRecurringInstanceOverrides != false) hash ^= HasRecurringInstanceOverrides.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -1400,17 +1329,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(122);
         output.WriteString(DeletedByCustomerId);
       }
-      lineItems_.WriteTo(output, _repeated_lineItems_codec);
       if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
         output.WriteRawTag(136, 1);
         output.WriteEnum((int) Channel);
       }
-      if (marketplaceBooking_ != null) {
-        output.WriteRawTag(146, 1);
-        output.WriteMessage(MarketplaceBooking);
-      }
       if (HasRecurringInstanceOverrides != false) {
-        output.WriteRawTag(152, 1);
+        output.WriteRawTag(144, 1);
         output.WriteBool(HasRecurringInstanceOverrides);
       }
       if (_unknownFields != null) {
@@ -1465,17 +1389,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
         output.WriteRawTag(122);
         output.WriteString(DeletedByCustomerId);
       }
-      lineItems_.WriteTo(ref output, _repeated_lineItems_codec);
       if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
         output.WriteRawTag(136, 1);
         output.WriteEnum((int) Channel);
       }
-      if (marketplaceBooking_ != null) {
-        output.WriteRawTag(146, 1);
-        output.WriteMessage(MarketplaceBooking);
-      }
       if (HasRecurringInstanceOverrides != false) {
-        output.WriteRawTag(152, 1);
+        output.WriteRawTag(144, 1);
         output.WriteBool(HasRecurringInstanceOverrides);
       }
       if (_unknownFields != null) {
@@ -1521,12 +1440,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (DeletedByCustomerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(DeletedByCustomerId);
       }
-      size += lineItems_.CalculateSize(_repeated_lineItems_codec);
       if (Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
         size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) Channel);
-      }
-      if (marketplaceBooking_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MarketplaceBooking);
       }
       if (HasRecurringInstanceOverrides != false) {
         size += 2 + 1;
@@ -1585,15 +1500,8 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
       if (other.DeletedByCustomerId.Length != 0) {
         DeletedByCustomerId = other.DeletedByCustomerId;
       }
-      lineItems_.Add(other.lineItems_);
       if (other.Channel != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel.Private) {
         Channel = other.Channel;
-      }
-      if (other.marketplaceBooking_ != null) {
-        if (marketplaceBooking_ == null) {
-          MarketplaceBooking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking();
-        }
-        MarketplaceBooking.MergeFrom(other.MarketplaceBooking);
       }
       if (other.HasRecurringInstanceOverrides != false) {
         HasRecurringInstanceOverrides = other.HasRecurringInstanceOverrides;
@@ -1686,22 +1594,11 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             DeletedByCustomerId = input.ReadString();
             break;
           }
-          case 130: {
-            lineItems_.AddEntriesFrom(input, _repeated_lineItems_codec);
-            break;
-          }
           case 136: {
             Channel = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel) input.ReadEnum();
             break;
           }
-          case 146: {
-            if (marketplaceBooking_ == null) {
-              MarketplaceBooking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking();
-            }
-            input.ReadMessage(MarketplaceBooking);
-            break;
-          }
-          case 152: {
+          case 144: {
             HasRecurringInstanceOverrides = input.ReadBool();
             break;
           }
@@ -1793,809 +1690,12 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
             DeletedByCustomerId = input.ReadString();
             break;
           }
-          case 130: {
-            lineItems_.AddEntriesFrom(ref input, _repeated_lineItems_codec);
-            break;
-          }
           case 136: {
             Channel = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingChannel) input.ReadEnum();
             break;
           }
-          case 146: {
-            if (marketplaceBooking_ == null) {
-              MarketplaceBooking = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.MarketplaceBooking();
-            }
-            input.ReadMessage(MarketplaceBooking);
-            break;
-          }
-          case 152: {
+          case 144: {
             HasRecurringInstanceOverrides = input.ReadBool();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class MarketplaceBooking : pb::IMessage<MarketplaceBooking>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<MarketplaceBooking> _parser = new pb::MessageParser<MarketplaceBooking>(() => new MarketplaceBooking());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<MarketplaceBooking> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[4]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public MarketplaceBooking() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public MarketplaceBooking(MarketplaceBooking other) : this() {
-      id_ = other.id_;
-      paymentStatus_ = other.paymentStatus_;
-      isPaymentRequired_ = other.isPaymentRequired_;
-      paidByCustomerId_ = other.paidByCustomerId_;
-      paidByOrganizationId_ = other.paidByOrganizationId_;
-      lineItems_ = other.lineItems_.Clone();
-      bookingCheckoutSession_ = other.bookingCheckoutSession_ != null ? other.bookingCheckoutSession_.Clone() : null;
-      paymentMethod_ = other.paymentMethod_;
-      totalAmountExcludeTax_ = other.totalAmountExcludeTax_;
-      taxAmount_ = other.taxAmount_;
-      taxRatePercentage_ = other.taxRatePercentage_;
-      totalAmount_ = other.totalAmount_;
-      currency_ = other.currency_;
-      invoiceUrl_ = other.invoiceUrl_;
-      invoiceNumber_ = other.invoiceNumber_;
-      invoiceEmailList_ = other.invoiceEmailList_.Clone();
-      paymentExpiry_ = other.paymentExpiry_ != null ? other.paymentExpiry_.Clone() : null;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public MarketplaceBooking Clone() {
-      return new MarketplaceBooking(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "paymentStatus" field.</summary>
-    public const int PaymentStatusFieldNumber = 2;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus paymentStatus_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus PaymentStatus {
-      get { return paymentStatus_; }
-      set {
-        paymentStatus_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "isPaymentRequired" field.</summary>
-    public const int IsPaymentRequiredFieldNumber = 3;
-    private bool isPaymentRequired_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool IsPaymentRequired {
-      get { return isPaymentRequired_; }
-      set {
-        isPaymentRequired_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "paidByCustomerId" field.</summary>
-    public const int PaidByCustomerIdFieldNumber = 4;
-    private string paidByCustomerId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string PaidByCustomerId {
-      get { return paidByCustomerId_; }
-      set {
-        paidByCustomerId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "paidByOrganizationId" field.</summary>
-    public const int PaidByOrganizationIdFieldNumber = 5;
-    private string paidByOrganizationId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string PaidByOrganizationId {
-      get { return paidByOrganizationId_; }
-      set {
-        paidByOrganizationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "lineItems" field.</summary>
-    public const int LineItemsFieldNumber = 6;
-    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> _repeated_lineItems_codec
-        = pb::FieldCodec.ForMessage(50, global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem.Parser);
-    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> lineItems_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.LineItem> LineItems {
-      get { return lineItems_; }
-    }
-
-    /// <summary>Field number for the "bookingCheckoutSession" field.</summary>
-    public const int BookingCheckoutSessionFieldNumber = 7;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession bookingCheckoutSession_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession BookingCheckoutSession {
-      get { return bookingCheckoutSession_; }
-      set {
-        bookingCheckoutSession_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "PaymentMethod" field.</summary>
-    public const int PaymentMethodFieldNumber = 8;
-    private global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod paymentMethod_ = global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod PaymentMethod {
-      get { return paymentMethod_; }
-      set {
-        paymentMethod_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "totalAmountExcludeTax" field.</summary>
-    public const int TotalAmountExcludeTaxFieldNumber = 9;
-    private double totalAmountExcludeTax_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double TotalAmountExcludeTax {
-      get { return totalAmountExcludeTax_; }
-      set {
-        totalAmountExcludeTax_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "taxAmount" field.</summary>
-    public const int TaxAmountFieldNumber = 10;
-    private double taxAmount_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double TaxAmount {
-      get { return taxAmount_; }
-      set {
-        taxAmount_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "taxRatePercentage" field.</summary>
-    public const int TaxRatePercentageFieldNumber = 11;
-    private double taxRatePercentage_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double TaxRatePercentage {
-      get { return taxRatePercentage_; }
-      set {
-        taxRatePercentage_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "totalAmount" field.</summary>
-    public const int TotalAmountFieldNumber = 12;
-    private double totalAmount_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double TotalAmount {
-      get { return totalAmount_; }
-      set {
-        totalAmount_ = value;
-      }
-    }
-
-    /// <summary>Field number for the "currency" field.</summary>
-    public const int CurrencyFieldNumber = 13;
-    private string currency_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Currency {
-      get { return currency_; }
-      set {
-        currency_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "InvoiceUrl" field.</summary>
-    public const int InvoiceUrlFieldNumber = 14;
-    private string invoiceUrl_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string InvoiceUrl {
-      get { return invoiceUrl_; }
-      set {
-        invoiceUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "InvoiceNumber" field.</summary>
-    public const int InvoiceNumberFieldNumber = 15;
-    private string invoiceNumber_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string InvoiceNumber {
-      get { return invoiceNumber_; }
-      set {
-        invoiceNumber_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "InvoiceEmailList" field.</summary>
-    public const int InvoiceEmailListFieldNumber = 16;
-    private static readonly pb::FieldCodec<string> _repeated_invoiceEmailList_codec
-        = pb::FieldCodec.ForString(130);
-    private readonly pbc::RepeatedField<string> invoiceEmailList_ = new pbc::RepeatedField<string>();
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> InvoiceEmailList {
-      get { return invoiceEmailList_; }
-    }
-
-    /// <summary>Field number for the "paymentExpiry" field.</summary>
-    public const int PaymentExpiryFieldNumber = 17;
-    private global::Google.Protobuf.WellKnownTypes.Timestamp paymentExpiry_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Google.Protobuf.WellKnownTypes.Timestamp PaymentExpiry {
-      get { return paymentExpiry_; }
-      set {
-        paymentExpiry_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as MarketplaceBooking);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(MarketplaceBooking other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (PaymentStatus != other.PaymentStatus) return false;
-      if (IsPaymentRequired != other.IsPaymentRequired) return false;
-      if (PaidByCustomerId != other.PaidByCustomerId) return false;
-      if (PaidByOrganizationId != other.PaidByOrganizationId) return false;
-      if(!lineItems_.Equals(other.lineItems_)) return false;
-      if (!object.Equals(BookingCheckoutSession, other.BookingCheckoutSession)) return false;
-      if (PaymentMethod != other.PaymentMethod) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TotalAmountExcludeTax, other.TotalAmountExcludeTax)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TaxAmount, other.TaxAmount)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TaxRatePercentage, other.TaxRatePercentage)) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(TotalAmount, other.TotalAmount)) return false;
-      if (Currency != other.Currency) return false;
-      if (InvoiceUrl != other.InvoiceUrl) return false;
-      if (InvoiceNumber != other.InvoiceNumber) return false;
-      if(!invoiceEmailList_.Equals(other.invoiceEmailList_)) return false;
-      if (!object.Equals(PaymentExpiry, other.PaymentExpiry)) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) hash ^= PaymentStatus.GetHashCode();
-      if (IsPaymentRequired != false) hash ^= IsPaymentRequired.GetHashCode();
-      if (PaidByCustomerId.Length != 0) hash ^= PaidByCustomerId.GetHashCode();
-      if (PaidByOrganizationId.Length != 0) hash ^= PaidByOrganizationId.GetHashCode();
-      hash ^= lineItems_.GetHashCode();
-      if (bookingCheckoutSession_ != null) hash ^= BookingCheckoutSession.GetHashCode();
-      if (PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) hash ^= PaymentMethod.GetHashCode();
-      if (TotalAmountExcludeTax != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TotalAmountExcludeTax);
-      if (TaxAmount != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TaxAmount);
-      if (TaxRatePercentage != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TaxRatePercentage);
-      if (TotalAmount != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(TotalAmount);
-      if (Currency.Length != 0) hash ^= Currency.GetHashCode();
-      if (InvoiceUrl.Length != 0) hash ^= InvoiceUrl.GetHashCode();
-      if (InvoiceNumber.Length != 0) hash ^= InvoiceNumber.GetHashCode();
-      hash ^= invoiceEmailList_.GetHashCode();
-      if (paymentExpiry_ != null) hash ^= PaymentExpiry.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) PaymentStatus);
-      }
-      if (IsPaymentRequired != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(IsPaymentRequired);
-      }
-      if (PaidByCustomerId.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(PaidByCustomerId);
-      }
-      if (PaidByOrganizationId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(PaidByOrganizationId);
-      }
-      lineItems_.WriteTo(output, _repeated_lineItems_codec);
-      if (bookingCheckoutSession_ != null) {
-        output.WriteRawTag(58);
-        output.WriteMessage(BookingCheckoutSession);
-      }
-      if (PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) {
-        output.WriteRawTag(64);
-        output.WriteEnum((int) PaymentMethod);
-      }
-      if (TotalAmountExcludeTax != 0D) {
-        output.WriteRawTag(73);
-        output.WriteDouble(TotalAmountExcludeTax);
-      }
-      if (TaxAmount != 0D) {
-        output.WriteRawTag(81);
-        output.WriteDouble(TaxAmount);
-      }
-      if (TaxRatePercentage != 0D) {
-        output.WriteRawTag(89);
-        output.WriteDouble(TaxRatePercentage);
-      }
-      if (TotalAmount != 0D) {
-        output.WriteRawTag(97);
-        output.WriteDouble(TotalAmount);
-      }
-      if (Currency.Length != 0) {
-        output.WriteRawTag(106);
-        output.WriteString(Currency);
-      }
-      if (InvoiceUrl.Length != 0) {
-        output.WriteRawTag(114);
-        output.WriteString(InvoiceUrl);
-      }
-      if (InvoiceNumber.Length != 0) {
-        output.WriteRawTag(122);
-        output.WriteString(InvoiceNumber);
-      }
-      invoiceEmailList_.WriteTo(output, _repeated_invoiceEmailList_codec);
-      if (paymentExpiry_ != null) {
-        output.WriteRawTag(138, 1);
-        output.WriteMessage(PaymentExpiry);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
-        output.WriteRawTag(16);
-        output.WriteEnum((int) PaymentStatus);
-      }
-      if (IsPaymentRequired != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(IsPaymentRequired);
-      }
-      if (PaidByCustomerId.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(PaidByCustomerId);
-      }
-      if (PaidByOrganizationId.Length != 0) {
-        output.WriteRawTag(42);
-        output.WriteString(PaidByOrganizationId);
-      }
-      lineItems_.WriteTo(ref output, _repeated_lineItems_codec);
-      if (bookingCheckoutSession_ != null) {
-        output.WriteRawTag(58);
-        output.WriteMessage(BookingCheckoutSession);
-      }
-      if (PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) {
-        output.WriteRawTag(64);
-        output.WriteEnum((int) PaymentMethod);
-      }
-      if (TotalAmountExcludeTax != 0D) {
-        output.WriteRawTag(73);
-        output.WriteDouble(TotalAmountExcludeTax);
-      }
-      if (TaxAmount != 0D) {
-        output.WriteRawTag(81);
-        output.WriteDouble(TaxAmount);
-      }
-      if (TaxRatePercentage != 0D) {
-        output.WriteRawTag(89);
-        output.WriteDouble(TaxRatePercentage);
-      }
-      if (TotalAmount != 0D) {
-        output.WriteRawTag(97);
-        output.WriteDouble(TotalAmount);
-      }
-      if (Currency.Length != 0) {
-        output.WriteRawTag(106);
-        output.WriteString(Currency);
-      }
-      if (InvoiceUrl.Length != 0) {
-        output.WriteRawTag(114);
-        output.WriteString(InvoiceUrl);
-      }
-      if (InvoiceNumber.Length != 0) {
-        output.WriteRawTag(122);
-        output.WriteString(InvoiceNumber);
-      }
-      invoiceEmailList_.WriteTo(ref output, _repeated_invoiceEmailList_codec);
-      if (paymentExpiry_ != null) {
-        output.WriteRawTag(138, 1);
-        output.WriteMessage(PaymentExpiry);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PaymentStatus);
-      }
-      if (IsPaymentRequired != false) {
-        size += 1 + 1;
-      }
-      if (PaidByCustomerId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByCustomerId);
-      }
-      if (PaidByOrganizationId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(PaidByOrganizationId);
-      }
-      size += lineItems_.CalculateSize(_repeated_lineItems_codec);
-      if (bookingCheckoutSession_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(BookingCheckoutSession);
-      }
-      if (PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) {
-        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PaymentMethod);
-      }
-      if (TotalAmountExcludeTax != 0D) {
-        size += 1 + 8;
-      }
-      if (TaxAmount != 0D) {
-        size += 1 + 8;
-      }
-      if (TaxRatePercentage != 0D) {
-        size += 1 + 8;
-      }
-      if (TotalAmount != 0D) {
-        size += 1 + 8;
-      }
-      if (Currency.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Currency);
-      }
-      if (InvoiceUrl.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(InvoiceUrl);
-      }
-      if (InvoiceNumber.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(InvoiceNumber);
-      }
-      size += invoiceEmailList_.CalculateSize(_repeated_invoiceEmailList_codec);
-      if (paymentExpiry_ != null) {
-        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PaymentExpiry);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(MarketplaceBooking other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.PaymentStatus != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus.NotSet) {
-        PaymentStatus = other.PaymentStatus;
-      }
-      if (other.IsPaymentRequired != false) {
-        IsPaymentRequired = other.IsPaymentRequired;
-      }
-      if (other.PaidByCustomerId.Length != 0) {
-        PaidByCustomerId = other.PaidByCustomerId;
-      }
-      if (other.PaidByOrganizationId.Length != 0) {
-        PaidByOrganizationId = other.PaidByOrganizationId;
-      }
-      lineItems_.Add(other.lineItems_);
-      if (other.bookingCheckoutSession_ != null) {
-        if (bookingCheckoutSession_ == null) {
-          BookingCheckoutSession = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession();
-        }
-        BookingCheckoutSession.MergeFrom(other.BookingCheckoutSession);
-      }
-      if (other.PaymentMethod != global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod.Card) {
-        PaymentMethod = other.PaymentMethod;
-      }
-      if (other.TotalAmountExcludeTax != 0D) {
-        TotalAmountExcludeTax = other.TotalAmountExcludeTax;
-      }
-      if (other.TaxAmount != 0D) {
-        TaxAmount = other.TaxAmount;
-      }
-      if (other.TaxRatePercentage != 0D) {
-        TaxRatePercentage = other.TaxRatePercentage;
-      }
-      if (other.TotalAmount != 0D) {
-        TotalAmount = other.TotalAmount;
-      }
-      if (other.Currency.Length != 0) {
-        Currency = other.Currency;
-      }
-      if (other.InvoiceUrl.Length != 0) {
-        InvoiceUrl = other.InvoiceUrl;
-      }
-      if (other.InvoiceNumber.Length != 0) {
-        InvoiceNumber = other.InvoiceNumber;
-      }
-      invoiceEmailList_.Add(other.invoiceEmailList_);
-      if (other.paymentExpiry_ != null) {
-        if (paymentExpiry_ == null) {
-          PaymentExpiry = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-        }
-        PaymentExpiry.MergeFrom(other.PaymentExpiry);
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 16: {
-            PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus) input.ReadEnum();
-            break;
-          }
-          case 24: {
-            IsPaymentRequired = input.ReadBool();
-            break;
-          }
-          case 34: {
-            PaidByCustomerId = input.ReadString();
-            break;
-          }
-          case 42: {
-            PaidByOrganizationId = input.ReadString();
-            break;
-          }
-          case 50: {
-            lineItems_.AddEntriesFrom(input, _repeated_lineItems_codec);
-            break;
-          }
-          case 58: {
-            if (bookingCheckoutSession_ == null) {
-              BookingCheckoutSession = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession();
-            }
-            input.ReadMessage(BookingCheckoutSession);
-            break;
-          }
-          case 64: {
-            PaymentMethod = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod) input.ReadEnum();
-            break;
-          }
-          case 73: {
-            TotalAmountExcludeTax = input.ReadDouble();
-            break;
-          }
-          case 81: {
-            TaxAmount = input.ReadDouble();
-            break;
-          }
-          case 89: {
-            TaxRatePercentage = input.ReadDouble();
-            break;
-          }
-          case 97: {
-            TotalAmount = input.ReadDouble();
-            break;
-          }
-          case 106: {
-            Currency = input.ReadString();
-            break;
-          }
-          case 114: {
-            InvoiceUrl = input.ReadString();
-            break;
-          }
-          case 122: {
-            InvoiceNumber = input.ReadString();
-            break;
-          }
-          case 130: {
-            invoiceEmailList_.AddEntriesFrom(input, _repeated_invoiceEmailList_codec);
-            break;
-          }
-          case 138: {
-            if (paymentExpiry_ == null) {
-              PaymentExpiry = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(PaymentExpiry);
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 16: {
-            PaymentStatus = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentStatus) input.ReadEnum();
-            break;
-          }
-          case 24: {
-            IsPaymentRequired = input.ReadBool();
-            break;
-          }
-          case 34: {
-            PaidByCustomerId = input.ReadString();
-            break;
-          }
-          case 42: {
-            PaidByOrganizationId = input.ReadString();
-            break;
-          }
-          case 50: {
-            lineItems_.AddEntriesFrom(ref input, _repeated_lineItems_codec);
-            break;
-          }
-          case 58: {
-            if (bookingCheckoutSession_ == null) {
-              BookingCheckoutSession = new global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingCheckoutSession();
-            }
-            input.ReadMessage(BookingCheckoutSession);
-            break;
-          }
-          case 64: {
-            PaymentMethod = (global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.PaymentMethod) input.ReadEnum();
-            break;
-          }
-          case 73: {
-            TotalAmountExcludeTax = input.ReadDouble();
-            break;
-          }
-          case 81: {
-            TaxAmount = input.ReadDouble();
-            break;
-          }
-          case 89: {
-            TaxRatePercentage = input.ReadDouble();
-            break;
-          }
-          case 97: {
-            TotalAmount = input.ReadDouble();
-            break;
-          }
-          case 106: {
-            Currency = input.ReadString();
-            break;
-          }
-          case 114: {
-            InvoiceUrl = input.ReadString();
-            break;
-          }
-          case 122: {
-            InvoiceNumber = input.ReadString();
-            break;
-          }
-          case 130: {
-            invoiceEmailList_.AddEntriesFrom(ref input, _repeated_invoiceEmailList_codec);
-            break;
-          }
-          case 138: {
-            if (paymentExpiry_ == null) {
-              PaymentExpiry = new global::Google.Protobuf.WellKnownTypes.Timestamp();
-            }
-            input.ReadMessage(PaymentExpiry);
             break;
           }
         }
@@ -2620,7 +1720,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2818,7 +1918,7 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3047,476 +2147,6 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value {
               Until = new global::Google.Protobuf.WellKnownTypes.Timestamp();
             }
             input.ReadMessage(Until);
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class LineItem : pb::IMessage<LineItem>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<LineItem> _parser = new pb::MessageParser<LineItem>(() => new LineItem());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<LineItem> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[7]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LineItem() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LineItem(LineItem other) : this() {
-      productVersionId_ = other.productVersionId_;
-      quantity_ = other.quantity_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public LineItem Clone() {
-      return new LineItem(this);
-    }
-
-    /// <summary>Field number for the "productVersionId" field.</summary>
-    public const int ProductVersionIdFieldNumber = 1;
-    private string productVersionId_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string ProductVersionId {
-      get { return productVersionId_; }
-      set {
-        productVersionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "quantity" field.</summary>
-    public const int QuantityFieldNumber = 2;
-    private int quantity_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int Quantity {
-      get { return quantity_; }
-      set {
-        quantity_ = value;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as LineItem);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(LineItem other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (ProductVersionId != other.ProductVersionId) return false;
-      if (Quantity != other.Quantity) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (ProductVersionId.Length != 0) hash ^= ProductVersionId.GetHashCode();
-      if (Quantity != 0) hash ^= Quantity.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (ProductVersionId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ProductVersionId);
-      }
-      if (Quantity != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Quantity);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (ProductVersionId.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(ProductVersionId);
-      }
-      if (Quantity != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Quantity);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (ProductVersionId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(ProductVersionId);
-      }
-      if (Quantity != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Quantity);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(LineItem other) {
-      if (other == null) {
-        return;
-      }
-      if (other.ProductVersionId.Length != 0) {
-        ProductVersionId = other.ProductVersionId;
-      }
-      if (other.Quantity != 0) {
-        Quantity = other.Quantity;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            ProductVersionId = input.ReadString();
-            break;
-          }
-          case 16: {
-            Quantity = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            ProductVersionId = input.ReadString();
-            break;
-          }
-          case 16: {
-            Quantity = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class BookingCheckoutSession : pb::IMessage<BookingCheckoutSession>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<BookingCheckoutSession> _parser = new pb::MessageParser<BookingCheckoutSession>(() => new BookingCheckoutSession());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<BookingCheckoutSession> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Booking.V1.Value.BookingV1ValueReflection.Descriptor.MessageTypes[8]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public BookingCheckoutSession() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public BookingCheckoutSession(BookingCheckoutSession other) : this() {
-      id_ = other.id_;
-      checkoutUrl_ = other.checkoutUrl_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public BookingCheckoutSession Clone() {
-      return new BookingCheckoutSession(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    /// <summary>Field number for the "checkoutUrl" field.</summary>
-    public const int CheckoutUrlFieldNumber = 2;
-    private string checkoutUrl_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string CheckoutUrl {
-      get { return checkoutUrl_; }
-      set {
-        checkoutUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as BookingCheckoutSession);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(BookingCheckoutSession other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      if (CheckoutUrl != other.CheckoutUrl) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (CheckoutUrl.Length != 0) hash ^= CheckoutUrl.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (CheckoutUrl.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(CheckoutUrl);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (CheckoutUrl.Length != 0) {
-        output.WriteRawTag(18);
-        output.WriteString(CheckoutUrl);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (CheckoutUrl.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(CheckoutUrl);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(BookingCheckoutSession other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      if (other.CheckoutUrl.Length != 0) {
-        CheckoutUrl = other.CheckoutUrl;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            CheckoutUrl = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-          case 18: {
-            CheckoutUrl = input.ReadString();
             break;
           }
         }

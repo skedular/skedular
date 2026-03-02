@@ -176,7 +176,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             }
           }
         }
-        openingHoursMinutesStep
+        bookingSlotSizeInMinutes
         ...singleChoiceBookingCategory_query
       }
     `,
@@ -736,7 +736,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
                         </StackRow>
 
                         <Box sx={{ width: 'fit-content' }}>
-                          <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
                         </Box>
                       </StackColumn>
                     </FormFieldLabel>

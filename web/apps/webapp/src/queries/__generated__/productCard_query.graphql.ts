@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<420d350adc41341e0f6e67a78c6bd47d>>
+ * @generated SignedSource<<2fae102b29c2c8b84955f84e9c653936>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,21 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type Currency = "NZD" | "USD" | "%future added value";
+export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type productCard_query$data = {
+  readonly currencies: ReadonlyArray<{
+    readonly name: string;
+    readonly type: Currency;
+  }>;
   readonly organization: {
     readonly canModify: boolean;
   } | null | undefined;
+  readonly productPricingCadences: ReadonlyArray<{
+    readonly name: string;
+    readonly type: ProductPricingCadence;
+  }>;
   readonly " $fragmentType": "productCard_query";
 };
 export type productCard_query$key = {
@@ -21,7 +31,24 @@ export type productCard_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"productCard_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "name",
+    "storageKey": null
+  }
+];
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -55,12 +82,33 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ProductPricingCadenceDetails",
+      "kind": "LinkedField",
+      "name": "productPricingCadences",
+      "plural": true,
+      "selections": (v0/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CurrencyDetails",
+      "kind": "LinkedField",
+      "name": "currencies",
+      "plural": true,
+      "selections": (v0/*: any*/),
+      "storageKey": null
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "c06c62885d1ce6c391ca78f6f17976f7";
+(node as any).hash = "7ae66dde3fa9551904dc7da1ffdb6fb1";
 
 export default node;

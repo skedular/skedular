@@ -14,7 +14,6 @@ using BookingChannel = Api.Shared.Services.Models.BookingChannel;
 using BookingEdge = Booking.Api.GraphQL.Booking.BookingEdge;
 using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using Customer = Booking.Shared.Models.Customer;
-using LineItem = Api.Shared.Services.Grpc.Skedular.Booking.V1.LineItem;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
@@ -132,7 +131,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
             BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays,
+            ByWeekDays = src.ByWeekDays.ToSafeCollection(),
             EndType = src.EndType,
             StartDate = src.StartDate,
             EndDate = src.EndDate,
@@ -161,7 +160,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
             BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays,
+            ByWeekDays = src.ByWeekDays.ToSafeCollection(),
             EndType = src.EndType,
             StartDate = src.StartDate,
             EndDate = src.EndDate,
@@ -190,7 +189,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Interval = src.Interval,
             ByMonthDay = src.ByMonthDay,
             BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays,
+            ByWeekDays = src.ByWeekDays.ToSafeCollection(),
             EndType = src.EndType,
             StartDate = src.StartDate,
             EndDate = src.EndDate,
@@ -204,9 +203,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
-                LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
+                Quantity = src.Quantity,
+                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
                 PaymentMethod = src.PaymentMethod,
-                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                ProductPricing = ProductPricing.Empty(src.PricingId)
             }
         };
     }
@@ -258,9 +259,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
-                LineItems = src.LineItems.Select(item => new ProductVersionLineItem(item.ProductVersionId, item.Quantity)).ToList(),
+                Quantity = src.Quantity,
+                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
                 PaymentMethod = src.PaymentMethod,
-                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection()
+                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                ProductPricing = ProductPricing.Empty(src.PricingId)
             }
         };
     }
@@ -462,11 +465,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingSchedule MapToGrpcResponse(BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
 
-    private static IEnumerable<LineItem> MapToGrpcResponse(IEnumerable<ProductVersionLineItem> src) => src.Select(MapToGrpcResponse);
-
-    private static LineItem MapToGrpcResponse(ProductVersionLineItem src) =>
-        new() { ProductVersionId = src.ProductVersionId, Quantity = src.Quantity };
-
     private static BookingCheckoutSessionDetails? MapTo(StripeCheckoutSession? src) =>
         src is null
             ? null
@@ -487,12 +485,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 PaidByCustomerId = src.PaidByCustomer?.Id,
                 PaidByOrganizationId = src.PaidByOrganization?.Id,
                 PaidByOrganizationUniqueAlphanumericName = src.PaidByOrganization?.UniqueAlphanumericName,
-                LineItems =
-                    src.LineItems.Select(item => new LineItemDetails
-                    {
-                        ProductVersionId = src.ProductVersions.First(productVersion => productVersion.Id == item.ProductVersionId).Id,
-                        Quantity = item.Quantity
-                    }),
+                Quantity = src.Quantity,
+                ProductVersionId = src.ProductVersion.Id,
+                ProductPricing = src.ProductPricing,
                 BookingCheckoutSession = MapTo(src.StripeCheckoutSession),
                 PaymentExpiry = src.PaymentExpiry,
                 PaymentStatus = new PaymentStatusDetails { Type = src.PaymentStatus, Name = src.PaymentStatus.ToPaymentStatusName() },
@@ -556,10 +551,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 PaymentMethod.Card => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.Card,
                 PaymentMethod.BankTransfer => global::Api.Shared.Services.Grpc.Skedular.Booking.V1.PaymentMethod.BankAccount,
                 _ => throw new ArgumentOutOfRangeException()
-            }
+            },
+            Quantity = src.Quantity,
+            ProductVersionId = src.ProductVersion.Id.ToSafeString()
         };
 
-        marketplaceBooking.LineItems.AddRange(MapToGrpcResponse(src.LineItems));
         marketplaceBooking.InvoiceEmailList.AddRange(src.InvoiceEmailList.ToSafeCollection());
 
         return marketplaceBooking;

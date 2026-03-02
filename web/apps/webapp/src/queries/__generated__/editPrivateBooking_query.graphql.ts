@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8306e3af574378829f4330991da16060>>
+ * @generated SignedSource<<8cf60034dba9c763153b19e4089ee558>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -58,6 +58,7 @@ export type editPrivateBooking_query$data = {
     readonly notes: string | null | undefined;
     readonly until: any;
   } | null | undefined;
+  readonly bookingSlotSizeInMinutes: number;
   readonly locations: {
     readonly __id: string;
     readonly edges: ReadonlyArray<{
@@ -68,7 +69,6 @@ export type editPrivateBooking_query$data = {
     }>;
     readonly totalCount: number;
   };
-  readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingCategory_query">;
   readonly " $fragmentType": "editPrivateBooking_query";
 };
@@ -372,7 +372,7 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
+      "name": "bookingSlotSizeInMinutes",
       "storageKey": null
     },
     {
@@ -386,6 +386,6 @@ return {
 };
 })();
 
-(node as any).hash = "860048f313d61c0544921fbe80c038a4";
+(node as any).hash = "95be5469059be8c4cc6c57329931fbfe";
 
 export default node;

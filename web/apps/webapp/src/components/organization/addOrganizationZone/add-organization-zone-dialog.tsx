@@ -122,15 +122,15 @@ const AddOrganizationZoneDialog = ({ organizationUniqueAlphanumericName, connect
                 <LeadIconTypography label="Add zone to this organization" />
                 <SmallIconTypography label="Enter the name of the zone to add to this organization." />
 
-                <FormFieldLabel label="Name" useWiderSpace>
+                <FormFieldLabel label="Name">
                   <TextField name="name" required={requiredFields.name} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Description" useWiderSpace>
+                <FormFieldLabel label="Description">
                   <TextField name="description" required={requiredFields.description} multiline rows={3} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Color" useWiderSpace>
+                <FormFieldLabel label="Color">
                   <ColorPicker onChange={handleColorChange} />
                 </FormFieldLabel>
 

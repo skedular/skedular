@@ -46,13 +46,13 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
   const rootData = useFragment<weekOpeningHours_query$key>(
     graphql`
       fragment weekOpeningHours_query on Query {
-        openingHoursMinutesStep
+        bookingSlotSizeInMinutes
       }
     `,
     rootDataRelay,
   );
 
-  const minutesStep = rootData.openingHoursMinutesStep;
+  const minutesStep = rootData.bookingSlotSizeInMinutes;
 
   const validate = (state: OpeningHoursState, from: Dayjs | null, until: Dayjs | null) => {
     if (state === 'custom' && (!from || !until)) {

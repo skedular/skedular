@@ -351,11 +351,6 @@ type InviteCustomersToJoinTeamPayload {
   invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
-type LineItemDetails {
-  productVersion: ProductVersionDetails!
-  quantity: Int!
-}
-
 type LocationAnalytics {
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
@@ -454,12 +449,14 @@ type MarketplaceBookingDetails {
   invoiceNumber: String
   invoiceUrl: String
   isPaymentRequired: Boolean!
-  lineItems: [LineItemDetails!]!
   paidByCustomer: CustomerDetails
   paidByOrganization: OrganizationDetails
   paymentExpiry: DateTime!
   paymentMethod: PaymentMethodTypeDetails!
   paymentStatus: PaymentStatusDetails!
+  productPricing: ProductPricing!
+  productVersion: ProductVersionDetails!
+  quantity: Int!
   taxAmount: Decimal
   taxAmountToDisplay: String!
   taxRatePercentage: Decimal
@@ -468,11 +465,6 @@ type MarketplaceBookingDetails {
   totalAmountExcludeTax: Decimal
   totalAmountExcludeTaxToDisplay: String!
   totalAmountToDisplay: String!
-}
-
-type Marketplace_PaymentMethodTypeDetails {
-  name: String!
-  type: PaymentMethod!
 }
 
 type Mutation {
@@ -967,34 +959,17 @@ type PersonalInformationVisibilityDetails {
   type: PersonalInformationVisibility!
 }
 
-type PriceUnitDetails {
-  name: String!
-  type: PriceUnit!
-}
-
 type ProductDetails {
-  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
-  bookAllLocationResources: Boolean!
   currency: CurrencyDetails!
-  currencyToDisplay: String!
   description: String
   featureImages: [CdnImageFile!]!
   id: ID!
   inactive: Boolean!
-  isPriceTaxInclusive: Boolean!
   latestProductVersionId: String!
   locationTags: [OrganizationTagDetails!]!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
   name: String!
-  numberOfResourcesToBook: Int!
   organization: OrganizationDetails!
-  price: String!
-  priceToDisplay: String!
-  priceUnit: PriceUnitDetails!
-  pricingOptions: [ProductVersionPricingOptions!]!
+  pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
 }
 
@@ -1008,107 +983,37 @@ type ProductPayload {
   product: ProductDetails!
 }
 
-type ProductVersionDailyPricingV1 {
+type ProductPricing {
   acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
+  cadence: ProductPricingCadence!
   description: String!
+  id: String!
   index: Int!
   isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-type ProductVersionDetails {
-  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
-  bookAllLocationResources: Boolean!
-  currency: CurrencyDetails!
-  currencyToDisplay: String!
-  description: String
-  featureImages: [CdnImageFile!]!
-  id: ID!
-  inactive: Boolean!
-  isPriceTaxInclusive: Boolean!
-  locationTags: [OrganizationTagDetails!]!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxDurationMinutes: Int
   minDurationMinutes: Int
   name: String!
   numberOfResourcesToBook: Int!
-  price: String!
-  priceToDisplay: String!
-  priceUnit: PriceUnitDetails!
-  pricingOptions: [ProductVersionPricingOptions!]!
+  price: Decimal!
+}
+
+type ProductPricingCadenceDetails {
+  name: String!
+  type: ProductPricingCadence!
+}
+
+type ProductVersionDetails {
+  currency: CurrencyDetails!
+  description: String
+  featureImages: [CdnImageFile!]!
+  id: ID!
+  inactive: Boolean!
+  locationTags: [OrganizationTagDetails!]!
+  name: String!
+  pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
-}
-
-type ProductVersionMonthlyPricingV1 {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-type ProductVersionOneTimePricingV1 {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-type ProductVersionPerMinutePricingV1 {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-type ProductVersionPricingOptions {
-  cadence: ProductVersionPricingCadence!
-  dailyV1: ProductVersionDailyPricingV1
-  monthlyV1: ProductVersionMonthlyPricingV1
-  oneTimeV1: ProductVersionOneTimePricingV1
-  perMinuteV1: ProductVersionPerMinutePricingV1
-  weeklyV1: ProductVersionWeeklyPricingV1
-}
-
-type ProductVersionWeeklyPricingV1 {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
 }
 
 type ProductsPayload {
@@ -1126,6 +1031,7 @@ type Query {
   bookingCategories: [BookingCategoryDetails!]!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
   bookings(after: String before: String first: Int last: Int orderBy: [BookingOrderInput!] where: BookingWhereInput!): ConnectionOfBookingEdge! @cost(weight: "10")
+  bookingSlotSizeInMinutes: Int!
   bookingVersion: Version!
   coreCustomerRecordSynced: Boolean! @cost(weight: "10")
   coreVersion: Version!
@@ -1163,7 +1069,6 @@ type Query {
   myLocations(organizationId: String organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
-  openingHoursMinutesStep: Int!
   organization(id: String uniqueAlphanumericName: String): OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationBankAccountOrderInput!] where: OrganizationBankAccountWhereInput!): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
@@ -1181,13 +1086,14 @@ type Query {
   organizationVersion: Version!
   otherResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
+  paymentMethods: [PaymentMethodTypeDetails!]!
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
   pendingOrganizationInvitationsCount: Int! @cost(weight: "10")
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
-  priceUnits: [PriceUnitDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
+  productPricingCadences: [ProductPricingCadenceDetails!]!
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
@@ -1510,11 +1416,13 @@ input AddMarketplaceBookingInput {
   from: DateTime!
   id: String
   invoiceEmailList: [String!]
-  lineItems: [LineItemInput!]!
   notes: String
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   paymentMethod: PaymentMethod!
+  pricingId: String!
+  productVersionId: String!
+  quantity: Int!
   resourceIds: [String!]
   teamIds: [String!]
   until: DateTime!
@@ -1534,11 +1442,13 @@ input AddMarketplaceRecurringBookingInput {
   id: String
   interval: Int!
   invoiceEmailList: [String!]
-  lineItems: [LineItemInput!]!
   occurrenceCount: Int
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   paymentMethod: PaymentMethod!
+  pricingId: String!
+  productVersionId: String!
+  quantity: Int!
   skippedDates: [DateTime!]
   startDate: DateTime!
   teamIds: [String!]
@@ -1690,26 +1600,16 @@ input AddPrivateRecurringBookingInput {
 }
 
 input AddProductInput {
-  acceptedBookingPaymentMethods: [PaymentMethod!]!
-  bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!
   description: String
   featureImages: [CdnImageFileInput!]!
   id: String
-  isPriceTaxInclusive: Boolean!
   locationTagIds: [String!]!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
   name: String!
-  numberOfResourcesToBook: Int!
   organizationId: String
   organizationUniqueAlphanumericName: String
-  price: String!
-  priceUnit: PriceUnit!
-  pricingOptions: [ProductVersionPricingOptionsInput!]!
+  pricingOptions: [ProductPricingInput!]!
   productTagIds: [String!]!
 }
 
@@ -2078,11 +1978,6 @@ input JoinTeamInvitationOrderInput {
   field: JoinTeamInvitationOrderField!
 }
 
-input LineItemInput {
-  productVersionId: String!
-  quantity: Int!
-}
-
 input LocationExtraMetadataInput {
   areaRange: AreaRangeInput
   contactDetails: ContactDetailsInput
@@ -2237,87 +2132,24 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
+input ProductPricingInput {
+  acceptedPaymentMethods: [PaymentMethod!]!
+  cadence: ProductPricingCadence!
+  description: String!
+  id: String!
+  index: Int!
+  isTaxInclusive: Boolean!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxDurationMinutes: Int
+  minDurationMinutes: Int
+  name: String!
+  numberOfResourcesToBook: Int!
+  price: Decimal!
+}
+
 input ProductTagOrganizationTagWhereInput {
   nameContains: String
-}
-
-input ProductVersionDailyPricingV1Input {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-input ProductVersionMonthlyPricingV1Input {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-input ProductVersionOneTimePricingV1Input {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-input ProductVersionPerMinutePricingV1Input {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
-}
-
-input ProductVersionPricingOptionsInput {
-  cadence: ProductVersionPricingCadence!
-  dailyV1: ProductVersionDailyPricingV1Input
-  monthlyV1: ProductVersionMonthlyPricingV1Input
-  oneTimeV1: ProductVersionOneTimePricingV1Input
-  perMinuteV1: ProductVersionPerMinutePricingV1Input
-  weeklyV1: ProductVersionWeeklyPricingV1Input
-}
-
-input ProductVersionWeeklyPricingV1Input {
-  acceptedPaymentMethods: [PaymentMethod!]!
-  currency: Currency!
-  description: String!
-  index: Int!
-  isTaxInclusive: Boolean!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
-  name: String!
-  price: Decimal!
 }
 
 input ProductWhereInput {
@@ -2739,24 +2571,14 @@ input UpdatePrivateRecurringBookingInput {
 }
 
 input UpdateProductInput {
-  acceptedBookingPaymentMethods: [PaymentMethod!]!
-  bookAllLocationResources: Boolean!
   clientMutationId: String
   currency: Currency!
   description: String
   featureImages: [CdnImageFileInput!]!
   id: String!
-  isPriceTaxInclusive: Boolean!
   locationTagIds: [String!]!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxDurationMinutes: Int
-  minDurationMinutes: Int
   name: String!
-  numberOfResourcesToBook: Int!
-  price: String!
-  priceUnit: PriceUnit!
-  pricingOptions: [ProductVersionPricingOptionsInput!]!
+  pricingOptions: [ProductPricingInput!]!
   productTagIds: [String!]!
 }
 
@@ -3036,20 +2858,16 @@ enum PersonalInformationVisibility {
   VISIBLE
 }
 
-enum PriceUnit {
-  PER_HOUR
-  PER_MINUTE
-  PER_USE
-}
-
 enum ProductOrderField {
   NAME
 }
 
-enum ProductVersionPricingCadence {
+enum ProductPricingCadence {
   DAILY_V1
   MONTHLY_V1
+  NOT_SET
   ONE_TIME_V1
+  PER_HOUR_V1
   PER_MINUTE_V1
   WEEKLY_V1
 }

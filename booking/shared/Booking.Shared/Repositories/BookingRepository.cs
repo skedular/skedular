@@ -68,8 +68,7 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersions)
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -78,8 +77,7 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersions)
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
@@ -104,8 +102,7 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersions)
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -114,7 +111,7 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersions)
+            .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 

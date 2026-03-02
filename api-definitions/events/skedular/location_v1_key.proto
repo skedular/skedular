@@ -4,6 +4,6 @@ package location;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Location.V1.Key";
 
 message Key {
-  string locationId = 1;
+  string locationId               = 1;
   string locationJoinInvitationId = 2;
 }

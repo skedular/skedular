@@ -371,7 +371,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<ICollection<ProductVersionLineItem>>("LineItems")
+                    b.Property<ICollection<ProductLineItem>>("LineItems")
                         .IsRequired()
                         .HasColumnType("jsonb");
 
@@ -841,7 +841,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("character varying(16)");
 
-                    b.Property<ICollection<ProductVersionPricingOptions>>("PricingOptions")
+                    b.Property<ICollection<ProductLineItem>>("PricingOptions")
                         .HasColumnType("jsonb");
 
                     b.Property<string>("ProductId")

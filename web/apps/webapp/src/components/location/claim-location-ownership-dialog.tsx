@@ -122,7 +122,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
           render={({ handleSubmit }) => {
             return (
               <FormStackColumn onSubmit={handleSubmit}>
-                <FormFieldLabel label="Claim Code" useWiderSpace>
+                <FormFieldLabel label="Claim Code">
                   <TextField name="uniqueClaimCode" required={requiredFields.uniqueClaimCode} helperText="Location unique claim code to claim ownership" />
                 </FormFieldLabel>
 

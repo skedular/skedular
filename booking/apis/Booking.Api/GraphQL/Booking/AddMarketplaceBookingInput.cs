@@ -20,7 +20,9 @@ public class AddMarketplaceBookingInput
     [GraphQLName("notes")] public string? Notes { get; set; }
     [GraphQLName("category")] public BookingCategory? Category { get; set; }
     [GraphQLName("resourceIds")] public IEnumerable<string>? ResourceIds { get; set; } = [];
-    [GraphQLName("lineItems")] public IEnumerable<LineItemInput> LineItems { get; set; } = [];
     [GraphQLName("paymentMethod")] public PaymentMethod PaymentMethod { get; set; }
     [GraphQLName("invoiceEmailList")] public IEnumerable<string>? InvoiceEmailList { get; set; } = [];
+    [GraphQLName("quantity")] public int Quantity { get; set; }
+    [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
+    [GraphQLName("pricingId")] public string PricingId { get; set; } = string.Empty;
 }

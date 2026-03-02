@@ -9,7 +9,9 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class StripeProduct : EntityBaseWithDeleted
 {
+    public string ProductPricingId { get; set; }
     public string PricingCadence { get; set; }
+    public int NumberOfResourcesToBook { get; set; }
     public string StripeProductId { get; set; }
     public string StripeAccountId { get; set; }
 
@@ -24,14 +26,17 @@ public class StripeProductConfiguration : IEntityTypeConfiguration<StripeProduct
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.PricingCadence).HasMaxLength(Constants.MaxProductVersionPricingCadenceLength);
+        builder.Property(item => item.PricingCadence).HasMaxLength(Constants.MaxProductPricingCadenceLength);
+        builder.Property(item => item.ProductPricingId).HasMaxLength(Enterprise.Shared.Constants.MaxUniqueIdLength);
         builder.Property(item => item.StripeProductId).HasMaxLength(Constants.MaxStripeProductIdLength);
         builder.Property(item => item.StripeAccountId).HasMaxLength(Constants.MaxStripeConnectAccountIdLength);
 
         builder.HasOne(item => item.ProductVersion).WithMany(item => item.StripeProducts);
 
+        builder.HasIndex(item => item.ProductPricingId);
         builder.HasIndex(item => item.PricingCadence);
         builder.HasIndex(item => item.StripeProductId);
         builder.HasIndex(item => item.StripeAccountId);
+        builder.HasIndex(item => item.NumberOfResourcesToBook);
     }
 }

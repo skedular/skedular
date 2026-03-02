@@ -95,7 +95,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const rootData = useFragment<editMarketplaceBooking_query$key>(
     graphql`
       fragment editMarketplaceBooking_query on Query {
-        openingHoursMinutesStep
         ...singleChoiceMarketplaceBookingCategory_query
       }
     `,
@@ -481,11 +480,11 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                 </StackColumn>
 
                 <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                  <FormFieldLabel label="Payment Status">
+                  <FormFieldLabel label="Payment Status" stackLabelOnTop>
                     <SmallIconTypography label={booking.marketplaceBooking?.paymentStatus.name} sx={{ paddingTop: 1, paddingBottom: 1 }} />
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="Date/Time">
+                  <FormFieldLabel label="Date/Time" stackLabelOnTop>
                     <StackRow>
                       <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
                       {allDay && <BodyIconTypography label="All day" />}
@@ -493,7 +492,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                     </StackRow>
                   </FormFieldLabel>
 
-                  <FormFieldLabel label="Invoice">
+                  <FormFieldLabel label="Invoice" stackLabelOnTop>
                     {booking.marketplaceBooking?.invoiceUrl && (
                       <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                         <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />

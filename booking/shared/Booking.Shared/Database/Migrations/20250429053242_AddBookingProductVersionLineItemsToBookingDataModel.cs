@@ -12,7 +12,7 @@ namespace Booking.Shared.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<ICollection<ProductVersionLineItem>>(
+            migrationBuilder.AddColumn<ICollection<ProductLineItem>>(
                 name: "LineItems",
                 table: "Booking",
                 type: "jsonb",

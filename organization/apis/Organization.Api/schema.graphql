@@ -467,7 +467,7 @@ type Query {
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
-  openingHoursMinutesStep: Int!
+  bookingSlotSizeInMinutes: Int!
   resourceTypes: [OrganizationTagTypeDetails!]!
   locationSpaceTypes: [OrganizationTagTypeDetails!]!
   emailsToShowLatestCapabilities: [String!]!

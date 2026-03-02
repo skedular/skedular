@@ -9,7 +9,7 @@ namespace Booking.Shared.Repositories;
 public interface IProductVersionRepository : IRepository<ProductVersion>
 {
     Task<ProductVersion> UpsertNakedAsync(string id, Product? product, CancellationToken cancellationToken);
-    Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken);
+    Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken);
     ProductVersion Update(ProductVersion product);
 }
 
@@ -38,11 +38,10 @@ public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider t
         return (await GetByIdAsync(id, cancellationToken))!;
     }
 
-    public async Task<ICollection<ProductVersion>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken cancellationToken) =>
+    public async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.ProductVersion
-            .Where(query => ids.Contains(query.Id))
             .AddDependentObjects()
-            .ToListAsync(cancellationToken);
+            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public ProductVersion Update(ProductVersion product)
     {
@@ -50,9 +49,4 @@ public class ProductVersionRepository(BookingDbContext dbContext, TimeProvider t
         product.ModifiedAt = now;
         return DbContext.ProductVersion.Update(product).Entity;
     }
-
-    private async Task<ProductVersion?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
-        await DbContext.ProductVersion
-            .AddDependentObjects()
-            .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 }

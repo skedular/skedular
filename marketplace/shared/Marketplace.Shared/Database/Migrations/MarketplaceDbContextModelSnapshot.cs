@@ -639,22 +639,13 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.PrimitiveCollection<string>("AcceptedBookingPaymentMethods")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
-
-                    b.Property<bool>("BookAllLocationResources")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Currency")
                         .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<string>("Description")
                         .HasMaxLength(10000)
@@ -669,27 +660,6 @@ namespace Marketplace.Shared.Database.Migrations
                     b.Property<ICollection<CdnImageFile>>("FeatureImages")
                         .HasColumnType("jsonb");
 
-                    b.Property<bool>("IsPriceTaxInclusive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(true);
-
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaBankTransfer")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(43200);
-
-                    b.Property<int>("MaxAllowedResourcesLockTimePaidViaCard")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(5);
-
-                    b.Property<int?>("MaxDurationMinutes")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("MinDurationMinutes")
-                        .HasColumnType("integer");
-
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -698,23 +668,7 @@ namespace Marketplace.Shared.Database.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<int>("NumberOfResourcesToBook")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(1);
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<decimal>("PricePerMinute")
-                        .HasColumnType("DECIMAL(18,4)");
-
-                    b.Property<string>("PriceUnit")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
-
-                    b.Property<ICollection<ProductVersionPricingOptions>>("PricingOptions")
+                    b.Property<ICollection<ProductPricing>>("PricingOptions")
                         .IsRequired()
                         .HasColumnType("jsonb");
 
@@ -728,13 +682,9 @@ namespace Marketplace.Shared.Database.Migrations
 
                     b.HasIndex("Currency");
 
-                    b.HasIndex("IsPriceTaxInclusive");
-
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("PricePerMinute");
 
                     b.HasIndex("ProductId");
 

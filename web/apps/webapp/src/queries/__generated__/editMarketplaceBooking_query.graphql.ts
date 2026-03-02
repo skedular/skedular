@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa9e9b2349919a266c362e8066f8457d>>
+ * @generated SignedSource<<906234fe5dcda862587b8b55eac04e35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_query$data = {
-  readonly openingHoursMinutesStep: number;
   readonly " $fragmentSpreads": FragmentRefs<"singleChoiceMarketplaceBookingCategory_query">;
   readonly " $fragmentType": "editMarketplaceBooking_query";
 };
@@ -27,13 +26,6 @@ const node: ReaderFragment = {
   "name": "editMarketplaceBooking_query",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceMarketplaceBookingCategory_query"
@@ -43,6 +35,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7dfb467d01f5857af3c390f73c3666b3";
+(node as any).hash = "44794e14a4aadbb8c331a5d16b0b3308";
 
 export default node;

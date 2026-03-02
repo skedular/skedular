@@ -116,7 +116,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
               <LeadIconTypography label="Invite members to join this organization" />
               <SmallIconTypography label="Enter email addresses of people to invite them to this organization." />
 
-              <FormFieldLabel label="Emails" useWiderSpace>
+              <FormFieldLabel label="Emails">
                 <TextField name="emails" required={requiredFields.emails} helperText="member1@example.com,member2@example.com" />
               </FormFieldLabel>
 

@@ -165,7 +165,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
                 new Shared.Models.Organization
                 {
@@ -185,7 +185,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId }
         };
 
@@ -196,7 +196,7 @@ public class Mapper : IMapper
             Name = src.Name,
             About = src.About,
             Timezone = src.Timezone,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
                 new Shared.Models.Organization
                 {

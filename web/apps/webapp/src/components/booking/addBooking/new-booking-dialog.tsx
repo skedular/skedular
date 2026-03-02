@@ -146,7 +146,7 @@ const NewBookingDialog = ({
             }
           }
         }
-        openingHoursMinutesStep
+        bookingSlotSizeInMinutes
         ...singleChoiceBookingCategory_query
       }
     `,
@@ -605,7 +605,7 @@ const NewBookingDialog = ({
                     if (values.category !== category) setCategory(values.category);
                   }}
                 />
-                <FormFieldLabel label="User" useWiderSpace>
+                <FormFieldLabel label="User">
                   <Autocomplete
                     name="member"
                     multiple={false}
@@ -639,7 +639,7 @@ const NewBookingDialog = ({
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Date/Time" useWiderSpace>
+                <FormFieldLabel label="Date/Time">
                   <StackColumn>
                     <StackRow>
                       <Box sx={{ width: 'fit-content' }}>
@@ -649,24 +649,24 @@ const NewBookingDialog = ({
                     </StackRow>
 
                     <Box sx={{ width: 'fit-content' }}>
-                      <TimeRangePicker minutesStep={rootData.openingHoursMinutesStep} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
+                      <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} disabled={allDay} defaultValue={timeRange} onChange={setTimeRange} />
                     </Box>
                   </StackColumn>
                 </FormFieldLabel>
 
-                <FormFieldLabel useWiderSpace>
+                <FormFieldLabel>
                   <ErrorTypography errorMessage={dateTimeErrorMessageDerived} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Notes" useWiderSpace>
+                <FormFieldLabel label="Notes">
                   <TextField name="notes" required={requiredFields.notes} helperText="e.g. I will be half an hour late this morning" multiline rows={2} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Category" useWiderSpace>
+                <FormFieldLabel label="Category">
                   <SingleChoiceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Team" useWiderSpace>
+                <FormFieldLabel label="Team">
                   <Autocomplete
                     name="team"
                     multiple={false}
@@ -691,7 +691,7 @@ const NewBookingDialog = ({
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Location" useWiderSpace>
+                <FormFieldLabel label="Location">
                   <Autocomplete
                     name="location"
                     multiple={false}
@@ -716,7 +716,7 @@ const NewBookingDialog = ({
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="Resources" useWiderSpace>
+                <FormFieldLabel label="Resources">
                   {resources.length > 0 && (
                     <Autocomplete
                       name="resources"

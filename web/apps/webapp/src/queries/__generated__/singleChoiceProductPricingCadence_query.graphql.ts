@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b39dc4c76a489cb4dd4c5c66d6d51b6c>>
+ * @generated SignedSource<<14af1d2a26c0a31bdfb4cd70a1b9b7ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,32 +9,32 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
+export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type singleChoicePriceUnit_query$data = {
-  readonly priceUnits: ReadonlyArray<{
+export type singleChoiceProductPricingCadence_query$data = {
+  readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
-    readonly type: PriceUnit;
+    readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentType": "singleChoicePriceUnit_query";
+  readonly " $fragmentType": "singleChoiceProductPricingCadence_query";
 };
-export type singleChoicePriceUnit_query$key = {
-  readonly " $data"?: singleChoicePriceUnit_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoicePriceUnit_query">;
+export type singleChoiceProductPricingCadence_query$key = {
+  readonly " $data"?: singleChoiceProductPricingCadence_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceProductPricingCadence_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "singleChoicePriceUnit_query",
+  "name": "singleChoiceProductPricingCadence_query",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "PriceUnitDetails",
+      "concreteType": "ProductPricingCadenceDetails",
       "kind": "LinkedField",
-      "name": "priceUnits",
+      "name": "productPricingCadences",
       "plural": true,
       "selections": [
         {
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "14ec12a219f633d74b5a62b887dd4e49";
+(node as any).hash = "d5702259e66210e6fdbe35acb31d1f98";
 
 export default node;

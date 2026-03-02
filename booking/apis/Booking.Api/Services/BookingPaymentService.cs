@@ -54,21 +54,18 @@ public class BookingPaymentService(
             throw new BookingIsNotMarketplaceType();
         }
 
-        var productVersionIds = marketplaceBooking.ProductVersions.Select(item => item.Id).ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).ToList();
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
-            organizationIds,
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            productVersion.Product.Organization.Id,
             null,
             false,
             false,
-            cancellationToken);
-        foreach (var organization in organizations)
+            cancellationToken) ?? throw new OrganizationNotFound();
+
+        if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
         {
-            if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
-            {
-                throw new UnauthorizedAccessException();
-            }
+            throw new UnauthorizedAccessException();
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);

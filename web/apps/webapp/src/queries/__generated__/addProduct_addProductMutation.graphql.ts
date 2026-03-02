@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<48a2b7da8cfb23b1e31843e9d5898e31>>
+ * @generated SignedSource<<afee5bd362d19b5714d6d37faa52ffd1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,29 +11,18 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type PriceUnit = "PER_HOUR" | "PER_MINUTE" | "PER_USE" | "%future added value";
-export type ProductVersionPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "ONE_TIME_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
+export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 export type AddProductInput = {
-  acceptedBookingPaymentMethods: ReadonlyArray<PaymentMethod>;
-  bookAllLocationResources: boolean;
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
   featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
-  isPriceTaxInclusive: boolean;
   locationTagIds: ReadonlyArray<string>;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-  maxAllowedResourcesLockTimePaidViaCard: number;
-  maxDurationMinutes?: number | null | undefined;
-  minDurationMinutes?: number | null | undefined;
   name: string;
-  numberOfResourcesToBook: number;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
-  price: string;
-  priceUnit: PriceUnit;
-  pricingOptions: ReadonlyArray<ProductVersionPricingOptionsInput>;
+  pricingOptions: ReadonlyArray<ProductPricingInput>;
   productTagIds: ReadonlyArray<string>;
 };
 export type CdnImageFileInput = {
@@ -45,18 +34,11 @@ export type CdnFileInput = {
   url: string;
   width?: number | null | undefined;
 };
-export type ProductVersionPricingOptionsInput = {
-  cadence: ProductVersionPricingCadence;
-  dailyV1?: ProductVersionDailyPricingV1Input | null | undefined;
-  monthlyV1?: ProductVersionMonthlyPricingV1Input | null | undefined;
-  oneTimeV1?: ProductVersionOneTimePricingV1Input | null | undefined;
-  perMinuteV1?: ProductVersionPerMinutePricingV1Input | null | undefined;
-  weeklyV1?: ProductVersionWeeklyPricingV1Input | null | undefined;
-};
-export type ProductVersionDailyPricingV1Input = {
+export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-  currency: Currency;
+  cadence: ProductPricingCadence;
   description: string;
+  id: string;
   index: number;
   isTaxInclusive: boolean;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
@@ -64,58 +46,7 @@ export type ProductVersionDailyPricingV1Input = {
   maxDurationMinutes?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
   name: string;
-  price: any;
-};
-export type ProductVersionMonthlyPricingV1Input = {
-  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-  currency: Currency;
-  description: string;
-  index: number;
-  isTaxInclusive: boolean;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-  maxAllowedResourcesLockTimePaidViaCard: number;
-  maxDurationMinutes?: number | null | undefined;
-  minDurationMinutes?: number | null | undefined;
-  name: string;
-  price: any;
-};
-export type ProductVersionOneTimePricingV1Input = {
-  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-  currency: Currency;
-  description: string;
-  index: number;
-  isTaxInclusive: boolean;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-  maxAllowedResourcesLockTimePaidViaCard: number;
-  maxDurationMinutes?: number | null | undefined;
-  minDurationMinutes?: number | null | undefined;
-  name: string;
-  price: any;
-};
-export type ProductVersionPerMinutePricingV1Input = {
-  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-  currency: Currency;
-  description: string;
-  index: number;
-  isTaxInclusive: boolean;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-  maxAllowedResourcesLockTimePaidViaCard: number;
-  maxDurationMinutes?: number | null | undefined;
-  minDurationMinutes?: number | null | undefined;
-  name: string;
-  price: any;
-};
-export type ProductVersionWeeklyPricingV1Input = {
-  acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-  currency: Currency;
-  description: string;
-  index: number;
-  isTaxInclusive: boolean;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-  maxAllowedResourcesLockTimePaidViaCard: number;
-  maxDurationMinutes?: number | null | undefined;
-  minDurationMinutes?: number | null | undefined;
-  name: string;
+  numberOfResourcesToBook: number;
   price: any;
 };
 export type addProduct_addProductMutation$variables = {
@@ -124,10 +55,6 @@ export type addProduct_addProductMutation$variables = {
 export type addProduct_addProductMutation$data = {
   readonly addProduct: {
     readonly product: {
-      readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-        readonly type: PaymentMethod;
-      }>;
-      readonly bookAllLocationResources: boolean;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -147,23 +74,21 @@ export type addProduct_addProductMutation$data = {
       }>;
       readonly id: string;
       readonly inactive: boolean;
-      readonly isPriceTaxInclusive: boolean;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-      readonly maxAllowedResourcesLockTimePaidViaCard: number;
-      readonly maxDurationMinutes: number | null | undefined;
-      readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
-      readonly numberOfResourcesToBook: number;
-      readonly price: string;
-      readonly priceUnit: {
+      readonly pricingOptions: ReadonlyArray<{
+        readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+        readonly cadence: ProductPricingCadence;
+        readonly description: string;
+        readonly index: number;
+        readonly isTaxInclusive: boolean;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationMinutes: number | null | undefined;
         readonly name: string;
-        readonly type: PriceUnit;
-      };
+        readonly numberOfResourcesToBook: number;
+        readonly price: any;
+      }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -175,10 +100,6 @@ export type addProduct_addProductMutation$data = {
 export type addProduct_addProductMutation$rawResponse = {
   readonly addProduct: {
     readonly product: {
-      readonly acceptedBookingPaymentMethods: ReadonlyArray<{
-        readonly type: PaymentMethod;
-      }>;
-      readonly bookAllLocationResources: boolean;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -198,23 +119,21 @@ export type addProduct_addProductMutation$rawResponse = {
       }>;
       readonly id: string;
       readonly inactive: boolean;
-      readonly isPriceTaxInclusive: boolean;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
-      readonly maxAllowedResourcesLockTimePaidViaCard: number;
-      readonly maxDurationMinutes: number | null | undefined;
-      readonly minDurationMinutes: number | null | undefined;
       readonly name: string;
-      readonly numberOfResourcesToBook: number;
-      readonly price: string;
-      readonly priceUnit: {
+      readonly pricingOptions: ReadonlyArray<{
+        readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+        readonly cadence: ProductPricingCadence;
+        readonly description: string;
+        readonly index: number;
+        readonly isTaxInclusive: boolean;
+        readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
+        readonly maxAllowedResourcesLockTimePaidViaCard: number;
+        readonly maxDurationMinutes: number | null | undefined;
+        readonly minDurationMinutes: number | null | undefined;
         readonly name: string;
-        readonly type: PriceUnit;
-      };
+        readonly numberOfResourcesToBook: number;
+        readonly price: any;
+      }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -255,25 +174,10 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "type",
+  "name": "description",
   "storageKey": null
 },
 v4 = [
-  (v3/*: any*/),
-  (v2/*: any*/)
-],
-v5 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
-],
-v6 = [
   {
     "alias": null,
     "args": null,
@@ -296,7 +200,7 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = [
+v5 = [
   {
     "alias": null,
     "args": [
@@ -328,30 +232,7 @@ v7 = [
             "storageKey": null
           },
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "description",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "price",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PriceUnitDetails",
-            "kind": "LinkedField",
-            "name": "priceUnit",
-            "plural": false,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -359,35 +240,16 @@ v7 = [
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "numberOfResourcesToBook",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "minDurationMinutes",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxDurationMinutes",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "bookAllLocationResources",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -397,43 +259,17 @@ v7 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v5/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTagDetails",
-            "kind": "LinkedField",
-            "name": "locationTags",
-            "plural": true,
-            "selections": (v5/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Marketplace_PaymentMethodTypeDetails",
-            "kind": "LinkedField",
-            "name": "acceptedBookingPaymentMethods",
-            "plural": true,
             "selections": [
-              (v3/*: any*/)
+              (v1/*: any*/),
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "color",
+                "storageKey": null
+              }
             ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxAllowedResourcesLockTimePaidViaCard",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
             "storageKey": null
           },
           {
@@ -451,7 +287,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": null
               },
               {
@@ -461,7 +297,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v4/*: any*/),
                 "storageKey": null
               }
             ],
@@ -470,8 +306,84 @@ v7 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "isPriceTaxInclusive",
+            "concreteType": "ProductPricing",
+            "kind": "LinkedField",
+            "name": "pricingOptions",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "index",
+                "storageKey": null
+              },
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cadence",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "price",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "numberOfResourcesToBook",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "minDurationMinutes",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxDurationMinutes",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isTaxInclusive",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaCard",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "maxAllowedResourcesLockTimePaidViaBankTransfer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "acceptedPaymentMethods",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           }
         ],
@@ -487,7 +399,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addProduct_addProductMutation",
-    "selections": (v7/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -496,19 +408,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addProduct_addProductMutation",
-    "selections": (v7/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "08def3356b241de1a764ca48bbdd3247",
+    "cacheID": "6148581768471a89a9efc302327ce590",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      price\n      priceUnit {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      bookAllLocationResources\n      productTags {\n        id\n        name\n        color\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      acceptedBookingPaymentMethods {\n        type\n      }\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      isPriceTaxInclusive\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "cbdb2069a16b225a008a12fdb9e13585";
+(node as any).hash = "8e4d45e07c732506364956ce35868779";
 
 export default node;

@@ -92,8 +92,6 @@ public static class Constants
 
     public const int MaxProductNameLength = 500;
     public const int MaxProductDescriptionLength = 10000;
-    public const int MaxProductPriceCurrencyLength = 16;
-    public const int MaxProductPriceUnitLength = 16;
 
     public const int MaxStripeConnectAccountIdLength = 100;
     public const int MaxStripeConnectAccountNameLength = 200;
@@ -116,7 +114,7 @@ public static class Constants
     public const int MaxStripeProductIdLength = 100;
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
-    public const int MaxProductVersionPricingCadenceLength = 100;
+    public const int MaxProductPricingCadenceLength = 100;
 
     public const int MaxFloorPlanNameLength = 100;
 
@@ -126,11 +124,9 @@ public static class Constants
     public const int MaxOrganizationAccountNumberLength = 100;
 
     public const int MaxInvoiceNumberLength = 100;
-
     public const int MaxTaxDetailsTaxIdLength = 100;
     public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
-
     public const int MaxCustomerTypeLength = 20;
 
     public const string SkedularPublicLocationsUniqueAlphanumericName = "skedularpubliclocations";

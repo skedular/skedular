@@ -388,7 +388,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
                 new Shared.Models.Organization
                 {
@@ -408,7 +408,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
-            FeatureImages = src.FeatureImages,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 

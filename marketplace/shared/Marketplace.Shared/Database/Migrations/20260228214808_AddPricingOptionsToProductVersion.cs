@@ -12,7 +12,7 @@ namespace Marketplace.Shared.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<ICollection<ProductVersionPricingOptions>>(
+            migrationBuilder.AddColumn<ICollection<ProductPricing>>(
                 name: "PricingOptions",
                 table: "ProductVersion",
                 type: "jsonb",

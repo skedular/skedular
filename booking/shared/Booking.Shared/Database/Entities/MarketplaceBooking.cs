@@ -12,7 +12,8 @@ public class MarketplaceBooking : EntityBase
 {
     public string PaymentStatus { get; set; }
     public bool IsPaymentRequired { get; set; }
-    public ICollection<ProductVersionLineItem> LineItems { get; set; } = [];
+    public int Quantity { get; set; }
+    public ProductPricing ProductPricing { get; set; }
     public string PaymentMethod { get; set; }
     public DateTimeOffset PaymentExpiry { get; set; }
     public decimal? TotalAmountExcludeTax { get; set; }
@@ -32,7 +33,7 @@ public class MarketplaceBooking : EntityBase
     public string? RecurringBookingId { get; set; }
     public virtual RecurringBooking? RecurringBooking { get; set; }
 
-    public virtual ICollection<ProductVersion> ProductVersions { get; set; } = [];
+    public virtual ProductVersion ProductVersion { get; set; }
     public virtual Customer? PaidByCustomer { get; set; }
     public virtual Organization? PaidByOrganization { get; set; }
     public virtual StripeCheckoutSession? StripeCheckoutSession { get; set; }
@@ -57,10 +58,10 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(item => item.TaxAmount).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TaxRatePercentage).HasColumnType("DECIMAL(18,4)");
         builder.Property(item => item.TotalAmount).HasColumnType("DECIMAL(18,4)");
-        builder.Property(item => item.Currency).HasMaxLength(Constants.MaxProductPriceCurrencyLength);
+        builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
-        builder.Property(item => item.LineItems).HasColumnType("jsonb");
+        builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
         builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");
 
         builder
@@ -73,12 +74,13 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
             .WithOne(item => item.MarketplaceBooking)
             .HasForeignKey<MarketplaceBooking>(item => item.RecurringBookingId);
 
-        builder.HasMany(item => item.ProductVersions).WithMany(item => item.MarketplaceBookings);
+        builder.HasOne(item => item.ProductVersion).WithMany(item => item.MarketplaceBookings);
         builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidMarketplaceBookings);
         builder.HasOne(item => item.PaidByOrganization).WithMany(item => item.PaidMarketplaceBookings);
 
         builder.HasIndex(item => item.PaymentStatus);
         builder.HasIndex(item => item.IsPaymentRequired);
+        builder.HasIndex(item => item.Quantity);
         builder.HasIndex(item => item.PaymentMethod);
         builder.HasIndex(item => item.PaymentExpiry);
         builder.HasIndex(item => item.TotalAmountExcludeTax);

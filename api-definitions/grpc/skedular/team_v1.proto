@@ -19,7 +19,7 @@ service TeamService {
 
 message RaiseGraphqlChangeInput {
   string topicName = 1;
-  string id = 2;
+  string id        = 2;
 }
 
 message RaiseGraphqlChangeResponse {
@@ -29,45 +29,45 @@ message VersionInput {
 }
 
 message Version {
-  int32 major = 1;
-  int32 minor = 2;
-  int32 build = 3;
+  int32 major    = 1;
+  int32 minor    = 2;
+  int32 build    = 3;
   int32 revision = 4;
 }
 
 enum OrderDirection {
-  OrderDirection_Ascending = 0;
+  OrderDirection_Ascending  = 0;
   OrderDirection_Descending = 1;
 }
 
 message PageInfo {
-  bool hasNextPage = 1;
-  bool hasPreviousPage =2;
-  string startCursor =3;
-  string endCursor =4;
+  bool   hasNextPage     = 1;
+  bool   hasPreviousPage = 2;
+  string startCursor     = 3;
+  string endCursor       = 4;
 }
 
 message TeamConnection {
-  PageInfo pageInfo = 1;
-  repeated TeamEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo          pageInfo   = 1;
+  repeated TeamEdge edges      = 2;
+  int32             totalCount = 3;
 }
 
 message TeamEdge {
-  Team node = 1;
+  Team   node   = 1;
   string cursor = 2;
 }
 
 message Team {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated TeamMember members = 6;
-  Permissions permissions = 7;
-  string primaryLocationId = 8;
-  repeated CdnImageFile featureImages = 9;
+  string                id                = 1;
+  string                name              = 2;
+  string                about             = 3;
+  string                organizationId    = 4;
+  string                timezone          = 5;
+  repeated TeamMember   members           = 6;
+  Permissions           permissions       = 7;
+  string                primaryLocationId = 8;
+  repeated CdnImageFile featureImages     = 9;
 }
 
 message Admin_GetInput {
@@ -79,28 +79,28 @@ message GetInput {
 }
 
 message GetPaginatedTeamsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  TeamWhereInput where = 5;
+  string                  after   = 1;
+  int32                   first   = 2;
+  string                  before  = 3;
+  int32                   last    = 4;
+  TeamWhereInput          where   = 5;
   repeated TeamOrderInput orderBy = 6;
 }
 
 message TeamWhereInput {
-  string organizationId = 1;
-  string customerId = 2;
-  string nameContains = 3;
+  string          organizationId     = 1;
+  string          customerId         = 2;
+  string          nameContains       = 3;
   repeated string primaryLocationIds = 4;
 }
 
 message TeamOrderInput {
   OrderDirection direction = 1;
-  TeamOrderField field = 2;
+  TeamOrderField field     = 2;
 }
 
 enum TeamOrderField {
-  TeamOrderField_Name = 0;
+  TeamOrderField_Name  = 0;
   TeamOrderField_About = 1;
 }
 
@@ -109,33 +109,33 @@ message GetPermissionsInput {
 }
 
 message Permissions {
-  bool canView = 1;
-  bool canModify = 2;
-  bool canDelete = 3;
-  bool canInvitePeople = 4;
+  bool canView                            = 1;
+  bool canModify                          = 2;
+  bool canDelete                          = 3;
+  bool canInvitePeople                    = 4;
   bool canCancelPeopleExistingInvitations = 5;
 }
 
 message AddInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated TeamMember members = 6;
-  string primaryLocationId = 7;
-  repeated CdnImageFile featureImages = 8;
+  string                id                = 1;
+  string                name              = 2;
+  string                about             = 3;
+  string                organizationId    = 4;
+  string                timezone          = 5;
+  repeated TeamMember   members           = 6;
+  string                primaryLocationId = 7;
+  repeated CdnImageFile featureImages     = 8;
 }
 
 message UpdateInput {
-  string id = 1;
-  string name = 2;
-  string about = 3;
-  string organizationId = 4;
-  string timezone = 5;
-  repeated TeamMember members = 6;
-  string primaryLocationId = 7;
-  repeated CdnImageFile featureImages = 8;
+  string                id                = 1;
+  string                name              = 2;
+  string                about             = 3;
+  string                organizationId    = 4;
+  string                timezone          = 5;
+  repeated TeamMember   members           = 6;
+  string                primaryLocationId = 7;
+  repeated CdnImageFile featureImages     = 8;
 }
 
 message RemoveInput {
@@ -143,44 +143,44 @@ message RemoveInput {
 }
 
 message TeamMember {
-  string id = 1;
-  string customerId = 2;
-  Role role = 3;
+  string             id                 = 1;
+  string             customerId         = 2;
+  Role               role               = 3;
   OrganizationMember organizationMember = 4;
-  TeamMemberStatus status = 5;
+  TeamMemberStatus   status             = 5;
 }
 
 enum TeamMemberStatus
 {
-  TeamMemberStatus_Active = 0;
+  TeamMemberStatus_Active   = 0;
   TeamMemberStatus_Inactive = 1;
 }
 
 enum Role {
-  Role_Owner = 0;
+  Role_Owner         = 0;
   Role_Administrator = 1;
-  Role_Member = 2;
+  Role_Member        = 2;
 }
 
 message OrganizationMember {
-  string id = 1;
+  string id         = 1;
   string customerId = 2;
-  Role role = 3;
+  Role   role       = 3;
 }
 
 enum OrganizationMemberRole {
-  OrganizationMemberRole_Owner = 0;
+  OrganizationMemberRole_Owner         = 0;
   OrganizationMemberRole_Administrator = 1;
-  OrganizationMemberRole_Member = 2;
+  OrganizationMemberRole_Member        = 2;
 }
 
 message CdnImageFile {
-  CdnFile original = 1;
+  CdnFile original  = 1;
   CdnFile thumbnail = 2;
 }
 
 message CdnFile {
-  string url = 1;
-  int32 height = 2;
-  int32 width = 3;
+  string url    = 1;
+  int32  height = 2;
+  int32  width  = 3;
 }

@@ -5,12 +5,35 @@ using HotChocolate.Types;
 using Marketplace.Api.GraphQL.Product;
 using Marketplace.Shared.Services.Cache;
 using Version = Enterprise.Shared.GraphQL.Types.Version;
+using Constants = Api.Shared.Services.Constants;
 
 namespace Marketplace.Api.GraphQL;
 
 [QueryType]
 public class RootQuery(IVersionService versionService)
 {
+    public int DefaultMaxAllowedResourcesLockTimePaidViaCard => Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard;
+    public int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer => Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
+
+    public ICollection<ProductPricingCadenceDetails> ProductPricingCadences =>
+    [
+        new() { Type = ProductPricingCadence.OneTimeV1, Name = ProductPricingCadence.OneTimeV1.ToProductPricingCadenceName() },
+        new()
+        {
+            Type = ProductPricingCadence.PerMinuteV1, Name = ProductPricingCadence.PerMinuteV1.ToProductPricingCadenceName()
+        },
+        new() { Type = ProductPricingCadence.PerHourV1, Name = ProductPricingCadence.PerHourV1.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.DailyV1, Name = ProductPricingCadence.DailyV1.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.WeeklyV1, Name = ProductPricingCadence.WeeklyV1.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.MonthlyV1, Name = ProductPricingCadence.MonthlyV1.ToProductPricingCadenceName() }
+    ];
+
+    public ICollection<PaymentMethodTypeDetails> PaymentMethods =>
+    [
+        new() { Type = PaymentMethod.Card, Name = PaymentMethod.Card.ToPaymentMethodName() },
+        new() { Type = PaymentMethod.BankTransfer, Name = PaymentMethod.BankTransfer.ToPaymentMethodName() }
+    ];
+
     [UseResolverScope]
     public Version MarketplaceVersion()
     {
@@ -30,13 +53,5 @@ public class RootQuery(IVersionService versionService)
     [
         new() { Type = Currency.Nzd, Name = Currency.Nzd.ToCurrencyName() },
         new() { Type = Currency.Usd, Name = Currency.Usd.ToCurrencyName() }
-    ];
-
-    [UseResolverScope]
-    public IEnumerable<PriceUnitDetails> PriceUnits() =>
-    [
-        new() { Type = PriceUnit.PerMinute, Name = PriceUnit.PerMinute.ToPriceUnitName() },
-        new() { Type = PriceUnit.PerHour, Name = PriceUnit.PerHour.ToPriceUnitName() },
-        new() { Type = PriceUnit.PerUse, Name = PriceUnit.PerUse.ToPriceUnitName() }
     ];
 }

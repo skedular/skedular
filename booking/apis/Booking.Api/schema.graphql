@@ -79,11 +79,6 @@ type DayOfWeekDetails {
   name: String!
 }
 
-type LineItemDetails {
-  productVersion: ProductVersionDetails!
-  quantity: Int!
-}
-
 type LocationDetails {
   id: ID!
 }
@@ -91,7 +86,9 @@ type LocationDetails {
 type MarketplaceBookingDetails {
   paidByCustomer: CustomerDetails
   paidByOrganization: OrganizationDetails
-  lineItems: [LineItemDetails!]!
+  productVersion: ProductVersionDetails!
+  quantity: Int!
+  productPricing: ProductPricing!
   paymentMethod: PaymentMethodTypeDetails!
   totalAmountExcludeTax: Decimal
   totalAmountExcludeTaxToDisplay: String!
@@ -163,6 +160,22 @@ type PaymentMethodTypeDetails {
 type PaymentStatusDetails {
   type: PaymentStatus!
   name: String!
+}
+
+type ProductPricing {
+  id: String!
+  index: Int!
+  name: String!
+  description: String!
+  cadence: ProductPricingCadence!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  acceptedPaymentMethods: [PaymentMethod!]!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  numberOfResourcesToBook: Int!
 }
 
 type ProductVersionDetails {
@@ -252,9 +265,11 @@ input AddMarketplaceBookingInput {
   notes: String
   category: BookingCategory
   resourceIds: [String!]
-  lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod!
   invoiceEmailList: [String!]
+  quantity: Int!
+  productVersionId: String!
+  pricingId: String!
 }
 
 input AddMarketplaceRecurringBookingInput {
@@ -277,9 +292,11 @@ input AddMarketplaceRecurringBookingInput {
   occurrenceCount: Int
   skippedDates: [DateTime!]
   category: BookingCategory
-  lineItems: [LineItemInput!]!
   paymentMethod: PaymentMethod!
   invoiceEmailList: [String!]
+  quantity: Int!
+  productVersionId: String!
+  pricingId: String!
 }
 
 input AddPrivateBookingInput {
@@ -381,11 +398,6 @@ input DeletePrivateBookingInput {
 input DeletePrivateRecurringBookingInput {
   clientMutationId: String
   id: String!
-}
-
-input LineItemInput {
-  productVersionId: String!
-  quantity: Int!
 }
 
 input MakeBookingPaymentNotRequiredInput {
@@ -512,6 +524,16 @@ enum PaymentStatus {
   EXPIRED
   RECORD_NEVER_CREATED
   NO_PAYMENT_REQUIRED
+}
+
+enum ProductPricingCadence {
+  NOT_SET
+  ONE_TIME_V1
+  PER_MINUTE_V1
+  PER_HOUR_V1
+  DAILY_V1
+  WEEKLY_V1
+  MONTHLY_V1
 }
 
 enum RecurringBookingEndType {

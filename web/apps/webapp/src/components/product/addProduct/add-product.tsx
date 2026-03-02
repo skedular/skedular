@@ -4,13 +4,13 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesLocationTags, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoicePriceUnit } from '@/components/organization';
+import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import type { addProduct_addProductMutation, Currency, PaymentMethod, PriceUnit } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -42,177 +42,167 @@ const RootQuery = graphql`
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
     $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
-    openingHoursMinutesStep
+    bookingSlotSizeInMinutes
     defaultMaxAllowedResourcesLockTimePaidViaCard
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
+    currencies {
+      type
+      name
+    }
+    paymentMethods {
+      type
+      name
+    }
     ...multipleChoicesProductTags_query
     ...multipleChoicesLocationTags_query
-    ...singleChoicePriceUnit_query
     ...singleChoiceCurrency_query
     ...multipleChoicesBookingPaymentMethodTypes_query
+    ...singleChoiceProductPricingCadence_query
   }
 `;
 
 type ProductDetails = {
   name: string;
   description: string | null;
-  price: string;
-  priceUnit: string;
   currency: string;
-  numberOfResourcesToBook: string;
-  minDurationMinutes: string | null;
-  maxDurationMinutes: string | null;
-  bookAllLocationResources: boolean;
   productTagIds: string[];
-  locationTagIds: string[];
-  maxAllowedResourcesLockTimePaidViaCard: string;
-  maxAllowedResourcesLockTimePaidViaBankTransfer: string;
-  acceptedBookingPaymentMethods: string[];
-  isPriceTaxInclusive: boolean;
+  pricingOptions: PricingOptionForm[];
 };
 
-const productSchema = (openingHoursMinutesStep: number) =>
+type PricingOptionForm = {
+  id: string;
+  cadence: string;
+  name: string;
+  description: string;
+  price: string;
+  numberOfResourcesToBook: string;
+  minDurationMinutes: string;
+  maxDurationMinutes: string;
+  isTaxInclusive: boolean;
+  maxAllowedResourcesLockTimePaidViaCard: string;
+  maxAllowedResourcesLockTimePaidViaBankTransfer: string;
+  acceptedPaymentMethods: string[];
+};
+
+const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
+  id: uuid(),
+  cadence: 'ONE_TIME_V1',
+  name: '',
+  description: '',
+  price: '',
+  numberOfResourcesToBook: '1',
+  minDurationMinutes: '',
+  maxDurationMinutes: '',
+  isTaxInclusive: true,
+  maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
+  maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+  acceptedPaymentMethods: [],
+});
+
+const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
     description: string().nullable(),
-    price: string()
-      .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
-      .required('Price is required.')
-      .test('is-greater-than-zero', 'Price must be greater than zero.', function (value) {
-        const price = Number(value);
-        if (isNaN(price)) {
-          return true;
-        }
-
-        return price > 0;
-      }),
-    priceUnit: string().required('Price Unit is required.'),
     currency: string().required('Currency is required.'),
-    numberOfResourcesToBook: string()
-      .required('Number of resources to book is required.')
-      .test('is-number', 'Number of resources to book must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-      .test('min', 'Number of resources to book must be greater than 0.', (value) => Number(value) > 0),
-    minDurationMinutes: string()
-      .nullable()
-      .test('is-multiple-of-openingHoursMinutesStep', `Minimum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        const minDurationMinutes = Number(value);
-        if (isNaN(minDurationMinutes)) {
-          return true;
-        }
-
-        return minDurationMinutes % openingHoursMinutesStep === 0;
-      })
-      .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
-        const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
-        const maxDurationMinutes = Number(maxDurationMinutesStr);
-        if (isNaN(maxDurationMinutes)) {
-          return true;
-        }
-
-        const minDurationMinutes = Number(value);
-        if (isNaN(minDurationMinutes)) {
-          return true;
-        }
-
-        return minDurationMinutes <= maxDurationMinutes;
-      })
-      .test('is-following-hour-price-unit-rules', 'Minimum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
-        const { priceUnit } = this.parent;
-        if (!priceUnit) {
-          return true;
-        }
-
-        if (priceUnit !== 'PerHour') {
-          return true;
-        }
-
-        const minDurationMinutes = Number(value);
-        if (isNaN(minDurationMinutes)) {
-          return true;
-        }
-
-        return minDurationMinutes % 60 === 0;
-      }),
-    maxDurationMinutes: string()
-      .nullable()
-      .test('is-multiple-of-openingHoursMinutesStep', `Maximum duration in minutes must be in ${openingHoursMinutesStep}-minutes increments.`, function (value) {
-        const maxDurationMinutes = Number(value);
-        if (isNaN(maxDurationMinutes)) {
-          return true;
-        }
-
-        return maxDurationMinutes % openingHoursMinutesStep === 0;
-      })
-      .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
-        const { minDurationMinutes: minDurationMinutesStr } = this.parent;
-        const minDurationMinutes = Number(minDurationMinutesStr);
-        if (isNaN(minDurationMinutes)) {
-          return true;
-        }
-
-        const maxDurationMinutes = Number(value);
-        if (isNaN(maxDurationMinutes)) {
-          return true;
-        }
-
-        return maxDurationMinutes >= minDurationMinutes;
-      })
-      .test('is-following-hour-price-unit-rules', 'Maximum duration in minutes must be in hour increments when price unit is hourly.', function (value) {
-        const { priceUnit } = this.parent;
-        if (!priceUnit) {
-          return true;
-        }
-
-        if (priceUnit !== 'PerHour') {
-          return true;
-        }
-
-        const maxDurationMinutes = Number(value);
-        if (isNaN(maxDurationMinutes)) {
-          return true;
-        }
-
-        return maxDurationMinutes % 60 === 0;
-      }),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
-    locationTagIds: array().nullable(),
-    maxAllowedResourcesLockTimePaidViaCard: string()
-      .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        const maxAllowedResourcesLockTimePaidViaCard = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
-          return false;
+    pricingOptions: array()
+      .of(
+        object({
+          cadence: string().required('Pricing cadence is required.'),
+          name: string().required('Pricing option name is required.'),
+          description: string().required('Pricing option description is required.'),
+          price: string()
+            .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
+            .required('Price is required.')
+            .test('is-greater-than-zero', 'Price must be greater than zero.', (value) => Number(value) > 0),
+          numberOfResourcesToBook: string()
+            .required('Number of resources to book is required.')
+            .test('is-number', 'Number of resources to book must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('min', 'Number of resources to book must be greater than 0.', (value) => Number(value) > 0),
+          minDurationMinutes: string()
+            .required('Minimum duration in minutes is required.')
+            .test('is-number', 'Minimum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Minimum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
+            .test('is-multiple-of-bookingSlotSizeInMinutes', `Minimum duration in minutes must be in ${bookingSlotSizeInMinutes}-minutes increments.`, function (value) {
+              const minDurationMinutes = Number(value);
+              if (isNaN(minDurationMinutes)) {
+                return true;
+              }
+
+              return minDurationMinutes % bookingSlotSizeInMinutes === 0;
+            })
+            .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
+              const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
+              const maxDurationMinutes = Number(maxDurationMinutesStr);
+              if (isNaN(maxDurationMinutes)) {
+                return true;
+              }
+
+              const minDurationMinutes = Number(value);
+              if (isNaN(minDurationMinutes)) {
+                return true;
+              }
+
+              return minDurationMinutes <= maxDurationMinutes;
+            }),
+          maxDurationMinutes: string()
+            .required('Maximum duration in minutes is required.')
+            .test('is-number', 'Maximum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Maximum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
+            .test('is-multiple-of-bookingSlotSizeInMinutes', `Maximum duration in minutes must be in ${bookingSlotSizeInMinutes}-minutes increments.`, function (value) {
+              const maxDurationMinutes = Number(value);
+              if (isNaN(maxDurationMinutes)) {
+                return true;
+              }
+
+              return maxDurationMinutes % bookingSlotSizeInMinutes === 0;
+            })
+            .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
+              const { minDurationMinutes: minDurationMinutesStr } = this.parent;
+              const minDurationMinutes = Number(minDurationMinutesStr);
+              if (isNaN(minDurationMinutes)) {
+                return true;
+              }
+
+              const maxDurationMinutes = Number(value);
+              if (isNaN(maxDurationMinutes)) {
+                return true;
+              }
+
+              return maxDurationMinutes >= minDurationMinutes;
+            }),
+          isTaxInclusive: boolean().required(),
+          maxAllowedResourcesLockTimePaidViaCard: string()
+            .required('Max allowed resources lock time paid via card is required.')
+            .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
+          maxAllowedResourcesLockTimePaidViaBankTransfer: string()
+            .required('Max allowed resources lock time paid via bank transfer is required.')
+            .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
+            .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
+          acceptedPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected.').required('Booking payment methods are required.'),
+        }),
+      )
+      .min(1, 'At least one pricing option is required.')
+      .test('is-unique-cadence-and-numberOfResourcesToBook', 'Cadence and number of resources to book combination must be unique for each pricing option.', (value) => {
+        if (!value || value.length === 0) {
+          return true;
+        }
+
+        const seenCombinations = new Set<string>();
+        for (const pricingOption of value as PricingOptionForm[]) {
+          const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}`;
+          if (seenCombinations.has(combination)) {
+            return false;
+          }
+
+          seenCombinations.add(combination);
         }
 
         return true;
       })
-      .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        const maxAllowedResourcesLockTimePaidViaCard = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidViaCard)) {
-          return false;
-        }
-
-        return maxAllowedResourcesLockTimePaidViaCard > 0;
-      }),
-    maxAllowedResourcesLockTimePaidViaBankTransfer: string()
-      .test('is-number', 'Max allowed resources lock time must be a valid number.', function (value) {
-        const maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
-          return false;
-        }
-
-        return true;
-      })
-      .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', function (value) {
-        const maxAllowedResourcesLockTimePaidViaBankTransfer = Number(value);
-        if (isNaN(maxAllowedResourcesLockTimePaidViaBankTransfer)) {
-          return false;
-        }
-
-        return maxAllowedResourcesLockTimePaidViaBankTransfer > 0;
-      }),
-    acceptedBookingPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected".').required('Booking payment methods are required.'),
-    isPriceTaxInclusive: boolean().required(),
+      .required('Pricing options are required.'),
   });
 
 const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel }: Props) => {
@@ -225,34 +215,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           inactive
           name
           description
-          price
-          priceUnit {
-            type
-            name
-          }
           currency {
             type
             name
           }
-          numberOfResourcesToBook
-          minDurationMinutes
-          maxDurationMinutes
-          bookAllLocationResources
           productTags {
             id
             name
             color
           }
-          locationTags {
-            id
-            name
-            color
-          }
-          acceptedBookingPaymentMethods {
-            type
-          }
-          maxAllowedResourcesLockTimePaidViaCard
-          maxAllowedResourcesLockTimePaidViaBankTransfer
           featureImages {
             original {
               url
@@ -265,7 +236,20 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               width
             }
           }
-          isPriceTaxInclusive
+          pricingOptions {
+            index
+            name
+            description
+            cadence
+            price
+            numberOfResourcesToBook
+            minDurationMinutes
+            maxDurationMinutes
+            isTaxInclusive
+            maxAllowedResourcesLockTimePaidViaCard
+            maxAllowedResourcesLockTimePaidViaBankTransfer
+            acceptedPaymentMethods
+          }
         }
       }
     }
@@ -273,54 +257,19 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
 
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
-  const validateProductDetails = makeValidate(productSchema(rootData.openingHoursMinutesStep));
-  const requiredFields = makeRequired(productSchema(rootData.openingHoursMinutesStep));
+  const validateProductDetails = makeValidate(productSchema(rootData.bookingSlotSizeInMinutes));
+  const requiredFields = makeRequired(productSchema(rootData.bookingSlotSizeInMinutes));
   const [name, setName] = useState('');
   const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
 
   const [description, setDescription] = useState<string | null>('');
   const debounceSetDescription = useDebounceCallback(setDescription, keyboardTextFieldDebounceTimeout);
 
-  const [price, setPrice] = useState('0.00');
-  const debounceSetPrice = useDebounceCallback(setPrice, keyboardTextFieldDebounceTimeout);
-
-  const [priceUnit, setPriceUnit] = useState('');
-  const debounceSetPriceUnit = useDebounceCallback(setPriceUnit, keyboardTextFieldDebounceTimeout);
-
   const [currency, setCurrency] = useState('');
   const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
 
-  const [numberOfResourcesToBook, setNumberOfResourcesToBook] = useState('1');
-  const debounceSetNumberOfResourcesToBook = useDebounceCallback(setNumberOfResourcesToBook, keyboardTextFieldDebounceTimeout);
-
-  const [minDurationMinutes, setMinDurationMinutes] = useState<string | null>(null);
-  const debounceSetMinDurationMinutes = useDebounceCallback(setMinDurationMinutes, keyboardTextFieldDebounceTimeout);
-
-  const [maxDurationMinutes, setMaxDurationMinutes] = useState<string | null>(null);
-  const debounceSetMaxDurationMinutes = useDebounceCallback(setMaxDurationMinutes, keyboardTextFieldDebounceTimeout);
-
-  const [bookAllLocationResources, setBookAllLocationResources] = useState(false);
-  const debounceSetBookAllLocationResources = useDebounceCallback(setBookAllLocationResources, keyboardTextFieldDebounceTimeout);
-
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
-
-  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
-  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
-
-  const [maxAllowedResourcesLockTimePaidViaCard, setMaxAllowedResourcesLockTimePaidViaCard] = useState<string>(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard.toString());
-  const debounceSetMaxAllowedResourcesLockTimePaidViaCard = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaCard, keyboardTextFieldDebounceTimeout);
-
-  const [maxAllowedResourcesLockTimePaidViaBankTransfer, setMaxAllowedResourcesLockTimePaidViaBankTransfer] = useState<string>(
-    (rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
-  );
-  const debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer = useDebounceCallback(setMaxAllowedResourcesLockTimePaidViaBankTransfer, keyboardTextFieldDebounceTimeout);
-
-  const [acceptedBookingPaymentMethods, setAcceptedBookingPaymentMethods] = useState<string[]>([]);
-  const debounceSetAcceptedBookingPaymentMethods = useDebounceCallback(setAcceptedBookingPaymentMethods, keyboardTextFieldDebounceTimeout);
-
-  const [isPriceTaxInclusive, setIsPriceTaxInclusive] = useState(true);
-  const debounceSetIsPriceTaxInclusive = useDebounceCallback(setIsPriceTaxInclusive, keyboardTextFieldDebounceTimeout);
 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
@@ -330,38 +279,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({
-    name,
-    description,
-    price,
-    priceUnit,
-    currency,
-    numberOfResourcesToBook: numberOfResourcesToBookStr,
-    minDurationMinutes: minDurationMinutesStr,
-    maxDurationMinutes: maxDurationMinutesStr,
-    bookAllLocationResources,
-    productTagIds,
-    locationTagIds,
-    maxAllowedResourcesLockTimePaidViaCard: maxAllowedResourcesLockTimePaidViaCardStr,
-    maxAllowedResourcesLockTimePaidViaBankTransfer: maxAllowedResourcesLockTimePaidViaBankTransferStr,
-    acceptedBookingPaymentMethods,
-    isPriceTaxInclusive,
-  }: ProductDetails) => {
+  const handleProductAddClick = ({ name, description, currency, productTagIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
-    const numberOfResourcesToBook = Number(numberOfResourcesToBookStr);
-    const minDurationMinutes = minDurationMinutesStr ? Number(minDurationMinutesStr) : null;
-    const maxDurationMinutes = maxDurationMinutesStr ? Number(maxDurationMinutesStr) : null;
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
     }));
-    const maxAllowedResourcesLockTimePaidViaCard = maxAllowedResourcesLockTimePaidViaCardStr
-      ? Number(maxAllowedResourcesLockTimePaidViaCardStr)
-      : rootData.defaultMaxAllowedResourcesLockTimePaidViaCard;
-    const maxAllowedResourcesLockTimePaidViaBankTransfer = maxAllowedResourcesLockTimePaidViaBankTransferStr
-      ? Number(maxAllowedResourcesLockTimePaidViaBankTransferStr) * 60 * 24
-      : rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer;
 
     commitAddProduct({
       variables: {
@@ -370,22 +294,26 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           id,
           name,
           description,
-          price,
-          isPriceTaxInclusive,
-          priceUnit: priceUnit as PriceUnit,
           currency: currency as Currency,
-          numberOfResourcesToBook,
-          bookAllLocationResources,
-          minDurationMinutes,
-          maxDurationMinutes,
           productTagIds,
-          locationTagIds,
+          locationTagIds: [],
           organizationUniqueAlphanumericName,
           featureImages: finalFeatureImages,
-          maxAllowedResourcesLockTimePaidViaCard,
-          maxAllowedResourcesLockTimePaidViaBankTransfer,
-          acceptedBookingPaymentMethods: acceptedBookingPaymentMethods.map((type) => type as PaymentMethod),
-          pricingOptions: [],
+          pricingOptions: pricingOptions.map((pricingOption, index) => ({
+            id: pricingOption.id,
+            index,
+            name: pricingOption.name.trim(),
+            description: pricingOption.description.trim(),
+            cadence: pricingOption.cadence as ProductPricingCadence,
+            price: Number(pricingOption.price),
+            numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
+            minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+            maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+            isTaxInclusive: pricingOption.isTaxInclusive,
+            maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
+            maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+            acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
+          })),
         },
       },
       onCompleted: (_, errors) => {
@@ -419,26 +347,26 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             inactive: false,
             name,
             description,
-            price,
-            isPriceTaxInclusive,
-            priceUnit: {
-              type: priceUnit as PriceUnit,
-              name: '',
-            },
             currency: {
               type: currency as Currency,
               name: '',
             },
-            numberOfResourcesToBook,
-            bookAllLocationResources,
-            minDurationMinutes,
-            maxDurationMinutes,
             productTags: [],
-            locationTags: [],
             featureImages: finalFeatureImages,
-            maxAllowedResourcesLockTimePaidViaCard,
-            maxAllowedResourcesLockTimePaidViaBankTransfer,
-            acceptedBookingPaymentMethods: [],
+            pricingOptions: pricingOptions.map((pricingOption, index) => ({
+              index,
+              name: pricingOption.name.trim(),
+              description: pricingOption.description.trim(),
+              cadence: pricingOption.cadence as ProductPricingCadence,
+              price: Number(pricingOption.price),
+              numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
+              minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
+              maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+              isTaxInclusive: pricingOption.isTaxInclusive,
+              maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
+              maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+              acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
+            })),
           },
         },
       },
@@ -476,37 +404,16 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             initialValues={{
               name,
               description,
-              price,
-              priceUnit,
               currency,
-              minDurationMinutes,
-              maxDurationMinutes,
-              bookAllLocationResources,
-              numberOfResourcesToBook,
               productTagIds,
-              locationTagIds,
-              maxAllowedResourcesLockTimePaidViaCard,
-              maxAllowedResourcesLockTimePaidViaBankTransfer,
-              acceptedBookingPaymentMethods,
-              isPriceTaxInclusive,
+              pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
             }}
             validate={validateProductDetails}
-            render={({ handleSubmit, values }) => {
+            render={({ handleSubmit, values, form, errors }) => {
               debounceSetName(values!.name);
               debounceSetDescription(values!.description);
-              debounceSetPrice(values!.price);
-              debounceSetPriceUnit(values!.priceUnit);
               debounceSetCurrency(values!.currency);
-              debounceSetMinDurationMinutes(values!.minDurationMinutes);
-              debounceSetMaxDurationMinutes(values!.maxDurationMinutes);
-              debounceSetBookAllLocationResources(values!.bookAllLocationResources);
-              debounceSetNumberOfResourcesToBook(values!.numberOfResourcesToBook);
               debounceSetProductTagIds(values!.productTagIds);
-              debounceSetLocationTagIds(values!.locationTagIds);
-              debounceSetMaxAllowedResourcesLockTimePaidViaCard(values!.maxAllowedResourcesLockTimePaidViaCard);
-              debounceSetMaxAllowedResourcesLockTimePaidViaBankTransfer(values!.maxAllowedResourcesLockTimePaidViaBankTransfer);
-              debounceSetAcceptedBookingPaymentMethods(values!.acceptedBookingPaymentMethods);
-              debounceSetIsPriceTaxInclusive(values!.isPriceTaxInclusive);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -569,40 +476,101 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                       <TextField name="description" required={requiredFields.description} multiline rows={3} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Price">
-                      <TextField name="price" required={requiredFields.price} />
-                    </FormFieldLabel>
+                    <FormFieldLabel label="Pricing Options" />
+                    <StackColumn>
+                      {(values?.pricingOptions ?? []).map((pricingOption: PricingOptionForm, index: number) => (
+                        <Box
+                          key={pricingOption.id}
+                          sx={{
+                            border: 1,
+                            borderColor: 'divider',
+                            borderRadius: 2,
+                            paddingLeft: 2,
+                            paddingBottom: 2,
+                          }}
+                        >
+                          <StackColumn>
+                            <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                              {(values?.pricingOptions ?? []).length > 1 ? (
+                                <Button
+                                  color="error"
+                                  onClick={() => {
+                                    const nextPricingOptions = (values?.pricingOptions ?? []).filter((_: PricingOptionForm, itemIndex: number) => itemIndex !== index);
+                                    form.change('pricingOptions', nextPricingOptions);
+                                  }}
+                                >
+                                  Remove
+                                </Button>
+                              ) : null}
+                            </StackRow>
 
-                    <FormFieldLabel label="Price Unit">
-                      <SingleChoicePriceUnit rootDataRelay={rootData} name="priceUnit" required={requiredFields.priceUnit} />
-                    </FormFieldLabel>
+                            <FormFieldLabel label="Name">
+                              <TextField name={`pricingOptions[${index}].name`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Description">
+                              <TextField name={`pricingOptions[${index}].description`} required multiline rows={3} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Cadence">
+                              <SingleChoiceProductPricingCadence rootDataRelay={rootData} name={`pricingOptions[${index}].cadence`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Price">
+                              <TextField name={`pricingOptions[${index}].price`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Number of Resources to Book">
+                              <TextField name={`pricingOptions[${index}].numberOfResourcesToBook`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel>
+                              <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Minimum Duration (minutes)">
+                              <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Maximum Duration (minutes)">
+                              <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
+                              <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
+                              <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaBankTransfer`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Accepted Payment Methods">
+                              <MultipleChoicesBookingPaymentMethodTypes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
+                            </FormFieldLabel>
+                          </StackColumn>
+                        </Box>
+                      ))}
+
+                      {typeof errors?.pricingOptions === 'string' ? <BodyIconTypography label={errors.pricingOptions} sx={{ color: 'error.main' }} /> : null}
+
+                      <StackRow>
+                        <Button
+                          variant="outlined"
+                          onClick={() => {
+                            const nextPricingOptions = [
+                              ...(values?.pricingOptions ?? []),
+                              createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer),
+                            ];
+                            form.change('pricingOptions', nextPricingOptions);
+                          }}
+                        >
+                          Add Pricing Option
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel>
-                      <Switches
-                        name="isPriceTaxInclusive"
-                        required={requiredFields.isPriceTaxInclusive}
-                        data={{ label: 'Is price tax inclusive?', value: 'isPriceTaxInclusive' }}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Minimum Duration (minutes)">
-                      <TextField name="minDurationMinutes" required={requiredFields.minDurationMinutes} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Maximum Duration (minutes)">
-                      <TextField name="maxDurationMinutes" required={requiredFields.maxDurationMinutes} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Accepted Payment Methods">
-                      <MultipleChoicesBookingPaymentMethodTypes
-                        rootDataRelay={rootData}
-                        name="acceptedBookingPaymentMethods"
-                        required={requiredFields.acceptedBookingPaymentMethods}
-                      />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Product Tags">
@@ -612,38 +580,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                         required={requiredFields.productTagIds}
                         organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                       />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Location Tags">
-                      <MultipleChoicesLocationTags
-                        rootDataRelay={rootData}
-                        name="locationTagIds"
-                        required={requiredFields.locationTagIds}
-                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                      />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel>
-                      <Switches
-                        name="bookAllLocationResources"
-                        required={requiredFields.bookAllLocationResources}
-                        data={{ label: 'Book all location resources', value: 'bookAllLocationResources' }}
-                        helperText="If checked, all location resources will be booked for this product."
-                      />
-                    </FormFieldLabel>
-
-                    {!bookAllLocationResources && (
-                      <FormFieldLabel label="Number of Resources to Book">
-                        <TextField name="numberOfResourcesToBook" required={requiredFields.numberOfResourcesToBook} />
-                      </FormFieldLabel>
-                    )}
-
-                    <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
-                      <TextField name="maxAllowedResourcesLockTimePaidViaCard" required={requiredFields.maxAllowedResourcesLockTimePaidViaCard} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Bank Transfer (days)">
-                      <TextField name="maxAllowedResourcesLockTimePaidViaBankTransfer" required={requiredFields.maxAllowedResourcesLockTimePaidViaBankTransfer} />
                     </FormFieldLabel>
                   </StackColumn>
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5c16cc69d5b70cbf65cdd25ff9dd5a10>>
+ * @generated SignedSource<<1d91dc4c3a23fdae905fee715823ee7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,18 +18,16 @@ export type AddMarketplaceBookingInput = {
   from: any;
   id?: string | null | undefined;
   invoiceEmailList?: ReadonlyArray<string> | null | undefined;
-  lineItems: ReadonlyArray<LineItemInput>;
   notes?: string | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
   organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   paymentMethod: PaymentMethod;
+  pricingId: string;
+  productVersionId: string;
+  quantity: number;
   resourceIds?: ReadonlyArray<string> | null | undefined;
   teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;
-};
-export type LineItemInput = {
-  productVersionId: string;
-  quantity: number;
 };
 export type bookProduct_addMarketplaceBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;

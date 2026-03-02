@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fe932aaada9cd3623582d884aa9e4a6e>>
+ * @generated SignedSource<<92443a3d04e7b53071811c9f43aac967>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type weekOpeningHours_query$data = {
-  readonly openingHoursMinutesStep: number;
+  readonly bookingSlotSizeInMinutes: number;
   readonly " $fragmentType": "weekOpeningHours_query";
 };
 export type weekOpeningHours_query$key = {
@@ -29,7 +29,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "openingHoursMinutesStep",
+      "name": "bookingSlotSizeInMinutes",
       "storageKey": null
     }
   ],
@@ -37,6 +37,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6acd92c93544bbc76455b92dab2b54ee";
+(node as any).hash = "d7b612aeb6b6fb0daf893d740ddc63cb";
 
 export default node;

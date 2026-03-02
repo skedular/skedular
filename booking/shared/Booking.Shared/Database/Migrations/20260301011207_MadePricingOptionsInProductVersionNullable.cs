@@ -12,26 +12,26 @@ namespace Booking.Shared.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<ICollection<ProductVersionPricingOptions>>(
+            migrationBuilder.AlterColumn<ICollection<ProductPricing>>(
                 name: "PricingOptions",
                 table: "ProductVersion",
                 type: "jsonb",
                 nullable: true,
-                oldClrType: typeof(ICollection<ProductVersionPricingOptions>),
+                oldClrType: typeof(ICollection<ProductPricing>),
                 oldType: "jsonb",
-                oldDefaultValue: new ProductVersionPricingOptions[0]);
+                oldDefaultValue: new ProductPricing[0]);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<ICollection<ProductVersionPricingOptions>>(
+            migrationBuilder.AlterColumn<ICollection<ProductPricing>>(
                 name: "PricingOptions",
                 table: "ProductVersion",
                 type: "jsonb",
                 nullable: false,
-                defaultValue: new ProductVersionPricingOptions[0],
-                oldClrType: typeof(ICollection<ProductVersionPricingOptions>),
+                defaultValue: new ProductPricing[0],
+                oldClrType: typeof(ICollection<ProductPricing>),
                 oldType: "jsonb",
                 oldNullable: true);
         }

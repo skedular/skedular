@@ -5,7 +5,7 @@ option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.Customer.V1";
 
 service CustomerService {
   rpc RaiseGraphqlChange (RaiseGraphqlChangeInput) returns (RaiseGraphqlChangeResponse);
-  
+
   rpc Admin_Get (Admin_GetInput) returns (Customer);
   rpc Admin_Add (Admin_AddInput) returns (Customer);
   rpc Admin_AddIdentity (Admin_AddIdentityInput) returns (Customer);
@@ -29,7 +29,7 @@ service CustomerService {
 
 message RaiseGraphqlChangeInput {
   string topicName = 1;
-  string id = 2;
+  string id        = 2;
 }
 
 message RaiseGraphqlChangeResponse {
@@ -39,9 +39,9 @@ message VersionInput {
 }
 
 message Version {
-  int32 major = 1;
-  int32 minor = 2;
-  int32 build = 3;
+  int32 major    = 1;
+  int32 minor    = 2;
+  int32 build    = 3;
   int32 revision = 4;
 }
 
@@ -61,7 +61,7 @@ message Admin_AnyCustomerExistByVerifiableTokenInput {
 }
 
 message AnyCustomerExistByVerifiableTokenResponse {
-  bool exist = 1;
+  bool     exist    = 1;
   Customer customer = 2;
 }
 
@@ -70,100 +70,100 @@ message Admin_AnyCustomerExistByEmailInput {
 }
 
 message AnyCustomerExistByEmailResponse {
-  bool exist = 1;
+  bool     exist    = 1;
   Customer customer = 2;
 }
 
 message Admin_AddInput {
-  string id = 1;
-  repeated Identity identities = 2;
-  string designation = 3;
-  string title = 4;
-  string name = 5;
-  string givenName = 6;
-  string middleName = 7;
-  string familyName = 8;
-  string photoUrl = 9;
-  string photoUrl24 = 10;
-  string photoUrl32 = 11;
-  string photoUrl48 = 12;
-  string photoUrl72 = 13;
-  string photoUrl192 = 14;
-  string photoUrl512 = 15;
-  string timezone = 16;
-  string locale = 17;
-  string defaultOrganizationId = 18;
-  repeated Location preferredLocations = 19;
-  repeated Resource preferredResources = 20;
-  repeated OrganizationTag preferredOrganizationTags = 21;
-  string phoneNumber = 22;
-  bool isOnboardingDone = 23;
+  string                        id                            = 1;
+  repeated Identity             identities                    = 2;
+  string                        designation                   = 3;
+  string                        title                         = 4;
+  string                        name                          = 5;
+  string                        givenName                     = 6;
+  string                        middleName                    = 7;
+  string                        familyName                    = 8;
+  string                        photoUrl                      = 9;
+  string                        photoUrl24                    = 10;
+  string                        photoUrl32                    = 11;
+  string                        photoUrl48                    = 12;
+  string                        photoUrl72                    = 13;
+  string                        photoUrl192                   = 14;
+  string                        photoUrl512                   = 15;
+  string                        timezone                      = 16;
+  string                        locale                        = 17;
+  string                        defaultOrganizationId         = 18;
+  repeated Location             preferredLocations            = 19;
+  repeated Resource             preferredResources            = 20;
+  repeated OrganizationTag      preferredOrganizationTags     = 21;
+  string                        phoneNumber                   = 22;
+  bool                          isOnboardingDone              = 23;
   PersonalInformationVisibility personalInformationVisibility = 24;
-  CustomerType type = 25;
+  CustomerType                  type                          = 25;
 }
 
 message Customer {
-  string id = 1;
-  repeated Identity identities = 2;
-  string designation = 3;
-  string title = 4;
-  string name = 5;
-  string givenName = 6;
-  string middleName = 7;
-  string familyName = 8;
-  string photoUrl = 9;
-  string photoUrl24 = 10;
-  string photoUrl32 = 11;
-  string photoUrl48 = 12;
-  string photoUrl72 = 13;
-  string photoUrl192 = 14;
-  string photoUrl512 = 15;
-  string timezone = 16;
-  string locale = 17;
-  string defaultOrganizationId = 18;
-  repeated string preferredLocationIds = 19;
-  repeated string preferredResourceIds = 20;
-  repeated string preferredOrganizationTagIds = 21;
-  repeated string favouriteLocationIds = 22;
-  string phoneNumber = 23;
-  bool isOnboardingDone = 24;
-  string displayableName = 25;
+  string                        id                            = 1;
+  repeated Identity             identities                    = 2;
+  string                        designation                   = 3;
+  string                        title                         = 4;
+  string                        name                          = 5;
+  string                        givenName                     = 6;
+  string                        middleName                    = 7;
+  string                        familyName                    = 8;
+  string                        photoUrl                      = 9;
+  string                        photoUrl24                    = 10;
+  string                        photoUrl32                    = 11;
+  string                        photoUrl48                    = 12;
+  string                        photoUrl72                    = 13;
+  string                        photoUrl192                   = 14;
+  string                        photoUrl512                   = 15;
+  string                        timezone                      = 16;
+  string                        locale                        = 17;
+  string                        defaultOrganizationId         = 18;
+  repeated string               preferredLocationIds          = 19;
+  repeated string               preferredResourceIds          = 20;
+  repeated string               preferredOrganizationTagIds   = 21;
+  repeated string               favouriteLocationIds          = 22;
+  string                        phoneNumber                   = 23;
+  bool                          isOnboardingDone              = 24;
+  string                        displayableName               = 25;
   PersonalInformationVisibility personalInformationVisibility = 26;
-  CustomerType type = 27;
+  CustomerType                  type                          = 27;
 }
 
 message Identity {
-  string id = 1;
-  string email = 2;
-  bool emailVerified = 3;
+  string id            = 1;
+  string email         = 2;
+  bool   emailVerified = 3;
 }
 
 message Organization {
-  string id = 1;
+  string id                     = 1;
   string uniqueAlphanumericName = 2;
 }
 
 message Location {
-  string id = 1;
+  string       id           = 1;
   Organization organization = 3;
 }
 
 message Admin_AddIdentityInput {
-  string customerId = 1;
-  string id = 2;
-  string email = 3;
-  bool emailVerified = 4;
+  string customerId    = 1;
+  string id            = 2;
+  string email         = 3;
+  bool   emailVerified = 4;
 }
 
 message Admin_UpdateIdentityInput {
-  string customerId = 1;
-  string id = 2;
-  string email = 3;
-  bool emailVerified = 4;
+  string customerId    = 1;
+  string id            = 2;
+  string email         = 3;
+  bool   emailVerified = 4;
 }
 
 message Admin_SetDefaultOrganizationInput {
-  string customerId = 1;
+  string customerId     = 1;
   string organizationId = 2;
 }
 
@@ -173,15 +173,15 @@ message Admin_AddPreferredLocationInput {
 }
 
 enum FeedbackChannel {
-  FeedbackChannel_Web = 0;
-  FeedbackChannel_Slack = 1;
+  FeedbackChannel_Web     = 0;
+  FeedbackChannel_Slack   = 1;
   FeedbackChannel_MsTeams = 2;
 }
 
 message SubmitFeedbackInput {
-  string id = 1;
-  string feedback = 2;
-  FeedbackChannel channel = 3;
+  string          id       = 1;
+  string          feedback = 2;
+  FeedbackChannel channel  = 3;
 }
 
 message Feedback {
@@ -197,7 +197,7 @@ message RemovePreferredLocationInput {
 }
 
 message OrganizationTag {
-  string id = 1;
+  string       id           = 1;
   Organization organization = 5;
 }
 
@@ -210,7 +210,7 @@ message RemovePreferredOrganizationTagInput {
 }
 
 message Resource {
-  string id = 1;
+  string   id       = 1;
   Location location = 3;
 }
 
@@ -223,11 +223,11 @@ message RemovePreferredResourceInput {
 }
 
 enum PersonalInformationVisibility {
-  PersonalInformationVisibility_Visible = 0;
+  PersonalInformationVisibility_Visible  = 0;
   PersonalInformationVisibility_Redacted = 1;
 }
 
 enum CustomerType {
-  CustomerType_Guest = 0;
+  CustomerType_Guest      = 0;
   CustomerType_Registered = 1;
 }

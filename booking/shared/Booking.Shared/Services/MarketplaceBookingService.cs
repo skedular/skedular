@@ -53,10 +53,10 @@ public class MarketplaceBookingService(
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
     IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
-    IProductService productService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     TimeProvider timeProvider,
-    IRandomHelper randomHelper) : IMarketplaceBookingService
+    IRandomHelper randomHelper,
+    IProductVersionHelperService productVersionHelperService) : IMarketplaceBookingService
 {
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
@@ -76,46 +76,27 @@ public class MarketplaceBookingService(
         var marketplaceBooking = booking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
-        var productVersions = await productService.GetProductVersionsAsync(
-            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
-            cancellationToken);
-        var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-            booking.From,
-            booking.Until,
-            resourceIds,
-            // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-            productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
-            cancellationToken);
-
-        if (productVersions.Any(item => item.ProductTags.Count == 0))
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        if (productVersion.ProductTags.Count == 0)
         {
             throw new ProductMissingProductTag();
         }
 
-        var organizationIds = productVersions.Select(item => item.Product.Organization.Id).Distinct().ToList();
-        if (organizationIds.Count > 1)
-        {
-            throw new CrossOrganizationProductBookingNotAllowed();
-        }
+        ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
-        if (!productVersions.All(item => item.IsPriceTaxInclusive is null) &&
-            !productVersions.All(item => item.IsPriceTaxInclusive!.Value) &&
-            productVersions.Any(item => item.IsPriceTaxInclusive!.Value))
-        {
-            throw new BookingProductWithMixedTaxSetupNotAllowed();
-        }
+        marketplaceBooking.ProductPricing =
+            productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
+            throw new ProductPricingNotFound();
 
-        // TODO: 20260211 : Morteza: The current implementation does not work when different products with different resources are selected, as it only validates the total quantity and ignores the requested resource types.
-        var maxAllowedResourcesToBook = marketplaceBooking.LineItems
-            .Select(item =>
-            {
-                var matchedProductVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
-
-                return item.Quantity * matchedProductVersion.NumberOfResourcesToBook;
-            }).Sum();
-
-        if (resourceIds.Count > maxAllowedResourcesToBook!.Value)
+        var maxAllowedResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+        var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+            booking.From,
+            booking.Until,
+            booking.Resources.Select(item => item.Resource.Id).ToList(),
+            productVersion.ProductTags.Select(item => item.Id).ToList(),
+            cancellationToken);
+        if (resources.Count > maxAllowedResourcesToBook)
         {
             throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
         }
@@ -124,16 +105,9 @@ public class MarketplaceBookingService(
         marketplaceBooking.IsPaymentRequired = true;
         marketplaceBooking.PaymentStatus = PaymentStatus.Pending;
 
-        if (productVersions.Any(item =>
-                !item.AcceptedBookingPaymentMethods.ToSafeCollection().Contains(marketplaceBooking.PaymentMethod.ToPaymentMethod())))
+        if (!marketplaceBooking.ProductPricing.AcceptedPaymentMethods.Contains(marketplaceBooking.PaymentMethod))
         {
             throw new BookingPaymentMethodNotAccepted();
-        }
-
-        var currencies = productVersions.Select(item => item.Currency).Distinct().ToList();
-        if (currencies.Count > 1)
-        {
-            throw new BookingsProductsWithMultipleCurrenciesAreNotSupported();
         }
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -144,9 +118,8 @@ public class MarketplaceBookingService(
                 booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
                 booking.From,
                 booking.Until,
-                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                productVersions.Single(),
-                marketplaceBooking.LineItems.First().Quantity,
+                productVersion,
+                marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook,
                 cancellationToken);
         }
 
@@ -161,20 +134,13 @@ public class MarketplaceBookingService(
 
         repositoryFactory.ResourceBookingSlotRepository.UpdateRange(slots);
 
-        var marketplaceBookingEntity = mapper.MapTo(
-            marketplaceBooking,
-            customer,
-            null,
-            productVersions,
-            null);
-
+        var marketplaceBookingEntity = mapper.MapTo(marketplaceBooking, customer, null, productVersion, null);
         var paymentExpiry = timeProvider
             .GetUtcNow()
             .TrimAllAfterSeconds()
-            .AddMinutes(GetBookingPaymentExpiryInMinutes(productVersions, marketplaceBooking.PaymentMethod));
+            .AddMinutes(GetBookingPaymentExpiryInMinutes(marketplaceBooking.ProductPricing, marketplaceBooking.PaymentMethod));
 
         marketplaceBookingEntity.PaymentExpiry = paymentExpiry;
-
         marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
 
         var bookingEntity = mapper.MapTo(
@@ -253,7 +219,7 @@ public class MarketplaceBookingService(
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         /********************************************************************************************************************/
-        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability check easier to manage.
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
@@ -261,11 +227,17 @@ public class MarketplaceBookingService(
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-        var productVersions = await productService.GetProductVersionsAsync(
-            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
-            cancellationToken);
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        if (productVersion.ProductTags.Count == 0)
+        {
+            throw new ProductMissingProductTag();
+        }
 
-        var resourceIds = booking.Resources.Select(item => item.Resource.Id).ToList();
+        var resourceIds = booking.Resources.Count == 0
+            ? existingBooking.InvolvedResources.Select(item => item.Id).ToList()
+            : booking.Resources.Select(item => item.Resource.Id).ToList();
+
         ICollection<Resource> resources;
 
         // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
@@ -276,23 +248,23 @@ public class MarketplaceBookingService(
             resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
                 null,
                 null,
-                booking.From,
-                booking.Until,
+                existingBooking.From,
+                existingBooking.Until,
                 resourceIds,
                 [],
                 [],
                 cancellationToken);
 
             // If no requested resource is available, try to auto-pick one by customer preference.
-            if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
+            var numberOfResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+            if (resources.Count < numberOfResourcesToBook && booking.InvolvedCustomers.Count == 1)
             {
                 resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
                     customerEntities.First(),
-                    booking.From,
-                    booking.Until,
-                    // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                    productVersions.Single(),
-                    marketplaceBooking.LineItems.First().Quantity,
+                    existingBooking.From,
+                    existingBooking.Until,
+                    productVersion,
+                    numberOfResourcesToBook,
                     cancellationToken);
             }
         }
@@ -301,11 +273,10 @@ public class MarketplaceBookingService(
             // Non-recurring or customized instances keep strict behavior:
             // caller-provided resources must all be available.
             resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                booking.From,
-                booking.Until,
+                existingBooking.From,
+                existingBooking.Until,
                 resourceIds,
-                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                productVersions.Single().ProductTags.Select(item => item.Id).ToList(),
+                productVersion.ProductTags.Select(item => item.Id).ToList(),
                 cancellationToken);
         }
 
@@ -408,7 +379,7 @@ public class MarketplaceBookingService(
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         /********************************************************************************************************************/
-        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability easier to manage.
+        // TODO: 20250317 : Morteza: For now, remove all existing resources as part of the transaction to make subsequent resource availability check easier to manage.
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         /********************************************************************************************************************/
@@ -416,9 +387,12 @@ public class MarketplaceBookingService(
         var marketplaceBooking = booking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-        var productVersions = await productService.GetProductVersionsAsync(
-            marketplaceBooking.LineItems.Select(item => item.ProductVersionId).ToList(),
-            cancellationToken);
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        if (productVersion.ProductTags.Count == 0)
+        {
+            throw new ProductMissingProductTag();
+        }
 
         var resourceIds = booking.InvolvedResources.Select(item => item.Id).ToList();
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
@@ -438,9 +412,8 @@ public class MarketplaceBookingService(
                 customerEntities.First(),
                 booking.From,
                 booking.Until,
-                // TODO: 20260218 : Morteza: We currently only support a single product version per booking. This should be changed to support multiple product versions in the future. 
-                productVersions.Single(),
-                marketplaceBooking.LineItems.First().Quantity,
+                productVersion,
+                marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook,
                 cancellationToken);
         }
 
@@ -475,18 +448,11 @@ public class MarketplaceBookingService(
             .Select(item => item.First())
             .ToList()!;
 
-    private static int GetBookingPaymentExpiryInMinutes(ICollection<ProductVersion> productVersions, PaymentMethod paymentMethod) =>
-        productVersions.Count == 0
-            ? paymentMethod switch
-            {
-                PaymentMethod.Card => Api.Shared.Services.Constants.DefaultMaxAllowedResourcesLockTimePaidViaCard,
-                PaymentMethod.BankTransfer => Api.Shared.Services.Constants.DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer,
-                _ => throw new ArgumentOutOfRangeException()
-            }
-            : paymentMethod switch
-            {
-                PaymentMethod.Card => productVersions.Select(item => item.MaxAllowedResourcesLockTimePaidViaCard).Min(),
-                PaymentMethod.BankTransfer => productVersions.Select(item => item.MaxAllowedResourcesLockTimePaidViaBankTransfer).Min(),
-                _ => throw new ArgumentOutOfRangeException()
-            };
+    private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
+        paymentMethod switch
+        {
+            PaymentMethod.Card => pricing.MaxAllowedResourcesLockTimePaidViaCard,
+            PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

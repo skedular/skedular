@@ -3,7 +3,7 @@ using HotChocolate;
 
 namespace Marketplace.Api.GraphQL.Product;
 
-[GraphQLName("Marketplace_PaymentMethodTypeDetails")]
+[GraphQLName("PaymentMethodTypeDetails")]
 public class PaymentMethodTypeDetails
 {
     [GraphQLName("type")] public PaymentMethod Type { get; set; }

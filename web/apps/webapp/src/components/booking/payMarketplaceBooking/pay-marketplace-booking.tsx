@@ -96,13 +96,10 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             }
             paymentExpiry
             invoiceUrl
-            lineItems {
-              quantity
-              productVersion {
-                id
-                name
-                priceToDisplay
-              }
+            quantity
+            productPricing {
+              name
+              price
             }
             isPaymentRequired
             paymentStatus {
@@ -492,7 +489,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
       <Box sx={{ flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Pay Booking">
           <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-            <FormFieldLabel label="Date/Time">
+            <FormFieldLabel label="Date/Time" stackLabelOnTop>
               <StackRow>
                 <BodyIconTypography label={`${toShortDate(booking.from)}, `} />
                 {allDay && <BodyIconTypography label="All day" />}
@@ -501,7 +498,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             </FormFieldLabel>
 
             {booking.involvedCustomers.length > 0 && (
-              <FormFieldLabel label="Users">
+              <FormFieldLabel label="Users" stackLabelOnTop>
                 <StackRow>
                   {booking.involvedCustomers.map((customer) => (
                     <BodyIconTypography
@@ -515,7 +512,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             )}
 
             {booking.involvedTeams.length > 0 && (
-              <FormFieldLabel label="Teams">
+              <FormFieldLabel label="Teams" stackLabelOnTop>
                 <StackRow>
                   {booking.involvedTeams.map((team) => (
                     <BodyIconTypography key={team.id} label={team.name} startElement={<TeamAvatar name={team} size="small" />} />
@@ -525,7 +522,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             )}
 
             {booking.involvedLocations.length > 0 && (
-              <FormFieldLabel label="Locations">
+              <FormFieldLabel label="Locations" stackLabelOnTop>
                 <StackRow>
                   {booking.involvedLocations.map((location) => (
                     <BodyIconTypography key={location.id} label={location.name} startElement={<LocationAvatar name={location} size="small" />} />
@@ -535,7 +532,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             )}
 
             {booking.bookingResources.length > 0 && (
-              <FormFieldLabel label="Resources">
+              <FormFieldLabel label="Resources" stackLabelOnTop>
                 <BodyIconTypography
                   label={booking.bookingResources
                     .reduce((acc, val) => `${acc}, ${val.resource.name}`, '')
@@ -545,20 +542,20 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
               </FormFieldLabel>
             )}
 
-            <FormFieldLabel label="Total Exclude GST/VAT">
+            <FormFieldLabel label="Total Exclude GST/VAT" stackLabelOnTop>
               <BodyIconTypography label={`${booking.marketplaceBooking?.totalAmountExcludeTaxToDisplay}`} />
             </FormFieldLabel>
 
-            <FormFieldLabel label="Total GST/VAT">
+            <FormFieldLabel label="Total GST/VAT" stackLabelOnTop>
               <BodyIconTypography label={`${booking.marketplaceBooking?.taxAmountToDisplay}`} />
             </FormFieldLabel>
 
-            <FormFieldLabel label="Total Amount">
+            <FormFieldLabel label="Total Amount" stackLabelOnTop>
               <BodyIconTypography label={`${booking.marketplaceBooking?.totalAmountToDisplay}`} />
             </FormFieldLabel>
 
             {booking.marketplaceBooking?.invoiceUrl && (
-              <FormFieldLabel label="">
+              <FormFieldLabel label="" stackLabelOnTop>
                 <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
                   <BodyIconTypography label="Download Invoice" startElement={<PdfIcon />} />
                 </Link>

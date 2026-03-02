@@ -8,6 +8,7 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Temporalio.Activities;
 
@@ -25,57 +26,50 @@ public class BookingIntegrations(
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     IMapper mapper,
     IBookingOutboxPublisher bookingOutboxPublisher,
-    ICachedBookingService cachedBookingService)
+    ICachedBookingService cachedBookingService,
+    IGraphQlTopicEventSender graphQlTopicEventSender)
 {
     [Activity]
     public async Task CalculateBookingDifferentAmountsAsync(CalculateBookingDifferentAmountsInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
+        if (booking is null || booking.IsDeleted())
         {
             return;
         }
 
-        var marketplaceBooking = booking.MarketplaceBooking;
-        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        if (productVersions.Count != productVersionIds.Count)
+        ArgumentNullException.ThrowIfNull(booking.MarketplaceBooking);
+
+        var marketplaceBooking = await repositoryFactory.MarketplaceBookingRepository.GetByIdAsync(booking.MarketplaceBooking.Id, cancellationToken);
+        if (marketplaceBooking is null || booking.IsDeleted())
         {
-            throw new InvalidOperationException();
+            return;
         }
 
-        var currencies = productVersions.Select(item => item.Currency).Distinct().ToList();
-        var organizationId = productVersions.First().Product.Organization.Id;
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { Id = organizationId },
+            new Admin_GetInput { Id = marketplaceBooking.ProductVersion.Product.Organization.Id },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         ArgumentNullException.ThrowIfNull(organization);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        marketplaceBooking.Currency = currencies.First();
-        var totalPrice = marketplaceBooking.LineItems.Aggregate(0.00m, (acc, lineItem) =>
+        var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
+        var totalPrice = marketplaceBooking.ProductPricing.Cadence switch
         {
-            var productVersion = productVersions.Single(item => item.Id == lineItem.ProductVersionId);
-            if (!productVersion.Price.HasValue)
-            {
-                throw new ArgumentNullException(nameof(productVersion.Price));
-            }
+            ProductPricingCadence.OneTimeV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.PerMinuteV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * totalMinutes,
+            ProductPricingCadence.PerHourV1 =>
+                marketplaceBooking.ProductPricing.Price / 60 * marketplaceBooking.Quantity * totalMinutes,
+            // TODO: 20260302 : Morteza: Implement other cadence 
+            // ProductVersionPricingCadence.DailyV1 => expr,
+            // ProductVersionPricingCadence.WeeklyV1 => expr,
+            // ProductVersionPricingCadence.MonthlyV1 => expr,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-            ArgumentException.ThrowIfNullOrWhiteSpace(productVersion.PriceUnit);
-            var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
-            var price = productVersion.PriceUnit.ToPriceUnit() switch
-            {
-                PriceUnit.PerMinute => productVersion.Price.Value * lineItem.Quantity * totalMinutes,
-                PriceUnit.PerHour => productVersion.Price.Value / 60 * lineItem.Quantity * totalMinutes,
-                PriceUnit.PerUse => productVersion.Price.Value * lineItem.Quantity,
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-            return acc + price;
-        });
+        marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
 
         if (organization.TaxDetails is null)
         {
@@ -86,13 +80,11 @@ public class BookingIntegrations(
         }
         else
         {
-            var isPriceTaxInclusive = productVersions.First().IsPriceTaxInclusive;
-            ArgumentNullException.ThrowIfNull(isPriceTaxInclusive);
-
+            var isPriceTaxInclusive = marketplaceBooking.ProductPricing.IsTaxInclusive;
             var taxRatePercentage = Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage);
             marketplaceBooking.TaxRatePercentage = taxRatePercentage.RoundedDecimal();
 
-            if (isPriceTaxInclusive.Value)
+            if (isPriceTaxInclusive)
             {
                 marketplaceBooking.TotalAmount = totalPrice.RoundedDecimal();
                 marketplaceBooking.TotalAmountExcludeTax = (marketplaceBooking.TotalAmount.Value * 100 / (100 + taxRatePercentage)).RoundedDecimal();
@@ -115,6 +107,7 @@ public class BookingIntegrations(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(GraphQL.Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
     [Activity]

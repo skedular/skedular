@@ -22,11 +22,11 @@ public class AddPrivateRecurringBookingInput
     [GraphQLName("interval")] public int Interval { get; set; }
     [GraphQLName("byMonthDay")] public int? ByMonthDay { get; set; }
     [GraphQLName("bySetPosition")] public int? BySetPosition { get; set; }
-    [GraphQLName("byWeekDays")] public ICollection<DayOfWeek> ByWeekDays { get; set; } = [];
+    [GraphQLName("byWeekDays")] public IEnumerable<DayOfWeek> ByWeekDays { get; set; } = [];
     [GraphQLName("endType")] public RecurringBookingEndType EndType { get; set; }
     [GraphQLName("startDate")] public DateTimeOffset StartDate { get; set; }
     [GraphQLName("endDate")] public DateTimeOffset? EndDate { get; set; }
     [GraphQLName("occurrenceCount")] public int? OccurrenceCount { get; set; }
-    [GraphQLName("skippedDates")] public ICollection<DateTimeOffset>? SkippedDates { get; set; } = [];
+    [GraphQLName("skippedDates")] public IEnumerable<DateTimeOffset>? SkippedDates { get; set; } = [];
     [GraphQLName("category")] public BookingCategory? Category { get; set; }
 }

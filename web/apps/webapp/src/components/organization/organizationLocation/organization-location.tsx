@@ -314,7 +314,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             }
           }
         }
-        openingHoursMinutesStep
         ...multipleChoicesLocationTags_query
         ...weekOpeningHours_query
         ...customTagSelector_allCustomTags_query

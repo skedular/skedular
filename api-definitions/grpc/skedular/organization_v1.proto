@@ -63,7 +63,7 @@ service OrganizationService {
 
 message RaiseGraphqlChangeInput {
   string topicName = 1;
-  string id = 2;
+  string id        = 2;
 }
 
 message RaiseGraphqlChangeResponse {
@@ -73,52 +73,52 @@ message VersionInput {
 }
 
 message Version {
-  int32 major = 1;
-  int32 minor = 2;
-  int32 build = 3;
+  int32 major    = 1;
+  int32 minor    = 2;
+  int32 build    = 3;
   int32 revision = 4;
 }
 
 enum OrderDirection {
-  OrderDirection_Ascending = 0;
+  OrderDirection_Ascending  = 0;
   OrderDirection_Descending = 1;
 }
 
 message PageInfo {
-  bool hasNextPage = 1;
-  bool hasPreviousPage =2;
-  string startCursor =3;
-  string endCursor =4;
+  bool   hasNextPage     = 1;
+  bool   hasPreviousPage = 2;
+  string startCursor     = 3;
+  string endCursor       = 4;
 }
 
 message GetActiveOrganizationTermsOfUseInput {
 }
 
 message TermsOfUse {
-  string id = 1;
+  string id    = 1;
   string terms = 2;
 }
 
 message Admin_AddInput {
-  string id = 1;
-  string uniqueAlphanumericName = 2;
-  string name = 3;
-  string about = 4;
-  string logoUrl = 5;
-  string website = 6;
-  bool agreedToTermsOfUse = 7;
-  string termsOfUseId = 8;
-  repeated string industrySubCategoryIds = 9;
-  string offeringCode = 10;
-  OrganizationType type = 11;
-  string contactEmail = 12;
-  string contactPhone = 13;
+  string           id                     = 1;
+  string           uniqueAlphanumericName = 2;
+  string           name                   = 3;
+  string           about                  = 4;
+  string           logoUrl                = 5;
+  string           website                = 6;
+  bool             agreedToTermsOfUse     = 7;
+  string           termsOfUseId           = 8;
+  repeated string  industrySubCategoryIds = 9;
+  string           offeringCode           = 10;
+  OrganizationType type                   = 11;
+  string           contactEmail           = 12;
+  string           contactPhone           = 13;
 }
 
 enum OrganizationType {
-  OrganizationType_Private = 0;
+  OrganizationType_Private     = 0;
   OrganizationType_Marketplace = 1;
-  OrganizationType_Individual = 2;
+  OrganizationType_Individual  = 2;
 }
 
 message Admin_GetOrganizationStripeConnectAccountsResponse {
@@ -126,125 +126,125 @@ message Admin_GetOrganizationStripeConnectAccountsResponse {
 }
 
 message Organization {
-  string id = 1;
-  string uniqueAlphanumericName = 2;
-  string name = 3;
-  string about = 4;
-  string logoUrl = 5;
-  string website = 6;
-  bool agreedToTermsOfUse = 7;
-  string termsOfUseId = 8;
-  repeated IndustrySubCategory industrySubCategories = 9;
-  repeated OrganizationMember members = 10;
-  Offering Offering = 11;
-  bool hasAttachedPaymentMethod = 12;
-  bool hasFutureBooking = 13;
-  repeated Tag tags = 14;
-  repeated ResourceType resourceTypes = 15;
-  OrganizationType type = 16;
-  string contactEmail = 17;
-  string contactPhone = 18;
-  bool isListable = 19;
-  BillingDetails billingDetails = 20;
-  StripeCustomer stripeCustomer = 21;
-  repeated StripePaymentMethod stripePaymentMethods = 22;
-  repeated StripeConnectAccount stripeConnectAccounts = 23;
-  TaxDetails taxDetails = 24;
-  PhysicalAddress physicalAddress = 25;
-  bool isOwnershipVerified = 26;
+  string                        id                       = 1;
+  string                        uniqueAlphanumericName   = 2;
+  string                        name                     = 3;
+  string                        about                    = 4;
+  string                        logoUrl                  = 5;
+  string                        website                  = 6;
+  bool                          agreedToTermsOfUse       = 7;
+  string                        termsOfUseId             = 8;
+  repeated IndustrySubCategory  industrySubCategories    = 9;
+  repeated OrganizationMember   members                  = 10;
+  Offering                      Offering                 = 11;
+  bool                          hasAttachedPaymentMethod = 12;
+  bool                          hasFutureBooking         = 13;
+  repeated Tag                  tags                     = 14;
+  repeated ResourceType         resourceTypes            = 15;
+  OrganizationType              type                     = 16;
+  string                        contactEmail             = 17;
+  string                        contactPhone             = 18;
+  bool                          isListable               = 19;
+  BillingDetails                billingDetails           = 20;
+  StripeCustomer                stripeCustomer           = 21;
+  repeated StripePaymentMethod  stripePaymentMethods     = 22;
+  repeated StripeConnectAccount stripeConnectAccounts    = 23;
+  TaxDetails                    taxDetails               = 24;
+  PhysicalAddress               physicalAddress          = 25;
+  bool                          isOwnershipVerified      = 26;
 }
 
 message IndustrySubCategory {
-  string id = 1;
-  string name = 2;
+  string id               = 1;
+  string name             = 2;
   string mainCategoryName = 3;
 }
 
 message Offering {
-  string id = 1;
-  string code = 2;
-  google.protobuf.Timestamp start = 3;
-  google.protobuf.Timestamp end = 4;
-  bool autoRenew = 5;
-  int32 unitPrice = 6;
-  repeated string activeCustomerIds = 7;
-  string organizationId = 8;
+  string                    id                = 1;
+  string                    code              = 2;
+  google.protobuf.Timestamp start             = 3;
+  google.protobuf.Timestamp end               = 4;
+  bool                      autoRenew         = 5;
+  int32                     unitPrice         = 6;
+  repeated string           activeCustomerIds = 7;
+  string                    organizationId    = 8;
 }
 
 message Admin_GetInput {
-  string id = 1;
+  string id                     = 1;
   string uniqueAlphanumericName = 2;
 }
 
 message GetInput {
-  string id = 1;
+  string id                     = 1;
   string uniqueAlphanumericName = 2;
 }
 
 enum Role {
-  Role_Owner = 0;
+  Role_Owner         = 0;
   Role_Administrator = 1;
-  Role_Member = 2;
+  Role_Member        = 2;
 }
 
 message OrganizationMember {
-  string id = 1;
-  string customerId = 2;
-  Role role = 3;
-  bool isOrganizationOnboardingDone = 4;
-  OrganizationMemberStatus status = 5;
+  string                   id                           = 1;
+  string                   customerId                   = 2;
+  Role                     role                         = 3;
+  bool                     isOrganizationOnboardingDone = 4;
+  OrganizationMemberStatus status                       = 5;
 }
 
 enum OrganizationMemberStatus
 {
-  OrganizationMemberStatus_Active = 0;
+  OrganizationMemberStatus_Active   = 0;
   OrganizationMemberStatus_Inactive = 1;
 }
 
 message Admin_AddMemberInput {
-  string id = 1;
+  string             id     = 1;
   OrganizationMember member = 2;
 }
 
 message GetPaginatedMembersInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  MemberWhereInput where = 5;
+  string                    after   = 1;
+  int32                     first   = 2;
+  string                    before  = 3;
+  int32                     last    = 4;
+  MemberWhereInput          where   = 5;
   repeated MemberOrderInput orderBy = 6;
 }
 
 message MemberWhereInput {
-  string organizationId  = 1;
-  string nameContains  = 2;
-  string customerId  = 3;
+  string organizationId = 1;
+  string nameContains   = 2;
+  string customerId     = 3;
 }
 
 message MemberOrderInput {
-  OrderDirection direction = 1;
-  MemberOrderField field = 2;
+  OrderDirection   direction = 1;
+  MemberOrderField field     = 2;
 }
 
 enum MemberOrderField {
-  MemberOrderField_RoleType = 0;
-  MemberOrderField_Status = 1;
-  MemberOrderField_Name= 2;
-  MemberOrderField_GivenName= 3;
-  MemberOrderField_MiddleName= 4;
-  MemberOrderField_FamilyName= 5;
-  MemberOrderField_PhoneNumber= 6;
+  MemberOrderField_RoleType    = 0;
+  MemberOrderField_Status      = 1;
+  MemberOrderField_Name        = 2;
+  MemberOrderField_GivenName   = 3;
+  MemberOrderField_MiddleName  = 4;
+  MemberOrderField_FamilyName  = 5;
+  MemberOrderField_PhoneNumber = 6;
 }
 
 message MemberConnection {
-  PageInfo pageInfo = 1;
-  repeated MemberEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo            pageInfo   = 1;
+  repeated MemberEdge edges      = 2;
+  int32               totalCount = 3;
 }
 
 message MemberEdge {
-  OrganizationMember node = 1;
-  string cursor = 2;
+  OrganizationMember node   = 1;
+  string             cursor = 2;
 }
 
 message GetPermissionsInput {
@@ -252,12 +252,12 @@ message GetPermissionsInput {
 }
 
 message Permissions {
-  bool canView = 1;
-  bool canModify = 2;
-  bool canDelete = 3;
-  bool canInvitePeople = 4;
+  bool canView                            = 1;
+  bool canModify                          = 2;
+  bool canDelete                          = 3;
+  bool canInvitePeople                    = 4;
   bool canCancelPeopleExistingInvitations = 5;
-  bool canViewAnalytics = 6;
+  bool canViewAnalytics                   = 6;
 }
 
 message Admin_GetTagInput {
@@ -265,11 +265,11 @@ message Admin_GetTagInput {
 }
 
 message Admin_GetPaginatedTagsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  TagWhereInput where = 5;
+  string                 after   = 1;
+  int32                  first   = 2;
+  string                 before  = 3;
+  int32                  last    = 4;
+  TagWhereInput          where   = 5;
   repeated TagOrderInput orderBy = 6;
 }
 
@@ -278,64 +278,64 @@ message GetTagInput {
 }
 
 message Tag {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string tagType = 4;
-  string color = 5;
+  string tagType     = 4;
+  string color       = 5;
 }
 
 message TagConnection {
-  PageInfo pageInfo = 1;
-  repeated TagEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo         pageInfo   = 1;
+  repeated TagEdge edges      = 2;
+  int32            totalCount = 3;
 }
 
 message TagEdge {
-  Tag node = 1;
+  Tag    node   = 1;
   string cursor = 2;
 }
 
 message GetPaginatedTagsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  TagWhereInput where = 5;
+  string                 after   = 1;
+  int32                  first   = 2;
+  string                 before  = 3;
+  int32                  last    = 4;
+  TagWhereInput          where   = 5;
   repeated TagOrderInput orderBy = 6;
 }
 
 message TagWhereInput {
-  string organizationId = 1;
-  string nameContains = 2;
-  repeated string types = 3;
+  string          organizationId = 1;
+  string          nameContains   = 2;
+  repeated string types          = 3;
 }
 
 message TagOrderInput {
   OrderDirection direction = 1;
-  TagOrderField field = 2;
+  TagOrderField  field     = 2;
 }
 
 enum TagOrderField {
-  TagOrderField_Name = 0;
+  TagOrderField_Name        = 0;
   TagOrderField_Description = 1;
 }
 
 message AddTagInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string name = 3;
-  string description = 4;
-  string color = 5;
-  string type = 6;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
+  string type           = 6;
 }
 
 message UpdateTagInput {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
-  string type = 6;
+  string color       = 4;
+  string type        = 6;
 }
 
 message RemoveTagInput {
@@ -343,44 +343,44 @@ message RemoveTagInput {
 }
 
 message CustomTag {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message CustomTagConnection {
-  PageInfo pageInfo = 1;
-  repeated CustomTagEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo               pageInfo   = 1;
+  repeated CustomTagEdge edges      = 2;
+  int32                  totalCount = 3;
 }
 
 message CustomTagEdge {
-  CustomTag node = 1;
-  string cursor = 2;
+  CustomTag node   = 1;
+  string    cursor = 2;
 }
 
 message GetPaginatedCustomTagsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  CustomTagWhereInput where = 5;
+  string                       after   = 1;
+  int32                        first   = 2;
+  string                       before  = 3;
+  int32                        last    = 4;
+  CustomTagWhereInput          where   = 5;
   repeated CustomTagOrderInput orderBy = 6;
 }
 
 message CustomTagWhereInput {
   string organizationId = 1;
-  string nameContains = 2;
+  string nameContains   = 2;
 }
 
 message CustomTagOrderInput {
-  OrderDirection direction = 1;
-  CustomTagOrderField field = 2;
+  OrderDirection      direction = 1;
+  CustomTagOrderField field     = 2;
 }
 
 enum CustomTagOrderField {
-  CustomTagOrderField_Name = 0;
+  CustomTagOrderField_Name        = 0;
   CustomTagOrderField_Description = 1;
 }
 
@@ -397,59 +397,59 @@ message RemoveCustomTagInput {
 }
 
 message AddCustomTagInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string name = 3;
-  string description = 4;
-  string color = 5;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
 }
 
 message UpdateCustomTagInput {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message Zone {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message ZoneConnection {
-  PageInfo pageInfo = 1;
-  repeated ZoneEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo          pageInfo   = 1;
+  repeated ZoneEdge edges      = 2;
+  int32             totalCount = 3;
 }
 
 message ZoneEdge {
-  Zone node = 1;
+  Zone   node   = 1;
   string cursor = 2;
 }
 
 message GetPaginatedZonesInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  ZoneWhereInput where = 5;
+  string                  after   = 1;
+  int32                   first   = 2;
+  string                  before  = 3;
+  int32                   last    = 4;
+  ZoneWhereInput          where   = 5;
   repeated ZoneOrderInput orderBy = 6;
 }
 
 message ZoneWhereInput {
   string organizationId = 1;
-  string nameContains = 2;
+  string nameContains   = 2;
 }
 
 message ZoneOrderInput {
   OrderDirection direction = 1;
-  ZoneOrderField field = 2;
+  ZoneOrderField field     = 2;
 }
 
 enum ZoneOrderField {
-  ZoneOrderField_Name = 0;
+  ZoneOrderField_Name        = 0;
   ZoneOrderField_Description = 1;
 }
 
@@ -462,18 +462,18 @@ message GetZoneInput {
 }
 
 message AddZoneInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string name = 3;
-  string description = 4;
-  string color = 5;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
 }
 
 message UpdateZoneInput {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message RemoveZoneInput {
@@ -481,11 +481,11 @@ message RemoveZoneInput {
 }
 
 message ResourceType {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string tagType = 4;
-  string color = 5;
+  string tagType     = 4;
+  string color       = 5;
 }
 
 message GetBillingDetailsInput {
@@ -493,81 +493,81 @@ message GetBillingDetailsInput {
 }
 
 message AddBillingDetailsInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string companyName = 3;
-  string email = 4;
-  string addressLine1 = 5;
-  string addressLine2 = 6;
-  string suburb = 7;
-  string city = 8;
-  string province = 9;
-  string zipcode = 10;
-  string country = 11;
-  string countryCode = 12;
+  string companyName    = 3;
+  string email          = 4;
+  string addressLine1   = 5;
+  string addressLine2   = 6;
+  string suburb         = 7;
+  string city           = 8;
+  string province       = 9;
+  string zipcode        = 10;
+  string country        = 11;
+  string countryCode    = 12;
 }
 
 message UpdateBillingDetailsInput {
-  string id = 1;
-  string companyName = 2;
-  string email = 3;
+  string id           = 1;
+  string companyName  = 2;
+  string email        = 3;
   string addressLine1 = 4;
   string addressLine2 = 5;
-  string suburb = 6;
-  string city = 7;
-  string province = 8;
-  string zipcode = 9;
-  string country = 10;
-  string countryCode = 11;
+  string suburb       = 6;
+  string city         = 7;
+  string province     = 8;
+  string zipcode      = 9;
+  string country      = 10;
+  string countryCode  = 11;
 }
 
 message BillingDetails {
-  string id = 1;
-  string companyName = 2;
-  string email = 3;
-  string addressLine1 = 4;
-  string addressLine2 = 5;
-  string suburb = 6;
-  string city = 7;
-  string province = 8;
-  string zipcode = 9;
-  string country = 10;
-  string countryCode = 11;
-  string formattedAddress = 12;
-  string osmType = 13;
-  string osmId = 14;
-  string placeId = 15;
-  Coordinates coordinates = 16;
+  string      id               = 1;
+  string      companyName      = 2;
+  string      email            = 3;
+  string      addressLine1     = 4;
+  string      addressLine2     = 5;
+  string      suburb           = 6;
+  string      city             = 7;
+  string      province         = 8;
+  string      zipcode          = 9;
+  string      country          = 10;
+  string      countryCode      = 11;
+  string      formattedAddress = 12;
+  string      osmType          = 13;
+  string      osmId            = 14;
+  string      placeId          = 15;
+  Coordinates coordinates      = 16;
 }
 
 message StripeCustomer {
-  string id = 1;
+  string id               = 1;
   string stripeCustomerId = 2;
 }
 
 message StripePaymentMethod {
-  string id = 1;
+  string id            = 1;
   string setupIntentId = 2;
 }
 
 message Admin_GetStripeConnectAccountsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  StripeConnectAccountWhereInput where = 5;
+  string                                  after   = 1;
+  int32                                   first   = 2;
+  string                                  before  = 3;
+  int32                                   last    = 4;
+  StripeConnectAccountWhereInput          where   = 5;
   repeated StripeConnectAccountOrderInput orderBy = 6;
 }
 
 message StripeConnectAccountWhereInput {
-  string organizationId = 1;
-  string nameContains = 2;
-  bool onboardingCompleted = 3;
+  string organizationId      = 1;
+  string nameContains        = 2;
+  bool   onboardingCompleted = 3;
 }
 
 message StripeConnectAccountOrderInput {
-  OrderDirection direction = 1;
-  StripeConnectAccountOrderField field = 2;
+  OrderDirection                 direction = 1;
+  StripeConnectAccountOrderField field     = 2;
 }
 
 enum StripeConnectAccountOrderField {
@@ -575,56 +575,56 @@ enum StripeConnectAccountOrderField {
 }
 
 message StripeConnectAccountConnection {
-  PageInfo pageInfo = 1;
-  repeated StripeConnectAccountEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo                          pageInfo   = 1;
+  repeated StripeConnectAccountEdge edges      = 2;
+  int32                             totalCount = 3;
 }
 
 message StripeConnectAccountEdge {
-  StripeConnectAccount node = 1;
-  string cursor = 2;
+  StripeConnectAccount node   = 1;
+  string               cursor = 2;
 }
 
 message StripeConnectAccount {
-  string id = 1;
-  bool isDefault = 2;
-  string stripeAccountId = 3;
-  string name = 4;
-  bool chargesEnabled = 5;
-  bool payoutsEnabled = 6;
-  string type = 7;
-  string country = 8;
-  string defaultCurrency = 9;
-  string businessType = 10;
-  string companyName = 11;
-  string url = 12;
-  string supportUrl = 13;
-  string contactEmail = 14;
-  string contactPhone = 15;
-  bool detailsSubmitted = 16;
-  string capabilitiesTransfers = 17;
+  string id                       = 1;
+  bool   isDefault                = 2;
+  string stripeAccountId          = 3;
+  string name                     = 4;
+  bool   chargesEnabled           = 5;
+  bool   payoutsEnabled           = 6;
+  string type                     = 7;
+  string country                  = 8;
+  string defaultCurrency          = 9;
+  string businessType             = 10;
+  string companyName              = 11;
+  string url                      = 12;
+  string supportUrl               = 13;
+  string contactEmail             = 14;
+  string contactPhone             = 15;
+  bool   detailsSubmitted         = 16;
+  string capabilitiesTransfers    = 17;
   string capabilitiesCardPayments = 18;
-  string onboardingUrl = 19;
-  bool onboardingCompleted = 20; 
+  string onboardingUrl            = 19;
+  bool   onboardingCompleted      = 20;
 }
 
 message Admin_GetBankAccountsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  BankAccountWhereInput where = 5;
+  string                         after   = 1;
+  int32                          first   = 2;
+  string                         before  = 3;
+  int32                          last    = 4;
+  BankAccountWhereInput          where   = 5;
   repeated BankAccountOrderInput orderBy = 6;
 }
 
 message BankAccountWhereInput {
   string organizationId = 1;
-  string nameContains = 2;
+  string nameContains   = 2;
 }
 
 message BankAccountOrderInput {
-  OrderDirection direction = 1;
-  BankAccountOrderField field = 2;
+  OrderDirection        direction = 1;
+  BankAccountOrderField field     = 2;
 }
 
 enum BankAccountOrderField {
@@ -632,93 +632,93 @@ enum BankAccountOrderField {
 }
 
 message BankAccountConnection {
-  PageInfo pageInfo = 1;
-  repeated BankAccountEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo                 pageInfo   = 1;
+  repeated BankAccountEdge edges      = 2;
+  int32                    totalCount = 3;
 }
 
 message BankAccountEdge {
-  BankAccount node = 1;
-  string cursor = 2;
+  BankAccount node   = 1;
+  string      cursor = 2;
 }
 
 message BankAccount {
-  string id = 1;
-  bool isDefault = 2;
-  string name = 3;
-  string bankName = 4;
+  string id                = 1;
+  bool   isDefault         = 2;
+  string name              = 3;
+  string bankName          = 4;
   string accountHolderName = 5;
-  string accountNumber = 6;
-  string country = 7;
+  string accountNumber     = 6;
+  string country           = 7;
 }
 
 message TaxDetails {
-  string id = 1;
-  string taxId = 2;
+  string id                = 1;
+  string taxId             = 2;
   double taxRatePercentage = 3;
 }
 
 message PhysicalAddress {
-  string id = 1;
-  string addressLine1 = 2;
-  string addressLine2 = 3;
-  string suburb = 4;
-  string city = 5;
-  string province = 6;
-  string zipcode = 7;
-  string country = 8;
-  string countryCode = 9;
-  string formattedAddress = 10;
-  string osmType = 11;
-  string osmId = 12;
-  string placeId = 13;
-  Coordinates coordinates = 14;
+  string      id               = 1;
+  string      addressLine1     = 2;
+  string      addressLine2     = 3;
+  string      suburb           = 4;
+  string      city             = 5;
+  string      province         = 6;
+  string      zipcode          = 7;
+  string      country          = 8;
+  string      countryCode      = 9;
+  string      formattedAddress = 10;
+  string      osmType          = 11;
+  string      osmId            = 12;
+  string      placeId          = 13;
+  Coordinates coordinates      = 14;
 }
 
 message Coordinates {
   double longitude = 1;
-  double latitude = 2;
+  double latitude  = 2;
 }
 
 message ProductTag {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message ProductTagConnection {
-  PageInfo pageInfo = 1;
-  repeated ProductTagEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo                pageInfo   = 1;
+  repeated ProductTagEdge edges      = 2;
+  int32                   totalCount = 3;
 }
 
 message ProductTagEdge {
-  ProductTag node = 1;
-  string cursor = 2;
+  ProductTag node   = 1;
+  string     cursor = 2;
 }
 
 message GetPaginatedProductTagsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  ProductTagWhereInput where = 5;
+  string                        after   = 1;
+  int32                         first   = 2;
+  string                        before  = 3;
+  int32                         last    = 4;
+  ProductTagWhereInput          where   = 5;
   repeated ProductTagOrderInput orderBy = 6;
 }
 
 message ProductTagWhereInput {
   string organizationId = 1;
-  string nameContains = 2;
+  string nameContains   = 2;
 }
 
 message ProductTagOrderInput {
-  OrderDirection direction = 1;
-  ProductTagOrderField field = 2;
+  OrderDirection       direction = 1;
+  ProductTagOrderField field     = 2;
 }
 
 enum ProductTagOrderField {
-  ProductTagOrderField_Name = 0;
+  ProductTagOrderField_Name        = 0;
   ProductTagOrderField_Description = 1;
 }
 
@@ -735,59 +735,59 @@ message RemoveProductTagInput {
 }
 
 message AddProductTagInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string name = 3;
-  string description = 4;
-  string color = 5;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
 }
 
 message UpdateProductTagInput {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message LocationTag {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }
 
 message LocationTagConnection {
-  PageInfo pageInfo = 1;
-  repeated LocationTagEdge edges = 2;
-  int32 totalCount = 3;
+  PageInfo                 pageInfo   = 1;
+  repeated LocationTagEdge edges      = 2;
+  int32                    totalCount = 3;
 }
 
 message LocationTagEdge {
-  LocationTag node = 1;
-  string cursor = 2;
+  LocationTag node   = 1;
+  string      cursor = 2;
 }
 
 message GetPaginatedLocationTagsInput {
-  string after = 1;
-  int32 first = 2;
-  string before = 3;
-  int32 last = 4;
-  LocationTagWhereInput where = 5;
+  string                         after   = 1;
+  int32                          first   = 2;
+  string                         before  = 3;
+  int32                          last    = 4;
+  LocationTagWhereInput          where   = 5;
   repeated LocationTagOrderInput orderBy = 6;
 }
 
 message LocationTagWhereInput {
   string organizationId = 1;
-  string nameContains = 2;
+  string nameContains   = 2;
 }
 
 message LocationTagOrderInput {
-  OrderDirection direction = 1;
-  LocationTagOrderField field = 2;
+  OrderDirection        direction = 1;
+  LocationTagOrderField field     = 2;
 }
 
 enum LocationTagOrderField {
-  LocationTagOrderField_Name = 0;
+  LocationTagOrderField_Name        = 0;
   LocationTagOrderField_Description = 1;
 }
 
@@ -804,16 +804,16 @@ message RemoveLocationTagInput {
 }
 
 message AddLocationTagInput {
-  string id = 1;
+  string id             = 1;
   string organizationId = 2;
-  string name = 3;
-  string description = 4;
-  string color = 5;
+  string name           = 3;
+  string description    = 4;
+  string color          = 5;
 }
 
 message UpdateLocationTagInput {
-  string id = 1;
-  string name = 2;
+  string id          = 1;
+  string name        = 2;
   string description = 3;
-  string color = 4;
+  string color       = 4;
 }

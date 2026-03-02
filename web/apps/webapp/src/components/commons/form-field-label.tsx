@@ -9,32 +9,55 @@ import BodyIconTypography from './body-icon-typography';
 type Props = {
   sx?: SxProps<Theme>;
   label?: string;
-  useWiderSpace?: boolean;
   fontWeight?: CSSProperties['fontWeight'];
   required?: boolean;
+  stackLabelOnTop?: boolean;
+  useWiderSpace?: boolean;
 };
 
-const FormFieldLabel = ({ children, sx, label, useWiderSpace, fontWeight, required }: PropsWithChildren<Props>) => (
-  <Grid
-    container
-    columnSpacing={2}
-    rowSpacing={1}
-    sx={{
-      alignItems: { xs: 'flex-start', md: 'center' },
-      ...sx,
-    }}
-  >
+const FormFieldLabel = ({ children, sx, label, fontWeight, required, stackLabelOnTop, useWiderSpace }: PropsWithChildren<Props>) =>
+  stackLabelOnTop ? (
     <Grid
-      size={{ xs: 12, md: useWiderSpace ? 3 : 1 }}
+      container
+      columnSpacing={2}
+      rowSpacing={1}
       sx={{
-        display: 'flex',
         alignItems: { xs: 'flex-start', md: 'center' },
+        ...sx,
       }}
     >
-      {label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}
+      <Grid
+        size={{ xs: 12, md: useWiderSpace ? 3 : 1 }}
+        sx={{
+          display: 'flex',
+          alignItems: { xs: 'flex-start', md: 'center' },
+        }}
+      >
+        {label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}
+      </Grid>
+      <Grid size={{ xs: 12, md: useWiderSpace ? 9 : 11 }}>{children}</Grid>
     </Grid>
-    <Grid size={{ xs: 12, md: useWiderSpace ? 9 : 11 }}>{children}</Grid>
-  </Grid>
-);
+  ) : (
+    <Grid
+      container
+      columnSpacing={2}
+      rowSpacing={1}
+      sx={{
+        alignItems: 'flex-start',
+        ...sx,
+      }}
+    >
+      <Grid
+        size={12}
+        sx={{
+          display: 'flex',
+          alignItems: 'flex-start',
+        }}
+      >
+        {label && <BodyIconTypography label={required ? `${label} *` : label} fontWeight={fontWeight} />}
+      </Grid>
+      <Grid size={12}>{children}</Grid>
+    </Grid>
+  );
 
 export default memo(FormFieldLabel);

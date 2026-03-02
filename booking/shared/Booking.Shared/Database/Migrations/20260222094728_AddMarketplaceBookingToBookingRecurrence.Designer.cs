@@ -449,7 +449,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
-                    b.Property<ICollection<ProductVersionLineItem>>("LineItems")
+                    b.Property<ICollection<ProductLineItem>>("LineItems")
                         .IsRequired()
                         .HasColumnType("jsonb");
 

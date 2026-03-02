@@ -4,5 +4,5 @@ package booking;
 option csharp_namespace = "Api.Shared.Clients.Events.Skedular.Booking.V1.Key";
 
 message Key {
-    string bookingId = 1;
+  string bookingId = 1;
 }

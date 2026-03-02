@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<22ac0b9bcaa920ac80c4ad65a0eb7720>>
+ * @generated SignedSource<<97ecab10ade6df89327b2cb873ac8c8a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,8 +10,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type Currency = "NZD" | "USD" | "%future added value";
 export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
 export type OrganizationTagOrderField = "DESCRIPTION" | "NAME" | "TYPE" | "%future added value";
+export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type OrganizationTagOrderInput = {
   direction: OrderDirection;
   field: OrganizationTagOrderField;
@@ -22,10 +24,18 @@ export type addProduct_rootQuery$variables = {
   organizationUniqueAlphanumericName: string;
 };
 export type addProduct_rootQuery$data = {
+  readonly bookingSlotSizeInMinutes: number;
+  readonly currencies: ReadonlyArray<{
+    readonly name: string;
+    readonly type: Currency;
+  }>;
   readonly defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
-  readonly openingHoursMinutesStep: number;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoicePriceUnit_query">;
+  readonly paymentMethods: ReadonlyArray<{
+    readonly name: string;
+    readonly type: PaymentMethod;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
 };
 export type addProduct_rootQuery = {
   response: addProduct_rootQuery$data;
@@ -52,7 +62,7 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "openingHoursMinutesStep",
+  "name": "bookingSlotSizeInMinutes",
   "storageKey": null
 },
 v4 = {
@@ -69,28 +79,58 @@ v5 = {
   "name": "defaultMaxAllowedResourcesLockTimePaidViaBankTransfer",
   "storageKey": null
 },
-v6 = [
-  {
-    "kind": "Variable",
-    "name": "orderBy",
-    "variableName": "multipleChoicesProductTagsSortingValues"
-  }
-],
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v8 = {
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v9 = [
+v7 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v6/*: any*/)
+],
+v8 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "CurrencyDetails",
+  "kind": "LinkedField",
+  "name": "currencies",
+  "plural": true,
+  "selections": (v7/*: any*/),
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PaymentMethodTypeDetails",
+  "kind": "LinkedField",
+  "name": "paymentMethods",
+  "plural": true,
+  "selections": (v7/*: any*/),
+  "storageKey": null
+},
+v10 = [
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "multipleChoicesProductTagsSortingValues"
+  }
+],
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -114,8 +154,8 @@ v9 = [
         "name": "node",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
-          (v8/*: any*/),
+          (v11/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -181,25 +221,15 @@ v9 = [
     ]
   }
 ],
-v10 = [
+v13 = [
   "orderBy"
 ],
-v11 = [
+v14 = [
   {
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "multipleChoicesLocationTagsSortingValues"
   }
-],
-v12 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v8/*: any*/)
 ];
 return {
   "fragment": {
@@ -215,6 +245,8 @@ return {
       (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
+      (v8/*: any*/),
+      (v9/*: any*/),
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -228,17 +260,17 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
-        "name": "singleChoicePriceUnit_query"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
         "name": "singleChoiceCurrency_query"
       },
       {
         "args": null,
         "kind": "FragmentSpread",
         "name": "multipleChoicesBookingPaymentMethodTypes_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceProductPricingCadence_query"
       }
     ],
     "type": "Query",
@@ -257,6 +289,8 @@ return {
       (v3/*: any*/),
       (v4/*: any*/),
       (v5/*: any*/),
+      (v8/*: any*/),
+      (v9/*: any*/),
       {
         "alias": null,
         "args": [
@@ -273,38 +307,38 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v10/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": false,
-            "selections": (v9/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v6/*: any*/),
-            "filters": (v10/*: any*/),
+            "args": (v10/*: any*/),
+            "filters": (v13/*: any*/),
             "handle": "connection",
             "key": "multipleChoicesProductTags_productTags",
             "kind": "LinkedHandle",
             "name": "productTags"
           },
-          (v7/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
-            "args": (v11/*: any*/),
+            "args": (v14/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "locationTags",
             "plural": false,
-            "selections": (v9/*: any*/),
+            "selections": (v12/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v11/*: any*/),
-            "filters": (v10/*: any*/),
+            "args": (v14/*: any*/),
+            "filters": (v13/*: any*/),
             "handle": "connection",
             "key": "multipleChoicesLocationTags_locationTags",
             "kind": "LinkedHandle",
@@ -316,46 +350,36 @@ return {
       {
         "alias": null,
         "args": null,
-        "concreteType": "PriceUnitDetails",
-        "kind": "LinkedField",
-        "name": "priceUnits",
-        "plural": true,
-        "selections": (v12/*: any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "CurrencyDetails",
-        "kind": "LinkedField",
-        "name": "currencies",
-        "plural": true,
-        "selections": (v12/*: any*/),
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": null,
         "concreteType": "PaymentMethodTypeDetails",
         "kind": "LinkedField",
         "name": "paymentMethodTypes",
         "plural": true,
-        "selections": (v12/*: any*/),
+        "selections": (v7/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductPricingCadenceDetails",
+        "kind": "LinkedField",
+        "name": "productPricingCadences",
+        "plural": true,
+        "selections": (v7/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "975c142504dd3b908606113cda6a6861",
+    "cacheID": "24fdaacd1dfb4c7b3ed11117f532bf97",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  openingHoursMinutesStep\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoicePriceUnit_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationTags(orderBy: $multipleChoicesLocationTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoicePriceUnit_query on Query {\n  priceUnits {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...multipleChoicesProductTags_query\n  ...multipleChoicesLocationTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesLocationTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationTags(orderBy: $multipleChoicesLocationTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0ad3ba3886b016859deb9d142b32d252";
+(node as any).hash = "f9a80f3c88fae9d60ee4aa582e4edaab";
 
 export default node;

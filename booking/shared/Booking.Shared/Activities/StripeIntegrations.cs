@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
-using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared;
@@ -41,7 +40,6 @@ public class StripeIntegrations(
     IStripeCustomerService stripeCustomerService,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IRandomHelper randomHelper,
-    IMapper mapper,
     IGraphQlTopicEventSender graphQlTopicEventSender)
 {
     [Activity]
@@ -49,18 +47,16 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
+        if (booking is null || booking.IsDeleted())
         {
             return null;
         }
 
         var marketplaceBooking = booking.MarketplaceBooking;
-        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        if (productVersions.Count != productVersionIds.Count)
-        {
-            throw new InvalidOperationException();
-        }
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
 
         var stripeConnectAccountConnection = await organizationServiceClient.Admin_GetStripeConnectAccountsAsync(
             new Admin_GetStripeConnectAccountsInput
@@ -69,33 +65,13 @@ public class StripeIntegrations(
                 First = ((int?)null).ToNullInt(),
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new StripeConnectAccountWhereInput
-                {
-                    OrganizationId = productVersions.First().Product.Organization.Id, OnboardingCompleted = true
-                }
+                Where = new StripeConnectAccountWhereInput { OrganizationId = productVersion.Product.Organization.Id, OnboardingCompleted = true }
             },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
         var stripeConnectAccountId = stripeConnectAccountConnection.Edges.Select(item => item.Node).First(item => item.IsDefault).StripeAccountId;
 
-        foreach (var productVersion in productVersions)
-        {
-            if (productVersion.StripeProducts.FirstOrDefault()?.StripePrice is not null)
-            {
-                continue;
-            }
-
-            var stripeProduct = await stripeProductPricingService.UpsertProductPricingAsync(
-                mapper.MapTo(productVersion),
-                productVersion,
-                stripeConnectAccountId,
-                cancellationToken);
-
-            productVersion.StripeProducts = [stripeProduct];
-            _ = repositoryFactory.ProductVersionRepository.Update(productVersion);
-        }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await stripeProductPricingService.UpsertProductPricingAsync(productVersion, stripeConnectAccountId, cancellationToken);
 
         return new UpsertProductAndPricingResponse(stripeConnectAccountId);
     }
@@ -148,29 +124,32 @@ public class StripeIntegrations(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(args.BookingId, cancellationToken);
-        if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
+        if (booking is null || booking.IsDeleted())
         {
             return null;
         }
 
         var marketplaceBooking = booking.MarketplaceBooking;
-        var productVersionIds = marketplaceBooking.LineItems.Select(item => item.ProductVersionId).Distinct().ToList();
-        var productVersions = await repositoryFactory.ProductVersionRepository.GetByIdsAsync(productVersionIds, cancellationToken);
-        var lineItems = marketplaceBooking.LineItems.SelectMany(item =>
-        {
-            var productVersion = productVersions.First(productVersion => productVersion.Id == item.ProductVersionId);
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-            return booking.Schedules.Select(schedule => new SessionLineItemOptions
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+
+        var lineItems = booking.Schedules.Select(schedule => new SessionLineItemOptions
+        {
+            Price = productVersion.StripeProducts.First().StripePrice!.StripePriceId,
+            Quantity = marketplaceBooking.ProductPricing.Cadence switch
             {
-                Price = productVersion.StripeProducts.First().StripePrice!.StripePriceId,
-                Quantity = productVersion.PriceUnit switch
-                {
-                    PriceUnitConstants.PerMinute => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * item.Quantity,
-                    PriceUnitConstants.PerHour => Convert.ToInt32((schedule.Until - schedule.From).TotalHours) * item.Quantity,
-                    PriceUnitConstants.PerUse => item.Quantity,
-                    _ => throw new ArgumentOutOfRangeException()
-                }
-            });
+                ProductPricingCadence.OneTimeV1 => marketplaceBooking.Quantity,
+                ProductPricingCadence.PerMinuteV1 => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) *
+                                                            marketplaceBooking.Quantity,
+                ProductPricingCadence.PerHourV1 => Convert.ToInt32((schedule.Until - schedule.From).TotalHours) * marketplaceBooking.Quantity,
+                // TODO: 20260302 : Morteza: Implement other cadence 
+                // ProductVersionPricingCadence.DailyV1 => expr,
+                // ProductVersionPricingCadence.WeeklyV1 => expr,
+                // ProductVersionPricingCadence.MonthlyV1 => expr,
+                _ => throw new ArgumentOutOfRangeException()
+            }
         }).ToList();
 
         if (marketplaceBooking.StripeCheckoutSession is not null)
