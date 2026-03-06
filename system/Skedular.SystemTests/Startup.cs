@@ -157,7 +157,7 @@ public class Startup
             .AddSingleton<IGatewayClient>(_ => new GatewayClient(gatewayClient));
 
         services
-            .AddSkedularGraphQlClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = gatewayClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

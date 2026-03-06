@@ -3,33 +3,42 @@ schema {
   mutation: Mutation
 }
 
-input RemoveTeamMembersInput {
-  clientMutationId: String
-  ids: [String!]!
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
 }
 
-input UpdateTeamMembersInput {
-  clientMutationId: String
-  id: String!
-  customerIds: [String!]!
-  organizationMemberIds: [String!]!
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
 }
 
-type Mutation {
-  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload!
-  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
-  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
-  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload!
-  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload!
-  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload!
-  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload!
-  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload!
-  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload!
-  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload!
-  addTeam(input: AddTeamInput!): TeamPayload!
-  updateTeam(input: UpdateTeamInput!): TeamPayload!
-  deleteTeam(input: DeleteTeamInput!): TeamPayload!
-  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload!
+type ConnectionOfTeamEdge {
+  pageInfo: PageInfo!
+  edges: [TeamEdge!]!
+  totalCount: Int!
+}
+
+type ConnectionOfTeamJoinInvitationEdge {
+  pageInfo: PageInfo!
+  edges: [TeamJoinInvitationEdge!]!
+  totalCount: Int!
+}
+
+type ConnectionOfTeamMemberEdge {
+  pageInfo: PageInfo!
+  edges: [TeamMemberEdge!]!
+  totalCount: Int!
+}
+
+type CustomerDetails {
+  id: ID!
+}
+
+type InvitationToJoinTeamPayload {
+  clientMutationId: String
+  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
 }
 
 type InviteCustomerToJoinTeamDetails {
@@ -42,52 +51,35 @@ type InviteCustomerToJoinTeamDetails {
   id: ID!
 }
 
-type TeamMemberEdge {
-  node: TeamMemberDetails!
-  cursor: String!
-}
-
-enum JoinTeamInvitationOrderField {
-  CREATED_AT
-  STATUS
-}
-
-input AcceptInvitationToJoinTeamInput {
+type InviteCustomersToJoinTeamPayload {
   clientMutationId: String
-  id: String!
+  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
-input InviteCustomersToJoinTeamInput {
-  clientMutationId: String
-  teamId: String!
-  emails: [String!]!
+type LocationDetails {
+  id: ID!
 }
 
-enum TeamMemberRole {
-  OWNER
-  ADMINISTRATOR
-  MEMBER
+type Mutation {
+  inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
+  acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  cancelInvitationToJoinTeam(input: CancelInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  updateTeamMembers(input: UpdateTeamMembersInput!): TeamPayload! @cost(weight: "10")
+  addTeamMember(input: AddTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  removeTeamMember(input: RemoveTeamMemberInput!): TeamMemberPayload! @cost(weight: "10")
+  changeTeamMemberRole(input: ChangeTeamMemberRoleInput!): TeamMemberDetailsPayload! @cost(weight: "10")
+  changeTeamMembersStatus(input: ChangeTeamMembersStatusInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  removeTeamMembers(input: RemoveTeamMembersInput!): TeamMembersDetailsPayload! @cost(weight: "10")
+  addTeam(input: AddTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeam(input: UpdateTeamInput!): TeamPayload! @cost(weight: "10")
+  deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
+  updateTeamAndTeamMembers(input: UpdateTeamAndTeamMembersInput!): TeamPayload! @cost(weight: "10")
 }
 
-enum TeamMemberOrderField {
-  ROLE
-  STATUS
-  NAME
-  GIVEN_NAME
-  MIDDLE_NAME
-  FAMILY_NAME
-}
-
-type ConnectionOfTeamEdge {
-  pageInfo: PageInfo!
-  edges: [TeamEdge!]!
-  totalCount: Int!
-}
-
-input MyInvitationsToJoinTeamsWhereInput {
-  organizationUniqueAlphanumericName: String
-  teamId: String
-  status: InvitationStatus
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
 }
 
 type PageInfo {
@@ -97,48 +89,38 @@ type PageInfo {
   endCursor: String
 }
 
-type CdnFile {
-  url: String!
-  height: Int
-  width: Int
+type Query {
+  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
+  pendingTeamInvitationsCount: Int! @cost(weight: "10")
+  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
+  teamMemberRoles: [TeamMemberRole!]!
+  teamVersion: Version!
+  teamCustomerRecordSynced: Boolean! @cost(weight: "10")
+  team(id: String!): TeamDetails @cost(weight: "10")
+  teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
+  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
+  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
 }
 
-type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
-}
-
-type TeamOrganizationMemberDetails {
-  customer: CustomerDetails!
-  uniqueId: ID!
-}
-
-input TeamWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
-  nameContains: String
-  primaryLocationIds: [String!]
-}
-
-type CustomerDetails {
+type TeamDetails {
+  organization: OrganizationDetails!
+  primaryLocation: LocationDetails
+  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge! @cost(weight: "10")
+  hasFutureBooking: Boolean! @cost(weight: "10")
+  name: String!
+  about: String
+  timezone: String
+  canModify: Boolean!
+  canDelete: Boolean!
+  canInvitePeople: Boolean!
+  featureImages: [CdnImageFile!]!
   id: ID!
 }
 
-input TeamOrderInput {
-  direction: OrderDirection!
-  field: TeamOrderField!
-}
-
-type OrganizationDetails {
-  uniqueAlphanumericName: String
-  id: ID!
-}
-
-type InviteCustomersToJoinTeamPayload {
-  clientMutationId: String
-  invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
+type TeamEdge {
+  node: TeamDetails!
+  cursor: String!
 }
 
 type TeamInvitationStatusDetails {
@@ -151,17 +133,52 @@ type TeamJoinInvitationEdge {
   cursor: String!
 }
 
-input RemoveTeamMemberInput {
+type TeamMemberDetails {
+  customer: CustomerDetails!
+  role: TeamMemberRole
+  status: TeamMemberStatus!
+  organizationMember: TeamOrganizationMemberDetails
+  id: ID!
+}
+
+type TeamMemberDetailsPayload {
   clientMutationId: String
-  id: String!
+  member: TeamMemberDetails
 }
 
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
+type TeamMemberEdge {
+  node: TeamMemberDetails!
+  cursor: String!
 }
 
-input DeleteTeamInput {
+type TeamMemberPayload {
+  clientMutationId: String
+  teamMember: TeamMemberDetails!
+}
+
+type TeamMembersDetailsPayload {
+  clientMutationId: String
+  members: [TeamMemberDetails!]!
+}
+
+type TeamOrganizationMemberDetails {
+  customer: CustomerDetails!
+  uniqueId: ID!
+}
+
+type TeamPayload {
+  clientMutationId: String
+  team: TeamDetails!
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input AcceptInvitationToJoinTeamInput {
   clientMutationId: String
   id: String!
 }
@@ -180,10 +197,22 @@ input AddTeamInput {
   featureImages: [CdnImageFileInput!]!
 }
 
-type ConnectionOfTeamMemberEdge {
-  pageInfo: PageInfo!
-  edges: [TeamMemberEdge!]!
-  totalCount: Int!
+input AddTeamMemberInput {
+  clientMutationId: String
+  id: String!
+  customerId: String
+  organizationMemberId: String
+}
+
+input CancelInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
 }
 
 input CdnImageFileInput {
@@ -191,9 +220,10 @@ input CdnImageFileInput {
   thumbnail: CdnFileInput
 }
 
-type CdnImageFile {
-  original: CdnFile
-  thumbnail: CdnFile
+input ChangeTeamMemberRoleInput {
+  clientMutationId: String
+  id: String!
+  role: TeamMemberRole!
 }
 
 input ChangeTeamMembersStatusInput {
@@ -202,23 +232,23 @@ input ChangeTeamMembersStatusInput {
   status: TeamMemberStatus!
 }
 
-input CancelInvitationToJoinTeamInput {
+input CustomerTeamWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  customerId: String!
+  nameContains: String
+  primaryLocationIds: [String!]
+}
+
+input DeleteTeamInput {
   clientMutationId: String
   id: String!
 }
 
-type Query {
-  teamInvitationStatuses: [TeamInvitationStatusDetails!]!
-  pendingTeamInvitationsCount: Int!
-  myInvitationsToJoinTeams(after: String first: Int before: String last: Int where: MyInvitationsToJoinTeamsWhereInput orderBy: [JoinTeamInvitationOrderInput!]): ConnectionOfTeamJoinInvitationEdge!
-  teamMemberRoles: [TeamMemberRole!]!
-  teamVersion: Version!
-  teamCustomerRecordSynced: Boolean!
-  team(id: String!): TeamDetails
-  teamById(id: String!): TeamDetails
-  teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge!
-  customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge!
-  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]!
+input InviteCustomersToJoinTeamInput {
+  clientMutationId: String
+  teamId: String!
+  emails: [String!]!
 }
 
 input JoinTeamInvitationOrderInput {
@@ -226,35 +256,46 @@ input JoinTeamInvitationOrderInput {
   field: JoinTeamInvitationOrderField!
 }
 
-type TeamMembersDetailsPayload {
-  clientMutationId: String
-  members: [TeamMemberDetails!]!
+input MyInvitationsToJoinTeamsWhereInput {
+  organizationUniqueAlphanumericName: String
+  teamId: String
+  status: InvitationStatus
 }
 
-type InvitationToJoinTeamPayload {
+input RejectInvitationToJoinTeamInput {
   clientMutationId: String
-  inviteCustomerToJoinTeam: InviteCustomerToJoinTeamDetails!
+  id: String!
 }
 
-type TeamMemberDetailsPayload {
+input RemoveTeamMemberInput {
   clientMutationId: String
-  member: TeamMemberDetails
+  id: String!
+}
+
+input RemoveTeamMembersInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input TeamMemberOrderInput {
+  direction: OrderDirection!
+  field: TeamMemberOrderField!
 }
 
 input TeamMemberWhereInput {
   nameContains: String
 }
 
-input AddTeamMemberInput {
-  clientMutationId: String
-  id: String!
-  customerId: String
-  organizationMemberId: String
+input TeamOrderInput {
+  direction: OrderDirection!
+  field: TeamOrderField!
 }
 
-input RejectInvitationToJoinTeamInput {
-  clientMutationId: String
-  id: String!
+input TeamWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  nameContains: String
+  primaryLocationIds: [String!]
 }
 
 input UpdateTeamAndTeamMembersInput {
@@ -281,10 +322,11 @@ input UpdateTeamInput {
   featureImages: [CdnImageFileInput!]!
 }
 
-input ChangeTeamMemberRoleInput {
+input UpdateTeamMembersInput {
   clientMutationId: String
   id: String!
-  role: TeamMemberRole!
+  customerIds: [String!]!
+  organizationMemberIds: [String!]!
 }
 
 enum InvitationStatus {
@@ -295,40 +337,29 @@ enum InvitationStatus {
   EXPIRED
 }
 
-type ConnectionOfTeamJoinInvitationEdge {
-  pageInfo: PageInfo!
-  edges: [TeamJoinInvitationEdge!]!
-  totalCount: Int!
+enum JoinTeamInvitationOrderField {
+  CREATED_AT
+  STATUS
 }
 
-type LocationDetails {
-  id: ID!
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
 }
 
-enum TeamOrderField {
+enum TeamMemberOrderField {
+  ROLE
+  STATUS
   NAME
-  ABOUT
+  GIVEN_NAME
+  MIDDLE_NAME
+  FAMILY_NAME
 }
 
-input CdnFileInput {
-  url: String!
-  height: Int
-  width: Int
-}
-
-type TeamDetails {
-  organization: OrganizationDetails!
-  primaryLocation: LocationDetails
-  members(after: String first: Int before: String last: Int where: TeamMemberWhereInput orderBy: [TeamMemberOrderInput!]): ConnectionOfTeamMemberEdge!
-  hasFutureBooking: Boolean!
-  name: String!
-  about: String
-  timezone: String
-  canModify: Boolean!
-  canDelete: Boolean!
-  canInvitePeople: Boolean!
-  featureImages: [CdnImageFile!]!
-  id: ID!
+enum TeamMemberRole {
+  OWNER
+  ADMINISTRATOR
+  MEMBER
 }
 
 enum TeamMemberStatus {
@@ -336,45 +367,14 @@ enum TeamMemberStatus {
   INACTIVE
 }
 
-type TeamMemberPayload {
-  clientMutationId: String
-  teamMember: TeamMemberDetails!
-}
-
-type TeamMemberDetails {
-  customer: CustomerDetails!
-  role: TeamMemberRole
-  status: TeamMemberStatus!
-  organizationMember: TeamOrganizationMemberDetails
-  id: ID!
-}
-
-input CustomerTeamWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
-  customerId: String!
-  nameContains: String
-  primaryLocationIds: [String!]
-}
-
-input TeamMemberOrderInput {
-  direction: OrderDirection!
-  field: TeamMemberOrderField!
-}
-
-type TeamEdge {
-  node: TeamDetails!
-  cursor: String!
-}
-
-type TeamPayload {
-  clientMutationId: String
-  team: TeamDetails!
+enum TeamOrderField {
+  NAME
+  ABOUT
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
 
-directive @lookup on FIELD_DEFINITION
-
 directive @internal on FIELD_DEFINITION
+
+directive @lookup on FIELD_DEFINITION

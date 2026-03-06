@@ -3,104 +3,10 @@ schema {
   mutation: Mutation
 }
 
-type Query {
-  product(id: String!): ProductDetails
-  productById(id: String!): ProductDetails
-  productVersion(id: String!): ProductVersionDetails
-  productVersionById(id: String!): ProductVersionDetails
-  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ConnectionOfProductEdge!
-  defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
-  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  marketplaceVersion: Version!
-  marketplaceCustomerRecordSynced: Boolean!
-  currencies: [CurrencyDetails!]!
-  priceUnits: [PriceUnitDetails!]!
-}
-
-type Mutation {
-  addProduct(input: AddProductInput!): ProductPayload!
-  updateProduct(input: UpdateProductInput!): ProductPayload!
-  deleteProducts(input: DeleteProductsInput!): ProductsPayload!
-  activateProducts(input: ActivateProductsInput!): ProductsPayload!
-  deactivateProducts(input: DeactivateProductsInput!): ProductsPayload!
-}
-
-type ProductDetails {
-  organization: OrganizationDetails!
-  productTags: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
-  inactive: Boolean!
-  name: String!
-  description: String
-  price: String!
-  priceToDisplay: String!
-  currencyToDisplay: String!
-  priceUnit: PriceUnitDetails!
-  isPriceTaxInclusive: Boolean!
-  currency: CurrencyDetails!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
-  bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
-  numberOfResourcesToBook: Int!
-  latestProductVersionId: String!
-  featureImages: [CdnImageFile!]!
-  id: ID!
-}
-
-type ProductVersionDetails {
-  productTags: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
-  inactive: Boolean!
-  name: String!
-  description: String
-  price: String!
-  priceToDisplay: String!
-  currencyToDisplay: String!
-  priceUnit: PriceUnitDetails!
-  isPriceTaxInclusive: Boolean!
-  currency: CurrencyDetails!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [Marketplace_PaymentMethodTypeDetails!]!
-  bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
-  numberOfResourcesToBook: Int!
-  featureImages: [CdnImageFile!]!
-  id: ID!
-}
-
-type OrganizationDetails {
-  uniqueAlphanumericName: String
-  id: ID!
-}
-
-type OrganizationTagDetails {
-  id: ID!
-}
-
-type PriceUnitDetails {
-  type: PriceUnit!
-  name: String!
-}
-
-type CurrencyDetails {
-  type: Currency!
-  name: String!
-}
-
-type Marketplace_PaymentMethodTypeDetails {
-  type: PaymentMethod!
-  name: String!
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
 }
 
 type CdnImageFile {
@@ -114,139 +20,26 @@ type ConnectionOfProductEdge {
   totalCount: Int!
 }
 
-input DeactivateProductsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input ActivateProductsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-input DeleteProductsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
-type ProductsPayload {
-  clientMutationId: String
-  products: [ProductDetails!]!
-}
-
-input UpdateProductInput {
-  clientMutationId: String
-  id: String!
+type CurrencyDetails {
+  type: Currency!
   name: String!
-  description: String
-  price: String!
-  priceUnit: PriceUnit!
-  isPriceTaxInclusive: Boolean!
-  currency: Currency!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [PaymentMethod!]!
-  bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
-  numberOfResourcesToBook: Int!
-  productTagIds: [String!]!
-  locationTagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
 }
 
-input AddProductInput {
-  clientMutationId: String
-  id: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
-  name: String!
-  description: String
-  price: String!
-  priceUnit: PriceUnit!
-  isPriceTaxInclusive: Boolean!
-  currency: Currency!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  acceptedBookingPaymentMethods: [PaymentMethod!]!
-  bookAllLocationResources: Boolean!
-  recurrenceWindowDays: Int!
-  requireConsecutiveDays: Boolean!
-  maxBookingSpreadDays: Int
-  numberOfResourcesToBook: Int!
-  productTagIds: [String!]!
-  locationTagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+type Mutation {
+  addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
+  updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
+  deleteProducts(input: DeleteProductsInput!): ProductsPayload! @cost(weight: "10")
+  activateProducts(input: ActivateProductsInput!): ProductsPayload! @cost(weight: "10")
+  deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
 }
 
-type ProductPayload {
-  clientMutationId: String
-  product: ProductDetails!
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
 }
 
-input ProductWhereInput {
-  organizationUniqueAlphanumericNames: [String!]
-  productIds: [String!]
-  nameContains: String
-  includeInactive: Boolean!
-}
-
-input ProductOrderInput {
-  direction: OrderDirection!
-  field: ProductOrderField!
-}
-
-type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
-}
-
-enum PriceUnit {
-  PER_MINUTE
-  PER_HOUR
-  PER_USE
-}
-
-enum Currency {
-  NZD
-  USD
-}
-
-enum PaymentMethod {
-  CARD
-  BANK_TRANSFER
-}
-
-type CdnFile {
-  url: String!
-  height: Int
-  width: Int
-}
-
-enum ProductOrderField {
-  NAME
-}
-
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
-}
-
-input CdnImageFileInput {
-  original: CdnFileInput
-  thumbnail: CdnFileInput
-}
-
-type ProductEdge {
-  node: ProductDetails!
-  cursor: String!
+type OrganizationTagDetails {
+  id: ID!
 }
 
 type PageInfo {
@@ -256,10 +49,201 @@ type PageInfo {
   endCursor: String
 }
 
+type PaymentMethodTypeDetails {
+  type: PaymentMethod!
+  name: String!
+}
+
+type ProductDetails {
+  organization: OrganizationDetails!
+  productTags: [OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
+  inactive: Boolean!
+  name: String!
+  description: String
+  currency: CurrencyDetails!
+  latestProductVersionId: String!
+  featureImages: [CdnImageFile!]!
+  pricingOptions: [ProductPricing!]!
+  id: ID!
+}
+
+type ProductEdge {
+  node: ProductDetails!
+  cursor: String!
+}
+
+type ProductPayload {
+  clientMutationId: String
+  product: ProductDetails!
+}
+
+type ProductPricing {
+  id: String!
+  index: Int!
+  name: String!
+  description: String!
+  cadence: ProductPricingCadence!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  acceptedPaymentMethods: [PaymentMethod!]!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  numberOfResourcesToBook: Int!
+}
+
+type ProductPricingCadenceDetails {
+  type: ProductPricingCadence!
+  name: String!
+}
+
+type ProductVersionDetails {
+  productTags: [OrganizationTagDetails!]!
+  locationTags: [OrganizationTagDetails!]!
+  inactive: Boolean!
+  name: String!
+  description: String
+  currency: CurrencyDetails!
+  featureImages: [CdnImageFile!]!
+  pricingOptions: [ProductPricing!]!
+  id: ID!
+}
+
+type ProductsPayload {
+  clientMutationId: String
+  products: [ProductDetails!]!
+}
+
+type Query {
+  product(id: String!): ProductDetails @cost(weight: "10")
+  productById(id: String!): ProductDetails @lookup @internal @cost(weight: "10")
+  productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
+  productVersionById(id: String!): ProductVersionDetails @lookup @internal @cost(weight: "10")
+  products(after: String first: Int before: String last: Int where: ProductWhereInput! orderBy: [ProductOrderInput!]): ConnectionOfProductEdge! @cost(weight: "10")
+  marketplaceVersion: Version!
+  marketplaceCustomerRecordSynced: Boolean! @cost(weight: "10")
+  currencies: [CurrencyDetails!]!
+  defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
+  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  productPricingCadences: [ProductPricingCadenceDetails!]!
+  paymentMethods: [PaymentMethodTypeDetails!]!
+}
+
+type Version {
+  major: Int!
+  minor: Int!
+  build: Int!
+  revision: Int!
+}
+
+input ActivateProductsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input AddProductInput {
+  clientMutationId: String
+  id: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  name: String!
+  description: String
+  currency: Currency!
+  productTagIds: [String!]!
+  locationTagIds: [String!]!
+  featureImages: [CdnImageFileInput!]!
+  pricingOptions: [ProductPricingInput!]!
+}
+
 input CdnFileInput {
   url: String!
   height: Int
   width: Int
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
+}
+
+input DeactivateProductsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input DeleteProductsInput {
+  clientMutationId: String
+  ids: [String!]!
+}
+
+input ProductOrderInput {
+  direction: OrderDirection!
+  field: ProductOrderField!
+}
+
+input ProductPricingInput {
+  id: String!
+  index: Int!
+  name: String!
+  description: String!
+  cadence: ProductPricingCadence!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  acceptedPaymentMethods: [PaymentMethod!]!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  numberOfResourcesToBook: Int!
+}
+
+input ProductWhereInput {
+  organizationUniqueAlphanumericNames: [String!]
+  productIds: [String!]
+  includeInactive: Boolean!
+}
+
+input UpdateProductInput {
+  clientMutationId: String
+  id: String!
+  name: String!
+  description: String
+  currency: Currency!
+  productTagIds: [String!]!
+  locationTagIds: [String!]!
+  featureImages: [CdnImageFileInput!]!
+  pricingOptions: [ProductPricingInput!]!
+}
+
+enum Currency {
+  NZD
+  USD
+}
+
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+}
+
+enum ProductOrderField {
+  NAME
+}
+
+enum ProductPricingCadence {
+  NOT_SET
+  ONE_TIME_V1
+  PER_MINUTE_V1
+  PER_HOUR_V1
+  DAILY_V1
+  WEEKLY_V1
+  MONTHLY_V1
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
@@ -268,3 +252,6 @@ directive @cost("The `weight` argument defines what value to add to the overall 
 directive @internal on FIELD_DEFINITION
 
 directive @lookup on FIELD_DEFINITION
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal

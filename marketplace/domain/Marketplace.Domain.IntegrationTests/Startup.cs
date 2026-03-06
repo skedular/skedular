@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<IMarketplaceClient>(_ => new MarketplaceClient(marketplaceApiClient));
 
         services
-            .AddSkedularGraphQlMarketplaceClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = marketplaceApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

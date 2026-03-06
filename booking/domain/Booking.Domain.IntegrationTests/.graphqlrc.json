@@ -3,9 +3,9 @@
   "documents": "**/*.graphql",
   "extensions": {
     "strawberryShake": {
-      "name": "SkedularGraphQlBookingClientV1",
-      "namespace": "Booking.Domain.IntegrationTests.Clients.GraphQL.V1",
-      "url": "http://localhost:10300/v1/graphql/",
+      "name": "SkedularGraphQLV1",
+      "namespace": "Booking.Domain.IntegrationTests.Skedular.GraphQL.V1",
+      "url": "../../apis/Booking.Api/schema.graphql",
       "records": {
         "inputs": false,
         "entities": false

@@ -3,99 +3,16 @@ schema {
   mutation: Mutation
 }
 
-type Query {
-  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
-  me: CustomerDetails!
-  customer(id: String!): CustomerDetails
-  customerById(id: String!): CustomerDetails
-  customerVersion: Version!
-  customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): ConnectionOfCustomerEdge!
+type AddCustomerPaymentMethodIntentPayload {
+  clientMutationId: String
+  publishedKeys: String!
+  clientSecret: String!
 }
 
-type Mutation {
-  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload!
-  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload!
-  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload!
-  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload!
-  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload!
-  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload!
-  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload!
-  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload!
-  addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload!
-  removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload!
-  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload!
-  clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload!
-  addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload!
-  removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload!
-  addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload!
-  removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload!
-  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload!
-  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload!
-}
-
-type CustomerDetails {
-  organization: OrganizationDetails
-  preferredLocations: [LocationDetails!]!
-  preferredZones: [OrganizationTagDetails!]!
-  preferredCustomTags: [OrganizationTagDetails!]!
-  preferredResources: [ResourceDetails!]!
-  favouriteLocations: [LocationDetails!]!
-  hasAttachedPaymentMethod: Boolean!
-  paymentMethods: [CustomerPaymentMethod!]!
-  billingDetails: CustomerBillingDetails
-  createdAt: DateTime!
-  email: String
-  emails: [String!]!
-  identities: [CustomerIdentity!]!
-  designation: String
-  title: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  photoUrl: String
-  photoUrl24: String
-  photoUrl32: String
-  photoUrl48: String
-  photoUrl72: String
-  photoUrl192: String
-  photoUrl512: String
-  timezone: String
-  locale: String
-  phoneNumber: String
-  isOnboardingDone: Boolean!
-  personalInformationVisibility: PersonalInformationVisibilityDetails!
-  id: ID!
-}
-
-type OrganizationDetails {
-  uniqueAlphanumericName: String
-  id: ID!
-}
-
-type LocationDetails {
-  id: ID!
-}
-
-type OrganizationTagDetails {
-  id: ID!
-}
-
-type ResourceDetails {
-  id: ID!
-}
-
-type CustomerPaymentMethod {
-  cardBrand: String
-  cardCountry: String
-  cardDescription: String
-  cardExpiryMonth: Int
-  cardExpiryYear: Int
-  cardFingerprint: String
-  cardFunding: String
-  cardIssuer: String
-  cardLastFourDigit: String
-  id: ID!
+type ConnectionOfCustomerEdge {
+  pageInfo: PageInfo!
+  edges: [CustomerEdge!]!
+  totalCount: Int!
 }
 
 type CustomerBillingDetails {
@@ -119,8 +36,46 @@ type CustomerBillingDetails {
   id: ID!
 }
 
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime
+type CustomerDetails {
+  organization: OrganizationDetails
+  preferredLocations: [LocationDetails!]!
+  preferredZones: [OrganizationTagDetails!]!
+  preferredCustomTags: [OrganizationTagDetails!]!
+  preferredResources: [ResourceDetails!]!
+  favouriteLocations: [LocationDetails!]!
+  hasAttachedPaymentMethod: Boolean! @cost(weight: "10")
+  paymentMethods: [CustomerPaymentMethod!]! @cost(weight: "10")
+  billingDetails: CustomerBillingDetails @cost(weight: "10")
+  createdAt: DateTime!
+  email: String
+  emails: [String!]!
+  identities: [CustomerIdentity!]!
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  photoUrl: String
+  photoUrl24: String
+  photoUrl32: String
+  photoUrl48: String
+  photoUrl72: String
+  photoUrl192: String
+  photoUrl512: String
+  timezone: String
+  locale: String
+  phoneNumber: String
+  type: CustomerType!
+  isOnboardingDone: Boolean!
+  personalInformationVisibility: PersonalInformationVisibilityDetails!
+  id: ID!
+}
+
+type CustomerEdge {
+  node: CustomerDetails!
+  cursor: String!
+}
 
 type CustomerIdentity {
   email: String
@@ -128,28 +83,89 @@ type CustomerIdentity {
   id: ID!
 }
 
+type CustomerPayload {
+  clientMutationId: String
+  customer: CustomerDetails!
+}
+
+type CustomerPaymentMethod {
+  cardBrand: String
+  cardCountry: String
+  cardDescription: String
+  cardExpiryMonth: Int
+  cardExpiryYear: Int
+  cardFingerprint: String
+  cardFunding: String
+  cardIssuer: String
+  cardLastFourDigit: String
+  id: ID!
+}
+
+type LocationDetails {
+  id: ID!
+}
+
+type Mutation {
+  addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
+  updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
+  updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
+  updateCustomerDetails(input: UpdateCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
+  submitCustomerFeedback(input: SubmitCustomerFeedbackInput!): SubmitCustomerFeedbackPayload! @cost(weight: "10")
+  addCustomerPaymentMethodIntent(input: AddCustomerPaymentMethodIntentInput!): AddCustomerPaymentMethodIntentPayload! @cost(weight: "10")
+  removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
+  completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
+  addCustomerPreferredLocation(input: AddCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
+  removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
+  setCustomerDefaultOrganization(input: SetCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
+  clearCustomerDefaultOrganization(input: ClearCustomerDefaultOrganizationInput!): CustomerPayload! @cost(weight: "10")
+  addCustomerPreferredOrganizationTag(input: AddCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
+  removeCustomerPreferredOrganizationTag(input: RemoveCustomerPreferredOrganizationTagInput!): CustomerPayload! @cost(weight: "10")
+  addCustomerPreferredResource(input: AddCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
+  removeCustomerPreferredResource(input: RemoveCustomerPreferredResourceInput!): CustomerPayload! @cost(weight: "10")
+  addCustomerFavouriteLocation(input: AddCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
+  removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
+}
+
+type OrganizationDetails {
+  uniqueAlphanumericName: String
+  id: ID!
+}
+
+type OrganizationTagDetails {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
 type PersonalInformationVisibilityDetails {
   type: PersonalInformationVisibility!
   name: String!
 }
 
-input SetCustomerDefaultOrganizationInput {
-  clientMutationId: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
+type Query {
+  personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
+  me: CustomerDetails! @cost(weight: "10")
+  customer(id: String!): CustomerDetails @cost(weight: "10")
+  customerById(id: String!): CustomerDetails @lookup @internal @cost(weight: "10")
+  customerVersion: Version!
+  customersByPreferredLocation(after: String first: Int before: String last: Int where: CustomersByPreferredLocationWhereInput! orderBy: [CustomerOrderInput!]): ConnectionOfCustomerEdge! @cost(weight: "10")
 }
 
-input RemoveCustomerPreferredLocationInput {
+type RemoveCustomerPaymentMethodPayload {
   clientMutationId: String
-  locationId: String!
 }
 
-input AddCustomerPreferredLocationInput {
-  clientMutationId: String
-  locationId: String!
+type ResourceDetails {
+  id: ID!
 }
 
-input CompleteOrganizationOnboardingInput {
+type SubmitCustomerFeedbackPayload {
+  id: ID!
   clientMutationId: String
 }
 
@@ -160,23 +176,98 @@ type Version {
   revision: Int!
 }
 
-input RemoveCustomerPaymentMethodInput {
+input AddCustomerFavouriteLocationInput {
   clientMutationId: String
-  id: String!
-}
-
-type RemoveCustomerPaymentMethodPayload {
-  clientMutationId: String
+  locationId: String!
 }
 
 input AddCustomerPaymentMethodIntentInput {
   clientMutationId: String
 }
 
-type AddCustomerPaymentMethodIntentPayload {
+input AddCustomerPreferredLocationInput {
   clientMutationId: String
-  publishedKeys: String!
-  clientSecret: String!
+  locationId: String!
+}
+
+input AddCustomerPreferredOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
+}
+
+input AddCustomerPreferredResourceInput {
+  clientMutationId: String
+  resourceId: String!
+}
+
+input AddMyBillingDetailsInput {
+  clientMutationId: String
+  id: String
+  companyName: String
+  email: String!
+  osmType: String
+  osmId: String
+  placeId: String
+  longitude: Float
+  latitude: Float
+  formattedAddress: String
+  addressLine1: String!
+  addressLine2: String
+  suburb: String
+  city: String
+  province: String
+  zipcode: String!
+  country: String!
+  countryCode: String
+}
+
+input ClearCustomerDefaultOrganizationInput {
+  clientMutationId: String
+}
+
+input CompleteOrganizationOnboardingInput {
+  clientMutationId: String
+}
+
+input CustomerOrderInput {
+  direction: OrderDirection!
+  field: CustomerOrderField!
+}
+
+input CustomersByPreferredLocationWhereInput {
+  locationId: String!
+  nameContains: String
+}
+
+input RemoveCustomerFavouriteLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input RemoveCustomerPaymentMethodInput {
+  clientMutationId: String
+  id: String!
+}
+
+input RemoveCustomerPreferredLocationInput {
+  clientMutationId: String
+  locationId: String!
+}
+
+input RemoveCustomerPreferredOrganizationTagInput {
+  clientMutationId: String
+  organizationTagId: String!
+}
+
+input RemoveCustomerPreferredResourceInput {
+  clientMutationId: String
+  resourceId: String!
+}
+
+input SetCustomerDefaultOrganizationInput {
+  clientMutationId: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
 }
 
 input SubmitCustomerFeedbackInput {
@@ -186,27 +277,9 @@ input SubmitCustomerFeedbackInput {
   channel: FeedbackChannelType!
 }
 
-type SubmitCustomerFeedbackPayload {
-  id: ID!
-  clientMutationId: String
-}
-
 input UpdateCustomerDetailsInput {
   clientMutationId: String
   id: String!
-  timezone: String
-  designation: String
-  title: String
-  name: String
-  givenName: String
-  middleName: String
-  familyName: String
-  phoneNumber: String
-  personalInformationVisibility: PersonalInformationVisibility!
-}
-
-input UpdateMyCustomerDetailsInput {
-  clientMutationId: String
   timezone: String
   designation: String
   title: String
@@ -239,85 +312,17 @@ input UpdateMyBillingDetailsInput {
   countryCode: String
 }
 
-input AddMyBillingDetailsInput {
+input UpdateMyCustomerDetailsInput {
   clientMutationId: String
-  id: String
-  companyName: String
-  email: String!
-  osmType: String
-  osmId: String
-  placeId: String
-  longitude: Float
-  latitude: Float
-  formattedAddress: String
-  addressLine1: String!
-  addressLine2: String
-  suburb: String
-  city: String
-  province: String
-  zipcode: String!
-  country: String!
-  countryCode: String
-}
-
-type CustomerPayload {
-  clientMutationId: String
-  customer: CustomerDetails!
-}
-
-input ClearCustomerDefaultOrganizationInput {
-  clientMutationId: String
-}
-
-input AddCustomerPreferredOrganizationTagInput {
-  clientMutationId: String
-  organizationTagId: String!
-}
-
-input RemoveCustomerPreferredOrganizationTagInput {
-  clientMutationId: String
-  organizationTagId: String!
-}
-
-input AddCustomerPreferredResourceInput {
-  clientMutationId: String
-  resourceId: String!
-}
-
-input RemoveCustomerPreferredResourceInput {
-  clientMutationId: String
-  resourceId: String!
-}
-
-input AddCustomerFavouriteLocationInput {
-  clientMutationId: String
-  locationId: String!
-}
-
-input RemoveCustomerFavouriteLocationInput {
-  clientMutationId: String
-  locationId: String!
-}
-
-type ConnectionOfCustomerEdge {
-  pageInfo: PageInfo!
-  edges: [CustomerEdge!]!
-  totalCount: Int!
-}
-
-input CustomersByPreferredLocationWhereInput {
-  locationId: String!
-  nameContains: String
-}
-
-input CustomerOrderInput {
-  direction: OrderDirection!
-  field: CustomerOrderField!
-}
-
-enum PersonalInformationVisibility {
-  VISIBLE
-  REDACTED
+  timezone: String
+  designation: String
+  title: String
+  name: String
+  givenName: String
+  middleName: String
+  familyName: String
+  phoneNumber: String
+  personalInformationVisibility: PersonalInformationVisibility!
 }
 
 enum CustomerOrderField {
@@ -332,21 +337,9 @@ enum CustomerOrderField {
   PHONE_NUMBER
 }
 
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
-}
-
-type CustomerEdge {
-  node: CustomerDetails!
-  cursor: String!
-}
-
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+enum CustomerType {
+  GUEST
+  REGISTERED
 }
 
 enum FeedbackChannelType {
@@ -355,9 +348,25 @@ enum FeedbackChannelType {
   MS_TEAMS
 }
 
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
+}
+
+enum PersonalInformationVisibility {
+  VISIBLE
+  REDACTED
+}
+
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
 directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
 
 directive @internal on FIELD_DEFINITION
 
 directive @lookup on FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

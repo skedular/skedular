@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<ITeamClient>(_ => new TeamClient(teamApiClient));
 
         services
-            .AddSkedularGraphQlTeamClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = teamApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

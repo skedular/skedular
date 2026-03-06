@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<ILocationClient>(_ => new LocationClient(locationApiClient));
 
         services
-            .AddSkedularGraphQlLocationClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = locationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

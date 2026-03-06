@@ -4,7 +4,7 @@ schema {
 
 type Query {
   coreVersion: Version!
-  coreCustomerRecordSynced: Boolean!
+  coreCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type Version {

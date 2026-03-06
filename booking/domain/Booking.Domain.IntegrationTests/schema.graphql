@@ -1,52 +1,95 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
-type Query {
-  bookingTypes: [BookingTypeDetails!]!
-  marketplaceBookingTypes: [BookingTypeDetails!]!
-  booking(id: String!): BookingDetails
-  bookingById(id: String!): BookingDetails
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge!
-  allBookings(where: BookingWhereInput!): [BookingDetails!]!
-  paymentMethodTypes: [PaymentMethodTypeDetails!]!
-  paymentStatuses: [PaymentStatusDetails!]!
-  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions!
-  teamBookingPermissions(teamId: String!): TeamBookingPermissions!
-  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]!
-  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources!
-  bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean!
+type BookingCategoryDetails {
+  category: BookingCategory!
+  name: String!
 }
 
-type Mutation {
-  addBooking(input: AddBookingInput!): BookingPayload!
-  updateBooking(input: UpdateBookingInput!): BookingPayload!
-  deleteBooking(input: DeleteBookingInput!): BookingPayload!
-  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload!
-  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload!
-  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload!
+type BookingChannelDetails {
+  channel: BookingChannel!
+  name: String!
+}
+
+type BookingCheckoutSessionDetails {
+  uniqueId: ID!
+  checkoutUrl: String!
 }
 
 type BookingDetails {
   involvedCustomers: [CustomerDetails!]!
-  paidByCustomer: CustomerDetails
   createdByCustomer: CustomerDetails
   lastModifiedByCustomer: CustomerDetails
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
-  paidByOrganization: OrganizationDetails
   involvedLocations: [LocationDetails!]!
   involvedTeams: [TeamDetails!]!
-  paymentStatus: PaymentStatusDetails!
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingTypeDetails!
+  category: BookingCategoryDetails!
+  channel: BookingChannelDetails!
   bookingResources: [BookingResourceDetails!]!
-  lineItems: [LineItemDetails!]!
-  paymentMethod: PaymentMethodTypeDetails
+  marketplaceBooking: MarketplaceBookingDetails
+  hasRecurringInstanceOverrides: Boolean
+  id: ID!
+}
+
+type BookingEdge {
+  node: BookingDetails!
+  cursor: String!
+}
+
+type BookingFrequencyDetails {
+  frequency: BookingFrequency!
+  name: String!
+}
+
+type BookingPayload {
+  clientMutationId: String
+  booking: BookingDetails!
+}
+
+type BookingRecurrenceEndTypeDetails {
+  endType: RecurringBookingEndType!
+  name: String!
+}
+
+type BookingResourceDetails {
+  resource: ResourceDetails!
+  location: LocationDetails
+  customers: [CustomerDetails!]!
+}
+
+type ConnectionOfBookingEdge {
+  pageInfo: PageInfo!
+  edges: [BookingEdge!]!
+  totalCount: Int!
+}
+
+type CustomerDetails {
+  id: ID!
+}
+
+type DayOfWeekDetails {
+  dayOfWeek: DayOfWeek!
+  name: String!
+}
+
+type LocationDetails {
+  id: ID!
+}
+
+type MarketplaceBookingDetails {
+  paidByCustomer: CustomerDetails
+  paidByOrganization: OrganizationDetails
+  productVersion: ProductVersionDetails!
+  quantity: Int!
+  productPricing: ProductPricing!
+  paymentMethod: PaymentMethodTypeDetails!
   totalAmountExcludeTax: Decimal
   totalAmountExcludeTaxToDisplay: String!
   taxAmount: Decimal
@@ -59,27 +102,42 @@ type BookingDetails {
   currencyToDisplay: String!
   invoiceUrl: String
   invoiceNumber: String
-  invoiceEmailList: [String!]
+  invoiceEmailList: [String!]!
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   paymentExpiry: DateTime!
-  bookedOnMarketplace: Boolean!
+  paymentStatus: PaymentStatusDetails!
   id: ID!
 }
 
-type BookingResourceDetails {
-  resource: ResourceDetails!
-  location: LocationDetails
-  customers: [CustomerDetails!]!
+type Mutation {
+  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
+  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  addMarketplaceRecurringBooking(input: AddMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+  deleteMarketplaceRecurringBooking(input: DeleteMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
 }
 
-type LineItemDetails {
-  productVersion: ProductVersionDetails!
-  quantity: Int!
+type OrganizationAvailableResources {
+  resourcesCount: Int!
+  availableResourcesCount: Int!
 }
 
-type CustomerDetails {
-  id: ID!
+type OrganizationBookingPermissions {
+  canViewBookings: Boolean!
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+  canModifyPaymentMethod: Boolean!
 }
 
 type OrganizationDetails {
@@ -87,25 +145,11 @@ type OrganizationDetails {
   id: ID!
 }
 
-type LocationDetails {
-  id: ID!
-}
-
-type TeamDetails {
-  id: ID!
-}
-
-type PaymentStatusDetails {
-  type: PaymentStatus!
-  name: String!
-}
-
-"The `DateTime` scalar represents an ISO-8601 compliant date time type."
-scalar DateTime
-
-type BookingTypeDetails {
-  type: BookingType!
-  name: String!
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
 }
 
 type PaymentMethodTypeDetails {
@@ -113,42 +157,93 @@ type PaymentMethodTypeDetails {
   name: String!
 }
 
-"The `Decimal` scalar type represents a decimal floating-point number."
-scalar Decimal
-
-type BookingCheckoutSessionDetails {
-  uniqueId: ID!
-  checkoutUrl: String!
+type PaymentStatusDetails {
+  type: PaymentStatus!
+  name: String!
 }
 
-type ResourceDetails {
-  id: ID!
+type ProductPricing {
+  id: String!
+  index: Int!
+  name: String!
+  description: String!
+  cadence: ProductPricingCadence!
+  price: Decimal!
+  isTaxInclusive: Boolean!
+  acceptedPaymentMethods: [PaymentMethod!]!
+  minDurationMinutes: Int
+  maxDurationMinutes: Int
+  maxAllowedResourcesLockTimePaidViaCard: Int!
+  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+  numberOfResourcesToBook: Int!
 }
 
 type ProductVersionDetails {
   id: ID!
 }
 
-enum BookingType {
-  WORKING_FROM_HOME
-  WORKING_FROM_OFFICE
-  WORKING_FROM_COWORKING_SPACE
-  SICK_LEAVE
-  ANNUAL_LEAVE
-  WELLBEING_LEAVE
-  CLIENT_OFFICE
-  VACATION
-  TRAVELING_FOR_WORK
-  NON_WORKING_DAY
+type Query {
+  bookingCategories: [BookingCategoryDetails!]!
+  marketplaceBookingCategories: [BookingCategoryDetails!]!
+  booking(id: String!): BookingDetails @cost(weight: "10")
+  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
+  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
+  allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  paymentMethodTypes: [PaymentMethodTypeDetails!]!
+  paymentStatuses: [PaymentStatusDetails!]!
+  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
+  teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
+  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
+  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
+  bookingVersion: Version!
+  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
-enum PaymentStatus {
-  PENDING
-  REJECTED
-  CONFIRMED
-  EXPIRED
-  RECORD_NEVER_CREATED
-  NO_PAYMENT_REQUIRED
+type RecurringBookingDetails {
+  involvedCustomers: [CustomerDetails!]!
+  createdByCustomer: CustomerDetails
+  lastModifiedByCustomer: CustomerDetails
+  deletedByCustomer: CustomerDetails
+  involvedOrganizations: [OrganizationDetails!]!
+  involvedTeams: [TeamDetails!]!
+  from: DateTime!
+  until: DateTime!
+  category: BookingCategoryDetails!
+  channel: BookingChannelDetails!
+  frequency: BookingFrequencyDetails!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeekDetails!]!
+  endType: BookingRecurrenceEndTypeDetails!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int
+  skippedDates: [DateTime!]!
+  id: ID!
+}
+
+type RecurringBookingPayload {
+  clientMutationId: String
+  recurringBooking: RecurringBookingDetails!
+}
+
+type ResourceDetails {
+  id: ID!
+}
+
+type Subscription {
+  booking(id: String!): BookingDetails!
+}
+
+type TeamBookingPermissions {
+  canAddBooking: Boolean!
+  canUpdateBooking: Boolean!
+  canDeleteBooking: Boolean!
+}
+
+type TeamDetails {
+  id: ID!
 }
 
 type Version {
@@ -158,16 +253,86 @@ type Version {
   revision: Int!
 }
 
-input OrganizationAvailableResourcesWhereInput {
-  organizationId: String
-  organizationUniqueAlphanumericName: String
+input AddMarketplaceBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
+  notes: String
+  category: BookingCategory
+  resourceIds: [String!]
+  paymentMethod: PaymentMethod!
+  invoiceEmailList: [String!]
+  quantity: Int!
+  productVersionId: String!
+  pricingId: String!
 }
 
-type OrganizationAvailableResources {
-  resourcesCount: Int!
-  availableResourcesCount: Int!
+input AddMarketplaceRecurringBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  from: DateTime!
+  until: DateTime!
+  frequency: BookingFrequency!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  endType: RecurringBookingEndType!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int
+  skippedDates: [DateTime!]
+  category: BookingCategory
+  paymentMethod: PaymentMethod!
+  invoiceEmailList: [String!]
+  quantity: Int!
+  productVersionId: String!
+  pricingId: String!
+}
+
+input AddPrivateBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  from: DateTime!
+  until: DateTime!
+  notes: String
+  category: BookingCategory
+  resourceIds: [String!]
+}
+
+input AddPrivateRecurringBookingInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  from: DateTime!
+  until: DateTime!
+  frequency: BookingFrequency!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  endType: RecurringBookingEndType!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int
+  skippedDates: [DateTime!]
+  category: BookingCategory
 }
 
 input AvailableResourcesWhereInput {
@@ -180,35 +345,6 @@ input AvailableResourcesWhereInput {
   zoneIds: [String!]
   resourceIdsToInclude: [String!]
   productId: String
-}
-
-type TeamBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-}
-
-type OrganizationBookingPermissions {
-  canViewBookings: Boolean!
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canModifyPaymentMethod: Boolean!
-}
-
-input MakeBookingPaymentNotRequiredInput {
-  clientMutationId: String
-  id: String!
-}
-
-input RejectBookingPaymentInput {
-  clientMutationId: String
-  id: String!
-}
-
-input ConfirmBookingPaymentInput {
-  clientMutationId: String
-  id: String!
 }
 
 input BookingOrderInput {
@@ -226,7 +362,8 @@ input BookingWhereInput {
   toLt: DateTime
   toLte: DateTime
   notesContains: String
-  type: BookingType
+  category: BookingCategory
+  channel: BookingChannel
   paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
@@ -238,51 +375,140 @@ input BookingWhereInput {
   includeFutureBookingsOnly: Boolean
 }
 
-type ConnectionOfBookingEdge {
-  pageInfo: PageInfo!
-  edges: [BookingEdge!]!
-  totalCount: Int!
-}
-
-input DeleteBookingInput {
+input ConfirmBookingPaymentInput {
   clientMutationId: String
   id: String!
 }
 
-input UpdateBookingInput {
+input DeleteMarketplaceBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeleteMarketplaceRecurringBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeletePrivateBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input DeletePrivateRecurringBookingInput {
+  clientMutationId: String
+  id: String!
+}
+
+input MakeBookingPaymentNotRequiredInput {
+  clientMutationId: String
+  id: String!
+}
+
+input OrganizationAvailableResourcesWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  from: DateTime!
+  until: DateTime!
+}
+
+input RejectBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
+input UpdateMarketplaceBookingInput {
   clientMutationId: String
   id: String!
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
-  from: DateTime!
-  until: DateTime!
+  teamIds: [String!]
   notes: String
-  type: BookingType!
-  resourceIds: [String!]!
+  category: BookingCategory
 }
 
-input AddBookingInput {
+input UpdatePrivateBookingInput {
   clientMutationId: String
-  id: String
+  id: String!
   customerIds: [String!]!
   organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
-  teamIds: [String!]!
+  teamIds: [String!]
   from: DateTime!
   until: DateTime!
   notes: String
-  type: BookingType!
-  resourceIds: [String!]!
-  lineItems: [LineItemInput!]!
-  paymentMethod: PaymentMethod
-  invoiceEmailList: [String!]
+  category: BookingCategory
+  resourceIds: [String!]
 }
 
-type BookingPayload {
+input UpdatePrivateRecurringBookingInput {
   clientMutationId: String
-  booking: BookingDetails!
+  id: String!
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  from: DateTime!
+  until: DateTime!
+  frequency: BookingFrequency!
+  interval: Int!
+  byMonthDay: Int
+  bySetPosition: Int
+  byWeekDays: [DayOfWeek!]!
+  endType: RecurringBookingEndType!
+  startDate: DateTime!
+  endDate: DateTime
+  occurrenceCount: Int
+  skippedDates: [DateTime!]
+  category: BookingCategory
+}
+
+enum BookingCategory {
+  WORKING_FROM_HOME
+  WORKING_FROM_OFFICE
+  WORKING_FROM_COWORKING_SPACE
+  SICK_LEAVE
+  ANNUAL_LEAVE
+  WELLBEING_LEAVE
+  CLIENT_OFFICE
+  VACATION
+  TRAVELING_FOR_WORK
+  NON_WORKING_DAY
+}
+
+enum BookingChannel {
+  PRIVATE
+  MARKETPLACE
+}
+
+enum BookingFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum BookingOrderField {
+  FROM
+  TO
+  NOTES
+  CATEGORY
+  CHANNEL
+}
+
+enum DayOfWeek {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum OrderDirection {
+  ASCENDING
+  DESCENDING
 }
 
 enum PaymentMethod {
@@ -290,34 +516,30 @@ enum PaymentMethod {
   BANK_TRANSFER
 }
 
-input LineItemInput {
-  productVersionId: String!
-  quantity: Int!
+enum PaymentStatus {
+  NOT_SET
+  PENDING
+  REJECTED
+  CONFIRMED
+  EXPIRED
+  RECORD_NEVER_CREATED
+  NO_PAYMENT_REQUIRED
 }
 
-type BookingEdge {
-  node: BookingDetails!
-  cursor: String!
+enum ProductPricingCadence {
+  NOT_SET
+  ONE_TIME_V1
+  PER_MINUTE_V1
+  PER_HOUR_V1
+  DAILY_V1
+  WEEKLY_V1
+  MONTHLY_V1
 }
 
-type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
-}
-
-enum BookingOrderField {
-  FROM
-  TO
-  NOTES
-  TYPE
-  STATUS
-}
-
-enum OrderDirection {
-  ASCENDING
-  DESCENDING
+enum RecurringBookingEndType {
+  NEVER
+  UNTIL_DATE
+  AFTER_OCCURRENCES
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
@@ -326,3 +548,12 @@ directive @cost("The `weight` argument defines what value to add to the overall 
 directive @internal on FIELD_DEFINITION
 
 directive @lookup on FIELD_DEFINITION
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Decimal` scalar type represents a decimal floating-point number."
+scalar Decimal

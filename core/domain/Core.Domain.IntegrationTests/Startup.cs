@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<ICoreClient>(_ => new CoreClient(coreApiClient));
 
         services
-            .AddSkedularGraphQlCoreClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = coreApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

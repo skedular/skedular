@@ -1,5 +1,5 @@
 using Shouldly;
-using Skedular.SystemTests.Clients.GraphQL.V1;
+using Skedular.SystemTests.Skedular.GraphQL.V1;
 using Testing.Shared;
 
 namespace Skedular.SystemTests.Gateway.GraphQl;

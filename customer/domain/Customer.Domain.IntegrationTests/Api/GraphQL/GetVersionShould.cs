@@ -1,4 +1,4 @@
-using Customer.Domain.IntegrationTests.Clients.GraphQL.V1;
+using Customer.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Shouldly;
 using Testing.Shared;
 

@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<IOrganizationClient>(_ => new OrganizationClient(organizationApiClient));
 
         services
-            .AddSkedularGraphQlOrganizationClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = organizationApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

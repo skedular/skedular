@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<ISlackClient>(_ => new SlackClient(slackApiClient));
 
         services
-            .AddSkedularGraphQlSlackClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = slackApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

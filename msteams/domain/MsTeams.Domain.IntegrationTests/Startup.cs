@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<IMsTeamsClient>(_ => new MsTeamsClient(msteamsApiClient));
 
         services
-            .AddSkedularGraphQlMsteamsClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = msteamsApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }

@@ -3,9 +3,9 @@
   "documents": "**/*.graphql",
   "extensions": {
     "strawberryShake": {
-      "name": "SkedularGraphQlMsteamsClientV1",
-      "namespace": "Msteams.Domain.IntegrationTests.Clients.GraphQL.V1",
-      "url": "http://localhost:10900/v1/graphql/",
+      "name": "SkedularGraphQLV1",
+      "namespace": "MsTeams.Domain.IntegrationTests.Skedular.GraphQL.V1",
+      "url": "../../apis/MsTeams.Api/schema.graphql",
       "records": {
         "inputs": false,
         "entities": false

@@ -1,4 +1,4 @@
-using Msteams.Domain.IntegrationTests.Clients.GraphQL.V1;
+using MsTeams.Domain.IntegrationTests.Skedular.GraphQL.V1;
 using Shouldly;
 using Testing.Shared;
 

@@ -68,7 +68,7 @@ public class Startup
             .AddSingleton<IBookingClient>(_ => new BookingClient(bookingApiClient));
 
         services
-            .AddSkedularGraphQlBookingClientV1()
+            .AddSkedularGraphQLV1()
             .ConfigureHttpClient(httpClient => httpClient.BaseAddress = bookingApiClient.BaseAddress.AppendPathSegment("/v1/graphql").ToUri());
     }
 }
