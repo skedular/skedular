@@ -106,13 +106,13 @@ const WeekOpeningHours = ({ rootDataRelay, defaultValue, onWeekOpeningHoursDetai
     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
       {weekdays.map((day) => (
         <div key={day}>
-          <FormFieldLabel label={day.charAt(0).toUpperCase() + day.slice(1)}>
+          <FormFieldLabel label={day.charAt(0).toUpperCase() + day.slice(1)} stackLabelOnTop>
             <StackRow>
               <ClosedOpenAllDayCustomToggle defaultValue={states[day]} onChange={(value) => handleStateChange(day, value)} />
               <TimeRangePicker minutesStep={minutesStep} disabled={states[day] !== 'custom'} defaultValue={hours[day]} onChange={(value) => handleHoursChange(day, value)} />
             </StackRow>
           </FormFieldLabel>
-          <FormFieldLabel>
+          <FormFieldLabel stackLabelOnTop>
             <ErrorTypography errorMessage={validations[day].errorMessage} />
           </FormFieldLabel>
         </div>
