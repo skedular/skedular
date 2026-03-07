@@ -10,7 +10,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 var kafka = builder.AddKafka("kafka").WithKafkaUI();
 var postgres = builder.AddPostgres("postgres").WithImage("postgis/postgis", "16-3.4").WithPgAdmin();
 var temporal = builder.AddTemporalServerContainer("temporal");
-var redis = builder.AddRedis("redis");
+#pragma warning disable ASPIRECERTIFICATES001
+var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
+#pragma warning restore ASPIRECERTIFICATES001
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")

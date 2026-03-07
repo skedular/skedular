@@ -24,6 +24,11 @@ public class BasicCustomerWithIdentityFixtureCustomizer : IFixtureCustomizer
                     var values = new List<string> { PersonalInformationVisibilityConstants.Visible, PersonalInformationVisibilityConstants.Redacted };
                     return values[Random.Shared.Next(0, values.Count - 1)];
                 })
+                .With(item => item.Type, () =>
+                {
+                    var values = new List<string> { CustomerTypeConstants.Guest, CustomerTypeConstants.Registered };
+                    return values[Random.Shared.Next(0, values.Count - 1)];
+                })
                 .With(item => item.CustomerFeedbacks, [])
                 .With(item => item.DefaultOrganization, (Organization?)null)
                 .With(item => item.PreferredLocations, [])
