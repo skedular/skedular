@@ -44,9 +44,8 @@ message ProductVersion {
   string                  description    = 3;
   Currency                currency       = 4;
   repeated string         productTagIds  = 5;
-  repeated string         locationTagIds = 6;
-  repeated CdnImageFile   featureImages  = 7;
-  repeated ProductPricing pricingOptions = 8;
+  repeated CdnImageFile   featureImages  = 6;
+  repeated ProductPricing pricingOptions = 7;
 }
 
 message CdnImageFile {

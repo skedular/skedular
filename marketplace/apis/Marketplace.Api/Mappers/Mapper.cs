@@ -28,8 +28,7 @@ public interface IMapper
     Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags);
+        ICollection<OrganizationTag> productTags);
 }
 
 public class Mapper : IMapper
@@ -70,7 +69,6 @@ public class Mapper : IMapper
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             ProductTags = MapTo(src.ProductTags).ToList(),
-            LocationTags = MapTo(src.LocationTags).ToList(),
             PricingOptions = src.PricingOptions
         };
 
@@ -82,7 +80,6 @@ public class Mapper : IMapper
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
 
@@ -94,7 +91,6 @@ public class Mapper : IMapper
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToList(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
 
@@ -116,7 +112,6 @@ public class Mapper : IMapper
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
             ProductTagIds = productVersion.ProductTags.Select(item => item.Id),
-            LocationTagIds = productVersion.LocationTags.Select(item => item.Id),
             OrganizationId = src.Organization.Id,
             OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
@@ -139,7 +134,6 @@ public class Mapper : IMapper
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
             ProductTagIds = src.ProductTags.Select(item => item.Id),
-            LocationTagIds = src.LocationTags.Select(item => item.Id),
             PricingOptions = src.PricingOptions
         };
     }
@@ -182,9 +176,8 @@ public class Mapper : IMapper
     public Shared.Database.Entities.ProductVersion MapTo(
         ProductVersion src,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags) =>
-        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags, locationTags);
+        ICollection<OrganizationTag> productTags) =>
+        MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags);
 
     private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 
@@ -214,8 +207,7 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags)
+        ICollection<OrganizationTag> productTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
@@ -223,7 +215,6 @@ public class Mapper : IMapper
         dest.Currency = src.Currency.ToCurrency();
         dest.FeatureImages = src.FeatureImages;
         dest.ProductTags = productTags;
-        dest.LocationTags = locationTags;
         dest.Product = product;
         dest.PricingOptions = src.PricingOptions;
         return dest;

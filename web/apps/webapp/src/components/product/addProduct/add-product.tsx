@@ -296,7 +296,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           description,
           currency: currency as Currency,
           productTagIds,
-          locationTagIds: [],
           organizationUniqueAlphanumericName,
           featureImages: finalFeatureImages,
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
@@ -476,6 +475,19 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                       <TextField name="description" required={requiredFields.description} multiline rows={3} />
                     </FormFieldLabel>
 
+                    <FormFieldLabel label="Currency">
+                      <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Product Tags">
+                      <MultipleChoicesProductTags
+                        rootDataRelay={rootData}
+                        name="productTagIds"
+                        required={requiredFields.productTagIds}
+                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      />
+                    </FormFieldLabel>
+
                     <FormFieldLabel label="Pricing Options" />
                     <StackColumn>
                       {(values?.pricingOptions ?? []).map((pricingOption: PricingOptionForm, index: number) => (
@@ -568,19 +580,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                         </Button>
                       </StackRow>
                     </StackColumn>
-
-                    <FormFieldLabel label="Currency">
-                      <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Product Tags">
-                      <MultipleChoicesProductTags
-                        rootDataRelay={rootData}
-                        name="productTagIds"
-                        required={requiredFields.productTagIds}
-                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                      />
-                    </FormFieldLabel>
                   </StackColumn>
 
                   <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>

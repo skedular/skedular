@@ -966,7 +966,6 @@ type ProductDetails {
   id: ID!
   inactive: Boolean!
   latestProductVersionId: String!
-  locationTags: [OrganizationTagDetails!]!
   name: String!
   organization: OrganizationDetails!
   pricingOptions: [ProductPricing!]!
@@ -1010,7 +1009,6 @@ type ProductVersionDetails {
   featureImages: [CdnImageFile!]!
   id: ID!
   inactive: Boolean!
-  locationTags: [OrganizationTagDetails!]!
   name: String!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
@@ -1605,7 +1603,6 @@ input AddProductInput {
   description: String
   featureImages: [CdnImageFileInput!]!
   id: String
-  locationTagIds: [String!]!
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
@@ -2576,7 +2573,6 @@ input UpdateProductInput {
   description: String
   featureImages: [CdnImageFileInput!]!
   id: String!
-  locationTagIds: [String!]!
   name: String!
   pricingOptions: [ProductPricingInput!]!
   productTagIds: [String!]!

@@ -19,7 +19,6 @@ public class ProductVersion : EntityBase
     public virtual Product Product { get; set; }
 
     public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
-    public virtual ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public virtual ICollection<MarketplaceBooking> MarketplaceBookings { get; set; } = [];
     public virtual ICollection<StripeProduct> StripeProducts { get; set; } = [];
 }
@@ -37,7 +36,6 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
-        builder.HasMany(item => item.LocationTags).WithMany(item => item.ProductVersionLocationTags);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Currency);

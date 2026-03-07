@@ -10,6 +10,5 @@ public class ProductVersion : ModelBase
     public ICollection<ProductPricing> PricingOptions { get; set; } = [];
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> ProductTags { get; set; } = [];
-    public ICollection<OrganizationTag> LocationTags { get; set; } = [];
     public ICollection<StripeProduct> StripeProducts { get; set; } = [];
 }

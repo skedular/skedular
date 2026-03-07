@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afee5bd362d19b5714d6d37faa52ffd1>>
+ * @generated SignedSource<<723761eeaefb9da99154fee9a44cb6f5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type AddProductInput = {
   description?: string | null | undefined;
   featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
-  locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;

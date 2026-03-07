@@ -67,8 +67,7 @@ public interface IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags);
+        ICollection<OrganizationTag> productTags);
 }
 
 public class Mapper : IMapper
@@ -333,13 +332,11 @@ public class Mapper : IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags,
-        ICollection<OrganizationTag> locationTags)
+        ICollection<OrganizationTag> productTags)
     {
         dest.Id = src.Id;
         dest.Product = product;
         dest.ProductTags = productTags;
-        dest.LocationTags = locationTags;
         return dest;
     }
 
@@ -348,7 +345,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            LocationTags = src.LocationTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product
         };
 }

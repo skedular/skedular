@@ -66,7 +66,7 @@ public class ResourceService(
         {
             var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
-            productRelatedTags = productVersion.ProductTags.Concat(productVersion.LocationTags).Select(item => item.Id).ToList();
+            productRelatedTags = productVersion.ProductTags.Select(item => item.Id).ToList();
         }
 
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(

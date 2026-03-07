@@ -36,7 +36,6 @@ public class Mapper : IMapper
         };
 
         productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
-        productVersion.LocationTagIds.AddRange(src.LocationTags.Select(item => item.Id));
         productVersion.FeatureImages.AddRange(MapTo(src.FeatureImages));
         productVersion.PricingOptions.AddRange(MapTo(src.PricingOptions));
 

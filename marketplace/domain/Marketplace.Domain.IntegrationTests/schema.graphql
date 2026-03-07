@@ -57,7 +57,6 @@ type PaymentMethodTypeDetails {
 type ProductDetails {
   organization: OrganizationDetails!
   productTags: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
   inactive: Boolean!
   name: String!
   description: String
@@ -101,7 +100,6 @@ type ProductPricingCadenceDetails {
 
 type ProductVersionDetails {
   productTags: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
   inactive: Boolean!
   name: String!
   description: String
@@ -152,7 +150,6 @@ input AddProductInput {
   description: String
   currency: Currency!
   productTagIds: [String!]!
-  locationTagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
   pricingOptions: [ProductPricingInput!]!
 }
@@ -212,7 +209,6 @@ input UpdateProductInput {
   description: String
   currency: Currency!
   productTagIds: [String!]!
-  locationTagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
   pricingOptions: [ProductPricingInput!]!
 }
