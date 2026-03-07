@@ -8,13 +8,13 @@ import type { newBookingButton_rootQuery } from '@/queries/__generated__/newBook
 import Button from '@mui/material/Button';
 import type { SxProps, Theme } from '@mui/system';
 import { Dayjs } from 'dayjs';
-import { memo, useEffect, useState } from 'react';
+import { memo, Suspense, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import NewBookingDialog from './new-booking-dialog';
 
 type Props = {
-  queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
+  queryReference?: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>> | null;
   onReloadRequired?: () => void;
   connectionIds?: string[];
   organizationUniqueAlphanumericName: string;
@@ -29,6 +29,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
   sx?: SxProps<Theme>;
   invertDefaultColor?: boolean;
+  onOpenRequested?: () => void;
 };
 
 const RootQuery = graphql`
@@ -51,6 +52,49 @@ const RootQuery = graphql`
   }
 `;
 
+type NewBookingDialogWithQueryProps = {
+  queryReference: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>>;
+  connectionIds?: string[];
+  isDialogOpen: boolean;
+  onAddClicked: () => void;
+  onCancel: () => void;
+  organizationUniqueAlphanumericName: string;
+  defaultLocationId?: string;
+  defaultDate?: Dayjs;
+  defaultResourceIds?: string[];
+};
+
+const NewBookingDialogWithQuery = ({
+  queryReference,
+  connectionIds,
+  isDialogOpen,
+  onAddClicked,
+  onCancel,
+  organizationUniqueAlphanumericName,
+  defaultLocationId,
+  defaultDate,
+  defaultResourceIds,
+}: NewBookingDialogWithQueryProps) => {
+  const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
+
+  return (
+    <NewBookingDialog
+      rootDataRelay={rootData}
+      rootDataTeamsRelay={rootData}
+      rootDataOrganizationMembersRelay={rootData}
+      rootDataAvailableResourcesRelay={rootData}
+      connectionIds={connectionIds ?? []}
+      isDialogOpen={isDialogOpen}
+      onAddClicked={onAddClicked}
+      onCancel={onCancel}
+      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      defaultLocationId={defaultLocationId}
+      defaultDate={defaultDate}
+      defaultResourceIds={defaultResourceIds}
+    />
+  );
+};
+
 const NewBookingButton = ({
   queryReference,
   onReloadRequired,
@@ -67,8 +111,8 @@ const NewBookingButton = ({
   size,
   sx,
   invertDefaultColor,
+  onOpenRequested,
 }: Props) => {
-  const rootData = usePreloadedQuery<newBookingButton_rootQuery>(RootQuery, queryReference);
   const [isDialogOpen, setIsDialogOpen] = useState(isInitiallyOpen);
 
   useEffect(() => {
@@ -76,12 +120,15 @@ const NewBookingButton = ({
       return;
     }
 
+    onOpenRequested?.();
+
     queueMicrotask(() => {
       setIsDialogOpen(true);
     });
-  }, [isInitiallyOpen]);
+  }, [isInitiallyOpen, onOpenRequested]);
 
   const handleButtonClicked = () => {
+    onOpenRequested?.();
     setIsDialogOpen(true);
   };
 
@@ -112,20 +159,22 @@ const NewBookingButton = ({
           <LeadIconTypography label={label ?? 'Add Booking'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} invertDefaultColor={invertDefaultColor} />
         )}
       </Button>
-      <NewBookingDialog
-        rootDataRelay={rootData}
-        rootDataTeamsRelay={rootData}
-        rootDataOrganizationMembersRelay={rootData}
-        rootDataAvailableResourcesRelay={rootData}
-        connectionIds={connectionIds ?? []}
-        isDialogOpen={isDialogOpen}
-        onAddClicked={handleAddClicked}
-        onCancel={handleCancelClicked}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-        defaultLocationId={defaultLocationId}
-        defaultDate={defaultDate}
-        defaultResourceIds={defaultResourceIds}
-      />
+      {isDialogOpen && !queryReference && <Loading />}
+      {isDialogOpen && queryReference && (
+        <Suspense fallback={<Loading />}>
+          <NewBookingDialogWithQuery
+            queryReference={queryReference}
+            connectionIds={connectionIds}
+            isDialogOpen={isDialogOpen}
+            onAddClicked={handleAddClicked}
+            onCancel={handleCancelClicked}
+            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+            defaultLocationId={defaultLocationId}
+            defaultDate={defaultDate}
+            defaultResourceIds={defaultResourceIds}
+          />
+        </Suspense>
+      )}
     </>
   );
 };
@@ -167,7 +216,7 @@ const NewBookingButtonWithRelay = ({
 }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<newBookingButton_rootQuery>(RootQuery);
 
-  useEffect(() => {
+  const loadNewBookingQuery = useCallback(() => {
     const date = startOfDay();
     const startDate = date.toISOString();
     const endDate = date.add(1, 'day').toISOString();
@@ -205,9 +254,21 @@ const NewBookingButtonWithRelay = ({
     );
   }, [loadQuery, organizationUniqueAlphanumericName, defaultLocationId]);
 
-  if (!queryReference) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    if (!isInitiallyOpen) {
+      return;
+    }
+
+    loadNewBookingQuery();
+  }, [isInitiallyOpen, loadNewBookingQuery]);
+
+  const handleOpenRequested = () => {
+    if (queryReference) {
+      return;
+    }
+
+    loadNewBookingQuery();
+  };
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
@@ -227,6 +288,7 @@ const NewBookingButtonWithRelay = ({
         size={size}
         sx={sx}
         invertDefaultColor={invertDefaultColor}
+        onOpenRequested={handleOpenRequested}
       />
     </ErrorBoundary>
   );
