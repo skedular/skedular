@@ -7,6 +7,7 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 
 namespace Booking.Shared.Repositories;
@@ -38,21 +39,10 @@ internal static class BookingExtensions
 {
     extension(IQueryable<Database.Entities.Booking> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
+        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingMinimumDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.Customers)
-            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.Resource)
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
-            .ThenInclude(query => query.Resource)
-            .ThenInclude(query => query.Location)
-            .ThenInclude(query => query!.Organization)
             .Include(query => query.InvolvedCustomers)
-            .ThenInclude(query => query.Identities)
             .Include(query => query.InvolvedOrganizations)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.InvolvedLocations)
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedTeams)
@@ -81,12 +71,20 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
-        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddPaginatedBookingsDependentObjects(bool isTracked) =>
+        internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Customers)
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
+            .ThenInclude(query => query.Resource)
+            .ThenInclude(query => query.Location)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.InvolvedCustomers)
             .ThenInclude(query => query.Identities)
             .Include(query => query.InvolvedOrganizations)
-            .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.InvolvedLocations)
             .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedTeams)
@@ -114,6 +112,20 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
+
+        internal IIncludableQueryable<Database.Entities.Booking, ProductVersion> AddPaginatedBookingsMinimumDependentObjects(bool isTracked) =>
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.InvolvedCustomers)
+            .Include(query => query.InvolvedOrganizations)
+            .Include(query => query.InvolvedLocations)
+            .ThenInclude(query => query.Organization)
+            .Include(query => query.InvolvedTeams)
+            .Include(query => query.InvolvedResources)
+            .Include(query => query.CreatedByCustomer)
+            .Include(query => query.LastModifiedByCustomer)
+            .Include(query => query.DeletedByCustomer)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.ProductVersion);
 
         internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria,
             TimeProvider timeProvider)
@@ -296,7 +308,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
 
     public async Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddSingleBookingDependentObjects(false)
+            .AddSingleBookingMinimumDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
@@ -346,7 +358,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         (await DbContext.Booking
             .AddSearchCriteria(searchCriteria, TimeProvider)
             .AddSortingOrders(orderByFields)
-            .AddPaginatedBookingsDependentObjects(false)
+            .AddPaginatedBookingsMinimumDependentObjects(false)
             .ToListAsync(cancellationToken))
         .ToPaginated(paginationInputParam);
 }

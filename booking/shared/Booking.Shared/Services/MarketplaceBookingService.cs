@@ -35,10 +35,7 @@ public interface IMarketplaceBookingService
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
-    Task<Models.Booking> DeleteAsync(
-        Database.Entities.Booking existingBooking,
-        Customer? deletedByCustomer,
-        CancellationToken cancellationToken);
+    Task<Models.Booking> DeleteAsync(Database.Entities.Booking existingBooking, Customer? deletedByCustomer, CancellationToken cancellationToken);
 
     Task AdjustRequiredResourcesAsync(Database.Entities.Booking booking, CancellationToken cancellationToken);
 }
@@ -334,6 +331,7 @@ public class MarketplaceBookingService(
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
 
+        existingBooking.InvolvedResources.Clear();
         existingBooking.DeletedByCustomer = deletedByCustomer;
         existingBooking = repositoryFactory.BookingRepository.Update(existingBooking);
         var deletedBooking = mapper.MapTo(repositoryFactory.BookingRepository.Remove(existingBooking));

@@ -11,6 +11,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Grpc;
 using Temporalio.Activities;
+using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Activities;
 
@@ -107,7 +108,7 @@ public class BookingIntegrations(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(GraphQL.Constants.BookingTopicName, booking.Id, cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
     [Activity]
@@ -126,6 +127,9 @@ public class BookingIntegrations(
         marketplaceBooking.PaymentStatus = marketplaceBooking.StripeCheckoutSession is null
             ? PaymentStatusConstants.RecordNeverCreated
             : PaymentStatusConstants.Expired;
+
+        booking.InvolvedResources.Clear();
+        repositoryFactory.BookingRepository.Update(booking);
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
 
