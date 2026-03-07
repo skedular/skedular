@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3c02b0ee70222b28d981673ed955bf3d>>
+ * @generated SignedSource<<1ed8b75c16730b87f459d7e608f35040>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationTagType = "CUSTOM" | "LOCATION" | "LOCATION_SPACE_TYPE_CAR_PARK_SPACE" | "LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN" | "LOCATION_SPACE_TYPE_EVENT_SPACE" | "LOCATION_SPACE_TYPE_MEETING_SPACE" | "LOCATION_SPACE_TYPE_OFFICE_SPACE" | "LOCATION_SPACE_TYPE_OTHERS" | "LOCATION_SPACE_TYPE_RETAIL_SPACE" | "LOCATION_SPACE_TYPE_SHOOT_LOCATION" | "LOCATION_SPACE_TYPE_STORAGE_SPACE" | "LOCATION_SPACE_TYPE_STUDIO_SPACE" | "PRODUCT" | "RESOURCE_DESK" | "RESOURCE_OTHERS" | "RESOURCE_PARKING" | "RESOURCE_ROOM" | "ZONE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editFloorPlan_resources_query$data = {
   readonly location: {
@@ -34,7 +35,7 @@ export type editFloorPlan_resources_query$data = {
             readonly color: string | null | undefined;
             readonly id: string;
             readonly name: string;
-            readonly tagType: string;
+            readonly tagType: OrganizationTagType | null | undefined;
           };
           readonly zones: ReadonlyArray<{
             readonly color: string | null | undefined;

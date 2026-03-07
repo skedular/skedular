@@ -11,7 +11,7 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Location : EntityBaseWithDeleted
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
     public string? About { get; set; }
     public string? Timezone { get; set; }
     public string Type { get; set; }

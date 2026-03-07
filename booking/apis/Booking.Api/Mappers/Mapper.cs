@@ -434,7 +434,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Shared.Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Shared.Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Type = src.Type.ToNullableOrganizationTagType() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
     private static Resource MapTo(Shared.Database.Entities.Resource src) =>
         new()
@@ -445,15 +445,36 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Capacity = src.Capacity,
+            Name = src.Name.ToSafeString(),
+            Color = src.Color,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
 
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
-        new() { ResourceId = src.Id, LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
+        new() { Resource = MapToResourceDetails(src), LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
 
-    private static BookingResourceDetails MapTo(Resource src) => new() { ResourceId = src.Id, LocationId = src.Location?.Id };
+    private static BookingResourceDetails MapTo(Resource src) => new() { Resource = MapToResourceDetails(src), LocationId = src.Location?.Id };
+
+    private static ResourceDetails MapToResourceDetails(Resource src) =>
+        new()
+        {
+            Id = src.Id,
+            Name = src.Name,
+            Inactive = src.Inactive,
+            RequireBookingApproval = src.RequireBookingApproval,
+            Color = src.Color,
+            Capacity = src.Capacity,
+            IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
+            CustomTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(MapTo).ToList(),
+            Zones = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(MapTo).ToList(),
+            ProductTags = src.OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).Select(MapTo).ToList(),
+            ResourceType = MapTo(src.OrganizationTags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
+        };
+
+    private static OrganizationTagDetails MapTo(OrganizationTag src) =>
+        new() { Id = src.Id, Name = src.Name, Color = src.Color, TagType = src.Type };
 
     private static IEnumerable<BookingResourceDetails> MapTo(ICollection<ResourceCustomersPair> src, ICollection<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));

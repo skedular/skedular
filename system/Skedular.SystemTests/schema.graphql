@@ -893,7 +893,7 @@ type OrganizationTagDetails {
   description: String
   id: ID!
   name: String!
-  tagType: String!
+  tagType: OrganizationTagType
 }
 
 type OrganizationTagEdge {

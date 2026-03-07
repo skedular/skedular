@@ -59,9 +59,9 @@ type BookingRecurrenceEndTypeDetails {
 }
 
 type BookingResourceDetails {
-  resource: ResourceDetails!
   location: LocationDetails
   customers: [CustomerDetails!]!
+  resource: ResourceDetails!
 }
 
 type ConnectionOfBookingEdge {
@@ -142,6 +142,13 @@ type OrganizationBookingPermissions {
 
 type OrganizationDetails {
   uniqueAlphanumericName: String
+  id: ID!
+}
+
+type OrganizationTagDetails {
+  name: String!
+  tagType: OrganizationTagType
+  color: String
   id: ID!
 }
 
@@ -229,6 +236,16 @@ type RecurringBookingPayload {
 }
 
 type ResourceDetails {
+  name: String!
+  inactive: Boolean!
+  requireBookingApproval: Boolean!
+  color: String
+  capacity: Int!
+  isAvailableHoursOverridden: Boolean!
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
+  resourceType: OrganizationTagDetails!
   id: ID!
 }
 
@@ -509,6 +526,27 @@ enum DayOfWeek {
 enum OrderDirection {
   ASCENDING
   DESCENDING
+}
+
+enum OrganizationTagType {
+  CUSTOM
+  ZONE
+  PRODUCT
+  LOCATION
+  RESOURCE_DESK
+  RESOURCE_ROOM
+  RESOURCE_PARKING
+  RESOURCE_OTHERS
+  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+  LOCATION_SPACE_TYPE_EVENT_SPACE
+  LOCATION_SPACE_TYPE_MEETING_SPACE
+  LOCATION_SPACE_TYPE_OFFICE_SPACE
+  LOCATION_SPACE_TYPE_RETAIL_SPACE
+  LOCATION_SPACE_TYPE_STORAGE_SPACE
+  LOCATION_SPACE_TYPE_STUDIO_SPACE
+  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+  LOCATION_SPACE_TYPE_SHOOT_LOCATION
+  LOCATION_SPACE_TYPE_OTHERS
 }
 
 enum PaymentMethod {

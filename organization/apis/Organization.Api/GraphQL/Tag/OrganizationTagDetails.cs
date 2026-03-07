@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 
@@ -8,6 +9,6 @@ public class OrganizationTagDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
-    [GraphQLName("tagType")] public string TagType { get; set; } = string.Empty;
+    [GraphQLName("tagType")] public OrganizationTagType TagType { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
 }

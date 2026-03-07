@@ -202,7 +202,9 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Name = item.Name.ToSafeString(),
             Type = item.Type.ToNullableOrganizationTagType(),
+            Color = item.Color.ToSafeString(),
             Organization = organization
         }).ToList();
 
@@ -250,6 +252,8 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Name = item.Name.ToSafeString(),
+            Color = item.Color.ToSafeString(),
             Inactive = item.Inactive,
             RequireBookingApproval = item.RequireBookingApproval,
             Capacity = item.Capacity,
@@ -442,6 +446,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Color = src.Color;
         dest.Inactive = src.Inactive;
         dest.RequireBookingApproval = src.RequireBookingApproval;
         dest.Capacity = src.Capacity;
@@ -506,7 +512,9 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
         dest.Type = src.Type.ToNullableOrganizationTagType();
+        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }

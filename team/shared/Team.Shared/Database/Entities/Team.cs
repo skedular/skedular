@@ -10,7 +10,7 @@ namespace Team.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Team : EntityBaseWithDeleted
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
     public string? About { get; set; }
     public string? Timezone { get; set; }
     public ICollection<CdnImageFile>? FeatureImages { get; set; }

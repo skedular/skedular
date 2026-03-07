@@ -710,7 +710,7 @@ public class Mapper : IMapper
                 Id = src.Id,
                 Name = src.Name,
                 Description = src.Description,
-                TagType = src.Type.ToOrganizationTagType(),
+                TagType = src.Type,
                 Color = src.Color
             };
 

@@ -398,7 +398,7 @@ type OrganizationStripeConnectAccountsPayload {
 type OrganizationTagDetails {
   name: String!
   description: String
-  tagType: String!
+  tagType: OrganizationTagType!
   color: String
   id: ID!
 }

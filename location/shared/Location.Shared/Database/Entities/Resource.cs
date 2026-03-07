@@ -10,7 +10,7 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Resource : EntityBaseWithDeleted
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; set; }
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
     public string? Color { get; set; }

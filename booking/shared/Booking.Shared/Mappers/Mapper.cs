@@ -584,7 +584,7 @@ public class Mapper : IMapper
     private static IEnumerable<OrganizationTag> MapTo(IEnumerable<Database.Entities.OrganizationTag> src) => src.Select(MapTo);
 
     private static OrganizationTag MapTo(Database.Entities.OrganizationTag src) =>
-        new() { Id = src.Id, Type = src.Type.ToNullableOrganizationTagType() };
+        new() { Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type.ToNullableOrganizationTagType(), Color = src.Color };
 
     private static IEnumerable<Models.Organization> MapTo(IEnumerable<Organization> src) => src.Select(MapTo)!;
 
@@ -648,6 +648,8 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             Capacity = src.Capacity,
+            Name = src.Name.ToSafeString(),
+            Color = src.Color,
             Inactive = src.Inactive,
             RequireBookingApproval = src.RequireBookingApproval,
             OrganizationTags = MapTo(src.OrganizationTags).ToList()

@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -9,8 +10,10 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Resource : ReplicatedEntityBaseWithDeleted
 {
+    public string? Name { get; set; }
     public bool Inactive { get; set; }
     public bool RequireBookingApproval { get; set; }
+    public string? Color { get; set; }
     public int Capacity { get; set; }
     public bool? IsAvailableHoursOverridden { get; set; }
     public OpeningHours? AvailableHours { get; set; }
@@ -29,6 +32,8 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxResourceNameLength);
+        builder.Property(item => item.Color).HasMaxLength(Constants.MaxColorValueLength);
         builder.Property(item => item.Inactive).HasDefaultValue(false);
         builder.Property(item => item.RequireBookingApproval).HasDefaultValue(false);
         builder.Property(item => item.Capacity).HasDefaultValue(1);
@@ -38,6 +43,7 @@ public class ResourceConfiguration : IEntityTypeConfiguration<Resource>
         builder.HasOne(item => item.Location).WithMany(item => item.Resources);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Resources);
 
+        builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Inactive);
         builder.HasIndex(item => item.RequireBookingApproval);
         builder.HasIndex(item => item.IsAvailableHoursOverridden);
