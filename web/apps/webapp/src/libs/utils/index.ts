@@ -6,6 +6,7 @@ import isTomorrow from 'dayjs/plugin/isTomorrow';
 import isYesterday from 'dayjs/plugin/isYesterday';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import type { NextRequest } from 'next/server';
 import { PayloadError } from 'relay-runtime';
 
 dayjs.extend(utc);
@@ -122,6 +123,10 @@ const toShortTime = (date?: Dayjs | string | null | undefined) => {
 
 const toShortDateWithoutWeekDay = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).format('Do MMM YYYY') : '';
+};
+
+const toShortDateTime = (date?: Dayjs | string | null | undefined) => {
+  return date ? dayjs(date).format('Do MMMM YYYY, HH:mm:ss') : '';
 };
 
 const toLongDateTime = (date?: Dayjs | string | null | undefined) => {
@@ -309,6 +314,36 @@ const stringToMultiLines = (str?: string | null) => (str ? str.split('\n').map((
 
 const stringCollectionToString = (str?: readonly string[] | null) => (str ? str.join('\n') : '');
 
+const firstHeaderValue = (value: string | null) => value?.split(',')[0]?.trim();
+const headerValues = (value: string | null) =>
+  value
+    ?.split(',')
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean) ?? [];
+
+const isLocalHost = (host: string) => {
+  const normalizedHost = host.toLowerCase();
+  return normalizedHost === 'localhost' || normalizedHost.startsWith('localhost:') || normalizedHost.startsWith('127.0.0.1');
+};
+
+const getPublicOrigin = (request: NextRequest) => {
+  const forwardedHost = firstHeaderValue(request.headers.get('x-forwarded-host'));
+  const host = forwardedHost ?? firstHeaderValue(request.headers.get('host'));
+  const forwardedProtocols = headerValues(request.headers.get('x-forwarded-proto'));
+  const forwardedPort = firstHeaderValue(request.headers.get('x-forwarded-port'));
+  const forwardedSsl = firstHeaderValue(request.headers.get('x-forwarded-ssl'))?.toLowerCase();
+  const frontEndHttps = firstHeaderValue(request.headers.get('front-end-https'))?.toLowerCase();
+  const requestProtocol = request.nextUrl.protocol.replace(':', '');
+
+  if (host) {
+    const isHttps = forwardedProtocols.includes('https') || forwardedPort === '443' || forwardedSsl === 'on' || frontEndHttps === 'on' || requestProtocol === 'https';
+    const protocol = isHttps ? 'https' : isLocalHost(host) ? 'http' : 'https';
+    return `${protocol}://${host}`;
+  }
+
+  return request.nextUrl.origin;
+};
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -322,6 +357,7 @@ export {
   getCustomerFullName,
   getCustomerShortName,
   getOpeningHoursFromDateTime,
+  getPublicOrigin,
   isInSameMonth,
   isInSameWeek,
   isInSameYear,
@@ -344,6 +380,7 @@ export {
   toLongDateTime,
   toOpeningHoursFromTime,
   toShortDate,
+  toShortDateTime,
   toShortDateTimeInUtc,
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,

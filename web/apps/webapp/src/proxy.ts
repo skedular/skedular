@@ -1,13 +1,28 @@
-import { authkitMiddleware } from '@workos-inc/authkit-nextjs';
+import { getPublicOrigin } from '@/libs/utils';
+import { authkit, handleAuthkitHeaders } from '@workos-inc/authkit-nextjs';
+import type { NextRequest } from 'next/server';
 
-export default authkitMiddleware({
-  debug: true,
-  redirectUri: process.env.NEXT_PUBLIC_WORKOS_REDIRECT_URI!,
-  middlewareAuth: {
-    enabled: true,
-    unauthenticatedPaths: ['/', '/marketplace', '/marketplace/:path*'],
-  },
-});
+const isUnauthenticatedPath = (pathname: string) => {
+  if (pathname === '/' || pathname === '/marketplace') {
+    return true;
+  }
+
+  return pathname.startsWith('/marketplace/');
+};
+
+export default async function proxy(request: NextRequest) {
+  const redirectUri = new URL('/callback', getPublicOrigin(request)).toString();
+  const { headers, authorizationUrl, session } = await authkit(request, {
+    debug: true,
+    redirectUri,
+  });
+
+  if (!session.user && authorizationUrl && !isUnauthenticatedPath(request.nextUrl.pathname)) {
+    return handleAuthkitHeaders(request, headers, { redirect: authorizationUrl });
+  }
+
+  return handleAuthkitHeaders(request, headers);
+}
 
 export const config = {
   matcher: [

@@ -92,11 +92,6 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
-      key    = "NEXT_PUBLIC_WORKOS_REDIRECT_URI"
-      value  = "https://${module.shared_common.webapp_domain_name}/callback"
-      target = ["development", "preview", "production"]
-    },
-    {
       key    = "NEXT_PUBLIC_SITE_URL"
       value  = "https://${module.shared_common.webapp_domain_name}"
       target = ["development", "preview", "production"]

@@ -3,7 +3,7 @@ import { BankAccountIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/com
 import {
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
-  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink
+  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
