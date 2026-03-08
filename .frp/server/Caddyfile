@@ -36,22 +36,6 @@ crm.skedular.app {
 	reverse_proxy localhost:50000
 }
 
-kapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-dapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-mapp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
-napp.skedular.app {
-	reverse_proxy localhost:7000
-}
-
 apistaging.skedular.app {
 	reverse_proxy localhost:49000
 }
@@ -66,4 +50,36 @@ api.skedular.app {
 
 slackapi.skedular.app {
 	reverse_proxy localhost:10700
+}
+
+kapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+kapi.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+dapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+dapi.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+mapp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+mapi.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+napp.skedular.app {
+	reverse_proxy localhost:7000
+}
+
+napi.skedular.app {
+	reverse_proxy localhost:7000
 }

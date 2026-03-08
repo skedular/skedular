@@ -16,7 +16,7 @@
     }
   },
   "oauth_config": {
-    "redirect_urls": ["https://mapp.skedular.app/v1/slack/callback"],
+    "redirect_urls": ["https://mapi.skedular.app/v1/slack/callback"],
     "scopes": {
       "user": ["users.profile:write", "users.profile:read"],
       "bot": [
@@ -34,13 +34,13 @@
   },
   "settings": {
     "event_subscriptions": {
-      "request_url": "https://mapp.skedular.app/v1/slack/event",
+      "request_url": "https://mapi.skedular.app/v1/slack/event",
       "bot_events": ["app_home_opened", "app_mention"]
     },
     "interactivity": {
       "is_enabled": true,
-      "request_url": "https://mapp.skedular.app/v1/slack/action",
-      "message_menu_options_url": "https://mapp.skedular.app/v1/slack/options"
+      "request_url": "https://mapi.skedular.app/v1/slack/action",
+      "message_menu_options_url": "https://mapi.skedular.app/v1/slack/options"
     },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
