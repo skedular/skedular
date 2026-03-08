@@ -83,8 +83,7 @@ type LocationDetails {
   customTags: [OrganizationTagDetails!]!
   zones: [OrganizationTagDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
-  locationSpaceTypes: [OrganizationTagDetails!]!
+  spaceTypes: [OrganizationTagDetails!]!
   products: [ProductDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
@@ -322,7 +321,7 @@ input AddLocationInput {
   organizationUniqueAlphanumericName: String
   timezone: String
   type: LocationType!
-  locationTagIds: [String!]!
+  tagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
   physicalAddress: LocationPhysicalAddressInput
   extraMetadata: LocationExtraMetadataInput
@@ -557,7 +556,7 @@ input UpdateLocationInput {
   about: String
   timezone: String
   type: LocationType!
-  locationTagIds: [String!]!
+  tagIds: [String!]!
   featureImages: [CdnImageFileInput!]!
   extraMetadata: LocationExtraMetadataInput
 }
@@ -649,7 +648,6 @@ enum OrganizationTagType {
   CUSTOM
   ZONE
   PRODUCT
-  LOCATION
   RESOURCE_DESK
   RESOURCE_ROOM
   RESOURCE_PARKING

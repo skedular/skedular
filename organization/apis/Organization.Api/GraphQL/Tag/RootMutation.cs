@@ -134,46 +134,4 @@ public class RootMutation(IMapper mapper)
         var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
         return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
     }
-
-    [UseResolverScope]
-    public async Task<OrganizationTagPayload> AddLocationTagAsync(
-        AddLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.AddAsync(mapper.MapTo(input), false, cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<OrganizationTagPayload> UpdateLocationTagAsync(
-        UpdateLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId,
-            OrganizationTag = mapper.MapTo(await tagService.UpdateAsync(mapper.MapTo(input), cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<OrganizationTagPayload> DeleteLocationTagAsync(
-        DeleteLocationTagInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken) =>
-        new()
-        {
-            ClientMutationId = input.ClientMutationId, OrganizationTag = mapper.MapTo(await tagService.DeleteAsync(input.Id, cancellationToken))!
-        };
-
-    [UseResolverScope]
-    public async Task<OrganizationTagsPayload> DeleteLocationTagsAsync(
-        DeleteLocationTagsInput input,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken)
-    {
-        var tags = await tagService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
-        return new OrganizationTagsPayload { ClientMutationId = input.ClientMutationId, OrganizationTags = tags.Select(item => mapper.MapTo(item)!) };
-    }
 }

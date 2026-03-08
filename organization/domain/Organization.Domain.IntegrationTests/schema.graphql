@@ -117,10 +117,6 @@ type Mutation {
   updateProductTag(input: UpdateProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteProductTag(input: DeleteProductTagInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
-  addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
   removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
 }
@@ -202,7 +198,6 @@ type OrganizationDetails {
   customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   productTags(after: String first: Int before: String last: Int where: ProductTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
-  locationTags(after: String first: Int before: String last: Int where: LocationTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
   isSsoTokenValid: Boolean! @cost(weight: "10")
   ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
@@ -485,8 +480,6 @@ type Query {
   zoneById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
-  locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
-  locationTagById(id: String!): OrganizationTagDetails @lookup @internal @cost(weight: "10")
 }
 
 type RemoveOrganizationPaymentMethodPayload {
@@ -517,16 +510,6 @@ input AddCustomTagInput {
   color: String
   organizationId: String
   organizationUniqueAlphanumericName: String
-}
-
-input AddLocationTagInput {
-  clientMutationId: String
-  id: String
-  name: String!
-  description: String
-  organizationId: String
-  organizationUniqueAlphanumericName: String
-  color: String
 }
 
 input AddOrganizationBankAccountInput {
@@ -679,16 +662,6 @@ input DeleteCustomTagsInput {
   ids: [String!]!
 }
 
-input DeleteLocationTagInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteLocationTagsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input DeleteOrganizationBankAccountInput {
   clientMutationId: String
   id: String!
@@ -745,10 +718,6 @@ input InviteCustomersToJoinOrganizationInput {
 input JoinOrganizationInvitationOrderInput {
   direction: OrderDirection!
   field: JoinOrganizationInvitationOrderField!
-}
-
-input LocationTagOrganizationTagWhereInput {
-  nameContains: String
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {
@@ -845,14 +814,6 @@ input SetOrganizationStripeConnectAccountAsDefaultInput {
 }
 
 input UpdateCustomTagInput {
-  clientMutationId: String
-  id: String!
-  name: String!
-  description: String
-  color: String
-}
-
-input UpdateLocationTagInput {
   clientMutationId: String
   id: String!
   name: String!
@@ -1035,7 +996,6 @@ enum OrganizationTagType {
   CUSTOM
   ZONE
   PRODUCT
-  LOCATION
   RESOURCE_DESK
   RESOURCE_ROOM
   RESOURCE_PARKING

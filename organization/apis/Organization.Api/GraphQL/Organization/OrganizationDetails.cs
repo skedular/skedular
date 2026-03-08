@@ -180,33 +180,6 @@ public class OrganizationDetails : Node
             cancellationToken);
 
     [UseResolverScope]
-    public async Task<Connection<OrganizationTagEdge>> LocationTagsAsync(
-        string? after,
-        int? first,
-        string? before,
-        int? last,
-        LocationTagOrganizationTagWhereInput? where,
-        IEnumerable<OrganizationTagOrderInput>? orderBy,
-        [Parent] OrganizationDetails organization,
-        [Service] ITagService tagService,
-        [Service] IMapper mapper,
-        CancellationToken cancellationToken) =>
-        await OrganizationTagsAsync(
-            after,
-            first,
-            before,
-            last,
-            new TagSearchCriteria(
-                organization.Id,
-                organization.UniqueAlphanumericName,
-                [OrganizationTagTypeConstants.Location],
-                where?.NameContains),
-            orderBy,
-            tagService,
-            mapper,
-            cancellationToken);
-
-    [UseResolverScope]
     public async Task<OrganizationAnalytics> AnalyticsAsync(
         DateTimeOffset from,
         DateTimeOffset until,

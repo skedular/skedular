@@ -23,7 +23,6 @@ const RootQuery = graphql`
   query pageOrganizationMarketplaceSetup_rootQuery(
     $organizationUniqueAlphanumericName: String!
     $productTagNameSearchText: String
-    $locationTagNameSearchText: String
     $organizationStripeConnectAccountNameSearchText: String
     $organizationBankAccountNameSearchText: String
   ) {
@@ -32,7 +31,6 @@ const RootQuery = graphql`
     }
     ...organizationMarketplaceSetup_query
     ...organizationMarketplaceSetup_productTags_query
-    ...organizationMarketplaceSetup_locationTags_query
     ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query
     ...organizationMarketplaceSetup_organizationBankAccounts_query
   }
@@ -65,7 +63,6 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
       <OrganizationMarketplaceSetup
         rootDataRelay={rootData}
         rootDataProductTagsRelay={rootData}
-        rootDataLocationTagsRelay={rootData}
         rootDataOrganizationStripeConnectAccountsRelay={rootData}
         rootDataOrganizationBankAccountsRelay={rootData}
         onReloadRequired={onReloadRequired}

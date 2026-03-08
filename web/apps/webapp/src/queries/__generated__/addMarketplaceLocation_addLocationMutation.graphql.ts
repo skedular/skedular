@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80673c07d57751a872ccc06c7988d585>>
+ * @generated SignedSource<<bfe6cd4a592302e74362a8736cd41bb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,11 @@ export type AddLocationInput = {
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
   featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
-  locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
   physicalAddress?: LocationPhysicalAddressInput | null | undefined;
+  tagIds: ReadonlyArray<string>;
   timezone?: string | null | undefined;
   type: LocationType;
   weekOpeningHours?: WeekOpeningHoursInput | null | undefined;
@@ -126,16 +126,6 @@ export type addMarketplaceLocation_addLocationMutation$data = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly locationSpaceTypes: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
       readonly name: string;
       readonly physicalAddress: {
         readonly addressLine1: string;
@@ -154,6 +144,11 @@ export type addMarketplaceLocation_addLocationMutation$data = {
         readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
+      readonly spaceTypes: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -198,16 +193,6 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly locationSpaceTypes: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
-      readonly locationTags: ReadonlyArray<{
-        readonly color: string | null | undefined;
-        readonly id: string;
-        readonly name: string;
-      }>;
       readonly name: string;
       readonly physicalAddress: {
         readonly addressLine1: string;
@@ -226,6 +211,11 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
         readonly suburb: string | null | undefined;
         readonly zipcode: string;
       } | null | undefined;
+      readonly spaceTypes: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -286,17 +276,6 @@ v3 = [
   }
 ],
 v4 = [
-  (v1/*: any*/),
-  (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
-],
-v5 = [
   {
     "alias": null,
     "args": [
@@ -511,19 +490,19 @@ v5 = [
             "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "locationTags",
+            "name": "spaceTypes",
             "plural": true,
-            "selections": (v4/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "OrganizationTagDetails",
-            "kind": "LinkedField",
-            "name": "locationSpaceTypes",
-            "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": [
+              (v1/*: any*/),
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "color",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -649,7 +628,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v4/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -658,19 +637,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addMarketplaceLocation_addLocationMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "7631cd17bab30873e8b950eb26e68745",
+    "cacheID": "6c9d76ff9ec3a6d7f8f68815412e9ef1",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n      locationSpaceTypes {\n        id\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "805158900907ca06656eedfcb5cbb251";
+(node as any).hash = "0e63aa1f3b4759f80710d35f9f1765e9";
 
 export default node;

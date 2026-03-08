@@ -604,7 +604,7 @@ public class ResourcesPage(
                         Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = customTagConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.OrganizationCustomTags
+                        .Where(item => resource.CustomTags
                             .Select(organizationCustomTag => organizationCustomTag.Id).Contains(item.Id))
                         .Select(item =>
                             new Option
@@ -635,8 +635,7 @@ public class ResourcesPage(
                         Description = string.IsNullOrWhiteSpace(item.Description) ? null : item.Description.ToPlainText()
                     }).ToList(),
                     InitialOptions = zoneConnection.Edges.Select(item => item.Node)
-                        .Where(item => resource.OrganizationZones
-                            .Select(organizationZone => organizationZone.Id).Contains(item.Id))
+                        .Where(item => resource.Zones.Select(organizationZone => organizationZone.Id).Contains(item.Id))
                         .Select(item =>
                             new Option
                             {

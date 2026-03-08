@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a13a561db02456e3a68c614884d6375>>
+ * @generated SignedSource<<350751de71081c77fb02cc93b3d59eba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,11 +16,11 @@ export type AddLocationInput = {
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
   featureImages: ReadonlyArray<CdnImageFileInput>;
   id?: string | null | undefined;
-  locationTagIds: ReadonlyArray<string>;
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
   physicalAddress?: LocationPhysicalAddressInput | null | undefined;
+  tagIds: ReadonlyArray<string>;
   timezone?: string | null | undefined;
   type: LocationType;
   weekOpeningHours?: WeekOpeningHoursInput | null | undefined;
@@ -107,12 +107,12 @@ export type addPrivateLocation_addLocationMutation$data = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
+      readonly name: string;
+      readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
         readonly name: string;
       }>;
-      readonly name: string;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -138,12 +138,12 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
         } | null | undefined;
       }>;
       readonly id: string;
-      readonly locationTags: ReadonlyArray<{
+      readonly name: string;
+      readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
         readonly name: string;
       }>;
-      readonly name: string;
       readonly timezone: string | null | undefined;
       readonly type: {
         readonly name: string;
@@ -297,7 +297,7 @@ v4 = [
             "args": null,
             "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "locationTags",
+            "name": "spaceTypes",
             "plural": true,
             "selections": [
               (v1/*: any*/),
@@ -337,16 +337,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "91a41a5bbef13f321ffa0de3e98f86e6",
+    "cacheID": "cf6084acc52149e0cfea33898dd8b091",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      locationTags {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d1a384268e7394ca95b32f4bc318b54e";
+(node as any).hash = "294d7c181fb0000ce40317dd23aabe74";
 
 export default node;

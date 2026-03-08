@@ -266,7 +266,7 @@ public class EditBookingButtonHandler(
 
         var resourcesOptions = availableResources.Select(item =>
         {
-            var zones = item.OrganizationZones.Where(locationTag => !string.IsNullOrWhiteSpace(locationTag.Name)).ToList();
+            var zones = item.Zones.Where(tag => !string.IsNullOrWhiteSpace(tag.Name)).ToList();
             var optionText = zones.Count == 0
                 ? item.Name.ToOptionTextWithIcon(Icons.Resource)
                 : $"{item.Name.ToTextWithIcon(Icons.Resource)} {string.Join(",", zones.Select(zone => zone.Name)).ToTextWithIcon(Icons.Zones)}"

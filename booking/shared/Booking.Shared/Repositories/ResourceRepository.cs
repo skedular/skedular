@@ -109,10 +109,16 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                             (resourceIds.Count == 0 || resourceIds.Contains(query.Resource.Id)) &&
                             query.Start >= from && query.Start < until &&
                             (string.IsNullOrWhiteSpace(organizationId) || (query.Resource.Location != null &&
+                                                                           !query.Resource.Location.DeletedAt.HasValue &&
                                                                            query.Resource.Location.Organization != null &&
+                                                                           !query.Resource.Location.Organization.DeletedAt.HasValue &&
                                                                            query.Resource.Location.Organization.Id == organizationId)) &&
                             (string.IsNullOrWhiteSpace(locationId) ||
-                             (query.Resource.Location != null && query.Resource.Location.Id == locationId)) &&
+                             (query.Resource.Location != null &&
+                              !query.Resource.Location.DeletedAt.HasValue &&
+                              query.Resource.Location.Organization != null &&
+                              !query.Resource.Location.Organization.DeletedAt.HasValue &&
+                              query.Resource.Location.Id == locationId)) &&
                             (tagIds.Count == 0 || tagIds.All(tagId =>
                                 query.Resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue).Select(tag => tag.Id).Contains(tagId))) &&
                             (tagTypes.Count == 0 ||

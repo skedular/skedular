@@ -463,22 +463,6 @@ public class LocationService(
 
         var mappedLocation = mapper.MapTo(location);
 
-        mappedLocation.CustomTags = mappedLocation.Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag =>
-                new Shared.Models.OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Custom }))
-            .GroupBy(item => item.Id)
-            .Select(group => group.First())
-            .ToList();
-
-        mappedLocation.Zones = mappedLocation.Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(zone => new Shared.Models.OrganizationTag
-            {
-                Id = zone.Id, Type = OrganizationTagType.Zone
-            }))
-            .GroupBy(item => item.Id)
-            .Select(group => group.First())
-            .ToList();
-
         if (customer is null || location.Organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
         {
             return mappedLocation;

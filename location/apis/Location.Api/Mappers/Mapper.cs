@@ -236,14 +236,11 @@ public class Mapper : IMapper
                 OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
                 CustomTagIds = src.CustomTags.Select(item => item.Id),
                 ZoneIds = src.Zones.Select(item => item.Id),
+                SpaceTypeIds = src.SpaceTypes.Select(item => item.Id),
                 ResourceTypeIds = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(item => item.Id),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
-                LocationTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id),
-                LocationSpaceTypeIds = src.Tags
-                    .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => tagType == item.Type))
-                    .Select(item => item.Id),
                 UniqueClaimCode = src.UniqueClaimCode,
                 ContactedViaEmail = src.ContactedViaEmail,
                 ContactedViaSms = src.ContactedViaSms,
@@ -394,7 +391,7 @@ public class Mapper : IMapper
                 {
                     Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
                 },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             OpeningHours = src.WeekOpeningHours is null ? null : new OpeningHours(MapTo(src.WeekOpeningHours)!, [], [])
         };
@@ -409,7 +406,7 @@ public class Mapper : IMapper
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Resource MapTo(AddResourceInput src) =>
@@ -462,7 +459,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -483,7 +480,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -525,7 +522,7 @@ public class Mapper : IMapper
         location.Resources.AddRange(MapToGrpcResponse(src.Resources));
         location.CustomTagIds.AddRange(src.CustomTags.Select(item => item.Id));
         location.ZoneIds.AddRange(src.Zones.Select(item => item.Id));
-        location.LocationTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Location).Select(item => item.Id));
+        location.SpaceTypeIds.AddRange(src.SpaceTypes.Select(item => item.Id));
         location.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return location;
@@ -546,7 +543,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -567,7 +564,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.LocationTagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -606,9 +603,9 @@ public class Mapper : IMapper
             ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id
         };
 
-        resource.OrganizationCustomTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id));
-        resource.OrganizationZoneIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id));
-        resource.OrganizationProductTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Product).Select(item => item.Id));
+        resource.CustomTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id));
+        resource.ZoneIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id));
+        resource.ProductTagIds.AddRange(src.Tags.Where(item => item.Type == OrganizationTagType.Product).Select(item => item.Id));
 
         return resource;
     }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66749f884f9dbe268649bc5660461346>>
+ * @generated SignedSource<<c52c5cf53f786de1b090afe85fe6f7c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,7 +69,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesLocationTags_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -375,11 +375,6 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "multipleChoicesLocationTags_query"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
       "name": "singleChoiceCurrency_query"
     },
     {
@@ -398,6 +393,6 @@ return {
 };
 })();
 
-(node as any).hash = "4015164a09ded272eccc410a7c1cf429";
+(node as any).hash = "f140c5ba4377a87160af0b9547fb6238";
 
 export default node;

@@ -311,15 +311,6 @@ export const ProductTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Pro
     </TooltipIcon>
   );
 
-export const LocationTagIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
-  excludeTooltip ? (
-    <LocalOffer fontSize={fontSize} sx={sx} color={color} />
-  ) : (
-    <TooltipIcon tip={tip ?? 'Location Tag'}>
-      <LocalOffer fontSize={fontSize} sx={sx} color={color} />
-    </TooltipIcon>
-  );
-
 export const ProductIcon = ({ fontSize, excludeTooltip, tip, sx, color }: Props) =>
   excludeTooltip ? (
     <Category fontSize={fontSize} sx={sx} color={color} />

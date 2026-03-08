@@ -37,11 +37,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query addProduct_rootQuery(
-    $organizationUniqueAlphanumericName: String!
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
-  ) {
+  query addProduct_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]) {
     bookingSlotSizeInMinutes
     defaultMaxAllowedResourcesLockTimePaidViaCard
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
@@ -54,7 +50,6 @@ const RootQuery = graphql`
       name
     }
     ...multipleChoicesProductTags_query
-    ...multipleChoicesLocationTags_query
     ...singleChoiceCurrency_query
     ...multipleChoicesBookingPaymentMethodTypes_query
     ...singleChoiceProductPricingCadence_query
@@ -631,12 +626,6 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
       {
         organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         multipleChoicesProductTagsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        multipleChoicesLocationTagsSortingValues: [
           {
             direction: 'ASCENDING',
             field: 'NAME',

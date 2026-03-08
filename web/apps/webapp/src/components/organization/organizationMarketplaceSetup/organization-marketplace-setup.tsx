@@ -2,12 +2,9 @@ import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import { AppBarWithStackColumn, BodyIconTypography, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
-import { LocationTag } from '@/components/locationTag';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { AddOrganizationLocationTagButton } from '@/components/organization/addOrganizationLocationTag';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
-import { EditOrganizationLocationTagDialog } from '@/components/organization/editOrganizationLocationTag';
 import { EditOrganizationProductTagDialog } from '@/components/organization/editOrganizationProductTag';
 import { ProductTag } from '@/components/productTag';
 import { Search } from '@/components/search';
@@ -17,12 +14,9 @@ import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
-import type { organizationMarketplaceSetup_deleteLocationTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteLocationTagsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
-import type { organizationMarketplaceSetup_locationTags_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_query.graphql';
-import type { organizationMarketplaceSetup_locationTags_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_locationTags_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_organizationBankAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_query.graphql';
 import type { organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_query.graphql';
@@ -51,7 +45,6 @@ import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organiz
 type Props = {
   rootDataRelay: organizationMarketplaceSetup_query$key;
   rootDataProductTagsRelay: organizationMarketplaceSetup_productTags_query$key;
-  rootDataLocationTagsRelay: organizationMarketplaceSetup_locationTags_query$key;
   rootDataOrganizationStripeConnectAccountsRelay: organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key;
   rootDataOrganizationBankAccountsRelay: organizationMarketplaceSetup_organizationBankAccounts_query$key;
   onReloadRequired: () => void;
@@ -59,12 +52,6 @@ type Props = {
 };
 
 type ProductTagRowType = {
-  id: string;
-  name: string;
-  description: string | null | undefined;
-};
-
-type LocationTagRowType = {
   id: string;
   name: string;
   description: string | null | undefined;
@@ -102,7 +89,6 @@ type OrganizationBankAccountRowType = {
 const OrganizationMarketplaceSetup = ({
   rootDataRelay,
   rootDataProductTagsRelay,
-  rootDataLocationTagsRelay,
   rootDataOrganizationStripeConnectAccountsRelay,
   rootDataOrganizationBankAccountsRelay,
   onReloadRequired,
@@ -143,34 +129,6 @@ const OrganizationMarketplaceSetup = ({
       }
     `,
     rootDataProductTagsRelay,
-  );
-
-  const [rootDataLocationTags, refetchLocationTags] = useRefetchableFragment<
-    organizationMarketplaceSetup_locationTags_refetchableFragment,
-    organizationMarketplaceSetup_locationTags_query$key
-  >(
-    graphql`
-      fragment organizationMarketplaceSetup_locationTags_query on Query
-      @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
-      @refetchable(queryName: "organizationMarketplaceSetup_locationTags_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
-          locationTags(first: $count, after: $cursor, where: { nameContains: $locationTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
-            @connection(key: "organizationMarketplaceSetup_locationTags") {
-            __id
-            totalCount
-            edges {
-              node {
-                id
-                name
-                description
-                color
-              }
-            }
-          }
-        }
-      }
-    `,
-    rootDataLocationTagsRelay,
   );
 
   const [rootDataOrganizationStripeConnectAccounts, refetchOrganizationStripeConnectAccounts] = useRefetchableFragment<
@@ -265,16 +223,6 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitDeleteLocationTags] = useMutation<organizationMarketplaceSetup_deleteLocationTagsMutation>(graphql`
-    mutation organizationMarketplaceSetup_deleteLocationTagsMutation($connectionIds: [ID!]!, $input: DeleteLocationTagsInput!) {
-      deleteLocationTags(input: $input) {
-        organizationTags {
-          id @deleteEdge(connections: $connectionIds)
-        }
-      }
-    }
-  `);
-
   const [commitDeleteOrganizationStripeConnectAccounts] = useMutation<organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation>(graphql`
     mutation organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation($connectionIds: [ID!]!, $input: DeleteOrganizationStripeConnectAccountsInput!) {
       deleteOrganizationStripeConnectAccounts(input: $input) {
@@ -356,41 +304,6 @@ const OrganizationMarketplaceSetup = ({
       });
     },
     [startTransition, refetchProductTags],
-  );
-
-  const [locationTagNameSearchText, setLocationTagNameSearchText] = useState<string>('');
-  const [seledctedLocationTags, setSeledctedLocationTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
-  const [selectedLocationTagId, setSelectedLocationTagId] = useState<null | string>(null);
-  const [locationTagMoreActionsAnchorEl, setLocationTagMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
-  const locationTagMoreActionsMenuOpen = Boolean(locationTagMoreActionsAnchorEl);
-  const [isEditLocationTagDialogOpen, setIsEditLocationTagDialogOpen] = useState(false);
-  const locationTags = useMemo(
-    () => (rootDataLocationTags.organization ? rootDataLocationTags.organization.locationTags.edges.map(({ node }) => node) : []),
-    [rootDataLocationTags.organization],
-  );
-  const locationTagsConnectionIds = useMemo(
-    () => (rootDataLocationTags.organization ? [rootDataLocationTags.organization.locationTags.__id] : []),
-    [rootDataLocationTags.organization],
-  );
-  const locationTagMoreActionsOption: MoreActionsMenuItemType[] = [
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditLocationTag],
-    moreActionsMenuAllOptions[MoreActionsMenuOptionType.DeleteLocationTag],
-  ];
-
-  const handleRefetchLocationTags = useCallback(
-    (locationTagNameSearchText: string) => {
-      startTransition(() => {
-        refetchLocationTags(
-          {
-            locationTagNameSearchText,
-          },
-          {
-            fetchPolicy: 'store-and-network',
-          },
-        );
-      });
-    },
-    [startTransition, refetchLocationTags],
   );
 
   const [organizationStripeConnectAccountNameSearchText, setOrganizationStripeConnectAccountNameSearchText] = useState<string>('');
@@ -597,117 +510,6 @@ const OrganizationMarketplaceSetup = ({
         toast.update(toastId, {
           ...errorNotificationOptions,
           render: <NotificationContent content={`Failed to remove product tag. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleLocationTagsSearchTextChange = (str: string) => {
-    setLocationTagNameSearchText(str);
-
-    handleRefetchLocationTags(str);
-  };
-
-  const handleSelectedLocationTagsChanged = (newRowSelectionModel: GridRowSelectionModel) => {
-    setSeledctedLocationTags(newRowSelectionModel);
-  };
-
-  const handleLocationTagMoreActionsMenuItemClick = (id: MoreActionsMenuOptionType) => {
-    setLocationTagMoreActionsAnchorEl(null);
-
-    switch (id) {
-      case MoreActionsMenuOptionType.EditLocationTag:
-        setIsEditLocationTagDialogOpen(true);
-        break;
-
-      case MoreActionsMenuOptionType.DeleteLocationTag:
-        handleRemoveLocationTagClick();
-        break;
-    }
-  };
-
-  const handleEditLocationTagClick = () => {
-    setIsEditLocationTagDialogOpen(false);
-  };
-
-  const handleEditLocationTagCancel = () => {
-    setIsEditLocationTagDialogOpen(false);
-  };
-
-  const handleRemoveLocationTagsClick = () => {
-    const toastId = themedToast(<NotificationContent content="Removing location tags ..." />, infoNotificationOptions);
-
-    commitDeleteLocationTags({
-      variables: {
-        connectionIds: locationTagsConnectionIds,
-        input: {
-          clientMutationId: uuid(),
-          ids: seledctedLocationTags.ids
-            .values()
-            .map((id) => id as string)
-            .toArray(),
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location tags. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location tags removed.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove location tags. Error: ${error.message}.`} />,
-        });
-      },
-    });
-  };
-
-  const handleRemoveLocationTagClick = () => {
-    if (!selectedLocationTagId) {
-      return;
-    }
-
-    const toastId = themedToast(<NotificationContent content="Removing location tag ..." />, infoNotificationOptions);
-
-    commitDeleteLocationTags({
-      variables: {
-        connectionIds: locationTagsConnectionIds,
-        input: {
-          clientMutationId: uuid(),
-          ids: [selectedLocationTagId],
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location tag. Error: ${joinErrors(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Location tag removed.`} />,
-        });
-
-        setSelectedLocationTagId(null);
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove location tag. Error: ${error.message}.`} />,
         });
       },
     });
@@ -1090,58 +892,6 @@ const OrganizationMarketplaceSetup = ({
             onClick={(event: React.MouseEvent<HTMLElement>) => {
               setSelectedProductTagId(params.id as string);
               setProductTagMoreActionsAnchorEl(event.currentTarget);
-            }}
-          >
-            <EllipseMenuIcon />
-          </IconButton>
-        </Box>
-      ),
-      flex: 1,
-    },
-  ];
-
-  const locationTagRows: LocationTagRowType[] = locationTags.map((locationTag) => ({
-    id: locationTag.id,
-    name: locationTag.name,
-    description: locationTag.description,
-  }));
-
-  const locationTagColumns: GridColDef<(typeof locationTagRows)[number]>[] = [
-    {
-      field: 'name',
-      headerName: 'Name',
-      editable: false,
-      renderCell: (params) => {
-        const locationTag = locationTags.find((locationTag) => locationTag.id === (params.id as string));
-        if (!locationTag) {
-          return null;
-        }
-
-        return <LocationTag locationTag={locationTag} showFullName />;
-      },
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'description',
-      headerName: 'Description',
-      editable: false,
-      renderCell: (params) => <SmallIconTypography label={params.value} />,
-      display: 'flex',
-      minWidth: 200,
-    },
-    {
-      field: 'More Actions',
-      headerName: '',
-      editable: false,
-      sortable: false,
-      display: 'flex',
-      renderCell: (params) => (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
-          <IconButton
-            onClick={(event: React.MouseEvent<HTMLElement>) => {
-              setSelectedLocationTagId(params.id as string);
-              setLocationTagMoreActionsAnchorEl(event.currentTarget);
             }}
           >
             <EllipseMenuIcon />
@@ -1675,76 +1425,6 @@ const OrganizationMarketplaceSetup = ({
                 localeText={{ noRowsLabel: 'No product tag found' }}
               />
             </StackRow>
-            <StackColumn
-              sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
-              ref={(divElement) => {
-                sectionRefs.current['location-tags-setup'] = divElement;
-              }}
-            >
-              <GridContainer sx={{ justifyContent: 'space-between' }}>
-                <Grid>
-                  <SectionIconTypography label="Location Tags" />
-                  <BodyIconTypography label="Edit your organization location tags details" />
-                </Grid>
-
-                <Grid>
-                  <AddOrganizationLocationTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={locationTagsConnectionIds} />
-                </Grid>
-              </GridContainer>
-              <Divider />
-            </StackColumn>
-            <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
-              <PushToRight />
-              <Search size="small" placeholder="Search for location tags" defaultValue={locationTagNameSearchText} onChange={handleLocationTagsSearchTextChange} />
-            </GridContainer>
-            {seledctedLocationTags.ids.size > 0 && (
-              <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-                <Box
-                  sx={{
-                    backgroundColor: 'white',
-                    padding: defaultGridActionPadding,
-                    border: 1,
-                    borderColor: (theme) => theme.palette.divider,
-                    borderRadius: 2,
-                    flexGrow: 1,
-                  }}
-                >
-                  <StackRow sx={{ alignItems: 'center' }}>
-                    <SmallIconTypography label={`${seledctedLocationTags.ids.size} records selected`} />
-                    <PushToRight />
-                    <Button size="medium" variant="contained" color="warning" startIcon={<DeleteIcon />} onClick={handleRemoveLocationTagsClick} sx={{ textTransform: 'none' }}>
-                      Remove Location Tag
-                    </Button>
-                  </StackRow>
-                </Box>
-              </StackRow>
-            )}
-            <StackRow sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding }}>
-              <DataGrid
-                checkboxSelection
-                rowSelectionModel={seledctedLocationTags}
-                onRowSelectionModelChange={handleSelectedLocationTagsChanged}
-                rows={locationTagRows}
-                columns={locationTagColumns}
-                hideFooterPagination={locationTagRows.length <= 10}
-                initialState={{
-                  pagination: {
-                    rowCount: locationTagRows.length,
-                    paginationModel: {
-                      pageSize: 10,
-                    },
-                  },
-                }}
-                pageSizeOptions={[10]}
-                ignoreDiacritics
-                disableRowSelectionOnClick
-                getRowHeight={() => 'auto'}
-                rowSpacingType="margin"
-                getRowSpacing={() => ({ top: 3, bottom: 3 })}
-                sx={defaultGridStyle}
-                localeText={{ noRowsLabel: 'No location tag found' }}
-              />
-            </StackRow>
           </AppBarWithStackColumn>
         </Box>
       </Box>
@@ -1754,13 +1434,6 @@ const OrganizationMarketplaceSetup = ({
         open={productTagMoreActionsMenuOpen}
         onMenuItemClick={handleProductTagMoreActionsMenuItemClick}
         options={productTagMoreActionsOption}
-      />
-
-      <MoreActionsMenu
-        anchorEl={locationTagMoreActionsAnchorEl}
-        open={locationTagMoreActionsMenuOpen}
-        onMenuItemClick={handleLocationTagMoreActionsMenuItemClick}
-        options={locationTagMoreActionsOption}
       />
 
       <MoreActionsMenu
@@ -1784,16 +1457,6 @@ const OrganizationMarketplaceSetup = ({
           isDialogOpen={isEditProductTagDialogOpen}
           onAddClicked={handleEditProductTagClick}
           onCancel={handleEditProductTagCancel}
-        />
-      )}
-
-      {selectedLocationTagId && (
-        <EditOrganizationLocationTagDialog
-          onReloadRequired={onReloadRequired}
-          locationTagId={selectedLocationTagId}
-          isDialogOpen={isEditLocationTagDialogOpen}
-          onAddClicked={handleEditLocationTagClick}
-          onCancel={handleEditLocationTagCancel}
         />
       )}
     </>

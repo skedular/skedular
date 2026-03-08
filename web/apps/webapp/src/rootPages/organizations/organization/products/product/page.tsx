@@ -18,7 +18,6 @@ const RootQuery = graphql`
     $organizationUniqueAlphanumericName: String!
     $productId: String!
     $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
-    $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]
   ) {
     product(id: $productId) {
       name
@@ -107,12 +106,6 @@ const RootPageWithRelay = () => {
         organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
         productId: finalProductId,
         multipleChoicesProductTagsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
-        multipleChoicesLocationTagsSortingValues: [
           {
             direction: 'ASCENDING',
             field: 'NAME',

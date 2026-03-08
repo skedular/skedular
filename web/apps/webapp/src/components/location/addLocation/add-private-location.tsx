@@ -5,7 +5,6 @@ import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesLocationTags } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
@@ -33,10 +32,10 @@ import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { array, object, string } from 'yup';
+import { object, string } from 'yup';
 
 const RootQuery = graphql`
-  query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesLocationTagsSortingValues: [OrganizationTagOrderInput!]) {
+  query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!) {
     emailsToShowLatestCapabilities
     me {
       emails
@@ -46,7 +45,6 @@ const RootQuery = graphql`
         type
       }
     }
-    ...multipleChoicesLocationTags_query
     ...singleChoiceLocationType_query
   }
 `;
@@ -66,7 +64,6 @@ type LocationDetails = {
   about: string | null;
   timezone: string;
   type: string;
-  locationTagIds: string[];
 };
 
 const locationSchema = object({
@@ -74,7 +71,6 @@ const locationSchema = object({
   about: string().nullable(),
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
-  locationTagIds: array().nullable(),
 });
 
 const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
@@ -104,7 +100,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
               width
             }
           }
-          locationTags {
+          spaceTypes {
             id
             name
             color
@@ -130,15 +126,13 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
   const [locationType, setLocationType] = useState<string>('PRIVATE');
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
-  const [locationTagIds, setLocationTagIds] = useState<string[]>([]);
-  const debounceSetLocationTagIds = useDebounceCallback(setLocationTagIds, keyboardTextFieldDebounceTimeout);
 
   const handleCloseClick = () => {
     onCancel();
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, type, locationTagIds }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, about, timezone, type }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -157,7 +151,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           timezone,
           type: type as LocationType,
           featureImages: finalFeatureImages,
-          locationTagIds,
+          tagIds: [],
         },
       },
       onCompleted: (_, errors) => {
@@ -196,7 +190,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
               name: '',
             },
             featureImages: finalFeatureImages,
-            locationTags: [],
+            spaceTypes: [],
           },
         },
       },
@@ -266,7 +260,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             about: locationAbout,
             timezone: locationTimezone,
             type: locationType,
-            locationTagIds,
           }}
           validate={validateLocationDetails}
           render={({ handleSubmit, values }) => {
@@ -274,7 +267,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             debounceSetLocationAbout(values!.about);
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
-            debounceSetLocationTagIds(values!.locationTagIds);
 
             return (
               <FormStackColumn onSubmit={handleSubmit}>
@@ -380,17 +372,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                   </FormFieldLabel>
                 )}
 
-                {rootData.organization?.type.type === 'MARKETPLACE' && (
-                  <FormFieldLabel label="Location Tags" required={requiredFields.locationTagIds}>
-                    <MultipleChoicesLocationTags
-                      rootDataRelay={rootData}
-                      name="locationTagIds"
-                      required={requiredFields.locationTagIds}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                    />
-                  </FormFieldLabel>
-                )}
-
                 <StackRow>
                   <Button variant="contained" sx={defaultButtonStyle} onClick={handleCloseClick}>
                     <BodyIconTypography label={cancelLabel ?? 'Cancel'} invertDefaultColor={paletteMode === 'dark'} />
@@ -430,12 +411,6 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationUniqueAlpha
     loadQuery(
       {
         organizationUniqueAlphanumericName,
-        multipleChoicesLocationTagsSortingValues: [
-          {
-            direction: 'ASCENDING',
-            field: 'NAME',
-          },
-        ],
       },
       {
         fetchPolicy: 'store-and-network',

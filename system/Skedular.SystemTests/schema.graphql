@@ -379,8 +379,6 @@ type LocationDetails {
   featureImages: [CdnImageFile!]!
   hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
-  locationSpaceTypes: [OrganizationTagDetails!]!
-  locationTags: [OrganizationTagDetails!]!
   name: String!
   openingHours: OpeningHours!
   organization: OrganizationDetails!
@@ -389,6 +387,7 @@ type LocationDetails {
   resources(after: String before: String first: Int last: Int orderBy: [ResourceOrderInput!] where: ResourceWhereInput): ConnectionOfResourceEdge! @cost(weight: "10")
   resourceTypes: [OrganizationTagDetails!]!
   roomCapacity: Int!
+  spaceTypes: [OrganizationTagDetails!]!
   timezone: String
   type: LocationTypeDetails!
   uniqueClaimCode: String
@@ -481,7 +480,6 @@ type Mutation {
   addFloorPlan(input: AddFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   addLocation(input: AddLocationInput!): LocationPayload! @cost(weight: "10")
   addLocationPhysicalAddress(input: AddLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
-  addLocationTag(input: AddLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   addMarketplaceRecurringBooking(input: AddMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   addMyBillingDetails(input: AddMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
@@ -517,8 +515,6 @@ type Mutation {
   deleteCustomTags(input: DeleteCustomTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   deleteFloorPlan(input: DeleteFloorPlanInput!): FloorPlanPayload! @cost(weight: "10")
   deleteLocation(input: DeleteLocationInput!): LocationPayload! @cost(weight: "10")
-  deleteLocationTag(input: DeleteLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
-  deleteLocationTags(input: DeleteLocationTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   deleteMarketplaceRecurringBooking(input: DeleteMarketplaceRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
@@ -568,7 +564,6 @@ type Mutation {
   updateLocationOpeningHours(input: UpdateLocationOpeningHoursInput!): LocationPayload! @cost(weight: "10")
   updateLocationPhysicalAddress(input: UpdateLocationPhysicalAddressInput!): LocationPayload! @cost(weight: "10")
   updateLocationResourceAvailableHours(input: UpdateLocationResourceAvailableHoursInput!): ResourcePayload! @cost(weight: "10")
-  updateLocationTag(input: UpdateLocationTagInput!): OrganizationTagPayload! @cost(weight: "10")
   updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   updateMyBillingDetails(input: UpdateMyBillingDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
@@ -714,7 +709,6 @@ type OrganizationDetails {
   isOwnershipVerified: Boolean!
   isSsoTokenValid: Boolean! @cost(weight: "10")
   locationSpaceTypes: [OrganizationTagDetails!]!
-  locationTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: LocationTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   logoUrl: String
   members(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   name: String!
@@ -1052,7 +1046,6 @@ type Query {
   locations(after: String before: String first: Int last: Int orderBy: [LocationOrderInput!] where: LocationWhereInput!): ConnectionOfLocationEdge! @cost(weight: "10")
   locationsAnalytics(from: DateTime! orderBy: [LocationOrderInput!] until: DateTime! where: LocationWhereInput): [LocationAnalytics!]! @cost(weight: "10")
   locationSpaceTypes: [OrganizationTagTypeDetails!]!
-  locationTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   locationTypes: [LocationTypeDetails!]!
   locationVersion: Version!
   marketplaceBookingCategories: [BookingCategoryDetails!]!
@@ -1367,11 +1360,11 @@ input AddLocationInput {
   extraMetadata: LocationExtraMetadataInput
   featureImages: [CdnImageFileInput!]!
   id: String
-  locationTagIds: [String!]!
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
   physicalAddress: LocationPhysicalAddressInput
+  tagIds: [String!]!
   timezone: String
   type: LocationType!
   weekOpeningHours: WeekOpeningHoursInput
@@ -1395,16 +1388,6 @@ input AddLocationPhysicalAddressInput {
   province: String
   suburb: String
   zipcode: String!
-}
-
-input AddLocationTagInput {
-  clientMutationId: String
-  color: String
-  description: String
-  id: String
-  name: String!
-  organizationId: String
-  organizationUniqueAlphanumericName: String
 }
 
 input AddMarketplaceBookingInput {
@@ -1847,16 +1830,6 @@ input DeleteLocationInput {
   id: String!
 }
 
-input DeleteLocationTagInput {
-  clientMutationId: String
-  id: String!
-}
-
-input DeleteLocationTagsInput {
-  clientMutationId: String
-  ids: [String!]!
-}
-
 input DeleteMarketplaceBookingInput {
   clientMutationId: String
   id: String!
@@ -2005,10 +1978,6 @@ input LocationPhysicalAddressInput {
   province: String
   suburb: String
   zipcode: String!
-}
-
-input LocationTagOrganizationTagWhereInput {
-  nameContains: String
 }
 
 input LocationWhereInput {
@@ -2346,8 +2315,8 @@ input UpdateLocationInput {
   extraMetadata: LocationExtraMetadataInput
   featureImages: [CdnImageFileInput!]!
   id: String!
-  locationTagIds: [String!]!
   name: String!
+  tagIds: [String!]!
   timezone: String
   type: LocationType!
 }
@@ -2382,14 +2351,6 @@ input UpdateLocationResourceAvailableHoursInput {
   clientMutationId: String
   id: String!
   overrideAvailableHours: Boolean!
-}
-
-input UpdateLocationTagInput {
-  clientMutationId: String
-  color: String
-  description: String
-  id: String!
-  name: String!
 }
 
 input UpdateMarketplaceBookingInput {
@@ -2809,7 +2770,6 @@ enum OrganizationTagOrderField {
 
 enum OrganizationTagType {
   CUSTOM
-  LOCATION
   LOCATION_SPACE_TYPE_CAR_PARK_SPACE
   LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
   LOCATION_SPACE_TYPE_EVENT_SPACE

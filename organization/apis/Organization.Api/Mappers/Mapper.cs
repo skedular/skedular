@@ -19,7 +19,6 @@ using Organization.Api.GraphQL.TaxDetails;
 using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
-using AddLocationTagInput = Organization.Api.GraphQL.Tag.AddLocationTagInput;
 using AddOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.AddOrganizationBillingDetailsInput;
 using AddProductTagInput = Organization.Api.GraphQL.Tag.AddProductTagInput;
 using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneInput;
@@ -58,7 +57,6 @@ using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationS
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
 using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
-using UpdateLocationTagInput = Organization.Api.GraphQL.Tag.UpdateLocationTagInput;
 using UpdateProductTagInput = Organization.Api.GraphQL.Tag.UpdateProductTagInput;
 
 namespace Organization.Api.Mappers;
@@ -149,11 +147,6 @@ public interface IMapper
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddProductTagInput src);
     Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateProductTagInput src);
 
-    LocationTag MapToGrpcResponseLocationTag(Tag src);
-    LocationTagEdge MapToGrpcResponseLocationTag(Edge<Tag> src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddLocationTagInput src);
-    Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateLocationTagInput src);
-
     IEnumerable<string> MapTo(Offering offering);
     OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src);
     Shared.Database.Entities.OrganizationSsoSettings MapToEntity(OrganizationSsoSettings src, Shared.Database.Entities.Organization organization);
@@ -165,8 +158,6 @@ public interface IMapper
 
     Tag MapTo(AddProductTagInput src);
     Tag MapTo(UpdateProductTagInput src);
-    Tag MapTo(AddLocationTagInput src);
-    Tag MapTo(UpdateLocationTagInput src);
     OrganizationBillingDetails MapTo(Shared.Models.OrganizationBillingDetails src, Shared.Database.Entities.Organization organization);
 
     OrganizationBillingDetails MergeToEntity(
@@ -820,33 +811,6 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    public LocationTag MapToGrpcResponseLocationTag(Tag src) =>
-        new() { Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Description.ToSafeString(), Color = src.Color.ToSafeString() };
-
-    public LocationTagEdge MapToGrpcResponseLocationTag(Edge<Tag> src) =>
-        new() { Cursor = src.Cursor, Node = MapToGrpcResponseLocationTag(src.Node) };
-
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.AddLocationTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Location,
-            Color = src.Color.ToSafeString(),
-            Organization = new Shared.Models.Organization { Id = src.OrganizationId }
-        };
-
-    public Tag MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateLocationTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
-            Type = OrganizationTagType.Location,
-            Color = src.Color
-        };
-
     public IEnumerable<string> MapTo(Offering offering) => offering.FeatureSets.Select(MapTo);
 
     public OrganizationSsoSettings MapTo(UpdateOrganizationSsoSettingsInput src) =>
@@ -902,30 +866,6 @@ public class Mapper : IMapper
             Name = src.Name,
             Description = src.Description,
             Type = OrganizationTagType.Product,
-            Color = src.Color
-        };
-
-    public Tag MapTo(AddLocationTagInput src) =>
-        new()
-        {
-            Id = src.Id.ToSafeString(),
-            Name = src.Name,
-            Description = src.Description,
-            Organization = new Shared.Models.Organization
-            {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
-            },
-            Type = OrganizationTagType.Location,
-            Color = src.Color
-        };
-
-    public Tag MapTo(UpdateLocationTagInput src) =>
-        new()
-        {
-            Id = src.Id,
-            Name = src.Name,
-            Description = src.Description,
-            Type = OrganizationTagType.Location,
             Color = src.Color
         };
 

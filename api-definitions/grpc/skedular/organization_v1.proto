@@ -18,7 +18,6 @@ service OrganizationService {
   rpc Admin_GetCustomTag (Admin_GetCustomTagInput) returns (CustomTag);
   rpc Admin_GetZone (Admin_GetZoneInput) returns (Zone);
   rpc Admin_GetProductTag (Admin_GetProductTagInput) returns (ProductTag);
-  rpc Admin_GetLocationTag (Admin_GetLocationTagInput) returns (LocationTag);
 
   rpc GetVersion (VersionInput) returns (Version);
   rpc GetActiveOrganizationTermsOfUse (GetActiveOrganizationTermsOfUseInput) returns (TermsOfUse);
@@ -49,12 +48,6 @@ service OrganizationService {
   rpc AddProductTag (AddProductTagInput) returns (ProductTag);
   rpc UpdateProductTag (UpdateProductTagInput) returns (ProductTag);
   rpc RemoveProductTag (RemoveProductTagInput) returns (ProductTag);
-
-  rpc GetPaginatedLocationTags (GetPaginatedLocationTagsInput) returns (LocationTagConnection);
-  rpc GetLocationTag (GetLocationTagInput) returns (LocationTag);
-  rpc AddLocationTag (AddLocationTagInput) returns (LocationTag);
-  rpc UpdateLocationTag (UpdateLocationTagInput) returns (LocationTag);
-  rpc RemoveLocationTag (RemoveLocationTagInput) returns (LocationTag);
 
   rpc GetBillingDetails (GetBillingDetailsInput) returns (BillingDetails);
   rpc AddBillingDetails (AddBillingDetailsInput) returns (BillingDetails);
@@ -743,75 +736,6 @@ message AddProductTagInput {
 }
 
 message UpdateProductTagInput {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
-}
-
-message LocationTag {
-  string id          = 1;
-  string name        = 2;
-  string description = 3;
-  string color       = 4;
-}
-
-message LocationTagConnection {
-  PageInfo                 pageInfo   = 1;
-  repeated LocationTagEdge edges      = 2;
-  int32                    totalCount = 3;
-}
-
-message LocationTagEdge {
-  LocationTag node   = 1;
-  string      cursor = 2;
-}
-
-message GetPaginatedLocationTagsInput {
-  string                         after   = 1;
-  int32                          first   = 2;
-  string                         before  = 3;
-  int32                          last    = 4;
-  LocationTagWhereInput          where   = 5;
-  repeated LocationTagOrderInput orderBy = 6;
-}
-
-message LocationTagWhereInput {
-  string organizationId = 1;
-  string nameContains   = 2;
-}
-
-message LocationTagOrderInput {
-  OrderDirection        direction = 1;
-  LocationTagOrderField field     = 2;
-}
-
-enum LocationTagOrderField {
-  LocationTagOrderField_Name        = 0;
-  LocationTagOrderField_Description = 1;
-}
-
-message Admin_GetLocationTagInput {
-  string id = 1;
-}
-
-message GetLocationTagInput {
-  string id = 1;
-}
-
-message RemoveLocationTagInput {
-  string id = 1;
-}
-
-message AddLocationTagInput {
-  string id             = 1;
-  string organizationId = 2;
-  string name           = 3;
-  string description    = 4;
-  string color          = 5;
-}
-
-message UpdateLocationTagInput {
   string id          = 1;
   string name        = 2;
   string description = 3;

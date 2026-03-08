@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0aefb14fc5fdeccacb211f2104674470>>
+ * @generated SignedSource<<0ff39ffa6a4bb8057ae91b09acf3d28e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,16 +48,6 @@ export type organizationLocation_query$data = {
       } | null | undefined;
     }>;
     readonly id: string;
-    readonly locationSpaceTypes: ReadonlyArray<{
-      readonly color: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-    }>;
-    readonly locationTags: ReadonlyArray<{
-      readonly color: string | null | undefined;
-      readonly id: string;
-      readonly name: string;
-    }>;
     readonly name: string;
     readonly openingHours: {
       readonly weekOpeningHours: {
@@ -122,6 +112,11 @@ export type organizationLocation_query$data = {
       readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
+    readonly spaceTypes: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly id: string;
+      readonly name: string;
+    }>;
     readonly timezone: string | null | undefined;
     readonly type: {
       readonly name: string;
@@ -140,7 +135,7 @@ export type organizationLocation_query$data = {
       readonly type: OrganizationType;
     };
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesLocationSpaceTypes_query" | "multipleChoicesLocationTags_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "multipleChoicesLocationSpaceTypes_query" | "singleChoiceLocationType_query" | "weekOpeningHours_query" | "zoneSelector_allZones_query">;
   readonly " $fragmentType": "organizationLocation_query";
 };
 export type organizationLocation_query$key = {
@@ -201,17 +196,6 @@ v4 = [
   }
 ],
 v5 = [
-  (v0/*: any*/),
-  (v2/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "color",
-    "storageKey": null
-  }
-],
-v6 = [
   {
     "alias": null,
     "args": null,
@@ -621,19 +605,19 @@ return {
           "args": null,
           "concreteType": "OrganizationTagDetails",
           "kind": "LinkedField",
-          "name": "locationTags",
+          "name": "spaceTypes",
           "plural": true,
-          "selections": (v5/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationTagDetails",
-          "kind": "LinkedField",
-          "name": "locationSpaceTypes",
-          "plural": true,
-          "selections": (v5/*: any*/),
+          "selections": [
+            (v0/*: any*/),
+            (v2/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "color",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -659,7 +643,7 @@ return {
                   "kind": "LinkedField",
                   "name": "monday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -669,7 +653,7 @@ return {
                   "kind": "LinkedField",
                   "name": "tuesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -679,7 +663,7 @@ return {
                   "kind": "LinkedField",
                   "name": "wednesday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -689,7 +673,7 @@ return {
                   "kind": "LinkedField",
                   "name": "thursday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -699,7 +683,7 @@ return {
                   "kind": "LinkedField",
                   "name": "friday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -709,7 +693,7 @@ return {
                   "kind": "LinkedField",
                   "name": "saturday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 },
                 {
@@ -719,7 +703,7 @@ return {
                   "kind": "LinkedField",
                   "name": "sunday",
                   "plural": false,
-                  "selections": (v6/*: any*/),
+                  "selections": (v5/*: any*/),
                   "storageKey": null
                 }
               ],
@@ -730,11 +714,6 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "multipleChoicesLocationTags_query"
     },
     {
       "args": null,
@@ -767,6 +746,6 @@ return {
 };
 })();
 
-(node as any).hash = "7892ff514664cba8852c446a4657e7e4";
+(node as any).hash = "c6072b13629b8d0042e3099fda14c3d6";
 
 export default node;

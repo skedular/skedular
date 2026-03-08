@@ -23,9 +23,27 @@ public class Location : ModelBaseWithDeleted
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
-    public ICollection<OrganizationTag> CustomTags { get; set; } = [];
-    public ICollection<OrganizationTag> Zones { get; set; } = [];
     public ICollection<OrganizationTag> Tags { get; set; } = [];
+
+    public ICollection<OrganizationTag> CustomTags =>
+        Resources
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag =>
+                new OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Custom }))
+            .GroupBy(item => item.Id)
+            .Select(group => group.First())
+            .ToList();
+
+    public ICollection<OrganizationTag> Zones =>
+        Resources
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(customTag =>
+                new OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Zone }))
+            .GroupBy(item => item.Id)
+            .Select(group => group.First())
+            .ToList();
+
+    public ICollection<OrganizationTag> SpaceTypes =>
+        Tags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
+
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }

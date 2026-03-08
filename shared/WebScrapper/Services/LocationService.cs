@@ -126,7 +126,7 @@ public class LocationService(
                     UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant()
                 };
 
-                adminAddInput.LocationTagIds.Add(tagId);
+                adminAddInput.TagIds.Add(tagId);
 
                 adminAddInput.ExtraMetadata.ContactDetails.ContactEmails.AddRange(
                     rawLocation.Emails.Split(Environment.NewLine)
@@ -179,7 +179,7 @@ public class LocationService(
                     UniqueClaimCode = matchingLocation.UniqueClaimCode.ToSafeString()
                 };
 
-                adminUpdateInput.LocationTagIds.Add(tagId);
+                adminUpdateInput.TagIds.Add(tagId);
 
                 adminUpdateInput.ExtraMetadata.ContactDetails.ContactEmails.AddRange(
                     rawLocation.Emails.Split(Environment.NewLine)

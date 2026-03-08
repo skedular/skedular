@@ -60,17 +60,4 @@ public class RootQuery(IMapper mapper)
         [Service] ITagService tagService,
         CancellationToken cancellationToken) =>
         await ProductTagAsync(id, tagService, cancellationToken);
-
-    [UseResolverScope]
-    public async Task<OrganizationTagDetails?> LocationTagAsync(string id, [Service] ITagService tagService, CancellationToken cancellationToken) =>
-        mapper.MapTo(await tagService.GetByIdAsync(id, false, cancellationToken));
-
-    [UseResolverScope]
-    [Lookup]
-    [Internal]
-    public async Task<OrganizationTagDetails?> LocationTagByIdAsync(
-        string id,
-        [Service] ITagService tagService,
-        CancellationToken cancellationToken) =>
-        await LocationTagAsync(id, tagService, cancellationToken);
 }

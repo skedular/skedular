@@ -70,9 +70,9 @@ public class LocationResourceService(
             LocationId = resource.Location!.Id
         };
 
-        addResourceInput.TagIds.AddRange(resource.OrganizationCustomTags.Select(item => item.Id));
-        addResourceInput.TagIds.AddRange(resource.OrganizationZones.Select(item => item.Id));
-        addResourceInput.TagIds.AddRange(resource.OrganizationProductTags.Select(item => item.Id));
+        addResourceInput.TagIds.AddRange(resource.CustomTags.Select(item => item.Id));
+        addResourceInput.TagIds.AddRange(resource.Zones.Select(item => item.Id));
+        addResourceInput.TagIds.AddRange(resource.ProductTags.Select(item => item.Id));
         addResourceInput.TagIds.Add(resource.ResourceType.Id);
 
         var mappedResource = mapper.MapTo(
@@ -98,9 +98,9 @@ public class LocationResourceService(
             RequireBookingApproval = resource.RequireBookingApproval
         };
 
-        updateZoneInput.TagIds.AddRange(resource.OrganizationCustomTags.Select(item => item.Id));
-        updateZoneInput.TagIds.AddRange(resource.OrganizationZones.Select(item => item.Id));
-        updateZoneInput.TagIds.AddRange(resource.OrganizationProductTags.Select(item => item.Id));
+        updateZoneInput.TagIds.AddRange(resource.CustomTags.Select(item => item.Id));
+        updateZoneInput.TagIds.AddRange(resource.Zones.Select(item => item.Id));
+        updateZoneInput.TagIds.AddRange(resource.ProductTags.Select(item => item.Id));
         updateZoneInput.TagIds.Add(resource.ResourceType.Id);
 
         var mappedResource = mapper.MapTo(
@@ -205,19 +205,19 @@ public class LocationResourceService(
     private async Task<Resource> AdminEnrichAsync(Resource resource, CancellationToken cancellationToken)
     {
         var customTags = await Task.WhenAll(
-            resource.OrganizationCustomTags
+            resource.CustomTags
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationCustomTagService.AdminGetAsync(item, cancellationToken)));
 
         var zones = await Task.WhenAll(
-            resource.OrganizationZones
+            resource.Zones
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationZoneService.AdminGetAsync(item, cancellationToken)));
 
         var productTags = await Task.WhenAll(
-            resource.OrganizationProductTags
+            resource.ProductTags
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationProductTagService.AdminGetAsync(item, cancellationToken)));
@@ -232,15 +232,15 @@ public class LocationResourceService(
             Type = resourceType.Type
         };
 
-        resource.OrganizationCustomTags = resource.OrganizationCustomTags
+        resource.CustomTags = resource.CustomTags
             .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item)
             .ToList();
 
-        resource.OrganizationZones = resource.OrganizationZones
+        resource.Zones = resource.Zones
             .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item)
             .ToList();
 
-        resource.OrganizationProductTags = resource.OrganizationProductTags
+        resource.ProductTags = resource.ProductTags
             .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item)
             .ToList();
 
@@ -250,19 +250,19 @@ public class LocationResourceService(
     private async Task<Resource> EnrichAsync(string workspaceMemberId, Resource resource, CancellationToken cancellationToken)
     {
         var customTags = await Task.WhenAll(
-            resource.OrganizationCustomTags
+            resource.CustomTags
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationCustomTagService.GetAsync(workspaceMemberId, item, cancellationToken)));
 
         var zones = await Task.WhenAll(
-            resource.OrganizationZones
+            resource.Zones
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationZoneService.GetAsync(workspaceMemberId, item, cancellationToken)));
 
         var productTags = await Task.WhenAll(
-            resource.OrganizationProductTags
+            resource.ProductTags
                 .Select(item => item.Id)
                 .Distinct()
                 .Select(item => organizationProductTagService.GetAsync(workspaceMemberId, item, cancellationToken)));
@@ -277,15 +277,15 @@ public class LocationResourceService(
             Type = resourceType.Type
         };
 
-        resource.OrganizationCustomTags = resource.OrganizationCustomTags
+        resource.CustomTags = resource.CustomTags
             .Select(item => customTags.FirstOrDefault(organizationCustomTag => organizationCustomTag.Id == item.Id) ?? item)
             .ToList();
 
-        resource.OrganizationZones = resource.OrganizationZones
+        resource.Zones = resource.Zones
             .Select(item => zones.FirstOrDefault(organizationZone => organizationZone.Id == item.Id) ?? item)
             .ToList();
 
-        resource.OrganizationProductTags = resource.OrganizationProductTags
+        resource.ProductTags = resource.ProductTags
             .Select(item => productTags.FirstOrDefault(organizationProductTag => organizationProductTag.Id == item.Id) ?? item)
             .ToList();
 

@@ -461,9 +461,9 @@ public class Mapper : IMapper
             Color = src.Color.ToSafeString(),
             Capacity = src.Capacity,
             ResourceType = new ResourceType { Id = src.ResourceTypeId },
-            OrganizationCustomTags = src.OrganizationCustomTagIds.Select(item => new Models_OrganizationCustomTag { Id = item }).ToList(),
-            OrganizationZones = src.OrganizationZoneIds.Select(item => new OrganizationZone { Id = item }).ToList(),
-            OrganizationProductTags = src.OrganizationProductTagIds.Select(item => new OrganizationProductTag { Id = item }).ToList()
+            CustomTags = src.CustomTagIds.Select(item => new Models_OrganizationCustomTag { Id = item }).ToList(),
+            Zones = src.ZoneIds.Select(item => new OrganizationZone { Id = item }).ToList(),
+            ProductTags = src.ProductTagIds.Select(item => new OrganizationProductTag { Id = item }).ToList()
         };
 
     private static IEnumerable<Models_OrganizationCustomTag> MapToOrganizationCustomTag(IEnumerable<Tag> src) =>

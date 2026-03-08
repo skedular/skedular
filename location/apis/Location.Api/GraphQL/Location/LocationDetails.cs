@@ -35,9 +35,8 @@ public class LocationDetails : Node
     [GraphQLName("physicalAddress")] public LocationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
+    [GraphQLName("spaceTypeIds")] public IEnumerable<string> SpaceTypeIds { get; set; } = [];
     [GraphQLName("resourceTypeIds")] public IEnumerable<string> ResourceTypeIds { get; set; } = [];
-    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
-    [GraphQLName("locationSpaceTypeIds")] public IEnumerable<string> LocationSpaceTypeIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
@@ -128,8 +127,7 @@ public static partial class LocationDetailsType
         descriptor.Ignore(item => item.CustomTagIds);
         descriptor.Ignore(item => item.ZoneIds);
         descriptor.Ignore(item => item.ResourceTypeIds);
-        descriptor.Ignore(item => item.LocationTagIds);
-        descriptor.Ignore(item => item.LocationSpaceTypeIds);
+        descriptor.Ignore(item => item.SpaceTypeIds);
         descriptor.Ignore(item => item.ProductIds);
     }
 
@@ -145,11 +143,8 @@ public static partial class LocationDetailsType
     public static IEnumerable<OrganizationTagDetails> GetResourceTypes([Parent] LocationDetails item) =>
         item.ResourceTypeIds.Select(id => new OrganizationTagDetails(id));
 
-    public static IEnumerable<OrganizationTagDetails> GetLocationTags([Parent] LocationDetails item) =>
-        item.LocationTagIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetLocationSpaceTypes([Parent] LocationDetails item) =>
-        item.LocationSpaceTypeIds.Select(id => new OrganizationTagDetails(id));
+    public static IEnumerable<OrganizationTagDetails> GetSpaceTypes([Parent] LocationDetails item) =>
+        item.SpaceTypeIds.Select(id => new OrganizationTagDetails(id));
 
     public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
         item.ProductIds.Select(id => new ProductDetails(id));

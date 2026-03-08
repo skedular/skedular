@@ -1,5 +1,4 @@
 export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
-export { default as MultipleChoicesLocationTags } from './multiple-choices-location-tags';
 export { default as MultipleChoicesProductTags } from './multiple-choices-product-tags';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export { default as OrganizationMemberSelector } from './organization-member-selector';

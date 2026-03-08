@@ -5,7 +5,6 @@ public enum OrganizationTagType
     Custom,
     Zone,
     Product,
-    Location,
 
     ResourceDesk,
     ResourceRoom,
@@ -29,7 +28,6 @@ public static class OrganizationTagTypeConstants
     public const string Custom = "CUSTOM";
     public const string Zone = "ZONE";
     public const string Product = "PRODUCT";
-    public const string Location = "LOCATION";
 
     public const string ResourceDesk = "RESOURCE_DESK";
     public const string ResourceRoom = "RESOURCE_ROOM";
@@ -80,7 +78,6 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                 OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                 OrganizationTagTypeConstants.Product => OrganizationTagType.Product,
-                OrganizationTagTypeConstants.Location => OrganizationTagType.Location,
 
                 OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
                 OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
@@ -112,7 +109,6 @@ public static class OrganizationTagTypeExtensions
                     OrganizationTagTypeConstants.Custom => OrganizationTagType.Custom,
                     OrganizationTagTypeConstants.Zone => OrganizationTagType.Zone,
                     OrganizationTagTypeConstants.Product => OrganizationTagType.Product,
-                    OrganizationTagTypeConstants.Location => OrganizationTagType.Location,
 
                     OrganizationTagTypeConstants.ResourceDesk => OrganizationTagType.ResourceDesk,
                     OrganizationTagTypeConstants.ResourceRoom => OrganizationTagType.ResourceRoom,
@@ -141,7 +137,6 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                 OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                 OrganizationTagType.Product => OrganizationTagTypeConstants.Product,
-                OrganizationTagType.Location => OrganizationTagTypeConstants.Location,
 
                 OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
                 OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,
@@ -167,7 +162,6 @@ public static class OrganizationTagTypeExtensions
                 OrganizationTagType.Custom => "Custom",
                 OrganizationTagType.Zone => "Zone",
                 OrganizationTagType.Product => "Product",
-                OrganizationTagType.Location => "Location",
 
                 OrganizationTagType.ResourceDesk => "Desk",
                 OrganizationTagType.ResourceRoom => "Room",
@@ -198,7 +192,6 @@ public static class OrganizationTagTypeExtensions
                     OrganizationTagType.Custom => OrganizationTagTypeConstants.Custom,
                     OrganizationTagType.Zone => OrganizationTagTypeConstants.Zone,
                     OrganizationTagType.Product => OrganizationTagTypeConstants.Product,
-                    OrganizationTagType.Location => OrganizationTagTypeConstants.Location,
 
                     OrganizationTagType.ResourceDesk => OrganizationTagTypeConstants.ResourceDesk,
                     OrganizationTagType.ResourceRoom => OrganizationTagTypeConstants.ResourceRoom,

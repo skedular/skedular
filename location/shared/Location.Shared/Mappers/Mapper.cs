@@ -59,7 +59,7 @@ public class Mapper : IMapper
             return resource;
         }));
 
-        location.TagIds.AddRange(src.Tags.Select(tag => tag.Id));
+        location.TagIds.AddRange(src.SpaceTypes.Select(tag => tag.Id));
         location.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return location;

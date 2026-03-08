@@ -235,7 +235,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         defaultMaxAllowedResourcesLockTimePaidViaCard
         defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
         ...multipleChoicesProductTags_query
-        ...multipleChoicesLocationTags_query
         ...singleChoiceCurrency_query
         ...multipleChoicesBookingPaymentMethodTypes_query
         ...singleChoiceProductPricingCadence_query

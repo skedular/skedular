@@ -22,14 +22,14 @@ public class BookingComponents : IBookingComponents
         {
             var resourceLabel = $"{Icons.Resources} {item.Name}";
 
-            if (item.OrganizationZones.Count != 0)
+            if (item.Zones.Count != 0)
             {
-                resourceLabel += $" {Icons.Zones} {string.Join(",", item.OrganizationZones.Select(tag => tag.Name))}";
+                resourceLabel += $" {Icons.Zones} {string.Join(",", item.Zones.Select(tag => tag.Name))}";
             }
 
-            if (item.OrganizationCustomTags.Count != 0)
+            if (item.CustomTags.Count != 0)
             {
-                resourceLabel += $" {Icons.CustomTags} {string.Join(",", item.OrganizationCustomTags.Select(tag => tag.Name))}";
+                resourceLabel += $" {Icons.CustomTags} {string.Join(",", item.CustomTags.Select(tag => tag.Name))}";
             }
 
             return new SectionBlock { Text = resourceLabel.ToMarkdown() };

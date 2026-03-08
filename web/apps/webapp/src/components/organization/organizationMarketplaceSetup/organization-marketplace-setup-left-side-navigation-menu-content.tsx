@@ -1,10 +1,9 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BankAccountIcon, LocationTagIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
+import { BankAccountIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
-  getOrganizationMarketplaceSetupLocationTagsBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
-  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
+  getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
@@ -68,7 +67,6 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const locationTagsLink = getOrganizationMarketplaceSetupLocationTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
 
   return (
     <List
@@ -138,25 +136,6 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <ProductTagIcon excludeTooltip color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === productTagsLink && paletteMode === 'dark'}
-                noWrap
-              />
-            )}
-          </ListItemButton>
-        </Link>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <Link component={NextLink} href={locationTagsLink}>
-          <ListItemButton selected={fullPath === locationTagsLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === locationTagsLink) }}>
-            {collapsed && (
-              <BodyIconTypography startElement={!hideIcons && <LocationTagIcon color="inherit" />} invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'} />
-            )}
-            {!collapsed && (
-              <BodyIconTypography
-                label="Location Tag"
-                startElement={!hideIcons && <LocationTagIcon excludeTooltip color="inherit" />}
-                spacing={3}
-                invertDefaultColor={fullPath === locationTagsLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

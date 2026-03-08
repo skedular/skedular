@@ -92,7 +92,7 @@ message Admin_AddInput {
   string                about           = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
-  repeated string       locationTagIds  = 6;
+  repeated string       tagIds          = 6;
   repeated CdnImageFile featureImages   = 7;
   LocationType          type            = 8;
   ExtraMetadata         ExtraMetadata   = 9;
@@ -106,7 +106,7 @@ message Admin_UpdateInput {
   string                about           = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
-  repeated string       locationTagIds  = 6;
+  repeated string       tagIds          = 6;
   repeated CdnImageFile featureImages   = 7;
   LocationType          type            = 8;
   ExtraMetadata         ExtraMetadata   = 9;
@@ -133,19 +133,20 @@ message Location {
   string                timezone             = 5;
   repeated Resource     resources            = 6;
   Permissions           permissions          = 7;
-  repeated string       customTagIds         = 8;
-  repeated string       zoneIds              = 9;
-  repeated string       locationTagIds       = 10;
-  OpeningHours          openingHours         = 11;
-  repeated CdnImageFile featureImages        = 12;
-  LocationType          type                 = 13;
-  ExtraMetadata         ExtraMetadata        = 14;
-  PhysicalAddress       physicalAddress      = 15;
-  string                uniqueClaimCode      = 16;
-  bool                  contactedViaEmail    = 17;
-  bool                  contactedViaSms      = 18;
-  bool                  contactedViaCall     = 19;
-  bool                  contactedViaWhatsapp = 20;
+  repeated string       tagIds               = 8;
+  repeated string       customTagIds         = 9;
+  repeated string       zoneIds              = 10;
+  repeated string       spaceTypeIds         = 11;
+  OpeningHours          openingHours         = 12;
+  repeated CdnImageFile featureImages        = 13;
+  LocationType          type                 = 14;
+  ExtraMetadata         ExtraMetadata        = 15;
+  PhysicalAddress       physicalAddress      = 16;
+  string                uniqueClaimCode      = 17;
+  bool                  contactedViaEmail    = 18;
+  bool                  contactedViaSms      = 19;
+  bool                  contactedViaCall     = 20;
+  bool                  contactedViaWhatsapp = 21;
 }
 
 message Admin_GetInput {
@@ -212,7 +213,7 @@ message AddInput {
   string                about           = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
-  repeated string       locationTagIds  = 6;
+  repeated string       tagIds          = 6;
   repeated CdnImageFile featureImages   = 7;
   LocationType          type            = 8;
   ExtraMetadata         ExtraMetadata   = 9;
@@ -226,7 +227,7 @@ message UpdateInput {
   string                about           = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
-  repeated string       locationTagIds  = 6;
+  repeated string       tagIds          = 6;
   repeated CdnImageFile featureImages   = 7;
   LocationType          type            = 8;
   ExtraMetadata         ExtraMetadata   = 9;
@@ -243,9 +244,9 @@ message Resource {
   string          name                       = 2;
   bool            inactive                   = 3;
   bool            requireBookingApproval     = 4;
-  repeated string organizationCustomTagIds   = 5;
-  repeated string organizationZoneIds        = 6;
-  repeated string organizationProductTagIds  = 7;
+  repeated string customTagIds               = 5;
+  repeated string zoneIds                    = 6;
+  repeated string productTagIds              = 7;
   string          color                      = 8;
   bool            isAvailableHoursOverridden = 9;
   OpeningHours    availableHours             = 10;

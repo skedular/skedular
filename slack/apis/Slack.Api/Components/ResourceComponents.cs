@@ -78,22 +78,22 @@ public class ResourceComponents(ICustomerService customerService, ILocationPermi
             new SectionBlock { Text = $"*RequireBookingApproval*: {resource.RequireBookingApproval}".ToMarkdown() }
         };
 
-        if (resource.OrganizationCustomTags.Count != 0)
+        if (resource.CustomTags.Count != 0)
         {
             blocks.Add(new SectionBlock
             {
                 Text = string
-                    .Join(", ", resource.OrganizationCustomTags.OrderBy(item => item.Name).Select(item => item.Name))
+                    .Join(", ", resource.CustomTags.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.CustomTags)
             });
         }
 
-        if (resource.OrganizationZones.Count != 0)
+        if (resource.Zones.Count != 0)
         {
             blocks.Add(new SectionBlock
             {
                 Text = string
-                    .Join(", ", resource.OrganizationZones.OrderBy(item => item.Name).Select(item => item.Name))
+                    .Join(", ", resource.Zones.OrderBy(item => item.Name).Select(item => item.Name))
                     .ToMarkdownWithIcon(Icons.Zones)
             });
         }

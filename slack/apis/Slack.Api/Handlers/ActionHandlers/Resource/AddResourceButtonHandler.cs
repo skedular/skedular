@@ -327,7 +327,7 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.OrganizationCustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag { Id = item.Value }).ToList();
+                    resource.CustomTags = value.SelectedOptions.Select(item => new OrganizationCustomTag { Id = item.Value }).ToList();
                 }
                 else
                 {
@@ -346,7 +346,7 @@ public class AddResourceButtonHandler(
             {
                 if (block is StaticMultiSelectValue value)
                 {
-                    resource.OrganizationZones = value.SelectedOptions.Select(item => new OrganizationZone { Id = item.Value }).ToList();
+                    resource.Zones = value.SelectedOptions.Select(item => new OrganizationZone { Id = item.Value }).ToList();
                 }
                 else
                 {

@@ -13,7 +13,7 @@ public class UpdateLocationInput
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationType Type { get; set; }
-    [GraphQLName("locationTagIds")] public IEnumerable<string> LocationTagIds { get; set; } = [];
+    [GraphQLName("tagIds")] public IEnumerable<string> TagIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
 }
