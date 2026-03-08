@@ -119,11 +119,9 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                               query.Resource.Location.Organization != null &&
                               !query.Resource.Location.Organization.DeletedAt.HasValue &&
                               query.Resource.Location.Id == locationId)) &&
-                            (tagIds.Count == 0 || tagIds.All(tagId =>
-                                query.Resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue).Select(tag => tag.Id).Contains(tagId))) &&
-                            (tagTypes.Count == 0 ||
-                             tagTypes.All(tagType =>
-                                 query.Resource.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue).Select(tag => tag.Type).Contains(tagType))))
+                            (tagIds.Count == 0 || query.Resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && tagIds.Contains(tag.Id))) &&
+                            (tagTypes.Count == 0 || query.Resource.OrganizationTags.Any(tag =>
+                                !tag.DeletedAt.HasValue && !string.IsNullOrWhiteSpace(tag.Type) && tagTypes.Contains(tag.Type))))
             .Include(query => query.Bookings)
             .Include(query => query.Resource)
             .AsNoTracking()
