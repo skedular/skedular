@@ -2,9 +2,9 @@ import { Loading } from '@/components/loading';
 import { MarketplaceLocation } from '@/components/location/marketplaceLocation';
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import type { pageMarketplaceLocation_rootQuery } from '@/queries/__generated__/pageMarketplaceLocation_rootQuery.graphql';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useParams } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -50,32 +50,22 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageMarketplaceLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { locationId } = useParams();
+  const { locationId } = useKnownParams();
 
-  let finalLocationId = '';
-
-  if (typeof locationId === 'string') {
-    finalLocationId = locationId;
-  } else if (Array.isArray(locationId)) {
-    if (typeof locationId[0] === 'undefined') {
-      throw new Error('locationId is required');
-    }
-
-    finalLocationId = locationId[0];
-  } else {
+  if (!locationId) {
     throw new Error('locationId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        locationId: finalLocationId,
+        locationId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalLocationId]);
+  }, [loadQuery, triggerReloadId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

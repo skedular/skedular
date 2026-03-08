@@ -3,11 +3,12 @@ import { EditFloorPlan } from '@/components/floorPlan/editFloorPlan';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import type { pageOrganizationLocationFloorPlanAdmin_rootQuery } from '@/queries/__generated__/pageOrganizationLocationFloorPlanAdmin_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -67,41 +68,21 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocationFloorPlanAdmin_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { locationId, floorPlanId } = useParams();
+  const { locationId, floorPlanId } = useKnownParams();
 
-  let finalLocationId = '';
-
-  if (typeof locationId === 'string') {
-    finalLocationId = locationId;
-  } else if (Array.isArray(locationId)) {
-    if (typeof locationId[0] === 'undefined') {
-      throw new Error('locationId is required');
-    }
-
-    finalLocationId = locationId[0];
-  } else {
+  if (!locationId) {
     throw new Error('locationId is required');
   }
 
-  let finalFloorPlanId = '';
-
-  if (typeof floorPlanId === 'string') {
-    finalFloorPlanId = floorPlanId;
-  } else if (Array.isArray(floorPlanId)) {
-    if (typeof floorPlanId[0] === 'undefined') {
-      throw new Error('floorPlanId is required');
-    }
-
-    finalFloorPlanId = floorPlanId[0];
-  } else {
+  if (!floorPlanId) {
     throw new Error('floorPlanId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        locationId: finalLocationId,
-        floorPlanId: finalFloorPlanId,
+        locationId,
+        floorPlanId,
         resourcesSortingValues: [
           {
             direction: 'ASCENDING',
@@ -113,7 +94,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalLocationId, finalFloorPlanId]);
+  }, [loadQuery, triggerReloadId, locationId, floorPlanId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

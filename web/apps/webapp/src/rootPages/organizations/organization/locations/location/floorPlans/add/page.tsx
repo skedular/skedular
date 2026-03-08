@@ -3,11 +3,12 @@ import { AddFloorPlan } from '@/components/floorPlan/addFloorPlan';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import type { pageOrganizationLocationFloorPlansAdd_rootQuery } from '@/queries/__generated__/pageOrganizationLocationFloorPlansAdd_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -77,32 +78,22 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocationFloorPlansAdd_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { locationId } = useParams();
+  const { locationId } = useKnownParams();
 
-  let finalLocationId = '';
-
-  if (typeof locationId === 'string') {
-    finalLocationId = locationId;
-  } else if (Array.isArray(locationId)) {
-    if (typeof locationId[0] === 'undefined') {
-      throw new Error('locationId is required');
-    }
-
-    finalLocationId = locationId[0];
-  } else {
-    throw new Error('locationId is required');
+  if (!locationId) {
+    throw new Error('organizationStripeConnectAccountId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        locationId: finalLocationId,
+        locationId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalLocationId]);
+  }, [loadQuery, triggerReloadId, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -116,7 +107,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={finalLocationId} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} locationId={locationId} />
     </ErrorBoundary>
   );
 };

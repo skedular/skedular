@@ -40,14 +40,13 @@ type Props = {
 const RootQuery = graphql`
   query addTeam_rootQuery(
     $organizationUniqueAlphanumericName: String!
-    $organizationExists: Boolean!
     $bookingPeopleNameSearchText: String
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     me {
       id
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       id
       name
     }
@@ -294,7 +293,6 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
                   <FormFieldLabel label="Organization Users">
                     <OrganizationMemberSelector
                       rootDataRelay={rootData}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                       name="organizationMemberIds"
                       required={requiredTeamDetailsFields.organizationMemberIds}
                       multiple={true}
@@ -344,7 +342,6 @@ const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired
     loadQuery(
       {
         organizationUniqueAlphanumericName,
-        organizationExists: !!organizationUniqueAlphanumericName,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'ASCENDING',

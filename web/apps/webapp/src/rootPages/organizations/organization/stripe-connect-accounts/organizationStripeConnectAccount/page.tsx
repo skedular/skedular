@@ -3,11 +3,12 @@ import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { EditStripeConnectAccount } from '@/components/stripeConnectAccount/editStripeConnectAccount';
+import { useKnownParams } from '@/libs/providers';
 import type { pageOrganizationStripeConnectAccount_rootQuery } from '@/queries/__generated__/pageOrganizationStripeConnectAccount_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -66,31 +67,22 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationStripeConnectAccount_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationStripeConnectAccountId } = useParams();
-  let finalOrganizationStripeConnectAccountId = '';
+  const { organizationStripeConnectAccountId } = useKnownParams();
 
-  if (typeof organizationStripeConnectAccountId === 'string') {
-    finalOrganizationStripeConnectAccountId = organizationStripeConnectAccountId;
-  } else if (Array.isArray(organizationStripeConnectAccountId)) {
-    if (typeof organizationStripeConnectAccountId[0] === 'undefined') {
-      throw new Error('organizationStripeConnectAccountId is required');
-    }
-
-    finalOrganizationStripeConnectAccountId = organizationStripeConnectAccountId[0];
-  } else {
+  if (!organizationStripeConnectAccountId) {
     throw new Error('organizationStripeConnectAccountId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationStripeConnectAccountId: finalOrganizationStripeConnectAccountId,
+        organizationStripeConnectAccountId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationStripeConnectAccountId]);
+  }, [loadQuery, triggerReloadId, organizationStripeConnectAccountId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

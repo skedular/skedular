@@ -1,22 +1,14 @@
 import { RootShell } from '@/components/rootShell';
 import { AddTeam } from '@/components/team/addTeam';
-import { useParams, useRouter } from 'next/navigation';
+import { useKnownParams } from '@/libs/providers';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 
 const RootPage = () => {
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
@@ -33,7 +25,7 @@ const RootPage = () => {
   return (
     <RootShell>
       <AddTeam
-        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         showDismiss={false}
         onAdded={handleAdded}
         onCancel={handleCancelled}

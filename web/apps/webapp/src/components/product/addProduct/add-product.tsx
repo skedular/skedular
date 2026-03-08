@@ -7,7 +7,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
-import { PaletteModeContext } from '@/libs/providers';
+import { PaletteModeContext, useKnownParams } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
@@ -18,7 +18,6 @@ import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
-import { useParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -606,25 +605,16 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
   const [queryReference, loadQuery] = useQueryLoader<addProduct_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
+        organizationUniqueAlphanumericName,
         multipleChoicesProductTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -636,7 +626,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -655,7 +645,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
       <MemoAddProduct
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
         onAdded={onAdded}
         onCancel={onCancel}
       />

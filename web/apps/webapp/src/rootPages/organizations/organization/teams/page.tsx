@@ -1,27 +1,18 @@
 import { OrganizationTeams } from '@/components/organization/organizationTeams';
 import { RootShell } from '@/components/rootShell';
-import { useParams } from 'next/navigation';
+import { useKnownParams } from '@/libs/providers';
 import { memo } from 'react';
 
 const RootPage = () => {
-  const { organizationUniqueAlphanumericName } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   return (
     <RootShell>
-      <OrganizationTeams organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
+      <OrganizationTeams organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </RootShell>
   );
 };

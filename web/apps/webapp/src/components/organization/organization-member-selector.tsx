@@ -10,7 +10,6 @@ import { useDebounceCallback } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: organizationMemberSelector_query$key;
-  organizationUniqueAlphanumericName: string;
   name: string;
   required?: boolean;
   readOnly?: boolean;
@@ -32,7 +31,7 @@ type OrganizationMemberDetails = {
   customer: CustomerDetails;
 };
 
-const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanumericName, name, required, readOnly, multiple, useMemberId }: Props) => {
+const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, multiple, useMemberId }: Props) => {
   const [rootData, refetch] = useRefetchableFragment<organizationMemberSelector_refetchableFragment, organizationMemberSelector_query$key>(
     graphql`
       fragment organizationMemberSelector_query on Query
@@ -40,8 +39,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
       @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
         organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           members(first: $count, after: $cursor, where: { nameContains: $bookingPeopleNameSearchText }, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues)
-            @connection(key: "organizationMemberSelector_members")
-            @include(if: $organizationExists) {
+            @connection(key: "organizationMemberSelector_members") {
             __id
             totalCount
             edges {
@@ -77,7 +75,6 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
         refetch(
           {
             bookingPeopleNameSearchText,
-            organizationExists: !!organizationUniqueAlphanumericName,
           },
           {
             fetchPolicy: 'store-and-network',
@@ -85,7 +82,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, organizationUniqueAlphanume
         );
       });
     },
-    [startTransition, refetch, organizationUniqueAlphanumericName],
+    [startTransition, refetch],
   );
 
   const handleSearchTextChange = (str: string) => {

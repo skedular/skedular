@@ -3,12 +3,13 @@ import { FloorPlans } from '@/components/floorPlan/floorPlans';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import { endOfDay, startOfDay } from '@/libs/utils';
 import type { pageFloorPlans_rootQuery } from '@/queries/__generated__/pageFloorPlans_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -92,32 +93,13 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageFloorPlans_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, locationId } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName, locationId } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
-  let finalLocationId = '';
-
-  if (typeof locationId === 'string') {
-    finalLocationId = locationId;
-  } else if (Array.isArray(locationId)) {
-    if (typeof locationId[0] === 'undefined') {
-      throw new Error('locationId is required');
-    }
-
-    finalLocationId = locationId[0];
-  } else {
+  if (!locationId) {
     throw new Error('locationId is required');
   }
 
@@ -128,8 +110,8 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        locationId: finalLocationId,
+        organizationUniqueAlphanumericName,
+        locationId,
         floorPlanId: '',
         floorPlanExists: false,
         bookingsSearchCriteriaFrom,
@@ -169,7 +151,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalLocationId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -186,8 +168,8 @@ const RootPageWithRelay = () => {
       <MemoRootPage
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
-        locationId={finalLocationId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        locationId={locationId}
       />
     </ErrorBoundary>
   );

@@ -6,7 +6,7 @@ import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { InMsTeamsContext, PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { coal, emerald } from '@/libs/theme';
 import type { rootShell_rootQuery } from '@/queries/__generated__/rootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -15,7 +15,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import type { JSX, PropsWithChildren } from 'react';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -34,7 +34,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery($organizationUniqueAlphanumericName: String!, $organizationExists: Boolean!) {
+  query rootShell_rootQuery($organizationUniqueAlphanumericName: String!) {
     me {
       id
       isOnboardingDone
@@ -55,7 +55,7 @@ const RootQuery = graphql`
     azureTenantOrganization {
       id
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
+    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       logoUrl
       name
       isSsoTokenValid
@@ -222,30 +222,22 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useParams();
+  const { organizationUniqueAlphanumericName } = useKnownParams();
 
-  let finalOrganizationUniqueAlphanumericName = '';
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] !== 'undefined') {
-      finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-    }
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        organizationExists: !!finalOrganizationUniqueAlphanumericName,
+        organizationUniqueAlphanumericName,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, router]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -267,7 +259,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}
         breadcrumbs={breadcrumbs}
-        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
       >
         {children}
       </MemoRootShell>

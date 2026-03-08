@@ -3,11 +3,12 @@ import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import type { pageOrganizationBankAccount_rootQuery } from '@/queries/__generated__/pageOrganizationBankAccount_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -66,31 +67,21 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBankAccount_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationBankAccountId } = useParams();
-  let finalOrganizationBankAccountId = '';
-
-  if (typeof organizationBankAccountId === 'string') {
-    finalOrganizationBankAccountId = organizationBankAccountId;
-  } else if (Array.isArray(organizationBankAccountId)) {
-    if (typeof organizationBankAccountId[0] === 'undefined') {
-      throw new Error('organizationBankAccountId is required');
-    }
-
-    finalOrganizationBankAccountId = organizationBankAccountId[0];
-  } else {
+  const { organizationBankAccountId } = useKnownParams();
+  if (!organizationBankAccountId) {
     throw new Error('organizationBankAccountId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationBankAccountId: finalOrganizationBankAccountId,
+        organizationBankAccountId,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationBankAccountId]);
+  }, [loadQuery, triggerReloadId, organizationBankAccountId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

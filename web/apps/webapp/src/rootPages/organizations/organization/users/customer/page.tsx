@@ -3,12 +3,13 @@ import { Loading } from '@/components/loading';
 import { OrganizationUser } from '@/components/organization/organizationUser';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import { getCustomerFullName } from '@/libs/utils';
 import type { pageOrganizationUser_rootQuery } from '@/queries/__generated__/pageOrganizationUser_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -73,40 +74,21 @@ const UserPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationUser_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, customerId } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName, customerId } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
-  let finalCustomerId = '';
-
-  if (typeof customerId === 'string') {
-    finalCustomerId = customerId;
-  } else if (Array.isArray(customerId)) {
-    if (typeof customerId[0] === 'undefined') {
-      throw new Error('customerId is required');
-    }
-
-    finalCustomerId = customerId[0];
-  } else {
+  if (!customerId) {
     throw new Error('customerId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        customerId: finalCustomerId,
+        organizationUniqueAlphanumericName,
+        customerId,
         teamsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -118,7 +100,7 @@ const UserPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalCustomerId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, customerId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -135,8 +117,8 @@ const UserPageWithRelay = () => {
       <MemoUserPage
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
-        customerId={finalCustomerId}
+        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        customerId={customerId}
       />
     </ErrorBoundary>
   );

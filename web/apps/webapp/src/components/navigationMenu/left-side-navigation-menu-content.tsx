@@ -25,7 +25,7 @@ import {
   getOrganizationUsersBaseLink,
 } from '@/components/links';
 import { InvitePeopleToJoinOrganizationButton } from '@/components/organization/invitePeopleToJoinOrganization';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { coal, defaultPadding, emerald, getSelectedListItemBorderRadius, sandstone, selectedListItemPaddings } from '@/libs/theme';
 import type { leftSideNavigationMenuContent_query$key } from '@/queries/__generated__/leftSideNavigationMenuContent_query.graphql';
 import Box from '@mui/material/Box';
@@ -37,7 +37,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { memo, useContext } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import { secondDrawerCollapsedDrawerWidth, secondDrawerExpandedDrawerWidth } from './commons';
@@ -54,7 +54,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const rootData = useFragment<leftSideNavigationMenuContent_query$key>(
     graphql`
       fragment leftSideNavigationMenuContent_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) @include(if: $organizationExists) {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
           id
           uniqueAlphanumericName
           type {
@@ -75,7 +75,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
-  const { organizationUniqueAlphanumericName } = useParams();
+  const { organizationUniqueAlphanumericName } = useKnownParams();
   const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const logoUrl =
     paletteMode === 'dark'
@@ -113,16 +113,8 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     ...selectedListItemPaddings,
   };
 
-  let finalOrganizationUniqueAlphanumericName = '';
-
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
+  if (!organizationUniqueAlphanumericName) {
+    throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   const handleCollpaseClicked = () => {
@@ -399,14 +391,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
         </List>
       </Box>
 
-      {!collapsed && finalOrganizationUniqueAlphanumericName && (
+      {!collapsed && organizationUniqueAlphanumericName && (
         <>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, finalOrganizationUniqueAlphanumericName)}
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
@@ -417,7 +409,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
-                organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName}
+                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                 label="Invite Teammates"
                 size="medium"
                 sx={{ backgroundColor: paletteMode === 'dark' ? coal : emerald, paddingTop: 1, paddingBottom: 1, width: 210 }}

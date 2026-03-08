@@ -3,11 +3,12 @@ import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { EditResource } from '@/components/resource/editResource';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import type { pageOrganizationLocationResource_rootQuery } from '@/queries/__generated__/pageOrganizationLocationResource_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -74,55 +75,26 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocationResource_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, locationId, resourceId } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName, locationId, resourceId } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
-  let finalLocationId = '';
-
-  if (typeof locationId === 'string') {
-    finalLocationId = locationId;
-  } else if (Array.isArray(locationId)) {
-    if (typeof locationId[0] === 'undefined') {
-      throw new Error('locationId is required');
-    }
-
-    finalLocationId = locationId[0];
-  } else {
+  if (!locationId) {
     throw new Error('locationId is required');
   }
 
-  let finalResourceId = '';
-
-  if (typeof resourceId === 'string') {
-    finalResourceId = resourceId;
-  } else if (Array.isArray(resourceId)) {
-    if (typeof resourceId[0] === 'undefined') {
-      throw new Error('resourceId is required');
-    }
-
-    finalResourceId = resourceId[0];
-  } else {
+  if (!resourceId) {
     throw new Error('resourceId is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        locationId: finalLocationId,
-        resourceId: finalResourceId,
+        organizationUniqueAlphanumericName,
+        locationId,
+        resourceId,
         multipleChoicesCustomTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -146,7 +118,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalLocationId, finalResourceId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, locationId, resourceId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -160,7 +132,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

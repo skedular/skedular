@@ -4,7 +4,7 @@ import { NewFeedbackDialog } from '@/components/feedback';
 import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon } from '@/components/icons';
 import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink } from '@/components/links';
 import { MobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
 import type { appBar_query$key } from '@/queries/__generated__/appBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -22,7 +22,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import type { JSX } from 'react';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -71,7 +71,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { signOut } = useAuth();
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useParams();
+  const { organizationUniqueAlphanumericName } = useKnownParams();
   const [currentTime, setCurrentTime] = useState(localNow());
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
@@ -79,18 +79,9 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
-  let finalOrganizationUniqueAlphanumericName = '';
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] !== 'undefined') {
-      finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-    }
-  }
-
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
-    if (finalOrganizationUniqueAlphanumericName && rootData.myOrganizations.some((item) => item.uniqueAlphanumericName === finalOrganizationUniqueAlphanumericName)) {
-      return finalOrganizationUniqueAlphanumericName;
+    if (organizationUniqueAlphanumericName && rootData.myOrganizations.some((item) => item.uniqueAlphanumericName === organizationUniqueAlphanumericName)) {
+      return organizationUniqueAlphanumericName;
     }
 
     return undefined;

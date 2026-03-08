@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 import { createContext } from 'react';
-import useIntegratedPlatrform from './integrated-paltform-hook';
+import useIntegratedPlatrform from './integrated-platform-hook';
 
 export const InMsTeamsContext = createContext<boolean>(false);
 

@@ -3,12 +3,13 @@ import { Loading } from '@/components/loading';
 import BookProduct from '@/components/product/bookProduct/book-product';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import { startOfDay } from '@/libs/utils';
 import type { pageOrganizationProductBook_rootQuery } from '@/queries/__generated__/pageOrganizationProductBook_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -80,32 +81,13 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationProductBook_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, productId } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName, productId } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
-  let finalProductId = '';
-
-  if (typeof productId === 'string') {
-    finalProductId = productId;
-  } else if (Array.isArray(productId)) {
-    if (typeof productId[0] === 'undefined') {
-      throw new Error('productId is required');
-    }
-
-    finalProductId = productId[0];
-  } else {
+  if (!productId) {
     throw new Error('productId is required');
   }
 
@@ -116,8 +98,8 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        productId: finalProductId,
+        organizationUniqueAlphanumericName,
+        productId,
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
       },
@@ -125,7 +107,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalProductId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, productId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -139,7 +121,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

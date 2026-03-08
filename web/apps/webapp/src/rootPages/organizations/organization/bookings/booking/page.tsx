@@ -5,13 +5,14 @@ import { BodyIconTypography, StackColumn } from '@/components/commons';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
+import { useKnownParams } from '@/libs/providers';
 import { startOfDay, toShortDateWithAdditionalDayInfo } from '@/libs/utils';
 import type { pageOrganizationBooking_rootQuery } from '@/queries/__generated__/pageOrganizationBooking_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -130,32 +131,13 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, bookingId } = useParams();
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName, bookingId } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
-  let finalBookingId = '';
-
-  if (typeof bookingId === 'string') {
-    finalBookingId = bookingId;
-  } else if (Array.isArray(bookingId)) {
-    if (typeof bookingId[0] === 'undefined') {
-      throw new Error('bookingId is required');
-    }
-
-    finalBookingId = bookingId[0];
-  } else {
+  if (!bookingId) {
     throw new Error('bookingId is required');
   }
 
@@ -166,8 +148,8 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        bookingId: finalBookingId,
+        organizationUniqueAlphanumericName,
+        bookingId,
         organizationMembersSortingValues: [
           {
             direction: 'ASCENDING',
@@ -196,7 +178,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, finalBookingId]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, bookingId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -210,7 +192,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={finalOrganizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

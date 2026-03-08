@@ -3,14 +3,14 @@ import { LeadIconTypography, SmallIconTypography } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
-import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { coal, emerald } from '@/libs/theme';
 import type { pageOrganizationSsoSignin_rootQuery } from '@/queries/__generated__/pageOrganizationSsoSignin_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { memo, useContext, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
@@ -62,34 +62,25 @@ const RootPageWithRelay = () => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useParams();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirectUrl');
-  let finalOrganizationUniqueAlphanumericName = '';
+  const { organizationUniqueAlphanumericName } = useKnownParams();
 
-  if (typeof organizationUniqueAlphanumericName === 'string') {
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName;
-  } else if (Array.isArray(organizationUniqueAlphanumericName)) {
-    if (typeof organizationUniqueAlphanumericName[0] === 'undefined') {
-      throw new Error('organizationUniqueAlphanumericName is required');
-    }
-
-    finalOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName[0];
-  } else {
+  if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName: finalOrganizationUniqueAlphanumericName,
-        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, finalOrganizationUniqueAlphanumericName),
+        organizationUniqueAlphanumericName,
+        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, finalOrganizationUniqueAlphanumericName, redirectUrl, integratedPlatrform]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, redirectUrl, integratedPlatrform]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
