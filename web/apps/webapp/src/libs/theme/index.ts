@@ -13,4 +13,4 @@ export {
   secondDrawerExpandedDrawerWidthPx,
   selectedListItemPaddings,
 } from './theme';
-export { aqua, coal, emerald, flame, sandstone, subbeam, violet } from './theme-primitives';
+export { aqua, coal, emerald, flame, sandstone, sunbeam, violet } from './theme-primitives';

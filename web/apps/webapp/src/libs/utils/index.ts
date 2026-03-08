@@ -1,4 +1,4 @@
-import { aqua, flame, subbeam, violet } from '@/libs/theme/theme-primitives';
+import { aqua, flame, sunbeam, violet } from '@/libs/theme/theme-primitives';
 import dayjs, { Dayjs } from 'dayjs';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import isToday from 'dayjs/plugin/isToday';
@@ -16,7 +16,7 @@ dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(isYesterday);
 
-const secondaryColors = [violet, aqua, subbeam, flame];
+const secondaryColors = [violet, aqua, sunbeam, flame];
 
 export type NameDetails = {
   name?: string | null;

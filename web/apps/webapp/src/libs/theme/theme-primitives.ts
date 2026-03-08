@@ -10,7 +10,7 @@ export const emerald = 'rgb(116, 215, 126)';
 export const sandstone = 'rgb(239, 238, 235)';
 export const violet = 'rgb(202,185,255)';
 export const aqua = 'rgb(161,217,232)';
-export const subbeam = 'rgb(249,214,110)';
+export const sunbeam = 'rgb(249,214,110)';
 export const flame = 'rgb(254,147,111)';
 
 // emerald
@@ -55,7 +55,7 @@ export const gray = {
   900: 'hsl(220, 23%, 15%)',
 };
 
-// flame
+// sunbeam
 export const warning = {
   50: 'hsl(45, 92%, 70%)',
   100: 'hsl(45, 92%, 70%)',
@@ -114,9 +114,9 @@ const getDesignTokens = (mode: PaletteMode) => {
         }),
       },
       warning: {
-        main: error[500],
-        light: error[300],
-        dark: error[700],
+        main: warning[500],
+        light: warning[300],
+        dark: warning[700],
       },
       grey: {
         ...(mode === 'dark' ? brand2 : gray),
@@ -139,42 +139,42 @@ const getDesignTokens = (mode: PaletteMode) => {
       interFontFamily,
       h1: {
         fontSize: defaultTheme.typography.pxToRem(52),
-        fontWeight: 800,
+        fontWeight: 700,
         lineHeight: 1.2,
         letterSpacing: -0.5,
         fontFamily: barlowFontFamily,
       },
       h2: {
         fontSize: defaultTheme.typography.pxToRem(40),
-        fontWeight: 800,
+        fontWeight: 700,
         lineHeight: 1.2,
         fontFamily: barlowFontFamily,
       },
       h3: {
         fontSize: defaultTheme.typography.pxToRem(34),
-        fontWeight: 800,
+        fontWeight: 600,
         lineHeight: 1.2,
         fontFamily: barlowFontFamily,
       },
       h4: {
         fontSize: defaultTheme.typography.pxToRem(28),
-        fontWeight: 700,
-        lineHeight: 1.5,
-        fontFamily: barlowFontFamily,
+        fontWeight: 500,
+        lineHeight: 1.4,
+        fontFamily: interFontFamily,
       },
       h5: {
         fontSize: defaultTheme.typography.pxToRem(24),
-        fontWeight: 700,
+        fontWeight: 600,
         fontFamily: barlowFontFamily,
       },
       h6: {
         fontSize: defaultTheme.typography.pxToRem(18),
-        fontWeight: 700,
+        fontWeight: 500,
         fontFamily: interFontFamily,
       },
       subtitle1: {
         fontSize: defaultTheme.typography.pxToRem(18),
-        fontWeight: 600,
+        fontWeight: 500,
         fontFamily: interFontFamily,
       },
       subtitle2: {
@@ -184,7 +184,7 @@ const getDesignTokens = (mode: PaletteMode) => {
       },
       body1: {
         fontSize: defaultTheme.typography.pxToRem(16),
-        fontWeight: 500,
+        fontWeight: 400,
         fontFamily: interFontFamily,
       },
       body2: {
