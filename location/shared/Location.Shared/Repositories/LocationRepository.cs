@@ -59,7 +59,7 @@ internal static class LocationExtensions
 
         internal IQueryable<Database.Entities.Location> AddSearchCriteria(LocationSearchCriteria searchCriteria)
         {
-            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && !item.Organization.DeletedAt.HasValue);
 
             if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
                 string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
@@ -261,7 +261,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
 
     public async Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue)
+            .Where(query => !query.DeletedAt.HasValue && !query.Organization.DeletedAt.HasValue)
             .AddDependentObjects(true, includeDeletedResources)
             .ToListAsync(cancellationToken);
 
@@ -269,7 +269,7 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         bool includeDeletedResources,
         CancellationToken cancellationToken) =>
         await DbContext.Location
-            .Where(query => !query.DeletedAt.HasValue)
+            .Where(query => !query.DeletedAt.HasValue && !query.Organization.DeletedAt.HasValue)
             .AddDependentObjects(false, includeDeletedResources)
             .ToListAsync(cancellationToken);
 
