@@ -14,8 +14,6 @@ public class OrganizationTag : ReplicatedEntityBaseWithDeleted
     public string? Color { get; set; }
 
     public virtual Organization Organization { get; set; }
-    public virtual ICollection<Product> ProductProductTag { get; set; } = [];
-    public virtual ICollection<Product> ProductLocationTags { get; set; } = [];
     public virtual ICollection<ProductVersion> ProductVersionProductTag { get; set; } = [];
     public virtual ICollection<Location> Locations { get; set; } = [];
 }
