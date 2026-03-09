@@ -29,6 +29,7 @@ const useKnownParams = () => {
   const isCustomDomain = host !== 'localhost' && host !== '127.0.0.1' && host !== 'skedular.app' && host !== 'staging.skedular.app' && host !== 'www.skedular.app';
 
   return {
+    isCustomDomain,
     organizationUniqueAlphanumericName: isCustomDomain ? host.split('.')[0] : getKnownParamValue(organizationUniqueAlphanumericName),
     locationId: getKnownParamValue(locationId),
     bookingId: getKnownParamValue(bookingId),
