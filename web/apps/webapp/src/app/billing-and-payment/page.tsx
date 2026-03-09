@@ -1,6 +1,6 @@
 'use client';
 
-import Page from '@/rootPages/billingAndPayment/page';
+import Page from '@/rootPages/billing-and-payment/page';
 import { memo } from 'react';
 
 const RootPage = () => <Page />;
