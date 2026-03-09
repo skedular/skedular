@@ -118,13 +118,21 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Minimum duration in minutes is required.')
             .test('is-number', 'Minimum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
             .test('is-greater-than-zero', 'Minimum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
-            .test('is-multiple-of-bookingSlotSizeInMinutes', `Minimum duration in minutes must be in ${bookingSlotSizeInMinutes}-minutes increments.`, function (value) {
+            .test('is-valid-duration-step', function (value) {
+              const { cadence } = this.parent;
+              const durationStepMinutes = cadence === 'PER_HOUR_V1' ? 60 : bookingSlotSizeInMinutes;
+              const durationStepLabel = cadence === 'PER_HOUR_V1' ? '1 hour (60 minutes)' : `${bookingSlotSizeInMinutes} minutes`;
+
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
                 return true;
               }
 
-              return minDurationMinutes % bookingSlotSizeInMinutes === 0;
+              if (minDurationMinutes % durationStepMinutes !== 0) {
+                return this.createError({ message: `Minimum duration in minutes must be in ${durationStepLabel} increments.` });
+              }
+
+              return true;
             })
             .test('is-less-than-maxDurationMinutes', 'Minimum duration in minutes must be less or equal than maximum duration in minutes.', function (value) {
               const { maxDurationMinutes: maxDurationMinutesStr } = this.parent;
@@ -144,13 +152,21 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Maximum duration in minutes is required.')
             .test('is-number', 'Maximum duration in minutes must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
             .test('is-greater-than-zero', 'Maximum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
-            .test('is-multiple-of-bookingSlotSizeInMinutes', `Maximum duration in minutes must be in ${bookingSlotSizeInMinutes}-minutes increments.`, function (value) {
+            .test('is-valid-duration-step', function (value) {
+              const { cadence } = this.parent;
+              const durationStepMinutes = cadence === 'PER_HOUR_V1' ? 60 : bookingSlotSizeInMinutes;
+              const durationStepLabel = cadence === 'PER_HOUR_V1' ? '1 hour (60 minutes)' : `${bookingSlotSizeInMinutes} minutes`;
+
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {
                 return true;
               }
 
-              return maxDurationMinutes % bookingSlotSizeInMinutes === 0;
+              if (maxDurationMinutes % durationStepMinutes !== 0) {
+                return this.createError({ message: `Maximum duration in minutes must be in ${durationStepLabel} increments.` });
+              }
+
+              return true;
             })
             .test('is-less-than-minDurationMinutes', 'Maximum duration in minutes must be greater or equal than minimum duration in minutes.', function (value) {
               const { minDurationMinutes: minDurationMinutesStr } = this.parent;
