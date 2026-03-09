@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c304d44a42e396d9a6124b2517aafccf>>
+ * @generated SignedSource<<03510f7c4bf027c7ea15cea5905801af>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,6 +41,18 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
@@ -52,6 +64,18 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
       readonly about: string | null | undefined;
+      readonly featureImages: ReadonlyArray<{
+        readonly original: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+        readonly thumbnail: {
+          readonly height: number | null | undefined;
+          readonly url: string;
+          readonly width: number | null | undefined;
+        } | null | undefined;
+      }>;
       readonly id: string;
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
@@ -74,6 +98,29 @@ var v0 = [
   }
 ],
 v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+],
+v2 = [
   {
     "alias": null,
     "args": [
@@ -130,6 +177,37 @@ v1 = [
             "kind": "ScalarField",
             "name": "website",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CdnImageFile",
+            "kind": "LinkedField",
+            "name": "featureImages",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "original",
+                "plural": false,
+                "selections": (v1/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "CdnFile",
+                "kind": "LinkedField",
+                "name": "thumbnail",
+                "plural": false,
+                "selections": (v1/*: any*/),
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -144,7 +222,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v1/*: any*/),
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -153,19 +231,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addPrivateOrganization_addOrganizationMutation",
-    "selections": (v1/*: any*/)
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "5b96db903823e7fade02f04eb978e63e",
+    "cacheID": "ffaa45a3ec8787436df0ce15b528df05",
     "id": null,
     "metadata": {},
     "name": "addPrivateOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n    }\n  }\n}\n"
+    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "07d8ca4f2223e5b450ea73e62480c27e";
+(node as any).hash = "916d820137f574a0dcd22ee17b280900";
 
 export default node;

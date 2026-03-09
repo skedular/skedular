@@ -310,22 +310,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                           </StackRow>
                         </Box>
                       ))}
-
-                      {featureImages.length === 0 && (
-                        <Box
-                          sx={{
-                            borderRadius: 2,
-                            border: '1px dashed',
-                            borderColor: 'divider',
-                            backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
-                            padding: 2,
-                            display: 'flex',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <BodyIconTypography label="Add feature images to showcase this location. A 4:3 aspect ratio works best." />
-                        </Box>
-                      )}
                     </Box>
 
                     <ImageFileUploaderWithCropper
