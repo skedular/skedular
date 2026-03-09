@@ -1,3 +1,4 @@
+import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { Address, PhysicalAddress } from '@/components/address';
 import {
   AppBarWithStackColumn,
@@ -27,6 +28,7 @@ import { EditOrganizationCustomTagDialog } from '@/components/organization/editO
 import { EditOrganizationZoneDialog } from '@/components/organization/editOrganizationZone/';
 import { Search } from '@/components/search';
 import { Zone } from '@/components/zone';
+import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
@@ -60,6 +62,7 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
@@ -332,6 +335,18 @@ const OrganizationAdmin = ({
             country
             countryCode
           }
+          featureImages {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
       }
     `,
@@ -402,6 +417,18 @@ const OrganizationAdmin = ({
           }
           contactEmail
           contactPhone
+          featureImages {
+            original {
+              url
+              height
+              width
+            }
+            thumbnail {
+              url
+              height
+              width
+            }
+          }
         }
       }
     }
@@ -691,6 +718,29 @@ const OrganizationAdmin = ({
   const [organizationContactPhone, setOrganizationContactPhone] = useState(rootDataOrganization.organization?.contactPhone);
   const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
 
+  const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
+    rootDataOrganization.organization
+      ? rootDataOrganization.organization.featureImages
+          .filter((item) => !!item.original)
+          .map((item) => ({
+            id: '',
+            original: {
+              url: item.original!.url,
+              height: item.original!.height,
+              width: item.original!.width,
+            },
+            thumbnail: item.thumbnail
+              ? {
+                  url: item.thumbnail.url,
+                  height: item.thumbnail.height,
+                  width: item.thumbnail.width,
+                }
+              : null,
+          }))
+      : [],
+  );
+  const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
+
   const validatePhysicalAddress = makeValidate(physicalAddressSchema);
   const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
   const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(rootDataOrganization.organization?.physicalAddress?.osmType);
@@ -863,6 +913,10 @@ const OrganizationAdmin = ({
 
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
+    const finalFeatureImages = featureImages.map((image) => ({
+      original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
+      thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
+    }));
 
     commitUpdateOrganization({
       variables: {
@@ -876,6 +930,7 @@ const OrganizationAdmin = ({
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
           contactPhone,
+          featureImages: finalFeatureImages,
         },
       },
       onCompleted: (_, errors) => {
@@ -913,6 +968,7 @@ const OrganizationAdmin = ({
               .map(({ id, name }) => ({ id, name })),
             contactEmail,
             contactPhone,
+            featureImages: finalFeatureImages,
           },
         },
       },
@@ -2220,6 +2276,28 @@ const OrganizationAdmin = ({
     },
   ];
 
+  const handleFeatureImageUploadCompleted = (response: FileUploadResponse) => {
+    setFeatureImages((prev) => [response, ...prev]);
+    setPrimaryFeatureImage((prevPrimary) => prevPrimary ?? response);
+  };
+
+  const handleRemoveFeatureImage = (image: FileUploadResponse) => {
+    setFeatureImages((prev) => {
+      const next = prev.filter((item) => item.original?.url !== image.original?.url);
+
+      if (primaryFeatureImage?.original?.url === image.original?.url) {
+        setPrimaryFeatureImage(next[0] ?? null);
+      }
+
+      return next;
+    });
+  };
+
+  const handleSetPrimaryFeatureImage = (image: FileUploadResponse) => {
+    setPrimaryFeatureImage(image);
+    setFeatureImages((prev) => [image, ...prev.filter((item) => item.original?.url !== image.original?.url)]);
+  };
+
   const organization = rootDataOrganization.organization;
   const paymentMethodExist = organization && organization.paymentMethods.length > 0;
   const activeOffering = organization ? organization.activeOffering : null;
@@ -2269,13 +2347,52 @@ const OrganizationAdmin = ({
                       <Divider />
                     </StackColumn>
 
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Feature Images">
+                        <StackColumn>
+                          <Box
+                            sx={{
+                              display: 'grid',
+                              gridTemplateColumns: { xs: 'repeat(auto-fill, minmax(140px, 1fr))', sm: 'repeat(auto-fill, minmax(180px, 1fr))' },
+                              gap: 2,
+                            }}
+                          >
+                            {featureImages.map((image, index) => (
+                              <Box
+                                key={index}
+                                sx={{
+                                  position: 'relative',
+                                  borderRadius: 2,
+                                  overflow: 'hidden',
+                                  border: 1,
+                                  borderColor: 'divider',
+                                  backgroundColor: paletteMode === 'dark' ? 'grey.900' : 'grey.50',
+                                }}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <StackRow sx={{ position: 'absolute', top: 8, right: 8 }}>
+                                  <IconButton size="small" aria-label="Remove feature image" onClick={() => handleRemoveFeatureImage(image)}>
+                                    <DeleteIcon fontSize="small" />
+                                  </IconButton>
+                                </StackRow>
+                                <StackRow sx={{ position: 'absolute', left: 8, bottom: 8 }}>
+                                  {primaryFeatureImage?.original?.url === image.original?.url ? (
+                                    <Chip size="small" color="success" label="Cover image" />
+                                  ) : (
+                                    <Button variant="contained" size="small" onClick={() => handleSetPrimaryFeatureImage(image)} sx={{ textTransform: 'none' }}>
+                                      Make cover
+                                    </Button>
+                                  )}
+                                </StackRow>
+                              </Box>
+                            ))}
+                          </Box>
+
+                          <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                        </StackColumn>
+                      </FormFieldLabel>
+
                       <FormFieldLabel label="Name">
                         <TextField name="name" required={requiredOrganizationDetailsFields.name} />
                       </FormFieldLabel>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<901f0757414777f7e7a14f1f3bffd086>>
+ * @generated SignedSource<<e8196d60f4113f92057a9414538e2148>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -55,6 +55,18 @@ export type organizationAdmin_organization_query$data = {
     readonly canModify: boolean;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
+    readonly featureImages: ReadonlyArray<{
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+      readonly thumbnail: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    }>;
     readonly hasAttachedPaymentMethod: boolean;
     readonly id: string;
     readonly industrySubCategories: ReadonlyArray<{
@@ -257,7 +269,30 @@ v20 = {
   "kind": "ScalarField",
   "name": "free",
   "storageKey": null
-};
+},
+v21 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [
     {
@@ -586,6 +621,37 @@ return {
             (v15/*: any*/)
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnImageFile",
+          "kind": "LinkedField",
+          "name": "featureImages",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "original",
+              "plural": false,
+              "selections": (v21/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "thumbnail",
+              "plural": false,
+              "selections": (v21/*: any*/),
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -596,6 +662,6 @@ return {
 };
 })();
 
-(node as any).hash = "7cbef5e857d95e3343146abef2c54c1b";
+(node as any).hash = "59f3ff7cd156aae200ef81bf5d93b523";
 
 export default node;
