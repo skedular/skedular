@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Organization.Api.GraphQL.Organization;
@@ -19,4 +20,6 @@ public class UpdateOrganizationInput
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
+
+    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
 }

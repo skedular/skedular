@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<350751de71081c77fb02cc93b3d59eba>>
+ * @generated SignedSource<<7e9c01a829ad2b051091c2184f2a6930>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type AddLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
-  featureImages: ReadonlyArray<CdnImageFileInput>;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   name: string;
   organizationId?: string | null | undefined;

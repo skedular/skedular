@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66f454c1cc7594eec0f2b16e33c173bb>>
+ * @generated SignedSource<<ebd071e7f9069bbdb66502b75e481948>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ export type AddTeamInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
-  featureImages: ReadonlyArray<CdnImageFileInput>;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   name: string;
   organizationId?: string | null | undefined;

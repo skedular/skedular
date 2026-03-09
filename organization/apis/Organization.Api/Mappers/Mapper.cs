@@ -25,6 +25,8 @@ using AddZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.AddZoneIn
 using AzureTenant = Organization.Shared.Models.AzureTenant;
 using AzureTenantMember = Organization.Shared.Models.AzureTenantMember;
 using BankAccount = Api.Shared.Services.Grpc.Skedular.Organization.V1.BankAccount;
+using CdnFile = Api.Shared.Services.Models.CdnFile;
+using CdnImageFile = Api.Shared.Services.Models.CdnImageFile;
 using Coordinates = Api.Shared.Services.Grpc.Skedular.Organization.V1.Coordinates;
 using Customer = Organization.Shared.Models.Customer;
 using DailyMemberCountRecording = Organization.Shared.Models.DailyMemberCountRecording;
@@ -236,6 +238,7 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
@@ -305,6 +308,7 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
+            FeatureImages = src.FeatureImages,
             TermsOfUse = termsOfUse,
             IndustrySubCategories = industrySubCategories
         };
@@ -325,6 +329,7 @@ public class Mapper : IMapper
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
+        dest.FeatureImages = src.FeatureImages;
         dest.IndustrySubCategories = industrySubCategories;
         return dest;
     }
@@ -418,6 +423,7 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
+            FeatureImages = src.FeatureImages,
             StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
             PaymentMethods = MapTo(src.OrganizationStripePaymentMethods),
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
@@ -478,6 +484,7 @@ public class Mapper : IMapper
             Type = src.Type,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
             TermsOfUse = new Shared.Models.TermsOfUse { Id = src.TermsOfUseId }
@@ -493,6 +500,7 @@ public class Mapper : IMapper
             Website = src.Website,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };
 
@@ -519,7 +527,8 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
             LogoUrl = src.LogoUrl,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
+            FeatureImages = MapTo(src.FeatureImages).ToList()
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src)
@@ -574,6 +583,7 @@ public class Mapper : IMapper
             }));
 
         organization.Members.AddRange(MapToGrpcResponse(src.OrganizationMembers));
+        organization.FeatureImages.AddRange(MapTo(src.FeatureImages));
 
         return organization;
     }
@@ -2008,5 +2018,28 @@ public class Mapper : IMapper
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
                 Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+            };
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile> src) =>
+        src.Select(MapTo);
+
+    private static CdnImageFile MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile src) =>
+        new(MapTo(src.Original), MapTo(src.Thumbnail));
+
+    private static CdnFile? MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile? src) =>
+        src is null ? null : new CdnFile(src.Url, src.Height.FromNullInt(), src.Width.FromNullInt());
+
+    private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile> MapTo(IEnumerable<CdnImageFile> src) =>
+        src.Select(MapTo);
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnImageFile MapTo(CdnImageFile src) =>
+        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile? MapTo(CdnFile? src) =>
+        src is null
+            ? null
+            : new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.CdnFile
+            {
+                Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
             };
 }

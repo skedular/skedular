@@ -106,6 +106,7 @@ message Admin_AddInput {
   OrganizationType type                   = 11;
   string           contactEmail           = 12;
   string           contactPhone           = 13;
+  repeated CdnImageFile featureImages     = 14;
 }
 
 enum OrganizationType {
@@ -145,6 +146,7 @@ message Organization {
   TaxDetails                    taxDetails               = 24;
   PhysicalAddress               physicalAddress          = 25;
   bool                          isOwnershipVerified      = 26;
+  repeated CdnImageFile         featureImages            = 27;
 }
 
 message IndustrySubCategory {
@@ -740,4 +742,15 @@ message UpdateProductTagInput {
   string name        = 2;
   string description = 3;
   string color       = 4;
+}
+
+message CdnImageFile {
+  CdnFile original  = 1;
+  CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+  string url    = 1;
+  int32  height = 2;
+  int32  width  = 3;
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4189a87cabd1d38cceadb0180cb4fce1>>
+ * @generated SignedSource<<6f5a08fbed19d03c28c9ff1248bfdc95>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type UpdateLocationInput = {
   about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
-  featureImages: ReadonlyArray<CdnImageFileInput>;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id: string;
   name: string;
   tagIds: ReadonlyArray<string>;

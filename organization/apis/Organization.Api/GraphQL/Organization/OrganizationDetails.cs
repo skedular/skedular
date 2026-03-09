@@ -65,6 +65,7 @@ public class OrganizationDetails : Node
 
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
+    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
 
     [UseResolverScope]
     public async Task<Connection<OrganizationMemberEdge>> MembersAsync(

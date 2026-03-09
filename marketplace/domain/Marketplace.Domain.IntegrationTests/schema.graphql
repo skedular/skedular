@@ -150,7 +150,7 @@ input AddProductInput {
   description: String
   currency: Currency!
   productTagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
 }
 
@@ -209,7 +209,7 @@ input UpdateProductInput {
   description: String
   currency: Currency!
   productTagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
 }
 

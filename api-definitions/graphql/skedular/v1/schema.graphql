@@ -699,6 +699,7 @@ type OrganizationDetails {
   contactEmail: String
   contactPhone: String
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  featureImages: [CdnImageFile!]!
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
@@ -1358,7 +1359,7 @@ input AddLocationInput {
   about: String
   clientMutationId: String
   extraMetadata: LocationExtraMetadataInput
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String
   name: String!
   organizationId: String
@@ -1499,6 +1500,7 @@ input AddOrganizationInput {
   clientMutationId: String
   contactEmail: String
   contactPhone: String
+  featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
   name: String!
@@ -1584,7 +1586,7 @@ input AddProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String
   name: String!
   organizationId: String
@@ -1622,7 +1624,7 @@ input AddTeamInput {
   about: String
   clientMutationId: String
   customerIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String
   name: String!
   organizationId: String
@@ -2313,7 +2315,7 @@ input UpdateLocationInput {
   about: String
   clientMutationId: String
   extraMetadata: LocationExtraMetadataInput
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String!
   name: String!
   tagIds: [String!]!
@@ -2435,6 +2437,7 @@ input UpdateOrganizationInput {
   clientMutationId: String
   contactEmail: String
   contactPhone: String
+  featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
   name: String!
@@ -2532,7 +2535,7 @@ input UpdateProductInput {
   clientMutationId: String
   currency: Currency!
   description: String
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String!
   name: String!
   pricingOptions: [ProductPricingInput!]!
@@ -2571,7 +2574,7 @@ input UpdateTeamAndTeamMembersInput {
   about: String
   clientMutationId: String
   customerIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String!
   name: String!
   organizationId: String
@@ -2584,7 +2587,7 @@ input UpdateTeamAndTeamMembersInput {
 input UpdateTeamInput {
   about: String
   clientMutationId: String
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   id: String!
   name: String!
   primaryLocationId: String

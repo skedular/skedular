@@ -26,4 +26,6 @@ public class AddOrganizationInput
 
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
+
+    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
 }

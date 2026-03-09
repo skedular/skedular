@@ -18,6 +18,7 @@ public class Organization : ModelBaseWithDeleted
     public string? ContactPhone { get; set; }
     public bool? IsOwnershipVerified { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
+    public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }

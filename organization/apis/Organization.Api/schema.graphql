@@ -13,6 +13,17 @@ type CancelOrganizationOfferingPayload {
   clientMutationId: String
 }
 
+type CdnFile {
+  url: String!
+  height: Int
+  width: Int
+}
+
+type CdnImageFile {
+  original: CdnFile
+  thumbnail: CdnFile
+}
+
 type ConnectionOfOrganizationBankAccountEdge {
   pageInfo: PageInfo!
   edges: [OrganizationBankAccountEdge!]!
@@ -232,6 +243,7 @@ type OrganizationDetails {
   hasAttachedPaymentMethod: Boolean!
   ssoSettings: OrganizationSsoSettingsDetails
   taxDetails: OrganizationTaxDetails
+  featureImages: [CdnImageFile!]!
   id: ID!
 }
 
@@ -561,6 +573,7 @@ input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
+  featureImages: [CdnImageFileInput!]
 }
 
 input AddOrganizationPaymentMethodIntentInput {
@@ -628,6 +641,17 @@ input CancelOrganizationOfferingInput {
   clientMutationId: String
   organizationId: String
   organizationUniqueAlphanumericName: String
+}
+
+input CdnFileInput {
+  url: String!
+  height: Int
+  width: Int
+}
+
+input CdnImageFileInput {
+  original: CdnFileInput
+  thumbnail: CdnFileInput
 }
 
 input ChangeOrganizationMemberRoleInput {
@@ -863,6 +887,7 @@ input UpdateOrganizationInput {
   contactEmail: String
   contactPhone: String
   industrySubCategoryIds: [String!]!
+  featureImages: [CdnImageFileInput!]
 }
 
 input UpdateOrganizationOfferingInput {

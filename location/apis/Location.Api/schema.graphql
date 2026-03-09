@@ -322,7 +322,7 @@ input AddLocationInput {
   timezone: String
   type: LocationType!
   tagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   physicalAddress: LocationPhysicalAddressInput
   extraMetadata: LocationExtraMetadataInput
   weekOpeningHours: WeekOpeningHoursInput
@@ -557,7 +557,7 @@ input UpdateLocationInput {
   timezone: String
   type: LocationType!
   tagIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   extraMetadata: LocationExtraMetadataInput
 }
 

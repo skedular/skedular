@@ -194,7 +194,7 @@ input AddTeamInput {
   timezone: String
   customerIds: [String!]!
   organizationMemberIds: [String!]!
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
 }
 
 input AddTeamMemberInput {
@@ -307,7 +307,7 @@ input UpdateTeamAndTeamMembersInput {
   organizationUniqueAlphanumericName: String
   primaryLocationId: String
   timezone: String
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
   customerIds: [String!]!
   organizationMemberIds: [String!]!
 }
@@ -319,7 +319,7 @@ input UpdateTeamInput {
   about: String
   primaryLocationId: String
   timezone: String
-  featureImages: [CdnImageFileInput!]!
+  featureImages: [CdnImageFileInput!]
 }
 
 input UpdateTeamMembersInput {

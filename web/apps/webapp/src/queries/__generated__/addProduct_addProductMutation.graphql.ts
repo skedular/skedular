@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<723761eeaefb9da99154fee9a44cb6f5>>
+ * @generated SignedSource<<417e2fa489b6da67af8b69675f2acd7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type AddProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
   description?: string | null | undefined;
-  featureImages: ReadonlyArray<CdnImageFileInput>;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   name: string;
   organizationId?: string | null | undefined;

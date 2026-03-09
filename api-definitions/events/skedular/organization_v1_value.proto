@@ -52,6 +52,7 @@ message Organization {
   PhysicalAddress             physicalAddress          = 17;
   bool                        isOwnershipVerified      = 18;
   bool                        hasAttachedPaymentMethod = 19;
+  repeated CdnImageFile       featureImages            = 20;
 }
 
 enum OrganizationType {
@@ -133,4 +134,15 @@ message PhysicalAddress {
 message Coordinates {
   double longitude = 1;
   double latitude  = 2;
+}
+
+message CdnImageFile {
+  CdnFile original  = 1;
+  CdnFile thumbnail = 2;
+}
+
+message CdnFile {
+  string url    = 1;
+  int32  height = 2;
+  int32  width  = 3;
 }

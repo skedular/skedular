@@ -140,10 +140,10 @@ public class Mapper : IMapper
             };
 
     private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
-        src.Select(MapTo)!;
+        src.Select(MapTo);
 
-    private static CdnImageFile? MapTo(Api.Shared.Services.Models.CdnImageFile? src) =>
-        src is null ? null : new CdnImageFile { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+    private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
+        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };

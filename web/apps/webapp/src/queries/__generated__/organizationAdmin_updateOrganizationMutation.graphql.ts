@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c68dc5f991ac9126729a12fd2777b7f0>>
+ * @generated SignedSource<<cdcd9ee3d611471b6cfa8fe0e4399ac2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,11 +14,21 @@ export type UpdateOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   name: string;
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;

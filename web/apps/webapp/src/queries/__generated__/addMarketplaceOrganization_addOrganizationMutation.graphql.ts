@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6937ce8f9039ba5ff244fd7d4de9d8a>>
+ * @generated SignedSource<<0f4ed1fdce9ea26949fe4a4eb2369b3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AddOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   name: string;
@@ -23,6 +24,15 @@ export type AddOrganizationInput = {
   type: OrganizationType;
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type addMarketplaceOrganization_addOrganizationMutation$variables = {
   input: AddOrganizationInput;

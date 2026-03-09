@@ -12,6 +12,6 @@ public class UpdateProductInput
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
-    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
     [GraphQLName("pricingOptions")] public IEnumerable<ProductPricing> PricingOptions { get; set; } = [];
 }

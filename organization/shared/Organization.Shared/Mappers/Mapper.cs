@@ -23,6 +23,8 @@ using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value
 using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 using Team = Organization.Shared.Models.Team;
+using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
+using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile;
 
 namespace Organization.Shared.Mappers;
 
@@ -122,6 +124,8 @@ public class Mapper : IMapper
             }
         }));
 
+        organization.FeatureImages.AddRange(MapTo(src.FeatureImages));
+
         return organization;
     }
 
@@ -160,6 +164,7 @@ public class Mapper : IMapper
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories).ToList()
         };
@@ -602,4 +607,13 @@ public class Mapper : IMapper
         dest.Customer = customer;
         return dest;
     }
+
+    private static IEnumerable<CdnImageFile> MapTo(IEnumerable<Api.Shared.Services.Models.CdnImageFile> src) =>
+        src.Select(MapTo);
+
+    private static CdnImageFile MapTo(Api.Shared.Services.Models.CdnImageFile src) =>
+        new() { Original = MapTo(src.Original), Thumbnail = MapTo(src.Thumbnail) };
+
+    private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
+        src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 }

@@ -20,6 +20,7 @@ public class Organization : EntityBaseWithDeleted
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool? IsOwnershipVerified { get; set; }
+    public ICollection<CdnImageFile>? FeatureImages { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -57,6 +58,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

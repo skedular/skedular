@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f75b1da074f1c58541d324a6f0cdc54>>
+ * @generated SignedSource<<c304d44a42e396d9a6124b2517aafccf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type AddOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   name: string;
@@ -23,6 +24,15 @@ export type AddOrganizationInput = {
   type: OrganizationType;
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
+};
+export type CdnImageFileInput = {
+  original?: CdnFileInput | null | undefined;
+  thumbnail?: CdnFileInput | null | undefined;
+};
+export type CdnFileInput = {
+  height?: number | null | undefined;
+  url: string;
+  width?: number | null | undefined;
 };
 export type addPrivateOrganization_addOrganizationMutation$variables = {
   input: AddOrganizationInput;

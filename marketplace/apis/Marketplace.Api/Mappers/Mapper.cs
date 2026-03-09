@@ -78,7 +78,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Description = src.Description,
             Currency = src.Currency,
-            FeatureImages = src.FeatureImages.ToList(),
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
@@ -89,7 +89,7 @@ public class Mapper : IMapper
             Name = src.Name,
             Description = src.Description,
             Currency = src.Currency,
-            FeatureImages = src.FeatureImages.ToList(),
+            FeatureImages = src.FeatureImages.ToSafeCollection(),
             ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
