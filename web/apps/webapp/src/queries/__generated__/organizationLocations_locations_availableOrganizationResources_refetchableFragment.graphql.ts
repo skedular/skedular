@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<612fd702c856ab0803dccf5f6c9effe4>>
+ * @generated SignedSource<<b57c1befa24001ad00525f46565136fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LocationOrderField = "ABOUT" | "NAME" | "TIMEZONE" | "TYPE" | "%future added value";
+export type LocationOrderField = "NAME" | "TIMEZONE" | "TYPE" | "%future added value";
 export type OrderDirection = "ASCENDING" | "DESCENDING" | "%future added value";
 export type LocationOrderInput = {
   direction: OrderDirection;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cafcbe62fea7bc6cd7231869cab052f1>>
+ * @generated SignedSource<<81addf3d9228557700074aa4ab6a2eb8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddOrganizationInput = {
-  about?: string | null | undefined;
   agreedToTermsOfUse: boolean;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
@@ -19,6 +18,7 @@ export type AddOrganizationInput = {
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
+  listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
@@ -34,13 +34,17 @@ export type CdnFileInput = {
   url: string;
   width?: number | null | undefined;
 };
+export type ListingMetadataInput = {
+  about: string;
+  mainHeader: string;
+  subHeader: string;
+};
 export type addMarketplaceOrganization_addOrganizationMutation$variables = {
   input: AddOrganizationInput;
 };
 export type addMarketplaceOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
-      readonly about: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -54,6 +58,11 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
         } | null | undefined;
       }>;
       readonly id: string;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -63,7 +72,6 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
 export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
-      readonly about: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -77,6 +85,11 @@ export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
         } | null | undefined;
       }>;
       readonly id: string;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -167,8 +180,33 @@ v2 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "about",
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "about",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "mainHeader",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subHeader",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -234,16 +272,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "03b7435e2ffb67e530440be45c286da8",
+    "cacheID": "a5c29c6adfef97f3914b9c0a420fe1e2",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "87f30dd10c2687f8287c4695157eac28";
+(node as any).hash = "01de2e10ae4770a1dfcfb3d7ceec9b75";
 
 export default node;

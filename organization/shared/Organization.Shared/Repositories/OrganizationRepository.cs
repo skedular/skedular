@@ -25,6 +25,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
 
     Task<ICollection<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByAzureTenantIdAsync(string azureTenantId, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Organization>> GetAllIncludingDeletedAsync(CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
     Database.Entities.Organization Add(Database.Entities.Organization organization);
     Database.Entities.Organization Update(Database.Entities.Organization organization);
@@ -236,6 +237,11 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
             .FirstOrDefaultAsync(
                 query => !query.DeletedAt.HasValue && query.AzureTenants.Any(azureTenant => azureTenant.Id == azureTenantId),
                 cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Organization>> GetAllIncludingDeletedAsync(CancellationToken cancellationToken) =>
+        await DbContext.Organization
+            .AddDependentObjects(false)
+            .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken) =>
         await DbContext.Organization

@@ -10,10 +10,10 @@ public class UpdateLocationInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationType Type { get; set; }
     [GraphQLName("tagIds")] public IEnumerable<string> TagIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
+    [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty();
 }

@@ -27,6 +27,7 @@ using CdnImageFile = Api.Shared.Services.Grpc.Skedular.Location.V1.CdnImageFile;
 using ContactDetails = Api.Shared.Services.Models.ContactDetails;
 using Coordinates = Api.Shared.Services.Grpc.Skedular.Location.V1.Coordinates;
 using FloorPlan = Location.Shared.Models.FloorPlan;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
 using UpdateResourceInput = Location.Api.GraphQL.Resource.UpdateResourceInput;
@@ -144,7 +145,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
@@ -177,7 +178,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata,
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
@@ -199,7 +200,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
-        dest.About = src.About;
+        dest.ListingMetadata = src.ListingMetadata;
         dest.Timezone = src.Timezone;
         dest.Type = src.Type.ToLocationType();
         dest.ExtraMetadata = src.ExtraMetadata;
@@ -221,7 +222,7 @@ public class Mapper : IMapper
             {
                 Id = src.Id,
                 Name = src.Name,
-                About = src.About,
+                ListingMetadata = src.ListingMetadata,
                 Timezone = src.Timezone,
                 Type = new LocationTypeDetails { Type = src.Type, Name = src.Type.ToLocationTypeName() },
                 ExtraMetadata = src.ExtraMetadata,
@@ -381,7 +382,7 @@ public class Mapper : IMapper
         {
             Id = src.Id.ToSafeString(),
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
@@ -401,7 +402,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
@@ -449,7 +450,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone,
             Type = src.Type switch
             {
@@ -470,7 +471,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone,
             Type = src.Type switch
             {
@@ -492,7 +493,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone.ToSafeString(),
             Type = src.Type switch
             {
@@ -533,7 +534,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone,
             Type = src.Type switch
             {
@@ -554,7 +555,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone,
             Type = src.Type switch
             {
@@ -1275,4 +1276,12 @@ public class Mapper : IMapper
 
     private static Product MapTo(Shared.Database.Entities.Product src) =>
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
+
+    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
+        new(src.About.ToSafeString(), src.MainHeader.ToSafeString(), src.SubHeader.ToSafeString());
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src) => new()
+    {
+        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+    };
 }

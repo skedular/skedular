@@ -147,7 +147,7 @@ public class AddLocationButtonHandler(
             {
                 if (block is PlainTextInputValue value)
                 {
-                    location.About = value.Value.ToSafeString();
+                    location.ListingMetadata = location.ListingMetadata with { About = value.Value.ToSafeString() };
                 }
                 else
                 {

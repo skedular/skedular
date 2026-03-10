@@ -111,7 +111,6 @@ public class LocationGrpcService(
                 var field = item.Field switch
                 {
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.Name => LocationOrderField.Name,
-                    global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.About => LocationOrderField.About,
                     global::Api.Shared.Services.Grpc.Skedular.Location.V1.LocationOrderField.Timezone => LocationOrderField.Timezone,
                     _ => throw new ArgumentOutOfRangeException()
                 };

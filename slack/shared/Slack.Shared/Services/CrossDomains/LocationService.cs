@@ -121,7 +121,12 @@ public class LocationService(
                 {
                     Id = location.Id,
                     Name = location.Name,
-                    About = location.About,
+                    ListingMetadata = new ListingMetadata
+                    {
+                        About = location.ListingMetadata.About,
+                        MainHeader = location.ListingMetadata.MainHeader,
+                        SubHeader = location.ListingMetadata.SubHeader
+                    },
                     OrganizationId = location.Organization!.Id,
                     Timezone = location.Timezone,
                     Type = location.Type switch
@@ -147,7 +152,12 @@ public class LocationService(
                 {
                     Id = location.Id,
                     Name = location.Name,
-                    About = location.About,
+                    ListingMetadata = new ListingMetadata
+                    {
+                        About = location.ListingMetadata.About,
+                        MainHeader = location.ListingMetadata.MainHeader,
+                        SubHeader = location.ListingMetadata.SubHeader
+                    },
                     Timezone = location.Timezone,
                     OrganizationId = location.Organization!.Id,
                     Type = location.Type switch

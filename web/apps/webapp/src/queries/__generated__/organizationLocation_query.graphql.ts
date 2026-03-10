@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ff39ffa6a4bb8057ae91b09acf3d28e>>
+ * @generated SignedSource<<d1388338f8f4ea666092791b037d8a6f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,6 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationLocation_query$data = {
   readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
   readonly location: {
-    readonly about: string | null | undefined;
     readonly extraMetadata: {
       readonly areaRange: {
         readonly fromInSqm: string;
@@ -48,6 +47,11 @@ export type organizationLocation_query$data = {
       } | null | undefined;
     }>;
     readonly id: string;
+    readonly listingMetadata: {
+      readonly about: string;
+      readonly mainHeader: string;
+      readonly subHeader: string;
+    };
     readonly name: string;
     readonly openingHours: {
       readonly weekOpeningHours: {
@@ -320,8 +324,33 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "about",
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "about",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mainHeader",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "subHeader",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -746,6 +775,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6072b13629b8d0042e3099fda14c3d6";
+(node as any).hash = "3f1c41a97aeac58a9980878151829543";
 
 export default node;

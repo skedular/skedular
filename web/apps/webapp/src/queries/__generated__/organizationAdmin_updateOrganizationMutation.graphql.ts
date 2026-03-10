@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<171c58eb77ab560bca98c0466951d7f7>>
+ * @generated SignedSource<<956279909c05039dac60d7da1614e454>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,13 +10,13 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationInput = {
-  about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
+  listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
@@ -30,13 +30,17 @@ export type CdnFileInput = {
   url: string;
   width?: number | null | undefined;
 };
+export type ListingMetadataInput = {
+  about: string;
+  mainHeader: string;
+  subHeader: string;
+};
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
 };
 export type organizationAdmin_updateOrganizationMutation$data = {
   readonly updateOrganization: {
     readonly organization: {
-      readonly about: string | null | undefined;
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
@@ -56,6 +60,11 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -65,7 +74,6 @@ export type organizationAdmin_updateOrganizationMutation$data = {
 export type organizationAdmin_updateOrganizationMutation$rawResponse = {
   readonly updateOrganization: {
     readonly organization: {
-      readonly about: string | null | undefined;
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
@@ -85,6 +93,11 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
@@ -177,8 +190,33 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "about",
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "about",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "mainHeader",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subHeader",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -271,16 +309,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "24e58841a9640dcac37df69c40839e36",
+    "cacheID": "4aa626e5d49bf24faa495dcdb8370e14",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      about\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4b731555eec81a431023fdee17421a36";
+(node as any).hash = "4eca7e725b7200791a6845d0e30f9888";
 
 export default node;

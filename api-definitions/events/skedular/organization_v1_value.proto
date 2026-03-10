@@ -37,7 +37,7 @@ message Organization {
   google.protobuf.Timestamp   deletedAt                = 2;
   string                      uniqueAlphanumericName   = 3;
   string                      name                     = 4;
-  string                      about                    = 5;
+  ListingMetadata             listingMetadata          = 5;
   string                      logoUrl                  = 6;
   string                      website                  = 7;
   repeated OrganizationMember members                  = 8;
@@ -145,4 +145,10 @@ message CdnFile {
   string url    = 1;
   int32  height = 2;
   int32  width  = 3;
+}
+
+message ListingMetadata {
+  string about      = 1;
+  string mainHeader = 2;
+  string subHeader  = 3;
 }

@@ -18,6 +18,7 @@ using Admin_AddInput = Api.Shared.Services.Grpc.Skedular.Customer.V1.Admin_AddIn
 using BookingCategory = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory;
 using BookingChannel = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingChannel;
 using CustomerType = Api.Shared.Services.Models.CustomerType;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
@@ -250,7 +251,7 @@ public class Mapper : IMapper
             Id = src.Id,
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Website = src.Website.ToSafeString(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),
@@ -273,7 +274,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone.ToSafeString(),
             Organization = string.IsNullOrWhiteSpace(src.OrganizationId) ? null : new Organization { Id = src.OrganizationId },
             Type = src.Type switch
@@ -589,4 +590,10 @@ public class Mapper : IMapper
                 },
             Team = team
         };
+
+    private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata src) =>
+        new(src.About.ToSafeString(), src.MainHeader.ToSafeString(), src.SubHeader.ToSafeString());
+
+    private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
+        new(src.About.ToSafeString(), src.MainHeader.ToSafeString(), src.SubHeader.ToSafeString());
 }

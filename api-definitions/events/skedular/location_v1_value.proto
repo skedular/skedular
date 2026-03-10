@@ -34,7 +34,7 @@ message Location {
   string                    id              = 1;
   google.protobuf.Timestamp deletedAt       = 2;
   string                    name            = 3;
-  string                    about           = 4;
+  ListingMetadata           listingMetadata = 4;
   string                    organizationId  = 5;
   string                    timezone        = 6;
   repeated Resource         resources       = 7;
@@ -121,4 +121,10 @@ message CdnFile {
   string url    = 1;
   int32  height = 2;
   int32  width  = 3;
+}
+
+message ListingMetadata {
+  string about      = 1;
+  string mainHeader = 2;
+  string subHeader  = 3;
 }

@@ -15,7 +15,6 @@ public class AddOrganizationInput
     public string? UniqueAlphanumericName { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
@@ -28,4 +27,5 @@ public class AddOrganizationInput
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
+    [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty();
 }

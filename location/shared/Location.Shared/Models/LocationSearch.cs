@@ -21,7 +21,6 @@ public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 public enum LocationOrderField
 {
     Name,
-    About,
     Timezone,
     Type
 }

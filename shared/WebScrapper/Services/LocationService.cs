@@ -13,6 +13,7 @@ using Admin_GetInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.Admin_G
 using AreaRange = Api.Shared.Services.Grpc.Skedular.Location.V1.AreaRange;
 using Constants = Api.Shared.Services.Constants;
 using ContactDetails = Api.Shared.Services.Grpc.Skedular.Location.V1.ContactDetails;
+using ListingMetadata = Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata;
 using Location = WebScrapper.Models.Location;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using PeopleCapacity = Api.Shared.Services.Grpc.Skedular.Location.V1.PeopleCapacity;
@@ -113,7 +114,7 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    About = description.ToSafeString(),
+                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), MainHeader = string.Empty, SubHeader = string.Empty },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
@@ -151,7 +152,7 @@ public class LocationService(
             }
             else
             {
-                if (matchingLocation.Name != rawLocation.Title || matchingLocation.About != rawLocation.Description)
+                if (matchingLocation.Name != rawLocation.Title || matchingLocation.ListingMetadata.About != rawLocation.Description)
                 {
                     continue;
                 }
@@ -166,7 +167,7 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    About = description.ToSafeString(),
+                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), MainHeader = string.Empty, SubHeader = string.Empty },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),

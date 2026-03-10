@@ -89,7 +89,7 @@ enum LocationType {
 message Admin_AddInput {
   string                id              = 1;
   string                name            = 2;
-  string                about           = 3;
+  ListingMetadata       listingMetadata = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
   repeated string       tagIds          = 6;
@@ -103,7 +103,7 @@ message Admin_AddInput {
 message Admin_UpdateInput {
   string                id              = 1;
   string                name            = 2;
-  string                about           = 3;
+  ListingMetadata       listingMetadata = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
   repeated string       tagIds          = 6;
@@ -128,7 +128,7 @@ message LocationEdge {
 message Location {
   string                id                   = 1;
   string                name                 = 2;
-  string                about                = 3;
+  ListingMetadata       listingMetadata      = 3;
   string                organizationId       = 4;
   string                timezone             = 5;
   repeated Resource     resources            = 6;
@@ -192,8 +192,7 @@ message LocationOrderInput {
 
 enum LocationOrderField {
   LocationOrderField_Name     = 0;
-  LocationOrderField_About    = 1;
-  LocationOrderField_Timezone = 2;
+  LocationOrderField_Timezone = 1;
 }
 
 message GetPermissionsInput {
@@ -210,7 +209,7 @@ message Permissions {
 message AddInput {
   string                id              = 1;
   string                name            = 2;
-  string                about           = 3;
+  ListingMetadata       listingMetadata = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
   repeated string       tagIds          = 6;
@@ -224,7 +223,7 @@ message AddInput {
 message UpdateInput {
   string                id              = 1;
   string                name            = 2;
-  string                about           = 3;
+  ListingMetadata       listingMetadata = 3;
   string                organizationId  = 4;
   string                timezone        = 5;
   repeated string       tagIds          = 6;
@@ -408,4 +407,10 @@ message PhysicalAddress {
 message Coordinates {
   double longitude = 1;
   double latitude  = 2;
+}
+
+message ListingMetadata {
+  string about      = 1;
+  string mainHeader = 2;
+  string subHeader  = 3;
 }

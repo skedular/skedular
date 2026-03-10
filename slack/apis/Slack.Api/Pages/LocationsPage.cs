@@ -586,7 +586,10 @@ public class LocationsPage(
         {
             BlockId = LocationActionTypes.About,
             Label = "About".ToPlainText(),
-            Element = new PlainTextInput { ActionId = LocationActionTypes.About, InitialValue = location.About.ToSafeString(), Multiline = true },
+            Element = new PlainTextInput
+            {
+                ActionId = LocationActionTypes.About, InitialValue = location.ListingMetadata.About.ToSafeString(), Multiline = true
+            },
             Optional = true
         };
 

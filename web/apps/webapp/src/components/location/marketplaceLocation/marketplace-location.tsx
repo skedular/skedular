@@ -4,13 +4,13 @@ import { AreaIcon, PersonIcon } from '@/components/icons';
 import { defaultPadding } from '@/libs/theme';
 import { stringCollectionToString, toOpeningHoursFromTime } from '@/libs/utils';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
+import '@/styles/leaflet/leaflet.css';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import type { LatLngTuple } from 'leaflet';
-import '@/styles/leaflet/leaflet.css';
 import NextLink from 'next/link';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -31,7 +31,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
         location(id: $locationId) {
           id
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           timezone
           extraMetadata {
             contactDetails {
@@ -211,7 +215,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           <Grid size={{ xs: 12, md: 9 }}>
             <StackColumn>
               <SmallHeadingIconTypography label={locationDetails.name} />
-              <SmallIconTypography label={locationDetails.about} sx={{ whiteSpace: 'pre-line' }} />
+              <SmallIconTypography label={locationDetails.listingMetadata.about} sx={{ whiteSpace: 'pre-line' }} />
               <LeadIconTypography label={'Opening Hours'} />
               <SmallIconTypography label={`Monday: ${toOpeningHours(openingHours.weekOpeningHours.monday)}`} />
               <SmallIconTypography label={`Tuesday: ${toOpeningHours(openingHours.weekOpeningHours.tuesday)}`} />

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e9c01a829ad2b051091c2184f2a6930>>
+ * @generated SignedSource<<7460bf599d371425404546d648024521>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,11 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type LocationType = "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddLocationInput = {
-  about?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   extraMetadata?: LocationExtraMetadataInput | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
+  listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
@@ -56,6 +56,11 @@ export type CdnFileInput = {
   url: string;
   width?: number | null | undefined;
 };
+export type ListingMetadataInput = {
+  about: string;
+  mainHeader: string;
+  subHeader: string;
+};
 export type LocationPhysicalAddressInput = {
   addressLine1: string;
   addressLine2?: string | null | undefined;
@@ -93,7 +98,6 @@ export type addPrivateLocation_addLocationMutation$variables = {
 export type addPrivateLocation_addLocationMutation$data = {
   readonly addLocation: {
     readonly location: {
-      readonly about: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -107,6 +111,11 @@ export type addPrivateLocation_addLocationMutation$data = {
         } | null | undefined;
       }>;
       readonly id: string;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -124,7 +133,6 @@ export type addPrivateLocation_addLocationMutation$data = {
 export type addPrivateLocation_addLocationMutation$rawResponse = {
   readonly addLocation: {
     readonly location: {
-      readonly about: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -138,6 +146,11 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
         } | null | undefined;
       }>;
       readonly id: string;
+      readonly listingMetadata: {
+        readonly about: string;
+        readonly mainHeader: string;
+        readonly subHeader: string;
+      };
       readonly name: string;
       readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -231,8 +244,33 @@ v4 = [
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "about",
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "about",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "mainHeader",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "subHeader",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -337,16 +375,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "cf6084acc52149e0cfea33898dd8b091",
+    "cacheID": "b7da7a79cd65130a83d031caac6639e1",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      about\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "294d7c181fb0000ce40317dd23aabe74";
+(node as any).hash = "0340573e984cdd43e06504586fbbaf6b";
 
 export default node;

@@ -17,6 +17,7 @@ public class Location : ModelBaseWithDeleted
     public bool ContactedViaSms { get; set; }
     public bool ContactedViaCall { get; set; }
     public bool ContactedViaWhatsapp { get; set; }
+    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
 
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];

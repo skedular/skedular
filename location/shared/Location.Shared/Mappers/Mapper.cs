@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using Location.Shared.Models;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using LocationType = Api.Shared.Services.Models.LocationType;
 using OpeningHours = Api.Shared.Services.Models.OpeningHours;
 using OpeningHoursDetails = Api.Shared.Services.Models.OpeningHoursDetails;
@@ -27,7 +28,7 @@ public class Mapper : IMapper
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Timezone = src.Timezone.ToSafeString(),
             Type = src.Type switch
             {
@@ -147,4 +148,9 @@ public class Mapper : IMapper
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+
+    private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata MapTo(ListingMetadata src) => new()
+    {
+        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+    };
 }

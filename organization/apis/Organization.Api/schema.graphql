@@ -84,6 +84,12 @@ type InviteCustomerToJoinOrganizationDetails {
   id: ID!
 }
 
+type ListingMetadata {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
+}
+
 type Mutation {
   addOrganizationBankAccount(input: AddOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
@@ -214,7 +220,6 @@ type OrganizationDetails {
   ssoLoginUrl(redirectUrl: String!): String! @cost(weight: "10")
   uniqueAlphanumericName: String
   name: String!
-  about: String
   website: String
   logoUrl: String
   type: OrganizationTypeDetails!
@@ -244,6 +249,7 @@ type OrganizationDetails {
   ssoSettings: OrganizationSsoSettingsDetails
   taxDetails: OrganizationTaxDetails
   featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
   id: ID!
 }
 
@@ -565,7 +571,6 @@ input AddOrganizationInput {
   id: String
   uniqueAlphanumericName: String
   name: String!
-  about: String
   website: String
   type: OrganizationType!
   contactEmail: String
@@ -574,6 +579,7 @@ input AddOrganizationInput {
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
+  listingMetadata: ListingMetadataInput
 }
 
 input AddOrganizationPaymentMethodIntentInput {
@@ -744,6 +750,12 @@ input JoinOrganizationInvitationOrderInput {
   field: JoinOrganizationInvitationOrderField!
 }
 
+input ListingMetadataInput {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
+}
+
 input MyInvitationsToJoinOrganizationsWhereInput {
   organizationUniqueAlphanumericName: String
   status: InvitationStatus
@@ -882,12 +894,12 @@ input UpdateOrganizationInput {
   id: String
   uniqueAlphanumericName: String
   name: String!
-  about: String
   website: String
   contactEmail: String
   contactPhone: String
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
+  listingMetadata: ListingMetadataInput
 }
 
 input UpdateOrganizationOfferingInput {

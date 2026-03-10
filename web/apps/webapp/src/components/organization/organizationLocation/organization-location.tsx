@@ -200,7 +200,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         location(id: $locationId) {
           id
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           timezone
           type {
             type
@@ -394,7 +398,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         location {
           id
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           timezone
           type {
             type
@@ -609,7 +617,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         location {
           id
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           timezone
           extraMetadata {
             contactDetails {
@@ -763,7 +775,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
   const [locationName, setLocationName] = useState<string>(rootData.location?.name ?? '');
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
-  const [locationAbout, setLocationAbout] = useState(rootData.location?.about);
+  const [locationAbout, setLocationAbout] = useState(rootData.location?.listingMetadata.about ?? null);
   const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>(rootData.location?.timezone ?? '');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
@@ -950,7 +962,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           clientMutationId: uuid(),
           id: location.id,
           name,
-          about,
+          listingMetadata: {
+            about: about ?? '',
+            mainHeader: '',
+            subHeader: '',
+          },
           timezone,
           type: type as LocationType,
           extraMetadata: {
@@ -1008,7 +1024,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           location: {
             id: location.id,
             name,
-            about,
+            listingMetadata: {
+              about: about ?? '',
+              mainHeader: '',
+              subHeader: '',
+            },
             timezone,
             type: {
               type: type as LocationType,
@@ -1680,7 +1700,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           location: {
             id: location.id,
             name: location.name,
-            about: location.about,
+            listingMetadata: location.listingMetadata,
             timezone: location.timezone,
             extraMetadata: location.extraMetadata,
             physicalAddress: location.physicalAddress,

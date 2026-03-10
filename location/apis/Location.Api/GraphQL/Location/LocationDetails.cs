@@ -18,7 +18,6 @@ namespace Location.Api.GraphQL.Location;
 public class LocationDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
     [GraphQLName("organizationUniqueAlphanumericName")]
@@ -45,6 +44,7 @@ public class LocationDetails : Node
     [GraphQLName("contactedViaCall")] public bool ContactedViaCall { get; set; }
     [GraphQLName("contactedViaWhatsapp")] public bool ContactedViaWhatsapp { get; set; }
     [GraphQLName("productIds")] public IEnumerable<string> ProductIds { get; set; } = [];
+    [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
 
     [UseResolverScope]
     public async Task<LocationAnalytics> AnalyticsAsync(

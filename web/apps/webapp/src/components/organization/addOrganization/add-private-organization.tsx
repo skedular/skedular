@@ -75,7 +75,11 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           id
           uniqueAlphanumericName
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           website
           featureImages {
             original {
@@ -117,7 +121,11 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           id,
           uniqueAlphanumericName,
           name,
-          about,
+          listingMetadata: {
+            about: about ?? '',
+            mainHeader: '',
+            subHeader: '',
+          },
           website,
           type: 'PRIVATE',
           agreedToTermsOfUse: true,
@@ -156,7 +164,11 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             id,
             uniqueAlphanumericName,
             name,
-            about,
+            listingMetadata: {
+              about: about ?? '',
+              mainHeader: '',
+              subHeader: '',
+            },
             website,
             featureImages: finalFeatureImages,
           },

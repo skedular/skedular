@@ -34,6 +34,7 @@ using Identity = Organization.Shared.Models.Identity;
 using IndustryMainCategory = Organization.Shared.Models.IndustryMainCategory;
 using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
 using JoinInvitation = Organization.Shared.Models.JoinInvitation;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Services.Offering.Offering;
 using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
@@ -230,7 +231,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -300,7 +301,7 @@ public class Mapper : IMapper
             Id = src.Id,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -321,7 +322,7 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Name = src.Name;
-        dest.About = src.About;
+        dest.ListingMetadata = src.ListingMetadata;
         dest.Website = src.Website;
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
@@ -415,7 +416,7 @@ public class Mapper : IMapper
             Id = src.Id,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -479,7 +480,7 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             Type = src.Type,
             ContactEmail = src.ContactEmail,
@@ -496,7 +497,7 @@ public class Mapper : IMapper
             Id = src.Id.ToSafeString(),
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
@@ -513,7 +514,7 @@ public class Mapper : IMapper
             Id = src.Id,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = MapTo(src.ListingMetadata),
             Website = src.Website,
             Type = src.Type switch
             {
@@ -540,7 +541,7 @@ public class Mapper : IMapper
             Id = src.Id,
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Website = src.Website.ToSafeString(),
             Type = src.Type switch
             {
@@ -2042,4 +2043,12 @@ public class Mapper : IMapper
             {
                 Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt()
             };
+
+    private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata src) =>
+        new(src.About.ToSafeString(), src.MainHeader.ToSafeString(), src.SubHeader.ToSafeString());
+
+    private static global::Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata MapTo(ListingMetadata src) => new()
+    {
+        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+    };
 }

@@ -351,6 +351,12 @@ type InviteCustomersToJoinTeamPayload {
   invitesCustomersToJoinTeam: [InviteCustomerToJoinTeamDetails!]!
 }
 
+type ListingMetadata {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
+}
+
 type LocationAnalytics {
   dailyBookingsTotals: [LocationDailyBookingsTotal!]!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
@@ -364,7 +370,6 @@ type LocationDailyBookingsTotal {
 }
 
 type LocationDetails {
-  about: String
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   canDelete: Boolean!
   canModify: Boolean!
@@ -379,6 +384,7 @@ type LocationDetails {
   featureImages: [CdnImageFile!]!
   hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
+  listingMetadata: ListingMetadata!
   name: String!
   openingHours: OpeningHours!
   organization: OrganizationDetails!
@@ -686,7 +692,6 @@ type OrganizationDailyBookingsTotal {
 }
 
 type OrganizationDetails {
-  about: String
   activeOffering: OrganizationActiveOfferingDetails!
   agreedToTermsOfUse: Boolean!
   analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
@@ -709,6 +714,7 @@ type OrganizationDetails {
   isMyOnboardingDone: Boolean!
   isOwnershipVerified: Boolean!
   isSsoTokenValid: Boolean! @cost(weight: "10")
+  listingMetadata: ListingMetadata!
   locationSpaceTypes: [OrganizationTagDetails!]!
   logoUrl: String
   members(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
@@ -1356,11 +1362,11 @@ input AddFloorPlanInput {
 }
 
 input AddLocationInput {
-  about: String
   clientMutationId: String
   extraMetadata: LocationExtraMetadataInput
   featureImages: [CdnImageFileInput!]
   id: String
+  listingMetadata: ListingMetadataInput
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
@@ -1495,7 +1501,6 @@ input AddOrganizationBillingDetailsInput {
 }
 
 input AddOrganizationInput {
-  about: String
   agreedToTermsOfUse: Boolean!
   clientMutationId: String
   contactEmail: String
@@ -1503,6 +1508,7 @@ input AddOrganizationInput {
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
+  listingMetadata: ListingMetadataInput
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
@@ -1950,6 +1956,12 @@ input JoinTeamInvitationOrderInput {
   field: JoinTeamInvitationOrderField!
 }
 
+input ListingMetadataInput {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
+}
+
 input LocationExtraMetadataInput {
   areaRange: AreaRangeInput
   contactDetails: ContactDetailsInput
@@ -2312,11 +2324,11 @@ input UpdateFloorPlanInput {
 }
 
 input UpdateLocationInput {
-  about: String
   clientMutationId: String
   extraMetadata: LocationExtraMetadataInput
   featureImages: [CdnImageFileInput!]
   id: String!
+  listingMetadata: ListingMetadataInput
   name: String!
   tagIds: [String!]!
   timezone: String
@@ -2433,13 +2445,13 @@ input UpdateOrganizationBillingDetailsInput {
 }
 
 input UpdateOrganizationInput {
-  about: String
   clientMutationId: String
   contactEmail: String
   contactPhone: String
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
+  listingMetadata: ListingMetadataInput
   name: String!
   uniqueAlphanumericName: String
   website: String
@@ -2716,7 +2728,6 @@ enum JoinTeamInvitationOrderField {
 }
 
 enum LocationOrderField {
-  ABOUT
   NAME
   TIMEZONE
   TYPE

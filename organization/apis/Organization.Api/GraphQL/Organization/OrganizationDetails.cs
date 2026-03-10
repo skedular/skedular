@@ -25,7 +25,6 @@ public class OrganizationDetails : Node
     public string? UniqueAlphanumericName { get; set; }
 
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
@@ -66,6 +65,7 @@ public class OrganizationDetails : Node
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
+    [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
 
     [UseResolverScope]
     public async Task<Connection<OrganizationMemberEdge>> MembersAsync(

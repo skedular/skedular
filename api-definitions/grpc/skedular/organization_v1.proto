@@ -93,20 +93,20 @@ message TermsOfUse {
 }
 
 message Admin_AddInput {
-  string           id                     = 1;
-  string           uniqueAlphanumericName = 2;
-  string           name                   = 3;
-  string           about                  = 4;
-  string           logoUrl                = 5;
-  string           website                = 6;
-  bool             agreedToTermsOfUse     = 7;
-  string           termsOfUseId           = 8;
-  repeated string  industrySubCategoryIds = 9;
-  string           offeringCode           = 10;
-  OrganizationType type                   = 11;
-  string           contactEmail           = 12;
-  string           contactPhone           = 13;
-  repeated CdnImageFile featureImages     = 14;
+  string                id                     = 1;
+  string                uniqueAlphanumericName = 2;
+  string                name                   = 3;
+  ListingMetadata       listingMetadata        = 4;
+  string                logoUrl                = 5;
+  string                website                = 6;
+  bool                  agreedToTermsOfUse     = 7;
+  string                termsOfUseId           = 8;
+  repeated string       industrySubCategoryIds = 9;
+  string                offeringCode           = 10;
+  OrganizationType      type                   = 11;
+  string                contactEmail           = 12;
+  string                contactPhone           = 13;
+  repeated CdnImageFile featureImages          = 14;
 }
 
 enum OrganizationType {
@@ -123,7 +123,7 @@ message Organization {
   string                        id                       = 1;
   string                        uniqueAlphanumericName   = 2;
   string                        name                     = 3;
-  string                        about                    = 4;
+  ListingMetadata               listingMetadata          = 4;
   string                        logoUrl                  = 5;
   string                        website                  = 6;
   bool                          agreedToTermsOfUse       = 7;
@@ -753,4 +753,10 @@ message CdnFile {
   string url    = 1;
   int32  height = 2;
   int32  width  = 3;
+}
+
+message ListingMetadata {
+  string about      = 1;
+  string mainHeader = 2;
+  string subHeader  = 3;
 }

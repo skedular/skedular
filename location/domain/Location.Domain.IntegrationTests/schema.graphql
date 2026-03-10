@@ -66,6 +66,12 @@ type FloorPlanPayload {
   floorPlan: FloorPlanDetails!
 }
 
+type ListingMetadata {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
+}
+
 type LocationAnalytics {
   name: String!
   desksOccupancyPercentage: [DesksOccupancyPercentage!]!
@@ -89,7 +95,6 @@ type LocationDetails {
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
   hasFutureBooking: Boolean! @cost(weight: "10")
   name: String!
-  about: String
   timezone: String
   type: LocationTypeDetails!
   openingHours: OpeningHours!
@@ -106,6 +111,7 @@ type LocationDetails {
   contactedViaSms: Boolean!
   contactedViaCall: Boolean!
   contactedViaWhatsapp: Boolean!
+  listingMetadata: ListingMetadata!
   id: ID!
 }
 
@@ -316,7 +322,6 @@ input AddLocationInput {
   clientMutationId: String
   id: String
   name: String!
-  about: String
   organizationId: String
   organizationUniqueAlphanumericName: String
   timezone: String
@@ -326,6 +331,7 @@ input AddLocationInput {
   physicalAddress: LocationPhysicalAddressInput
   extraMetadata: LocationExtraMetadataInput
   weekOpeningHours: WeekOpeningHoursInput
+  listingMetadata: ListingMetadataInput
 }
 
 input AddLocationPhysicalAddressInput {
@@ -425,6 +431,12 @@ input FloorPlanOrderInput {
 
 input FloorPlanWhereInput {
   locationId: String!
+}
+
+input ListingMetadataInput {
+  about: String!
+  mainHeader: String!
+  subHeader: String!
 }
 
 input LocationExtraMetadataInput {
@@ -553,12 +565,12 @@ input UpdateLocationInput {
   clientMutationId: String
   id: String!
   name: String!
-  about: String
   timezone: String
   type: LocationType!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
   extraMetadata: LocationExtraMetadataInput
+  listingMetadata: ListingMetadataInput
 }
 
 input UpdateLocationOpeningHoursInput {
@@ -629,7 +641,6 @@ enum FloorPlanOrderField {
 
 enum LocationOrderField {
   NAME
-  ABOUT
   TIMEZONE
   TYPE
 }

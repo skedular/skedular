@@ -81,7 +81,7 @@ public class LocationComponents(
         var blocks = new List<Block>
         {
             new SectionBlock { Text = $"*Name*: {location.Name.ToSafeString()}".ToMarkdown() },
-            new SectionBlock { Text = $"*About*: {location.About.ToSafeString()}".ToMarkdown() },
+            new SectionBlock { Text = $"*About*: {location.ListingMetadata.About.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Timezone*: {location.Timezone.ToSafeString()}".ToMarkdown() },
             new SectionBlock { Text = $"*Resource capacity*: {resourceCapacity}".ToMarkdown() },
             new SectionBlock { Text = $"*Daily update channel*: {dailyUpdateChannel}".ToMarkdown() }

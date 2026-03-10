@@ -23,6 +23,7 @@ public class Location : EntityBaseWithDeleted
     public bool ContactedViaSms { get; set; }
     public bool ContactedViaCall { get; set; }
     public bool ContactedViaWhatsapp { get; set; }
+    public ListingMetadata? ListingMetadata { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -57,6 +58,7 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
         builder.Property(item => item.ContactedViaSms).HasDefaultValue(false);
         builder.Property(item => item.ContactedViaCall).HasDefaultValue(false);
         builder.Property(item => item.ContactedViaWhatsapp).HasDefaultValue(false);
+        builder.Property(item => item.ListingMetadata).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations).HasForeignKey(item => item.OrganizationId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.Locations);

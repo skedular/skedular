@@ -25,6 +25,7 @@ using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 using Team = Organization.Shared.Models.Team;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 
 namespace Organization.Shared.Mappers;
 
@@ -62,7 +63,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt?.ToTimestamp(),
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
-            About = src.About.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Website = src.Website.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type switch
@@ -156,7 +157,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
-            About = src.About,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -616,4 +617,9 @@ public class Mapper : IMapper
 
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
+
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata MapTo(ListingMetadata src) => new()
+    {
+        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+    };
 }

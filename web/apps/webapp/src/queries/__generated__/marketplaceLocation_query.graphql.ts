@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3376b638c4a9d65f83f6109259e62ba3>>
+ * @generated SignedSource<<1ff6fa81c4764977a5abcb60b25cc08e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceLocation_query$data = {
   readonly location: {
-    readonly about: string | null | undefined;
     readonly extraMetadata: {
       readonly areaRange: {
         readonly fromInSqm: string;
@@ -40,6 +39,11 @@ export type marketplaceLocation_query$data = {
       } | null | undefined;
     }>;
     readonly id: string;
+    readonly listingMetadata: {
+      readonly about: string;
+      readonly mainHeader: string;
+      readonly subHeader: string;
+    };
     readonly name: string;
     readonly openingHours: {
       readonly weekOpeningHours: {
@@ -175,8 +179,33 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "about",
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "about",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mainHeader",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "subHeader",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -477,6 +506,6 @@ return {
 };
 })();
 
-(node as any).hash = "3af2746d76233e6d452cbe93da4c4284";
+(node as any).hash = "0339b7e100d60844cd62da697639198a";
 
 export default node;

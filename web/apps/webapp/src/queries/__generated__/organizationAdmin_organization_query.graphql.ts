@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8196d60f4113f92057a9414538e2148>>
+ * @generated SignedSource<<6710f80cb9a3b8b0e2a00e380f65d7e5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_organization_query$data = {
   readonly organization: {
-    readonly about: string | null | undefined;
     readonly activeOffering: {
       readonly end: any;
       readonly featureSet: ReadonlyArray<string>;
@@ -73,6 +72,11 @@ export type organizationAdmin_organization_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
+    readonly listingMetadata: {
+      readonly about: string;
+      readonly mainHeader: string;
+      readonly subHeader: string;
+    };
     readonly logoUrl: string | null | undefined;
     readonly name: string;
     readonly paymentMethods: ReadonlyArray<{
@@ -343,8 +347,33 @@ return {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "about",
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "about",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "mainHeader",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "subHeader",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -662,6 +691,6 @@ return {
 };
 })();
 
-(node as any).hash = "59f3ff7cd156aae200ef81bf5d93b523";
+(node as any).hash = "dc58ccadb6579b65d358646a594b430e";
 
 export default node;

@@ -26,6 +26,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
 
     Task<ICollection<Database.Entities.Location>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken);
 
+    Task<ICollection<Database.Entities.Location>> GetAllIncludingDeletedAsync(CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetAllAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Location>> GetAllUntrackedAsync(bool includeDeletedResources, CancellationToken cancellationToken);
     Database.Entities.Location Add(Database.Entities.Location location);
@@ -181,9 +182,6 @@ internal static class LocationExtensions
                 LocationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Name)
                     : originalQuery.OrderByDescending(x => x.Name),
-                LocationOrderField.About => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.About)
-                    : originalQuery.OrderByDescending(x => x.About),
                 LocationOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
                     ? originalQuery.OrderBy(x => x.Timezone)
                     : originalQuery.OrderByDescending(x => x.Timezone),
@@ -197,9 +195,6 @@ internal static class LocationExtensions
                     LocationOrderField.Name => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Name)
                         : query.ThenByDescending(x => x.Name),
-                    LocationOrderField.About => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.About)
-                        : query.ThenByDescending(x => x.About),
                     LocationOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
                         ? query.ThenBy(x => x.Timezone)
                         : query.ThenByDescending(x => x.Timezone),
@@ -256,6 +251,11 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue && query.Organization.Id == organizationId)
+            .AddDependentObjects(true, false)
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Location>> GetAllIncludingDeletedAsync(CancellationToken cancellationToken) =>
+        await DbContext.Location
             .AddDependentObjects(true, false)
             .ToListAsync(cancellationToken);
 

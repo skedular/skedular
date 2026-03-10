@@ -70,7 +70,11 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
           id
           uniqueAlphanumericName
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           website
         }
       }
@@ -93,7 +97,11 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
           id,
           uniqueAlphanumericName,
           name,
-          about,
+          listingMetadata: {
+            about: about ?? '',
+            mainHeader: '',
+            subHeader: '',
+          },
           website,
           type: 'INDIVIDUAL',
           agreedToTermsOfUse: true,
@@ -131,7 +139,11 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             id,
             uniqueAlphanumericName,
             name,
-            about,
+            listingMetadata: {
+              about: about ?? '',
+              mainHeader: '',
+              subHeader: '',
+            },
             website,
           },
         },

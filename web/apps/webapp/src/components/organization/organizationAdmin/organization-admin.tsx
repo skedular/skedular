@@ -251,7 +251,11 @@ const OrganizationAdmin = ({
           uniqueAlphanumericName
           name
           logoUrl
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           website
           canModify
           industrySubCategories {
@@ -409,7 +413,11 @@ const OrganizationAdmin = ({
           id
           uniqueAlphanumericName
           name
-          about
+          listingMetadata {
+            about
+            mainHeader
+            subHeader
+          }
           website
           industrySubCategories {
             id
@@ -705,7 +713,7 @@ const OrganizationAdmin = ({
   const debounceSetOrganizationEditableUniqueAlphanumericName = useDebounceCallback(setOrganizationEditableUniqueAlphanumericName, keyboardTextFieldDebounceTimeout);
   const [organizationName, setOrganizationName] = useState<string>(rootDataOrganization.organization?.name ?? '');
   const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
-  const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.about);
+  const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.listingMetadata.about ?? null);
   const debounceSetOrganizationAbout = useDebounceCallback(setOrganizationAbout, keyboardTextFieldDebounceTimeout);
   const [organizationWebsite, setOrganizationWebsite] = useState(rootDataOrganization.organization?.website);
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
@@ -925,7 +933,11 @@ const OrganizationAdmin = ({
           id: organization.id,
           uniqueAlphanumericName,
           name,
-          about,
+          listingMetadata: {
+            about: about ?? '',
+            mainHeader: '',
+            subHeader: '',
+          },
           website,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
@@ -960,7 +972,11 @@ const OrganizationAdmin = ({
             id: organization.id,
             uniqueAlphanumericName: organization.uniqueAlphanumericName,
             name,
-            about,
+            listingMetadata: {
+              about: about ?? '',
+              mainHeader: '',
+              subHeader: '',
+            },
             website,
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)

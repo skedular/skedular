@@ -12,7 +12,6 @@ public class AddLocationInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
     [GraphQLName("organizationUniqueAlphanumericName")]
@@ -25,4 +24,5 @@ public class AddLocationInput
     [GraphQLName("physicalAddress")] public LocationPhysicalAddressInput? PhysicalAddress { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("weekOpeningHours")] public WeekOpeningHours? WeekOpeningHours { get; set; }
+    [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty();
 }
