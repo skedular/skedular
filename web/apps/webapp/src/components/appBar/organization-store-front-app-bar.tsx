@@ -24,10 +24,9 @@ import { useInterval } from 'usehooks-ts';
 
 type Props = {
   rootDataRelay: organizationStoreFrontAppBar_query$key;
-  hideWelcomeMessage?: boolean;
 };
 
-const OrganizationStoreFrontAppBar = ({ rootDataRelay, hideWelcomeMessage }: Props) => {
+const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<organizationStoreFrontAppBar_query$key>(
     graphql`
       fragment organizationStoreFrontAppBar_query on Query {
@@ -39,6 +38,9 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay, hideWelcomeMessage }: Pro
           middleName
           familyName
           photoUrl
+        }
+        organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          name
         }
         ...newFeedbackDialog_query
       }
@@ -105,6 +107,10 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay, hideWelcomeMessage }: Pro
   const settingsLink = getSettingsLink(integratedPlatrform);
   const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
 
+  if (!rootData.organizationPublic) {
+    return null;
+  }
+
   return (
     <>
       <MuiAppBar position="sticky" className="app-bar">
@@ -115,7 +121,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay, hideWelcomeMessage }: Pro
             borderColor: (theme) => theme.palette.divider,
           }}
         >
-          {!hideWelcomeMessage && <BodyIconTypography label={`Welcome ${customerName}`} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingLeft: 2 }} />}
+          <LeadIconTypography label={rootData.organizationPublic?.name} />
 
           <PushToRight />
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />

@@ -5,7 +5,7 @@ import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,11 +21,10 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<organizationStoreFrontRootShell_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  hideWelcomeMessage?: boolean;
 };
 
 const RootQuery = graphql`
-  query organizationStoreFrontRootShell_rootQuery {
+  query organizationStoreFrontRootShell_rootQuery($organizationUniqueAlphanumericName: String!) {
     me {
       id
     }
@@ -44,7 +43,7 @@ const RootQuery = graphql`
 
 const maxRetryAttemptsToReload = 20;
 
-const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadRequired, hideWelcomeMessage }: PropsWithChildren<Props>) => {
+const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<organizationStoreFrontRootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
@@ -103,7 +102,7 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
       <Box sx={{ display: 'flex' }}>
         <CssBaseline enableColorScheme />
         <Box sx={{ flexGrow: 1 }}>
-          <OrganizationStoreFrontAppBar rootDataRelay={rootData} hideWelcomeMessage={hideWelcomeMessage} />
+          <OrganizationStoreFrontAppBar rootDataRelay={rootData} />
           {children}
         </Box>
       </Box>
@@ -113,24 +112,25 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
 
 const MemoOrganizationStoreFrontRootShell = memo(OrganizationStoreFrontRootShell);
 
-type RelayProps = {
-  hideWelcomeMessage?: boolean;
-};
-
-const OrganizationStoreFrontRootShellWithRelay = ({ children, hideWelcomeMessage }: PropsWithChildren<RelayProps>) => {
+const OrganizationStoreFrontRootShellWithRelay = ({ children }: PropsWithChildren) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationStoreFrontRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
   const router = useRouter();
+  const { organizationUniqueAlphanumericName } = useKnownParams();
+
+  if (!organizationUniqueAlphanumericName) {
+    throw new Error('organizationUniqueAlphanumericName is required');
+  }
 
   useEffect(() => {
     loadQuery(
-      {},
+      { organizationUniqueAlphanumericName },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, router]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, router]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -144,7 +144,7 @@ const OrganizationStoreFrontRootShellWithRelay = ({ children, hideWelcomeMessage
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoOrganizationStoreFrontRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired} hideWelcomeMessage={hideWelcomeMessage}>
+      <MemoOrganizationStoreFrontRootShell queryReference={queryReference} onReloadRequired={handleReloadRequired}>
         {children}
       </MemoOrganizationStoreFrontRootShell>
     </ErrorBoundary>

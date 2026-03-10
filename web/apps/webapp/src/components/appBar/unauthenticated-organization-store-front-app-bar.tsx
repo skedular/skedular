@@ -1,8 +1,9 @@
-import { BodyIconTypography, PushToRight } from '@/components/commons';
+import { BodyIconTypography, LeadIconTypography, PushToRight } from '@/components/commons';
 import { HamburgerMenuIcon } from '@/components/icons';
 import { getSignInLink, getSignUpLink } from '@/components/links';
 import { UnauthenticatedMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, UpdatePaletteModeContext } from '@/libs/providers';
+import type { unauthenticatedOrganizationStoreFrontAppBar_query$key } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import MuiAppBar from '@mui/material/AppBar';
@@ -10,22 +11,28 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/system/Box';
-import Image from 'next/image';
 import { memo, useContext, useState } from 'react';
+import { graphql, useFragment } from 'react-relay';
 
-const UnauthenticatedAppBar = () => {
+type Props = {
+  rootDataRelay: unauthenticatedOrganizationStoreFrontAppBar_query$key;
+};
+
+const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<unauthenticatedOrganizationStoreFrontAppBar_query$key>(
+    graphql`
+      fragment unauthenticatedOrganizationStoreFrontAppBar_query on Query {
+        organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          name
+        }
+      }
+    `,
+    rootDataRelay,
+  );
+
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
-
-  const logoUrl = paletteMode === 'dark' ? '/images/skedular-logo-inverse.svg' : '/images/skedular-logo-primary.svg';
-  const originalWidth = 779;
-  const originalHeight = 163;
-  const maxWidth = 300;
-  const widthPercentage = ((maxWidth - 70) * 100) / originalWidth;
-  const heightPercentage = ((maxWidth - 30) * 100) / originalWidth;
-  const width = (originalWidth * widthPercentage) / 100;
-  const height = (originalHeight * heightPercentage) / 100;
 
   const signInLink = getSignInLink();
   const signUpLink = getSignUpLink();
@@ -42,6 +49,10 @@ const UnauthenticatedAppBar = () => {
     setMobileDrawerOpen(newOpen);
   };
 
+  if (!rootData.organizationPublic) {
+    return null;
+  }
+
   return (
     <MuiAppBar position="sticky" className="app-bar">
       <Toolbar
@@ -51,7 +62,7 @@ const UnauthenticatedAppBar = () => {
           borderColor: (theme) => theme.palette.divider,
         }}
       >
-        <Image src={logoUrl} width={width} height={height} alt="Skedular" />
+        <LeadIconTypography label={rootData.organizationPublic?.name} />
 
         <PushToRight />
         {paletteMode === 'dark' && (
@@ -92,4 +103,4 @@ const UnauthenticatedAppBar = () => {
   );
 };
 
-export default memo(UnauthenticatedAppBar);
+export default memo(UnauthenticatedOrganizationStoreFrontAppBar);

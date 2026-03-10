@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b68330c815c7afb7d353b0c1be0568ff>>
+ * @generated SignedSource<<939930b3c703c0eea6369d5979da3526>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,9 @@ export type organizationStoreFrontAppBar_query$data = {
     readonly middleName: string | null | undefined;
     readonly photoUrl: string | null | undefined;
   };
+  readonly organizationPublic: {
+    readonly name: string;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"newFeedbackDialog_query">;
   readonly " $fragmentType": "organizationStoreFrontAppBar_query";
 };
@@ -29,7 +32,12 @@ export type organizationStoreFrontAppBar_query$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "organizationUniqueAlphanumericName"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "organizationStoreFrontAppBar_query",
@@ -95,6 +103,30 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "uniqueAlphanumericName",
+          "variableName": "organizationUniqueAlphanumericName"
+        }
+      ],
+      "concreteType": "OrganizationPublicDetails",
+      "kind": "LinkedField",
+      "name": "organizationPublic",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "newFeedbackDialog_query"
@@ -104,6 +136,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "bd03628d65bc063b000887ebcae8a434";
+(node as any).hash = "31be907dd0c3e5fbe1b17a5bb4e8b6c8";
 
 export default node;
