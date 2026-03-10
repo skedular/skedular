@@ -111,7 +111,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
 
   const handleSignOutClick = async () => {
     setProfileOpenAnchorEl(null);
-    await signOut();
+    await signOut({ returnTo: window.location.href });
   };
 
   const handleSubmitFeedbackClicked = () => {

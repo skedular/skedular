@@ -69,7 +69,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
   const handleSignOutClick = async () => {
     setProfileOpenAnchorEl(null);
-    await signOut();
+    await signOut({ returnTo: window.location.href });
   };
 
   const handleSubmitFeedbackClicked = () => {

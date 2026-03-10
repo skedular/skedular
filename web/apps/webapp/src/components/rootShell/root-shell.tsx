@@ -137,7 +137,7 @@ const RootShell = ({
   }, [rootData.me.isOnboardingDone, welcomeLink, pathName, rootLink, router]);
 
   const handleSignOutClick = async () => {
-    await signOut();
+    await signOut({ returnTo: window.location.href });
     router.push(rootLink);
   };
 

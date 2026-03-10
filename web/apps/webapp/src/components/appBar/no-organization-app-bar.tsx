@@ -99,7 +99,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
 
   const handleSignOutClick = async () => {
     setProfileOpenAnchorEl(null);
-    await signOut();
+    await signOut({ returnTo: window.location.href });
   };
 
   const handleSubmitFeedbackClicked = () => {

@@ -77,7 +77,7 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
 
   const handleSignOutClick = async () => {
-    await signOut();
+    await signOut({ returnTo: window.location.href });
     router.push(rootLink);
   };
 
