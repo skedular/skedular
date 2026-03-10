@@ -1,13 +1,12 @@
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 
 namespace Team.Api.GraphQL.Member;
 
 [GraphQLName("TeamOrganizationMemberDetails")]
 public class TeamOrganizationMemberDetails
 {
-    [GraphQLName("uniqueId")] [ID] public string UniqueId { get; set; } = string.Empty;
+    [GraphQLName("uniqueId")] public string UniqueId { get; set; } = string.Empty;
     [GraphQLName("customerId")] public string CustomerId { get; set; } = string.Empty;
 }
 

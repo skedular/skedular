@@ -33,7 +33,7 @@ type BookingChannelDetails {
 
 type BookingCheckoutSessionDetails {
   checkoutUrl: String!
-  uniqueId: ID!
+  uniqueId: String!
 }
 
 type BookingDetails {
@@ -842,6 +842,24 @@ type OrganizationPhysicalAddressDetails {
   zipcode: String!
 }
 
+type OrganizationPublicDetails {
+  contactEmail: String
+  contactPhone: String
+  customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  featureImages: [CdnImageFile!]!
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  listingMetadata: ListingMetadata!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  logoUrl: String
+  name: String!
+  physicalAddress: OrganizationPhysicalAddressDetails
+  resourceTypes: [OrganizationTagDetails!]!
+  uniqueAlphanumericName: String
+  uniqueId: String!
+  website: String
+  zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+}
+
 type OrganizationSsoSettingsDetails {
   appFederationMetadataUrl: String!
   entityId: String!
@@ -1076,6 +1094,7 @@ type Query {
   organizationInvitationStatuses: [OrganizationInvitationStatusDetails!]!
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
+  organizationPublic(id: String uniqueAlphanumericName: String): OrganizationPublicDetails @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   organizations(after: String before: String first: Int last: Int orderBy: [OrganizationOrderInput!] where: OrganizationWhereInput!): ConnectionOfOrganizationEdge! @cost(weight: "10")
   organizationStripeConnectAccount(id: String!): OrganizationStripeConnectAccountDetails @cost(weight: "10")
@@ -1264,7 +1283,7 @@ type TeamMembersDetailsPayload {
 
 type TeamOrganizationMemberDetails {
   customer: CustomerDetails!
-  uniqueId: ID!
+  uniqueId: String!
 }
 
 type TeamPayload {

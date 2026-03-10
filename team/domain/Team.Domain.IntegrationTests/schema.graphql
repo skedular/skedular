@@ -163,7 +163,7 @@ type TeamMembersDetailsPayload {
 
 type TeamOrganizationMemberDetails {
   customer: CustomerDetails!
-  uniqueId: ID!
+  uniqueId: String!
 }
 
 type TeamPayload {

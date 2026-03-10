@@ -361,6 +361,24 @@ type OrganizationPhysicalAddressDetails {
   id: ID!
 }
 
+type OrganizationPublicDetails {
+  customTags(after: String first: Int before: String last: Int where: CustomTagOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  zones(after: String first: Int before: String last: Int where: ZoneOrganizationTagWhereInput orderBy: [OrganizationTagOrderInput!]): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
+  uniqueId: String!
+  uniqueAlphanumericName: String
+  name: String!
+  website: String
+  logoUrl: String
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  contactEmail: String
+  contactPhone: String
+  physicalAddress: OrganizationPhysicalAddressDetails
+  resourceTypes: [OrganizationTagDetails!]!
+  locationSpaceTypes: [OrganizationTagDetails!]!
+  featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
+}
+
 type OrganizationSsoSettingsDetails {
   isActive: Boolean!
   entityId: String!
@@ -476,6 +494,7 @@ type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
   organization(id: String uniqueAlphanumericName: String): OrganizationDetails @cost(weight: "10")
+  organizationPublic(id: String uniqueAlphanumericName: String): OrganizationPublicDetails @cost(weight: "10")
   organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
   myOrganizations: [OrganizationDetails!]! @cost(weight: "10")

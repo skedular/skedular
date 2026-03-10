@@ -16,6 +16,7 @@ using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows;
 using Booking = Organization.Shared.Database.Entities.Booking;
+using Constants = Enterprise.Shared.Constants;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
@@ -44,6 +45,11 @@ public interface IOrganizationService
         string? id,
         string? uniqueAlphanumericName,
         bool ignoreAuthorizationCheck,
+        CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization?> GetByIdOrUniqueAlphanumericNamePublicAsync(
+        string? id,
+        string? uniqueAlphanumericName,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
@@ -270,6 +276,25 @@ public class OrganizationService(
         return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
     }
 
+    public async Task<Shared.Models.Organization?> GetByIdOrUniqueAlphanumericNamePublicAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, cancellationToken);
+        if (organization is null)
+        {
+            return null;
+        }
+
+        if (organization.Type.ToOrganizationType() == OrganizationType.Private)
+        {
+            return await EnrichOrganizationAsync(await cachedCustomerService.GetAsync(cancellationToken), organization, false, cancellationToken);
+        }
+
+        return EnrichOrganizationPublic(organization);
+    }
+
     public async Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken)
     {
         var tenantId = context.GetAzureTenantId();
@@ -399,11 +424,8 @@ public class OrganizationService(
         if (!ignoreAuthorizationCheck)
         {
             ArgumentNullException.ThrowIfNull(customer);
-        }
 
-        if (!ignoreAuthorizationCheck)
-        {
-            if (!await organizationAuthorizationService.CanViewAsync(organization, customer!.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
             {
                 if (!await organizationAuthorizationService.CanViewMinimumAsync(organization, customer.Id, cancellationToken))
                 {
@@ -466,7 +488,6 @@ public class OrganizationService(
             })
             .AnyAsync(cancellationToken);
 
-
         if (!ignoreAuthorizationCheck)
         {
             var organizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.CustomerId == customer!.Id);
@@ -481,6 +502,26 @@ public class OrganizationService(
         }
 
         return mappedOrganization;
+    }
+
+    private Shared.Models.Organization EnrichOrganizationPublic(Shared.Database.Entities.Organization organization)
+    {
+        organization.OrganizationMembers = [];
+        organization.TermsOfUse = null;
+        organization.OrganizationOfferings = [];
+        organization.DailyMemberCountRecordings = [];
+        organization.JoinInvitations = [];
+        organization.AzureTenants = [];
+        organization.OrganizationSsoSettings = null;
+        organization.InvolvedBookings = [];
+        organization.OrganizationStripePaymentMethods = [];
+        organization.OrganizationStripeCustomer = null;
+        organization.BillingDetails = null;
+        organization.OrganizationStripeConnectAccounts = [];
+        organization.OrganizationBankAccounts = [];
+        organization.OrganizationTaxDetails = null;
+
+        return mapper.MapTo(organization, Constants.EmptyUri);
     }
 
     private void AddDefaultOrganizationTags(Shared.Database.Entities.Organization organizationEntity)

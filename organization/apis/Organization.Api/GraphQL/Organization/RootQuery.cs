@@ -50,6 +50,14 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(await organizationService.GetByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, false, cancellationToken));
 
     [UseResolverScope]
+    public async Task<OrganizationPublicDetails?> OrganizationPublicAsync(
+        string? id,
+        string? uniqueAlphanumericName,
+        [Service] IOrganizationService organizationService,
+        CancellationToken cancellationToken) =>
+        mapper.MapToPublic(await organizationService.GetByIdOrUniqueAlphanumericNamePublicAsync(id, uniqueAlphanumericName, cancellationToken));
+
+    [UseResolverScope]
     [Lookup]
     [Internal]
     public async Task<OrganizationDetails?> OrganizationByIdAsync(

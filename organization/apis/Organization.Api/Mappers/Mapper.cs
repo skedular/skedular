@@ -86,8 +86,9 @@ public interface IMapper
     OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src);
     IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src);
     IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src);
-    OrganizationDetails? MapTo(Shared.Models.Organization? src);
     OrganizationMemberDetails MapTo(OrganizationMember src);
+    OrganizationDetails? MapTo(Shared.Models.Organization? src);
+    OrganizationPublicDetails? MapToPublic(Shared.Models.Organization? src);
 
     OrganizationAnalytics MapTo(
         IEnumerable<OrganizationMemberAttendancePercentage> organizationMemberAttendancePercentages,
@@ -452,6 +453,30 @@ public class Mapper : IMapper
             TaxDetails = MapTo(src.OrganizationTaxDetails)
         };
     }
+
+    public OrganizationPublicDetails? MapToPublic(Shared.Models.Organization? src) =>
+        src is null
+            ? null
+            : new OrganizationPublicDetails
+            {
+                Id = src.Id,
+                UniqueAlphanumericName = src.UniqueAlphanumericName,
+                Name = src.Name,
+                ListingMetadata = src.ListingMetadata,
+                Website = src.Website,
+                LogoUrl = src.LogoUrl,
+                ContactEmail = src.ContactEmail,
+                ContactPhone = src.ContactPhone,
+                FeatureImages = src.FeatureImages,
+                IndustrySubCategories = src.IndustrySubCategories.Select(item => MapTo(item, null)),
+                PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
+                ResourceTypes = src.Tags
+                    .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
+                    .Select(item => MapTo(item)!),
+                LocationSpaceTypes = src.Tags
+                    .Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(resourceType => resourceType == item.Type))
+                    .Select(item => MapTo(item)!)
+            };
 
     public OrganizationMemberDetails MapTo(OrganizationMember src) =>
         new()
