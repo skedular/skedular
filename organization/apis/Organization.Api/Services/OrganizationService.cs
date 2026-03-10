@@ -410,7 +410,7 @@ public class OrganizationService(
                     throw new UnauthorizedAccessException();
                 }
 
-                organization.About = null;
+                organization.ListingMetadata = ListingMetadata.Empty();
                 organization.Website = null;
                 organization.ContactEmail = null;
                 organization.ContactPhone = null;

@@ -6,7 +6,6 @@ namespace Location.Shared.Models;
 public class Location : ModelBaseWithDeleted
 {
     public string Name { get; set; } = string.Empty;
-    public string? About { get; set; }
     public string? Timezone { get; set; }
     public LocationType Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }

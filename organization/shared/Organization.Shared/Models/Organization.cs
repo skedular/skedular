@@ -8,7 +8,6 @@ public class Organization : ModelBaseWithDeleted
 {
     public string? UniqueAlphanumericName { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string? About { get; set; }
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }

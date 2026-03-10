@@ -1,5 +1,3 @@
-using Location.Jobs.Jobs;
-
 namespace Location.Jobs;
 
 public static class Extensions
@@ -13,7 +11,6 @@ public static class Extensions
             services;
 
         public IServiceCollection AddJobs() =>
-            services
-                .AddHostedService<MigrateListingMetadata>();
+            services;
     }
 }
