@@ -138,7 +138,6 @@ const RootShell = ({
 
   const handleSignOutClick = async () => {
     await signOut({ returnTo: window.location.href });
-    router.push(rootLink);
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
@@ -221,7 +220,6 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const router = useRouter();
   const { organizationUniqueAlphanumericName } = useKnownParams();
 
   if (!organizationUniqueAlphanumericName) {
@@ -237,7 +235,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, router]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

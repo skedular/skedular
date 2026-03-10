@@ -1,17 +1,15 @@
 import { OrganizationStoreFrontAppBar } from '@/components/appBar';
 import { SmallHeadingIconTypography } from '@/components/commons';
 import { SignOutIcon } from '@/components/icons';
-import { getRootLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { useKnownParams } from '@/libs/providers';
 import type { organizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/organizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
-import { useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -45,11 +43,8 @@ const maxRetryAttemptsToReload = 20;
 
 const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadRequired }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<organizationStoreFrontRootShell_rootQuery>(RootQuery, queryReference);
-  const { integratedPlatrform } = useIntegratedPlatrform();
-  const router = useRouter();
   const { signOut } = useAuth();
   const [reloadCount, setReloadCount] = useState(0);
-  const rootLink = getRootLink(integratedPlatrform);
   const areCustomerRecordsSync = !!(
     rootData?.bookingCustomerRecordSynced &&
     rootData?.locationCustomerRecordSynced &&
@@ -78,7 +73,6 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
 
   const handleSignOutClick = async () => {
     await signOut({ returnTo: window.location.href });
-    router.push(rootLink);
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
@@ -116,7 +110,6 @@ const OrganizationStoreFrontRootShellWithRelay = ({ children }: PropsWithChildre
   const [queryReference, loadQuery] = useQueryLoader<organizationStoreFrontRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const router = useRouter();
   const { organizationUniqueAlphanumericName } = useKnownParams();
 
   if (!organizationUniqueAlphanumericName) {
@@ -130,7 +123,7 @@ const OrganizationStoreFrontRootShellWithRelay = ({ children }: PropsWithChildre
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, router]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

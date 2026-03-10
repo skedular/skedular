@@ -6,7 +6,6 @@ import { useKnownParams } from '@/libs/providers';
 import type { unauthenticatedOrganizationStoreFrontRootShell_rootQuery } from '@/queries/__generated__/unauthenticatedOrganizationStoreFrontRootShell_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useRouter } from 'next/navigation';
 import type { PropsWithChildren } from 'react';
 import { memo, useEffect, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -47,7 +46,6 @@ const UnauthenticatedOrganizationStoreFrontRootShellWithRelay = ({ children }: P
   const [queryReference, loadQuery] = useQueryLoader<unauthenticatedOrganizationStoreFrontRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const router = useRouter();
   const { organizationUniqueAlphanumericName } = useKnownParams();
 
   if (!organizationUniqueAlphanumericName) {
@@ -63,7 +61,7 @@ const UnauthenticatedOrganizationStoreFrontRootShellWithRelay = ({ children }: P
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, router]);
+  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

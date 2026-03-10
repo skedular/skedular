@@ -118,7 +118,6 @@ const NoOrganizationRootShell = ({
 
   const handleSignOutClick = async () => {
     await signOut({ returnTo: window.location.href });
-    router.push(rootLink);
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {
@@ -171,7 +170,6 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
   const [queryReference, loadQuery] = useQueryLoader<noOrganizationRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const router = useRouter();
 
   useEffect(() => {
     loadQuery(
@@ -180,7 +178,7 @@ const NoOrganizationRootShellWithRelay = ({ children, collapsed, hideOrganizatio
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, router]);
+  }, [loadQuery, triggerReloadId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
