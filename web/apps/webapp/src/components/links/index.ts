@@ -168,3 +168,10 @@ export const getOrganizationLocationFloorPlansLink = (integratedPlatrform: strin
 export const getOrganizationBankAccountBaseLink = (integratedPlatrform: string | undefined, id: string, bankAccountId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/${bankAccountId}`;
 export const getOrganizationBankAccountAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/bank-accounts/add`;
+
+export const postSignOutReturnToKey = 'postSignOutReturnTo';
+export const getSignOutReturnToLink = () => {
+  const returnToPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  sessionStorage.setItem(postSignOutReturnToKey, returnToPath);
+  return window.location.origin;
+};

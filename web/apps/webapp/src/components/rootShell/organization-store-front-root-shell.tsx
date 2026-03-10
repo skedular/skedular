@@ -1,6 +1,7 @@
 import { OrganizationStoreFrontAppBar } from '@/components/appBar';
 import { SmallHeadingIconTypography } from '@/components/commons';
 import { SignOutIcon } from '@/components/icons';
+import { getSignOutReturnToLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { Observability } from '@/components/observability';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -72,7 +73,7 @@ const OrganizationStoreFrontRootShell = ({ queryReference, children, onReloadReq
   }, [rootData.me, reloadCount, onReloadRequired, areCustomerRecordsSync]);
 
   const handleSignOutClick = async () => {
-    await signOut({ returnTo: window.location.href });
+    await signOut({ returnTo: getSignOutReturnToLink() });
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {

@@ -1,7 +1,7 @@
 import { NoOrganizationAppBar } from '@/components/appBar';
 import { SmallHeadingIconTypography } from '@/components/commons';
 import { SignOutIcon } from '@/components/icons';
-import { getInstallMsTeamsLink, getRootLink, getWelcomeLink } from '@/components/links';
+import { getInstallMsTeamsLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { NoOrganizationLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
@@ -117,7 +117,7 @@ const NoOrganizationRootShell = ({
   }, [rootData.me.isOnboardingDone, welcomeLink, pathName, rootLink, router]);
 
   const handleSignOutClick = async () => {
-    await signOut({ returnTo: window.location.href });
+    await signOut({ returnTo: getSignOutReturnToLink() });
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {

@@ -314,12 +314,27 @@ const stringToMultiLines = (str?: string | null) => (str ? str.split('\n').map((
 
 const stringCollectionToString = (str?: readonly string[] | null) => (str ? str.join('\n') : '');
 
-const firstHeaderValue = (value: string | null) => value?.split(',')[0]?.trim();
-const headerValues = (value: string | null) =>
+const splitHeaderValues = (value: string | null) =>
   value
     ?.split(',')
-    .map((item) => item.trim().toLowerCase())
+    .map((item) => item.trim())
     .filter(Boolean) ?? [];
+const firstHeaderValue = (value: string | null) => splitHeaderValues(value)[0];
+const headerValues = (value: string | null) =>
+  splitHeaderValues(value)
+    .map((item) => item.trim().toLowerCase())
+    .filter(Boolean);
+const hostFromAbsoluteUrl = (value: string | null) => {
+  if (!value) {
+    return undefined;
+  }
+
+  try {
+    return new URL(value).host;
+  } catch {
+    return undefined;
+  }
+};
 
 const isLocalHost = (host: string) => {
   const normalizedHost = host.toLowerCase();
@@ -327,9 +342,24 @@ const isLocalHost = (host: string) => {
 };
 
 const getPublicOrigin = (request: NextRequest) => {
-  const forwardedHost = firstHeaderValue(request.headers.get('x-forwarded-host'));
-  const host = forwardedHost ?? firstHeaderValue(request.headers.get('host'));
-  const forwardedProtocols = headerValues(request.headers.get('x-forwarded-proto'));
+  const forwardedHostCandidates = [
+    ...splitHeaderValues(request.headers.get('x-forwarded-host')),
+    ...splitHeaderValues(request.headers.get('x-original-host')),
+    ...splitHeaderValues(request.headers.get('x-host')),
+    ...splitHeaderValues(request.headers.get('host')),
+  ];
+  const browserOriginHost = hostFromAbsoluteUrl(request.headers.get('origin'));
+  const browserRefererHost = hostFromAbsoluteUrl(request.headers.get('referer'));
+  const nonLocalBrowserHost = [browserOriginHost, browserRefererHost].find((item) => !!item && !isLocalHost(item));
+  const nonLocalForwardedHost = forwardedHostCandidates.find((item) => !isLocalHost(item));
+  const nextUrlHost = request.nextUrl.host;
+  const host = nonLocalForwardedHost ?? nonLocalBrowserHost ?? (!isLocalHost(nextUrlHost) ? nextUrlHost : undefined) ?? forwardedHostCandidates[0] ?? nextUrlHost;
+
+  const forwardedProtocols = headerValues(
+    firstHeaderValue(request.headers.get('x-forwarded-proto')) ??
+      firstHeaderValue(request.headers.get('x-forwarded-protocol')) ??
+      firstHeaderValue(request.headers.get('x-forwarded-scheme')),
+  );
   const forwardedPort = firstHeaderValue(request.headers.get('x-forwarded-port'));
   const forwardedSsl = firstHeaderValue(request.headers.get('x-forwarded-ssl'))?.toLowerCase();
   const frontEndHttps = firstHeaderValue(request.headers.get('front-end-https'))?.toLowerCase();

@@ -1,7 +1,7 @@
 import { AppBar } from '@/components/appBar';
 import { LeadIconTypography, PushToRight, SmallHeadingIconTypography, StackRow } from '@/components/commons';
 import { SignOutIcon, SsoSigninIcon } from '@/components/icons';
-import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getWelcomeLink } from '@/components/links';
+import { getInstallMsTeamsLink, getOrganizationSsoSignInBaseLink, getRootLink, getSignOutReturnToLink, getWelcomeLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { LeftSideNavigationMenu } from '@/components/navigationMenu';
 import { Observability } from '@/components/observability';
@@ -137,7 +137,7 @@ const RootShell = ({
   }, [rootData.me.isOnboardingDone, welcomeLink, pathName, rootLink, router]);
 
   const handleSignOutClick = async () => {
-    await signOut({ returnTo: window.location.href });
+    await signOut({ returnTo: getSignOutReturnToLink() });
   };
 
   if (reloadCount === maxRetryAttemptsToReload) {

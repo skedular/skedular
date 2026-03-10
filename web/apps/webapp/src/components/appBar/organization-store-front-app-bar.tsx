@@ -2,7 +2,7 @@ import { CustomerAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
 import { BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, SettingsIcon, SignOutIcon } from '@/components/icons';
-import { getBillingAndPaymentLink, getSettingsLink } from '@/components/links';
+import { getBillingAndPaymentLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
 import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
@@ -69,7 +69,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
 
   const handleSignOutClick = async () => {
     setProfileOpenAnchorEl(null);
-    await signOut({ returnTo: window.location.href });
+    await signOut({ returnTo: getSignOutReturnToLink() });
   };
 
   const handleSubmitFeedbackClicked = () => {
