@@ -63,8 +63,15 @@ const GuestStoreFront = ({ queryReference }: Props) => {
             }}
           >
             <Box sx={{ p: { xs: 3, md: 5 }, maxWidth: 850 }}>
-              <LargeHeadingIconTypography label={rootData.organizationPublic.listingMetadata.title} sx={{ color: (theme) => theme.palette.common.white, mb: 1 }} />
-              <SubtitleIconTypography label={`${rootData.organizationPublic.listingMetadata.subTitle}`} sx={{ color: (theme) => alpha(theme.palette.common.white, 0.92), mb: 3 }} />
+              {rootData.organizationPublic.listingMetadata.title && (
+                <LargeHeadingIconTypography label={rootData.organizationPublic.listingMetadata.title} sx={{ color: (theme) => theme.palette.common.white, mb: 1 }} />
+              )}
+              {rootData.organizationPublic.listingMetadata.subTitle && (
+                <SubtitleIconTypography
+                  label={`${rootData.organizationPublic.listingMetadata.subTitle}`}
+                  sx={{ color: (theme) => alpha(theme.palette.common.white, 0.92), mb: 3 }}
+                />
+              )}
             </Box>
           </Box>
         </Box>

@@ -85,7 +85,7 @@ type InviteCustomerToJoinOrganizationDetails {
 }
 
 type ListingMetadata {
-  about: String!
+  about: String
   title: String
   subTitle: String
 }
@@ -770,7 +770,7 @@ input JoinOrganizationInvitationOrderInput {
 }
 
 input ListingMetadataInput {
-  about: String!
+  about: String
   title: String
   subTitle: String
 }

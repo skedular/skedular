@@ -67,7 +67,7 @@ type FloorPlanPayload {
 }
 
 type ListingMetadata {
-  about: String!
+  about: String
   title: String
   subTitle: String
 }
@@ -434,7 +434,7 @@ input FloorPlanWhereInput {
 }
 
 input ListingMetadataInput {
-  about: String!
+  about: String
   title: String
   subTitle: String
 }

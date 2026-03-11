@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<174f2ac6c0eb2144484cf92a58278897>>
+ * @generated SignedSource<<2c8d35c7f212c49d3ad4bfc81ff3b950>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,7 +48,7 @@ export type organizationLocation_query$data = {
     }>;
     readonly id: string;
     readonly listingMetadata: {
-      readonly about: string;
+      readonly about: string | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };

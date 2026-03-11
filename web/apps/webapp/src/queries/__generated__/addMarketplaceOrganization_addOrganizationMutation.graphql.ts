@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<80a8b03133d64fcfb85acb8dc5ebca78>>
+ * @generated SignedSource<<375cf830f9f66088a01185dfffb41943>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,7 +35,7 @@ export type CdnFileInput = {
   width?: number | null | undefined;
 };
 export type ListingMetadataInput = {
-  about: string;
+  about?: string | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
@@ -59,7 +59,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -86,7 +86,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };

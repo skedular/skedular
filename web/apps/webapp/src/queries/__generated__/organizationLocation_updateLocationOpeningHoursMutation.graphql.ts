@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0e1659e74a12ff895c774e2c874f2f4>>
+ * @generated SignedSource<<80435c71ceaccbe87c594a796d1c6c08>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,7 +56,7 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
       } | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -150,7 +150,7 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
       } | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };

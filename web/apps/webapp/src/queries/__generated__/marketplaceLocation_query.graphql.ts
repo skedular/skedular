@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<01b80da00d04b8237dda24f93ce516bb>>
+ * @generated SignedSource<<a109398f99deb0bca3cc41e9aea5af6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,7 +40,7 @@ export type marketplaceLocation_query$data = {
     }>;
     readonly id: string;
     readonly listingMetadata: {
-      readonly about: string;
+      readonly about: string | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };

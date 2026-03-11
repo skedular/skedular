@@ -352,7 +352,7 @@ type InviteCustomersToJoinTeamPayload {
 }
 
 type ListingMetadata {
-  about: String!
+  about: String
   subTitle: String
   title: String
 }
@@ -1976,7 +1976,7 @@ input JoinTeamInvitationOrderInput {
 }
 
 input ListingMetadataInput {
-  about: String!
+  about: String
   subTitle: String
   title: String
 }

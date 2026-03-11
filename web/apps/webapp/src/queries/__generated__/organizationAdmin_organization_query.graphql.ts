@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0df1dbeaeab8668fef404369558663b>>
+ * @generated SignedSource<<889ede4331b746a884c9e6040b6aa51f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -73,7 +73,7 @@ export type organizationAdmin_organization_query$data = {
       readonly name: string;
     }>;
     readonly listingMetadata: {
-      readonly about: string;
+      readonly about: string | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };

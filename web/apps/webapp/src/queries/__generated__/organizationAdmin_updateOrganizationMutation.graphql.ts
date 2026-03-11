@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<052617fadea231ba530928e630308f20>>
+ * @generated SignedSource<<1b77754cc684846b2f828db376316633>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type CdnFileInput = {
   width?: number | null | undefined;
 };
 export type ListingMetadataInput = {
-  about: string;
+  about?: string | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
@@ -61,7 +61,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly name: string;
       }>;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -94,7 +94,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly name: string;
       }>;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };

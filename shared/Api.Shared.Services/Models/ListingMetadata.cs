@@ -1,6 +1,6 @@
 namespace Api.Shared.Services.Models;
 
-public record ListingMetadata(string About, string? Title, string? SubTitle)
+public record ListingMetadata(string? About, string? Title, string? SubTitle)
 {
     public static ListingMetadata Empty() => new(string.Empty, string.Empty, string.Empty);
 }

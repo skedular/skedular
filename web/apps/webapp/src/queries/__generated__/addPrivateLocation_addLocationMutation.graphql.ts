@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<778e8670c6322812000f9701aa27f98a>>
+ * @generated SignedSource<<cc2bc7492909d13869dd52026c2b3efe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,7 +57,7 @@ export type CdnFileInput = {
   width?: number | null | undefined;
 };
 export type ListingMetadataInput = {
-  about: string;
+  about?: string | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
@@ -112,7 +112,7 @@ export type addPrivateLocation_addLocationMutation$data = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -147,7 +147,7 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string;
+        readonly about: string | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
