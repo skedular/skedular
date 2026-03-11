@@ -68,8 +68,8 @@ type FloorPlanPayload {
 
 type ListingMetadata {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  title: String
+  subTitle: String
 }
 
 type LocationAnalytics {
@@ -435,8 +435,8 @@ input FloorPlanWhereInput {
 
 input ListingMetadataInput {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  title: String
+  subTitle: String
 }
 
 input LocationExtraMetadataInput {

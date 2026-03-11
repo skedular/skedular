@@ -76,17 +76,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "CghvcmlnaW5hbBgBIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlEigKCXRo",
             "dW1ibmFpbBgCIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlIjUKB0NkbkZp",
             "bGUSCwoDdXJsGAEgASgJEg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgDIAEo",
-            "BSJHCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQYASABKAkSEgoKbWFpbkhl",
-            "YWRlchgCIAEoCRIRCglzdWJIZWFkZXIYAyABKAkqaQoEVHlwZRIdChlUeXBl",
-            "X09yZ2FuaXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25E",
-            "ZWxldGVkEAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQ",
-            "AipzChBPcmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJp",
-            "dmF0ZRAAEiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQARIfChtP",
-            "cmdhbml6YXRpb25UeXBlX0luZGl2aWR1YWwQAio/CgRSb2xlEg4KClJvbGVf",
-            "T3duZXIQABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJl",
-            "chACKjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0lu",
-            "YWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVs",
-            "YXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "BSJBCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQYASABKAkSDQoFdGl0bGUY",
+            "AiABKAkSEAoIc3ViVGl0bGUYAyABKAkqaQoEVHlwZRIdChlUeXBlX09yZ2Fu",
+            "aXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25EZWxldGVk",
+            "EAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQAipzChBP",
+            "cmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJpdmF0ZRAA",
+            "EiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQARIfChtPcmdhbml6",
+            "YXRpb25UeXBlX0luZGl2aWR1YWwQAio/CgRSb2xlEg4KClJvbGVfT3duZXIQ",
+            "ABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchACKjAK",
+            "BlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0aXZl",
+            "EAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3Jn",
+            "YW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -104,7 +104,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Coordinates), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Coordinates.Parser, new[]{ "Longitude", "Latitude" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata.Parser, new[]{ "About", "MainHeader", "SubHeader" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle" }, null, null, null, null)
           }));
     }
     #endregion
@@ -5406,8 +5406,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ListingMetadata(ListingMetadata other) : this() {
       about_ = other.about_;
-      mainHeader_ = other.mainHeader_;
-      subHeader_ = other.subHeader_;
+      title_ = other.title_;
+      subTitle_ = other.subTitle_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -5429,27 +5429,27 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "mainHeader" field.</summary>
-    public const int MainHeaderFieldNumber = 2;
-    private string mainHeader_ = "";
+    /// <summary>Field number for the "title" field.</summary>
+    public const int TitleFieldNumber = 2;
+    private string title_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string MainHeader {
-      get { return mainHeader_; }
+    public string Title {
+      get { return title_; }
       set {
-        mainHeader_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        title_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
-    /// <summary>Field number for the "subHeader" field.</summary>
-    public const int SubHeaderFieldNumber = 3;
-    private string subHeader_ = "";
+    /// <summary>Field number for the "subTitle" field.</summary>
+    public const int SubTitleFieldNumber = 3;
+    private string subTitle_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string SubHeader {
-      get { return subHeader_; }
+    public string SubTitle {
+      get { return subTitle_; }
       set {
-        subHeader_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        subTitle_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -5469,8 +5469,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         return true;
       }
       if (About != other.About) return false;
-      if (MainHeader != other.MainHeader) return false;
-      if (SubHeader != other.SubHeader) return false;
+      if (Title != other.Title) return false;
+      if (SubTitle != other.SubTitle) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5479,8 +5479,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     public override int GetHashCode() {
       int hash = 1;
       if (About.Length != 0) hash ^= About.GetHashCode();
-      if (MainHeader.Length != 0) hash ^= MainHeader.GetHashCode();
-      if (SubHeader.Length != 0) hash ^= SubHeader.GetHashCode();
+      if (Title.Length != 0) hash ^= Title.GetHashCode();
+      if (SubTitle.Length != 0) hash ^= SubTitle.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5503,13 +5503,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(About);
       }
-      if (MainHeader.Length != 0) {
+      if (Title.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(MainHeader);
+        output.WriteString(Title);
       }
-      if (SubHeader.Length != 0) {
+      if (SubTitle.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(SubHeader);
+        output.WriteString(SubTitle);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -5525,13 +5525,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(10);
         output.WriteString(About);
       }
-      if (MainHeader.Length != 0) {
+      if (Title.Length != 0) {
         output.WriteRawTag(18);
-        output.WriteString(MainHeader);
+        output.WriteString(Title);
       }
-      if (SubHeader.Length != 0) {
+      if (SubTitle.Length != 0) {
         output.WriteRawTag(26);
-        output.WriteString(SubHeader);
+        output.WriteString(SubTitle);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -5546,11 +5546,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (About.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(About);
       }
-      if (MainHeader.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(MainHeader);
+      if (Title.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Title);
       }
-      if (SubHeader.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(SubHeader);
+      if (SubTitle.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SubTitle);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -5567,11 +5567,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.About.Length != 0) {
         About = other.About;
       }
-      if (other.MainHeader.Length != 0) {
-        MainHeader = other.MainHeader;
+      if (other.Title.Length != 0) {
+        Title = other.Title;
       }
-      if (other.SubHeader.Length != 0) {
-        SubHeader = other.SubHeader;
+      if (other.SubTitle.Length != 0) {
+        SubTitle = other.SubTitle;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -5597,11 +5597,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            MainHeader = input.ReadString();
+            Title = input.ReadString();
             break;
           }
           case 26: {
-            SubHeader = input.ReadString();
+            SubTitle = input.ReadString();
             break;
           }
         }
@@ -5628,11 +5628,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 18: {
-            MainHeader = input.ReadString();
+            Title = input.ReadString();
             break;
           }
           case 26: {
-            SubHeader = input.ReadString();
+            SubTitle = input.ReadString();
             break;
           }
         }

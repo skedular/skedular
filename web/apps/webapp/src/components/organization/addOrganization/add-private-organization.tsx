@@ -77,8 +77,8 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           website
           featureImages {
@@ -123,8 +123,8 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           website,
           type: 'PRIVATE',
@@ -166,8 +166,8 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             website,
             featureImages: finalFeatureImages,

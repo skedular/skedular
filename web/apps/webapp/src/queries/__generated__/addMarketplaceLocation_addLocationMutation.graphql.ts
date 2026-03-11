@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2602928807b55630d99019cff9e9bd76>>
+ * @generated SignedSource<<ff7c07e1c25a8f20e24dce0e9dfae9b9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -58,8 +58,8 @@ export type CdnFileInput = {
 };
 export type ListingMetadataInput = {
   about: string;
-  mainHeader: string;
-  subHeader: string;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
 };
 export type LocationPhysicalAddressInput = {
   addressLine1: string;
@@ -132,8 +132,8 @@ export type addMarketplaceLocation_addLocationMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly physicalAddress: {
@@ -203,8 +203,8 @@ export type addMarketplaceLocation_addLocationMutation$rawResponse = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly physicalAddress: {
@@ -332,14 +332,14 @@ v4 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "mainHeader",
+                "name": "title",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "subHeader",
+                "name": "subTitle",
                 "storageKey": null
               }
             ],
@@ -678,16 +678,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "a719db6cf57815f67abf1334794bc689",
+    "cacheID": "84c09644f61727be5628e2491f6142dc",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      physicalAddress {\n        id\n        osmType\n        osmId\n        placeId\n        longitude\n        latitude\n        formattedAddress\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9847d234eb538e86edb2afd773c3dd35";
+(node as any).hash = "6ce0b61416967072f9a51c3e7099de2c";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1ff6fa81c4764977a5abcb60b25cc08e>>
+ * @generated SignedSource<<01b80da00d04b8237dda24f93ce516bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,8 +41,8 @@ export type marketplaceLocation_query$data = {
     readonly id: string;
     readonly listingMetadata: {
       readonly about: string;
-      readonly mainHeader: string;
-      readonly subHeader: string;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
     };
     readonly name: string;
     readonly openingHours: {
@@ -195,14 +195,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "mainHeader",
+              "name": "title",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "subHeader",
+              "name": "subTitle",
               "storageKey": null
             }
           ],
@@ -506,6 +506,6 @@ return {
 };
 })();
 
-(node as any).hash = "0339b7e100d60844cd62da697639198a";
+(node as any).hash = "5c0fc979323c75ba8fa7f06488e20ece";
 
 export default node;

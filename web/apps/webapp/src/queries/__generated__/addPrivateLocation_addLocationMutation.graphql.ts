@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7460bf599d371425404546d648024521>>
+ * @generated SignedSource<<778e8670c6322812000f9701aa27f98a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -58,8 +58,8 @@ export type CdnFileInput = {
 };
 export type ListingMetadataInput = {
   about: string;
-  mainHeader: string;
-  subHeader: string;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
 };
 export type LocationPhysicalAddressInput = {
   addressLine1: string;
@@ -113,8 +113,8 @@ export type addPrivateLocation_addLocationMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly spaceTypes: ReadonlyArray<{
@@ -148,8 +148,8 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly spaceTypes: ReadonlyArray<{
@@ -260,14 +260,14 @@ v4 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "mainHeader",
+                "name": "title",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "subHeader",
+                "name": "subTitle",
                 "storageKey": null
               }
             ],
@@ -375,16 +375,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "b7da7a79cd65130a83d031caac6639e1",
+    "cacheID": "fb60ac661d2692c3529acf162e37e3a5",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0340573e984cdd43e06504586fbbaf6b";
+(node as any).hash = "8635b8257a1b8d4e87178f712700b9b5";
 
 export default node;

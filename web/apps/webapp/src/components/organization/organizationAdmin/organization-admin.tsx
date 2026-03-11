@@ -253,8 +253,8 @@ const OrganizationAdmin = ({
           logoUrl
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           website
           canModify
@@ -415,8 +415,8 @@ const OrganizationAdmin = ({
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           website
           industrySubCategories {
@@ -935,8 +935,8 @@ const OrganizationAdmin = ({
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           website,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
@@ -974,8 +974,8 @@ const OrganizationAdmin = ({
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             website,
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences

@@ -84,8 +84,8 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           type {
@@ -152,8 +152,8 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           organizationUniqueAlphanumericName,
           timezone,
@@ -193,8 +193,8 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             timezone,
             type: {

@@ -202,8 +202,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           type {
@@ -400,8 +400,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           type {
@@ -619,8 +619,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           extraMetadata {
@@ -964,8 +964,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           timezone,
           type: type as LocationType,
@@ -1026,8 +1026,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             timezone,
             type: {

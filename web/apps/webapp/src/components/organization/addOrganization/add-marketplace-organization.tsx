@@ -80,8 +80,8 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           website
           featureImages {
@@ -126,8 +126,8 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           website,
           type: 'MARKETPLACE',
@@ -169,8 +169,8 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             website,
             featureImages: finalFeatureImages,

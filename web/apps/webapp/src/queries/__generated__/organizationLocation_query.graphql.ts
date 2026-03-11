@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1388338f8f4ea666092791b037d8a6f>>
+ * @generated SignedSource<<174f2ac6c0eb2144484cf92a58278897>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,8 +49,8 @@ export type organizationLocation_query$data = {
     readonly id: string;
     readonly listingMetadata: {
       readonly about: string;
-      readonly mainHeader: string;
-      readonly subHeader: string;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
     };
     readonly name: string;
     readonly openingHours: {
@@ -340,14 +340,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "mainHeader",
+              "name": "title",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "subHeader",
+              "name": "subTitle",
               "storageKey": null
             }
           ],
@@ -775,6 +775,6 @@ return {
 };
 })();
 
-(node as any).hash = "3f1c41a97aeac58a9980878151829543";
+(node as any).hash = "9e52b43b8fb5ce46101a300ec5285fc6";
 
 export default node;

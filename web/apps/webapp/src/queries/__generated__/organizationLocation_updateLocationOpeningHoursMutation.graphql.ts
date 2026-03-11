@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75cccb08337a066be2ee52777fbb48ea>>
+ * @generated SignedSource<<b0e1659e74a12ff895c774e2c874f2f4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,8 +57,8 @@ export type organizationLocation_updateLocationOpeningHoursMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly openingHours: {
@@ -151,8 +151,8 @@ export type organizationLocation_updateLocationOpeningHoursMutation$rawResponse 
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly openingHours: {
@@ -275,14 +275,14 @@ v4 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "mainHeader",
+      "name": "title",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "subHeader",
+      "name": "subTitle",
       "storageKey": null
     }
   ],
@@ -726,16 +726,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f4e02fc4e097ce9764d01a568b3f25b5",
+    "cacheID": "7f81744309e83943b7c106ae590028b5",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationOpeningHoursMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      timezone\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n        id\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationOpeningHoursMutation(\n  $input: UpdateLocationOpeningHoursInput!\n) {\n  updateLocationOpeningHours(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      physicalAddress {\n        addressLine1\n        addressLine2\n        suburb\n        city\n        province\n        zipcode\n        country\n        countryCode\n        id\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6d67b603e5f515cc33ff62c22efc7bf0";
+(node as any).hash = "d7a52b2aa5d41df897133476285c64ac";
 
 export default node;

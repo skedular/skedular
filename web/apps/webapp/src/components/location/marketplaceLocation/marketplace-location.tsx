@@ -33,8 +33,8 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           extraMetadata {

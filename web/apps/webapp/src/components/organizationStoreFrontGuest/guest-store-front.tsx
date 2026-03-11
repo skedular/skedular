@@ -23,8 +23,8 @@ const RootQuery = graphql`
   query guestStoreFront_rootQuery($organizationUniqueAlphanumericName: String!) {
     organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       listingMetadata {
-        mainHeader
-        subHeader
+        title
+        subTitle
       }
     }
     ...guestStoreFrontFooter_query
@@ -63,11 +63,8 @@ const GuestStoreFront = ({ queryReference }: Props) => {
             }}
           >
             <Box sx={{ p: { xs: 3, md: 5 }, maxWidth: 850 }}>
-              <LargeHeadingIconTypography label={rootData.organizationPublic.listingMetadata.mainHeader} sx={{ color: (theme) => theme.palette.common.white, mb: 1 }} />
-              <SubtitleIconTypography
-                label={`${rootData.organizationPublic.listingMetadata.subHeader}`}
-                sx={{ color: (theme) => alpha(theme.palette.common.white, 0.92), mb: 3 }}
-              />
+              <LargeHeadingIconTypography label={rootData.organizationPublic.listingMetadata.title} sx={{ color: (theme) => theme.palette.common.white, mb: 1 }} />
+              <SubtitleIconTypography label={`${rootData.organizationPublic.listingMetadata.subTitle}`} sx={{ color: (theme) => alpha(theme.palette.common.white, 0.92), mb: 3 }} />
             </Box>
           </Box>
         </Box>

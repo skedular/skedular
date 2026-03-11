@@ -86,8 +86,8 @@ type InviteCustomerToJoinOrganizationDetails {
 
 type ListingMetadata {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  title: String
+  subTitle: String
 }
 
 type Mutation {
@@ -771,8 +771,8 @@ input JoinOrganizationInvitationOrderInput {
 
 input ListingMetadataInput {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  title: String
+  subTitle: String
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {

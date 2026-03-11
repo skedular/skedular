@@ -1278,10 +1278,10 @@ public class Mapper : IMapper
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
 
     private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.MainHeader.ToSafeString(), src.SubHeader.ToSafeString());
+        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString());
 
     private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src) => new()
     {
-        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+        About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
     };
 }

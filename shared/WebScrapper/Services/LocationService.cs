@@ -114,7 +114,7 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), MainHeader = string.Empty, SubHeader = string.Empty },
+                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), Title = string.Empty, SubTitle = string.Empty },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),
@@ -167,7 +167,7 @@ public class LocationService(
                     OrganizationId = organization.Id,
                     Type = LocationType.Marketplace,
                     Timezone = "Pacific/Auckland",
-                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), MainHeader = string.Empty, SubHeader = string.Empty },
+                    ListingMetadata = new ListingMetadata { About = description.ToSafeString(), Title = string.Empty, SubTitle = string.Empty },
                     ExtraMetadata = new ExtraMetadata
                     {
                         Website = rawLocation.Websites.ToSafeString(),

@@ -151,6 +151,6 @@ public class Mapper : IMapper
 
     private static Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata MapTo(ListingMetadata src) => new()
     {
-        About = src.About.ToSafeString(), MainHeader = src.MainHeader.ToSafeString(), SubHeader = src.SubHeader.ToSafeString()
+        About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
     };
 }

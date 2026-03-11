@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<956279909c05039dac60d7da1614e454>>
+ * @generated SignedSource<<052617fadea231ba530928e630308f20>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,8 +32,8 @@ export type CdnFileInput = {
 };
 export type ListingMetadataInput = {
   about: string;
-  mainHeader: string;
-  subHeader: string;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
 };
 export type organizationAdmin_updateOrganizationMutation$variables = {
   input: UpdateOrganizationInput;
@@ -62,8 +62,8 @@ export type organizationAdmin_updateOrganizationMutation$data = {
       }>;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
@@ -95,8 +95,8 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
       }>;
       readonly listingMetadata: {
         readonly about: string;
-        readonly mainHeader: string;
-        readonly subHeader: string;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
       };
       readonly name: string;
       readonly uniqueAlphanumericName: string | null | undefined;
@@ -206,14 +206,14 @@ v4 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "mainHeader",
+                "name": "title",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "subHeader",
+                "name": "subTitle",
                 "storageKey": null
               }
             ],
@@ -309,16 +309,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "4aa626e5d49bf24faa495dcdb8370e14",
+    "cacheID": "0edf74ecaf46aa1ccc3d3eb9e24c351a",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        mainHeader\n        subHeader\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4eca7e725b7200791a6845d0e30f9888";
+(node as any).hash = "4c3e9be9fba6e6bfdf095e7fc43f17c1";
 
 export default node;

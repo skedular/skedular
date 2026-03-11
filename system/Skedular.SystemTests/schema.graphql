@@ -353,8 +353,8 @@ type InviteCustomersToJoinTeamPayload {
 
 type ListingMetadata {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  subTitle: String
+  title: String
 }
 
 type LocationAnalytics {
@@ -1977,8 +1977,8 @@ input JoinTeamInvitationOrderInput {
 
 input ListingMetadataInput {
   about: String!
-  mainHeader: String!
-  subHeader: String!
+  subTitle: String
+  title: String
 }
 
 input LocationExtraMetadataInput {

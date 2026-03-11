@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8d6e0fcdb197f0fb62a742822aa4c68>>
+ * @generated SignedSource<<6d24326bde44a10bdc7bce0e4777dbcf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,8 +16,8 @@ export type guestStoreFront_rootQuery$variables = {
 export type guestStoreFront_rootQuery$data = {
   readonly organizationPublic: {
     readonly listingMetadata: {
-      readonly mainHeader: string;
-      readonly subHeader: string;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
     };
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontFooter_query">;
@@ -54,14 +54,14 @@ v2 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "mainHeader",
+      "name": "title",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "subHeader",
+      "name": "subTitle",
       "storageKey": null
     }
   ],
@@ -204,16 +204,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "00bfcfea21c051ae9b6d7baa2476f010",
+    "cacheID": "1636cc505e111eb1d500165323d52166",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    listingMetadata {\n      mainHeader\n      subHeader\n    }\n  }\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    listingMetadata {\n      title\n      subTitle\n    }\n  }\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "251e548f906e0d02725b1751d35f29fe";
+(node as any).hash = "ec076d326d72acd537c60c1d624528f7";
 
 export default node;

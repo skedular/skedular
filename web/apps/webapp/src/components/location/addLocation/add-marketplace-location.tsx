@@ -125,8 +125,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           name
           listingMetadata {
             about
-            mainHeader
-            subHeader
+            title
+            subTitle
           }
           timezone
           type {
@@ -327,8 +327,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           name,
           listingMetadata: {
             about: about ?? '',
-            mainHeader: '',
-            subHeader: '',
+            title: '',
+            subTitle: '',
           },
           organizationUniqueAlphanumericName,
           timezone,
@@ -409,8 +409,8 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             name,
             listingMetadata: {
               about: about ?? '',
-              mainHeader: '',
-              subHeader: '',
+              title: '',
+              subTitle: '',
             },
             timezone,
             type: {

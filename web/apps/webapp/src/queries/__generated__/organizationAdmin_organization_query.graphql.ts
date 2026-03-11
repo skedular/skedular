@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6710f80cb9a3b8b0e2a00e380f65d7e5>>
+ * @generated SignedSource<<d0df1dbeaeab8668fef404369558663b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,8 +74,8 @@ export type organizationAdmin_organization_query$data = {
     }>;
     readonly listingMetadata: {
       readonly about: string;
-      readonly mainHeader: string;
-      readonly subHeader: string;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
     };
     readonly logoUrl: string | null | undefined;
     readonly name: string;
@@ -363,14 +363,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "mainHeader",
+              "name": "title",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "subHeader",
+              "name": "subTitle",
               "storageKey": null
             }
           ],
@@ -691,6 +691,6 @@ return {
 };
 })();
 
-(node as any).hash = "dc58ccadb6579b65d358646a594b430e";
+(node as any).hash = "4ab2977582c44028c9cfcb3f89906322";
 
 export default node;

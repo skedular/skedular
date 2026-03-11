@@ -124,8 +124,8 @@ public class LocationService(
                     ListingMetadata = new ListingMetadata
                     {
                         About = location.ListingMetadata.About,
-                        MainHeader = location.ListingMetadata.MainHeader,
-                        SubHeader = location.ListingMetadata.SubHeader
+                        Title = location.ListingMetadata.Title,
+                        SubTitle = location.ListingMetadata.SubTitle
                     },
                     OrganizationId = location.Organization!.Id,
                     Timezone = location.Timezone,
@@ -155,8 +155,8 @@ public class LocationService(
                     ListingMetadata = new ListingMetadata
                     {
                         About = location.ListingMetadata.About,
-                        MainHeader = location.ListingMetadata.MainHeader,
-                        SubHeader = location.ListingMetadata.SubHeader
+                        Title = location.ListingMetadata.Title,
+                        SubTitle = location.ListingMetadata.SubTitle
                     },
                     Timezone = location.Timezone,
                     OrganizationId = location.Organization!.Id,
