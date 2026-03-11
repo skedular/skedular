@@ -8,15 +8,22 @@ import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import Slider from '@mui/material/Slider';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import React, { memo, useContext, useRef, useState } from 'react';
 import ReactCrop, { centerCrop, Crop, makeAspectCrop, PixelCrop } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { toast } from 'react-toastify';
 
 type Props = {
-  defaultAspectRatio: number;
   onUploadCompleted: (cdnFile: FileUploadResponse) => void;
   helperText?: string;
+};
+
+type AspectRatioOption = {
+  key: string;
+  label: string;
+  aspect?: number;
 };
 
 const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: number) =>
@@ -34,7 +41,15 @@ const centerAspectCrop = (mediaWidth: number, mediaHeight: number, aspect: numbe
     mediaHeight,
   );
 
-const ImageFileUploaderWithCropper = ({ defaultAspectRatio, onUploadCompleted, helperText }: Props) => {
+const popularAspectRatioOptions: AspectRatioOption[] = [
+  { key: '1:1', label: '1:1', aspect: 1 },
+  { key: '4:3', label: '4:3', aspect: 4 / 3 },
+  { key: '16:9', label: '16:9', aspect: 16 / 9 },
+  { key: '3:2', label: '3:2', aspect: 3 / 2 },
+  { key: 'custom', label: 'Custom' },
+];
+
+const ImageFileUploaderWithCropper = ({ onUploadCompleted, helperText }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const [imageSource, setImgSrc] = useState<string>('');
@@ -45,6 +60,8 @@ const ImageFileUploaderWithCropper = ({ defaultAspectRatio, onUploadCompleted, h
   const [crop, setCrop] = useState<Crop>();
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
   const [scale, setScale] = useState<number>(1);
+  const [selectedAspectRatioKey, setSelectedAspectRatioKey] = useState<string>('1:1');
+  const [selectedAspectRatio, setSelectedAspectRatio] = useState<number | undefined>(1);
 
   const onSelectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -68,7 +85,50 @@ const ImageFileUploaderWithCropper = ({ defaultAspectRatio, onUploadCompleted, h
   const onImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     const { width, height } = event.currentTarget;
 
-    setCrop(centerAspectCrop(width, height, defaultAspectRatio));
+    if (selectedAspectRatio) {
+      setCrop(centerAspectCrop(width, height, selectedAspectRatio));
+      return;
+    }
+
+    setCrop({
+      unit: '%',
+      x: 5,
+      y: 5,
+      width: 90,
+      height: 90,
+    });
+  };
+
+  const handleAspectRatioChanged = (_event: React.MouseEvent<HTMLElement>, nextSelectedAspectRatioKey: string | null) => {
+    if (!nextSelectedAspectRatioKey) {
+      return;
+    }
+
+    const selectedOption = popularAspectRatioOptions.find((option) => option.key === nextSelectedAspectRatioKey);
+    if (!selectedOption) {
+      return;
+    }
+
+    setSelectedAspectRatioKey(nextSelectedAspectRatioKey);
+    setSelectedAspectRatio(selectedOption.aspect);
+
+    const image = imgRef.current;
+    if (!image) {
+      return;
+    }
+
+    if (selectedOption.aspect) {
+      setCrop(centerAspectCrop(image.width, image.height, selectedOption.aspect));
+      return;
+    }
+
+    setCrop({
+      unit: '%',
+      x: 5,
+      y: 5,
+      width: 90,
+      height: 90,
+    });
   };
 
   const handleCropButtonClicked = () => {
@@ -154,8 +214,19 @@ const ImageFileUploaderWithCropper = ({ defaultAspectRatio, onUploadCompleted, h
       <Dialog open={isDialogOpen} fullWidth>
         <DialogContent>
           <StackColumn>
+            <FormControl>
+              <BodyIconTypography label="Aspect ratio" />
+              <ToggleButtonGroup size="small" value={selectedAspectRatioKey} exclusive onChange={handleAspectRatioChanged} sx={{ flexWrap: 'wrap', mt: 1 }}>
+                {popularAspectRatioOptions.map((option) => (
+                  <ToggleButton key={option.key} value={option.key} sx={{ textTransform: 'none' }}>
+                    {option.label}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </FormControl>
+
             {!!imageSource && (
-              <ReactCrop crop={crop} onChange={(_, percentCrop) => setCrop(percentCrop)} onComplete={(c) => setCompletedCrop(c)} aspect={defaultAspectRatio} minHeight={100}>
+              <ReactCrop crop={crop} onChange={(_, percentCrop) => setCrop(percentCrop)} onComplete={(c) => setCompletedCrop(c)} aspect={selectedAspectRatio} minHeight={100}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img ref={imgRef} alt="Crop me" src={imageSource} style={{ transform: `scale(${scale})`, maxWidth: '100%' }} onLoad={onImageLoad} />
               </ReactCrop>

@@ -1984,7 +1984,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                             ))}
                           </Box>
 
-                          <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                          <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
                         </StackColumn>
                       </FormFieldLabel>
 

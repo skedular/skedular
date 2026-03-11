@@ -559,7 +559,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                           ))}
                         </Box>
 
-                        <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 

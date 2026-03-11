@@ -998,7 +998,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                             </Box>
                           ))}
                         </Box>
-                        <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 

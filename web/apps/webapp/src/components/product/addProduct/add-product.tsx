@@ -473,7 +473,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                             </Box>
                           ))}
                         </Box>
-                        <ImageFileUploaderWithCropper defaultAspectRatio={1} onUploadCompleted={handleFeatureImageUploadCompleted} />
+                        <ImageFileUploaderWithCropper onUploadCompleted={handleFeatureImageUploadCompleted} />
                       </StackColumn>
                     </FormFieldLabel>
 
