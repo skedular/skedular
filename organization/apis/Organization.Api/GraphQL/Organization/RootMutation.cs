@@ -40,4 +40,20 @@ public class RootMutation(IMapper mapper)
             ClientMutationId = input.ClientMutationId,
             Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, input.UniqueAlphanumericName, cancellationToken))!
         };
+
+    [UseResolverScope]
+    public async Task<OrganizationPayload> UpdateOrganizationMarketplaceListingMetadataAsync(
+        UpdateOrganizationMarketplaceListingMetadataInput input,
+        [Service] IOrganizationService organizationService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Organization = mapper.MapTo(
+                await organizationService.UpdateMarketplaceListingMetadataAsync(
+                    input.Id,
+                    input.UniqueAlphanumericName,
+                    input.MarketplaceListingMetadata,
+                    cancellationToken))!
+        };
 }

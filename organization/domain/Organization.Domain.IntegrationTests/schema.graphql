@@ -111,6 +111,7 @@ type Mutation {
   addOrganization(input: AddOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
@@ -923,6 +924,13 @@ input UpdateOrganizationInput {
   featureImages: [CdnImageFileInput!]
   listingMetadata: ListingMetadataInput
   marketplaceListingMetadata: ListingMetadataInput
+}
+
+input UpdateOrganizationMarketplaceListingMetadataInput {
+  clientMutationId: String
+  id: String
+  uniqueAlphanumericName: String
+  marketplaceListingMetadata: ListingMetadataInput!
 }
 
 input UpdateOrganizationOfferingInput {

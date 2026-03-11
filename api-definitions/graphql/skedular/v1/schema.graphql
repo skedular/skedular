@@ -576,6 +576,7 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
   updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
@@ -2478,6 +2479,13 @@ input UpdateOrganizationInput {
   name: String!
   uniqueAlphanumericName: String
   website: String
+}
+
+input UpdateOrganizationMarketplaceListingMetadataInput {
+  clientMutationId: String
+  id: String
+  marketplaceListingMetadata: ListingMetadataInput!
+  uniqueAlphanumericName: String
 }
 
 input UpdateOrganizationOfferingInput {

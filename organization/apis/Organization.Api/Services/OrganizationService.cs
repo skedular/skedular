@@ -60,6 +60,12 @@ public interface IOrganizationService
         OrganizationSearchCriteria searchCriteria,
         ICollection<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        ListingMetadata marketplaceListingMetadata,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -358,6 +364,45 @@ public class OrganizationService(
         return (paginatedInfo, mappedOrganizations, totalCount);
     }
 
+    public async Task<Shared.Models.Organization> UpdateMarketplaceListingMetadataAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        ListingMetadata marketplaceListingMetadata,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationId,
+                                       organizationUniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
+
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        existingOrganization.MarketplaceListingMetadata = marketplaceListingMetadata;
+
+        var organization = mapper.MapTo(
+            repositoryFactory.OrganizationRepository.Update(existingOrganization),
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
+
+        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.UpdateByIdOrUniqueAlphanumericNameAsync(
+            organization.Id,
+            organization.UniqueAlphanumericName,
+            cancellationToken);
+
+        return organization;
+    }
+
     private async Task<Shared.Models.Organization> UpdateInternalAsync(
         Shared.Models.Organization organization,
         Shared.Database.Entities.Organization existingOrganization,
@@ -400,7 +445,7 @@ public class OrganizationService(
 
         organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(existingOrganization),
-            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
 

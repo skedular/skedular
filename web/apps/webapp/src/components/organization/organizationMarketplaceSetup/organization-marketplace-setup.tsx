@@ -1,5 +1,16 @@
 import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
-import { AppBarWithStackColumn, BodyIconTypography, GridContainer, PushToRight, SectionIconTypography, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
+import {
+  AppBarWithStackColumn,
+  BodyIconTypography,
+  FormFieldLabel,
+  FormStackColumn,
+  GridContainer,
+  PushToRight,
+  SectionIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+} from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
@@ -12,8 +23,8 @@ import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeCo
 import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } from '@/components/stripeConnectAccount/addStripeConnectAccount';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
+import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
@@ -26,6 +37,7 @@ import type { organizationMarketplaceSetup_productTags_refetchableFragment } fro
 import type { organizationMarketplaceSetup_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_query.graphql';
 import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
+import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -35,11 +47,15 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { Form } from 'react-final-form';
 import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react-relay';
 import { toast } from 'react-toastify';
+import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
+import { object, string } from 'yup';
 import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
@@ -86,6 +102,16 @@ type OrganizationBankAccountRowType = {
   country: string;
 };
 
+type OrganizationMarketplaceListingMetadataDetails = {
+  title: string | null;
+  subTitle: string | null;
+};
+
+const organizationMarketplaceListingMetadataSchema = object({
+  title: string().nullable(),
+  subTitle: string().nullable(),
+});
+
 const OrganizationMarketplaceSetup = ({
   rootDataRelay,
   rootDataProductTagsRelay,
@@ -97,6 +123,14 @@ const OrganizationMarketplaceSetup = ({
   const rootData = useFragment<organizationMarketplaceSetup_query$key>(
     graphql`
       fragment organizationMarketplaceSetup_query on Query {
+        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+          id
+          name
+          marketplaceListingMetadata {
+            title
+            subTitle
+          }
+        }
         ...existingStripeConnectAccountButton_query
       }
     `,
@@ -265,6 +299,21 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
+  const [commitUpdateOrganizationMarketplaceListingMetadata] = useMutation<organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation($input: UpdateOrganizationMarketplaceListingMetadataInput!) @raw_response_type {
+      updateOrganizationMarketplaceListingMetadata(input: $input) {
+        organization {
+          id
+          marketplaceListingMetadata {
+            about
+            title
+            subTitle
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
@@ -273,6 +322,14 @@ const OrganizationMarketplaceSetup = ({
   const searchParams = useSearchParams();
   const section = searchParams.get('section');
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  const validateOrganizationMarketplaceListingMetadataDetails = makeValidate(organizationMarketplaceListingMetadataSchema);
+  const requiredOrganizationMarketplaceListingMetadataDetailsFields = makeRequired(organizationMarketplaceListingMetadataSchema);
+
+  const [organizationTitle, setOrganizationTitle] = useState(rootData.organization?.marketplaceListingMetadata.title ?? null);
+  const debounceSetOrganizationTitle = useDebounceCallback(setOrganizationTitle, keyboardTextFieldDebounceTimeout);
+  const [organizationSubTitle, setOrganizationSubTitle] = useState(rootData.organization?.marketplaceListingMetadata.subTitle ?? null);
+  const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
 
   const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
   const [seledctedProductTags, setSeledctedProductTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -1184,12 +1241,124 @@ const OrganizationMarketplaceSetup = ({
     },
   ];
 
+  const handleOrganizationDetailUpdateClick = ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
+    const organization = rootData.organization;
+    if (!organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' marketplace listing...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationMarketplaceListingMetadata({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: organization.id,
+          marketplaceListingMetadata: {
+            about: '',
+            title: title ?? '',
+            subTitle: subTitle ?? '',
+          },
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} marketplace listing updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationMarketplaceListingMetadata: {
+          organization: {
+            id: organization.id,
+            marketplaceListingMetadata: {
+              about: '',
+              title: title ?? '',
+              subTitle: subTitle ?? '',
+            },
+          },
+        },
+      },
+    });
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
         <OrganizationMarketplaceSetupLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Marketplace Information">
+            <Form
+              onSubmit={handleOrganizationDetailUpdateClick}
+              initialValues={{
+                title: organizationTitle,
+                subTitle: organizationSubTitle,
+              }}
+              validate={validateOrganizationMarketplaceListingMetadataDetails}
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationTitle(values!.title);
+                debounceSetOrganizationSubTitle(values!.subTitle);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                      ref={(divElement) => {
+                        sectionRefs.current['setup'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Organization Marketplace Listing Setup" />
+                      <BodyIconTypography label="Edit your organization marketplace listing details" />
+                      <Divider />
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Title">
+                        <TextField name="title" required={requiredOrganizationMarketplaceListingMetadataDetailsFields.title} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Sub Title">
+                        <TextField name="subTitle" required={requiredOrganizationMarketplaceListingMetadataDetailsFields.subTitle} />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                    >
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
+            />
+
             <StackColumn
               sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}
               ref={(divElement) => {

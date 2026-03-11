@@ -99,6 +99,8 @@ type OrganizationDetails = {
   uniqueAlphanumericName: string | null;
   name: string;
   about: string | null;
+  title: string | null;
+  subTitle: string | null;
   website: string | null;
   industrySubCategoryIds: string[];
   contactEmail: string;
@@ -109,6 +111,8 @@ const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   about: string().nullable(),
+  title: string().nullable(),
+  subTitle: string().nullable(),
   website: string().url('Website must be a valid Url').nullable(),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
@@ -252,6 +256,11 @@ const OrganizationAdmin = ({
           name
           logoUrl
           listingMetadata {
+            about
+            title
+            subTitle
+          }
+          marketplaceListingMetadata {
             about
             title
             subTitle
@@ -414,6 +423,11 @@ const OrganizationAdmin = ({
           uniqueAlphanumericName
           name
           listingMetadata {
+            about
+            title
+            subTitle
+          }
+          marketplaceListingMetadata {
             about
             title
             subTitle
@@ -715,6 +729,10 @@ const OrganizationAdmin = ({
   const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
   const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.listingMetadata.about ?? null);
   const debounceSetOrganizationAbout = useDebounceCallback(setOrganizationAbout, keyboardTextFieldDebounceTimeout);
+  const [organizationTitle, setOrganizationTitle] = useState(rootDataOrganization.organization?.listingMetadata.title ?? null);
+  const debounceSetOrganizationTitle = useDebounceCallback(setOrganizationTitle, keyboardTextFieldDebounceTimeout);
+  const [organizationSubTitle, setOrganizationSubTitle] = useState(rootDataOrganization.organization?.listingMetadata.subTitle ?? null);
+  const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
   const [organizationWebsite, setOrganizationWebsite] = useState(rootDataOrganization.organization?.website);
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
   const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(
@@ -913,7 +931,17 @@ const OrganizationAdmin = ({
     });
   }, [startTransition, refetchOrganization]);
 
-  const handleOrganizationDetailUpdateClick = ({ uniqueAlphanumericName, name, about, website, industrySubCategoryIds, contactEmail, contactPhone }: OrganizationDetails) => {
+  const handleOrganizationDetailUpdateClick = ({
+    uniqueAlphanumericName,
+    name,
+    about,
+    title,
+    subTitle,
+    website,
+    industrySubCategoryIds,
+    contactEmail,
+    contactPhone,
+  }: OrganizationDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
       return;
@@ -935,9 +963,10 @@ const OrganizationAdmin = ({
           name,
           listingMetadata: {
             about: about ?? '',
-            title: '',
-            subTitle: '',
+            title: title ?? '',
+            subTitle: subTitle ?? '',
           },
+          marketplaceListingMetadata: organization.marketplaceListingMetadata,
           website,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
@@ -974,9 +1003,10 @@ const OrganizationAdmin = ({
             name,
             listingMetadata: {
               about: about ?? '',
-              title: '',
-              subTitle: '',
+              title: title ?? '',
+              subTitle: subTitle ?? '',
             },
+            marketplaceListingMetadata: organization.marketplaceListingMetadata,
             website,
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)
@@ -2331,6 +2361,8 @@ const OrganizationAdmin = ({
                 uniqueAlphanumericName: organizationEditableUniqueAlphanumericName,
                 name: organizationName,
                 about: organizationAbout,
+                title: organizationTitle,
+                subTitle: organizationSubTitle,
                 website: organizationWebsite,
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
@@ -2341,6 +2373,8 @@ const OrganizationAdmin = ({
                 debounceSetOrganizationEditableUniqueAlphanumericName(values!.uniqueAlphanumericName);
                 debounceSetOrganizationName(values!.name);
                 debounceSetOrganizationAbout(values!.about);
+                debounceSetOrganizationTitle(values!.title);
+                debounceSetOrganizationSubTitle(values!.subTitle);
                 debounceSetOrganizationWebsite(values!.website);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
@@ -2421,6 +2455,14 @@ const OrganizationAdmin = ({
 
                       <FormFieldLabel label="About">
                         <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Title">
+                        <TextField name="title" required={requiredOrganizationDetailsFields.title} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Sub Title">
+                        <TextField name="subTitle" required={requiredOrganizationDetailsFields.subTitle} />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Website">
