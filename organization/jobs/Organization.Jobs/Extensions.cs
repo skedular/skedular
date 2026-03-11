@@ -1,3 +1,5 @@
+using Organization.Jobs.Jobs;
+
 namespace Organization.Jobs;
 
 public static class Extensions
@@ -11,6 +13,7 @@ public static class Extensions
             services;
 
         public IServiceCollection AddJobs() =>
-            services;
+            services
+                .AddHostedService<TagSyncJob>();
     }
 }
