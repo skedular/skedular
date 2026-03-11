@@ -64,7 +64,14 @@ const GuestStoreFront = ({ queryReference }: Props) => {
             borderColor: (theme) => theme.palette.divider,
           }}
         >
-          <Box component="img" src={data.heroImageUrl} alt={rootData.organizationPublic.name} sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          {rootData.organizationPublic.featureImages.length > 0 && rootData.organizationPublic.featureImages[0].original && (
+            <Box
+              component="img"
+              src={rootData.organizationPublic.featureImages[0].original.url}
+              alt={rootData.organizationPublic.name}
+              sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          )}
           <Box
             sx={{
               position: 'absolute',

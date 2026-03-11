@@ -1,12 +1,6 @@
 import type { GuestStoreFrontData } from './types';
 
 export const defaultGuestStoreFrontData: GuestStoreFrontData = {
-  organizationName: 'Downtown Hub',
-  heroTitle: 'Your workspace in the heart of downtown',
-  heroSubtitle: 'Flexible memberships, premium amenities, and a community that inspires.',
-  heroImageUrl: 'https://images.unsplash.com/photo-1678282931256-370578a0d036?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
-  productsHeading: 'Explore our spaces',
-  productsSubtitle: 'From hot desks to private offices, find the workspace that matches your needs.',
   products: [
     {
       id: 'hot-desk',
@@ -61,6 +55,4 @@ export const defaultGuestStoreFrontData: GuestStoreFrontData = {
       ],
     },
   ],
-  footerAddressLines: ['123 Main Street, Suite 100', 'New York, NY 10001'],
-  footerEmail: 'info@downtownhub.com',
 };

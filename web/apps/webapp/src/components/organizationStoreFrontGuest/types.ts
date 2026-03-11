@@ -18,13 +18,5 @@ export type GuestStoreFrontProduct = {
 };
 
 export type GuestStoreFrontData = {
-  organizationName: string;
-  heroTitle: string;
-  heroSubtitle: string;
-  heroImageUrl: string;
-  productsHeading: string;
-  productsSubtitle: string;
   products: GuestStoreFrontProduct[];
-  footerAddressLines: string[];
-  footerEmail: string;
 };

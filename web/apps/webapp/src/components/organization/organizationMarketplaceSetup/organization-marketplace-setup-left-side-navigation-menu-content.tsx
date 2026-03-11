@@ -84,15 +84,9 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
     >
       <ListItem disablePadding>
         <Link component={NextLink} href={marketplaceListingLink}>
-          <ListItemButton
-            selected={fullPath === marketplaceListingLink}
-            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === marketplaceListingLink) }}
-          >
+          <ListItemButton selected={fullPath === marketplaceListingLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === marketplaceListingLink) }}>
             {collapsed && (
-              <BodyIconTypography
-                startElement={!hideIcons && <EditIcon color="inherit" />}
-                invertDefaultColor={fullPath === marketplaceListingLink && paletteMode === 'dark'}
-              />
+              <BodyIconTypography startElement={!hideIcons && <EditIcon color="inherit" />} invertDefaultColor={fullPath === marketplaceListingLink && paletteMode === 'dark'} />
             )}
             {!collapsed && (
               <BodyIconTypography
