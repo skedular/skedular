@@ -1,3 +1,4 @@
+export { default as MultipleChoicesAmenities } from './multiple-choices-amenities';
 export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
 export { default as MultipleChoicesProductTags } from './multiple-choices-product-tags';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';

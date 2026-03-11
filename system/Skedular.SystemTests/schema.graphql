@@ -370,6 +370,7 @@ type LocationDailyBookingsTotal {
 }
 
 type LocationDetails {
+  amenities: [OrganizationTagDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   canDelete: Boolean!
   canModify: Boolean!

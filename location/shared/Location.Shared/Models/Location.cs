@@ -44,6 +44,9 @@ public class Location : ModelBaseWithDeleted
     public ICollection<OrganizationTag> SpaceTypes =>
         Tags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
 
+    public ICollection<OrganizationTag> Amenities =>
+        Tags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
+
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5b1f2dc37096404d3c88a7fb39b7b50>>
+ * @generated SignedSource<<aa48664aa60ded16b2e6eb15e16a3401>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -63,6 +63,11 @@ export type organizationLocation_updateLocationMutation$variables = {
 export type organizationLocation_updateLocationMutation$data = {
   readonly updateLocation: {
     readonly location: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly extraMetadata: {
         readonly areaRange: {
           readonly fromInSqm: string;
@@ -101,52 +106,6 @@ export type organizationLocation_updateLocationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly openingHours: {
-        readonly weekOpeningHours: {
-          readonly friday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly monday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly saturday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly sunday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly thursday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly tuesday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly wednesday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-        };
-      };
       readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -163,6 +122,11 @@ export type organizationLocation_updateLocationMutation$data = {
 export type organizationLocation_updateLocationMutation$rawResponse = {
   readonly updateLocation: {
     readonly location: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly extraMetadata: {
         readonly areaRange: {
           readonly fromInSqm: string;
@@ -201,52 +165,6 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly openingHours: {
-        readonly weekOpeningHours: {
-          readonly friday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly monday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly saturday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly sunday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly thursday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly tuesday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-          readonly wednesday: {
-            readonly closed: boolean;
-            readonly from: string | null | undefined;
-            readonly openAllDay: boolean;
-            readonly until: string | null | undefined;
-          };
-        };
-      };
       readonly spaceTypes: ReadonlyArray<{
         readonly color: string | null | undefined;
         readonly id: string;
@@ -288,14 +206,7 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "from",
-  "storageKey": null
-},
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -318,31 +229,18 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v4 = [
+  (v1/*: any*/),
+  (v2/*: any*/),
   {
     "alias": null,
     "args": null,
     "kind": "ScalarField",
-    "name": "closed",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "openAllDay",
-    "storageKey": null
-  },
-  (v3/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "until",
+    "name": "color",
     "storageKey": null
   }
 ],
-v6 = [
+v5 = [
   {
     "alias": null,
     "args": [
@@ -498,7 +396,13 @@ v6 = [
                 "name": "peopleCapacity",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "from",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -555,7 +459,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               },
               {
@@ -565,7 +469,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v3/*: any*/),
                 "storageKey": null
               }
             ],
@@ -578,109 +482,17 @@ v6 = [
             "kind": "LinkedField",
             "name": "spaceTypes",
             "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "color",
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "OpeningHours",
+            "concreteType": "OrganizationTagDetails",
             "kind": "LinkedField",
-            "name": "openingHours",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "WeekOpeningHours",
-                "kind": "LinkedField",
-                "name": "weekOpeningHours",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "monday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "tuesday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "wednesday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "thursday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "friday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "saturday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "OpeningHoursDetails",
-                    "kind": "LinkedField",
-                    "name": "sunday",
-                    "plural": false,
-                    "selections": (v5/*: any*/),
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
+            "name": "amenities",
+            "plural": true,
+            "selections": (v4/*: any*/),
             "storageKey": null
           }
         ],
@@ -696,7 +508,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v6/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -705,19 +517,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationLocation_updateLocationMutation",
-    "selections": (v6/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "1e33c0a112dbad8a74e96d79efdca99b",
+    "cacheID": "53a654cbadffdc2560d173b831efbd49",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      openingHours {\n        weekOpeningHours {\n          monday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          tuesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          wednesday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          thursday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          friday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          saturday {\n            closed\n            openAllDay\n            from\n            until\n          }\n          sunday {\n            closed\n            openAllDay\n            from\n            until\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c78088a8cce166932cf0b0e9462abc9";
+(node as any).hash = "663f9eb69413f3440a4261c551872b78";
 
 export default node;

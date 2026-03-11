@@ -21,6 +21,7 @@ import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLin
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { MultipleChoicesAmenities } from '@/components/organization';
 import { CustomTagSelector } from '@/components/organization/customTagSelector/';
 import { ZoneSelector } from '@/components/organization/zoneSelector';
 import { ProductTags } from '@/components/productTag';
@@ -97,6 +98,7 @@ type LocationDetails = {
   relatedVideoLinks: string | null;
   otherLinks: string | null;
   spaceTypeIds: string[];
+  amenityIds: string[];
 };
 
 const locationSchema = object({
@@ -116,6 +118,7 @@ const locationSchema = object({
   relatedVideoLinks: string().nullable(),
   otherLinks: string().nullable(),
   spaceTypeIds: array().nullable(),
+  amenityIds: array().nullable(),
 });
 
 type PhysicalAddress = {
@@ -263,6 +266,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name
             color
           }
+          amenities {
+            id
+            name
+            color
+          }
           openingHours {
             weekOpeningHours {
               monday {
@@ -315,6 +323,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         ...zoneSelector_allZones_query
         ...singleChoiceLocationType_query
         ...multipleChoicesLocationSpaceTypes_query
+        ...multipleChoicesAmenities_query
       }
     `,
     rootDataRelay,
@@ -444,51 +453,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             name
             color
           }
-          openingHours {
-            weekOpeningHours {
-              monday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              tuesday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              wednesday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              thursday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              friday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              saturday {
-                closed
-                openAllDay
-                from
-                until
-              }
-              sunday {
-                closed
-                openAllDay
-                from
-                until
-              }
-            }
+          amenities {
+            id
+            name
+            color
           }
         }
       }
@@ -616,47 +584,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
       updateLocationOpeningHours(input: $input) {
         location {
           id
-          name
-          listingMetadata {
-            about
-            title
-            subTitle
-          }
-          timezone
-          extraMetadata {
-            contactDetails {
-              contactPeople
-              contactEmails
-              contactPhones
-            }
-            areaRange {
-              fromInSqm
-              toInSqm
-            }
-            peopleCapacity {
-              from
-              to
-            }
-            website
-            relatedImageLinks
-            relatedVideoLinks
-            otherLinks
-          }
-          physicalAddress {
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-            countryCode
-          }
-          spaceTypes {
-            id
-            name
-            color
-          }
           openingHours {
             weekOpeningHours {
               monday {
@@ -783,6 +710,8 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   const debounceSetLocationType = useDebounceCallback(setLocationType, keyboardTextFieldDebounceTimeout);
   const [spaceTypeIds, setSpaceTypeIds] = useState<string[]>(rootData.location?.spaceTypes.map((item) => item.id) ?? []);
   const debounceSetSpaceTypeIds = useDebounceCallback(setSpaceTypeIds, keyboardTextFieldDebounceTimeout);
+  const [amenityIds, setAmenityIds] = useState<string[]>(rootData.location?.amenities.map((item) => item.id) ?? []);
+  const debounceSetAmenityIds = useDebounceCallback(setAmenityIds, keyboardTextFieldDebounceTimeout);
 
   const [locationContactPerson, setLocationContactPerson] = useState<string | null | undefined>(
     stringCollectionToString(rootData.location?.extraMetadata?.contactDetails?.contactPeople),
@@ -944,6 +873,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     relatedVideoLinks,
     otherLinks,
     spaceTypeIds,
+    amenityIds,
   }: LocationDetails) => {
     const location = rootData.location;
     if (!location) {
@@ -995,7 +925,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             otherLinks: stringToMultiLines(otherLinks),
           },
           featureImages: finalFeatureImages,
-          tagIds: spaceTypeIds,
+          tagIds: spaceTypeIds.concat(amenityIds),
         },
       },
       onCompleted: (_, errors) => {
@@ -1061,7 +991,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             },
             featureImages: finalFeatureImages,
             spaceTypes: location.spaceTypes,
-            openingHours: location.openingHours,
+            amenities: location.amenities,
           },
         },
       },
@@ -1699,12 +1629,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         updateLocationOpeningHours: {
           location: {
             id: location.id,
-            name: location.name,
-            listingMetadata: location.listingMetadata,
-            timezone: location.timezone,
-            extraMetadata: location.extraMetadata,
-            physicalAddress: location.physicalAddress,
-            spaceTypes: location.spaceTypes,
             openingHours: {
               weekOpeningHours,
             },
@@ -1887,6 +1811,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 timezone: locationTimezone,
                 type: locationType,
                 spaceTypeIds,
+                amenityIds,
                 contactPeople: locationContactPerson,
                 contactEmails: locationContactEmail,
                 contactPhones: locationContactPhone,
@@ -1906,6 +1831,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 debounceSetLocationTimezone(values!.timezone);
                 debounceSetLocationType(values!.type);
                 debounceSetSpaceTypeIds(values!.spaceTypeIds);
+                debounceSetAmenityIds(values!.amenityIds);
 
                 debounceSetLocationContactPerson(values!.contactPeople);
                 debounceSetLocationContactEmail(values!.contactEmails);
@@ -2002,6 +1928,10 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
                       <FormFieldLabel label="Space Type">
                         <MultipleChoicesLocationSpaceTypes rootDataRelay={rootData} name="spaceTypeIds" required={requiredFields.spaceTypeIds} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Amenities">
+                        <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
                       </FormFieldLabel>
 
                       {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (

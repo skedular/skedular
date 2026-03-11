@@ -35,6 +35,7 @@ public class LocationDetails : Node
     [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
     [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
     [GraphQLName("spaceTypeIds")] public IEnumerable<string> SpaceTypeIds { get; set; } = [];
+    [GraphQLName("amenityIds")] public IEnumerable<string> AmenityIds { get; set; } = [];
     [GraphQLName("resourceTypeIds")] public IEnumerable<string> ResourceTypeIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
@@ -128,6 +129,7 @@ public static partial class LocationDetailsType
         descriptor.Ignore(item => item.ZoneIds);
         descriptor.Ignore(item => item.ResourceTypeIds);
         descriptor.Ignore(item => item.SpaceTypeIds);
+        descriptor.Ignore(item => item.AmenityIds);
         descriptor.Ignore(item => item.ProductIds);
     }
 
@@ -145,6 +147,9 @@ public static partial class LocationDetailsType
 
     public static IEnumerable<OrganizationTagDetails> GetSpaceTypes([Parent] LocationDetails item) =>
         item.SpaceTypeIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<OrganizationTagDetails> GetAmenities([Parent] LocationDetails item) =>
+        item.AmenityIds.Select(id => new OrganizationTagDetails(id));
 
     public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
         item.ProductIds.Select(id => new ProductDetails(id));

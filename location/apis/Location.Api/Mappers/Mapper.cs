@@ -238,6 +238,7 @@ public class Mapper : IMapper
                 CustomTagIds = src.CustomTags.Select(item => item.Id),
                 ZoneIds = src.Zones.Select(item => item.Id),
                 SpaceTypeIds = src.SpaceTypes.Select(item => item.Id),
+                AmenityIds = src.Amenities.Select(item => item.Id),
                 ResourceTypeIds = src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
                     .Select(item => item.Id),

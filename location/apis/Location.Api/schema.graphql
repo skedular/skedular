@@ -90,6 +90,7 @@ type LocationDetails {
   zones: [OrganizationTagDetails!]!
   resourceTypes: [OrganizationTagDetails!]!
   spaceTypes: [OrganizationTagDetails!]!
+  amenities: [OrganizationTagDetails!]!
   products: [ProductDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
