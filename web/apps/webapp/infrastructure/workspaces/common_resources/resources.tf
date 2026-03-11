@@ -92,6 +92,11 @@ resource "vercel_project" "default" {
       target = ["development", "preview", "production"]
     },
     {
+      key    = "WORKOS_COOKIE_DOMAIN"
+      value  = ".${module.shared_common.cloudflare_webapp_domain_name}"
+      target = ["development", "preview", "production"]
+    },
+    {
       key    = "NEXT_PUBLIC_SITE_URL"
       value  = "https://${module.shared_common.webapp_domain_name}"
       target = ["development", "preview", "production"]
