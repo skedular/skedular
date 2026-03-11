@@ -32,6 +32,7 @@ public class OrganizationPublicDetails : Node
     [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("locationSpaceTypes")] public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
+    [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
 

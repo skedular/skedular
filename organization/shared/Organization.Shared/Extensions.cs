@@ -37,6 +37,7 @@ public static class Extensions
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
                 .AddSingleton<IGraphService, GraphService>()
+                .AddSingleton<IOrganizationDefaultValuesProvider, OrganizationDefaultValuesProvider>()
                 .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
                 .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
