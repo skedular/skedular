@@ -717,6 +717,7 @@ type OrganizationDetails {
   listingMetadata: ListingMetadata!
   locationSpaceTypes: [OrganizationTagDetails!]!
   logoUrl: String
+  marketplaceListingMetadata: ListingMetadata!
   members(after: String before: String first: Int last: Int orderBy: [OrganizationMemberOrderInput!] where: OrganizationMemberWhereInput): ConnectionOfOrganizationMemberEdge! @cost(weight: "10")
   name: String!
   paymentMethods: [OrganizationPaymentMethod!]!
@@ -851,6 +852,7 @@ type OrganizationPublicDetails {
   listingMetadata: ListingMetadata!
   locationSpaceTypes: [OrganizationTagDetails!]!
   logoUrl: String
+  marketplaceListingMetadata: ListingMetadata!
   name: String!
   physicalAddress: OrganizationPhysicalAddressDetails
   resourceTypes: [OrganizationTagDetails!]!
@@ -1528,6 +1530,7 @@ input AddOrganizationInput {
   id: String
   industrySubCategoryIds: [String!]!
   listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
   name: String!
   termsOfUseId: String!
   type: OrganizationType!
@@ -2471,6 +2474,7 @@ input UpdateOrganizationInput {
   id: String
   industrySubCategoryIds: [String!]!
   listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
   name: String!
   uniqueAlphanumericName: String
   website: String

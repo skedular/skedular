@@ -233,6 +233,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -303,6 +304,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata,
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -324,6 +326,7 @@ public class Mapper : IMapper
         dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
         dest.Name = src.Name;
         dest.ListingMetadata = src.ListingMetadata;
+        dest.MarketplaceListingMetadata = src.MarketplaceListingMetadata;
         dest.Website = src.Website;
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
@@ -418,6 +421,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata,
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
@@ -463,6 +467,7 @@ public class Mapper : IMapper
                 UniqueAlphanumericName = src.UniqueAlphanumericName,
                 Name = src.Name,
                 ListingMetadata = src.ListingMetadata,
+                MarketplaceListingMetadata = src.MarketplaceListingMetadata,
                 Website = src.Website,
                 LogoUrl = src.LogoUrl,
                 ContactEmail = src.ContactEmail,
@@ -506,6 +511,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             Type = src.Type,
             ContactEmail = src.ContactEmail,
@@ -523,6 +529,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
@@ -540,6 +547,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = MapTo(src.ListingMetadata),
+            MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website,
             Type = src.Type switch
             {
@@ -567,6 +575,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
+            MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
             Type = src.Type switch
             {

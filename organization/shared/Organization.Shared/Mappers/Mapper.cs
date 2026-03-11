@@ -64,6 +64,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
+            MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type switch
@@ -158,6 +159,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00b1f3d590723d6fcd0085222bc9b105>>
+ * @generated SignedSource<<eaa2d9090dd0b125f409a6b9f5c8343a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,6 +19,7 @@ export type AddOrganizationInput = {
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   listingMetadata?: ListingMetadataInput | null | undefined;
+  marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   termsOfUseId: string;
   type: OrganizationType;

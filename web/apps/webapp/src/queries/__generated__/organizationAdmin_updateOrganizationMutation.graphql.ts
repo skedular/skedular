@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b77754cc684846b2f828db376316633>>
+ * @generated SignedSource<<3fec7a26d3dcaf82ec260ada3a078f8b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type UpdateOrganizationInput = {
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   listingMetadata?: ListingMetadataInput | null | undefined;
+  marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;

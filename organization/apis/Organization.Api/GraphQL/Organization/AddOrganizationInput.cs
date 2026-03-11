@@ -28,4 +28,7 @@ public class AddOrganizationInput
 
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];
     [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty();
+
+    [GraphQLName("marketplaceListingMetadata")]
+    public ListingMetadata? MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty();
 }

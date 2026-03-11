@@ -252,6 +252,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
+            MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl.ToSafeString(),

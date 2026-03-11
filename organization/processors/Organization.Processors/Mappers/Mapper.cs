@@ -226,6 +226,7 @@ public class Mapper : IMapper
             UniqueAlphanumericName = src.UniqueAlphanumericName,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty(),
             Website = src.Website,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,

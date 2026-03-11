@@ -33,7 +33,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
             "aW9uSWQYBiABKAkicQoERGF0YRIyCgxvcmdhbml6YXRpb24YASABKAsyGi5v",
             "cmdhbml6YXRpb24uT3JnYW5pemF0aW9uSAASKgoIb2ZmZXJpbmcYAiABKAsy",
-            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIuEFCgxPcmdh",
+            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIqQGCgxPcmdh",
             "bml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
             "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIeChZ1bmlxdWVBbHBoYW51bWVyaWNO",
             "YW1lGAMgASgJEgwKBG5hbWUYBCABKAkSNgoPbGlzdGluZ01ldGFkYXRhGAUg",
@@ -50,50 +50,52 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "CzIdLm9yZ2FuaXphdGlvbi5QaHlzaWNhbEFkZHJlc3MSGwoTaXNPd25lcnNo",
             "aXBWZXJpZmllZBgSIAEoCBIgChhoYXNBdHRhY2hlZFBheW1lbnRNZXRob2QY",
             "EyABKAgSMQoNZmVhdHVyZUltYWdlcxgUIAMoCzIaLm9yZ2FuaXphdGlvbi5D",
-            "ZG5JbWFnZUZpbGUifAoST3JnYW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJ",
-            "EhIKCmN1c3RvbWVySWQYAiABKAkSIAoEcm9sZRgDIAEoDjISLm9yZ2FuaXph",
-            "dGlvbi5Sb2xlEiQKBnN0YXR1cxgEIAEoDjIULm9yZ2FuaXphdGlvbi5TdGF0",
-            "dXMi0QEKCE9mZmVyaW5nEgoKAmlkGAEgASgJEgwKBGNvZGUYAiABKAkSKQoF",
-            "c3RhcnQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEicKA2Vu",
-            "ZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXASEQoJYXV0b1Jl",
-            "bmV3GAUgASgIEhEKCXVuaXRQcmljZRgGIAEoBRIZChFhY3RpdmVDdXN0b21l",
-            "cklkcxgHIAMoCRIWCg5vcmdhbml6YXRpb25JZBgIIAEoCSIWCghMb2NhdGlv",
-            "bhIKCgJpZBgBIAEoCSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEo",
-            "CRITCgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9y",
-            "GAUgASgJIn0KF09yZ2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJ",
-            "EhAKCGVudGl0eUlkGAIgASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFwcEZl",
-            "ZGVyYXRpb25NZXRhZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEoCCJO",
-            "ChZPcmdhbml6YXRpb25UYXhEZXRhaWxzEgoKAmlkGAEgASgJEg0KBXRheElk",
-            "GAIgASgJEhkKEXRheFJhdGVQZXJjZW50YWdlGAMgASgBIqsCCg9QaHlzaWNh",
-            "bEFkZHJlc3MSCgoCaWQYASABKAkSFAoMYWRkcmVzc0xpbmUxGAIgASgJEhQK",
-            "DGFkZHJlc3NMaW5lMhgDIAEoCRIOCgZzdWJ1cmIYBCABKAkSDAoEY2l0eRgF",
-            "IAEoCRIQCghwcm92aW5jZRgGIAEoCRIPCgd6aXBjb2RlGAcgASgJEg8KB2Nv",
-            "dW50cnkYCCABKAkSEwoLY291bnRyeUNvZGUYCSABKAkSGAoQZm9ybWF0dGVk",
-            "QWRkcmVzcxgKIAEoCRIPCgdvc21UeXBlGAsgASgJEg0KBW9zbUlkGAwgASgJ",
-            "Eg8KB3BsYWNlSWQYDSABKAkSLgoLY29vcmRpbmF0ZXMYDiABKAsyGS5vcmdh",
-            "bml6YXRpb24uQ29vcmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMSEQoJbG9uZ2l0",
-            "dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIgASgBImEKDENkbkltYWdlRmlsZRIn",
-            "CghvcmlnaW5hbBgBIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlEigKCXRo",
-            "dW1ibmFpbBgCIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlIjUKB0NkbkZp",
-            "bGUSCwoDdXJsGAEgASgJEg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgDIAEo",
-            "BSJBCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQYASABKAkSDQoFdGl0bGUY",
-            "AiABKAkSEAoIc3ViVGl0bGUYAyABKAkqaQoEVHlwZRIdChlUeXBlX09yZ2Fu",
-            "aXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25EZWxldGVk",
-            "EAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQAipzChBP",
-            "cmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJpdmF0ZRAA",
-            "EiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQARIfChtPcmdhbml6",
-            "YXRpb25UeXBlX0luZGl2aWR1YWwQAio/CgRSb2xlEg4KClJvbGVfT3duZXIQ",
-            "ABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchACKjAK",
-            "BlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0aXZl",
-            "EAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuT3Jn",
-            "YW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "ZG5JbWFnZUZpbGUSQQoabWFya2V0cGxhY2VMaXN0aW5nTWV0YWRhdGEYFSAB",
+            "KAsyHS5vcmdhbml6YXRpb24uTGlzdGluZ01ldGFkYXRhInwKEk9yZ2FuaXph",
+            "dGlvbk1lbWJlchIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEiAK",
+            "BHJvbGUYAyABKA4yEi5vcmdhbml6YXRpb24uUm9sZRIkCgZzdGF0dXMYBCAB",
+            "KA4yFC5vcmdhbml6YXRpb24uU3RhdHVzItEBCghPZmZlcmluZxIKCgJpZBgB",
+            "IAEoCRIMCgRjb2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnBy",
+            "b3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9i",
+            "dWYuVGltZXN0YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UY",
+            "BiABKAUSGQoRYWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0",
+            "aW9uSWQYCCABKAkiFgoITG9jYXRpb24SCgoCaWQYASABKAkiUQoDVGFnEgoK",
+            "AmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkS",
+            "DAoEdHlwZRgEIAEoCRINCgVjb2xvchgFIAEoCSJ9ChdPcmdhbml6YXRpb25T",
+            "c29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQCghlbnRpdHlJZBgCIAEoCRIQCghs",
+            "b2dpblVybBgDIAEoCRIgChhhcHBGZWRlcmF0aW9uTWV0YWRhdGFVcmwYBCAB",
+            "KAkSEAoIaXNBY3RpdmUYBSABKAgiTgoWT3JnYW5pemF0aW9uVGF4RGV0YWls",
+            "cxIKCgJpZBgBIAEoCRINCgV0YXhJZBgCIAEoCRIZChF0YXhSYXRlUGVyY2Vu",
+            "dGFnZRgDIAEoASKrAgoPUGh5c2ljYWxBZGRyZXNzEgoKAmlkGAEgASgJEhQK",
+            "DGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRyZXNzTGluZTIYAyABKAkSDgoG",
+            "c3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkSEAoIcHJvdmluY2UYBiABKAkS",
+            "DwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5GAggASgJEhMKC2NvdW50cnlD",
+            "b2RlGAkgASgJEhgKEGZvcm1hdHRlZEFkZHJlc3MYCiABKAkSDwoHb3NtVHlw",
+            "ZRgLIAEoCRINCgVvc21JZBgMIAEoCRIPCgdwbGFjZUlkGA0gASgJEi4KC2Nv",
+            "b3JkaW5hdGVzGA4gASgLMhkub3JnYW5pemF0aW9uLkNvb3JkaW5hdGVzIjIK",
+            "C0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgC",
+            "IAEoASJhCgxDZG5JbWFnZUZpbGUSJwoIb3JpZ2luYWwYASABKAsyFS5vcmdh",
+            "bml6YXRpb24uQ2RuRmlsZRIoCgl0aHVtYm5haWwYAiABKAsyFS5vcmdhbml6",
+            "YXRpb24uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWln",
+            "aHQYAiABKAUSDQoFd2lkdGgYAyABKAUiQQoPTGlzdGluZ01ldGFkYXRhEg0K",
+            "BWFib3V0GAEgASgJEg0KBXRpdGxlGAIgASgJEhAKCHN1YlRpdGxlGAMgASgJ",
+            "KmkKBFR5cGUSHQoZVHlwZV9Pcmdhbml6YXRpb25VcHNlcnRlZBAAEhwKGFR5",
+            "cGVfT3JnYW5pemF0aW9uRGVsZXRlZBABEiQKIFR5cGVfT3JnYW5pemF0aW9u",
+            "T2ZmZXJpbmdVcGRhdGVkEAIqcwoQT3JnYW5pemF0aW9uVHlwZRIcChhPcmdh",
+            "bml6YXRpb25UeXBlX1ByaXZhdGUQABIgChxPcmdhbml6YXRpb25UeXBlX01h",
+            "cmtldHBsYWNlEAESHwobT3JnYW5pemF0aW9uVHlwZV9JbmRpdmlkdWFsEAIq",
+            "PwoEUm9sZRIOCgpSb2xlX093bmVyEAASFgoSUm9sZV9BZG1pbmlzdHJhdG9y",
+            "EAESDwoLUm9sZV9NZW1iZXIQAiowCgZTdGF0dXMSEQoNU3RhdHVzX0FjdGl2",
+            "ZRAAEhMKD1N0YXR1c19JbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNsaWVu",
+            "dHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "UniqueAlphanumericName", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "UniqueAlphanumericName", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -1131,6 +1133,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       isOwnershipVerified_ = other.isOwnershipVerified_;
       hasAttachedPaymentMethod_ = other.hasAttachedPaymentMethod_;
       featureImages_ = other.featureImages_.Clone();
+      marketplaceListingMetadata_ = other.marketplaceListingMetadata_ != null ? other.marketplaceListingMetadata_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1376,6 +1379,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       get { return featureImages_; }
     }
 
+    /// <summary>Field number for the "marketplaceListingMetadata" field.</summary>
+    public const int MarketplaceListingMetadataFieldNumber = 21;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata marketplaceListingMetadata_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata MarketplaceListingMetadata {
+      get { return marketplaceListingMetadata_; }
+      set {
+        marketplaceListingMetadata_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1411,6 +1426,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (IsOwnershipVerified != other.IsOwnershipVerified) return false;
       if (HasAttachedPaymentMethod != other.HasAttachedPaymentMethod) return false;
       if(!featureImages_.Equals(other.featureImages_)) return false;
+      if (!object.Equals(MarketplaceListingMetadata, other.MarketplaceListingMetadata)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1438,6 +1454,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (IsOwnershipVerified != false) hash ^= IsOwnershipVerified.GetHashCode();
       if (HasAttachedPaymentMethod != false) hash ^= HasAttachedPaymentMethod.GetHashCode();
       hash ^= featureImages_.GetHashCode();
+      if (marketplaceListingMetadata_ != null) hash ^= MarketplaceListingMetadata.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1524,6 +1541,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteBool(HasAttachedPaymentMethod);
       }
       featureImages_.WriteTo(output, _repeated_featureImages_codec);
+      if (marketplaceListingMetadata_ != null) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(MarketplaceListingMetadata);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1602,6 +1623,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteBool(HasAttachedPaymentMethod);
       }
       featureImages_.WriteTo(ref output, _repeated_featureImages_codec);
+      if (marketplaceListingMetadata_ != null) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(MarketplaceListingMetadata);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1664,6 +1689,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         size += 2 + 1;
       }
       size += featureImages_.CalculateSize(_repeated_featureImages_codec);
+      if (marketplaceListingMetadata_ != null) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MarketplaceListingMetadata);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1746,6 +1774,12 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         HasAttachedPaymentMethod = other.HasAttachedPaymentMethod;
       }
       featureImages_.Add(other.featureImages_);
+      if (other.marketplaceListingMetadata_ != null) {
+        if (marketplaceListingMetadata_ == null) {
+          MarketplaceListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata();
+        }
+        MarketplaceListingMetadata.MergeFrom(other.MarketplaceListingMetadata);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1863,6 +1897,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             featureImages_.AddEntriesFrom(input, _repeated_featureImages_codec);
             break;
           }
+          case 170: {
+            if (marketplaceListingMetadata_ == null) {
+              MarketplaceListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(MarketplaceListingMetadata);
+            break;
+          }
         }
       }
     #endif
@@ -1978,6 +2019,13 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 162: {
             featureImages_.AddEntriesFrom(ref input, _repeated_featureImages_codec);
+            break;
+          }
+          case 170: {
+            if (marketplaceListingMetadata_ == null) {
+              MarketplaceListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(MarketplaceListingMetadata);
             break;
           }
         }

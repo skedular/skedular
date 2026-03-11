@@ -250,6 +250,7 @@ type OrganizationDetails {
   taxDetails: OrganizationTaxDetails
   featureImages: [CdnImageFile!]!
   listingMetadata: ListingMetadata!
+  marketplaceListingMetadata: ListingMetadata!
   id: ID!
 }
 
@@ -377,6 +378,7 @@ type OrganizationPublicDetails {
   locationSpaceTypes: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
   listingMetadata: ListingMetadata!
+  marketplaceListingMetadata: ListingMetadata!
 }
 
 type OrganizationSsoSettingsDetails {
@@ -599,6 +601,7 @@ input AddOrganizationInput {
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
   listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
 }
 
 input AddOrganizationPaymentMethodIntentInput {
@@ -919,6 +922,7 @@ input UpdateOrganizationInput {
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
   listingMetadata: ListingMetadataInput
+  marketplaceListingMetadata: ListingMetadataInput
 }
 
 input UpdateOrganizationOfferingInput {
