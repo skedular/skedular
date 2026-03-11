@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6d24326bde44a10bdc7bce0e4777dbcf>>
+ * @generated SignedSource<<a37578665ab309f9fe9776cfda774bdc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,10 +15,22 @@ export type guestStoreFront_rootQuery$variables = {
 };
 export type guestStoreFront_rootQuery$data = {
   readonly organizationPublic: {
+    readonly featureImages: ReadonlyArray<{
+      readonly original: {
+        readonly height: number | null | undefined;
+        readonly url: string;
+        readonly width: number | null | undefined;
+      } | null | undefined;
+    }>;
     readonly listingMetadata: {
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
+    readonly marketplaceListingMetadata: {
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
+    };
+    readonly name: string;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontFooter_query">;
 };
@@ -45,23 +57,84 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "title",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "subTitle",
+    "storageKey": null
+  }
+],
+v4 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ListingMetadata",
   "kind": "LinkedField",
   "name": "listingMetadata",
   "plural": false,
+  "selections": (v3/*: any*/),
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "marketplaceListingMetadata",
+  "plural": false,
+  "selections": (v3/*: any*/),
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "CdnImageFile",
+  "kind": "LinkedField",
+  "name": "featureImages",
+  "plural": true,
   "selections": [
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subTitle",
+      "concreteType": "CdnFile",
+      "kind": "LinkedField",
+      "name": "original",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "url",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "height",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "width",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     }
   ],
@@ -82,7 +155,10 @@ return {
         "name": "organizationPublic",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          (v4/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
@@ -110,13 +186,9 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "name",
-            "storageKey": null
-          },
+          (v4/*: any*/),
+          (v5/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -204,16 +276,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1636cc505e111eb1d500165323d52166",
+    "cacheID": "d11b0375fc40ef3c79e28a8a42f087e2",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    listingMetadata {\n      title\n      subTitle\n    }\n  }\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    listingMetadata {\n      title\n      subTitle\n    }\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ec076d326d72acd537c60c1d624528f7";
+(node as any).hash = "8fa0948e8621a708b8bc8834d4b59d4f";
 
 export default node;

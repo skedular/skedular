@@ -2389,7 +2389,7 @@ const OrganizationAdmin = ({
                         paddingTop: defaultPadding,
                       }}
                       ref={(divElement) => {
-                        sectionRefs.current['setup'] = divElement;
+                        sectionRefs.current['marketplace-listing-setup'] = divElement;
                       }}
                     >
                       <SectionIconTypography label="Organization Setup" />

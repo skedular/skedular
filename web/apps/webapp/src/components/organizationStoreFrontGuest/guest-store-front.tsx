@@ -22,9 +22,21 @@ type Props = {
 const RootQuery = graphql`
   query guestStoreFront_rootQuery($organizationUniqueAlphanumericName: String!) {
     organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+      name
       listingMetadata {
         title
         subTitle
+      }
+      marketplaceListingMetadata {
+        title
+        subTitle
+      }
+      featureImages {
+        original {
+          url
+          height
+          width
+        }
       }
     }
     ...guestStoreFrontFooter_query
@@ -52,7 +64,7 @@ const GuestStoreFront = ({ queryReference }: Props) => {
             borderColor: (theme) => theme.palette.divider,
           }}
         >
-          <Box component="img" src={data.heroImageUrl} alt={data.organizationName} sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <Box component="img" src={data.heroImageUrl} alt={rootData.organizationPublic.name} sx={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           <Box
             sx={{
               position: 'absolute',
@@ -79,8 +91,12 @@ const GuestStoreFront = ({ queryReference }: Props) => {
 
       <Container maxWidth="xl" sx={{ mb: 6 }}>
         <Box sx={{ mb: 4 }}>
-          <MediumHeadingIconTypography label={data.productsHeading} sx={{ mb: 1 }} />
-          <BodyIconTypography label={data.productsSubtitle} sx={{ opacity: 0.85 }} />
+          {rootData.organizationPublic.marketplaceListingMetadata.title && (
+            <MediumHeadingIconTypography label={rootData.organizationPublic.marketplaceListingMetadata.title} sx={{ mb: 1 }} />
+          )}
+          {rootData.organizationPublic.marketplaceListingMetadata.subTitle && (
+            <BodyIconTypography label={rootData.organizationPublic.marketplaceListingMetadata.subTitle} sx={{ opacity: 0.85 }} />
+          )}
         </Box>
 
         <Box

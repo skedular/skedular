@@ -1,7 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BankAccountIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
+import { BankAccountIcon, EditIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
+  getOrganizationMarketplaceSetupMarketplaceListingBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
 } from '@/components/links';
@@ -64,6 +65,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
+  const marketplaceListingLink = getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
@@ -80,6 +82,31 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
         width: collapsed ? secondDrawerCollapsedDrawerWidthPx : secondDrawerExpandedDrawerWidthPx,
       }}
     >
+      <ListItem disablePadding>
+        <Link component={NextLink} href={marketplaceListingLink}>
+          <ListItemButton
+            selected={fullPath === marketplaceListingLink}
+            sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === marketplaceListingLink) }}
+          >
+            {collapsed && (
+              <BodyIconTypography
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                invertDefaultColor={fullPath === marketplaceListingLink && paletteMode === 'dark'}
+              />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Marketplace Listing"
+                startElement={!hideIcons && <EditIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === marketplaceListingLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
       <ListItem disablePadding>
         <Link component={NextLink} href={stripeConnectAccountsLink}>
           <ListItemButton
