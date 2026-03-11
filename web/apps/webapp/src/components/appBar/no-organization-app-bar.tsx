@@ -1,10 +1,20 @@
 import { CustomerAvatar, OrganizationAvatar } from '@/components/avatars';
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { NewFeedbackDialog } from '@/components/feedback';
-import { AddIcon, BillingAndPaymentIcon, FeedbackIcon, HamburgerMenuIcon, NotificationsIcon, OrganizationIcon, SettingsIcon, SignOutIcon } from '@/components/icons';
+import {
+  AddIcon,
+  BillingAndPaymentIcon,
+  FeedbackIcon,
+  HamburgerMenuIcon,
+  NotificationsIcon,
+  OrganizationIcon,
+  SettingsIcon,
+  SignOutIcon,
+  SystemModeIcon,
+} from '@/components/icons';
 import { getBillingAndPaymentLink, getNotificationsLink, getOrganizationBaseLink, getOrganizationSetupLink, getSettingsLink, getSignOutReturnToLink } from '@/components/links';
 import { NoOrganizationMobileLeftSideNavigationMenu } from '@/components/navigationMenu';
-import { PaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
+import { PaletteModeContext, SelectedPaletteModeContext, UpdatePaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { getCustomerFullName, localNow, toLongDateTime } from '@/libs/utils';
 import type { noOrganizationAppBar_query$key } from '@/queries/__generated__/noOrganizationAppBar_query.graphql';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -71,8 +81,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
   const { signOut } = useAuth();
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState(localNow());
+  const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const paletteMode = useContext(PaletteModeContext);
   const updatePaletteMode = useContext(UpdatePaletteModeContext);
+  const [themeMenuAnchorEl, setThemeMenuAnchorEl] = useState<null | HTMLElement>(null);
   const [profileOpenAnchorEl, setProfileOpenAnchorEl] = useState<null | HTMLElement>(null);
   const [submitFeedbackDialogOpen, setSubmitFeedbackDialogOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -115,12 +127,17 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
     setSubmitFeedbackDialogOpen(false);
   };
 
-  const handleDarkThemeClicked = () => {
-    updatePaletteMode('dark');
+  const handleThemeMenuOpenClick = (event: React.MouseEvent<HTMLElement>) => {
+    setThemeMenuAnchorEl(event.currentTarget);
   };
 
-  const handleLightThemeClicked = () => {
-    updatePaletteMode('light');
+  const handleThemeMenuCloseClick = () => {
+    setThemeMenuAnchorEl(null);
+  };
+
+  const handleThemeModeSelected = (mode: 'light' | 'dark' | 'system') => {
+    updatePaletteMode(mode);
+    handleThemeMenuCloseClick();
   };
 
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
@@ -138,6 +155,8 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
   const billingAndPaymentLink = getBillingAndPaymentLink(integratedPlatrform);
   const notificationsLink = getNotificationsLink(integratedPlatrform);
   const pendingInvitationsCount = rootData.pendingOrganizationInvitationsCount + rootData.pendingTeamInvitationsCount;
+  const selectedThemeIcon =
+    selectedThemeMode === 'light' ? <LightModeIcon fontSize="small" /> : selectedThemeMode === 'dark' ? <DarkModeIcon fontSize="small" /> : <SystemModeIcon fontSize="small" />;
 
   return (
     <>
@@ -232,10 +251,54 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           {showBreadcrumps && <>{breadcrumbs}</>}
 
           <PushToRight />
+
           <BodyIconTypography label={toLongDateTime(currentTime)} sx={{ display: { xs: 'none', sm: 'none', md: 'block' }, paddingRight: 2 }} />
           <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
 
-          <IconButton sx={{ ml: 1, paddingLeft: 2 }} color="inherit">
+          <IconButton
+            onClick={handleThemeMenuOpenClick}
+            sx={{
+              ml: 1,
+              border: 1,
+              borderColor: (theme) => theme.palette.divider,
+              borderRadius: 3,
+              width: 40,
+              height: 40,
+              color: (theme) => theme.palette.text.primary,
+              '&:hover': {
+                backgroundColor: (theme) => theme.palette.action.hover,
+              },
+            }}
+          >
+            {selectedThemeIcon}
+          </IconButton>
+
+          <Menu
+            anchorEl={themeMenuAnchorEl}
+            open={Boolean(themeMenuAnchorEl)}
+            onClose={handleThemeMenuCloseClick}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            sx={{ mt: 1 }}
+          >
+            <MenuItem selected={selectedThemeMode === 'light'} onClick={() => handleThemeModeSelected('light')}>
+              <BodyIconTypography startElement={<LightModeIcon fontSize="small" />} label="Light" spacing={2} />
+            </MenuItem>
+            <MenuItem selected={selectedThemeMode === 'dark'} onClick={() => handleThemeModeSelected('dark')}>
+              <BodyIconTypography startElement={<DarkModeIcon fontSize="small" />} label="Dark" spacing={2} />
+            </MenuItem>
+            <MenuItem selected={selectedThemeMode === 'system'} onClick={() => handleThemeModeSelected('system')}>
+              <BodyIconTypography startElement={<SystemModeIcon fontSize="small" />} label="System" spacing={2} />
+            </MenuItem>
+          </Menu>
+
+          <IconButton color="inherit">
             <Link component={NextLink} href={notificationsLink}>
               {pendingInvitationsCount === 0 && <NotificationsIcon excludeTooltip />}
               {pendingInvitationsCount > 0 && (
@@ -300,18 +363,6 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
                 <SmallIconTypography startElement={<BillingAndPaymentIcon />} label="Billing & Payment" />
               </Link>
             </MenuItem>
-            {paletteMode === 'dark' && (
-              <MenuItem onClick={handleLightThemeClicked}>
-                <SmallIconTypography startElement={<LightModeIcon />} label="Light Mode" />
-              </MenuItem>
-            )}
-
-            {paletteMode === 'light' && (
-              <MenuItem onClick={handleDarkThemeClicked}>
-                <SmallIconTypography startElement={<DarkModeIcon />} label="Dark Mode" />
-              </MenuItem>
-            )}
-
             <Divider />
 
             <MenuItem onClick={handleSubmitFeedbackClicked}>

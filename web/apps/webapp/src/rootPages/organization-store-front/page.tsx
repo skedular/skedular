@@ -1,3 +1,4 @@
+import { GuestStoreFront } from '@/components/organizationStoreFrontGuest';
 import { OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell } from '@/components/rootShell';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import { memo } from 'react';
@@ -19,7 +20,7 @@ const RootPage = () => {
 
   return (
     <UnauthenticatedOrganizationStoreFrontRootShell>
-      <>User is not signed in</>
+      <GuestStoreFront />
     </UnauthenticatedOrganizationStoreFrontRootShell>
   );
 };

@@ -29,9 +29,9 @@ const UnauthenticatedOrganizationStoreFrontRootShell = ({ children, queryReferen
   return (
     <>
       <UnathenticatedObservability />
-      <Box sx={{ display: 'flex' }}>
+      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: (theme) => theme.palette.background.default }}>
         <CssBaseline enableColorScheme />
-        <Box sx={{ flexGrow: 1 }}>
+        <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
           <UnauthenticatedOrganizationStoreFrontAppBar rootDataRelay={rootData} />
           {children}
         </Box>

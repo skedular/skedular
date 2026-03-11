@@ -4,7 +4,7 @@ export { InMsTeamsContext, default as InMsTeamsProvider } from './in-msteams-pro
 export { default as useIntegratedPlatrform } from './integrated-platform-hook';
 export { default as useKnownParams } from './known-params-hook';
 export { default as LogRocketProvider } from './logrocket-provider';
-export { PaletteModeContext, default as PaletteModeProvider, UpdatePaletteModeContext } from './palette-mode-provider';
+export { PaletteModeContext, default as PaletteModeProvider, SelectedPaletteModeContext, UpdatePaletteModeContext } from './palette-mode-provider';
 export type { ExtendedPaletteMode } from './palette-mode-provider';
 export { default as RelayProvider } from './relay-provider';
 export { default as ThemeProvider } from './theme-provider';

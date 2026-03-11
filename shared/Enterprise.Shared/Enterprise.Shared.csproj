@@ -51,18 +51,18 @@
         <PackageReference Include="HotChocolate.Fusion.SourceSchema" Version="15.1.12"/>
         <PackageReference Include="HotChocolate.Subscriptions.Redis" Version="15.1.12"/>
 
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.3.0"/>
-        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.3"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.3.0"/>
-        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.3.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.4.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.4"/>
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.4.0"/>
+        <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.4.0"/>
         <PackageReference Include="Microsoft.Graph" Version="5.103.0"/>
         <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="4.5.0"/>
 
@@ -112,7 +112,7 @@
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12"/>
         <PackageReference Include="StackExchange.Redis" Version="2.11.8"/>
         <PackageReference Include="Stripe.net" Version="50.4.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5"/>
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0"/>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>
         <PackageReference Include="WorkOS.net" Version="2.11.0"/>
@@ -130,7 +130,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.3">
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

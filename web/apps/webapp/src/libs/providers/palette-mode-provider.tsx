@@ -7,31 +7,35 @@ import { useLocalStorage } from 'usehooks-ts';
 export type ExtendedPaletteMode = PaletteMode | 'system';
 
 export const PaletteModeContext = createContext<PaletteMode>('light');
+export const SelectedPaletteModeContext = createContext<ExtendedPaletteMode>('system');
 export const UpdatePaletteModeContext = createContext<(mode: ExtendedPaletteMode) => void>(() => {});
 
 const PaletteModeProvider = ({ children }: PropsWithChildren) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [persistedPaletteMode, setPersistedPaletteMode] = useLocalStorage<ExtendedPaletteMode | undefined>('paletteMode', undefined);
+  const selectedPaletteMode: ExtendedPaletteMode = persistedPaletteMode ?? 'system';
   const paletteMode: PaletteMode = useMemo(() => {
-    if (persistedPaletteMode === 'dark') {
+    if (selectedPaletteMode === 'dark') {
       return 'dark';
     }
 
-    if (persistedPaletteMode === 'light') {
+    if (selectedPaletteMode === 'light') {
       return 'light';
     }
 
     return prefersDarkMode ? 'dark' : 'light';
-  }, [persistedPaletteMode, prefersDarkMode]);
+  }, [selectedPaletteMode, prefersDarkMode]);
 
   const updatePaletteMode = (mode: ExtendedPaletteMode) => {
     setPersistedPaletteMode(mode);
   };
 
   return (
-    <PaletteModeContext.Provider value={paletteMode}>
-      <UpdatePaletteModeContext.Provider value={updatePaletteMode}>{children}</UpdatePaletteModeContext.Provider>
-    </PaletteModeContext.Provider>
+    <SelectedPaletteModeContext.Provider value={selectedPaletteMode}>
+      <PaletteModeContext.Provider value={paletteMode}>
+        <UpdatePaletteModeContext.Provider value={updatePaletteMode}>{children}</UpdatePaletteModeContext.Provider>
+      </PaletteModeContext.Provider>
+    </SelectedPaletteModeContext.Provider>
   );
 };
 
