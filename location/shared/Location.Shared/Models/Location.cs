@@ -23,7 +23,7 @@ public class Location : ModelBaseWithDeleted
     public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
-    public ICollection<OrganizationTag> Tags { get; set; } = [];
+    public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
 
     public ICollection<OrganizationTag> CustomTags =>
         Resources
@@ -42,10 +42,10 @@ public class Location : ModelBaseWithDeleted
             .ToList();
 
     public ICollection<OrganizationTag> SpaceTypes =>
-        Tags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
+        OrganizationTags.Where(item => OrganizationTagTypeConstants.LocationSpaceTypes.Any(tagType => item.Type == tagType)).ToList();
 
     public ICollection<OrganizationTag> Amenities =>
-        Tags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
+        OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];

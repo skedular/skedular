@@ -23,7 +23,7 @@ internal static class MarketplaceBookingExtensions
             .Include(query => query.PaidByCustomer)
             .Include(query => query.PaidByOrganization)
             .Include(query => query.ProductVersion)
-            .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue))
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.ProductVersion)
             .ThenInclude(query => query.Product)
             .ThenInclude(query => query.Organization)

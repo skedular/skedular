@@ -5,6 +5,7 @@ import { DeleteIcon } from '@/components/icons';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
+import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useKnownParams } from '@/libs/providers';
@@ -52,6 +53,7 @@ const RootQuery = graphql`
     ...singleChoiceCurrency_query
     ...multipleChoicesBookingPaymentMethodTypes_query
     ...singleChoiceProductPricingCadence_query
+    ...multipleChoicesAmenities_query
   }
 `;
 
@@ -60,6 +62,7 @@ type ProductDetails = {
   description: string | null;
   currency: string;
   productTagIds: string[];
+  amenityIds: string[];
   pricingOptions: PricingOptionForm[];
 };
 
@@ -100,6 +103,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
+    amenityIds: array().nullable(),
     pricingOptions: array()
       .of(
         object({
@@ -234,6 +238,11 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             name
             color
           }
+          amenities {
+            id
+            name
+            color
+          }
           featureImages {
             original {
               url
@@ -281,6 +290,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
   const [productTagIds, setProductTagIds] = useState<string[]>([]);
   const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
 
+  const [amenityIds, setAmenityIds] = useState<string[]>([]);
+  const debounceSetAmenityIds = useDebounceCallback(setAmenityIds, keyboardTextFieldDebounceTimeout);
+
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
@@ -289,7 +301,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, description, currency, productTagIds, pricingOptions }: ProductDetails) => {
+  const handleProductAddClick = ({ name, description, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -305,7 +317,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           name,
           description,
           currency: currency as Currency,
-          productTagIds,
+          tagIds: productTagIds.concat(amenityIds),
           organizationUniqueAlphanumericName,
           featureImages: finalFeatureImages,
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
@@ -361,6 +373,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               name: '',
             },
             productTags: [],
+            amenities: [],
             featureImages: finalFeatureImages,
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
@@ -415,6 +428,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               description,
               currency,
               productTagIds,
+              amenityIds,
               pricingOptions: [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],
             }}
             validate={validateProductDetails}
@@ -423,6 +437,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               debounceSetDescription(values!.description);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
+              debounceSetAmenityIds(values!.amenityIds);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -496,6 +511,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                         required={requiredFields.productTagIds}
                         organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                       />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Amenities">
+                      <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Pricing Options" />

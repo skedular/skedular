@@ -57,6 +57,7 @@ type PaymentMethodTypeDetails {
 type ProductDetails {
   organization: OrganizationDetails!
   productTags: [OrganizationTagDetails!]!
+  amenities: [OrganizationTagDetails!]!
   inactive: Boolean!
   name: String!
   description: String
@@ -149,7 +150,7 @@ input AddProductInput {
   name: String!
   description: String
   currency: Currency!
-  productTagIds: [String!]!
+  tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
 }
@@ -208,7 +209,7 @@ input UpdateProductInput {
   name: String!
   description: String
   currency: Currency!
-  productTagIds: [String!]!
+  tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
 }

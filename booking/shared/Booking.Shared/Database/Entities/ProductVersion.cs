@@ -18,7 +18,7 @@ public class ProductVersion : EntityBase
     public string ProductId { get; set; }
     public virtual Product Product { get; set; }
 
-    public virtual ICollection<OrganizationTag> ProductTags { get; set; } = [];
+    public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public virtual ICollection<MarketplaceBooking> MarketplaceBookings { get; set; } = [];
     public virtual ICollection<StripeProduct> StripeProducts { get; set; } = [];
 }
@@ -35,7 +35,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
         builder.Property(item => item.PricingOptions).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
-        builder.HasMany(item => item.ProductTags).WithMany(item => item.ProductVersionProductTag);
+        builder.HasMany(item => item.OrganizationTags).WithMany(item => item.ProductVersionOrganizationTags);
 
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Currency);

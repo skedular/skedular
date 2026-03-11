@@ -52,7 +52,7 @@ public class MarketplaceRecurringBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
-        if (productVersion.ProductTags.Count == 0)
+        if (productVersion.OrganizationTags.All(item => item.Type != OrganizationTagTypeConstants.Product))
         {
             throw new ProductMissingProductTag();
         }

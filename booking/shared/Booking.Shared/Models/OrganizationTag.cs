@@ -11,5 +11,5 @@ public class OrganizationTag : ReplicatedModelBaseWithDeleted
     public Organization Organization { get; set; } = new();
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
-    public ICollection<ProductVersion> ProductVersionProductTag { get; set; } = [];
+    public ICollection<ProductVersion> ProductVersionOrganizationTags { get; set; } = [];
 }

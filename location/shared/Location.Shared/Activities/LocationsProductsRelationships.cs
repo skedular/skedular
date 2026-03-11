@@ -30,7 +30,11 @@ public class LocationsProductsRelationships(
 
         foreach (var product in products)
         {
-            var productTagIds = product.ProductVersions.First().ProductTags.Select(item => item.Id);
+            var productTagIds = product.ProductVersions
+                .First().OrganizationTags
+                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                .Select(item => item.Id)
+                .ToList();
 
             foreach (var location in locations)
             {

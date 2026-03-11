@@ -152,7 +152,7 @@ public class Mapper : IMapper
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OpeningHours = src.OpeningHours,
             Organization = MapTo(src.Organization),
-            Tags = MapTo(src.OrganizationTags).ToList(),
+            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             UniqueClaimCode = src.UniqueClaimCode,
             ContactedViaEmail = src.ContactedViaEmail,
             ContactedViaSms = src.ContactedViaSms,
@@ -393,7 +393,7 @@ public class Mapper : IMapper
                 {
                     Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
                 },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             OpeningHours = src.WeekOpeningHours is null ? null : new OpeningHours(MapTo(src.WeekOpeningHours)!, [], [])
         };
@@ -408,7 +408,7 @@ public class Mapper : IMapper
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList()
         };
 
     public Shared.Models.Resource MapTo(AddResourceInput src) =>
@@ -461,7 +461,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -482,7 +482,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -545,7 +545,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()
@@ -566,7 +566,7 @@ public class Mapper : IMapper
             },
             FeatureImages = MapTo(src.FeatureImages).ToList(),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId },
-            Tags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             ExtraMetadata = MapTo(src.ExtraMetadata),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             UniqueClaimCode = src.UniqueClaimCode.ToSafeString()

@@ -13,6 +13,7 @@ public class ProductDetails : Node
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
+    [GraphQLName("amenityIds")] public IEnumerable<string> AmenityIds { get; set; } = [];
 
     [GraphQLName("latestProductVersionId")]
     public string LatestProductVersionId { get; set; } = string.Empty;
@@ -34,6 +35,7 @@ public static partial class ProductDetailsType
         descriptor.Ignore(item => item.OrganizationId);
         descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.ProductTagIds);
+        descriptor.Ignore(item => item.AmenityIds);
     }
 
     public static OrganizationDetails GetOrganization([Parent] ProductDetails item) =>
@@ -41,4 +43,7 @@ public static partial class ProductDetailsType
 
     public static IEnumerable<OrganizationTagDetails> GetProductTags([Parent] ProductDetails item) =>
         item.ProductTagIds.Select(id => new OrganizationTagDetails(id));
+
+    public static IEnumerable<OrganizationTagDetails> GetAmenities([Parent] ProductDetails item) =>
+        item.AmenityIds.Select(id => new OrganizationTagDetails(id));
 }

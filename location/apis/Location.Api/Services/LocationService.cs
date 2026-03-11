@@ -138,7 +138,7 @@ public class LocationService(
             new Specification<OrganizationTag>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
-                                    locationRef.Tags.Select(item => item.Id).Contains(query.Id) &&
+                                    locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
                                     (query.Organization.Id == locationRef.Organization.Id || query.Organization.UniqueAlphanumericName ==
                                         locationRef.Organization.UniqueAlphanumericName) &&
                                     !query.Organization.DeletedAt.HasValue
@@ -387,7 +387,7 @@ public class LocationService(
             new Specification<OrganizationTag>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
-                                    locationRef.Tags.Select(item => item.Id).Contains(query.Id) &&
+                                    locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
                                     (query.Organization.Id == locationEntityRef.Organization.Id || query.Organization.UniqueAlphanumericName ==
                                         locationEntityRef.Organization.UniqueAlphanumericName) &&
                                     !query.Organization.DeletedAt.HasValue

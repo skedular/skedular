@@ -985,6 +985,7 @@ type PersonalInformationVisibilityDetails {
 }
 
 type ProductDetails {
+  amenities: [OrganizationTagDetails!]!
   currency: CurrencyDetails!
   description: String
   featureImages: [CdnImageFile!]!
@@ -1624,7 +1625,7 @@ input AddProductInput {
   organizationId: String
   organizationUniqueAlphanumericName: String
   pricingOptions: [ProductPricingInput!]!
-  productTagIds: [String!]!
+  tagIds: [String!]!
 }
 
 input AddProductTagInput {
@@ -2585,7 +2586,7 @@ input UpdateProductInput {
   id: String!
   name: String!
   pricingOptions: [ProductPricingInput!]!
-  productTagIds: [String!]!
+  tagIds: [String!]!
 }
 
 input UpdateProductTagInput {

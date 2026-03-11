@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c52c5cf53f786de1b090afe85fe6f7c0>>
+ * @generated SignedSource<<cbfe56b9cf2d8fa620cf351e48b07ab8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,11 @@ export type editProduct_query$data = {
   readonly defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number;
   readonly defaultMaxAllowedResourcesLockTimePaidViaCard: number;
   readonly product: {
+    readonly amenities: ReadonlyArray<{
+      readonly color: string | null | undefined;
+      readonly id: string;
+      readonly name: string;
+    }>;
     readonly currency: {
       readonly name: string;
       readonly type: Currency;
@@ -69,7 +74,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -110,6 +115,17 @@ v3 = [
   (v1/*: any*/)
 ],
 v4 = [
+  (v0/*: any*/),
+  (v1/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -184,17 +200,17 @@ return {
           "kind": "LinkedField",
           "name": "productTags",
           "plural": true,
-          "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/),
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "color",
-              "storageKey": null
-            }
-          ],
+          "selections": (v4/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationTagDetails",
+          "kind": "LinkedField",
+          "name": "amenities",
+          "plural": true,
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -224,7 +240,7 @@ return {
               "kind": "LinkedField",
               "name": "original",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             },
             {
@@ -234,7 +250,7 @@ return {
               "kind": "LinkedField",
               "name": "thumbnail",
               "plural": false,
-              "selections": (v4/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             }
           ],
@@ -386,6 +402,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceProductPricingCadence_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "multipleChoicesAmenities_query"
     }
   ],
   "type": "Query",
@@ -393,6 +414,6 @@ return {
 };
 })();
 
-(node as any).hash = "f140c5ba4377a87160af0b9547fb6238";
+(node as any).hash = "15198011baa9c8352c446fe897ea1941";
 
 export default node;

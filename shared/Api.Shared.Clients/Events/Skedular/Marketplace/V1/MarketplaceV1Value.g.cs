@@ -36,37 +36,37 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiLmAQoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "cm9kdWN0VmVyc2lvbiLfAQoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
             "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRInCghjdXJyZW5j",
-            "eRgEIAEoDjIVLm1hcmtldHBsYWNlLkN1cnJlbmN5EhUKDXByb2R1Y3RUYWdJ",
-            "ZHMYBSADKAkSMAoNZmVhdHVyZUltYWdlcxgGIAMoCzIZLm1hcmtldHBsYWNl",
-            "LkNkbkltYWdlRmlsZRIzCg5wcmljaW5nT3B0aW9ucxgHIAMoCzIbLm1hcmtl",
-            "dHBsYWNlLlByb2R1Y3RQcmljaW5nIl8KDENkbkltYWdlRmlsZRImCghvcmln",
-            "aW5hbBgBIAEoCzIULm1hcmtldHBsYWNlLkNkbkZpbGUSJwoJdGh1bWJuYWls",
-            "GAIgASgLMhQubWFya2V0cGxhY2UuQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3Vy",
-            "bBgBIAEoCRIOCgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyABKAUi1wMKDlBy",
-            "b2R1Y3RQcmljaW5nEgoKAmlkGAEgASgJEg0KBWluZGV4GAIgASgFEgwKBG5h",
-            "bWUYAyABKAkSEwoLZGVzY3JpcHRpb24YBCABKAkSMwoHY2FkZW5jZRgFIAEo",
-            "DjIiLm1hcmtldHBsYWNlLlByb2R1Y3RQcmljaW5nQ2FkZW5jZRINCgVwcmlj",
-            "ZRgGIAEoARIWCg5pc1RheEluY2x1c2l2ZRgHIAEoCBInCghjdXJyZW5jeRgI",
-            "IAEoDjIVLm1hcmtldHBsYWNlLkN1cnJlbmN5EkEKHWFjY2VwdGVkQm9va2lu",
-            "Z1BheW1lbnRNZXRob2RzGAkgAygOMhoubWFya2V0cGxhY2UuUGF5bWVudE1l",
-            "dGhvZBIaChJtaW5EdXJhdGlvbk1pbnV0ZXMYCiABKAUSGgoSbWF4RHVyYXRp",
-            "b25NaW51dGVzGAsgASgFEi4KJm1heEFsbG93ZWRSZXNvdXJjZXNMb2NrVGlt",
-            "ZVBhaWRWaWFDYXJkGAwgASgFEjYKLm1heEFsbG93ZWRSZXNvdXJjZXNMb2Nr",
-            "VGltZVBhaWRWaWFCYW5rVHJhbnNmZXIYDSABKAUSHwoXbnVtYmVyT2ZSZXNv",
-            "dXJjZXNUb0Jvb2sYDiABKAUqOQoEVHlwZRIYChRUeXBlX1Byb2R1Y3RVcHNl",
-            "cnRlZBAAEhcKE1R5cGVfUHJvZHVjdERlbGV0ZWQQASr0AQoVUHJvZHVjdFBy",
-            "aWNpbmdDYWRlbmNlEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9PbmVUaW1l",
-            "VjEQABIlCiFQcm9kdWN0UHJpY2luZ0NhZGVuY2VfUGVyTWludXRlVjEQARIj",
-            "Ch9Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfUGVySG91clYxEAISIQodUHJvZHVj",
-            "dFByaWNpbmdDYWRlbmNlX0RhaWx5VjEQAxIiCh5Qcm9kdWN0UHJpY2luZ0Nh",
-            "ZGVuY2VfV2Vla2x5VjEQBBIjCh9Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfTW9u",
-            "dGhseVYxEAUqRwoNUGF5bWVudE1ldGhvZBIWChJQYXltZW50TWV0aG9kX0Nh",
-            "cmQQABIeChpQYXltZW50TWV0aG9kX0JhbmtUcmFuc2ZlchABKi4KCEN1cnJl",
-            "bmN5EhAKDEN1cnJlbmN5X056ZBAAEhAKDEN1cnJlbmN5X1VzZBABQjqqAjdB",
-            "cGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNl",
-            "LlYxLlZhbHVlYgZwcm90bzM="));
+            "eRgEIAEoDjIVLm1hcmtldHBsYWNlLkN1cnJlbmN5Eg4KBnRhZ0lkcxgFIAMo",
+            "CRIwCg1mZWF0dXJlSW1hZ2VzGAYgAygLMhkubWFya2V0cGxhY2UuQ2RuSW1h",
+            "Z2VGaWxlEjMKDnByaWNpbmdPcHRpb25zGAcgAygLMhsubWFya2V0cGxhY2Uu",
+            "UHJvZHVjdFByaWNpbmciXwoMQ2RuSW1hZ2VGaWxlEiYKCG9yaWdpbmFsGAEg",
+            "ASgLMhQubWFya2V0cGxhY2UuQ2RuRmlsZRInCgl0aHVtYm5haWwYAiABKAsy",
+            "FC5tYXJrZXRwbGFjZS5DZG5GaWxlIjUKB0NkbkZpbGUSCwoDdXJsGAEgASgJ",
+            "Eg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgDIAEoBSLXAwoOUHJvZHVjdFBy",
+            "aWNpbmcSCgoCaWQYASABKAkSDQoFaW5kZXgYAiABKAUSDAoEbmFtZRgDIAEo",
+            "CRITCgtkZXNjcmlwdGlvbhgEIAEoCRIzCgdjYWRlbmNlGAUgASgOMiIubWFy",
+            "a2V0cGxhY2UuUHJvZHVjdFByaWNpbmdDYWRlbmNlEg0KBXByaWNlGAYgASgB",
+            "EhYKDmlzVGF4SW5jbHVzaXZlGAcgASgIEicKCGN1cnJlbmN5GAggASgOMhUu",
+            "bWFya2V0cGxhY2UuQ3VycmVuY3kSQQodYWNjZXB0ZWRCb29raW5nUGF5bWVu",
+            "dE1ldGhvZHMYCSADKA4yGi5tYXJrZXRwbGFjZS5QYXltZW50TWV0aG9kEhoK",
+            "Em1pbkR1cmF0aW9uTWludXRlcxgKIAEoBRIaChJtYXhEdXJhdGlvbk1pbnV0",
+            "ZXMYCyABKAUSLgombWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFpZFZp",
+            "YUNhcmQYDCABKAUSNgoubWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFp",
+            "ZFZpYUJhbmtUcmFuc2ZlchgNIAEoBRIfChdudW1iZXJPZlJlc291cmNlc1Rv",
+            "Qm9vaxgOIAEoBSo5CgRUeXBlEhgKFFR5cGVfUHJvZHVjdFVwc2VydGVkEAAS",
+            "FwoTVHlwZV9Qcm9kdWN0RGVsZXRlZBABKvQBChVQcm9kdWN0UHJpY2luZ0Nh",
+            "ZGVuY2USIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX09uZVRpbWVWMRAAEiUK",
+            "IVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9QZXJNaW51dGVWMRABEiMKH1Byb2R1",
+            "Y3RQcmljaW5nQ2FkZW5jZV9QZXJIb3VyVjEQAhIhCh1Qcm9kdWN0UHJpY2lu",
+            "Z0NhZGVuY2VfRGFpbHlWMRADEiIKHlByb2R1Y3RQcmljaW5nQ2FkZW5jZV9X",
+            "ZWVrbHlWMRAEEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9Nb250aGx5VjEQ",
+            "BSpHCg1QYXltZW50TWV0aG9kEhYKElBheW1lbnRNZXRob2RfQ2FyZBAAEh4K",
+            "GlBheW1lbnRNZXRob2RfQmFua1RyYW5zZmVyEAEqLgoIQ3VycmVuY3kSEAoM",
+            "Q3VycmVuY3lfTnpkEAASEAoMQ3VycmVuY3lfVXNkEAFCOqoCN0FwaS5TaGFy",
+            "ZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2UuVjEuVmFs",
+            "dWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -74,7 +74,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Currency", "ProductTagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Currency", "TagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "Name", "Description", "Cadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook" }, null, null, null, null)
@@ -1400,7 +1400,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       name_ = other.name_;
       description_ = other.description_;
       currency_ = other.currency_;
-      productTagIds_ = other.productTagIds_.Clone();
+      tagIds_ = other.tagIds_.Clone();
       featureImages_ = other.featureImages_.Clone();
       pricingOptions_ = other.pricingOptions_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
@@ -1460,15 +1460,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "productTagIds" field.</summary>
-    public const int ProductTagIdsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_productTagIds_codec
+    /// <summary>Field number for the "tagIds" field.</summary>
+    public const int TagIdsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_tagIds_codec
         = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> productTagIds_ = new pbc::RepeatedField<string>();
+    private readonly pbc::RepeatedField<string> tagIds_ = new pbc::RepeatedField<string>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<string> ProductTagIds {
-      get { return productTagIds_; }
+    public pbc::RepeatedField<string> TagIds {
+      get { return tagIds_; }
     }
 
     /// <summary>Field number for the "featureImages" field.</summary>
@@ -1512,7 +1512,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Name != other.Name) return false;
       if (Description != other.Description) return false;
       if (Currency != other.Currency) return false;
-      if(!productTagIds_.Equals(other.productTagIds_)) return false;
+      if(!tagIds_.Equals(other.tagIds_)) return false;
       if(!featureImages_.Equals(other.featureImages_)) return false;
       if(!pricingOptions_.Equals(other.pricingOptions_)) return false;
       return Equals(_unknownFields, other._unknownFields);
@@ -1526,7 +1526,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) hash ^= Currency.GetHashCode();
-      hash ^= productTagIds_.GetHashCode();
+      hash ^= tagIds_.GetHashCode();
       hash ^= featureImages_.GetHashCode();
       hash ^= pricingOptions_.GetHashCode();
       if (_unknownFields != null) {
@@ -1563,7 +1563,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(32);
         output.WriteEnum((int) Currency);
       }
-      productTagIds_.WriteTo(output, _repeated_productTagIds_codec);
+      tagIds_.WriteTo(output, _repeated_tagIds_codec);
       featureImages_.WriteTo(output, _repeated_featureImages_codec);
       pricingOptions_.WriteTo(output, _repeated_pricingOptions_codec);
       if (_unknownFields != null) {
@@ -1592,7 +1592,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(32);
         output.WriteEnum((int) Currency);
       }
-      productTagIds_.WriteTo(ref output, _repeated_productTagIds_codec);
+      tagIds_.WriteTo(ref output, _repeated_tagIds_codec);
       featureImages_.WriteTo(ref output, _repeated_featureImages_codec);
       pricingOptions_.WriteTo(ref output, _repeated_pricingOptions_codec);
       if (_unknownFields != null) {
@@ -1617,7 +1617,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
       }
-      size += productTagIds_.CalculateSize(_repeated_productTagIds_codec);
+      size += tagIds_.CalculateSize(_repeated_tagIds_codec);
       size += featureImages_.CalculateSize(_repeated_featureImages_codec);
       size += pricingOptions_.CalculateSize(_repeated_pricingOptions_codec);
       if (_unknownFields != null) {
@@ -1644,7 +1644,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         Currency = other.Currency;
       }
-      productTagIds_.Add(other.productTagIds_);
+      tagIds_.Add(other.tagIds_);
       featureImages_.Add(other.featureImages_);
       pricingOptions_.Add(other.pricingOptions_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -1683,7 +1683,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 42: {
-            productTagIds_.AddEntriesFrom(input, _repeated_productTagIds_codec);
+            tagIds_.AddEntriesFrom(input, _repeated_tagIds_codec);
             break;
           }
           case 50: {
@@ -1730,7 +1730,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 42: {
-            productTagIds_.AddEntriesFrom(ref input, _repeated_productTagIds_codec);
+            tagIds_.AddEntriesFrom(ref input, _repeated_tagIds_codec);
             break;
           }
           case 50: {

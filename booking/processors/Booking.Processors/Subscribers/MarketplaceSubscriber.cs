@@ -66,7 +66,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
         CancellationToken cancellationToken)
     {
         var organizationTags = new List<OrganizationTag>();
-        var organizationTagIds = product.ProductVersions.SelectMany(item => item.ProductTags.Select(tag => tag.Id)).Distinct().ToList();
+        var organizationTagIds = product.ProductVersions.SelectMany(item => item.OrganizationTags.Select(tag => tag.Id)).Distinct().ToList();
         foreach (var tagId in organizationTagIds)
         {
             organizationTags.Add(await repositoryFactory.OrganizationTagRepository.UpsertNakedAsync(tagId, organization, cancellationToken));
@@ -78,7 +78,7 @@ public class MarketplaceSubscriber(ILogger<MarketplaceSubscriber> logger, IMappe
             var productVersionEntity =
                 await repositoryFactory.ProductVersionRepository.UpsertNakedAsync(productVersion.Id, existingProduct, cancellationToken);
 
-            var productTags = organizationTags.Where(item => productVersion.ProductTags.Select(tag => tag.Id).Contains(item.Id)).ToList();
+            var productTags = organizationTags.Where(item => productVersion.OrganizationTags.Select(tag => tag.Id).Contains(item.Id)).ToList();
             productVersions.Add(
                 repositoryFactory.ProductVersionRepository.Update(
                     mapper.MergeToEntity(productVersion, productVersionEntity, existingProduct, productTags)));

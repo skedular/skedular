@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<417e2fa489b6da67af8b69675f2acd7f>>
+ * @generated SignedSource<<198a033b611a2ea7bd8bdb900546d6c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,7 +22,7 @@ export type AddProductInput = {
   organizationId?: string | null | undefined;
   organizationUniqueAlphanumericName?: string | null | undefined;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
-  productTagIds: ReadonlyArray<string>;
+  tagIds: ReadonlyArray<string>;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -54,6 +54,11 @@ export type addProduct_addProductMutation$variables = {
 export type addProduct_addProductMutation$data = {
   readonly addProduct: {
     readonly product: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -99,6 +104,11 @@ export type addProduct_addProductMutation$data = {
 export type addProduct_addProductMutation$rawResponse = {
   readonly addProduct: {
     readonly product: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -177,6 +187,17 @@ v3 = {
   "storageKey": null
 },
 v4 = [
+  (v1/*: any*/),
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -199,7 +220,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": [
@@ -258,17 +279,17 @@ v5 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "color",
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "amenities",
+            "plural": true,
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -286,7 +307,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -296,7 +317,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               }
             ],
@@ -398,7 +419,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "addProduct_addProductMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -407,19 +428,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "addProduct_addProductMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "6148581768471a89a9efc302327ce590",
+    "cacheID": "a1f25a60c1e59fc370a8049ca75e0365",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8e4d45e07c732506364956ce35868779";
+(node as any).hash = "1982f1338576e55b5c084a6b1e566720";
 
 export default node;

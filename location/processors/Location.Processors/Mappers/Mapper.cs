@@ -67,7 +67,7 @@ public interface IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags);
+        ICollection<OrganizationTag> organizationTags);
 }
 
 public class Mapper : IMapper
@@ -332,19 +332,17 @@ public class Mapper : IMapper
         Shared.Models.ProductVersion src,
         ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags)
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Product = product;
-        dest.ProductTags = productTags;
+        dest.OrganizationTags = organizationTags;
         return dest;
     }
 
     private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
         new()
         {
-            Id = src.Id,
-            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
-            Product = product
+            Id = src.Id, OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(), Product = product
         };
 }

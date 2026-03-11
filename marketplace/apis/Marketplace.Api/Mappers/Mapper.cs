@@ -68,7 +68,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            ProductTags = MapTo(src.ProductTags).ToList(),
+            OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             PricingOptions = src.PricingOptions
         };
 
@@ -79,7 +79,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
 
@@ -90,7 +90,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
-            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
         };
 
@@ -112,6 +112,7 @@ public class Mapper : IMapper
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
             ProductTagIds = productVersion.ProductTags.Select(item => item.Id),
+            AmenityIds = productVersion.Amenities.Select(item => item.Id),
             OrganizationId = src.Organization.Id,
             OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
@@ -207,14 +208,14 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags)
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Description = src.Description;
         dest.Currency = src.Currency.ToCurrency();
         dest.FeatureImages = src.FeatureImages;
-        dest.ProductTags = productTags;
+        dest.OrganizationTags = organizationTags;
         dest.Product = product;
         dest.PricingOptions = src.PricingOptions;
         return dest;

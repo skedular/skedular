@@ -100,12 +100,12 @@ public class ProductService(
         }
 
         productVersion.Id = randomHelper.Generate();
-        var productTagIds = productVersion.ProductTags.Select(item => item.Id).ToList();
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+        var tagIds = productVersion.OrganizationTags.Select(item => item.Id).ToList();
+        var tags = await repositoryFactory.OrganizationTagRepository.Query(
             new Specification<OrganizationTag>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
-                                    productTagIds.Contains(query.Id) &&
+                                    tagIds.Contains(query.Id) &&
                                     (query.Organization.Id == organizationId || (query.Organization.UniqueAlphanumericName != null &&
                                                                                  query.Organization.UniqueAlphanumericName ==
                                                                                  organizationUniqueAlphanumericName)) &&
@@ -114,10 +114,10 @@ public class ProductService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
+        var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
         var productEntity = mapper.MapTo(new Product { Id = id, Inactive = true }, existingOrganization);
 
-        var productVersionEntity = mapper.MapTo(productVersion, productEntity, productTags);
+        var productVersionEntity = mapper.MapTo(productVersion, productEntity, organizationTags);
         productEntity.ProductVersions.Add(productVersionEntity);
         repositoryFactory.ProductVersionRepository.Add(productVersionEntity);
 
@@ -304,22 +304,22 @@ public class ProductService(
         }
 
         productVersion.Id = randomHelper.Generate();
-        var productTagIds = productVersion.ProductTags.Select(item => item.Id).ToList();
+        var tagIds = productVersion.OrganizationTags.Select(item => item.Id).ToList();
         var existingProductRef = existingProduct;
-        var organizationTags = await repositoryFactory.OrganizationTagRepository.Query(
+        var tags = await repositoryFactory.OrganizationTagRepository.Query(
             new Specification<OrganizationTag>
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
-                                    productTagIds.Contains(query.Id) &&
+                                    tagIds.Contains(query.Id) &&
                                     query.Organization.Id == existingProductRef.Organization.Id &&
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var productTags = organizationTags.Where(item => productTagIds.Contains(item.Id)).ToList();
+        var organizationTags = tags.Where(item => tagIds.Contains(item.Id)).ToList();
 
-        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, productTags));
+        _ = repositoryFactory.ProductVersionRepository.Add(mapper.MapTo(productVersion, existingProduct, organizationTags));
         existingProduct = mapper.MergeTo(existingProduct, existingProduct.Organization);
 
         var product = mapper.MapTo(repositoryFactory.ProductRepository.Update(existingProduct));

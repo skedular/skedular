@@ -26,7 +26,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         int numberOfResourcesToBook,
         CancellationToken cancellationToken)
     {
-        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.ProductTags, cancellationToken);
+        var availableResources = await GetAvailableResourcesAsync(from, until, productVersion.OrganizationTags, cancellationToken);
         if (availableResources.Count < numberOfResourcesToBook)
         {
             throw new NoResourceAvailable();
@@ -95,7 +95,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
     private async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,
-        ICollection<OrganizationTag> productTags,
+        ICollection<OrganizationTag> organizationTags,
         CancellationToken cancellationToken) =>
         await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
             null,
@@ -103,7 +103,7 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
             from,
             until,
             [],
-            productTags.Select(item => item.Id).ToList(),
+            organizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
             [],
             cancellationToken);
 }

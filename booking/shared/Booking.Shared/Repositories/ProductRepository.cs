@@ -27,7 +27,7 @@ internal static class ProductExtensions
                 .ThenInclude(query => query.Customer)
                 .ThenInclude(query => query.Identities)
                 .Include(query => query.ProductVersions.OrderByDescending(productVersion => productVersion.CreatedAt))
-                .ThenInclude(query => query.ProductTags.Where(tag => !tag.DeletedAt.HasValue));
+                .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));
     }
 }
 

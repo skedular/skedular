@@ -75,7 +75,7 @@ public class MarketplaceBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
-        if (productVersion.ProductTags.Count == 0)
+        if (productVersion.OrganizationTags.All(item => item.Type != OrganizationTagTypeConstants.Product))
         {
             throw new ProductMissingProductTag();
         }
@@ -91,7 +91,7 @@ public class MarketplaceBookingService(
             booking.From,
             booking.Until,
             booking.Resources.Select(item => item.Resource.Id).ToList(),
-            productVersion.ProductTags.Select(item => item.Id).ToList(),
+            productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
             cancellationToken);
         if (resources.Count > maxAllowedResourcesToBook)
         {
@@ -226,7 +226,7 @@ public class MarketplaceBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
-        if (productVersion.ProductTags.Count == 0)
+        if (productVersion.OrganizationTags.All(item => item.Type != OrganizationTagTypeConstants.Product))
         {
             throw new ProductMissingProductTag();
         }
@@ -273,7 +273,7 @@ public class MarketplaceBookingService(
                 existingBooking.From,
                 existingBooking.Until,
                 resourceIds,
-                productVersion.ProductTags.Select(item => item.Id).ToList(),
+                productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
                 cancellationToken);
         }
 
@@ -387,7 +387,7 @@ public class MarketplaceBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
-        if (productVersion.ProductTags.Count == 0)
+        if (productVersion.OrganizationTags.All(item => item.Type != OrganizationTagTypeConstants.Product))
         {
             throw new ProductMissingProductTag();
         }

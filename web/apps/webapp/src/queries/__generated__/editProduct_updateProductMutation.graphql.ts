@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2351a7e6637e2a821d67462f596d4cf7>>
+ * @generated SignedSource<<8864f03a36b4f5c095c52875bb4d795f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type UpdateProductInput = {
   id: string;
   name: string;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
-  productTagIds: ReadonlyArray<string>;
+  tagIds: ReadonlyArray<string>;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -52,6 +52,11 @@ export type editProduct_updateProductMutation$variables = {
 export type editProduct_updateProductMutation$data = {
   readonly updateProduct: {
     readonly product: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -97,6 +102,11 @@ export type editProduct_updateProductMutation$data = {
 export type editProduct_updateProductMutation$rawResponse = {
   readonly updateProduct: {
     readonly product: {
+      readonly amenities: ReadonlyArray<{
+        readonly color: string | null | undefined;
+        readonly id: string;
+        readonly name: string;
+      }>;
       readonly currency: {
         readonly name: string;
         readonly type: Currency;
@@ -175,6 +185,17 @@ v3 = {
   "storageKey": null
 },
 v4 = [
+  (v1/*: any*/),
+  (v2/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "color",
+    "storageKey": null
+  }
+],
+v5 = [
   {
     "alias": null,
     "args": null,
@@ -197,7 +218,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": [
@@ -256,17 +277,17 @@ v5 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "color",
-                "storageKey": null
-              }
-            ],
+            "selections": (v4/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "OrganizationTagDetails",
+            "kind": "LinkedField",
+            "name": "amenities",
+            "plural": true,
+            "selections": (v4/*: any*/),
             "storageKey": null
           },
           {
@@ -284,7 +305,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               },
               {
@@ -294,7 +315,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v5/*: any*/),
                 "storageKey": null
               }
             ],
@@ -396,7 +417,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v6/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -405,19 +426,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "dfe08c6892429620205230cb66d578b6",
+    "cacheID": "4ff76940769bb0de1f107df39c1e73d5",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fe5ab7ef21427488d27433feb4b0244c";
+(node as any).hash = "10873517bf6ed7f8957905e5fbe33b1c";
 
 export default node;

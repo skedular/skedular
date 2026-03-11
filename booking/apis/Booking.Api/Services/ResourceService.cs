@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -66,7 +67,10 @@ public class ResourceService(
         {
             var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
-            productRelatedTags = productVersion.ProductTags.Select(item => item.Id).ToList();
+            productRelatedTags = productVersion.OrganizationTags
+                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                .Select(item => item.Id)
+                .ToList();
         }
 
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(

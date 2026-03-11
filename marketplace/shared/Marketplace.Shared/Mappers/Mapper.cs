@@ -35,7 +35,7 @@ public class Mapper : IMapper
             Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Name.ToSafeString(), Currency = MapTo(src.Currency)
         };
 
-        productVersion.ProductTagIds.AddRange(src.ProductTags.Select(item => item.Id));
+        productVersion.TagIds.AddRange(src.OrganizationTags.Select(item => item.Id));
         productVersion.FeatureImages.AddRange(MapTo(src.FeatureImages));
         productVersion.PricingOptions.AddRange(MapTo(src.PricingOptions));
 

@@ -43,7 +43,7 @@ public interface IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags);
+        ICollection<OrganizationTag> organizationTags);
 
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
@@ -355,13 +355,13 @@ public class Mapper : IMapper
         ProductVersion src,
         Shared.Database.Entities.ProductVersion dest,
         Shared.Database.Entities.Product product,
-        ICollection<OrganizationTag> productTags)
+        ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
         dest.Currency = src.Currency.ToCurrency();
         dest.Product = product;
-        dest.ProductTags = productTags;
+        dest.OrganizationTags = organizationTags;
         dest.PricingOptions = src.PricingOptions;
         return dest;
     }
@@ -567,7 +567,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Name = src.Name.ToSafeString(),
             Currency = MapTo(src.Currency),
-            ProductTags = src.ProductTagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product,
             PricingOptions = MapTo(src.PricingOptions).ToList()
         };

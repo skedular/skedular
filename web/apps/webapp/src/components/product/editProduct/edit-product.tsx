@@ -4,6 +4,7 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { DeleteIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
+import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -36,6 +37,7 @@ type ProductDetails = {
   description: string | null;
   currency: string;
   productTagIds: string[];
+  amenityIds: string[];
   pricingOptions: PricingOptionForm[];
 };
 
@@ -76,6 +78,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
+    amenityIds: array().nullable(),
     pricingOptions: array()
       .of(
         object({
@@ -209,6 +212,11 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             name
             color
           }
+          amenities {
+            id
+            name
+            color
+          }
           organization {
             id
           }
@@ -254,6 +262,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         ...singleChoiceCurrency_query
         ...multipleChoicesBookingPaymentMethodTypes_query
         ...singleChoiceProductPricingCadence_query
+        ...multipleChoicesAmenities_query
       }
     `,
     rootDataRelay,
@@ -272,6 +281,11 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             name
           }
           productTags {
+            id
+            name
+            color
+          }
+          amenities {
             id
             name
             color
@@ -325,6 +339,9 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   const [productTagIds, setProductTagIds] = useState<string[]>(rootData.product ? rootData.product.productTags.map(({ id }) => id) : []);
   const debounceSetProductTagIds = useDebounceCallback(setProductTagIds, keyboardTextFieldDebounceTimeout);
 
+  const [amenityIds, setAmenityIds] = useState<string[]>(rootData.product?.amenities.map((item) => item.id) ?? []);
+  const debounceSetAmenityIds = useDebounceCallback(setAmenityIds, keyboardTextFieldDebounceTimeout);
+
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
     rootData.product
       ? rootData.product.featureImages
@@ -348,7 +365,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
 
-  const handleProductDetailUpdateClick = ({ name, description, currency, productTagIds, pricingOptions }: ProductDetails) => {
+  const handleProductDetailUpdateClick = ({ name, description, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
       return;
@@ -368,7 +385,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           name,
           description,
           currency: currency as Currency,
-          productTagIds,
+          tagIds: productTagIds.concat(amenityIds),
           featureImages: finalFeatureImages,
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
             id: pricingOption.id,
@@ -422,6 +439,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               name: '',
             },
             productTags: [],
+            amenities: [],
             featureImages: finalFeatureImages,
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
@@ -484,6 +502,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               description,
               currency,
               productTagIds,
+              amenityIds,
               pricingOptions:
                 rootData.product.pricingOptions.length > 0
                   ? rootData.product.pricingOptions.map((pricingOption) => ({
@@ -508,6 +527,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               debounceSetDescription(values!.description);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
+              debounceSetAmenityIds(values!.amenityIds);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -582,6 +602,10 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                         required={requiredFields.productTagIds}
                         organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
                       />
+                    </FormFieldLabel>
+
+                    <FormFieldLabel label="Amenities">
+                      <MultipleChoicesAmenities rootDataRelay={rootData} name="amenityIds" required={requiredFields.amenityIds} />
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Pricing Options" />

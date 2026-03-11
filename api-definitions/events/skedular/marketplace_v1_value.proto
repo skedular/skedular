@@ -43,7 +43,7 @@ message ProductVersion {
   string                  name           = 2;
   string                  description    = 3;
   Currency                currency       = 4;
-  repeated string         productTagIds  = 5;
+  repeated string         tagIds         = 5;
   repeated CdnImageFile   featureImages  = 6;
   repeated ProductPricing pricingOptions = 7;
 }
