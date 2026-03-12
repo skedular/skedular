@@ -10,6 +10,10 @@ export const getMarketplaceLocationLink = (integratedPlatrform: string | undefin
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
 export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, productId: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/products/${productId}` : `/marketplace/products/${productId}`;
+export const getMarketplaceProductBookingLink = (integratedPlatrform: string | undefined, productId: string, pricingOptionId: string) =>
+  integratedPlatrform
+    ? `/${integratedPlatrform}/marketplace/products/${productId}/book?pricingOptionId=${pricingOptionId}`
+    : `/marketplace/products/${productId}/book?pricingOptionId=${pricingOptionId}`;
 
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 

@@ -1,6 +1,7 @@
 export type MarketplaceProductPricingPlan = {
   id: string;
   name: string;
+  description?: string;
   cadenceLabel: string;
   amountLabel: string;
   note: string;
@@ -19,17 +20,4 @@ export type MarketplaceProductLocation = {
   address: string;
   availableLabel: string;
   resources: MarketplaceProductResource[];
-};
-
-export type MarketplaceProductDetail = {
-  id: string;
-  title: string;
-  typeLabel: string;
-  shortDescription: string;
-  longDescription: string;
-  imageUrls: string[];
-  features: string[];
-  amenities: string[];
-  pricingPlans: MarketplaceProductPricingPlan[];
-  locations: MarketplaceProductLocation[];
 };

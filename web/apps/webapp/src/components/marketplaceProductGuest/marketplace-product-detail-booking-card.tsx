@@ -1,184 +1,137 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { AddressIcon, PreferredIcon } from '@/components/icons';
+import { PreferredIcon } from '@/components/icons';
+import { getMarketplaceProductBookingLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
+import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
+import type { marketplaceProductDetailSharedProductFragment_product$key } from '@/queries/__generated__/marketplaceProductDetailSharedProductFragment_product.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
 import Box from '@mui/system/Box';
-import { memo, useMemo, useState } from 'react';
-import type { MarketplaceProductDetail } from './types';
+import { useRouter } from 'next/navigation';
+import { memo, useMemo } from 'react';
+import { graphql, useFragment } from 'react-relay';
+import marketplaceProductDetailSharedProductFragment from './marketplace-product-detail-shared-product-fragment';
+import { marketplaceProductDetailLocationMocks } from './mock-data';
+import type { MarketplaceProductPricingPlan } from './types';
 
 type Props = {
-  product: MarketplaceProductDetail;
-  onContinue?: (options: { locationId: string; resourceId: string; pricingPlanId: string }) => void;
+  rootDataRelay: marketplaceProductDetailBookingCard_query$key;
 };
 
-const MarketplaceProductDetailBookingCard = ({ product, onContinue }: Props) => {
-  const [selectedLocationId, setSelectedLocationId] = useState('');
-  const [selectedResourceId, setSelectedResourceId] = useState('');
-  const [selectedPricingPlanId, setSelectedPricingPlanId] = useState('');
+const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
+  const rootData = useFragment<marketplaceProductDetailBookingCard_query$key>(
+    graphql`
+      fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(productId: { type: "String!" }) {
+        productPricingCadences {
+          type
+          name
+        }
+        currencies {
+          type
+          name
+        }
+        product(id: $productId) {
+          ...marketplaceProductDetailSharedProductFragment_product
+        }
+      }
+    `,
+    rootDataRelay,
+  );
 
-  const selectedLocation = useMemo(() => product.locations.find((location) => location.id === selectedLocationId) ?? null, [product.locations, selectedLocationId]);
-  const canContinue = selectedLocationId !== '' && selectedResourceId !== '' && selectedPricingPlanId !== '';
+  const product = useFragment<marketplaceProductDetailSharedProductFragment_product$key>(marketplaceProductDetailSharedProductFragment, rootData.product);
+  const router = useRouter();
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const pricingPlans = useMemo<MarketplaceProductPricingPlan[]>(() => {
+    if (!product) {
+      return [];
+    }
+
+    const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name ?? product.currency.type;
+
+    return [...product.pricingOptions]
+      .sort((left, right) => left.index - right.index)
+      .map((pricingOption, index) => ({
+        id: pricingOption.id,
+        name: pricingOption.name,
+        description: pricingOption.description,
+        cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence,
+        amountLabel: `${currencyLabel} - $${pricingOption.price}`,
+        note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+        highlighted: index === 0,
+      }));
+  }, [product, rootData.currencies, rootData.productPricingCadences]);
+
+  if (!product) {
+    return null;
+  }
 
   return (
     <Box sx={{ position: { md: 'sticky' }, top: { md: 90 } }}>
       <Card sx={{ borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
-          <CaptionIconTypography label={product.typeLabel} sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7, mb: 0.75 }} />
-          <LeadIconTypography label={product.title} sx={{ mb: 0.5 }} />
-          <BodyIconTypography label={product.shortDescription} sx={{ opacity: 0.85, mb: 2.5 }} />
+          <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
+          <LeadIconTypography label={product.name} sx={{ mt: 0.4, mb: 0.6 }} />
+          <BodyIconTypography label={product.description ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
 
-          <LeadIconTypography label="1. Select location" sx={{ mb: 1.25 }} />
-          <RadioGroup
-            value={selectedLocationId}
-            onChange={(event) => {
-              setSelectedLocationId(event.target.value);
-              setSelectedResourceId('');
-            }}
-          >
-            {product.locations.map((location) => (
+          <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            {pricingPlans.map((pricingPlan) => (
               <Box
-                key={location.id}
+                key={pricingPlan.id}
                 sx={{
                   border: 1,
-                  borderColor: location.id === selectedLocationId ? (theme) => theme.palette.primary.main : (theme) => theme.palette.divider,
+                  borderColor: (theme) => theme.palette.divider,
                   borderRadius: 2,
-                  mb: 1,
-                  bgcolor: location.id === selectedLocationId ? (theme) => theme.palette.action.selected : (theme) => theme.palette.background.paper,
+                  px: 1.35,
+                  py: 1.2,
                 }}
               >
-                <FormControlLabel
-                  value={location.id}
-                  control={<Radio size="small" />}
-                  sx={{ m: 0, px: 1.25, py: 0.7, width: '100%', alignItems: 'flex-start' }}
-                  label={
-                    <Box sx={{ minWidth: 0, py: 0.45 }}>
-                      <BodyIconTypography label={location.name} fontWeight={600} />
-                      <CaptionIconTypography label={location.address} startElement={<AddressIcon sx={{ fontSize: 14, opacity: 0.75 }} />} sx={{ opacity: 0.75 }} />
-                      <CaptionIconTypography label={location.availableLabel} sx={{ color: (theme) => theme.palette.success.main, mt: 0.35 }} />
-                    </Box>
-                  }
-                />
+                {pricingPlan.highlighted && (
+                  <CaptionIconTypography
+                    label="Best Value"
+                    startElement={<PreferredIcon sx={{ fontSize: 13 }} />}
+                    sx={{
+                      color: (theme) => theme.palette.success.main,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.03em',
+                      mb: 0.35,
+                    }}
+                  />
+                )}
+                <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                  <Box sx={{ minWidth: 0, pr: 1 }}>
+                    <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
+                    <SubtitleIconTypography label={pricingPlan.name} sx={{ lineHeight: 1.25 }} />
+                    {pricingPlan.description && <CaptionIconTypography label={pricingPlan.description} sx={{ mt: 0.5, opacity: 0.78 }} />}
+                  </Box>
+                  <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
+                    <SubtitleIconTypography label={pricingPlan.amountLabel} fontWeight={600} sx={{ lineHeight: 1.2 }} />
+                    <CaptionIconTypography label={pricingPlan.note} sx={{ opacity: 0.7 }} />
+                  </Box>
+                </StackRow>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => {
+                    router.push(getMarketplaceProductBookingLink(integratedPlatrform, product.id, pricingPlan.id));
+                  }}
+                  sx={{ mt: 1.2, textTransform: 'none' }}
+                >
+                  Book {pricingPlan.cadenceLabel}
+                </Button>
               </Box>
             ))}
-          </RadioGroup>
+          </Box>
 
-          {selectedLocation && (
-            <>
-              <LeadIconTypography label="2. Choose resource" sx={{ mt: 2.2, mb: 1.25 }} />
-              <RadioGroup value={selectedResourceId} onChange={(event) => setSelectedResourceId(event.target.value)}>
-                {selectedLocation.resources.map((resource) => (
-                  <Box
-                    key={resource.id}
-                    sx={{
-                      border: 1,
-                      borderColor: resource.id === selectedResourceId ? (theme) => theme.palette.primary.main : (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      mb: 1,
-                      bgcolor: resource.id === selectedResourceId ? (theme) => theme.palette.action.selected : (theme) => theme.palette.background.paper,
-                    }}
-                  >
-                    <FormControlLabel
-                      value={resource.id}
-                      control={<Radio size="small" />}
-                      sx={{ m: 0, px: 1.25, py: 0.7, width: '100%', alignItems: 'flex-start' }}
-                      label={
-                        <Box sx={{ py: 0.45 }}>
-                          <BodyIconTypography label={resource.name} fontWeight={600} />
-                          <StackRow spacing={0.75} sx={{ mt: 0.7 }}>
-                            {resource.details.map((detail) => (
-                              <CaptionIconTypography
-                                key={detail}
-                                label={detail}
-                                sx={{
-                                  px: 0.9,
-                                  py: 0.35,
-                                  borderRadius: 1,
-                                  bgcolor: (theme) => theme.palette.action.hover,
-                                }}
-                              />
-                            ))}
-                          </StackRow>
-                        </Box>
-                      }
-                    />
-                  </Box>
-                ))}
-              </RadioGroup>
-            </>
-          )}
-
-          {selectedResourceId && (
-            <>
-              <LeadIconTypography label="3. Select plan" sx={{ mt: 2.2, mb: 1.25 }} />
-              <RadioGroup value={selectedPricingPlanId} onChange={(event) => setSelectedPricingPlanId(event.target.value)}>
-                {product.pricingPlans.map((pricingPlan) => (
-                  <Box
-                    key={pricingPlan.id}
-                    sx={{
-                      border: 1,
-                      borderColor: pricingPlan.id === selectedPricingPlanId ? (theme) => theme.palette.primary.main : (theme) => theme.palette.divider,
-                      borderRadius: 2,
-                      mb: 1,
-                      px: 1.25,
-                      py: 0.95,
-                      bgcolor: pricingPlan.id === selectedPricingPlanId ? (theme) => theme.palette.action.selected : (theme) => theme.palette.background.paper,
-                    }}
-                  >
-                    {pricingPlan.highlighted && (
-                      <CaptionIconTypography
-                        label="Best Value"
-                        startElement={<PreferredIcon sx={{ fontSize: 13 }} />}
-                        sx={{
-                          color: (theme) => theme.palette.success.main,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.03em',
-                          mb: 0.35,
-                        }}
-                      />
-                    )}
-                    <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap' }}>
-                      <FormControlLabel
-                        value={pricingPlan.id}
-                        control={<Radio size="small" />}
-                        sx={{ m: 0, mr: 1, minWidth: 0 }}
-                        label={
-                          <Box sx={{ minWidth: 0 }}>
-                            <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
-                            <CaptionIconTypography label={pricingPlan.name} sx={{ opacity: 0.75 }} />
-                          </Box>
-                        }
-                      />
-                      <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
-                        <SubtitleIconTypography label={pricingPlan.amountLabel} fontWeight={600} sx={{ lineHeight: 1.2 }} />
-                        <CaptionIconTypography label={pricingPlan.note} sx={{ opacity: 0.7 }} />
-                      </Box>
-                    </StackRow>
-                  </Box>
-                ))}
-              </RadioGroup>
-            </>
-          )}
-
-          <Button
-            fullWidth
-            variant="contained"
-            disabled={!canContinue}
-            onClick={() =>
-              canContinue &&
-              onContinue?.({
-                locationId: selectedLocationId,
-                resourceId: selectedResourceId,
-                pricingPlanId: selectedPricingPlanId,
-              })
-            }
-            sx={{ mt: 2, textTransform: 'none' }}
-          >
-            {canContinue ? 'Continue to checkout' : 'Select options to continue'}
-          </Button>
+          <Box sx={{ mt: 2 }}>
+            <CaptionIconTypography label="Locations (temporary mock data)" sx={{ opacity: 0.72, mb: 0.8 }} />
+            <StackRow spacing={0.75}>
+              {marketplaceProductDetailLocationMocks.map((location) => (
+                <CaptionIconTypography key={location.id} label={location.name} sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: (theme) => theme.palette.action.hover }} />
+              ))}
+            </StackRow>
+          </Box>
         </CardContent>
       </Card>
     </Box>
