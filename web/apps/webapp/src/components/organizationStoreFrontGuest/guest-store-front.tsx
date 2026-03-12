@@ -2,22 +2,22 @@ import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypogr
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useKnownParams } from '@/libs/providers';
+import type { guestStoreFrontProductsRefetchQuery } from '@/queries/__generated__/guestStoreFrontProductsRefetchQuery.graphql';
+import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
 import Container from '@mui/material/Container';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
-import { memo, useEffect, useState, useTransition } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
-import { v7 as uuid } from 'uuid';
+import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
-import { defaultGuestStoreFrontData } from './mock-data';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;
-  onReloadRequired: () => void;
+  organizationUniqueAlphanumericName: string;
 };
 
 const RootQuery = graphql`
@@ -40,15 +40,65 @@ const RootQuery = graphql`
         }
       }
     }
-    ...guestStoreFrontFooter_query
+    ...guestStoreFrontProducts_query @arguments(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName)
     ...guestStoreFrontLocationsStrip_query
+    ...guestStoreFrontProductCard_query
+    ...guestStoreFrontFooter_query
   }
 `;
 
-const GuestStoreFront = ({ queryReference }: Props) => {
+const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFront_rootQuery>(RootQuery, queryReference);
-  const data = defaultGuestStoreFrontData;
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const [productsData, refetchProducts] = useRefetchableFragment<guestStoreFrontProductsRefetchQuery, guestStoreFrontProducts_query$key>(
+    graphql`
+      fragment guestStoreFrontProducts_query on Query
+      @refetchable(queryName: "guestStoreFrontProductsRefetchQuery")
+      @argumentDefinitions(organizationUniqueAlphanumericName: { type: "String!" }, locationSelected: { type: "Boolean", defaultValue: false }) {
+        marketplaceLocations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) @include(if: $locationSelected) {
+          edges {
+            node {
+              id
+              products {
+                id
+                ...guestStoreFrontProductCard_product
+              }
+            }
+          }
+        }
+        products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false }) @skip(if: $locationSelected) {
+          edges {
+            node {
+              id
+              ...guestStoreFrontProductCard_product
+            }
+          }
+        }
+      }
+    `,
+    rootData,
+  );
+
+  const [selectedLocationId, setSelectedLocationId] = useState('');
+
+  const displayedProducts = useMemo(
+    () =>
+      selectedLocationId
+        ? (productsData.marketplaceLocations?.edges.find((edge) => edge.node.id === selectedLocationId)?.node.products ?? [])
+        : (productsData.products?.edges.map((edge) => edge.node) ?? []),
+    [productsData.marketplaceLocations?.edges, productsData.products?.edges, selectedLocationId],
+  );
+
+  useEffect(() => {
+    refetchProducts(
+      {
+        organizationUniqueAlphanumericName,
+        locationSelected: selectedLocationId !== '',
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [organizationUniqueAlphanumericName, refetchProducts, selectedLocationId]);
 
   if (!rootData.organizationPublic) {
     return null;
@@ -124,8 +174,8 @@ const GuestStoreFront = ({ queryReference }: Props) => {
             },
           }}
         >
-          {data.products.map((product) => (
-            <GuestStoreFrontProductCard key={product.id} product={product} />
+          {displayedProducts.map((product) => (
+            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} />
           ))}
         </Box>
       </Container>
@@ -139,8 +189,6 @@ const MemoGuestStoreFront = memo(GuestStoreFront);
 
 const GuestStoreFrontWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<guestStoreFront_rootQuery>(RootQuery);
-  const [triggerReloadId, setTriggerReloadId] = useState(uuid());
-  const [, startTransition] = useTransition();
   const { organizationUniqueAlphanumericName } = useKnownParams();
 
   if (!organizationUniqueAlphanumericName) {
@@ -156,13 +204,7 @@ const GuestStoreFrontWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
-
-  const handleReloadRequired = () => {
-    startTransition(() => {
-      setTriggerReloadId(uuid());
-    });
-  };
+  }, [loadQuery, organizationUniqueAlphanumericName]);
 
   if (!queryReference) {
     return <Loading />;
@@ -170,7 +212,7 @@ const GuestStoreFrontWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoGuestStoreFront queryReference={queryReference} onReloadRequired={handleReloadRequired} />
+      <MemoGuestStoreFront queryReference={queryReference} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
     </ErrorBoundary>
   );
 };

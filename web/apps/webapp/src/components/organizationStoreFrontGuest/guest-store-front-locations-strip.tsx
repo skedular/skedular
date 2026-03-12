@@ -177,20 +177,16 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
     rootDataRelay,
   );
 
-  const [selectedLocationId, setSelectedLocationId] = useState(rootData.marketplaceLocations?.edges[0]?.node.id ?? '');
+  const [selectedLocationId, setSelectedLocationId] = useState('');
   const locations = useMemo(() => rootData.marketplaceLocations.edges.map((item) => item.node), [rootData.marketplaceLocations.edges]);
 
   useEffect(() => {
-    if (!onLocationChange || locations.length === 0) {
+    if (!onLocationChange) {
       return;
     }
 
-    const selectedLocation = locations.find((location) => location.id === selectedLocationId);
-
-    if (selectedLocation) {
-      onLocationChange(selectedLocation.id);
-    }
-  }, [locations, onLocationChange, selectedLocationId]);
+    onLocationChange(selectedLocationId);
+  }, [onLocationChange, selectedLocationId]);
 
   if (rootData.marketplaceLocations.totalCount === 0) {
     return null;
@@ -199,7 +195,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
   return (
     <Box sx={{ mb: { xs: 3, md: 4 } }}>
       <MediumHeadingIconTypography label="Locations" sx={{ mb: 0.75 }} />
-      <BodyIconTypography label="Pick a location first, then browse available products." sx={{ opacity: 0.8, mb: 2 }} />
+      <BodyIconTypography label="Pick a location to narrow results, or leave all locations selected." sx={{ opacity: 0.8, mb: 2 }} />
 
       <StackRow sx={{ overflowX: 'auto', pb: 1, flexWrap: 'nowrap', alignItems: 'stretch' }}>
         {locations.map((location) => {
@@ -210,7 +206,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
           return (
             <Box
               key={location.id}
-              onClick={() => setSelectedLocationId(location.id)}
+              onClick={() => setSelectedLocationId((current) => (current === location.id ? '' : location.id))}
               sx={{
                 border: 1,
                 borderColor: (theme) => (isActive ? theme.palette.primary.main : theme.palette.divider),
