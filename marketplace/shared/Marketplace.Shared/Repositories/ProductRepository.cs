@@ -49,6 +49,12 @@ internal static class ProductExtensions
                 !item.DeletedAt.HasValue && item.Organization.Type == OrganizationTypeConstants.Marketplace &&
                 (searchCriteria.IncludeInactive || !item.Inactive));
 
+            if (searchCriteria.OrganizationIds.Count > 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    !item.Organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(item.Organization.Id));
+            }
+
             if (searchCriteria.OrganizationUniqueAlphanumericNames.Count > 0)
             {
                 originalQuery = originalQuery.Where(item =>

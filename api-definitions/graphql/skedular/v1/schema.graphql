@@ -2163,6 +2163,7 @@ input ProductTagOrganizationTagWhereInput {
 
 input ProductWhereInput {
   includeInactive: Boolean!
+  organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
 }

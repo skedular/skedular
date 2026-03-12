@@ -198,6 +198,7 @@ input ProductPricingInput {
 }
 
 input ProductWhereInput {
+  organizationIds: [String!]
   organizationUniqueAlphanumericNames: [String!]
   productIds: [String!]
   includeInactive: Boolean!

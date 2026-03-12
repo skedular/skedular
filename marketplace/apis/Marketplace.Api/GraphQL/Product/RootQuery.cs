@@ -54,6 +54,7 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await productService.GetPaginatedProductsAsync(
             new PaginationInputParam(after, first, before, last),
             new ProductSearchCriteria(
+                where.OrganizationIds.ToSafeCollection(),
                 where.OrganizationUniqueAlphanumericNames.ToSafeCollection(),
                 where.ProductIds.ToSafeCollection(),
                 where.IncludeInactive),

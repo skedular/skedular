@@ -5,6 +5,9 @@ namespace Marketplace.Api.GraphQL.Product;
 [GraphQLName("ProductWhereInput")]
 public class ProductWhereInput
 {
+    [GraphQLName("organizationIds")]
+    public IEnumerable<string>? OrganizationIds { get; set; }
+
     [GraphQLName("organizationUniqueAlphanumericNames")]
     public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
 

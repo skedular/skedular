@@ -3,6 +3,7 @@ using Enterprise.Shared.Pagination;
 namespace Marketplace.Shared.Models;
 
 public record ProductSearchCriteria(
+    ICollection<string> OrganizationIds,
     ICollection<string> OrganizationUniqueAlphanumericNames,
     ICollection<string> ProductIds,
     bool IncludeInactive);
