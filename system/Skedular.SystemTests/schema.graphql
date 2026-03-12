@@ -2042,6 +2042,8 @@ input MarketplaceLocationWhereInput {
   customTagIds: [String!]
   locationIds: [String!]
   nameContains: String
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   resourceType: OrganizationTagType
   searchBoundaries: PolygonInput
   zoneIds: [String!]

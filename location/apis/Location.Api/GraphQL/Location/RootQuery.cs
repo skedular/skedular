@@ -97,8 +97,8 @@ public class RootQuery(IMapper mapper)
         var (paginatedInfo, edges, totalCount) = await locationService.GetPaginatedLocationsAsync(
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
-                null,
-                null,
+                where.OrganizationId,
+                where.OrganizationUniqueAlphanumericName,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),

@@ -485,6 +485,8 @@ input LocationWhereInput {
 }
 
 input MarketplaceLocationWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
   locationIds: [String!]
   nameContains: String
   customTagIds: [String!]
