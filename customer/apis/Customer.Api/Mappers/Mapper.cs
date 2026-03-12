@@ -138,8 +138,8 @@ public class Mapper : IMapper
             DefaultOrganizationId = src.DefaultOrganization?.Id,
             DefaultOrganizationUniqueAlphanumericName = src.DefaultOrganization?.UniqueAlphanumericName,
             PreferredLocationIds = src.PreferredLocations.Select(item => item.Id),
-            PreferredZoneIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
-            PreferredCustomTagIds = src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
+            PreferredZones = MapTo(src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)),
+            PreferredCustomTags = MapTo(src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom)),
             PreferredResourceIds = src.PreferredResources.Select(item => item.Id),
             FavouriteLocationIds = src.FavouriteLocations.Select(item => item.Id),
             PersonalInformationVisibility = new PersonalInformationVisibilityDetails
@@ -664,4 +664,11 @@ public class Mapper : IMapper
             CardIssuer = src.CardIssuer,
             CardLastFourDigit = src.CardLastFourDigit
         };
+
+    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+
+    private static OrganizationTagDetails MapTo(OrganizationTag src) => new()
+    {
+        Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()
+    };
 }

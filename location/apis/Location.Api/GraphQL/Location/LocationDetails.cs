@@ -32,11 +32,11 @@ public class LocationDetails : Node
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canViewAnalytics")] public bool CanViewAnalytics { get; set; }
     [GraphQLName("physicalAddress")] public LocationPhysicalAddressDetails? PhysicalAddress { get; set; }
-    [GraphQLName("customTagIds")] public IEnumerable<string> CustomTagIds { get; set; } = [];
-    [GraphQLName("zoneIds")] public IEnumerable<string> ZoneIds { get; set; } = [];
-    [GraphQLName("spaceTypeIds")] public IEnumerable<string> SpaceTypeIds { get; set; } = [];
-    [GraphQLName("amenityIds")] public IEnumerable<string> AmenityIds { get; set; } = [];
-    [GraphQLName("resourceTypeIds")] public IEnumerable<string> ResourceTypeIds { get; set; } = [];
+    [GraphQLName("customTags")] public IEnumerable<OrganizationTagDetails> CustomTags { get; set; } = [];
+    [GraphQLName("zones")] public IEnumerable<OrganizationTagDetails> Zones { get; set; } = [];
+    [GraphQLName("spaceTypes")] public IEnumerable<OrganizationTagDetails> SpaceTypes { get; set; } = [];
+    [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
+    [GraphQLName("resourceTypes")] public IEnumerable<OrganizationTagDetails> ResourceTypes { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("uniqueClaimCode")] public string? UniqueClaimCode { get; set; }
@@ -125,31 +125,11 @@ public static partial class LocationDetailsType
     {
         descriptor.Ignore(item => item.OrganizationId);
         descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
-        descriptor.Ignore(item => item.CustomTagIds);
-        descriptor.Ignore(item => item.ZoneIds);
-        descriptor.Ignore(item => item.ResourceTypeIds);
-        descriptor.Ignore(item => item.SpaceTypeIds);
-        descriptor.Ignore(item => item.AmenityIds);
         descriptor.Ignore(item => item.ProductIds);
     }
 
     public static OrganizationDetails GetOrganization([Parent] LocationDetails item) =>
         new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
-
-    public static IEnumerable<OrganizationTagDetails> GetCustomTags([Parent] LocationDetails item) =>
-        item.CustomTagIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetZones([Parent] LocationDetails item) =>
-        item.ZoneIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetResourceTypes([Parent] LocationDetails item) =>
-        item.ResourceTypeIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetSpaceTypes([Parent] LocationDetails item) =>
-        item.SpaceTypeIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetAmenities([Parent] LocationDetails item) =>
-        item.AmenityIds.Select(id => new OrganizationTagDetails(id));
 
     public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
         item.ProductIds.Select(id => new ProductDetails(id));

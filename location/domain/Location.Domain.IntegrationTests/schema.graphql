@@ -86,11 +86,6 @@ type LocationDailyBookingsTotal {
 
 type LocationDetails {
   organization: OrganizationDetails!
-  customTags: [OrganizationTagDetails!]!
-  zones: [OrganizationTagDetails!]!
-  resourceTypes: [OrganizationTagDetails!]!
-  spaceTypes: [OrganizationTagDetails!]!
-  amenities: [OrganizationTagDetails!]!
   products: [ProductDetails!]!
   analytics(from: DateTime! until: DateTime!): LocationAnalytics! @cost(weight: "10")
   resources(after: String first: Int before: String last: Int where: ResourceWhereInput orderBy: [ResourceOrderInput!]): ConnectionOfResourceEdge! @cost(weight: "10")
@@ -105,6 +100,11 @@ type LocationDetails {
   canDelete: Boolean!
   canViewAnalytics: Boolean!
   physicalAddress: LocationPhysicalAddressDetails
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  spaceTypes: [OrganizationTagDetails!]!
+  amenities: [OrganizationTagDetails!]!
+  resourceTypes: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
   extraMetadata: LocationExtraMetadata
   uniqueClaimCode: String
@@ -205,6 +205,9 @@ type OrganizationDetails {
 }
 
 type OrganizationTagDetails {
+  name: String!
+  tagType: OrganizationTagType
+  color: String
   id: ID!
 }
 
@@ -242,15 +245,15 @@ type Query {
 }
 
 type ResourceDetails {
-  customTags: [OrganizationTagDetails!]!
-  zones: [OrganizationTagDetails!]!
-  productTags: [OrganizationTagDetails!]!
-  resourceType: OrganizationTagDetails!
   name: String!
   inactive: Boolean!
   requireBookingApproval: Boolean!
   color: String
   capacity: Int!
+  customTags: [OrganizationTagDetails!]!
+  zones: [OrganizationTagDetails!]!
+  productTags: [OrganizationTagDetails!]!
+  resourceType: OrganizationTagDetails!
   isAvailableHoursOverridden: Boolean!
   availableHours: OpeningHours
   id: ID!

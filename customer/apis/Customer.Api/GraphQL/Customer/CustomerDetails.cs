@@ -41,8 +41,8 @@ public class CustomerDetails : Node
     public string? DefaultOrganizationUniqueAlphanumericName { get; set; }
 
     [GraphQLName("preferredLocationIds")] public IEnumerable<string> PreferredLocationIds { get; set; } = [];
-    [GraphQLName("preferredZoneIds")] public IEnumerable<string> PreferredZoneIds { get; set; } = [];
-    [GraphQLName("preferredCustomTagIds")] public IEnumerable<string> PreferredCustomTagIds { get; set; } = [];
+    [GraphQLName("preferredZones")] public IEnumerable<OrganizationTagDetails> PreferredZones { get; set; } = [];
+    [GraphQLName("preferredCustomTags")] public IEnumerable<OrganizationTagDetails> PreferredCustomTags { get; set; } = [];
     [GraphQLName("preferredResourceIds")] public IEnumerable<string> PreferredResourceIds { get; set; } = [];
     [GraphQLName("favouriteLocationIds")] public IEnumerable<string> FavouriteLocationIds { get; set; } = [];
 
@@ -82,8 +82,6 @@ public static partial class CustomerDetailsType
         descriptor.Ignore(item => item.DefaultOrganizationId);
         descriptor.Ignore(item => item.DefaultOrganizationUniqueAlphanumericName);
         descriptor.Ignore(item => item.PreferredLocationIds);
-        descriptor.Ignore(item => item.PreferredZoneIds);
-        descriptor.Ignore(item => item.PreferredCustomTagIds);
         descriptor.Ignore(item => item.PreferredResourceIds);
         descriptor.Ignore(item => item.FavouriteLocationIds);
     }
@@ -94,12 +92,6 @@ public static partial class CustomerDetailsType
 
     public static IEnumerable<LocationDetails> GetPreferredLocations([Parent] CustomerDetails item) =>
         item.PreferredLocationIds.Select(id => new LocationDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetPreferredZones([Parent] CustomerDetails item) =>
-        item.PreferredZoneIds.Select(id => new OrganizationTagDetails(id));
-
-    public static IEnumerable<OrganizationTagDetails> GetPreferredCustomTags([Parent] CustomerDetails item) =>
-        item.PreferredCustomTagIds.Select(id => new OrganizationTagDetails(id));
 
     public static IEnumerable<ResourceDetails> GetPreferredResources([Parent] CustomerDetails item) =>
         item.PreferredResourceIds.Select(id => new ResourceDetails(id));

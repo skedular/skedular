@@ -473,8 +473,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             ResourceType = MapTo(src.OrganizationTags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
         };
 
-    private static OrganizationTagDetails MapTo(OrganizationTag src) =>
-        new() { Id = src.Id, Name = src.Name, Color = src.Color, TagType = src.Type };
+    private static OrganizationTagDetails MapTo(OrganizationTag src) => new() { Id = src.Id, Name = src.Name, Color = src.Color };
 
     private static IEnumerable<BookingResourceDetails> MapTo(ICollection<ResourceCustomersPair> src, ICollection<Resource> involvedResources) =>
         src.Count == 0 ? involvedResources.Select(MapTo) : src.Select(item => MapTo(item.Resource, item.Customers));

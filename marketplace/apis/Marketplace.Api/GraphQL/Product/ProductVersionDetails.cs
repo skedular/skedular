@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
-using HotChocolate.Types;
 
 namespace Marketplace.Api.GraphQL.Product;
 
@@ -12,16 +11,7 @@ public class ProductVersionDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
-    [GraphQLName("productTagIds")] public IEnumerable<string> ProductTagIds { get; set; } = [];
+    [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("pricingOptions")] public IEnumerable<ProductPricing> PricingOptions { get; set; } = [];
-}
-
-[ObjectType<ProductVersionDetails>]
-public static partial class ProductVersionDetailsType
-{
-    static partial void Configure(IObjectTypeDescriptor<ProductVersionDetails> descriptor) => descriptor.Ignore(item => item.ProductTagIds);
-
-    public static IEnumerable<OrganizationTagDetails> GetProductTags([Parent] ProductVersionDetails item) =>
-        item.ProductTagIds.Select(id => new OrganizationTagDetails(id));
 }

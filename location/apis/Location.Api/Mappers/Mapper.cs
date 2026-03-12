@@ -235,13 +235,11 @@ public class Mapper : IMapper
                 RoomCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceRoom)),
                 OrganizationId = src.Organization.Id,
                 OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
-                CustomTagIds = src.CustomTags.Select(item => item.Id),
-                ZoneIds = src.Zones.Select(item => item.Id),
-                SpaceTypeIds = src.SpaceTypes.Select(item => item.Id),
-                AmenityIds = src.Amenities.Select(item => item.Id),
-                ResourceTypeIds = src.Organization.Tags
-                    .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
-                    .Select(item => item.Id),
+                CustomTags = MapTo(src.CustomTags),
+                Zones = MapTo(src.Zones),
+                SpaceTypes = MapTo(src.SpaceTypes),
+                ResourceTypes = MapTo(src.Organization.Tags
+                    .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),
                 UniqueClaimCode = src.UniqueClaimCode,
                 ContactedViaEmail = src.ContactedViaEmail,
@@ -346,10 +344,10 @@ public class Mapper : IMapper
             Capacity = src.Capacity,
             IsAvailableHoursOverridden = src.IsAvailableHoursOverridden,
             AvailableHours = src.AvailableHours is null ? null : MapTo(src.AvailableHours),
-            CustomTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Custom).Select(item => item.Id),
-            ZoneIds = src.Tags.Where(item => item.Type == OrganizationTagType.Zone).Select(item => item.Id),
-            ProductTagIds = src.Tags.Where(item => item.Type == OrganizationTagType.Product).Select(item => item.Id),
-            ResourceTypeId = src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)).Id
+            CustomTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Custom)),
+            Zones = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Zone)),
+            ProductTags = MapTo(src.Tags.Where(item => item.Type == OrganizationTagType.Product)),
+            ResourceType = MapTo(src.Tags.First(item => OrganizationTagTypeConstants.ResourceTypes.Any(tagType => tagType == item.Type)))
         };
 
     public IEnumerable<Edge<Shared.Models.Resource>> MapTo(IEnumerable<Edge<Resource>> src, Shared.Models.Location location) =>
@@ -871,7 +869,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
             Type = src.Type.ToNullableOrganizationTagType(),
-            Color = src.Color,
+            Color = src.Color
         };
 
         if (organization is not null)
@@ -1288,5 +1286,12 @@ public class Mapper : IMapper
     private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src) => new()
     {
         About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+    };
+
+    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
+
+    private static OrganizationTagDetails MapTo(OrganizationTag src) => new()
+    {
+        Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()
     };
 }

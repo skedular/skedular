@@ -111,8 +111,8 @@ public class Mapper : IMapper
             Description = productVersion.Description,
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
-            ProductTagIds = productVersion.ProductTags.Select(item => item.Id),
-            AmenityIds = productVersion.Amenities.Select(item => item.Id),
+            ProductTags = MapTo(productVersion.ProductTags),
+            Amenities = MapTo(productVersion.Amenities),
             OrganizationId = src.Organization.Id,
             OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
@@ -134,7 +134,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
-            ProductTagIds = src.ProductTags.Select(item => item.Id),
+            ProductTags = MapTo(src.ProductTags),
             PricingOptions = src.PricingOptions
         };
     }
@@ -220,4 +220,11 @@ public class Mapper : IMapper
         dest.PricingOptions = src.PricingOptions;
         return dest;
     }
+
+    private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<Shared.Models.OrganizationTag> src) => src.Select(MapTo);
+
+    private static OrganizationTagDetails MapTo(Shared.Models.OrganizationTag src) => new()
+    {
+        Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()
+    };
 }
