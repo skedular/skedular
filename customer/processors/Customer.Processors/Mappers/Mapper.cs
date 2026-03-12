@@ -1,4 +1,5 @@
 using Api.Shared.Services.Models;
+using Enterprise.Shared;
 using CustomerBillingDetails = Customer.Shared.Models.CustomerBillingDetails;
 using Event = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
 using Identity = Customer.Shared.Models.Identity;
@@ -104,7 +105,12 @@ public class Mapper : IMapper
 
         organization.Tags = organizationAfterState.Tags.Select(item => new OrganizationTag
         {
-            Id = item.Id, EventRaisedAt = eventRaisedAt, Type = item.Type.ToNullableOrganizationTagType(), Organization = organization
+            Id = item.Id,
+            EventRaisedAt = eventRaisedAt,
+            Name = item.Name.ToSafeString(),
+            Type = item.Type.ToNullableOrganizationTagType(),
+            Color = item.Color.ToSafeString(),
+            Organization = organization
         }).ToList();
 
         organization.OrganizationSsoSettings = organizationAfterState.SsoSettings is null
@@ -250,7 +256,9 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
         dest.Type = src.Type.ToNullableOrganizationTagType();
+        dest.Color = src.Color;
         dest.Organization = organization;
         return dest;
     }
@@ -351,7 +359,9 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                Type = src.Type.ToNullableOrganizationTagType()
+                Name = src.Name,
+                Type = src.Type.ToNullableOrganizationTagType(),
+                Color = src.Color
             };
 
     private static CustomerBillingDetails? MapTo(Shared.Database.Entities.CustomerBillingDetails? src) =>

@@ -789,7 +789,9 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Type = src.Type.ToNullableOrganizationTagType()
+            Name = src.Name,
+            Type = src.Type.ToNullableOrganizationTagType(),
+            Color = src.Color
         };
 
     private static IEnumerable<OrganizationTag> MapTo(
@@ -867,7 +869,9 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            Type = src.Type.ToNullableOrganizationTagType()
+            Name = src.Name,
+            Type = src.Type.ToNullableOrganizationTagType(),
+            Color = src.Color,
         };
 
         if (organization is not null)

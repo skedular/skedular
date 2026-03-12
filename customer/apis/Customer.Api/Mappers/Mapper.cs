@@ -591,7 +591,9 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name,
                 Type = src.Type.ToNullableOrganizationTagType(),
+                Color = src.Color,
                 Organization = new Organization { Id = src.Organization.Id }
             };
 
