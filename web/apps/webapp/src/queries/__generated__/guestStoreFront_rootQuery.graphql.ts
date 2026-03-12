@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a37578665ab309f9fe9776cfda774bdc>>
+ * @generated SignedSource<<f590bdf52724012a2093f6513e0a5988>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,7 +32,7 @@ export type guestStoreFront_rootQuery$data = {
     };
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontFooter_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontFooter_query" | "guestStoreFrontLocationsStrip_query">;
 };
 export type guestStoreFront_rootQuery = {
   response: guestStoreFront_rootQuery$data;
@@ -139,7 +139,44 @@ v6 = {
     }
   ],
   "storageKey": null
-};
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v8 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "closed",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "openAllDay",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "from",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "until",
+    "storageKey": null
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -166,6 +203,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "guestStoreFrontFooter_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "guestStoreFrontLocationsStrip_query"
       }
     ],
     "type": "Query",
@@ -260,11 +302,177 @@ return {
                 "name": "country",
                 "storageKey": null
               },
+              (v7/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": [
+          {
+            "fields": [
+              {
+                "kind": "Variable",
+                "name": "organizationUniqueAlphanumericName",
+                "variableName": "organizationUniqueAlphanumericName"
+              }
+            ],
+            "kind": "ObjectValue",
+            "name": "where"
+          }
+        ],
+        "concreteType": "ConnectionOfLocationEdge",
+        "kind": "LinkedField",
+        "name": "marketplaceLocations",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "totalCount",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "LocationEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "id",
+                "concreteType": "LocationDetails",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v7/*: any*/),
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "timezone",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "LocationPhysicalAddressDetails",
+                    "kind": "LinkedField",
+                    "name": "physicalAddress",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "formattedAddress",
+                        "storageKey": null
+                      },
+                      (v7/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "OpeningHours",
+                    "kind": "LinkedField",
+                    "name": "openingHours",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "WeekOpeningHours",
+                        "kind": "LinkedField",
+                        "name": "weekOpeningHours",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "monday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "tuesday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "wednesday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "thursday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "friday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "saturday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "OpeningHoursDetails",
+                            "kind": "LinkedField",
+                            "name": "sunday",
+                            "plural": false,
+                            "selections": (v8/*: any*/),
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -276,16 +484,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d11b0375fc40ef3c79e28a8a42f087e2",
+    "cacheID": "1dcf1bcd911243f36777ecb8769c6590",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    listingMetadata {\n      title\n      subTitle\n    }\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontFooter_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    listingMetadata {\n      title\n      subTitle\n    }\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontLocationsStrip_query\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8fa0948e8621a708b8bc8834d4b59d4f";
+(node as any).hash = "6b3d832e7402a2d4215140c8f6b03d81";
 
 export default node;

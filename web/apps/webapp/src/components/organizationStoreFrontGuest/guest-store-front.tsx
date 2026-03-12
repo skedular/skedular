@@ -11,6 +11,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'react-relay';
 import { v7 as uuid } from 'uuid';
 import GuestStoreFrontFooter from './guest-store-front-footer';
+import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
 import { defaultGuestStoreFrontData } from './mock-data';
 
@@ -40,12 +41,14 @@ const RootQuery = graphql`
       }
     }
     ...guestStoreFrontFooter_query
+    ...guestStoreFrontLocationsStrip_query
   }
 `;
 
 const GuestStoreFront = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFront_rootQuery>(RootQuery, queryReference);
   const data = defaultGuestStoreFrontData;
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
 
   if (!rootData.organizationPublic) {
     return null;
@@ -53,6 +56,10 @@ const GuestStoreFront = ({ queryReference }: Props) => {
 
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh' }}>
+      <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 4 } }}>
+        <GuestStoreFrontLocationsStrip rootDataRelay={rootData} onLocationChange={setSelectedLocationId} />
+      </Container>
+
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 5 }, mb: 7 }}>
         <Box
           sx={{

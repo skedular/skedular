@@ -89,7 +89,9 @@ public class RootQuery(IMapper mapper)
         [Service] ILocationService locationService,
         CancellationToken cancellationToken)
     {
-        if (where.SearchBoundaries is null)
+        if (where.SearchBoundaries is null &&
+            string.IsNullOrWhiteSpace(where.OrganizationId) &&
+            string.IsNullOrWhiteSpace(where.OrganizationUniqueAlphanumericName))
         {
             return Connection<LocationEdge>.Empty;
         }
