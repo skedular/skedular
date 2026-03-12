@@ -60,6 +60,9 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
               id
               products {
                 id
+                pricingOptions {
+                  index
+                }
                 ...guestStoreFrontProductCard_product
               }
             }
@@ -69,6 +72,9 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
           edges {
             node {
               id
+              pricingOptions {
+                index
+              }
               ...guestStoreFrontProductCard_product
             }
           }
@@ -82,9 +88,15 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
 
   const displayedProducts = useMemo(
     () =>
-      selectedLocationId
+      (selectedLocationId
         ? (productsData.marketplaceLocations?.edges.find((edge) => edge.node.id === selectedLocationId)?.node.products ?? [])
-        : (productsData.products?.edges.map((edge) => edge.node) ?? []),
+        : (productsData.products?.edges.map((edge) => edge.node) ?? [])
+      ).toSorted((left, right) => {
+        const leftIndex = left.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
+        const rightIndex = right.pricingOptions[0]?.index ?? Number.MAX_SAFE_INTEGER;
+
+        return leftIndex - rightIndex;
+      }),
     [productsData.marketplaceLocations?.edges, productsData.products?.edges, selectedLocationId],
   );
 

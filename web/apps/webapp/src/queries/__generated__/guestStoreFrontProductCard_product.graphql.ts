@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb0776aac36eea9d5b641af0cee93388>>
+ * @generated SignedSource<<e4244b71bd73a4c17603804e58b16052>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,6 +34,7 @@ export type guestStoreFrontProductCard_product$data = {
     readonly id: string;
     readonly index: number;
     readonly isTaxInclusive: boolean;
+    readonly name: string;
     readonly price: any;
   }>;
   readonly " $fragmentType": "guestStoreFrontProductCard_product";
@@ -150,6 +151,7 @@ return {
           "name": "index",
           "storageKey": null
         },
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -180,6 +182,6 @@ return {
 };
 })();
 
-(node as any).hash = "cb9f2f85b902292e3af2bb2be5f4aad2";
+(node as any).hash = "4b5143925e5e3e13c3f4ab8858b9811f";
 
 export default node;

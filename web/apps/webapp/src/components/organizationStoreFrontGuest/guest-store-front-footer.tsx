@@ -67,10 +67,13 @@ const GuestStoreFrontFooter = ({ rootDataRelay }: Props) => {
             <BodyIconTypography label={rootData.organizationPublic.contactEmail} sx={{ opacity: 0.8 }} />
             <BodyIconTypography label={rootData.organizationPublic.contactPhone} sx={{ opacity: 0.8 }} />
           </Grid>
-          <Grid sx={{ xs: 12, md: 6 }}>
-            <BodyIconTypography label="Powered by Skedular" sx={{ textAlign: { xs: 'left', md: 'right' }, opacity: 0.7 }} />
-          </Grid>
         </GridContainer>
+
+        <Box sx={{ mt: 4, pt: 3, borderTop: 1, borderColor: (theme) => theme.palette.divider }}>
+          <Box component="a" href="https://getskedular.com" target="_blank" rel="noopener noreferrer" sx={{ display: 'block', textDecoration: 'none' }}>
+            <BodyIconTypography label="Powered by Skedular" sx={{ textAlign: 'center', opacity: 0.7 }} />
+          </Box>
+        </Box>
       </Container>
     </Box>
   );

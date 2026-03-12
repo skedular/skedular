@@ -8,6 +8,8 @@ export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined
 export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
 export const getMarketplaceLocationLink = (integratedPlatrform: string | undefined, locationId: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
+export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, productId: string) =>
+  integratedPlatrform ? `/${integratedPlatrform}/marketplace/products/${productId}` : `/marketplace/products/${productId}`;
 
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 

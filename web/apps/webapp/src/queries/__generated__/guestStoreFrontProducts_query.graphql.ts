@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2eaf41c7303d6e0de4fbbaa08e60fa3c>>
+ * @generated SignedSource<<1b36cddb168ca52ee02ac3d0cb80e217>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,9 @@ export type guestStoreFrontProducts_query$data = {
         readonly id: string;
         readonly products: ReadonlyArray<{
           readonly id: string;
+          readonly pricingOptions: ReadonlyArray<{
+            readonly index: number;
+          }>;
           readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_product">;
         }>;
       };
@@ -26,6 +29,9 @@ export type guestStoreFrontProducts_query$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly pricingOptions: ReadonlyArray<{
+          readonly index: number;
+        }>;
         readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProductCard_product">;
       };
     }>;
@@ -49,6 +55,24 @@ var v0 = {
 },
 v1 = [
   (v0/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ProductPricing",
+    "kind": "LinkedField",
+    "name": "pricingOptions",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "index",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
   {
     "args": null,
     "kind": "FragmentSpread",
@@ -209,6 +233,6 @@ return {
 };
 })();
 
-(node as any).hash = "abcfe8c93dd9260b9f365b5485f5dfb7";
+(node as any).hash = "8c5341534425bb0a1472dc95620a4d05";
 
 export default node;
