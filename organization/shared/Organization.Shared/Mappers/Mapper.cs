@@ -620,8 +620,15 @@ public class Mapper : IMapper
     private static CdnFile? MapTo(Api.Shared.Services.Models.CdnFile? src) =>
         src is null ? null : new CdnFile { Url = src.Url.ToSafeString(), Height = src.Height.ToNullInt(), Width = src.Width.ToNullInt() };
 
-    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata MapTo(ListingMetadata src) => new()
+    private static Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata MapTo(ListingMetadata src)
     {
-        About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
-    };
+        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata
+        {
+            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+        };
+
+        listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
+
+        return listingMetadata;
+    }
 }

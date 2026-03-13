@@ -88,6 +88,7 @@ type ListingMetadata {
   about: String
   title: String
   subTitle: String
+  includedFeatures: [String!]
 }
 
 type Mutation {
@@ -779,6 +780,7 @@ input ListingMetadataInput {
   about: String
   title: String
   subTitle: String
+  includedFeatures: [String!]
 }
 
 input MyInvitationsToJoinOrganizationsWhereInput {

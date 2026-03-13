@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<066bf4cf1f234e0fa17402875e30f2d3>>
+ * @generated SignedSource<<3f5019ae0c725af9ddf5ce30ba95f7de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,6 +37,7 @@ export type CdnFileInput = {
 };
 export type ListingMetadataInput = {
   about?: string | null | undefined;
+  includedFeatures?: ReadonlyArray<string> | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };

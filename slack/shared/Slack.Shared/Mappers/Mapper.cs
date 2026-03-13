@@ -593,8 +593,8 @@ public class Mapper : IMapper
         };
 
     private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Organization.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString());
+        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
     private static ListingMetadata MapTo(Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString());
+        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 }

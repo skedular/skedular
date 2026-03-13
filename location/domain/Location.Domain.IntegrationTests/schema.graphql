@@ -70,6 +70,7 @@ type ListingMetadata {
   about: String
   title: String
   subTitle: String
+  includedFeatures: [String!]
 }
 
 type LocationAnalytics {
@@ -441,6 +442,7 @@ input ListingMetadataInput {
   about: String
   title: String
   subTitle: String
+  includedFeatures: [String!]
 }
 
 input LocationExtraMetadataInput {

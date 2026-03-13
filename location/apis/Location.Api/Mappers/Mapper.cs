@@ -1281,12 +1281,19 @@ public class Mapper : IMapper
         new() { Id = src.Id, CreatedAt = src.CreatedAt, ModifiedAt = src.ModifiedAt, DeletedAt = src.DeletedAt };
 
     private static ListingMetadata MapTo(global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata src) =>
-        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString());
+        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 
-    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src) => new()
+    private static global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata MapTo(ListingMetadata src)
     {
-        About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
-    };
+        var listingMetadata = new global::Api.Shared.Services.Grpc.Skedular.Location.V1.ListingMetadata
+        {
+            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+        };
+
+        listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
+
+        return listingMetadata;
+    }
 
     private static IEnumerable<OrganizationTagDetails> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 

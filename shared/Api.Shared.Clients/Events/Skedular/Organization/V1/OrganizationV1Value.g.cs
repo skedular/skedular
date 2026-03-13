@@ -77,18 +77,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "IAEoASJhCgxDZG5JbWFnZUZpbGUSJwoIb3JpZ2luYWwYASABKAsyFS5vcmdh",
             "bml6YXRpb24uQ2RuRmlsZRIoCgl0aHVtYm5haWwYAiABKAsyFS5vcmdhbml6",
             "YXRpb24uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWln",
-            "aHQYAiABKAUSDQoFd2lkdGgYAyABKAUiQQoPTGlzdGluZ01ldGFkYXRhEg0K",
+            "aHQYAiABKAUSDQoFd2lkdGgYAyABKAUiWwoPTGlzdGluZ01ldGFkYXRhEg0K",
             "BWFib3V0GAEgASgJEg0KBXRpdGxlGAIgASgJEhAKCHN1YlRpdGxlGAMgASgJ",
-            "KmkKBFR5cGUSHQoZVHlwZV9Pcmdhbml6YXRpb25VcHNlcnRlZBAAEhwKGFR5",
-            "cGVfT3JnYW5pemF0aW9uRGVsZXRlZBABEiQKIFR5cGVfT3JnYW5pemF0aW9u",
-            "T2ZmZXJpbmdVcGRhdGVkEAIqcwoQT3JnYW5pemF0aW9uVHlwZRIcChhPcmdh",
-            "bml6YXRpb25UeXBlX1ByaXZhdGUQABIgChxPcmdhbml6YXRpb25UeXBlX01h",
-            "cmtldHBsYWNlEAESHwobT3JnYW5pemF0aW9uVHlwZV9JbmRpdmlkdWFsEAIq",
-            "PwoEUm9sZRIOCgpSb2xlX093bmVyEAASFgoSUm9sZV9BZG1pbmlzdHJhdG9y",
-            "EAESDwoLUm9sZV9NZW1iZXIQAiowCgZTdGF0dXMSEQoNU3RhdHVzX0FjdGl2",
-            "ZRAAEhMKD1N0YXR1c19JbmFjdGl2ZRABQjuqAjhBcGkuU2hhcmVkLkNsaWVu",
-            "dHMuRXZlbnRzLlNrZWR1bGFyLk9yZ2FuaXphdGlvbi5WMS5WYWx1ZWIGcHJv",
-            "dG8z"));
+            "EhgKEGluY2x1ZGVkRmVhdHVyZXMYBCADKAkqaQoEVHlwZRIdChlUeXBlX09y",
+            "Z2FuaXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25EZWxl",
+            "dGVkEAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQAipz",
+            "ChBPcmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJpdmF0",
+            "ZRAAEiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQARIfChtPcmdh",
+            "bml6YXRpb25UeXBlX0luZGl2aWR1YWwQAio/CgRSb2xlEg4KClJvbGVfT3du",
+            "ZXIQABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchAC",
+            "KjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0",
+            "aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
+            "T3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -106,7 +106,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Coordinates), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Coordinates.Parser, new[]{ "Longitude", "Latitude" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle", "IncludedFeatures" }, null, null, null, null)
           }));
     }
     #endregion
@@ -5456,6 +5456,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       about_ = other.about_;
       title_ = other.title_;
       subTitle_ = other.subTitle_;
+      includedFeatures_ = other.includedFeatures_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -5501,6 +5502,17 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "includedFeatures" field.</summary>
+    public const int IncludedFeaturesFieldNumber = 4;
+    private static readonly pb::FieldCodec<string> _repeated_includedFeatures_codec
+        = pb::FieldCodec.ForString(34);
+    private readonly pbc::RepeatedField<string> includedFeatures_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> IncludedFeatures {
+      get { return includedFeatures_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -5519,6 +5531,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (About != other.About) return false;
       if (Title != other.Title) return false;
       if (SubTitle != other.SubTitle) return false;
+      if(!includedFeatures_.Equals(other.includedFeatures_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5529,6 +5542,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (About.Length != 0) hash ^= About.GetHashCode();
       if (Title.Length != 0) hash ^= Title.GetHashCode();
       if (SubTitle.Length != 0) hash ^= SubTitle.GetHashCode();
+      hash ^= includedFeatures_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5559,6 +5573,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(SubTitle);
       }
+      includedFeatures_.WriteTo(output, _repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -5581,6 +5596,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(SubTitle);
       }
+      includedFeatures_.WriteTo(ref output, _repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -5600,6 +5616,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (SubTitle.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SubTitle);
       }
+      size += includedFeatures_.CalculateSize(_repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -5621,6 +5638,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.SubTitle.Length != 0) {
         SubTitle = other.SubTitle;
       }
+      includedFeatures_.Add(other.includedFeatures_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -5652,6 +5670,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             SubTitle = input.ReadString();
             break;
           }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(input, _repeated_includedFeatures_codec);
+            break;
+          }
         }
       }
     #endif
@@ -5681,6 +5703,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 26: {
             SubTitle = input.ReadString();
+            break;
+          }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(ref input, _repeated_includedFeatures_codec);
             break;
           }
         }

@@ -410,7 +410,8 @@ message Coordinates {
 }
 
 message ListingMetadata {
-  string about    = 1;
-  string title    = 2;
-  string subTitle = 3;
+  string          about            = 1;
+  string          title            = 2;
+  string          subTitle         = 3;
+  repeated string includedFeatures = 4;
 }

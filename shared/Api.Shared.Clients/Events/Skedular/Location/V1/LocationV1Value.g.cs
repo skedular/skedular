@@ -74,13 +74,13 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             "AiABKAEiWQoMQ2RuSW1hZ2VGaWxlEiMKCG9yaWdpbmFsGAEgASgLMhEubG9j",
             "YXRpb24uQ2RuRmlsZRIkCgl0aHVtYm5haWwYAiABKAsyES5sb2NhdGlvbi5D",
             "ZG5GaWxlIjUKB0NkbkZpbGUSCwoDdXJsGAEgASgJEg4KBmhlaWdodBgCIAEo",
-            "BRINCgV3aWR0aBgDIAEoBSJBCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQY",
-            "ASABKAkSDQoFdGl0bGUYAiABKAkSEAoIc3ViVGl0bGUYAyABKAkqOwoEVHlw",
-            "ZRIZChVUeXBlX0xvY2F0aW9uVXBzZXJ0ZWQQABIYChRUeXBlX0xvY2F0aW9u",
-            "RGVsZXRlZBABKkYKDExvY2F0aW9uVHlwZRIYChRMb2NhdGlvblR5cGVfUHJp",
-            "dmF0ZRAAEhwKGExvY2F0aW9uVHlwZV9NYXJrZXRwbGFjZRABQjeqAjRBcGku",
-            "U2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLkxvY2F0aW9uLlYxLlZh",
-            "bHVlYgZwcm90bzM="));
+            "BRINCgV3aWR0aBgDIAEoBSJbCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQY",
+            "ASABKAkSDQoFdGl0bGUYAiABKAkSEAoIc3ViVGl0bGUYAyABKAkSGAoQaW5j",
+            "bHVkZWRGZWF0dXJlcxgEIAMoCSo7CgRUeXBlEhkKFVR5cGVfTG9jYXRpb25V",
+            "cHNlcnRlZBAAEhgKFFR5cGVfTG9jYXRpb25EZWxldGVkEAEqRgoMTG9jYXRp",
+            "b25UeXBlEhgKFExvY2F0aW9uVHlwZV9Qcml2YXRlEAASHAoYTG9jYXRpb25U",
+            "eXBlX01hcmtldHBsYWNlEAFCN6oCNEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
+            "dHMuU2tlZHVsYXIuTG9jYXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -97,7 +97,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.Coordinates.Parser, new[]{ "Longitude", "Latitude" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Location.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle", "IncludedFeatures" }, null, null, null, null)
           }));
     }
     #endregion
@@ -4893,6 +4893,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       about_ = other.about_;
       title_ = other.title_;
       subTitle_ = other.subTitle_;
+      includedFeatures_ = other.includedFeatures_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -4938,6 +4939,17 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "includedFeatures" field.</summary>
+    public const int IncludedFeaturesFieldNumber = 4;
+    private static readonly pb::FieldCodec<string> _repeated_includedFeatures_codec
+        = pb::FieldCodec.ForString(34);
+    private readonly pbc::RepeatedField<string> includedFeatures_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> IncludedFeatures {
+      get { return includedFeatures_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -4956,6 +4968,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (About != other.About) return false;
       if (Title != other.Title) return false;
       if (SubTitle != other.SubTitle) return false;
+      if(!includedFeatures_.Equals(other.includedFeatures_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -4966,6 +4979,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (About.Length != 0) hash ^= About.GetHashCode();
       if (Title.Length != 0) hash ^= Title.GetHashCode();
       if (SubTitle.Length != 0) hash ^= SubTitle.GetHashCode();
+      hash ^= includedFeatures_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -4996,6 +5010,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(SubTitle);
       }
+      includedFeatures_.WriteTo(output, _repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -5018,6 +5033,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(SubTitle);
       }
+      includedFeatures_.WriteTo(ref output, _repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -5037,6 +5053,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (SubTitle.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(SubTitle);
       }
+      size += includedFeatures_.CalculateSize(_repeated_includedFeatures_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -5058,6 +5075,7 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
       if (other.SubTitle.Length != 0) {
         SubTitle = other.SubTitle;
       }
+      includedFeatures_.Add(other.includedFeatures_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -5089,6 +5107,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
             SubTitle = input.ReadString();
             break;
           }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(input, _repeated_includedFeatures_codec);
+            break;
+          }
         }
       }
     #endif
@@ -5118,6 +5140,10 @@ namespace Api.Shared.Clients.Events.Skedular.Location.V1.Value {
           }
           case 26: {
             SubTitle = input.ReadString();
+            break;
+          }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(ref input, _repeated_includedFeatures_codec);
             break;
           }
         }

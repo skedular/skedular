@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc81ead5e63c481d93decd0d380dae65>>
+ * @generated SignedSource<<f1b2f5803cf3706484dc35a5e763a3ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type UpdateOrganizationMarketplaceListingMetadataInput = {
 };
 export type ListingMetadataInput = {
   about?: string | null | undefined;
+  includedFeatures?: ReadonlyArray<string> | null | undefined;
   subTitle?: string | null | undefined;
   title?: string | null | undefined;
 };
