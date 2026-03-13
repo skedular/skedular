@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<efbbc63c42930635a8a8ac57e93b8a84>>
+ * @generated SignedSource<<272fb1ef5d21353ab36b58c66a61b60f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,8 +24,6 @@ export type marketplaceProductDetailOverview_product$data = {
   readonly listingMetadata: {
     readonly about: string | null | undefined;
     readonly includedFeatures: ReadonlyArray<string> | null | undefined;
-    readonly subTitle: string | null | undefined;
-    readonly title: string | null | undefined;
   };
   readonly name: string;
   readonly " $fragmentType": "marketplaceProductDetailOverview_product";
@@ -63,20 +61,6 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "about",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "title",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "subTitle",
           "storageKey": null
         },
         {
@@ -150,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "f4e10b6156f6ca5bcb14e3b5189afbcc";
+(node as any).hash = "f2146846e6530e0f3690a1892ec16262";
 
 export default node;

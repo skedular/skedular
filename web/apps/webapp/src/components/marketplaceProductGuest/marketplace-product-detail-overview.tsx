@@ -29,8 +29,6 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
         name
         listingMetadata {
           about
-          title
-          subTitle
           includedFeatures
         }
         featureImages {
