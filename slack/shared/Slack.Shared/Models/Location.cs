@@ -6,7 +6,7 @@ namespace Slack.Shared.Models;
 public class Location : ReplicatedModelBaseWithDeleted
 {
     public string? Name { get; set; }
-    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
+    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public string? Timezone { get; set; }
     public LocationType? Type { get; set; }
     public ICollection<Resource> Resources { get; set; } = [];

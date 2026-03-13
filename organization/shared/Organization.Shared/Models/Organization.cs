@@ -18,8 +18,8 @@ public class Organization : ModelBaseWithDeleted
     public bool? IsOwnershipVerified { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
     public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
-    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
-    public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty();
+    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
+    public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
 
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public TermsOfUse? TermsOfUse { get; set; }

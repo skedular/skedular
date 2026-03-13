@@ -10,7 +10,6 @@ import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import { marketplaceProductDetailLocationMocks } from './mock-data';
 import type { MarketplaceProductPricingPlan } from './types';
 
 type Props = {
@@ -20,7 +19,7 @@ type Props = {
 const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<marketplaceProductDetailBookingCard_query$key>(
     graphql`
-      fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(productId: { type: "String!" }) {
+      fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(organizationUniqueAlphanumericName: { type: "String!" }, productId: { type: "String!" }) {
         productPricingCadences {
           type
           name
@@ -31,6 +30,14 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         }
         product(id: $productId) {
           ...marketplaceProductDetailBookingCard_product
+        }
+        marketplaceLocations(where: { productIds: [$productId], organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
+          edges {
+            node {
+              id
+              name
+            }
+          }
         }
       }
     `,
@@ -95,6 +102,11 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
       }));
   }, [product, rootData.currencies, rootData.productPricingCadences]);
+  const marketplaceLocations = useMemo(
+    () => rootData.marketplaceLocations.edges.map((edge) => edge.node).filter((location): location is NonNullable<typeof location> => !!location),
+    [rootData.marketplaceLocations.edges],
+  );
+  const canBookProduct = marketplaceLocations.length > 0;
 
   if (!product) {
     return null;
@@ -135,24 +147,33 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                 <Button
                   fullWidth
                   variant="contained"
+                  disabled={!canBookProduct}
                   onClick={() => {
+                    if (!canBookProduct) {
+                      return;
+                    }
+
                     router.push(getMarketplaceProductBookingLink(integratedPlatrform, product.id, pricingPlan.id));
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}
                 >
-                  Book now
+                  {canBookProduct ? 'Book now' : 'Unavailable'}
                 </Button>
               </Box>
             ))}
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <CaptionIconTypography label="Locations (temporary mock data)" sx={{ opacity: 0.72, mb: 0.8 }} />
-            <StackRow spacing={0.75}>
-              {marketplaceProductDetailLocationMocks.map((location) => (
-                <CaptionIconTypography key={location.id} label={location.name} sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: (theme) => theme.palette.action.hover }} />
-              ))}
-            </StackRow>
+            <CaptionIconTypography label={marketplaceLocations.length > 0 ? 'Available locations' : 'Availability'} sx={{ opacity: 0.72, mb: 0.8 }} />
+            {marketplaceLocations.length > 0 ? (
+              <StackRow spacing={0.75}>
+                {marketplaceLocations.map((location) => (
+                  <CaptionIconTypography key={location.id} label={location.name} sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: (theme) => theme.palette.action.hover }} />
+                ))}
+              </StackRow>
+            ) : (
+              <BodyIconTypography label="This product can't be booked right now because no resources are currently available at any location." sx={{ opacity: 0.78 }} />
+            )}
           </Box>
         </CardContent>
       </Card>

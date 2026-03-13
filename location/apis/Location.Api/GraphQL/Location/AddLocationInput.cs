@@ -24,5 +24,5 @@ public class AddLocationInput
     [GraphQLName("physicalAddress")] public LocationPhysicalAddressInput? PhysicalAddress { get; set; }
     [GraphQLName("extraMetadata")] public LocationExtraMetadata? ExtraMetadata { get; set; }
     [GraphQLName("weekOpeningHours")] public WeekOpeningHours? WeekOpeningHours { get; set; }
-    [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty();
+    [GraphQLName("listingMetadata")] public ListingMetadata? ListingMetadata { get; set; } = ListingMetadata.Empty;
 }

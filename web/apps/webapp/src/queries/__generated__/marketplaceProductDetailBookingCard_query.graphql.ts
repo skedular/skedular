@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f1ac21749a4d18a69ade40144f32295>>
+ * @generated SignedSource<<2820960b77cfcafcac9ed1855935789d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,14 @@ export type marketplaceProductDetailBookingCard_query$data = {
     readonly name: string;
     readonly type: Currency;
   }>;
+  readonly marketplaceLocations: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly name: string;
+      };
+    }>;
+  };
   readonly product: {
     readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailBookingCard_product">;
   } | null | undefined;
@@ -32,7 +40,14 @@ export type marketplaceProductDetailBookingCard_query$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -40,16 +55,15 @@ var v0 = [
     "name": "type",
     "storageKey": null
   },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
-    "storageKey": null
-  }
+  (v0/*: any*/)
 ];
 return {
   "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "organizationUniqueAlphanumericName"
+    },
     {
       "defaultValue": null,
       "kind": "LocalArgument",
@@ -67,7 +81,7 @@ return {
       "kind": "LinkedField",
       "name": "productPricingCadences",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
@@ -77,7 +91,7 @@ return {
       "kind": "LinkedField",
       "name": "currencies",
       "plural": true,
-      "selections": (v0/*: any*/),
+      "selections": (v1/*: any*/),
       "storageKey": null
     },
     {
@@ -101,6 +115,70 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": [
+        {
+          "fields": [
+            {
+              "kind": "Variable",
+              "name": "organizationUniqueAlphanumericName",
+              "variableName": "organizationUniqueAlphanumericName"
+            },
+            {
+              "items": [
+                {
+                  "kind": "Variable",
+                  "name": "productIds.0",
+                  "variableName": "productId"
+                }
+              ],
+              "kind": "ListValue",
+              "name": "productIds"
+            }
+          ],
+          "kind": "ObjectValue",
+          "name": "where"
+        }
+      ],
+      "concreteType": "ConnectionOfLocationEdge",
+      "kind": "LinkedField",
+      "name": "marketplaceLocations",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "LocationEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "LocationDetails",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                (v0/*: any*/)
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
@@ -108,6 +186,6 @@ return {
 };
 })();
 
-(node as any).hash = "ee31f44a1ad9124a6ec4e1e3b30d6a20";
+(node as any).hash = "41f53542e773edb1f117ddf54a14a278";
 
 export default node;

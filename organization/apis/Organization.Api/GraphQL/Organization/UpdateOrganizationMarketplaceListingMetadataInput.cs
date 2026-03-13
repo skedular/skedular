@@ -13,5 +13,5 @@ public class UpdateOrganizationMarketplaceListingMetadataInput
     public string? UniqueAlphanumericName { get; set; }
 
     [GraphQLName("marketplaceListingMetadata")]
-    public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty();
+    public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
 }

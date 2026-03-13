@@ -484,7 +484,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Currency = src.Currency.ToSafeString().ToCurrency(),
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             PricingOptions = src.PricingOptions.ToSafeCollection()
         };
 

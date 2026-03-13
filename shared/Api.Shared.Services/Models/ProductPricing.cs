@@ -18,7 +18,7 @@ public record ProductPricing(
         new(
             id,
             int.MinValue,
-            ListingMetadata.Empty(),
+            ListingMetadata.Empty,
             ProductPricingCadence.NotSet,
             int.MinValue,
             false,

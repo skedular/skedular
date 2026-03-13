@@ -64,7 +64,7 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
@@ -74,7 +74,7 @@ public class Mapper : IMapper
     public ProductVersion MapTo(AddProductInput src) =>
         new()
         {
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
@@ -84,7 +84,7 @@ public class Mapper : IMapper
     public ProductVersion MapTo(UpdateProductInput src) =>
         new()
         {
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),

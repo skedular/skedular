@@ -19,9 +19,9 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query marketplaceProductDetail_rootQuery($productId: String!) {
+  query marketplaceProductDetail_rootQuery($organizationUniqueAlphanumericName: String!, $productId: String!) {
     ...marketplaceProductDetailOverview_query @arguments(productId: $productId)
-    ...marketplaceProductDetailBookingCard_query @arguments(productId: $productId)
+    ...marketplaceProductDetailBookingCard_query @arguments(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId)
   }
 `;
 
@@ -59,7 +59,11 @@ const MemoMarketplaceProductDetail = memo(MarketplaceProductDetail);
 
 const MarketplaceProductDetailWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<marketplaceProductDetail_rootQuery>(RootQuery);
-  const { productId } = useKnownParams();
+  const { organizationUniqueAlphanumericName, productId } = useKnownParams();
+
+  if (!organizationUniqueAlphanumericName) {
+    throw new Error('organizationUniqueAlphanumericName is required');
+  }
 
   if (!productId) {
     throw new Error('productId is required');
@@ -69,12 +73,13 @@ const MarketplaceProductDetailWithRelay = () => {
     loadQuery(
       {
         productId,
+        organizationUniqueAlphanumericName,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, productId]);
+  }, [loadQuery, productId, organizationUniqueAlphanumericName]);
 
   if (!queryReference) {
     return <Loading />;

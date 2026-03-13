@@ -145,7 +145,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Timezone = src.Timezone,
             Type = src.Type.ToLocationType(),
             ExtraMetadata = src.ExtraMetadata,
@@ -381,7 +381,7 @@ public class Mapper : IMapper
         {
             Id = src.Id.ToSafeString(),
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
@@ -401,7 +401,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Timezone = src.Timezone,
             Type = src.Type,
             ExtraMetadata = src.ExtraMetadata,
