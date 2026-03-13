@@ -23,7 +23,9 @@ const RootQuery = graphql`
     $dateUntilToGetAvailableResources: DateTime!
   ) {
     product(id: $productId) {
-      name
+      listingMetadata {
+        title
+      }
     }
     ...bookProduct_query
     ...bookProduct_availableResources_query
@@ -56,7 +58,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Breadcrumbs>
           <BodyIconTypography label="Product" />
-          <BodyIconTypography label={rootData.product.name} />
+          <BodyIconTypography label={rootData.product.listingMetadata.title} />
         </Breadcrumbs>
       </Box>
     </StackColumn>

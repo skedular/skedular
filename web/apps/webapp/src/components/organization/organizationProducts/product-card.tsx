@@ -60,12 +60,9 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
       fragment productCard_ProductDetails on ProductDetails {
         id
         inactive
-        name
         listingMetadata {
-          about
           title
           subTitle
-          includedFeatures
         }
         organization {
           id
@@ -178,7 +175,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Removing product ${productDetails.name}...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Removing product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
 
     commitDeleteProduct({
       variables: {
@@ -192,7 +189,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product ${productDetails.name}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}.`} />,
           });
 
           return;
@@ -200,13 +197,13 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.name} removed.`} />,
+          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} removed.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to remove product ${productDetails.name}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
         });
       },
     });
@@ -217,7 +214,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Deactivating product ${productDetails.name}...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Deactivating product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
 
     commitDeactivateProducts({
       variables: {
@@ -230,7 +227,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate product ${productDetails.name}. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -238,13 +235,13 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.name} deactivated.`} />,
+          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} deactivated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to deactivate product ${productDetails.name}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -265,7 +262,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Activating product ${productDetails.name}...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Activating product ${productDetails.listingMetadata.title}...`} />, infoNotificationOptions);
 
     commitActivateProducts({
       variables: {
@@ -278,7 +275,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate product ${productDetails.name}. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -286,13 +283,13 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Product ${productDetails.name} activated.`} />,
+          render: <NotificationContent content={`Product ${productDetails.listingMetadata.title} activated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to activate product ${productDetails.name}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${error.message}.`} />,
         });
       },
     });
@@ -309,7 +306,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
           title={
             <StackRow>
               <Link component={NextLink} href={editLink}>
-                <LeadIconTypography label={productDetails.name} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography label={productDetails.listingMetadata.title} startElement={<ProductIcon />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
 
               <PushToRight />
@@ -357,7 +354,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
           }
         />
         <CardContent>
-          <BodyIconTypography label={productDetails.listingMetadata.about} />
+          <BodyIconTypography label={productDetails.listingMetadata.subTitle} />
 
           <StackRow sx={{ marginTop: 1 }}>
             <BodyIconTypography label="Pricing Options" />

@@ -9,7 +9,6 @@ namespace Marketplace.Api.GraphQL.Product;
 public class ProductDetails : Node
 {
     [GraphQLName("inactive")] public bool Inactive { get; set; }
-    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("currency")] public CurrencyDetails Currency { get; set; } = new();
     [GraphQLName("productTags")] public IEnumerable<OrganizationTagDetails> ProductTags { get; set; } = [];
     [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];

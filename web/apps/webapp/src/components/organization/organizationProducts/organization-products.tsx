@@ -27,7 +27,9 @@ const RootQuery = graphql`
       edges {
         node {
           id
-          name
+          listingMetadata {
+            title
+          }
           organization {
             id
           }

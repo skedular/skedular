@@ -26,9 +26,9 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
   const product = useFragment<marketplaceProductDetailOverview_product$key>(
     graphql`
       fragment marketplaceProductDetailOverview_product on ProductDetails {
-        name
         listingMetadata {
-          about
+          title
+          subTitle
           includedFeatures
         }
         featureImages {
@@ -68,7 +68,12 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
         }}
       >
         {effectiveSelectedImageUrl ? (
-          <Box component="img" src={effectiveSelectedImageUrl} alt={product.name} sx={{ width: '100%', height: { xs: 260, md: 460 }, objectFit: 'cover', display: 'block' }} />
+          <Box
+            component="img"
+            src={effectiveSelectedImageUrl}
+            alt={product.listingMetadata.title ?? ''}
+            sx={{ width: '100%', height: { xs: 260, md: 460 }, objectFit: 'cover', display: 'block' }}
+          />
         ) : (
           <Box sx={{ width: '100%', height: { xs: 260, md: 460 } }} />
         )}
@@ -93,7 +98,12 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
                 boxShadow: effectiveSelectedImageUrl === imageUrl ? (theme) => `0 0 0 2px ${theme.palette.primary.main}` : 'none',
               }}
             >
-              <Box component="img" src={imageUrl} alt={product.name} sx={{ width: '100%', height: { xs: 90, md: 120 }, objectFit: 'cover', display: 'block' }} />
+              <Box
+                component="img"
+                src={imageUrl}
+                alt={product.listingMetadata.title ?? ''}
+                sx={{ width: '100%', height: { xs: 90, md: 120 }, objectFit: 'cover', display: 'block' }}
+              />
             </Box>
           ))}
         </Box>
@@ -102,7 +112,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
       <Card variant="outlined" sx={{ borderRadius: 3 }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
           <LeadIconTypography label="About this product" sx={{ mb: 1.5 }} />
-          <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85 }} />
+          <BodyIconTypography label={product.listingMetadata.subTitle ?? ''} sx={{ opacity: 0.85 }} />
         </CardContent>
       </Card>
 

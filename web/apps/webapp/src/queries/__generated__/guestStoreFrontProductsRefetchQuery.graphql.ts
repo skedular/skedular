@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7abae75d04128305dc0f90700c7e242a>>
+ * @generated SignedSource<<fed821cac2f7740d5bfcca934b19f556>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -50,25 +50,36 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "title",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v6 = [
+v5 = [
   (v2/*: any*/),
   {
     "alias": null,
@@ -86,19 +97,7 @@ v6 = [
         "storageKey": null
       },
       (v2/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "ListingMetadata",
-        "kind": "LinkedField",
-        "name": "listingMetadata",
-        "plural": false,
-        "selections": [
-          (v3/*: any*/),
-          (v4/*: any*/)
-        ],
-        "storageKey": null
-      },
+      (v3/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -123,34 +122,7 @@ v6 = [
     ],
     "storageKey": null
   },
-  (v5/*: any*/),
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "ListingMetadata",
-    "kind": "LinkedField",
-    "name": "listingMetadata",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "about",
-        "storageKey": null
-      },
-      (v3/*: any*/),
-      (v4/*: any*/),
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "includedFeatures",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
+  (v3/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -195,7 +167,7 @@ v6 = [
         "name": "type",
         "storageKey": null
       },
-      (v5/*: any*/)
+      (v4/*: any*/)
     ],
     "storageKey": null
   },
@@ -208,7 +180,7 @@ v6 = [
     "plural": true,
     "selections": [
       (v2/*: any*/),
-      (v5/*: any*/)
+      (v4/*: any*/)
     ],
     "storageKey": null
   }
@@ -287,7 +259,7 @@ return {
                         "kind": "LinkedField",
                         "name": "products",
                         "plural": true,
-                        "selections": (v6/*: any*/),
+                        "selections": (v5/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -352,7 +324,7 @@ return {
                     "kind": "LinkedField",
                     "name": "node",
                     "plural": false,
-                    "selections": (v6/*: any*/),
+                    "selections": (v5/*: any*/),
                     "storageKey": null
                   }
                 ],
@@ -366,12 +338,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "01855fb5dcfccc8fe22b778dc505c34d",
+    "cacheID": "440af80ce5a7141a31eefa519dc3b3e1",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontProductsRefetchQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...guestStoreFrontProducts_query_CPnhj\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  name\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    cadence\n    price\n    isTaxInclusive\n  }\n}\n\nfragment guestStoreFrontProducts_query_CPnhj on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...guestStoreFrontProducts_query_CPnhj\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    cadence\n    price\n    isTaxInclusive\n  }\n}\n\nfragment guestStoreFrontProducts_query_CPnhj on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
   }
 };
 })();

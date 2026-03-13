@@ -34,8 +34,6 @@ type Props = {
 };
 
 type ProductDetails = {
-  name: string;
-  about: string | null;
   title: string | null;
   subTitle: string | null;
   includedFeatures: string | null;
@@ -77,7 +75,6 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
-    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
     ...listingMetadataSchemaShape,
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
@@ -204,9 +201,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         product(id: $productId) {
           id
           inactive
-          name
           listingMetadata {
-            about
             title
             subTitle
             includedFeatures
@@ -243,10 +238,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           pricingOptions {
             index
             listingMetadata {
-              about
               title
               subTitle
-              includedFeatures
             }
             cadence
             price
@@ -286,9 +279,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         product {
           id
           inactive
-          name
           listingMetadata {
-            about
             title
             subTitle
             includedFeatures
@@ -322,10 +313,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           pricingOptions {
             index
             listingMetadata {
-              about
               title
               subTitle
-              includedFeatures
             }
             cadence
             price
@@ -348,11 +337,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   const validateProductDetails = makeValidate(productSchema(rootData.bookingSlotSizeInMinutes));
   const requiredFields = makeRequired(productSchema(rootData.bookingSlotSizeInMinutes));
 
-  const [name, setName] = useState(rootData.product ? rootData.product.name : '');
-  const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
-
-  const [about, setAbout] = useState<string | null>(((rootData.product?.listingMetadata as { about?: string | null } | null | undefined)?.about ?? null) as string | null);
-  const debounceSetAbout = useDebounceCallback(setAbout, keyboardTextFieldDebounceTimeout);
   const [title, setTitle] = useState<string | null>(rootData.product?.listingMetadata.title ?? null);
   const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
   const [subTitle, setSubTitle] = useState<string | null>(rootData.product?.listingMetadata.subTitle ?? null);
@@ -392,13 +376,13 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
 
-  const handleProductDetailUpdateClick = ({ name, about, title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductDetailUpdateClick = ({ title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating product '${product.name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Updating product '${product.listingMetadata.title}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -409,9 +393,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         input: {
           clientMutationId: uuid(),
           id: product.id,
-          name,
           listingMetadata: {
-            about: about ?? '',
+            about: '',
             title: title ?? '',
             subTitle: subTitle ?? '',
             includedFeatures: (includedFeatures ?? '')
@@ -447,7 +430,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update product '${product.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update product '${product.listingMetadata.title}'. Error: ${joinErrors(errors)}`} />,
           });
 
           return;
@@ -463,7 +446,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update product '${product.name}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update product '${product.listingMetadata.title}'. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
@@ -471,9 +454,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           product: {
             id: product.id,
             inactive: false,
-            name,
             listingMetadata: {
-              about: about ?? '',
               title: title ?? '',
               subTitle: subTitle ?? '',
               includedFeatures: (includedFeatures ?? '')
@@ -549,8 +530,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           <Form
             onSubmit={handleProductDetailUpdateClick}
             initialValues={{
-              name,
-              about,
               title,
               subTitle,
               includedFeatures,
@@ -561,10 +540,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                 rootData.product.pricingOptions.length > 0
                   ? rootData.product.pricingOptions.map((pricingOption) => ({
                       id: uuid(),
-                      about: pricingOption.listingMetadata.about ?? null,
                       title: pricingOption.listingMetadata.title ?? null,
                       subTitle: pricingOption.listingMetadata.subTitle ?? null,
-                      includedFeatures: pricingOption.listingMetadata.includedFeatures?.join('\n') ?? null,
                       cadence: pricingOption.cadence,
                       price: pricingOption.price.toString(),
                       numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
@@ -579,8 +556,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values, form, errors }) => {
-              debounceSetName(values!.name);
-              debounceSetAbout(values!.about);
               debounceSetTitle(values!.title);
               debounceSetSubTitle(values!.subTitle);
               debounceSetIncludedFeatures(values!.includedFeatures);
@@ -642,14 +617,9 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                       </StackColumn>
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
-
                     <ListingMetadata
-                      fields={['about', 'title', 'subTitle', 'includedFeatures']}
-                      onChange={({ about, includedFeatures, subTitle, title }) => {
-                        debounceSetAbout(about);
+                      fields={['title', 'subTitle', 'includedFeatures']}
+                      onChange={({ includedFeatures, subTitle, title }) => {
                         debounceSetTitle(title);
                         debounceSetSubTitle(subTitle);
                         debounceSetIncludedFeatures(includedFeatures);

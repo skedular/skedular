@@ -67,7 +67,6 @@ type PaymentMethodTypeDetails {
 type ProductDetails {
   organization: OrganizationDetails!
   inactive: Boolean!
-  name: String!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
@@ -110,7 +109,6 @@ type ProductPricingCadenceDetails {
 
 type ProductVersionDetails {
   inactive: Boolean!
-  name: String!
   listingMetadata: ListingMetadata!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
@@ -156,7 +154,6 @@ input AddProductInput {
   id: String
   organizationId: String
   organizationUniqueAlphanumericName: String
-  name: String!
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
@@ -222,7 +219,6 @@ input ProductWhereInput {
 input UpdateProductInput {
   clientMutationId: String
   id: String!
-  name: String!
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]

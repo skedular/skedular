@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c560fc27ddbb38927abf3b489b222d14>>
+ * @generated SignedSource<<9e45c9e6d8e2f3451330966a0c67ebc4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,6 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly subTitle: string | null | undefined;
     readonly title: string | null | undefined;
   };
-  readonly name: string;
   readonly pricingOptions: ReadonlyArray<{
     readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
     readonly cadence: ProductPricingCadence;
@@ -65,21 +64,21 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "subTitle",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subTitle",
+  "name": "name",
   "storageKey": null
 };
 return {
@@ -89,7 +88,6 @@ return {
   "name": "marketplaceProductDetailBookingCard_product",
   "selections": [
     (v0/*: any*/),
-    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -105,8 +103,8 @@ return {
           "name": "about",
           "storageKey": null
         },
+        (v1/*: any*/),
         (v2/*: any*/),
-        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -126,7 +124,7 @@ return {
       "plural": true,
       "selections": [
         (v0/*: any*/),
-        (v1/*: any*/),
+        (v3/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -152,7 +150,7 @@ return {
           "name": "type",
           "storageKey": null
         },
-        (v1/*: any*/)
+        (v3/*: any*/)
       ],
       "storageKey": null
     },
@@ -180,8 +178,8 @@ return {
           "name": "listingMetadata",
           "plural": false,
           "selections": [
-            (v2/*: any*/),
-            (v3/*: any*/)
+            (v1/*: any*/),
+            (v2/*: any*/)
           ],
           "storageKey": null
         },
@@ -243,6 +241,6 @@ return {
 };
 })();
 
-(node as any).hash = "22bb1b23060b936959c5001ad55c5aa3";
+(node as any).hash = "35b94eeb104e483e411ed86e1f28b93e";
 
 export default node;

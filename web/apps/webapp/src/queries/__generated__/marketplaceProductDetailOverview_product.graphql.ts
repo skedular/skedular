@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<272fb1ef5d21353ab36b58c66a61b60f>>
+ * @generated SignedSource<<f1e196e30f74db9e96c1e0d463253523>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,10 +22,10 @@ export type marketplaceProductDetailOverview_product$data = {
     } | null | undefined;
   }>;
   readonly listingMetadata: {
-    readonly about: string | null | undefined;
     readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+    readonly subTitle: string | null | undefined;
+    readonly title: string | null | undefined;
   };
-  readonly name: string;
   readonly " $fragmentType": "marketplaceProductDetailOverview_product";
 };
 export type marketplaceProductDetailOverview_product$key = {
@@ -33,21 +33,12 @@ export type marketplaceProductDetailOverview_product$key = {
   readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailOverview_product">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "marketplaceProductDetailOverview_product",
   "selections": [
-    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -60,7 +51,14 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "about",
+          "name": "title",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "subTitle",
           "storageKey": null
         },
         {
@@ -117,7 +115,13 @@ return {
           "name": "id",
           "storageKey": null
         },
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -132,8 +136,7 @@ return {
   "type": "ProductDetails",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "f2146846e6530e0f3690a1892ec16262";
+(node as any).hash = "14a47e5585be7754022115d33429a7a3";
 
 export default node;

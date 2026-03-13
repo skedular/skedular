@@ -154,7 +154,7 @@ public class Mapper : IMapper
     public ProductCreateOptions MapTo(ProductPricing pricing, ProductVersion productVersion) =>
         new()
         {
-            Name = productVersion.Name.ToSafeString(),
+            Name = productVersion.ListingMetadata?.Title ?? "Name not set",
             UnitLabel = pricing.Cadence.ToStripePriceUnitName(),
             TaxCode = "txcd_10103001",
             Metadata = new Dictionary<string, string>
@@ -483,8 +483,8 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name.ToSafeString(),
             Currency = src.Currency.ToSafeString().ToCurrency(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             PricingOptions = src.PricingOptions.ToSafeCollection()
         };
 

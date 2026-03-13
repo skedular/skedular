@@ -5,7 +5,6 @@ namespace Marketplace.Shared.Models;
 
 public class ProductVersion : ModelBase
 {
-    public string Name { get; set; } = string.Empty;
     public Currency Currency { get; set; }
     public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     public ICollection<ProductPricing> PricingOptions { get; set; } = [];

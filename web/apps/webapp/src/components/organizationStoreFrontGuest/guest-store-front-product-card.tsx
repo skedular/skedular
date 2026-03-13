@@ -41,12 +41,9 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
     graphql`
       fragment guestStoreFrontProductCard_product on ProductDetails {
         id
-        name
         listingMetadata {
-          about
           title
           subTitle
-          includedFeatures
         }
         featureImages {
           original {
@@ -106,13 +103,13 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
         height: '100%',
       }}
     >
-      <CardMedia component="img" image={product.featureImages[0]?.original?.url ?? ''} alt={product.name} sx={{ height: 190 }} />
+      <CardMedia component="img" image={product.featureImages[0]?.original?.url ?? ''} alt={product.listingMetadata.title ?? ''} sx={{ height: 190 }} />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
         <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-          <LeadIconTypography label={product.name} />
+          <LeadIconTypography label={product.listingMetadata.title} />
         </StackRow>
 
-        <BodyIconTypography label={product.listingMetadata.about ?? ''} />
+        <BodyIconTypography label={product.listingMetadata.subTitle ?? ''} />
 
         {product.amenities.length > 0 && (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>

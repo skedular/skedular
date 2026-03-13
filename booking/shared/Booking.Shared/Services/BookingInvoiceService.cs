@@ -191,7 +191,7 @@ public class BookingInvoiceService(
 
                 table.Cell().Element(CellStyle).Padding(8)
                     .Text(
-                        $"{productVersion.Name}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}");
+                        $"{productVersion.ListingMetadata?.Title}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}");
 
                 var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
                 var quantity = pricing.Cadence switch

@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class ProductVersion : ModelBase
+public class ProductVersion : ReplicatedModelBase
 {
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];

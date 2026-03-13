@@ -10,7 +10,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class ProductVersion : EntityBase
 {
-    public string? Name { get; set; }
+    public ListingMetadata? ListingMetadata { get; set; }
     public string? Currency { get; set; }
     public ICollection<ProductPricing>? PricingOptions { get; set; } = [];
 
@@ -30,14 +30,13 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
     {
         builder.ConfigureEntityBase();
 
-        builder.Property(item => item.Name).HasMaxLength(Constants.MaxProductNameLength);
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.PricingOptions).HasColumnType("jsonb");
+        builder.Property(item => item.ListingMetadata).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.ProductVersionOrganizationTags);
 
-        builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Currency);
     }
 }

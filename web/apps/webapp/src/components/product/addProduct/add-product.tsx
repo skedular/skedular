@@ -59,8 +59,6 @@ const RootQuery = graphql`
 `;
 
 type ProductDetails = {
-  name: string;
-  about: string | null;
   title: string | null;
   subTitle: string | null;
   includedFeatures: string | null;
@@ -102,7 +100,6 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
-    name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
     ...listingMetadataSchemaShape,
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
@@ -230,9 +227,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
         product {
           id
           inactive
-          name
           listingMetadata {
-            about
             title
             subTitle
             includedFeatures
@@ -266,10 +261,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           pricingOptions {
             index
             listingMetadata {
-              about
               title
               subTitle
-              includedFeatures
             }
             cadence
             price
@@ -290,11 +283,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
   const themedToast = paletteMode === 'dark' ? toast.dark : toast;
   const validateProductDetails = makeValidate(productSchema(rootData.bookingSlotSizeInMinutes));
   const requiredFields = makeRequired(productSchema(rootData.bookingSlotSizeInMinutes));
-  const [name, setName] = useState('');
-  const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
 
-  const [about, setAbout] = useState<string | null>(null);
-  const debounceSetAbout = useDebounceCallback(setAbout, keyboardTextFieldDebounceTimeout);
   const [title, setTitle] = useState<string | null>(null);
   const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
   const [subTitle, setSubTitle] = useState<string | null>(null);
@@ -319,9 +308,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, about, title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductAddClick = ({ title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
-    const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
+    const toastId = themedToast(<NotificationContent content={`Adding product '${title}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
@@ -332,9 +321,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
         input: {
           clientMutationId: uuid(),
           id,
-          name,
           listingMetadata: {
-            about: about ?? '',
+            about: '',
             title: title ?? '',
             subTitle: subTitle ?? '',
             includedFeatures: (includedFeatures ?? '')
@@ -396,9 +384,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           product: {
             id,
             inactive: false,
-            name,
             listingMetadata: {
-              about: about ?? '',
               title: title ?? '',
               subTitle: subTitle ?? '',
               includedFeatures: (includedFeatures ?? '')
@@ -466,8 +452,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           <Form
             onSubmit={handleProductAddClick}
             initialValues={{
-              name,
-              about,
               title,
               subTitle,
               includedFeatures,
@@ -478,8 +462,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             }}
             validate={validateProductDetails}
             render={({ handleSubmit, values, form, errors }) => {
-              debounceSetName(values!.name);
-              debounceSetAbout(values!.about);
               debounceSetTitle(values!.title);
               debounceSetSubTitle(values!.subTitle);
               debounceSetIncludedFeatures(values!.includedFeatures);
@@ -540,14 +522,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                       </StackColumn>
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Name">
-                      <TextField name="name" required={requiredFields.name} />
-                    </FormFieldLabel>
-
                     <ListingMetadata
-                      fields={['about', 'title', 'subTitle', 'includedFeatures']}
-                      onChange={({ about, includedFeatures, subTitle, title }) => {
-                        debounceSetAbout(about);
+                      fields={['title', 'subTitle', 'includedFeatures']}
+                      onChange={({ includedFeatures, subTitle, title }) => {
                         debounceSetTitle(title);
                         debounceSetSubTitle(subTitle);
                         debounceSetIncludedFeatures(includedFeatures);

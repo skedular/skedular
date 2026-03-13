@@ -40,12 +40,11 @@ message Product {
 
 message ProductVersion {
   string                  id              = 1;
-  string                  name            = 2;
-  ListingMetadata         listingMetadata = 3;
-  Currency                currency        = 4;
-  repeated string         tagIds          = 5;
-  repeated CdnImageFile   featureImages   = 6;
-  repeated ProductPricing pricingOptions  = 7;
+  ListingMetadata         listingMetadata = 2;
+  Currency                currency        = 3;
+  repeated string         tagIds          = 4;
+  repeated CdnImageFile   featureImages   = 5;
+  repeated ProductPricing pricingOptions  = 6;
 }
 
 message CdnImageFile {

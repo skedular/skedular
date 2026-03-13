@@ -64,7 +64,6 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
-            Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -75,7 +74,6 @@ public class Mapper : IMapper
     public ProductVersion MapTo(AddProductInput src) =>
         new()
         {
-            Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -86,7 +84,6 @@ public class Mapper : IMapper
     public ProductVersion MapTo(UpdateProductInput src) =>
         new()
         {
-            Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -107,7 +104,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Inactive = src.Inactive,
-            Name = productVersion.Name,
             ListingMetadata = productVersion.ListingMetadata,
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
@@ -130,7 +126,6 @@ public class Mapper : IMapper
         return new ProductVersionDetails
         {
             Id = src.Id,
-            Name = src.Name,
             ListingMetadata = src.ListingMetadata,
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
@@ -211,7 +206,6 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
-        dest.Name = src.Name;
         dest.ListingMetadata = src.ListingMetadata;
         dest.Currency = src.Currency.ToCurrency();
         dest.FeatureImages = src.FeatureImages;

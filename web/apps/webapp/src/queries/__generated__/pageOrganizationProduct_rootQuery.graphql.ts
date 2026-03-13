@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c01f10c0cb4de826870899173f4b2758>>
+ * @generated SignedSource<<faa1843c6bbab4d7209b971fae19ae1c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,9 @@ export type pageOrganizationProduct_rootQuery$variables = {
 };
 export type pageOrganizationProduct_rootQuery$data = {
   readonly product: {
-    readonly name: string;
+    readonly listingMetadata: {
+      readonly title: string | null | undefined;
+    };
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"editProduct_query">;
 };
@@ -59,56 +61,31 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "subTitle",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
-  "concreteType": "ListingMetadata",
-  "kind": "LinkedField",
-  "name": "listingMetadata",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "about",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subTitle",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "includedFeatures",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "id",
   "storageKey": null
 },
-v7 = [
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = [
   {
     "alias": null,
     "args": null,
@@ -116,31 +93,31 @@ v7 = [
     "name": "type",
     "storageKey": null
   },
-  (v4/*: any*/)
+  (v7/*: any*/)
 ],
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v9 = [
-  (v5/*: any*/),
-  (v4/*: any*/),
-  (v8/*: any*/)
+v10 = [
+  (v6/*: any*/),
+  (v7/*: any*/),
+  (v9/*: any*/)
 ],
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationTagDetails",
   "kind": "LinkedField",
   "name": "amenities",
   "plural": true,
-  "selections": (v9/*: any*/),
+  "selections": (v10/*: any*/),
   "storageKey": null
 },
-v11 = [
+v12 = [
   {
     "alias": null,
     "args": null,
@@ -163,7 +140,7 @@ v11 = [
     "storageKey": null
   }
 ],
-v12 = [
+v13 = [
   {
     "kind": "Variable",
     "name": "orderBy",
@@ -189,7 +166,18 @@ return {
         "name": "product",
         "plural": false,
         "selections": [
-          (v4/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              (v4/*: any*/)
+            ],
+            "storageKey": null
+          }
         ],
         "storageKey": null
       },
@@ -220,8 +208,27 @@ return {
         "name": "product",
         "plural": false,
         "selections": [
-          (v4/*: any*/),
-          (v5/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              (v4/*: any*/),
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -229,7 +236,6 @@ return {
             "name": "inactive",
             "storageKey": null
           },
-          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -237,7 +243,7 @@ return {
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v8/*: any*/),
             "storageKey": null
           },
           {
@@ -247,10 +253,10 @@ return {
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v9/*: any*/),
+            "selections": (v10/*: any*/),
             "storageKey": null
           },
-          (v10/*: any*/),
+          (v11/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -259,7 +265,7 @@ return {
             "name": "organization",
             "plural": false,
             "selections": [
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           },
@@ -278,7 +284,7 @@ return {
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v11/*: any*/),
+                "selections": (v12/*: any*/),
                 "storageKey": null
               },
               {
@@ -288,7 +294,7 @@ return {
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v11/*: any*/),
+                "selections": (v12/*: any*/),
                 "storageKey": null
               }
             ],
@@ -309,7 +315,19 @@ return {
                 "name": "index",
                 "storageKey": null
               },
-              (v6/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ListingMetadata",
+                "kind": "LinkedField",
+                "name": "listingMetadata",
+                "plural": false,
+                "selections": [
+                  (v4/*: any*/),
+                  (v5/*: any*/)
+                ],
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -386,7 +404,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       },
       {
@@ -396,7 +414,7 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       },
       {
@@ -436,7 +454,7 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v13/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
@@ -465,9 +483,9 @@ return {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      (v5/*: any*/),
-                      (v4/*: any*/),
-                      (v8/*: any*/),
+                      (v6/*: any*/),
+                      (v7/*: any*/),
+                      (v9/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -530,7 +548,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v12/*: any*/),
+            "args": (v13/*: any*/),
             "filters": [
               "orderBy"
             ],
@@ -539,8 +557,8 @@ return {
             "kind": "LinkedHandle",
             "name": "productTags"
           },
-          (v5/*: any*/),
-          (v10/*: any*/)
+          (v6/*: any*/),
+          (v11/*: any*/)
         ],
         "storageKey": null
       },
@@ -551,22 +569,22 @@ return {
         "kind": "LinkedField",
         "name": "paymentMethodTypes",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "8e5b06a586daafea3a17c2a4b30d9064",
+    "cacheID": "5799f3fc4f4f0c5410245199048db1db",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProduct_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    name\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    currency {\n      type\n      name\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    pricingOptions {\n      index\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedPaymentMethods\n    }\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    currency {\n      type\n      name\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    pricingOptions {\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedPaymentMethods\n    }\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesBookingPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesBookingPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a2e74b5a6dbd9c7027fb9dc434ffc268";
+(node as any).hash = "6abbdba300b687240e4a3fd1db71165c";
 
 export default node;

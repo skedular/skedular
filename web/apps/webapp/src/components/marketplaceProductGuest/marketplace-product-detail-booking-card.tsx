@@ -41,7 +41,6 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     graphql`
       fragment marketplaceProductDetailBookingCard_product on ProductDetails {
         id
-        name
         listingMetadata {
           about
           title
@@ -106,7 +105,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
       <Card sx={{ borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
           <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
-          <LeadIconTypography label={product.name} sx={{ mt: 0.4, mb: 0.6 }} />
+          <LeadIconTypography label={product.listingMetadata.title} sx={{ mt: 0.4, mb: 0.6 }} />
           <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
 
           <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />

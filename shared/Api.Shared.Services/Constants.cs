@@ -90,9 +90,6 @@ public static class Constants
 
     public const int MaxPersonalInformationVisibilityLength = 50;
 
-    public const int MaxProductNameLength = 500;
-    public const int MaxProductDescriptionLength = 10000;
-
     public const int MaxStripeConnectAccountIdLength = 100;
     public const int MaxStripeConnectAccountNameLength = 200;
     public const int MaxStripeConnectAccountTypeLength = 50;

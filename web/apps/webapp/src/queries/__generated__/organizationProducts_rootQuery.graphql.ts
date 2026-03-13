@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e59fce73b76f09ded75f64d21e7753b>>
+ * @generated SignedSource<<e79a62dd288b8cda6da5819b00f11dc7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,9 @@ export type organizationProducts_rootQuery$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly name: string;
+        readonly listingMetadata: {
+          readonly title: string | null | undefined;
+        };
         readonly organization: {
           readonly id: string;
         };
@@ -102,7 +104,7 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v5 = {
@@ -132,27 +134,38 @@ v6 = {
 v7 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "title",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/),
-  (v4/*: any*/)
+v9 = [
+  (v8/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "name",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -187,7 +200,18 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v4/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ListingMetadata",
+                    "kind": "LinkedField",
+                    "name": "listingMetadata",
+                    "plural": false,
+                    "selections": [
+                      (v4/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
                   (v5/*: any*/),
                   {
                     "args": null,
@@ -245,40 +269,13 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v4/*: any*/),
+                  (v7/*: any*/),
                   (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
                     "name": "inactive",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ListingMetadata",
-                    "kind": "LinkedField",
-                    "name": "listingMetadata",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "about",
-                        "storageKey": null
-                      },
-                      (v7/*: any*/),
-                      (v8/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "includedFeatures",
-                        "storageKey": null
-                      }
-                    ],
                     "storageKey": null
                   },
                   {
@@ -332,7 +329,7 @@ return {
                     "name": "currency",
                     "plural": false,
                     "selections": [
-                      (v9/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -351,19 +348,7 @@ return {
                         "name": "index",
                         "storageKey": null
                       },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "ListingMetadata",
-                        "kind": "LinkedField",
-                        "name": "listingMetadata",
-                        "plural": false,
-                        "selections": [
-                          (v7/*: any*/),
-                          (v8/*: any*/)
-                        ],
-                        "storageKey": null
-                      },
+                      (v7/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -430,7 +415,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v10/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       },
       {
@@ -440,22 +425,22 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v10/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "7479455c1a33b2287690d1a8703b3ce9",
+    "cacheID": "fdc78f77b2537f93b471b8764108b3cf",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  name\n  listingMetadata {\n    about\n    title\n    subTitle\n    includedFeatures\n  }\n  organization {\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    cadence\n    price\n    isTaxInclusive\n  }\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  organization {\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    cadence\n    price\n    isTaxInclusive\n  }\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "31a1976d69dcd4752eb6961e7b6aff26";
+(node as any).hash = "8fac45d0e5fc6b51ee4b35237ef699bb";
 
 export default node;

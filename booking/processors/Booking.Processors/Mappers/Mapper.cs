@@ -359,8 +359,8 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
-        dest.Name = src.Name;
         dest.Currency = src.Currency.ToCurrency();
+        dest.ListingMetadata = src.ListingMetadata;
         dest.Product = product;
         dest.OrganizationTags = organizationTags;
         dest.PricingOptions = src.PricingOptions;
@@ -566,8 +566,8 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            Name = src.Name.ToSafeString(),
             Currency = MapTo(src.Currency),
+            ListingMetadata = MapTo(src.ListingMetadata),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product,
             PricingOptions = MapTo(src.PricingOptions).ToList()
@@ -619,6 +619,6 @@ public class Mapper : IMapper
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 
-    private static ListingMetadata MapTo(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata src) =>
+    private static ListingMetadata MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata src) =>
         new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 }

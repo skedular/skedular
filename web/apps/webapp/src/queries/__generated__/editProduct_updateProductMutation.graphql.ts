@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<21e1791d4ec97142b4d136a4f341396b>>
+ * @generated SignedSource<<90b5e9ae419690d466268243729bf624>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,6 @@ export type UpdateProductInput = {
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id: string;
   listingMetadata?: ListingMetadataInput | null | undefined;
-  name: string;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
   tagIds: ReadonlyArray<string>;
 };
@@ -81,20 +80,16 @@ export type editProduct_updateProductMutation$data = {
       readonly id: string;
       readonly inactive: boolean;
       readonly listingMetadata: {
-        readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
-      readonly name: string;
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly cadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
-          readonly about: string | null | undefined;
-          readonly includedFeatures: ReadonlyArray<string> | null | undefined;
           readonly subTitle: string | null | undefined;
           readonly title: string | null | undefined;
         };
@@ -140,20 +135,16 @@ export type editProduct_updateProductMutation$rawResponse = {
       readonly id: string;
       readonly inactive: boolean;
       readonly listingMetadata: {
-        readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
-      readonly name: string;
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly cadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
-          readonly about: string | null | undefined;
-          readonly includedFeatures: ReadonlyArray<string> | null | undefined;
           readonly subTitle: string | null | undefined;
           readonly title: string | null | undefined;
         };
@@ -197,51 +188,26 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
-  "concreteType": "ListingMetadata",
-  "kind": "LinkedField",
-  "name": "listingMetadata",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "about",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subTitle",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "includedFeatures",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "subTitle",
   "storageKey": null
 },
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v5 = [
   (v1/*: any*/),
-  (v2/*: any*/),
+  (v4/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -250,7 +216,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -273,7 +239,7 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": [
@@ -304,8 +270,26 @@ v6 = [
             "name": "inactive",
             "storageKey": null
           },
-          (v2/*: any*/),
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ListingMetadata",
+            "kind": "LinkedField",
+            "name": "listingMetadata",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -321,7 +305,7 @@ v6 = [
                 "name": "type",
                 "storageKey": null
               },
-              (v2/*: any*/)
+              (v4/*: any*/)
             ],
             "storageKey": null
           },
@@ -332,7 +316,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v5/*: any*/),
             "storageKey": null
           },
           {
@@ -342,7 +326,7 @@ v6 = [
             "kind": "LinkedField",
             "name": "amenities",
             "plural": true,
-            "selections": (v4/*: any*/),
+            "selections": (v5/*: any*/),
             "storageKey": null
           },
           {
@@ -360,7 +344,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -370,7 +354,7 @@ v6 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v5/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               }
             ],
@@ -391,7 +375,19 @@ v6 = [
                 "name": "index",
                 "storageKey": null
               },
-              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ListingMetadata",
+                "kind": "LinkedField",
+                "name": "listingMetadata",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  (v3/*: any*/)
+                ],
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -471,7 +467,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v6/*: any*/),
+    "selections": (v7/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -480,19 +476,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v6/*: any*/)
+    "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "cf3550a689b28c1a30a77b49932500d5",
+    "cacheID": "c11d2b6d8f2f9f680fd6c0ef55b5436e",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3e6ca4490a84ad024631807621782010";
+(node as any).hash = "809599d10ede0b582301a1d614bb7a7b";
 
 export default node;

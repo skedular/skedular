@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64c5a7d5bcf53910e9b24780b497bcc2>>
+ * @generated SignedSource<<1324fab3c3fafe3ca15453691ac33000>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,9 @@ export type pageOrganizationProductBook_rootQuery$variables = {
 };
 export type pageOrganizationProductBook_rootQuery$data = {
   readonly product: {
-    readonly name: string;
+    readonly listingMetadata: {
+      readonly title: string | null | undefined;
+    };
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"bookProduct_availableResources_query" | "bookProduct_query">;
 };
@@ -59,28 +61,33 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "id",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    (v5/*: any*/)
+  ],
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "id",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subTitle",
+  "name": "name",
   "storageKey": null
 },
 v9 = [
@@ -91,11 +98,11 @@ v9 = [
     "name": "type",
     "storageKey": null
   },
-  (v5/*: any*/)
+  (v8/*: any*/)
 ],
 v10 = [
-  (v6/*: any*/),
-  (v5/*: any*/),
+  (v7/*: any*/),
+  (v8/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -124,7 +131,7 @@ return {
         "name": "product",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       },
@@ -161,28 +168,8 @@ return {
         "name": "product",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
           (v6/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "ListingMetadata",
-            "kind": "LinkedField",
-            "name": "listingMetadata",
-            "plural": false,
-            "selections": [
-              (v7/*: any*/),
-              (v8/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "includedFeatures",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -208,7 +195,7 @@ return {
             "name": "pricingOptions",
             "plural": true,
             "selections": [
-              (v6/*: any*/),
+              (v7/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -224,8 +211,14 @@ return {
                 "name": "listingMetadata",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v8/*: any*/)
+                  (v5/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "subTitle",
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -306,7 +299,7 @@ return {
         "name": "me",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -353,11 +346,11 @@ return {
                 "name": "taxRatePercentage",
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
-          (v6/*: any*/)
+          (v7/*: any*/)
         ],
         "storageKey": null
       },
@@ -393,7 +386,7 @@ return {
             "name": "category",
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v8/*: any*/)
         ],
         "storageKey": null
       },
@@ -450,8 +443,8 @@ return {
             "name": "location",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
-              (v5/*: any*/)
+              (v7/*: any*/),
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
@@ -463,8 +456,8 @@ return {
             "name": "resource",
             "plural": false,
             "selections": [
-              (v6/*: any*/),
-              (v5/*: any*/),
+              (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -494,16 +487,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e7cf4525e2cb62abbec76e41045f391d",
+    "cacheID": "5a71b4fa7775791992f12f7baa089c31",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    name\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    name\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    currency {\n      type\n      name\n    }\n    latestProductVersionId\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedPaymentMethods\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoiceBookingPaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    latestProductVersionId\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedPaymentMethods\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoiceBookingPaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceBookingPaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "678d5d9bbcb4dbc5a12317b40ef083d2";
+(node as any).hash = "53bb9616a380cea6a0bc76a495ab6d03";
 
 export default node;

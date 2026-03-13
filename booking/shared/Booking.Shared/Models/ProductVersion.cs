@@ -3,11 +3,11 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class ProductVersion : ModelBase
+public class ProductVersion : ReplicatedModelBase
 {
-    public string Name { get; set; } = string.Empty;
     public Currency Currency { get; set; }
     public ICollection<ProductPricing> PricingOptions { get; set; } = [];
+    public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty();
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();

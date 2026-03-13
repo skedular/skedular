@@ -146,11 +146,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         }
         product(id: $productId) {
           id
-          name
           listingMetadata {
             title
-            subTitle
-            includedFeatures
           }
           currency {
             type

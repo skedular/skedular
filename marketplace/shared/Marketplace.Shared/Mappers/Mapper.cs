@@ -1,4 +1,4 @@
-using Api.Shared.Services.Models;
+using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile;
@@ -8,6 +8,7 @@ using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.P
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
+using ProductPricingCadence = Api.Shared.Services.Models.ProductPricingCadence;
 
 namespace Marketplace.Shared.Mappers;
 
@@ -30,10 +31,7 @@ public class Mapper : IMapper
 
     private static ProductVersion MapTo(Models.ProductVersion src)
     {
-        var productVersion = new ProductVersion
-        {
-            Id = src.Id, Name = src.Name.ToSafeString(), ListingMetadata = MapTo(src.ListingMetadata), Currency = MapTo(src.Currency)
-        };
+        var productVersion = new ProductVersion { Id = src.Id, ListingMetadata = MapTo(src.ListingMetadata), Currency = MapTo(src.Currency) };
 
         productVersion.TagIds.AddRange(src.OrganizationTags.Select(item => item.Id));
         productVersion.FeatureImages.AddRange(MapTo(src.FeatureImages));
@@ -103,10 +101,10 @@ public class Mapper : IMapper
             Api.Shared.Services.Models.Currency.Usd => Currency.Usd,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
-    
-    private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata MapTo(ListingMetadata src)
+
+    private static ListingMetadata MapTo(Api.Shared.Services.Models.ListingMetadata src)
     {
-        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata
+        var listingMetadata = new ListingMetadata
         {
             About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
         };
