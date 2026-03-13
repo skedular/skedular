@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<97da2a0bf03b22a68ed02110bb282595>>
+ * @generated SignedSource<<c2ae685e43485d77a71be0ab968aa696>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -70,7 +70,6 @@ export type editProduct_query$data = {
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
       readonly maxDurationMinutes: number | null | undefined;
       readonly minDurationMinutes: number | null | undefined;
-      readonly name: string;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
     }>;
@@ -313,7 +312,6 @@ return {
               "name": "index",
               "storageKey": null
             },
-            (v1/*: any*/),
             (v2/*: any*/),
             {
               "alias": null,
@@ -456,6 +454,6 @@ return {
 };
 })();
 
-(node as any).hash = "6fe551e2a81ff88e4736e46d57927c80";
+(node as any).hash = "40147fce1d53b8ea8b31115a66255994";
 
 export default node;

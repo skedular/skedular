@@ -91,7 +91,6 @@ type ProductPayload {
 type ProductPricing {
   id: String!
   index: Int!
-  name: String!
   listingMetadata: ListingMetadata!
   cadence: ProductPricingCadence!
   price: Decimal!
@@ -201,7 +200,6 @@ input ProductOrderInput {
 input ProductPricingInput {
   id: String!
   index: Int!
-  name: String!
   listingMetadata: ListingMetadataInput!
   cadence: ProductPricingCadence!
   price: Decimal!

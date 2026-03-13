@@ -64,12 +64,9 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
         pricingOptions {
           id
           index
-          name
           listingMetadata {
-            about
             title
             subTitle
-            includedFeatures
           }
           cadence
           price
@@ -88,7 +85,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
         .sort((a, b) => a.index - b.index)
         .map((option) => ({
           id: option.id,
-          name: option.name,
+          title: option.listingMetadata.title ?? '',
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.cadence)?.name ?? option.cadence,
           amountLabel: currency ? `${currency} ${option.price}` : `${option.price}`,
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
@@ -164,7 +161,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
                       />
                       <Box sx={{ minWidth: 0 }}>
                         <CaptionIconTypography label={row.cadenceLabel} sx={{ opacity: 0.9, display: 'block', fontWeight: 500 }} />
-                        <CaptionIconTypography label={row.name} sx={{ opacity: 0.65, display: 'block' }} />
+                        <CaptionIconTypography label={row.title} sx={{ opacity: 0.65, display: 'block' }} />
                       </Box>
                     </StackRow>
                     <Box sx={{ textAlign: 'right', flexShrink: 0 }}>

@@ -82,12 +82,9 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         }
         pricingOptions {
           index
-          name
           listingMetadata {
-            about
             title
             subTitle
-            includedFeatures
           }
           cadence
           price
@@ -384,7 +381,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
                   }}
                 >
                   <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <BodyIconTypography label={pricingOption.name || `Option ${pricingOption.index + 1}`} />
+                    <BodyIconTypography label={pricingOption.listingMetadata.title || `Option ${pricingOption.index + 1}`} />
                     <Chip size="small" label={cadence} />
                   </StackRow>
 

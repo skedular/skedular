@@ -1020,7 +1020,6 @@ type ProductPricing {
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxDurationMinutes: Int
   minDurationMinutes: Int
-  name: String!
   numberOfResourcesToBook: Int!
   price: Decimal!
 }
@@ -2156,7 +2155,6 @@ input ProductPricingInput {
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxDurationMinutes: Int
   minDurationMinutes: Int
-  name: String!
   numberOfResourcesToBook: Int!
   price: Decimal!
 }

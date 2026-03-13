@@ -50,7 +50,6 @@ type PricingOptionForm = {
   title: string | null;
   subTitle: string | null;
   cadence: string;
-  name: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -66,7 +65,6 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   title: null,
   subTitle: null,
   cadence: 'ONE_TIME_V1',
-  name: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -90,7 +88,6 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
         object({
           ...listingMetadataSchemaShape,
           cadence: string().required('Pricing cadence is required.'),
-          name: string().required('Pricing option name is required.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
             .required('Price is required.')
@@ -245,7 +242,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           }
           pricingOptions {
             index
-            name
             listingMetadata {
               about
               title
@@ -325,7 +321,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           }
           pricingOptions {
             index
-            name
             listingMetadata {
               about
               title
@@ -430,7 +425,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
             id: pricingOption.id,
             index,
-            name: pricingOption.name.trim(),
             listingMetadata: {
               about: '',
               title: pricingOption.title ?? '',
@@ -496,7 +490,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             featureImages: finalFeatureImages,
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
-              name: pricingOption.name.trim(),
               listingMetadata: {
                 about: '',
                 title: pricingOption.title ?? '',
@@ -573,7 +566,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                       subTitle: pricingOption.listingMetadata.subTitle ?? null,
                       includedFeatures: pricingOption.listingMetadata.includedFeatures?.join('\n') ?? null,
                       cadence: pricingOption.cadence,
-                      name: pricingOption.name ?? '',
                       price: pricingOption.price.toString(),
                       numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                       minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
@@ -712,10 +704,6 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
 
                             <FormFieldLabel label="Cadence">
                               <SingleChoiceProductPricingCadence rootDataRelay={rootData} name={`pricingOptions[${index}].cadence`} required />
-                            </FormFieldLabel>
-
-                            <FormFieldLabel label="Name">
-                              <TextField name={`pricingOptions[${index}].name`} required />
                             </FormFieldLabel>
 
                             <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />

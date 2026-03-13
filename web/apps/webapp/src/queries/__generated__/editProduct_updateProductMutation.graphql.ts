@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6fe96bdc2827ffa51993e70084f1648e>>
+ * @generated SignedSource<<21e1791d4ec97142b4d136a4f341396b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -48,7 +48,6 @@ export type ProductPricingInput = {
   maxAllowedResourcesLockTimePaidViaCard: number;
   maxDurationMinutes?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
-  name: string;
   numberOfResourcesToBook: number;
   price: any;
 };
@@ -103,7 +102,6 @@ export type editProduct_updateProductMutation$data = {
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
-        readonly name: string;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
       }>;
@@ -163,7 +161,6 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
-        readonly name: string;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
       }>;
@@ -394,7 +391,6 @@ v6 = [
                 "name": "index",
                 "storageKey": null
               },
-              (v2/*: any*/),
               (v3/*: any*/),
               {
                 "alias": null,
@@ -487,16 +483,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "627cb40129efcbbccecea2311f99e6c4",
+    "cacheID": "cf3550a689b28c1a30a77b49932500d5",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7b9acb937b1262a3653bdd21d624cd85";
+(node as any).hash = "3e6ca4490a84ad024631807621782010";
 
 export default node;

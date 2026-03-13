@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7205e4a88bbe636e10af493a9bb94e0>>
+ * @generated SignedSource<<f3d3bb0850f6f4a6ef7c42d5a3d7de71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -50,7 +50,6 @@ export type ProductPricingInput = {
   maxAllowedResourcesLockTimePaidViaCard: number;
   maxDurationMinutes?: number | null | undefined;
   minDurationMinutes?: number | null | undefined;
-  name: string;
   numberOfResourcesToBook: number;
   price: any;
 };
@@ -105,7 +104,6 @@ export type addProduct_addProductMutation$data = {
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
-        readonly name: string;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
       }>;
@@ -165,7 +163,6 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
         readonly minDurationMinutes: number | null | undefined;
-        readonly name: string;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
       }>;
@@ -396,7 +393,6 @@ v6 = [
                 "name": "index",
                 "storageKey": null
               },
-              (v2/*: any*/),
               (v3/*: any*/),
               {
                 "alias": null,
@@ -489,16 +485,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "0abc33b4457d54c1271c99c94deb346a",
+    "cacheID": "a783ca710b93883fc00c0bf9fc7d3592",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8fedc474048ee1b5215081619975b52a";
+(node as any).hash = "76d586046480228b3120a2ef23aa8329";
 
 export default node;

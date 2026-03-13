@@ -179,7 +179,6 @@ type PaymentStatusDetails {
 type ProductPricing {
   id: String!
   index: Int!
-  name: String!
   listingMetadata: ListingMetadata!
   cadence: ProductPricingCadence!
   price: Decimal!

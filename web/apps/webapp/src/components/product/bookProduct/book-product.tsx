@@ -160,11 +160,9 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           pricingOptions {
             id
             index
-            name
             listingMetadata {
               title
               subTitle
-              includedFeatures
             }
             cadence
             price
@@ -295,7 +293,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     return sortedPricingOptions.map((pricingOption) => {
       return {
         id: pricingOption.id,
-        name: `${pricingOption.name} - ${currencyDisplayName} ${pricingOption.price}`,
+        name: `${pricingOption.listingMetadata.title} - ${currencyDisplayName} ${pricingOption.price}`,
       };
     });
   }, [sortedPricingOptions, currencyDisplayName]);

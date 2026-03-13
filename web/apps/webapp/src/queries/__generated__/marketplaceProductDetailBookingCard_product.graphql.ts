@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a7ea72a5cb9d2dc8e7b676dab4b6eeab>>
+ * @generated SignedSource<<c560fc27ddbb38927abf3b489b222d14>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,11 +23,6 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly name: string;
     readonly type: Currency;
   };
-  readonly featureImages: ReadonlyArray<{
-    readonly original: {
-      readonly url: string;
-    } | null | undefined;
-  }>;
   readonly id: string;
   readonly listingMetadata: {
     readonly about: string | null | undefined;
@@ -43,14 +38,11 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly index: number;
     readonly isTaxInclusive: boolean;
     readonly listingMetadata: {
-      readonly about: string | null | undefined;
-      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
-    readonly name: string;
     readonly numberOfResourcesToBook: number;
     readonly price: any;
   }>;
@@ -79,40 +71,15 @@ v1 = {
 v2 = {
   "alias": null,
   "args": null,
-  "concreteType": "ListingMetadata",
-  "kind": "LinkedField",
-  "name": "listingMetadata",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "about",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subTitle",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "includedFeatures",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "subTitle",
   "storageKey": null
 };
 return {
@@ -123,31 +90,28 @@ return {
   "selections": [
     (v0/*: any*/),
     (v1/*: any*/),
-    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
-      "concreteType": "CdnImageFile",
+      "concreteType": "ListingMetadata",
       "kind": "LinkedField",
-      "name": "featureImages",
-      "plural": true,
+      "name": "listingMetadata",
+      "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "CdnFile",
-          "kind": "LinkedField",
-          "name": "original",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "about",
+          "storageKey": null
+        },
+        (v2/*: any*/),
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "includedFeatures",
           "storageKey": null
         }
       ],
@@ -208,8 +172,19 @@ return {
           "name": "index",
           "storageKey": null
         },
-        (v1/*: any*/),
-        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            (v2/*: any*/),
+            (v3/*: any*/)
+          ],
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -268,6 +243,6 @@ return {
 };
 })();
 
-(node as any).hash = "408e8d1d96bd1d48dd3a0df22bc6e9b9";
+(node as any).hash = "22bb1b23060b936959c5001ad55c5aa3";
 
 export default node;

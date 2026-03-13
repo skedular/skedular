@@ -45,31 +45,31 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "aW5nIl8KDENkbkltYWdlRmlsZRImCghvcmlnaW5hbBgBIAEoCzIULm1hcmtl",
             "dHBsYWNlLkNkbkZpbGUSJwoJdGh1bWJuYWlsGAIgASgLMhQubWFya2V0cGxh",
             "Y2UuQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQY",
-            "AiABKAUSDQoFd2lkdGgYAyABKAUi+QMKDlByb2R1Y3RQcmljaW5nEgoKAmlk",
-            "GAEgASgJEg0KBWluZGV4GAIgASgFEgwKBG5hbWUYAyABKAkSNQoPbGlzdGlu",
-            "Z01ldGFkYXRhGAQgASgLMhwubWFya2V0cGxhY2UuTGlzdGluZ01ldGFkYXRh",
-            "EjMKB2NhZGVuY2UYBSABKA4yIi5tYXJrZXRwbGFjZS5Qcm9kdWN0UHJpY2lu",
-            "Z0NhZGVuY2USDQoFcHJpY2UYBiABKAESFgoOaXNUYXhJbmNsdXNpdmUYByAB",
-            "KAgSJwoIY3VycmVuY3kYCCABKA4yFS5tYXJrZXRwbGFjZS5DdXJyZW5jeRJB",
-            "Ch1hY2NlcHRlZEJvb2tpbmdQYXltZW50TWV0aG9kcxgJIAMoDjIaLm1hcmtl",
-            "dHBsYWNlLlBheW1lbnRNZXRob2QSGgoSbWluRHVyYXRpb25NaW51dGVzGAog",
-            "ASgFEhoKEm1heER1cmF0aW9uTWludXRlcxgLIAEoBRIuCiZtYXhBbGxvd2Vk",
-            "UmVzb3VyY2VzTG9ja1RpbWVQYWlkVmlhQ2FyZBgMIAEoBRI2Ci5tYXhBbGxv",
-            "d2VkUmVzb3VyY2VzTG9ja1RpbWVQYWlkVmlhQmFua1RyYW5zZmVyGA0gASgF",
-            "Eh8KF251bWJlck9mUmVzb3VyY2VzVG9Cb29rGA4gASgFIlsKD0xpc3RpbmdN",
-            "ZXRhZGF0YRINCgVhYm91dBgBIAEoCRINCgV0aXRsZRgCIAEoCRIQCghzdWJU",
-            "aXRsZRgDIAEoCRIYChBpbmNsdWRlZEZlYXR1cmVzGAQgAygJKjkKBFR5cGUS",
-            "GAoUVHlwZV9Qcm9kdWN0VXBzZXJ0ZWQQABIXChNUeXBlX1Byb2R1Y3REZWxl",
-            "dGVkEAEq9AEKFVByb2R1Y3RQcmljaW5nQ2FkZW5jZRIjCh9Qcm9kdWN0UHJp",
-            "Y2luZ0NhZGVuY2VfT25lVGltZVYxEAASJQohUHJvZHVjdFByaWNpbmdDYWRl",
-            "bmNlX1Blck1pbnV0ZVYxEAESIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX1Bl",
-            "ckhvdXJWMRACEiEKHVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9EYWlseVYxEAMS",
-            "IgoeUHJvZHVjdFByaWNpbmdDYWRlbmNlX1dlZWtseVYxEAQSIwofUHJvZHVj",
-            "dFByaWNpbmdDYWRlbmNlX01vbnRobHlWMRAFKkcKDVBheW1lbnRNZXRob2QS",
-            "FgoSUGF5bWVudE1ldGhvZF9DYXJkEAASHgoaUGF5bWVudE1ldGhvZF9CYW5r",
-            "VHJhbnNmZXIQASouCghDdXJyZW5jeRIQCgxDdXJyZW5jeV9OemQQABIQCgxD",
-            "dXJyZW5jeV9Vc2QQAUI6qgI3QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
-            "a2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIGcHJvdG8z"));
+            "AiABKAUSDQoFd2lkdGgYAyABKAUi6wMKDlByb2R1Y3RQcmljaW5nEgoKAmlk",
+            "GAEgASgJEg0KBWluZGV4GAIgASgFEjUKD2xpc3RpbmdNZXRhZGF0YRgDIAEo",
+            "CzIcLm1hcmtldHBsYWNlLkxpc3RpbmdNZXRhZGF0YRIzCgdjYWRlbmNlGAQg",
+            "ASgOMiIubWFya2V0cGxhY2UuUHJvZHVjdFByaWNpbmdDYWRlbmNlEg0KBXBy",
+            "aWNlGAUgASgBEhYKDmlzVGF4SW5jbHVzaXZlGAYgASgIEicKCGN1cnJlbmN5",
+            "GAcgASgOMhUubWFya2V0cGxhY2UuQ3VycmVuY3kSQQodYWNjZXB0ZWRCb29r",
+            "aW5nUGF5bWVudE1ldGhvZHMYCCADKA4yGi5tYXJrZXRwbGFjZS5QYXltZW50",
+            "TWV0aG9kEhoKEm1pbkR1cmF0aW9uTWludXRlcxgJIAEoBRIaChJtYXhEdXJh",
+            "dGlvbk1pbnV0ZXMYCiABKAUSLgombWF4QWxsb3dlZFJlc291cmNlc0xvY2tU",
+            "aW1lUGFpZFZpYUNhcmQYCyABKAUSNgoubWF4QWxsb3dlZFJlc291cmNlc0xv",
+            "Y2tUaW1lUGFpZFZpYUJhbmtUcmFuc2ZlchgMIAEoBRIfChdudW1iZXJPZlJl",
+            "c291cmNlc1RvQm9vaxgNIAEoBSJbCg9MaXN0aW5nTWV0YWRhdGESDQoFYWJv",
+            "dXQYASABKAkSDQoFdGl0bGUYAiABKAkSEAoIc3ViVGl0bGUYAyABKAkSGAoQ",
+            "aW5jbHVkZWRGZWF0dXJlcxgEIAMoCSo5CgRUeXBlEhgKFFR5cGVfUHJvZHVj",
+            "dFVwc2VydGVkEAASFwoTVHlwZV9Qcm9kdWN0RGVsZXRlZBABKvQBChVQcm9k",
+            "dWN0UHJpY2luZ0NhZGVuY2USIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX09u",
+            "ZVRpbWVWMRAAEiUKIVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9QZXJNaW51dGVW",
+            "MRABEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9QZXJIb3VyVjEQAhIhCh1Q",
+            "cm9kdWN0UHJpY2luZ0NhZGVuY2VfRGFpbHlWMRADEiIKHlByb2R1Y3RQcmlj",
+            "aW5nQ2FkZW5jZV9XZWVrbHlWMRAEEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5j",
+            "ZV9Nb250aGx5VjEQBSpHCg1QYXltZW50TWV0aG9kEhYKElBheW1lbnRNZXRo",
+            "b2RfQ2FyZBAAEh4KGlBheW1lbnRNZXRob2RfQmFua1RyYW5zZmVyEAEqLgoI",
+            "Q3VycmVuY3kSEAoMQ3VycmVuY3lfTnpkEAASEAoMQ3VycmVuY3lfVXNkEAFC",
+            "OqoCN0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0",
+            "cGxhY2UuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -80,7 +80,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "ListingMetadata", "Currency", "TagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "Name", "ListingMetadata", "Cadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "ListingMetadata", "Cadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle", "IncludedFeatures" }, null, null, null, null)
           }));
     }
@@ -2323,7 +2323,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     public ProductPricing(ProductPricing other) : this() {
       id_ = other.id_;
       index_ = other.index_;
-      name_ = other.name_;
       listingMetadata_ = other.listingMetadata_ != null ? other.listingMetadata_.Clone() : null;
       cadence_ = other.cadence_;
       price_ = other.price_;
@@ -2368,20 +2367,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "name" field.</summary>
-    public const int NameFieldNumber = 3;
-    private string name_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Name {
-      get { return name_; }
-      set {
-        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
     /// <summary>Field number for the "listingMetadata" field.</summary>
-    public const int ListingMetadataFieldNumber = 4;
+    public const int ListingMetadataFieldNumber = 3;
     private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata listingMetadata_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2393,7 +2380,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "cadence" field.</summary>
-    public const int CadenceFieldNumber = 5;
+    public const int CadenceFieldNumber = 4;
     private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence cadence_ = global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2405,7 +2392,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "price" field.</summary>
-    public const int PriceFieldNumber = 6;
+    public const int PriceFieldNumber = 5;
     private double price_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2417,7 +2404,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "isTaxInclusive" field.</summary>
-    public const int IsTaxInclusiveFieldNumber = 7;
+    public const int IsTaxInclusiveFieldNumber = 6;
     private bool isTaxInclusive_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2429,7 +2416,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "currency" field.</summary>
-    public const int CurrencyFieldNumber = 8;
+    public const int CurrencyFieldNumber = 7;
     private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency currency_ = global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2441,9 +2428,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "acceptedBookingPaymentMethods" field.</summary>
-    public const int AcceptedBookingPaymentMethodsFieldNumber = 9;
+    public const int AcceptedBookingPaymentMethodsFieldNumber = 8;
     private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod> _repeated_acceptedBookingPaymentMethods_codec
-        = pb::FieldCodec.ForEnum(74, x => (int) x, x => (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod) x);
+        = pb::FieldCodec.ForEnum(66, x => (int) x, x => (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod) x);
     private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod> acceptedBookingPaymentMethods_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2452,7 +2439,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "minDurationMinutes" field.</summary>
-    public const int MinDurationMinutesFieldNumber = 10;
+    public const int MinDurationMinutesFieldNumber = 9;
     private int minDurationMinutes_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2464,7 +2451,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "maxDurationMinutes" field.</summary>
-    public const int MaxDurationMinutesFieldNumber = 11;
+    public const int MaxDurationMinutesFieldNumber = 10;
     private int maxDurationMinutes_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2476,7 +2463,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "maxAllowedResourcesLockTimePaidViaCard" field.</summary>
-    public const int MaxAllowedResourcesLockTimePaidViaCardFieldNumber = 12;
+    public const int MaxAllowedResourcesLockTimePaidViaCardFieldNumber = 11;
     private int maxAllowedResourcesLockTimePaidViaCard_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2488,7 +2475,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "maxAllowedResourcesLockTimePaidViaBankTransfer" field.</summary>
-    public const int MaxAllowedResourcesLockTimePaidViaBankTransferFieldNumber = 13;
+    public const int MaxAllowedResourcesLockTimePaidViaBankTransferFieldNumber = 12;
     private int maxAllowedResourcesLockTimePaidViaBankTransfer_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2500,7 +2487,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     }
 
     /// <summary>Field number for the "numberOfResourcesToBook" field.</summary>
-    public const int NumberOfResourcesToBookFieldNumber = 14;
+    public const int NumberOfResourcesToBookFieldNumber = 13;
     private int numberOfResourcesToBook_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -2528,7 +2515,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (Id != other.Id) return false;
       if (Index != other.Index) return false;
-      if (Name != other.Name) return false;
       if (!object.Equals(ListingMetadata, other.ListingMetadata)) return false;
       if (Cadence != other.Cadence) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Price, other.Price)) return false;
@@ -2549,7 +2535,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Index != 0) hash ^= Index.GetHashCode();
-      if (Name.Length != 0) hash ^= Name.GetHashCode();
       if (listingMetadata_ != null) hash ^= ListingMetadata.GetHashCode();
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) hash ^= Cadence.GetHashCode();
       if (Price != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Price);
@@ -2587,49 +2572,45 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(16);
         output.WriteInt32(Index);
       }
-      if (Name.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(Name);
-      }
       if (listingMetadata_ != null) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteMessage(ListingMetadata);
       }
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(32);
         output.WriteEnum((int) Cadence);
       }
       if (Price != 0D) {
-        output.WriteRawTag(49);
+        output.WriteRawTag(41);
         output.WriteDouble(Price);
       }
       if (IsTaxInclusive != false) {
-        output.WriteRawTag(56);
+        output.WriteRawTag(48);
         output.WriteBool(IsTaxInclusive);
       }
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
-        output.WriteRawTag(64);
+        output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
       acceptedBookingPaymentMethods_.WriteTo(output, _repeated_acceptedBookingPaymentMethods_codec);
       if (MinDurationMinutes != 0) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(72);
         output.WriteInt32(MinDurationMinutes);
       }
       if (MaxDurationMinutes != 0) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(80);
         output.WriteInt32(MaxDurationMinutes);
       }
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(88);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
       }
       if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(96);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaBankTransfer);
       }
       if (NumberOfResourcesToBook != 0) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(104);
         output.WriteInt32(NumberOfResourcesToBook);
       }
       if (_unknownFields != null) {
@@ -2650,49 +2631,45 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(16);
         output.WriteInt32(Index);
       }
-      if (Name.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(Name);
-      }
       if (listingMetadata_ != null) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(26);
         output.WriteMessage(ListingMetadata);
       }
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(32);
         output.WriteEnum((int) Cadence);
       }
       if (Price != 0D) {
-        output.WriteRawTag(49);
+        output.WriteRawTag(41);
         output.WriteDouble(Price);
       }
       if (IsTaxInclusive != false) {
-        output.WriteRawTag(56);
+        output.WriteRawTag(48);
         output.WriteBool(IsTaxInclusive);
       }
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
-        output.WriteRawTag(64);
+        output.WriteRawTag(56);
         output.WriteEnum((int) Currency);
       }
       acceptedBookingPaymentMethods_.WriteTo(ref output, _repeated_acceptedBookingPaymentMethods_codec);
       if (MinDurationMinutes != 0) {
-        output.WriteRawTag(80);
+        output.WriteRawTag(72);
         output.WriteInt32(MinDurationMinutes);
       }
       if (MaxDurationMinutes != 0) {
-        output.WriteRawTag(88);
+        output.WriteRawTag(80);
         output.WriteInt32(MaxDurationMinutes);
       }
       if (MaxAllowedResourcesLockTimePaidViaCard != 0) {
-        output.WriteRawTag(96);
+        output.WriteRawTag(88);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaCard);
       }
       if (MaxAllowedResourcesLockTimePaidViaBankTransfer != 0) {
-        output.WriteRawTag(104);
+        output.WriteRawTag(96);
         output.WriteInt32(MaxAllowedResourcesLockTimePaidViaBankTransfer);
       }
       if (NumberOfResourcesToBook != 0) {
-        output.WriteRawTag(112);
+        output.WriteRawTag(104);
         output.WriteInt32(NumberOfResourcesToBook);
       }
       if (_unknownFields != null) {
@@ -2710,9 +2687,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (Index != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Index);
-      }
-      if (Name.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
       if (listingMetadata_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ListingMetadata);
@@ -2762,9 +2736,6 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (other.Index != 0) {
         Index = other.Index;
-      }
-      if (other.Name.Length != 0) {
-        Name = other.Name;
       }
       if (other.listingMetadata_ != null) {
         if (listingMetadata_ == null) {
@@ -2828,54 +2799,50 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 26: {
-            Name = input.ReadString();
-            break;
-          }
-          case 34: {
             if (listingMetadata_ == null) {
               ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
             }
             input.ReadMessage(ListingMetadata);
             break;
           }
-          case 40: {
+          case 32: {
             Cadence = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence) input.ReadEnum();
             break;
           }
-          case 49: {
+          case 41: {
             Price = input.ReadDouble();
             break;
           }
-          case 56: {
+          case 48: {
             IsTaxInclusive = input.ReadBool();
             break;
           }
-          case 64: {
+          case 56: {
             Currency = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency) input.ReadEnum();
             break;
           }
-          case 74:
-          case 72: {
+          case 66:
+          case 64: {
             acceptedBookingPaymentMethods_.AddEntriesFrom(input, _repeated_acceptedBookingPaymentMethods_codec);
             break;
           }
-          case 80: {
+          case 72: {
             MinDurationMinutes = input.ReadInt32();
             break;
           }
-          case 88: {
+          case 80: {
             MaxDurationMinutes = input.ReadInt32();
             break;
           }
-          case 96: {
+          case 88: {
             MaxAllowedResourcesLockTimePaidViaCard = input.ReadInt32();
             break;
           }
-          case 104: {
+          case 96: {
             MaxAllowedResourcesLockTimePaidViaBankTransfer = input.ReadInt32();
             break;
           }
-          case 112: {
+          case 104: {
             NumberOfResourcesToBook = input.ReadInt32();
             break;
           }
@@ -2907,54 +2874,50 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 26: {
-            Name = input.ReadString();
-            break;
-          }
-          case 34: {
             if (listingMetadata_ == null) {
               ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
             }
             input.ReadMessage(ListingMetadata);
             break;
           }
-          case 40: {
+          case 32: {
             Cadence = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence) input.ReadEnum();
             break;
           }
-          case 49: {
+          case 41: {
             Price = input.ReadDouble();
             break;
           }
-          case 56: {
+          case 48: {
             IsTaxInclusive = input.ReadBool();
             break;
           }
-          case 64: {
+          case 56: {
             Currency = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency) input.ReadEnum();
             break;
           }
-          case 74:
-          case 72: {
+          case 66:
+          case 64: {
             acceptedBookingPaymentMethods_.AddEntriesFrom(ref input, _repeated_acceptedBookingPaymentMethods_codec);
             break;
           }
-          case 80: {
+          case 72: {
             MinDurationMinutes = input.ReadInt32();
             break;
           }
-          case 88: {
+          case 80: {
             MaxDurationMinutes = input.ReadInt32();
             break;
           }
-          case 96: {
+          case 88: {
             MaxAllowedResourcesLockTimePaidViaCard = input.ReadInt32();
             break;
           }
-          case 104: {
+          case 96: {
             MaxAllowedResourcesLockTimePaidViaBankTransfer = input.ReadInt32();
             break;
           }
-          case 112: {
+          case 104: {
             NumberOfResourcesToBook = input.ReadInt32();
             break;
           }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca9895c7388f1bfc4ff1036770231bf9>>
+ * @generated SignedSource<<f758307a8390bc6f25745049f90a903c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,12 +40,9 @@ export type productCard_ProductDetails$data = {
     readonly index: number;
     readonly isTaxInclusive: boolean;
     readonly listingMetadata: {
-      readonly about: string | null | undefined;
-      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
-    readonly name: string;
     readonly price: any;
   }>;
   readonly " $fragmentType": "productCard_ProductDetails";
@@ -67,46 +64,14 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
-  "concreteType": "ListingMetadata",
-  "kind": "LinkedField",
-  "name": "listingMetadata",
-  "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "about",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subTitle",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "includedFeatures",
-      "storageKey": null
-    }
-  ],
+  "kind": "ScalarField",
+  "name": "subTitle",
   "storageKey": null
 };
 return {
@@ -123,8 +88,40 @@ return {
       "name": "inactive",
       "storageKey": null
     },
-    (v1/*: any*/),
-    (v2/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ListingMetadata",
+      "kind": "LinkedField",
+      "name": "listingMetadata",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "about",
+          "storageKey": null
+        },
+        (v1/*: any*/),
+        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "includedFeatures",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -213,8 +210,19 @@ return {
           "name": "index",
           "storageKey": null
         },
-        (v1/*: any*/),
-        (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            (v1/*: any*/),
+            (v2/*: any*/)
+          ],
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -245,6 +253,6 @@ return {
 };
 })();
 
-(node as any).hash = "89870582835bb7f3145eabb83096221f";
+(node as any).hash = "b00133ccaa66efd5218b9207f906f06a";
 
 export default node;

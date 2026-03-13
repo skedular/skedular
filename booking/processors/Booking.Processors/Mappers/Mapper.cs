@@ -580,7 +580,6 @@ public class Mapper : IMapper
         new(
             src.Id,
             src.Index,
-            src.Name.ToSafeString(),
             MapTo(src.ListingMetadata),
             src.Cadence switch
             {

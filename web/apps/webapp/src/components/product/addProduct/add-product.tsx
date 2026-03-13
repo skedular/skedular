@@ -75,7 +75,6 @@ type PricingOptionForm = {
   title: string | null;
   subTitle: string | null;
   cadence: string;
-  name: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -91,7 +90,6 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   title: null,
   subTitle: null,
   cadence: 'ONE_TIME_V1',
-  name: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -115,7 +113,6 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
         object({
           ...listingMetadataSchemaShape,
           cadence: string().required('Pricing cadence is required.'),
-          name: string().required('Pricing option name is required.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
             .required('Price is required.')
@@ -268,7 +265,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           }
           pricingOptions {
             index
-            name
             listingMetadata {
               about
               title
@@ -353,7 +349,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
             id: pricingOption.id,
             index,
-            name: pricingOption.name.trim(),
             listingMetadata: {
               about: '',
               title: pricingOption.title ?? '',
@@ -420,7 +415,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             featureImages: finalFeatureImages,
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
-              name: pricingOption.name.trim(),
               listingMetadata: {
                 about: '',
                 title: pricingOption.title ?? '',
@@ -605,10 +599,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                                 </Button>
                               ) : null}
                             </StackRow>
-
-                            <FormFieldLabel label="Name">
-                              <TextField name={`pricingOptions[${index}].name`} required />
-                            </FormFieldLabel>
 
                             <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 

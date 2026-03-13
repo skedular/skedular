@@ -60,7 +60,6 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Index = src.Index,
-            Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
             Cadence = src.Cadence switch
             {

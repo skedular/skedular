@@ -98,7 +98,9 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationUniqueAlphanumericNa
             invoiceUrl
             quantity
             productPricing {
-              name
+              listingMetadata {
+                title
+              }
               price
             }
             isPaymentRequired

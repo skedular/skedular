@@ -3,7 +3,6 @@ namespace Api.Shared.Services.Models;
 public record ProductPricing(
     string Id,
     int Index,
-    string Name,
     ListingMetadata ListingMetadata,
     ProductPricingCadence Cadence,
     decimal Price,
@@ -19,7 +18,6 @@ public record ProductPricing(
         new(
             id,
             int.MinValue,
-            string.Empty,
             ListingMetadata.Empty(),
             ProductPricingCadence.NotSet,
             int.MinValue,

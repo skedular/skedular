@@ -1,5 +1,4 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { PreferredIcon } from '@/components/icons';
 import { getMarketplaceProductBookingLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
@@ -49,11 +48,6 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           subTitle
           includedFeatures
         }
-        featureImages {
-          original {
-            url
-          }
-        }
         amenities {
           id
           name
@@ -66,12 +60,9 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         pricingOptions {
           id
           index
-          name
           listingMetadata {
-            about
             title
             subTitle
-            includedFeatures
           }
           cadence
           price
@@ -96,14 +87,13 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
 
     return [...product.pricingOptions]
       .sort((left, right) => left.index - right.index)
-      .map((pricingOption, index) => ({
+      .map((pricingOption) => ({
         id: pricingOption.id,
-        name: pricingOption.name,
-        about: pricingOption.listingMetadata.about ?? '',
+        title: pricingOption.listingMetadata.title ?? '',
+        subTitle: pricingOption.listingMetadata.subTitle ?? '',
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence,
         amountLabel: `${currencyLabel} - $${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
-        highlighted: index === 0,
       }));
   }, [product, rootData.currencies, rootData.productPricingCadences]);
 
@@ -132,23 +122,11 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                   py: 1.2,
                 }}
               >
-                {pricingPlan.highlighted && (
-                  <CaptionIconTypography
-                    label="Best Value"
-                    startElement={<PreferredIcon sx={{ fontSize: 13 }} />}
-                    sx={{
-                      color: (theme) => theme.palette.success.main,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.03em',
-                      mb: 0.35,
-                    }}
-                  />
-                )}
                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
                   <Box sx={{ minWidth: 0, pr: 1 }}>
                     <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
-                    <SubtitleIconTypography label={pricingPlan.name} sx={{ lineHeight: 1.25 }} />
-                    {pricingPlan.about && <CaptionIconTypography label={pricingPlan.about} sx={{ mt: 0.5, opacity: 0.78 }} />}
+                    <SubtitleIconTypography label={pricingPlan.title} sx={{ lineHeight: 1.25 }} />
+                    {pricingPlan.subTitle && <CaptionIconTypography label={pricingPlan.subTitle} sx={{ mt: 0.5, opacity: 0.78 }} />}
                   </Box>
                   <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
                     <SubtitleIconTypography label={pricingPlan.amountLabel} fontWeight={600} sx={{ lineHeight: 1.2 }} />

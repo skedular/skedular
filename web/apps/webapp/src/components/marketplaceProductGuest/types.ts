@@ -1,11 +1,10 @@
 export type MarketplaceProductPricingPlan = {
   id: string;
-  name: string;
-  about: string;
+  title: string;
+  subTitle: string;
   cadenceLabel: string;
   amountLabel: string;
   note: string;
-  highlighted?: boolean;
 };
 
 export type MarketplaceProductResource = {

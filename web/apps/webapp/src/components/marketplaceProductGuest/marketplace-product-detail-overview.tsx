@@ -26,7 +26,6 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
   const product = useFragment<marketplaceProductDetailOverview_product$key>(
     graphql`
       fragment marketplaceProductDetailOverview_product on ProductDetails {
-        id
         name
         listingMetadata {
           about
@@ -43,28 +42,6 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
           id
           name
           color
-        }
-        currency {
-          type
-          name
-        }
-        pricingOptions {
-          id
-          index
-          name
-          listingMetadata {
-            about
-            title
-            subTitle
-            includedFeatures
-          }
-          cadence
-          price
-          isTaxInclusive
-          acceptedPaymentMethods
-          minDurationMinutes
-          maxDurationMinutes
-          numberOfResourcesToBook
         }
       }
     `,

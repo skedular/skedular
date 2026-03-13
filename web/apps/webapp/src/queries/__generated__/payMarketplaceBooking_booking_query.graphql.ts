@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<491b8eceabfbec86765fc4ffaf03ca73>>
+ * @generated SignedSource<<d9eb3644d94ae8046e09e210dd3b7231>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -72,7 +72,9 @@ export type payMarketplaceBooking_booking_query$data = {
         readonly type: PaymentStatus;
       };
       readonly productPricing: {
-        readonly name: string;
+        readonly listingMetadata: {
+          readonly title: string | null | undefined;
+        };
         readonly price: any;
       };
       readonly quantity: number;
@@ -412,7 +414,24 @@ return {
               "name": "productPricing",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "ListingMetadata",
+                  "kind": "LinkedField",
+                  "name": "listingMetadata",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "title",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -486,6 +505,6 @@ return {
 };
 })();
 
-(node as any).hash = "7e21aebb5bd9495c8055cc2ab2166447";
+(node as any).hash = "34d4dce6a2df809e115f263c79b93d3c";
 
 export default node;
