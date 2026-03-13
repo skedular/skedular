@@ -140,7 +140,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}
                 >
-                  Book {pricingPlan.cadenceLabel}
+                  Book now
                 </Button>
               </Box>
             ))}

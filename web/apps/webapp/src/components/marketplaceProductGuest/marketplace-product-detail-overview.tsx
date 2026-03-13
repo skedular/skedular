@@ -1,8 +1,10 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { SelectedTickIcon } from '@/components/icons';
 import type { marketplaceProductDetailOverview_product$key } from '@/queries/__generated__/marketplaceProductDetailOverview_product.graphql';
 import type { marketplaceProductDetailOverview_query$key } from '@/queries/__generated__/marketplaceProductDetailOverview_query.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Divider from '@mui/material/Divider';
 import Box from '@mui/system/Box';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -46,6 +48,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
     rootData.product,
   );
   const imageUrls = useMemo(() => (product ? product.featureImages.map((item) => item.original?.url).filter((item): item is string => !!item) : []), [product]);
+  const includedFeatures = useMemo(() => product?.listingMetadata.includedFeatures?.filter(Boolean) ?? [], [product?.listingMetadata.includedFeatures]);
   const [selectedImageUrl, setSelectedImageUrl] = useState(imageUrls[0] ?? '');
   const effectiveSelectedImageUrl = useMemo(
     () => (imageUrls.some((imageUrl) => imageUrl === selectedImageUrl) ? selectedImageUrl : (imageUrls[0] ?? '')),
@@ -113,6 +116,27 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
           <LeadIconTypography label="About this product" sx={{ mb: 1.5 }} />
           <BodyIconTypography label={product.listingMetadata.subTitle ?? ''} sx={{ opacity: 0.85 }} />
+
+          {includedFeatures.length > 0 && (
+            <>
+              <Divider sx={{ my: 3 }} />
+              <SubtitleIconTypography label="What's included" sx={{ mb: 2 }} />
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+                  gap: 1.5,
+                }}
+              >
+                {includedFeatures.map((feature) => (
+                  <Box key={feature} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25 }}>
+                    <SelectedTickIcon sx={{ color: 'success.main', fontSize: 20, mt: '2px' }} />
+                    <BodyIconTypography label={feature} sx={{ opacity: 0.9 }} />
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
         </CardContent>
       </Card>
 
