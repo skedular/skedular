@@ -2,7 +2,6 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
-import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -62,14 +61,12 @@ type Props = {
 
 type LocationDetails = {
   name: string;
-  about: string | null;
   timezone: string;
   type: string;
 };
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
 });
@@ -126,8 +123,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
 
   const [locationName, setLocationName] = useState<string>('');
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
-  const [locationAbout, setLocationAbout] = useState<string | null>('');
-  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>('');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
   const [locationType, setLocationType] = useState<string>('PRIVATE');
@@ -138,7 +133,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
     onReloadRequired();
   };
 
-  const handleLocationAddClick = ({ name, about, timezone, type }: LocationDetails) => {
+  const handleLocationAddClick = ({ name, timezone, type }: LocationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding location '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -153,7 +148,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           id,
           name,
           listingMetadata: {
-            about: about ?? '',
+            about: '',
             title: '',
             subTitle: '',
             includedFeatures: [],
@@ -195,7 +190,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             id,
             name,
             listingMetadata: {
-              about: about ?? '',
+              about: '',
               title: '',
               subTitle: '',
               includedFeatures: [],
@@ -273,7 +268,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           onSubmit={handleLocationAddClick}
           initialValues={{
             name: locationName,
-            about: locationAbout,
             timezone: locationTimezone,
             type: locationType,
           }}
@@ -343,19 +337,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                     }
                   />
                 </FormFieldLabel>
-
-                <ListingMetadata
-                  fields={['about']}
-                  helperTexts={{
-                    about: (
-                      <HelperText text="Provide a brief description of this location. Include details like the purpose of the site, departments it hosts, or any distinguishing features to help users understand its context." />
-                    ),
-                  }}
-                  onChange={({ about }) => {
-                    debounceSetLocationAbout(about);
-                  }}
-                  requiredFields={requiredFields}
-                />
 
                 <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
                   <SingleChoinceTimezone

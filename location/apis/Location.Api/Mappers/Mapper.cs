@@ -238,6 +238,7 @@ public class Mapper : IMapper
                 CustomTags = MapTo(src.CustomTags),
                 Zones = MapTo(src.Zones),
                 SpaceTypes = MapTo(src.SpaceTypes),
+                Amenities = MapTo(src.Amenities),
                 ResourceTypes = MapTo(src.Organization.Tags
                     .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))),
                 PhysicalAddress = MapToGraphQl(src.PhysicalAddress),

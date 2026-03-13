@@ -133,6 +133,7 @@ public class Mapper : IMapper
             Id = item.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
             Organization = organization
         }).ToList();

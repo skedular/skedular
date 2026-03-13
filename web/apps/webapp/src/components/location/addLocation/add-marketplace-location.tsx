@@ -3,7 +3,6 @@ import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
-import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -65,7 +64,6 @@ type Props = {
 
 type LocationDetails = {
   name: string;
-  about: string | null;
   timezone: string;
   type: string;
   spaceTypeIds: string[];
@@ -91,7 +89,6 @@ type LocationDetails = {
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   spaceTypeIds: array().nullable(),
@@ -200,8 +197,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
 
   const [locationName, setLocationName] = useState<string>('');
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
-  const [locationAbout, setLocationAbout] = useState<string | null>('');
-  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>('');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
   const [locationType, setLocationType] = useState<string>('MARKETPLACE');
@@ -285,7 +280,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
 
   const handleLocationAddClick = ({
     name,
-    about,
     timezone,
     type,
     spaceTypeIds,
@@ -328,7 +322,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           id,
           name,
           listingMetadata: {
-            about: about ?? '',
+            about: '',
             title: '',
             subTitle: '',
             includedFeatures: [],
@@ -411,7 +405,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             id,
             name,
             listingMetadata: {
-              about: about ?? '',
+              about: '',
               title: '',
               subTitle: '',
               includedFeatures: [],
@@ -533,7 +527,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           onSubmit={handleLocationAddClick}
           initialValues={{
             name: locationName,
-            about: locationAbout,
             timezone: locationTimezone,
             type: locationType,
             spaceTypeIds,
@@ -647,19 +640,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                     }
                   />
                 </FormFieldLabel>
-
-                <ListingMetadata
-                  fields={['about']}
-                  helperTexts={{
-                    about: (
-                      <HelperText text="Write a brief description of your co-working location. Highlight what makes it unique and the type of professionals or businesses it caters to." />
-                    ),
-                  }}
-                  onChange={({ about }) => {
-                    debounceSetLocationAbout(about);
-                  }}
-                  requiredFields={requiredFields}
-                />
 
                 <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
                   <SingleChoinceTimezone

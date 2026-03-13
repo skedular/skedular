@@ -24,7 +24,7 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.ProductRepository.GetByIdUntrackedAsync(id, ct) ?? throw new ProductNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
         catch (ProductNotFound)
@@ -40,7 +40,7 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.ProductRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new ProductNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
 
@@ -53,7 +53,7 @@ public class CachedProductService(ApplicationConfiguration applicationConfigurat
             await hybridCache.SetAsync(
                 CreateKeyById(item.Id),
                 item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
     }

@@ -327,7 +327,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     () => (locationDetails?.listingMetadata?.includedFeatures ?? []).filter((item): item is string => Boolean(item?.trim())),
     [locationDetails?.listingMetadata?.includedFeatures],
   );
-  const amenities = useMemo(() => locationDetails?.amenities.map((item) => item.name).filter(Boolean) ?? [], [locationDetails?.amenities]);
+  const amenities = (locationDetails?.amenities ?? []).filter((amenity) => !!amenity.name);
   const primaryPhone = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactPhones);
   const primaryEmail = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactEmails);
 
@@ -587,9 +587,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                 {amenities.length > 0 ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
                     {amenities.map((amenity) => (
-                      <Box key={amenity} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25 }}>
+                      <Box key={amenity.id} sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.25 }}>
                         <CheckIcon sx={{ color: 'success.main', fontSize: 18, mt: '2px' }} />
-                        <Typography sx={{ color: 'text.secondary' }}>{amenity}</Typography>
+                        <Typography sx={{ color: 'text.secondary' }}>{amenity.name}</Typography>
                       </Box>
                     ))}
                   </Box>

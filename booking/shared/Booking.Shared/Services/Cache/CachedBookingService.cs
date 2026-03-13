@@ -22,7 +22,7 @@ public class CachedBookingService(ApplicationConfiguration applicationConfigurat
             return await hybridCache.GetOrCreateAsync(
                 CreateKeyById(id),
                 async ct => await repositoryFactory.BookingRepository.GetByIdUntrackedAsync(id, ct) ?? throw new BookingNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
         catch (BookingNotFound)
@@ -38,7 +38,7 @@ public class CachedBookingService(ApplicationConfiguration applicationConfigurat
         await hybridCache.SetAsync(
             CreateKeyById(id),
             await repositoryFactory.BookingRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new BookingNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromDays(7), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);
     }
 
