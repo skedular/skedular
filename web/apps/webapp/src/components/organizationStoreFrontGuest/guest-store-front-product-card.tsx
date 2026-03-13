@@ -1,6 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceProductLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { guestStoreFrontProductCard_product$key } from '@/queries/__generated__/guestStoreFrontProductCard_product.graphql';
 import type { guestStoreFrontProductCard_query$key } from '@/queries/__generated__/guestStoreFrontProductCard_query.graphql';
 import Button from '@mui/material/Button';
@@ -16,9 +16,10 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: guestStoreFrontProductCard_query$key;
   productRelay: guestStoreFrontProductCard_product$key;
+  organizationUniqueAlphanumericName: string;
 };
 
-const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
+const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationUniqueAlphanumericName }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const rootData = useFragment<guestStoreFrontProductCard_query$key>(
@@ -73,6 +74,8 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
     `,
     productRelay,
   );
+
+  const { isCustomDomain } = useKnownParams();
 
   const currency = product.currency ? rootData.currencies.find((item) => item.type === product.currency?.type)?.name : null;
 
@@ -178,7 +181,12 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
           <Button fullWidth variant="contained" onClick={() => {}} disabled={!selectedPricing} sx={{ textTransform: 'none' }}>
             Book now
           </Button>
-          <Button fullWidth variant="outlined" onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, product.id))} sx={{ textTransform: 'none' }}>
+          <Button
+            fullWidth
+            variant="outlined"
+            onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id))}
+            sx={{ textTransform: 'none' }}
+          >
             Details
           </Button>
         </StackRow>

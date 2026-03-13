@@ -190,7 +190,7 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
           }}
         >
           {displayedProducts.map((product) => (
-            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} />
+            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
           ))}
         </Box>
       </Container>
