@@ -72,10 +72,8 @@ type ProductDetails = {
 
 type PricingOptionForm = {
   id: string;
-  about: string | null;
   title: string | null;
   subTitle: string | null;
-  includedFeatures: string | null;
   cadence: string;
   name: string;
   price: string;
@@ -90,10 +88,8 @@ type PricingOptionForm = {
 
 const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
   id: uuid(),
-  about: null,
   title: null,
   subTitle: null,
-  includedFeatures: null,
   cadence: 'ONE_TIME_V1',
   name: '',
   price: '',
@@ -359,13 +355,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             index,
             name: pricingOption.name.trim(),
             listingMetadata: {
-              about: pricingOption.about ?? '',
+              about: '',
               title: pricingOption.title ?? '',
               subTitle: pricingOption.subTitle ?? '',
-              includedFeatures: (pricingOption.includedFeatures ?? '')
-                .split('\n')
-                .map((feature) => feature.trim())
-                .filter((feature) => feature !== ''),
+              includedFeatures: [],
             },
             cadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
@@ -429,13 +422,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               index,
               name: pricingOption.name.trim(),
               listingMetadata: {
-                about: pricingOption.about ?? '',
+                about: '',
                 title: pricingOption.title ?? '',
                 subTitle: pricingOption.subTitle ?? '',
-                includedFeatures: (pricingOption.includedFeatures ?? '')
-                  .split('\n')
-                  .map((feature) => feature.trim())
-                  .filter((feature) => feature !== ''),
+                includedFeatures: [],
               },
               cadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
@@ -620,7 +610,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                               <TextField name={`pricingOptions[${index}].name`} required />
                             </FormFieldLabel>
 
-                            <ListingMetadata fields={['about', 'title', 'subTitle', 'includedFeatures']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
+                            <ListingMetadata fields={['title', 'subTitle']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
                             <FormFieldLabel label="Cadence">
                               <SingleChoiceProductPricingCadence rootDataRelay={rootData} name={`pricingOptions[${index}].cadence`} required />
