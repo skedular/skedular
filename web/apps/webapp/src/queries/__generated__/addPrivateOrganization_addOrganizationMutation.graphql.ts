@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16b071e6d221b84a76eaa54f72d22b94>>
+ * @generated SignedSource<<7aadbae84b0fdad019aa62cf02360884>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,6 +62,7 @@ export type addPrivateOrganization_addOrganizationMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -89,6 +90,7 @@ export type addPrivateOrganization_addOrganizationMutation$rawResponse = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -207,6 +209,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "subTitle",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -274,16 +283,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "c26a59fdeb4249d54bbf18de1fafdc7a",
+    "cacheID": "3e777a3151cf768bd613e533589ff446",
     "id": null,
     "metadata": {},
     "name": "addPrivateOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a1a61e346844f4965eae2423e3f3e68b";
+(node as any).hash = "39411ae5f1278375e024e1a5563d7079";
 
 export default node;

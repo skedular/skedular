@@ -2,6 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
@@ -59,7 +60,10 @@ const RootQuery = graphql`
 
 type ProductDetails = {
   name: string;
-  description: string | null;
+  about: string | null;
+  title: string | null;
+  subTitle: string | null;
+  includedFeatures: string | null;
   currency: string;
   productTagIds: string[];
   amenityIds: string[];
@@ -68,9 +72,12 @@ type ProductDetails = {
 
 type PricingOptionForm = {
   id: string;
+  about: string | null;
+  title: string | null;
+  subTitle: string | null;
+  includedFeatures: string | null;
   cadence: string;
   name: string;
-  description: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -83,9 +90,12 @@ type PricingOptionForm = {
 
 const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
   id: uuid(),
+  about: null,
+  title: null,
+  subTitle: null,
+  includedFeatures: null,
   cadence: 'ONE_TIME_V1',
   name: '',
-  description: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -99,7 +109,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
-    description: string().nullable(),
+    ...listingMetadataSchemaShape,
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
@@ -107,9 +117,9 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
     pricingOptions: array()
       .of(
         object({
+          ...listingMetadataSchemaShape,
           cadence: string().required('Pricing cadence is required.'),
           name: string().required('Pricing option name is required.'),
-          description: string().required('Pricing option description is required.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
             .required('Price is required.')
@@ -228,7 +238,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           id
           inactive
           name
-          description
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
           currency {
             type
             name
@@ -258,7 +273,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           pricingOptions {
             index
             name
-            description
+            listingMetadata {
+              about
+              title
+              subTitle
+              includedFeatures
+            }
             cadence
             price
             numberOfResourcesToBook
@@ -281,8 +301,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
   const [name, setName] = useState('');
   const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
 
-  const [description, setDescription] = useState<string | null>('');
-  const debounceSetDescription = useDebounceCallback(setDescription, keyboardTextFieldDebounceTimeout);
+  const [about, setAbout] = useState<string | null>(null);
+  const debounceSetAbout = useDebounceCallback(setAbout, keyboardTextFieldDebounceTimeout);
+  const [title, setTitle] = useState<string | null>(null);
+  const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
+  const [subTitle, setSubTitle] = useState<string | null>(null);
+  const debounceSetSubTitle = useDebounceCallback(setSubTitle, keyboardTextFieldDebounceTimeout);
+  const [includedFeatures, setIncludedFeatures] = useState<string | null>(null);
+  const debounceSetIncludedFeatures = useDebounceCallback(setIncludedFeatures, keyboardTextFieldDebounceTimeout);
 
   const [currency, setCurrency] = useState('');
   const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
@@ -301,7 +327,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ name, description, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductAddClick = ({ name, about, title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -315,7 +341,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           clientMutationId: uuid(),
           id,
           name,
-          description,
+          listingMetadata: {
+            about: about ?? '',
+            title: title ?? '',
+            subTitle: subTitle ?? '',
+            includedFeatures: (includedFeatures ?? '')
+              .split('\n')
+              .map((feature) => feature.trim())
+              .filter((feature) => feature !== ''),
+          },
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
           organizationUniqueAlphanumericName,
@@ -324,7 +358,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             id: pricingOption.id,
             index,
             name: pricingOption.name.trim(),
-            description: pricingOption.description.trim(),
+            listingMetadata: {
+              about: pricingOption.about ?? '',
+              title: pricingOption.title ?? '',
+              subTitle: pricingOption.subTitle ?? '',
+              includedFeatures: (pricingOption.includedFeatures ?? '')
+                .split('\n')
+                .map((feature) => feature.trim())
+                .filter((feature) => feature !== ''),
+            },
             cadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
@@ -367,7 +409,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             id,
             inactive: false,
             name,
-            description,
+            listingMetadata: {
+              about: about ?? '',
+              title: title ?? '',
+              subTitle: subTitle ?? '',
+              includedFeatures: (includedFeatures ?? '')
+                .split('\n')
+                .map((feature) => feature.trim())
+                .filter((feature) => feature !== ''),
+            },
             currency: {
               type: currency as Currency,
               name: '',
@@ -378,7 +428,15 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
               name: pricingOption.name.trim(),
-              description: pricingOption.description.trim(),
+              listingMetadata: {
+                about: pricingOption.about ?? '',
+                title: pricingOption.title ?? '',
+                subTitle: pricingOption.subTitle ?? '',
+                includedFeatures: (pricingOption.includedFeatures ?? '')
+                  .split('\n')
+                  .map((feature) => feature.trim())
+                  .filter((feature) => feature !== ''),
+              },
               cadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
@@ -425,7 +483,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             onSubmit={handleProductAddClick}
             initialValues={{
               name,
-              description,
+              about,
+              title,
+              subTitle,
+              includedFeatures,
               currency,
               productTagIds,
               amenityIds,
@@ -434,7 +495,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             validate={validateProductDetails}
             render={({ handleSubmit, values, form, errors }) => {
               debounceSetName(values!.name);
-              debounceSetDescription(values!.description);
+              debounceSetAbout(values!.about);
+              debounceSetTitle(values!.title);
+              debounceSetSubTitle(values!.subTitle);
+              debounceSetIncludedFeatures(values!.includedFeatures);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
@@ -496,9 +560,16 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Description">
-                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                    </FormFieldLabel>
+                    <ListingMetadata
+                      fields={['about', 'title', 'subTitle', 'includedFeatures']}
+                      onChange={({ about, includedFeatures, subTitle, title }) => {
+                        debounceSetAbout(about);
+                        debounceSetTitle(title);
+                        debounceSetSubTitle(subTitle);
+                        debounceSetIncludedFeatures(includedFeatures);
+                      }}
+                      requiredFields={requiredFields}
+                    />
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
@@ -549,9 +620,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                               <TextField name={`pricingOptions[${index}].name`} required />
                             </FormFieldLabel>
 
-                            <FormFieldLabel label="Description">
-                              <TextField name={`pricingOptions[${index}].description`} required multiline rows={3} />
-                            </FormFieldLabel>
+                            <ListingMetadata fields={['about', 'title', 'subTitle', 'includedFeatures']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
                             <FormFieldLabel label="Cadence">
                               <SingleChoiceProductPricingCadence rootDataRelay={rootData} name={`pricingOptions[${index}].cadence`} required />

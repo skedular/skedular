@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3f5019ae0c725af9ddf5ce30ba95f7de>>
+ * @generated SignedSource<<1a47366d5053c7538093f2244de6ab4e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,6 +62,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -89,6 +90,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -207,6 +209,13 @@ v2 = [
                 "kind": "ScalarField",
                 "name": "subTitle",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -274,16 +283,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "540e63b0f6a4bd6abe6a43bfda884b69",
+    "cacheID": "8a8736e861bf395d5b626cd04466ce5c",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "50992f42402f5f70c086181f93586b21";
+(node as any).hash = "c9735393c95b440327f7f292acd4ded4";
 
 export default node;

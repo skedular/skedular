@@ -147,7 +147,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         product(id: $productId) {
           id
           name
-          description
+          listingMetadata {
+            title
+            subTitle
+            includedFeatures
+          }
           currency {
             type
             name
@@ -157,7 +161,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             id
             index
             name
-            description
+            listingMetadata {
+              title
+              subTitle
+              includedFeatures
+            }
             cadence
             price
             numberOfResourcesToBook

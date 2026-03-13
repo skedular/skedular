@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9212cced58ab9c97cdea823070e60d20>>
+ * @generated SignedSource<<b524c08874bf9662a089987e0429bba1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,8 @@ export type organizationMarketplaceSetup_query$data = {
   readonly organization: {
     readonly id: string;
     readonly marketplaceListingMetadata: {
+      readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
@@ -78,6 +80,13 @@ const node: ReaderFragment = {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "about",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "title",
               "storageKey": null
             },
@@ -86,6 +95,13 @@ const node: ReaderFragment = {
               "args": null,
               "kind": "ScalarField",
               "name": "subTitle",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "includedFeatures",
               "storageKey": null
             }
           ],
@@ -104,6 +120,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "035c0c53743ab2edc47afec8db0b1abe";
+(node as any).hash = "7ea1b680b4aafb5d1d17d26263e08236";
 
 export default node;

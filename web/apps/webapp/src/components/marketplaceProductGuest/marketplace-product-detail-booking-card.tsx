@@ -54,7 +54,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
       .map((pricingOption, index) => ({
         id: pricingOption.id,
         name: pricingOption.name,
-        description: pricingOption.description,
+        about: pricingOption.listingMetadata.about ?? '',
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence,
         amountLabel: `${currencyLabel} - $${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
@@ -72,7 +72,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
           <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
           <LeadIconTypography label={product.name} sx={{ mt: 0.4, mb: 0.6 }} />
-          <BodyIconTypography label={product.description ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
+          <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
 
           <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -103,7 +103,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                   <Box sx={{ minWidth: 0, pr: 1 }}>
                     <CaptionIconTypography label={pricingPlan.cadenceLabel} fontWeight={600} />
                     <SubtitleIconTypography label={pricingPlan.name} sx={{ lineHeight: 1.25 }} />
-                    {pricingPlan.description && <CaptionIconTypography label={pricingPlan.description} sx={{ mt: 0.5, opacity: 0.78 }} />}
+                    {pricingPlan.about && <CaptionIconTypography label={pricingPlan.about} sx={{ mt: 0.5, opacity: 0.78 }} />}
                   </Box>
                   <Box sx={{ textAlign: 'right', flexShrink: 0 }}>
                     <SubtitleIconTypography label={pricingPlan.amountLabel} fontWeight={600} sx={{ lineHeight: 1.2 }} />

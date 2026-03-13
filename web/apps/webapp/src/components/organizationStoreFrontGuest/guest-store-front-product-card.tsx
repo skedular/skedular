@@ -42,7 +42,12 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
       fragment guestStoreFrontProductCard_product on ProductDetails {
         id
         name
-        description
+        listingMetadata {
+          about
+          title
+          subTitle
+          includedFeatures
+        }
         featureImages {
           original {
             url
@@ -60,6 +65,12 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
           id
           index
           name
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
           cadence
           price
           isTaxInclusive
@@ -104,7 +115,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay }: Props) => {
           <LeadIconTypography label={product.name} />
         </StackRow>
 
-        <BodyIconTypography label={product.description ?? ''} />
+        <BodyIconTypography label={product.listingMetadata.about ?? ''} />
 
         {product.amenities.length > 0 && (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>

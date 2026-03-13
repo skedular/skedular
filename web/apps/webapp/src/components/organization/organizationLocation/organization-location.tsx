@@ -18,6 +18,7 @@ import { NewFloorplanButton } from '@/components/floorPlan/addFloorPlan';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { BookingIcon, DeleteIcon, EllipseMenuIcon, NotPreferredIcon, PreferredIcon } from '@/components/icons';
 import { getOrganizationBookingsBaseLink, getOrganizationLocationResourceBaseLink, getOrganizationLocationsBaseLink } from '@/components/links';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -103,7 +104,7 @@ type LocationDetails = {
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   contactPeople: string().nullable(),
@@ -207,6 +208,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             about
             title
             subTitle
+            includedFeatures
           }
           timezone
           type {
@@ -411,6 +413,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             about
             title
             subTitle
+            includedFeatures
           }
           timezone
           type {
@@ -896,6 +899,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           timezone,
           type: type as LocationType,
@@ -958,6 +962,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             timezone,
             type: {
@@ -1827,7 +1832,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               validate={validateLocationDetails}
               render={({ handleSubmit, values }) => {
                 debounceSetLocationName(values!.name);
-                debounceSetLocationAbout(values!.about);
                 debounceSetLocationTimezone(values!.timezone);
                 debounceSetLocationType(values!.type);
                 debounceSetSpaceTypeIds(values!.spaceTypeIds);
@@ -1918,9 +1922,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                         <TextField name="name" required={requiredFields.name} />
                       </FormFieldLabel>
 
-                      <FormFieldLabel label="About">
-                        <TextField name="about" required={requiredFields.about} multiline rows={3} />
-                      </FormFieldLabel>
+                      <ListingMetadata
+                        fields={['about']}
+                        onChange={({ about }) => {
+                          debounceSetLocationAbout(about);
+                        }}
+                        requiredFields={requiredFields}
+                      />
 
                       <FormFieldLabel label="Timezone">
                         <SingleChoinceTimezone name="timezone" required={requiredFields.timezone} />

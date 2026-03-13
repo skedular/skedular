@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7ca3d5e6ca90120f4cf9322c0331f73>>
+ * @generated SignedSource<<ab548fab725b693473992c0209aa2356>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -114,6 +114,7 @@ export type addPrivateLocation_addLocationMutation$data = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -149,6 +150,7 @@ export type addPrivateLocation_addLocationMutation$rawResponse = {
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -270,6 +272,13 @@ v4 = [
                 "kind": "ScalarField",
                 "name": "subTitle",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -376,16 +385,16 @@ return {
     "selections": (v4/*: any*/)
   },
   "params": {
-    "cacheID": "fb60ac661d2692c3529acf162e37e3a5",
+    "cacheID": "5d451ee0b137502f497ec49c436e0a85",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_addLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation addPrivateLocation_addLocationMutation(\n  $input: AddLocationInput!\n) {\n  addLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8635b8257a1b8d4e87178f712700b9b5";
+(node as any).hash = "138cf9c7c67aaa7df78767e9281e3076";
 
 export default node;

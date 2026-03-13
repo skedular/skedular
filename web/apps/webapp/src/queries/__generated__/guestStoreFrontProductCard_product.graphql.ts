@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e4244b71bd73a4c17603804e58b16052>>
+ * @generated SignedSource<<3c535a461a00b7e44f76f60fac24f22b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,19 +21,30 @@ export type guestStoreFrontProductCard_product$data = {
     readonly name: string;
     readonly type: Currency;
   };
-  readonly description: string | null | undefined;
   readonly featureImages: ReadonlyArray<{
     readonly original: {
       readonly url: string;
     } | null | undefined;
   }>;
   readonly id: string;
+  readonly listingMetadata: {
+    readonly about: string | null | undefined;
+    readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+    readonly subTitle: string | null | undefined;
+    readonly title: string | null | undefined;
+  };
   readonly name: string;
   readonly pricingOptions: ReadonlyArray<{
     readonly cadence: ProductPricingCadence;
     readonly id: string;
     readonly index: number;
     readonly isTaxInclusive: boolean;
+    readonly listingMetadata: {
+      readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
+    };
     readonly name: string;
     readonly price: any;
   }>;
@@ -58,6 +69,45 @@ v1 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "about",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "includedFeatures",
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [],
@@ -67,13 +117,7 @@ return {
   "selections": [
     (v0/*: any*/),
     (v1/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "description",
-      "storageKey": null
-    },
+    (v2/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -152,6 +196,7 @@ return {
           "storageKey": null
         },
         (v1/*: any*/),
+        (v2/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -182,6 +227,6 @@ return {
 };
 })();
 
-(node as any).hash = "4b5143925e5e3e13c3f4ab8858b9811f";
+(node as any).hash = "ad64109db90bb4ad80dd3e4e539337c2";
 
 export default node;

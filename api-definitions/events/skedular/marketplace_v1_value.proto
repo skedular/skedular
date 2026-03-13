@@ -39,13 +39,13 @@ message Product {
 }
 
 message ProductVersion {
-  string                  id             = 1;
-  string                  name           = 2;
-  string                  description    = 3;
-  Currency                currency       = 4;
-  repeated string         tagIds         = 5;
-  repeated CdnImageFile   featureImages  = 6;
-  repeated ProductPricing pricingOptions = 7;
+  string                  id              = 1;
+  string                  name            = 2;
+  ListingMetadata         listingMetadata = 3;
+  Currency                currency        = 4;
+  repeated string         tagIds          = 5;
+  repeated CdnImageFile   featureImages   = 6;
+  repeated ProductPricing pricingOptions  = 7;
 }
 
 message CdnImageFile {
@@ -82,7 +82,7 @@ message ProductPricing {
   string                 id                                             = 1;
   int32                  index                                          = 2;
   string                 name                                           = 3;
-  string                 description                                    = 4;
+  ListingMetadata        listingMetadata                                = 4;
   ProductPricingCadence  cadence                                        = 5;
   double                 price                                          = 6;
   bool                   isTaxInclusive                                 = 7;
@@ -93,4 +93,11 @@ message ProductPricing {
   int32                  maxAllowedResourcesLockTimePaidViaCard         = 12;
   int32                  maxAllowedResourcesLockTimePaidViaBankTransfer = 13;
   int32                  numberOfResourcesToBook                        = 14;
+}
+
+message ListingMetadata {
+  string          about            = 1;
+  string          title            = 2;
+  string          subTitle         = 3;
+  repeated string includedFeatures = 4;
 }

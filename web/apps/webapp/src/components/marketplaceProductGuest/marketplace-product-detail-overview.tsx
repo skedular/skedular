@@ -82,7 +82,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
       <Card variant="outlined" sx={{ borderRadius: 3 }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
           <LeadIconTypography label="About this product" sx={{ mb: 1.5 }} />
-          <BodyIconTypography label={product.description ?? ''} sx={{ opacity: 0.85 }} />
+          <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85 }} />
         </CardContent>
       </Card>
 

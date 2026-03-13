@@ -1,5 +1,6 @@
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackRow } from '@/components/commons';
 import { AnalyticsIcon, CalendarIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
@@ -41,7 +42,7 @@ type OrganizationDetails = {
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   website: string().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
@@ -74,6 +75,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             about
             title
             subTitle
+            includedFeatures
           }
           website
         }
@@ -101,6 +103,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           website,
           type: 'INDIVIDUAL',
@@ -143,6 +146,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             website,
           },
@@ -217,17 +221,15 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="About" required={requiredFields.about}>
-                <TextField
-                  name="about"
-                  required={requiredFields.about}
-                  multiline
-                  rows={3}
-                  helperText={
+              <ListingMetadata
+                fields={['about']}
+                helperTexts={{
+                  about: (
                     <HelperText text="Introduce yourself as a host. Share your hosting style or the types of stays you offer. Individual listings can include their own detailed descriptions later." />
-                  }
-                />
-              </FormFieldLabel>
+                  ),
+                }}
+                requiredFields={requiredFields}
+              />
 
               <FormFieldLabel label="Website" required={requiredFields.website}>
                 <TextField

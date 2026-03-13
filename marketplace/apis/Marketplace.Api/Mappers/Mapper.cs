@@ -65,7 +65,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name,
-            Description = src.Description,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
@@ -76,7 +76,7 @@ public class Mapper : IMapper
         new()
         {
             Name = src.Name,
-            Description = src.Description,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
@@ -87,7 +87,7 @@ public class Mapper : IMapper
         new()
         {
             Name = src.Name,
-            Description = src.Description,
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty(),
             Currency = src.Currency,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
@@ -108,7 +108,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Inactive = src.Inactive,
             Name = productVersion.Name,
-            Description = productVersion.Description,
+            ListingMetadata = productVersion.ListingMetadata,
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
             ProductTags = MapTo(productVersion.ProductTags),
@@ -131,7 +131,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             Name = src.Name,
-            Description = src.Description,
+            ListingMetadata = src.ListingMetadata,
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
             ProductTags = MapTo(src.ProductTags),
@@ -212,7 +212,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.Name = src.Name;
-        dest.Description = src.Description;
+        dest.ListingMetadata = src.ListingMetadata;
         dest.Currency = src.Currency.ToCurrency();
         dest.FeatureImages = src.FeatureImages;
         dest.OrganizationTags = organizationTags;

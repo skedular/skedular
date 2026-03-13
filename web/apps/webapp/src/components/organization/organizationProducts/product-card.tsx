@@ -61,7 +61,12 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         id
         inactive
         name
-        description
+        listingMetadata {
+          about
+          title
+          subTitle
+          includedFeatures
+        }
         organization {
           id
         }
@@ -78,6 +83,12 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
         pricingOptions {
           index
           name
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
           cadence
           price
           isTaxInclusive
@@ -349,7 +360,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
           }
         />
         <CardContent>
-          <BodyIconTypography label={productDetails.description} />
+          <BodyIconTypography label={productDetails.listingMetadata.about} />
 
           <StackRow sx={{ marginTop: 1 }}>
             <BodyIconTypography label="Pricing Options" />

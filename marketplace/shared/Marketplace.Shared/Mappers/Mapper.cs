@@ -32,7 +32,7 @@ public class Mapper : IMapper
     {
         var productVersion = new ProductVersion
         {
-            Id = src.Id, Name = src.Name.ToSafeString(), Description = src.Name.ToSafeString(), Currency = MapTo(src.Currency)
+            Id = src.Id, Name = src.Name.ToSafeString(), ListingMetadata = MapTo(src.ListingMetadata), Currency = MapTo(src.Currency)
         };
 
         productVersion.TagIds.AddRange(src.OrganizationTags.Select(item => item.Id));
@@ -61,7 +61,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Index = src.Index,
             Name = src.Name.ToSafeString(),
-            Description = src.Description.ToSafeString(),
+            ListingMetadata = MapTo(src.ListingMetadata),
             Cadence = src.Cadence switch
             {
                 ProductPricingCadence.OneTimeV1 => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1,
@@ -104,4 +104,16 @@ public class Mapper : IMapper
             Api.Shared.Services.Models.Currency.Usd => Currency.Usd,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
+    
+    private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata MapTo(ListingMetadata src)
+    {
+        var listingMetadata = new Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata
+        {
+            About = src.About.ToSafeString(), Title = src.Title.ToSafeString(), SubTitle = src.SubTitle.ToSafeString()
+        };
+
+        listingMetadata.IncludedFeatures.AddRange(src.IncludedFeatures.ToSafeCollection().Select(item => item.ToSafeString()));
+
+        return listingMetadata;
+    }
 }

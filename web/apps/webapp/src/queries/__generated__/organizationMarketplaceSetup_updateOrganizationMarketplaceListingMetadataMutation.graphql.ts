@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f1b2f5803cf3706484dc35a5e763a3ae>>
+ * @generated SignedSource<<9e6d57b4212e0301ab2dfe52bbb5b042>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,6 +30,7 @@ export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMet
       readonly id: string;
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -42,6 +43,7 @@ export type organizationMarketplaceSetup_updateOrganizationMarketplaceListingMet
       readonly id: string;
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -120,6 +122,13 @@ v1 = [
                 "kind": "ScalarField",
                 "name": "subTitle",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -149,16 +158,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "49858ab73d9dccb8c2f35aac782d27d7",
+    "cacheID": "a2ba8103113d0fb574a08b594ee1baf2",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation(\n  $input: UpdateOrganizationMarketplaceListingMetadataInput!\n) {\n  updateOrganizationMarketplaceListingMetadata(input: $input) {\n    organization {\n      id\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation(\n  $input: UpdateOrganizationMarketplaceListingMetadataInput!\n) {\n  updateOrganizationMarketplaceListingMetadata(input: $input) {\n    organization {\n      id\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e16a8114747073e918fb888902575bf7";
+(node as any).hash = "e9ec1b1f93b8fdd9fc1baffb50794b34";
 
 export default node;

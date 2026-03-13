@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8864f03a36b4f5c095c52875bb4d795f>>
+ * @generated SignedSource<<6fe96bdc2827ffa51993e70084f1648e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,9 @@ export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE
 export type UpdateProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
-  description?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id: string;
+  listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
   tagIds: ReadonlyArray<string>;
@@ -31,13 +31,19 @@ export type CdnFileInput = {
   url: string;
   width?: number | null | undefined;
 };
+export type ListingMetadataInput = {
+  about?: string | null | undefined;
+  includedFeatures?: ReadonlyArray<string> | null | undefined;
+  subTitle?: string | null | undefined;
+  title?: string | null | undefined;
+};
 export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   cadence: ProductPricingCadence;
-  description: string;
   id: string;
   index: number;
   isTaxInclusive: boolean;
+  listingMetadata: ListingMetadataInput;
   maxAllowedResourcesLockTimePaidViaBankTransfer: number;
   maxAllowedResourcesLockTimePaidViaCard: number;
   maxDurationMinutes?: number | null | undefined;
@@ -61,7 +67,6 @@ export type editProduct_updateProductMutation$data = {
         readonly name: string;
         readonly type: Currency;
       };
-      readonly description: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -76,13 +81,24 @@ export type editProduct_updateProductMutation$data = {
       }>;
       readonly id: string;
       readonly inactive: boolean;
+      readonly listingMetadata: {
+        readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
+      };
       readonly name: string;
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly cadence: ProductPricingCadence;
-        readonly description: string;
         readonly index: number;
         readonly isTaxInclusive: boolean;
+        readonly listingMetadata: {
+          readonly about: string | null | undefined;
+          readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+          readonly subTitle: string | null | undefined;
+          readonly title: string | null | undefined;
+        };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
@@ -111,7 +127,6 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly name: string;
         readonly type: Currency;
       };
-      readonly description: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -126,13 +141,24 @@ export type editProduct_updateProductMutation$rawResponse = {
       }>;
       readonly id: string;
       readonly inactive: boolean;
+      readonly listingMetadata: {
+        readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
+      };
       readonly name: string;
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly cadence: ProductPricingCadence;
-        readonly description: string;
         readonly index: number;
         readonly isTaxInclusive: boolean;
+        readonly listingMetadata: {
+          readonly about: string | null | undefined;
+          readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+          readonly subTitle: string | null | undefined;
+          readonly title: string | null | undefined;
+        };
         readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
         readonly maxAllowedResourcesLockTimePaidViaCard: number;
         readonly maxDurationMinutes: number | null | undefined;
@@ -180,8 +206,40 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "description",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "about",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "includedFeatures",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v4 = [
@@ -429,16 +487,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "4ff76940769bb0de1f107df39c1e73d5",
+    "cacheID": "627cb40129efcbbccecea2311f99e6c4",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      description\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        description\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        name\n        listingMetadata {\n          about\n          title\n          subTitle\n          includedFeatures\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "10873517bf6ed7f8957905e5fbe33b1c";
+(node as any).hash = "7b9acb937b1262a3653bdd21d624cd85";
 
 export default node;

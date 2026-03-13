@@ -18,6 +18,7 @@ import {
 import { CustomTag } from '@/components/customTag';
 import { DeleteIcon, EllipseMenuIcon, ErrorIcon, NewIcon, NotPreferredIcon, PreferredIcon, TickIcon } from '@/components/icons';
 import { getOrganizationBaseLink, getRootLink } from '@/components/links';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationMultipleChoicesIndustries } from '@/components/organization';
@@ -110,9 +111,7 @@ type OrganizationDetails = {
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  about: string().nullable(),
-  title: string().nullable(),
-  subTitle: string().nullable(),
+  ...listingMetadataSchemaShape,
   website: string().url('Website must be a valid Url').nullable(),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
@@ -259,11 +258,13 @@ const OrganizationAdmin = ({
             about
             title
             subTitle
+            includedFeatures
           }
           marketplaceListingMetadata {
             about
             title
             subTitle
+            includedFeatures
           }
           website
           canModify
@@ -431,6 +432,7 @@ const OrganizationAdmin = ({
             about
             title
             subTitle
+            includedFeatures
           }
           website
           industrySubCategories {
@@ -2372,9 +2374,6 @@ const OrganizationAdmin = ({
               render={({ handleSubmit, values }) => {
                 debounceSetOrganizationEditableUniqueAlphanumericName(values!.uniqueAlphanumericName);
                 debounceSetOrganizationName(values!.name);
-                debounceSetOrganizationAbout(values!.about);
-                debounceSetOrganizationTitle(values!.title);
-                debounceSetOrganizationSubTitle(values!.subTitle);
                 debounceSetOrganizationWebsite(values!.website);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
@@ -2453,17 +2452,15 @@ const OrganizationAdmin = ({
                         </FormFieldLabel>
                       )}
 
-                      <FormFieldLabel label="About">
-                        <TextField name="about" required={requiredOrganizationDetailsFields.about} multiline rows={3} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Title">
-                        <TextField name="title" required={requiredOrganizationDetailsFields.title} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Sub Title">
-                        <TextField name="subTitle" required={requiredOrganizationDetailsFields.subTitle} />
-                      </FormFieldLabel>
+                      <ListingMetadata
+                        fields={['about', 'title', 'subTitle']}
+                        requiredFields={requiredOrganizationDetailsFields}
+                        onChange={({ about, title, subTitle }) => {
+                          debounceSetOrganizationAbout(about);
+                          debounceSetOrganizationTitle(title);
+                          debounceSetOrganizationSubTitle(subTitle);
+                        }}
+                      />
 
                       <FormFieldLabel label="Website">
                         <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />

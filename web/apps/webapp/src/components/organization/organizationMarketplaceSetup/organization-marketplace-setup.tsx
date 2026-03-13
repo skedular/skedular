@@ -2,7 +2,6 @@ import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
-  FormFieldLabel,
   FormStackColumn,
   GridContainer,
   PushToRight,
@@ -13,6 +12,7 @@ import {
 } from '@/components/commons';
 import { DeleteIcon, EllipseMenuIcon } from '@/components/icons';
 import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganizationStripeConnectAccountBaseLink } from '@/components/links';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
@@ -47,7 +47,7 @@ import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
-import { makeRequired, makeValidate, TextField } from 'mui-rff';
+import { makeRequired, makeValidate } from 'mui-rff';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -55,7 +55,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { object, string } from 'yup';
+import { object } from 'yup';
 import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
@@ -108,8 +108,7 @@ type OrganizationMarketplaceListingMetadataDetails = {
 };
 
 const organizationMarketplaceListingMetadataSchema = object({
-  title: string().nullable(),
-  subTitle: string().nullable(),
+  ...listingMetadataSchemaShape,
 });
 
 const OrganizationMarketplaceSetup = ({
@@ -127,8 +126,10 @@ const OrganizationMarketplaceSetup = ({
           id
           name
           marketplaceListingMetadata {
+            about
             title
             subTitle
+            includedFeatures
           }
         }
         ...existingStripeConnectAccountButton_query
@@ -308,6 +309,7 @@ const OrganizationMarketplaceSetup = ({
             about
             title
             subTitle
+            includedFeatures
           }
         }
       }
@@ -1258,6 +1260,7 @@ const OrganizationMarketplaceSetup = ({
             about: '',
             title: title ?? '',
             subTitle: subTitle ?? '',
+            includedFeatures: [],
           },
         },
       },
@@ -1290,6 +1293,7 @@ const OrganizationMarketplaceSetup = ({
               about: '',
               title: title ?? '',
               subTitle: subTitle ?? '',
+              includedFeatures: [],
             },
           },
         },
@@ -1310,10 +1314,7 @@ const OrganizationMarketplaceSetup = ({
                 subTitle: organizationSubTitle,
               }}
               validate={validateOrganizationMarketplaceListingMetadataDetails}
-              render={({ handleSubmit, values }) => {
-                debounceSetOrganizationTitle(values!.title);
-                debounceSetOrganizationSubTitle(values!.subTitle);
-
+              render={({ handleSubmit }) => {
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
@@ -1332,13 +1333,14 @@ const OrganizationMarketplaceSetup = ({
                     </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Title">
-                        <TextField name="title" required={requiredOrganizationMarketplaceListingMetadataDetailsFields.title} />
-                      </FormFieldLabel>
-
-                      <FormFieldLabel label="Sub Title">
-                        <TextField name="subTitle" required={requiredOrganizationMarketplaceListingMetadataDetailsFields.subTitle} />
-                      </FormFieldLabel>
+                      <ListingMetadata
+                        fields={['title', 'subTitle']}
+                        onChange={({ subTitle, title }) => {
+                          debounceSetOrganizationTitle(title);
+                          debounceSetOrganizationSubTitle(subTitle);
+                        }}
+                        requiredFields={requiredOrganizationMarketplaceListingMetadataDetailsFields}
+                      />
                     </StackColumn>
 
                     <StackColumn

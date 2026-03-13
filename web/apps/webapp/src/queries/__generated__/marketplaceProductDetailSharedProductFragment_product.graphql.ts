@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a5c3e9fae380ac5d6682e113fbd1257>>
+ * @generated SignedSource<<63b085dc43075c129dc4ac124a248970>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,21 +23,31 @@ export type marketplaceProductDetailSharedProductFragment_product$data = {
     readonly name: string;
     readonly type: Currency;
   };
-  readonly description: string | null | undefined;
   readonly featureImages: ReadonlyArray<{
     readonly original: {
       readonly url: string;
     } | null | undefined;
   }>;
   readonly id: string;
+  readonly listingMetadata: {
+    readonly about: string | null | undefined;
+    readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+    readonly subTitle: string | null | undefined;
+    readonly title: string | null | undefined;
+  };
   readonly name: string;
   readonly pricingOptions: ReadonlyArray<{
     readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
     readonly cadence: ProductPricingCadence;
-    readonly description: string;
     readonly id: string;
     readonly index: number;
     readonly isTaxInclusive: boolean;
+    readonly listingMetadata: {
+      readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
+    };
     readonly maxDurationMinutes: number | null | undefined;
     readonly minDurationMinutes: number | null | undefined;
     readonly name: string;
@@ -69,8 +79,40 @@ v1 = {
 v2 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "description",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "about",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "includedFeatures",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 };
 return {
@@ -226,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "a29d2cf9b4b8d0ee8c50b5a994a1aedb";
+(node as any).hash = "4be9d12b283664512ace3d00b88cf5ec";
 
 export default node;

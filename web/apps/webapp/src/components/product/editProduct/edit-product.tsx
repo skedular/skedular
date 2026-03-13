@@ -2,6 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
@@ -34,7 +35,10 @@ type Props = {
 
 type ProductDetails = {
   name: string;
-  description: string | null;
+  about: string | null;
+  title: string | null;
+  subTitle: string | null;
+  includedFeatures: string | null;
   currency: string;
   productTagIds: string[];
   amenityIds: string[];
@@ -43,9 +47,12 @@ type ProductDetails = {
 
 type PricingOptionForm = {
   id: string;
+  about: string | null;
+  title: string | null;
+  subTitle: string | null;
+  includedFeatures: string | null;
   cadence: string;
   name: string;
-  description: string;
   price: string;
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
@@ -58,9 +65,12 @@ type PricingOptionForm = {
 
 const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
   id: uuid(),
+  about: null,
+  title: null,
+  subTitle: null,
+  includedFeatures: null,
   cadence: 'ONE_TIME_V1',
   name: '',
-  description: '',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -74,7 +84,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     name: string().min(3, 'Product name must be at least three characters long.').required('Product name is required'),
-    description: string().nullable(),
+    ...listingMetadataSchemaShape,
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
@@ -82,9 +92,9 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
     pricingOptions: array()
       .of(
         object({
+          ...listingMetadataSchemaShape,
           cadence: string().required('Pricing cadence is required.'),
           name: string().required('Pricing option name is required.'),
-          description: string().required('Pricing option description is required.'),
           price: string()
             .matches(/^\d+(\.\d{1,2})?$/, 'Price must be a valid decimal number.')
             .required('Price is required.')
@@ -202,7 +212,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           id
           inactive
           name
-          description
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
           currency {
             type
             name
@@ -235,7 +250,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           pricingOptions {
             index
             name
-            description
+            listingMetadata {
+              about
+              title
+              subTitle
+              includedFeatures
+            }
             cadence
             price
             numberOfResourcesToBook
@@ -275,7 +295,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           id
           inactive
           name
-          description
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
           currency {
             type
             name
@@ -305,7 +330,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           pricingOptions {
             index
             name
-            description
+            listingMetadata {
+              about
+              title
+              subTitle
+              includedFeatures
+            }
             cadence
             price
             numberOfResourcesToBook
@@ -330,8 +360,14 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   const [name, setName] = useState(rootData.product ? rootData.product.name : '');
   const debounceSetName = useDebounceCallback(setName, keyboardTextFieldDebounceTimeout);
 
-  const [description, setDescription] = useState<string | null>(rootData.product && rootData.product.description ? rootData.product.description : null);
-  const debounceSetDescription = useDebounceCallback(setDescription, keyboardTextFieldDebounceTimeout);
+  const [about, setAbout] = useState<string | null>(((rootData.product?.listingMetadata as { about?: string | null } | null | undefined)?.about ?? null) as string | null);
+  const debounceSetAbout = useDebounceCallback(setAbout, keyboardTextFieldDebounceTimeout);
+  const [title, setTitle] = useState<string | null>(rootData.product?.listingMetadata.title ?? null);
+  const debounceSetTitle = useDebounceCallback(setTitle, keyboardTextFieldDebounceTimeout);
+  const [subTitle, setSubTitle] = useState<string | null>(rootData.product?.listingMetadata.subTitle ?? null);
+  const debounceSetSubTitle = useDebounceCallback(setSubTitle, keyboardTextFieldDebounceTimeout);
+  const [includedFeatures, setIncludedFeatures] = useState<string | null>(rootData.product?.listingMetadata.includedFeatures?.join('\n') ?? null);
+  const debounceSetIncludedFeatures = useDebounceCallback(setIncludedFeatures, keyboardTextFieldDebounceTimeout);
 
   const [currency, setCurrency] = useState(rootData.product ? rootData.product.currency.type : '');
   const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
@@ -365,7 +401,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
 
-  const handleProductDetailUpdateClick = ({ name, description, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductDetailUpdateClick = ({ name, about, title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
       return;
@@ -383,7 +419,15 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           clientMutationId: uuid(),
           id: product.id,
           name,
-          description,
+          listingMetadata: {
+            about: about ?? '',
+            title: title ?? '',
+            subTitle: subTitle ?? '',
+            includedFeatures: (includedFeatures ?? '')
+              .split('\n')
+              .map((feature) => feature.trim())
+              .filter((feature) => feature !== ''),
+          },
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
           featureImages: finalFeatureImages,
@@ -391,7 +435,15 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             id: pricingOption.id,
             index,
             name: pricingOption.name.trim(),
-            description: pricingOption.description.trim(),
+            listingMetadata: {
+              about: pricingOption.about ?? '',
+              title: pricingOption.title ?? '',
+              subTitle: pricingOption.subTitle ?? '',
+              includedFeatures: (pricingOption.includedFeatures ?? '')
+                .split('\n')
+                .map((feature) => feature.trim())
+                .filter((feature) => feature !== ''),
+            },
             cadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
@@ -433,7 +485,15 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             id: product.id,
             inactive: false,
             name,
-            description,
+            listingMetadata: {
+              about: about ?? '',
+              title: title ?? '',
+              subTitle: subTitle ?? '',
+              includedFeatures: (includedFeatures ?? '')
+                .split('\n')
+                .map((feature) => feature.trim())
+                .filter((feature) => feature !== ''),
+            },
             currency: {
               type: currency as Currency,
               name: '',
@@ -444,7 +504,15 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
               name: pricingOption.name.trim(),
-              description: pricingOption.description.trim(),
+              listingMetadata: {
+                about: pricingOption.about ?? '',
+                title: pricingOption.title ?? '',
+                subTitle: pricingOption.subTitle ?? '',
+                includedFeatures: (pricingOption.includedFeatures ?? '')
+                  .split('\n')
+                  .map((feature) => feature.trim())
+                  .filter((feature) => feature !== ''),
+              },
               cadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
@@ -499,7 +567,10 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             onSubmit={handleProductDetailUpdateClick}
             initialValues={{
               name,
-              description,
+              about,
+              title,
+              subTitle,
+              includedFeatures,
               currency,
               productTagIds,
               amenityIds,
@@ -507,9 +578,12 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                 rootData.product.pricingOptions.length > 0
                   ? rootData.product.pricingOptions.map((pricingOption) => ({
                       id: uuid(),
+                      about: pricingOption.listingMetadata.about ?? null,
+                      title: pricingOption.listingMetadata.title ?? null,
+                      subTitle: pricingOption.listingMetadata.subTitle ?? null,
+                      includedFeatures: pricingOption.listingMetadata.includedFeatures?.join('\n') ?? null,
                       cadence: pricingOption.cadence,
                       name: pricingOption.name ?? '',
-                      description: pricingOption.description ?? '',
                       price: pricingOption.price.toString(),
                       numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                       minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
@@ -524,7 +598,10 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
             validate={validateProductDetails}
             render={({ handleSubmit, values, form, errors }) => {
               debounceSetName(values!.name);
-              debounceSetDescription(values!.description);
+              debounceSetAbout(values!.about);
+              debounceSetTitle(values!.title);
+              debounceSetSubTitle(values!.subTitle);
+              debounceSetIncludedFeatures(values!.includedFeatures);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
@@ -587,9 +664,16 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                       <TextField name="name" required={requiredFields.name} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Description">
-                      <TextField name="description" required={requiredFields.description} multiline rows={3} />
-                    </FormFieldLabel>
+                    <ListingMetadata
+                      fields={['about', 'title', 'subTitle', 'includedFeatures']}
+                      onChange={({ about, includedFeatures, subTitle, title }) => {
+                        debounceSetAbout(about);
+                        debounceSetTitle(title);
+                        debounceSetSubTitle(subTitle);
+                        debounceSetIncludedFeatures(includedFeatures);
+                      }}
+                      requiredFields={requiredFields}
+                    />
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
@@ -644,9 +728,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                               <TextField name={`pricingOptions[${index}].name`} required />
                             </FormFieldLabel>
 
-                            <FormFieldLabel label="Description">
-                              <TextField name={`pricingOptions[${index}].description`} required multiline rows={3} />
-                            </FormFieldLabel>
+                            <ListingMetadata fields={['about', 'title', 'subTitle', 'includedFeatures']} namePrefix={`pricingOptions[${index}]`} requiredFields={requiredFields} />
 
                             <FormFieldLabel label="Price">
                               <TextField name={`pricingOptions[${index}].price`} required />

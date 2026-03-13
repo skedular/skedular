@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cbfe56b9cf2d8fa620cf351e48b07ab8>>
+ * @generated SignedSource<<97da2a0bf03b22a68ed02110bb282595>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,6 @@ export type editProduct_query$data = {
       readonly name: string;
       readonly type: Currency;
     };
-    readonly description: string | null | undefined;
     readonly featureImages: ReadonlyArray<{
       readonly original: {
         readonly height: number | null | undefined;
@@ -46,6 +45,12 @@ export type editProduct_query$data = {
     }>;
     readonly id: string;
     readonly inactive: boolean;
+    readonly listingMetadata: {
+      readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
+    };
     readonly name: string;
     readonly organization: {
       readonly id: string;
@@ -53,9 +58,14 @@ export type editProduct_query$data = {
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly cadence: ProductPricingCadence;
-      readonly description: string;
       readonly index: number;
       readonly isTaxInclusive: boolean;
+      readonly listingMetadata: {
+        readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
+      };
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
       readonly maxDurationMinutes: number | null | undefined;
@@ -100,8 +110,40 @@ v1 = {
 v2 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "description",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "about",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "includedFeatures",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v3 = [
@@ -414,6 +456,6 @@ return {
 };
 })();
 
-(node as any).hash = "15198011baa9c8352c446fe897ea1941";
+(node as any).hash = "6fe551e2a81ff88e4736e46d57927c80";
 
 export default node;

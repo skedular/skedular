@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2fd8648b788ee3b6f6df1228fd7915e>>
+ * @generated SignedSource<<c44b5b549bc425dc4a6de13ec366ba7d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -74,12 +74,14 @@ export type organizationAdmin_organization_query$data = {
     }>;
     readonly listingMetadata: {
       readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
     readonly logoUrl: string | null | undefined;
     readonly marketplaceListingMetadata: {
       readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
@@ -166,6 +168,13 @@ v2 = [
     "args": null,
     "kind": "ScalarField",
     "name": "subTitle",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "includedFeatures",
     "storageKey": null
   }
 ],
@@ -707,6 +716,6 @@ return {
 };
 })();
 
-(node as any).hash = "870411d35caa7b57267cfd8bc34c58a2";
+(node as any).hash = "dd0597f87a7c42d481e5a02f2e050910";
 
 export default node;

@@ -2,6 +2,7 @@ import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -68,7 +69,7 @@ type LocationDetails = {
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
 });
@@ -86,6 +87,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             about
             title
             subTitle
+            includedFeatures
           }
           timezone
           type {
@@ -154,6 +156,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           organizationUniqueAlphanumericName,
           timezone,
@@ -195,6 +198,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             timezone,
             type: {
@@ -276,7 +280,6 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
           validate={validateLocationDetails}
           render={({ handleSubmit, values }) => {
             debounceSetLocationName(values!.name);
-            debounceSetLocationAbout(values!.about);
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
 
@@ -341,17 +344,18 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="About" required={requiredFields.about}>
-                  <TextField
-                    name="about"
-                    required={requiredFields.about}
-                    multiline
-                    rows={3}
-                    helperText={
+                <ListingMetadata
+                  fields={['about']}
+                  helperTexts={{
+                    about: (
                       <HelperText text="Provide a brief description of this location. Include details like the purpose of the site, departments it hosts, or any distinguishing features to help users understand its context." />
-                    }
-                  />
-                </FormFieldLabel>
+                    ),
+                  }}
+                  onChange={({ about }) => {
+                    debounceSetLocationAbout(about);
+                  }}
+                  requiredFields={requiredFields}
+                />
 
                 <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
                   <SingleChoinceTimezone

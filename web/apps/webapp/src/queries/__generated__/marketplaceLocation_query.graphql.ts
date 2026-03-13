@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a109398f99deb0bca3cc41e9aea5af6d>>
+ * @generated SignedSource<<fa7b80db968a67a7a447cc4439b3c594>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,6 +41,7 @@ export type marketplaceLocation_query$data = {
     readonly id: string;
     readonly listingMetadata: {
       readonly about: string | null | undefined;
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
     };
@@ -203,6 +204,13 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "subTitle",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "includedFeatures",
               "storageKey": null
             }
           ],
@@ -506,6 +514,6 @@ return {
 };
 })();
 
-(node as any).hash = "5c0fc979323c75ba8fa7f06488e20ece";
+(node as any).hash = "55d237830cba39bbc67c2520ebf8f3ca";
 
 export default node;

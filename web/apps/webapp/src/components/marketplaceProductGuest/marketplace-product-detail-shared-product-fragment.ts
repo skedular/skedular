@@ -4,7 +4,12 @@ const marketplaceProductDetailSharedProductFragment = graphql`
   fragment marketplaceProductDetailSharedProductFragment_product on ProductDetails {
     id
     name
-    description
+    listingMetadata {
+      about
+      title
+      subTitle
+      includedFeatures
+    }
     featureImages {
       original {
         url
@@ -23,7 +28,12 @@ const marketplaceProductDetailSharedProductFragment = graphql`
       id
       index
       name
-      description
+      listingMetadata {
+        about
+        title
+        subTitle
+        includedFeatures
+      }
       cadence
       price
       isTaxInclusive

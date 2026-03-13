@@ -21,6 +21,7 @@ using TeamMember = Booking.Shared.Database.Entities.TeamMember;
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
+using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 
 namespace Booking.Processors.Mappers;
 
@@ -580,7 +581,7 @@ public class Mapper : IMapper
             src.Id,
             src.Index,
             src.Name.ToSafeString(),
-            src.Description.ToSafeString(),
+            MapTo(src.ListingMetadata),
             src.Cadence switch
             {
                 ProductPricingCadence.OneTimeV1 => Api.Shared.Services.Models.ProductPricingCadence.OneTimeV1,
@@ -618,4 +619,7 @@ public class Mapper : IMapper
             Currency.Usd => Api.Shared.Services.Models.Currency.Usd,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
+
+    private static ListingMetadata MapTo(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata src) =>
+        new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
 }

@@ -1,6 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { AnalyticsIcon, CalendarIcon, DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
@@ -46,7 +47,7 @@ type OrganizationDetails = {
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   website: string().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
@@ -79,6 +80,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             about
             title
             subTitle
+            includedFeatures
           }
           website
           featureImages {
@@ -125,6 +127,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           website,
           type: 'PRIVATE',
@@ -168,6 +171,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             website,
             featureImages: finalFeatureImages,
@@ -309,17 +313,13 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="About" required={requiredFields.about}>
-                <TextField
-                  name="about"
-                  required={requiredFields.about}
-                  multiline
-                  rows={3}
-                  helperText={
-                    <HelperText text="Briefly describe what your organization does. This helps coworkers and team members understand your company's focus and purpose." />
-                  }
-                />
-              </FormFieldLabel>
+              <ListingMetadata
+                fields={['about']}
+                helperTexts={{
+                  about: <HelperText text="Briefly describe what your organization does. This helps coworkers and team members understand your company's focus and purpose." />,
+                }}
+                requiredFields={requiredFields}
+              />
 
               <FormFieldLabel label="Website" required={requiredFields.website}>
                 <TextField

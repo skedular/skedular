@@ -988,11 +988,11 @@ type PersonalInformationVisibilityDetails {
 type ProductDetails {
   amenities: [OrganizationTagDetails!]!
   currency: CurrencyDetails!
-  description: String
   featureImages: [CdnImageFile!]!
   id: ID!
   inactive: Boolean!
   latestProductVersionId: String!
+  listingMetadata: ListingMetadata!
   name: String!
   organization: OrganizationDetails!
   pricingOptions: [ProductPricing!]!
@@ -1012,10 +1012,10 @@ type ProductPayload {
 type ProductPricing {
   acceptedPaymentMethods: [PaymentMethod!]!
   cadence: ProductPricingCadence!
-  description: String!
   id: String!
   index: Int!
   isTaxInclusive: Boolean!
+  listingMetadata: ListingMetadata!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxDurationMinutes: Int
@@ -1032,10 +1032,10 @@ type ProductPricingCadenceDetails {
 
 type ProductVersionDetails {
   currency: CurrencyDetails!
-  description: String
   featureImages: [CdnImageFile!]!
   id: ID!
   inactive: Boolean!
+  listingMetadata: ListingMetadata!
   name: String!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
@@ -1619,9 +1619,9 @@ input AddPrivateRecurringBookingInput {
 input AddProductInput {
   clientMutationId: String
   currency: Currency!
-  description: String
   featureImages: [CdnImageFileInput!]
   id: String
+  listingMetadata: ListingMetadataInput
   name: String!
   organizationId: String
   organizationUniqueAlphanumericName: String
@@ -2148,10 +2148,10 @@ input ProductOrderInput {
 input ProductPricingInput {
   acceptedPaymentMethods: [PaymentMethod!]!
   cadence: ProductPricingCadence!
-  description: String!
   id: String!
   index: Int!
   isTaxInclusive: Boolean!
+  listingMetadata: ListingMetadataInput!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxDurationMinutes: Int
@@ -2588,9 +2588,9 @@ input UpdatePrivateRecurringBookingInput {
 input UpdateProductInput {
   clientMutationId: String
   currency: Currency!
-  description: String
   featureImages: [CdnImageFileInput!]
   id: String!
+  listingMetadata: ListingMetadataInput
   name: String!
   pricingOptions: [ProductPricingInput!]!
   tagIds: [String!]!

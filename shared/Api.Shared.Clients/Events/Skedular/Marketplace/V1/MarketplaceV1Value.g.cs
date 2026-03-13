@@ -36,37 +36,40 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "Ei0KCWRlbGV0ZWRBdBgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh",
             "bXASEAoIaW5hY3RpdmUYAyABKAgSFgoOb3JnYW5pemF0aW9uSWQYBCABKAkS",
             "OQoUbGF0ZXN0UHJvZHVjdFZlcnNpb24YBSABKAsyGy5tYXJrZXRwbGFjZS5Q",
-            "cm9kdWN0VmVyc2lvbiLfAQoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
-            "DAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRInCghjdXJyZW5j",
-            "eRgEIAEoDjIVLm1hcmtldHBsYWNlLkN1cnJlbmN5Eg4KBnRhZ0lkcxgFIAMo",
-            "CRIwCg1mZWF0dXJlSW1hZ2VzGAYgAygLMhkubWFya2V0cGxhY2UuQ2RuSW1h",
-            "Z2VGaWxlEjMKDnByaWNpbmdPcHRpb25zGAcgAygLMhsubWFya2V0cGxhY2Uu",
-            "UHJvZHVjdFByaWNpbmciXwoMQ2RuSW1hZ2VGaWxlEiYKCG9yaWdpbmFsGAEg",
-            "ASgLMhQubWFya2V0cGxhY2UuQ2RuRmlsZRInCgl0aHVtYm5haWwYAiABKAsy",
-            "FC5tYXJrZXRwbGFjZS5DZG5GaWxlIjUKB0NkbkZpbGUSCwoDdXJsGAEgASgJ",
-            "Eg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgDIAEoBSLXAwoOUHJvZHVjdFBy",
-            "aWNpbmcSCgoCaWQYASABKAkSDQoFaW5kZXgYAiABKAUSDAoEbmFtZRgDIAEo",
-            "CRITCgtkZXNjcmlwdGlvbhgEIAEoCRIzCgdjYWRlbmNlGAUgASgOMiIubWFy",
-            "a2V0cGxhY2UuUHJvZHVjdFByaWNpbmdDYWRlbmNlEg0KBXByaWNlGAYgASgB",
-            "EhYKDmlzVGF4SW5jbHVzaXZlGAcgASgIEicKCGN1cnJlbmN5GAggASgOMhUu",
-            "bWFya2V0cGxhY2UuQ3VycmVuY3kSQQodYWNjZXB0ZWRCb29raW5nUGF5bWVu",
-            "dE1ldGhvZHMYCSADKA4yGi5tYXJrZXRwbGFjZS5QYXltZW50TWV0aG9kEhoK",
-            "Em1pbkR1cmF0aW9uTWludXRlcxgKIAEoBRIaChJtYXhEdXJhdGlvbk1pbnV0",
-            "ZXMYCyABKAUSLgombWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFpZFZp",
-            "YUNhcmQYDCABKAUSNgoubWF4QWxsb3dlZFJlc291cmNlc0xvY2tUaW1lUGFp",
-            "ZFZpYUJhbmtUcmFuc2ZlchgNIAEoBRIfChdudW1iZXJPZlJlc291cmNlc1Rv",
-            "Qm9vaxgOIAEoBSo5CgRUeXBlEhgKFFR5cGVfUHJvZHVjdFVwc2VydGVkEAAS",
-            "FwoTVHlwZV9Qcm9kdWN0RGVsZXRlZBABKvQBChVQcm9kdWN0UHJpY2luZ0Nh",
-            "ZGVuY2USIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX09uZVRpbWVWMRAAEiUK",
-            "IVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9QZXJNaW51dGVWMRABEiMKH1Byb2R1",
-            "Y3RQcmljaW5nQ2FkZW5jZV9QZXJIb3VyVjEQAhIhCh1Qcm9kdWN0UHJpY2lu",
-            "Z0NhZGVuY2VfRGFpbHlWMRADEiIKHlByb2R1Y3RQcmljaW5nQ2FkZW5jZV9X",
-            "ZWVrbHlWMRAEEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9Nb250aGx5VjEQ",
-            "BSpHCg1QYXltZW50TWV0aG9kEhYKElBheW1lbnRNZXRob2RfQ2FyZBAAEh4K",
-            "GlBheW1lbnRNZXRob2RfQmFua1RyYW5zZmVyEAEqLgoIQ3VycmVuY3kSEAoM",
-            "Q3VycmVuY3lfTnpkEAASEAoMQ3VycmVuY3lfVXNkEAFCOqoCN0FwaS5TaGFy",
-            "ZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIuTWFya2V0cGxhY2UuVjEuVmFs",
-            "dWViBnByb3RvMw=="));
+            "cm9kdWN0VmVyc2lvbiKBAgoOUHJvZHVjdFZlcnNpb24SCgoCaWQYASABKAkS",
+            "DAoEbmFtZRgCIAEoCRI1Cg9saXN0aW5nTWV0YWRhdGEYAyABKAsyHC5tYXJr",
+            "ZXRwbGFjZS5MaXN0aW5nTWV0YWRhdGESJwoIY3VycmVuY3kYBCABKA4yFS5t",
+            "YXJrZXRwbGFjZS5DdXJyZW5jeRIOCgZ0YWdJZHMYBSADKAkSMAoNZmVhdHVy",
+            "ZUltYWdlcxgGIAMoCzIZLm1hcmtldHBsYWNlLkNkbkltYWdlRmlsZRIzCg5w",
+            "cmljaW5nT3B0aW9ucxgHIAMoCzIbLm1hcmtldHBsYWNlLlByb2R1Y3RQcmlj",
+            "aW5nIl8KDENkbkltYWdlRmlsZRImCghvcmlnaW5hbBgBIAEoCzIULm1hcmtl",
+            "dHBsYWNlLkNkbkZpbGUSJwoJdGh1bWJuYWlsGAIgASgLMhQubWFya2V0cGxh",
+            "Y2UuQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWlnaHQY",
+            "AiABKAUSDQoFd2lkdGgYAyABKAUi+QMKDlByb2R1Y3RQcmljaW5nEgoKAmlk",
+            "GAEgASgJEg0KBWluZGV4GAIgASgFEgwKBG5hbWUYAyABKAkSNQoPbGlzdGlu",
+            "Z01ldGFkYXRhGAQgASgLMhwubWFya2V0cGxhY2UuTGlzdGluZ01ldGFkYXRh",
+            "EjMKB2NhZGVuY2UYBSABKA4yIi5tYXJrZXRwbGFjZS5Qcm9kdWN0UHJpY2lu",
+            "Z0NhZGVuY2USDQoFcHJpY2UYBiABKAESFgoOaXNUYXhJbmNsdXNpdmUYByAB",
+            "KAgSJwoIY3VycmVuY3kYCCABKA4yFS5tYXJrZXRwbGFjZS5DdXJyZW5jeRJB",
+            "Ch1hY2NlcHRlZEJvb2tpbmdQYXltZW50TWV0aG9kcxgJIAMoDjIaLm1hcmtl",
+            "dHBsYWNlLlBheW1lbnRNZXRob2QSGgoSbWluRHVyYXRpb25NaW51dGVzGAog",
+            "ASgFEhoKEm1heER1cmF0aW9uTWludXRlcxgLIAEoBRIuCiZtYXhBbGxvd2Vk",
+            "UmVzb3VyY2VzTG9ja1RpbWVQYWlkVmlhQ2FyZBgMIAEoBRI2Ci5tYXhBbGxv",
+            "d2VkUmVzb3VyY2VzTG9ja1RpbWVQYWlkVmlhQmFua1RyYW5zZmVyGA0gASgF",
+            "Eh8KF251bWJlck9mUmVzb3VyY2VzVG9Cb29rGA4gASgFIlsKD0xpc3RpbmdN",
+            "ZXRhZGF0YRINCgVhYm91dBgBIAEoCRINCgV0aXRsZRgCIAEoCRIQCghzdWJU",
+            "aXRsZRgDIAEoCRIYChBpbmNsdWRlZEZlYXR1cmVzGAQgAygJKjkKBFR5cGUS",
+            "GAoUVHlwZV9Qcm9kdWN0VXBzZXJ0ZWQQABIXChNUeXBlX1Byb2R1Y3REZWxl",
+            "dGVkEAEq9AEKFVByb2R1Y3RQcmljaW5nQ2FkZW5jZRIjCh9Qcm9kdWN0UHJp",
+            "Y2luZ0NhZGVuY2VfT25lVGltZVYxEAASJQohUHJvZHVjdFByaWNpbmdDYWRl",
+            "bmNlX1Blck1pbnV0ZVYxEAESIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX1Bl",
+            "ckhvdXJWMRACEiEKHVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9EYWlseVYxEAMS",
+            "IgoeUHJvZHVjdFByaWNpbmdDYWRlbmNlX1dlZWtseVYxEAQSIwofUHJvZHVj",
+            "dFByaWNpbmdDYWRlbmNlX01vbnRobHlWMRAFKkcKDVBheW1lbnRNZXRob2QS",
+            "FgoSUGF5bWVudE1ldGhvZF9DYXJkEAASHgoaUGF5bWVudE1ldGhvZF9CYW5r",
+            "VHJhbnNmZXIQASouCghDdXJyZW5jeRIQCgxDdXJyZW5jeV9OemQQABIQCgxD",
+            "dXJyZW5jeV9Vc2QQAUI6qgI3QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5T",
+            "a2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -74,10 +77,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product.Parser, new[]{ "Id", "DeletedAt", "Inactive", "OrganizationId", "LatestProductVersion" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "Description", "Currency", "TagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "Name", "ListingMetadata", "Currency", "TagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "Name", "Description", "Cadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "Name", "ListingMetadata", "Cadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle", "IncludedFeatures" }, null, null, null, null)
           }));
     }
     #endregion
@@ -1398,7 +1402,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     public ProductVersion(ProductVersion other) : this() {
       id_ = other.id_;
       name_ = other.name_;
-      description_ = other.description_;
+      listingMetadata_ = other.listingMetadata_ != null ? other.listingMetadata_.Clone() : null;
       currency_ = other.currency_;
       tagIds_ = other.tagIds_.Clone();
       featureImages_ = other.featureImages_.Clone();
@@ -1436,15 +1440,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "description" field.</summary>
-    public const int DescriptionFieldNumber = 3;
-    private string description_ = "";
+    /// <summary>Field number for the "listingMetadata" field.</summary>
+    public const int ListingMetadataFieldNumber = 3;
+    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata listingMetadata_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Description {
-      get { return description_; }
+    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata ListingMetadata {
+      get { return listingMetadata_; }
       set {
-        description_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        listingMetadata_ = value;
       }
     }
 
@@ -1510,7 +1514,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (Id != other.Id) return false;
       if (Name != other.Name) return false;
-      if (Description != other.Description) return false;
+      if (!object.Equals(ListingMetadata, other.ListingMetadata)) return false;
       if (Currency != other.Currency) return false;
       if(!tagIds_.Equals(other.tagIds_)) return false;
       if(!featureImages_.Equals(other.featureImages_)) return false;
@@ -1524,7 +1528,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Description.Length != 0) hash ^= Description.GetHashCode();
+      if (listingMetadata_ != null) hash ^= ListingMetadata.GetHashCode();
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) hash ^= Currency.GetHashCode();
       hash ^= tagIds_.GetHashCode();
       hash ^= featureImages_.GetHashCode();
@@ -1555,9 +1559,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (Description.Length != 0) {
+      if (listingMetadata_ != null) {
         output.WriteRawTag(26);
-        output.WriteString(Description);
+        output.WriteMessage(ListingMetadata);
       }
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         output.WriteRawTag(32);
@@ -1584,9 +1588,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(Name);
       }
-      if (Description.Length != 0) {
+      if (listingMetadata_ != null) {
         output.WriteRawTag(26);
-        output.WriteString(Description);
+        output.WriteMessage(ListingMetadata);
       }
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         output.WriteRawTag(32);
@@ -1611,8 +1615,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Description.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      if (listingMetadata_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ListingMetadata);
       }
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Currency);
@@ -1638,8 +1642,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.Description.Length != 0) {
-        Description = other.Description;
+      if (other.listingMetadata_ != null) {
+        if (listingMetadata_ == null) {
+          ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+        }
+        ListingMetadata.MergeFrom(other.ListingMetadata);
       }
       if (other.Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) {
         Currency = other.Currency;
@@ -1675,7 +1682,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 26: {
-            Description = input.ReadString();
+            if (listingMetadata_ == null) {
+              ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(ListingMetadata);
             break;
           }
           case 32: {
@@ -1722,7 +1732,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 26: {
-            Description = input.ReadString();
+            if (listingMetadata_ == null) {
+              ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(ListingMetadata);
             break;
           }
           case 32: {
@@ -2311,7 +2324,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       id_ = other.id_;
       index_ = other.index_;
       name_ = other.name_;
-      description_ = other.description_;
+      listingMetadata_ = other.listingMetadata_ != null ? other.listingMetadata_.Clone() : null;
       cadence_ = other.cadence_;
       price_ = other.price_;
       isTaxInclusive_ = other.isTaxInclusive_;
@@ -2367,15 +2380,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
-    /// <summary>Field number for the "description" field.</summary>
-    public const int DescriptionFieldNumber = 4;
-    private string description_ = "";
+    /// <summary>Field number for the "listingMetadata" field.</summary>
+    public const int ListingMetadataFieldNumber = 4;
+    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata listingMetadata_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Description {
-      get { return description_; }
+    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata ListingMetadata {
+      get { return listingMetadata_; }
       set {
-        description_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        listingMetadata_ = value;
       }
     }
 
@@ -2516,7 +2529,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Id != other.Id) return false;
       if (Index != other.Index) return false;
       if (Name != other.Name) return false;
-      if (Description != other.Description) return false;
+      if (!object.Equals(ListingMetadata, other.ListingMetadata)) return false;
       if (Cadence != other.Cadence) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Price, other.Price)) return false;
       if (IsTaxInclusive != other.IsTaxInclusive) return false;
@@ -2537,7 +2550,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Index != 0) hash ^= Index.GetHashCode();
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Description.Length != 0) hash ^= Description.GetHashCode();
+      if (listingMetadata_ != null) hash ^= ListingMetadata.GetHashCode();
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) hash ^= Cadence.GetHashCode();
       if (Price != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Price);
       if (IsTaxInclusive != false) hash ^= IsTaxInclusive.GetHashCode();
@@ -2578,9 +2591,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Name);
       }
-      if (Description.Length != 0) {
+      if (listingMetadata_ != null) {
         output.WriteRawTag(34);
-        output.WriteString(Description);
+        output.WriteMessage(ListingMetadata);
       }
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
         output.WriteRawTag(40);
@@ -2641,9 +2654,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteString(Name);
       }
-      if (Description.Length != 0) {
+      if (listingMetadata_ != null) {
         output.WriteRawTag(34);
-        output.WriteString(Description);
+        output.WriteMessage(ListingMetadata);
       }
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
         output.WriteRawTag(40);
@@ -2701,8 +2714,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Description.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      if (listingMetadata_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ListingMetadata);
       }
       if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Cadence);
@@ -2753,8 +2766,11 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.Description.Length != 0) {
-        Description = other.Description;
+      if (other.listingMetadata_ != null) {
+        if (listingMetadata_ == null) {
+          ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+        }
+        ListingMetadata.MergeFrom(other.ListingMetadata);
       }
       if (other.Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
         Cadence = other.Cadence;
@@ -2816,7 +2832,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 34: {
-            Description = input.ReadString();
+            if (listingMetadata_ == null) {
+              ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(ListingMetadata);
             break;
           }
           case 40: {
@@ -2892,7 +2911,10 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             break;
           }
           case 34: {
-            Description = input.ReadString();
+            if (listingMetadata_ == null) {
+              ListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata();
+            }
+            input.ReadMessage(ListingMetadata);
             break;
           }
           case 40: {
@@ -2934,6 +2956,304 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
           }
           case 112: {
             NumberOfResourcesToBook = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class ListingMetadata : pb::IMessage<ListingMetadata>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ListingMetadata> _parser = new pb::MessageParser<ListingMetadata>(() => new ListingMetadata());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ListingMetadata> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.MarketplaceV1ValueReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ListingMetadata() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ListingMetadata(ListingMetadata other) : this() {
+      about_ = other.about_;
+      title_ = other.title_;
+      subTitle_ = other.subTitle_;
+      includedFeatures_ = other.includedFeatures_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ListingMetadata Clone() {
+      return new ListingMetadata(this);
+    }
+
+    /// <summary>Field number for the "about" field.</summary>
+    public const int AboutFieldNumber = 1;
+    private string about_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string About {
+      get { return about_; }
+      set {
+        about_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "title" field.</summary>
+    public const int TitleFieldNumber = 2;
+    private string title_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Title {
+      get { return title_; }
+      set {
+        title_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "subTitle" field.</summary>
+    public const int SubTitleFieldNumber = 3;
+    private string subTitle_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SubTitle {
+      get { return subTitle_; }
+      set {
+        subTitle_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "includedFeatures" field.</summary>
+    public const int IncludedFeaturesFieldNumber = 4;
+    private static readonly pb::FieldCodec<string> _repeated_includedFeatures_codec
+        = pb::FieldCodec.ForString(34);
+    private readonly pbc::RepeatedField<string> includedFeatures_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> IncludedFeatures {
+      get { return includedFeatures_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ListingMetadata);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ListingMetadata other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (About != other.About) return false;
+      if (Title != other.Title) return false;
+      if (SubTitle != other.SubTitle) return false;
+      if(!includedFeatures_.Equals(other.includedFeatures_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (About.Length != 0) hash ^= About.GetHashCode();
+      if (Title.Length != 0) hash ^= Title.GetHashCode();
+      if (SubTitle.Length != 0) hash ^= SubTitle.GetHashCode();
+      hash ^= includedFeatures_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (About.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(About);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Title);
+      }
+      if (SubTitle.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(SubTitle);
+      }
+      includedFeatures_.WriteTo(output, _repeated_includedFeatures_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (About.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(About);
+      }
+      if (Title.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Title);
+      }
+      if (SubTitle.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(SubTitle);
+      }
+      includedFeatures_.WriteTo(ref output, _repeated_includedFeatures_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (About.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(About);
+      }
+      if (Title.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Title);
+      }
+      if (SubTitle.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SubTitle);
+      }
+      size += includedFeatures_.CalculateSize(_repeated_includedFeatures_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ListingMetadata other) {
+      if (other == null) {
+        return;
+      }
+      if (other.About.Length != 0) {
+        About = other.About;
+      }
+      if (other.Title.Length != 0) {
+        Title = other.Title;
+      }
+      if (other.SubTitle.Length != 0) {
+        SubTitle = other.SubTitle;
+      }
+      includedFeatures_.Add(other.includedFeatures_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            About = input.ReadString();
+            break;
+          }
+          case 18: {
+            Title = input.ReadString();
+            break;
+          }
+          case 26: {
+            SubTitle = input.ReadString();
+            break;
+          }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(input, _repeated_includedFeatures_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            About = input.ReadString();
+            break;
+          }
+          case 18: {
+            Title = input.ReadString();
+            break;
+          }
+          case 26: {
+            SubTitle = input.ReadString();
+            break;
+          }
+          case 34: {
+            includedFeatures_.AddEntriesFrom(ref input, _repeated_includedFeatures_codec);
             break;
           }
         }

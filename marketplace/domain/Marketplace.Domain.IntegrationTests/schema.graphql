@@ -25,6 +25,13 @@ type CurrencyDetails {
   name: String!
 }
 
+type ListingMetadata {
+  about: String
+  title: String
+  subTitle: String
+  includedFeatures: [String!]
+}
+
 type Mutation {
   addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
@@ -61,13 +68,13 @@ type ProductDetails {
   organization: OrganizationDetails!
   inactive: Boolean!
   name: String!
-  description: String
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
   latestProductVersionId: String!
   featureImages: [CdnImageFile!]!
   pricingOptions: [ProductPricing!]!
+  listingMetadata: ListingMetadata!
   id: ID!
 }
 
@@ -85,7 +92,7 @@ type ProductPricing {
   id: String!
   index: Int!
   name: String!
-  description: String!
+  listingMetadata: ListingMetadata!
   cadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!
@@ -105,7 +112,7 @@ type ProductPricingCadenceDetails {
 type ProductVersionDetails {
   inactive: Boolean!
   name: String!
-  description: String
+  listingMetadata: ListingMetadata!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
@@ -151,11 +158,11 @@ input AddProductInput {
   organizationId: String
   organizationUniqueAlphanumericName: String
   name: String!
-  description: String
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
+  listingMetadata: ListingMetadataInput
 }
 
 input CdnFileInput {
@@ -179,6 +186,13 @@ input DeleteProductsInput {
   ids: [String!]!
 }
 
+input ListingMetadataInput {
+  about: String
+  title: String
+  subTitle: String
+  includedFeatures: [String!]
+}
+
 input ProductOrderInput {
   direction: OrderDirection!
   field: ProductOrderField!
@@ -188,7 +202,7 @@ input ProductPricingInput {
   id: String!
   index: Int!
   name: String!
-  description: String!
+  listingMetadata: ListingMetadataInput!
   cadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!
@@ -211,11 +225,11 @@ input UpdateProductInput {
   clientMutationId: String
   id: String!
   name: String!
-  description: String
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
   pricingOptions: [ProductPricingInput!]!
+  listingMetadata: ListingMetadataInput
 }
 
 enum Currency {

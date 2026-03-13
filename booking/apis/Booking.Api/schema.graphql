@@ -79,6 +79,13 @@ type DayOfWeekDetails {
   name: String!
 }
 
+type ListingMetadata {
+  about: String
+  title: String
+  subTitle: String
+  includedFeatures: [String!]
+}
+
 type LocationDetails {
   id: ID!
 }
@@ -173,7 +180,7 @@ type ProductPricing {
   id: String!
   index: Int!
   name: String!
-  description: String!
+  listingMetadata: ListingMetadata!
   cadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!

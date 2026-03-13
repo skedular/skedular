@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e21a32068c0952d2d7fc5fbe17175708>>
+ * @generated SignedSource<<91b94dabfceab09613a5ed782522486d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,17 +34,25 @@ export type bookProduct_query$data = {
       readonly name: string;
       readonly type: Currency;
     };
-    readonly description: string | null | undefined;
     readonly id: string;
     readonly latestProductVersionId: string;
+    readonly listingMetadata: {
+      readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+      readonly subTitle: string | null | undefined;
+      readonly title: string | null | undefined;
+    };
     readonly name: string;
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly cadence: ProductPricingCadence;
-      readonly description: string;
       readonly id: string;
       readonly index: number;
       readonly isTaxInclusive: boolean;
+      readonly listingMetadata: {
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+        readonly subTitle: string | null | undefined;
+        readonly title: string | null | undefined;
+      };
       readonly maxAllowedResourcesLockTimePaidViaBankTransfer: number;
       readonly maxAllowedResourcesLockTimePaidViaCard: number;
       readonly maxDurationMinutes: number | null | undefined;
@@ -80,8 +88,33 @@ v1 = {
 v2 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "description",
+  "concreteType": "ListingMetadata",
+  "kind": "LinkedField",
+  "name": "listingMetadata",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "title",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "subTitle",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "includedFeatures",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v3 = [
@@ -329,6 +362,6 @@ return {
 };
 })();
 
-(node as any).hash = "0e2b746ab2000b90a1e0d276091d0929";
+(node as any).hash = "9f75bd050779f167c77505585360188f";
 
 export default node;

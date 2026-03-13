@@ -27,10 +27,13 @@ const RootQuery = graphql`
       listingMetadata {
         title
         subTitle
+        includedFeatures
       }
       marketplaceListingMetadata {
+        about
         title
         subTitle
+        includedFeatures
       }
       featureImages {
         original {

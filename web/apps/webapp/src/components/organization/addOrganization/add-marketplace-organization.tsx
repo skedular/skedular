@@ -1,6 +1,7 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
@@ -49,7 +50,7 @@ type OrganizationDetails = {
 const organizationSchema = object({
   uniqueAlphanumericName: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   website: string().nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
@@ -82,6 +83,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             about
             title
             subTitle
+            includedFeatures
           }
           website
           featureImages {
@@ -128,6 +130,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           website,
           type: 'MARKETPLACE',
@@ -171,6 +174,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             website,
             featureImages: finalFeatureImages,
@@ -314,15 +318,13 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
                 </FormFieldLabel>
               )}
 
-              <FormFieldLabel label="About" required={requiredFields.about}>
-                <TextField
-                  name="about"
-                  required={requiredFields.about}
-                  multiline
-                  rows={3}
-                  helperText={<HelperText text="Briefly describe your co-working space, its mission, community vibe, and what makes it unique." />}
-                />
-              </FormFieldLabel>
+              <ListingMetadata
+                fields={['about']}
+                helperTexts={{
+                  about: <HelperText text="Briefly describe your co-working space, its mission, community vibe, and what makes it unique." />,
+                }}
+                requiredFields={requiredFields}
+              />
 
               <FormFieldLabel label="Website" required={requiredFields.website}>
                 <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space's website to share with members." />} />

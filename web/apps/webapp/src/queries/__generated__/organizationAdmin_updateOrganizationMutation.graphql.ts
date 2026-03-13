@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c2cf6d52fc24a14f898de2dac813292>>
+ * @generated SignedSource<<505103ad5433dd2dddc720c639f0911e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,6 +69,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
       };
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -107,6 +108,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
       };
       readonly marketplaceListingMetadata: {
         readonly about: string | null | undefined;
+        readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
       };
@@ -144,30 +146,28 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "about",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "subTitle",
-    "storageKey": null
-  }
-],
-v4 = [
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "about",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "title",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "subTitle",
+  "storageKey": null
+},
+v6 = [
   {
     "alias": null,
     "args": null,
@@ -190,7 +190,7 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
+v7 = [
   {
     "alias": null,
     "args": [
@@ -229,7 +229,11 @@ v5 = [
             "kind": "LinkedField",
             "name": "listingMetadata",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": [
+              (v3/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -239,7 +243,18 @@ v5 = [
             "kind": "LinkedField",
             "name": "marketplaceListingMetadata",
             "plural": false,
-            "selections": (v3/*: any*/),
+            "selections": [
+              (v3/*: any*/),
+              (v4/*: any*/),
+              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "includedFeatures",
+                "storageKey": null
+              }
+            ],
             "storageKey": null
           },
           {
@@ -291,7 +306,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               },
               {
@@ -301,7 +316,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v4/*: any*/),
+                "selections": (v6/*: any*/),
                 "storageKey": null
               }
             ],
@@ -320,7 +335,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v5/*: any*/),
+    "selections": (v7/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -329,19 +344,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "organizationAdmin_updateOrganizationMutation",
-    "selections": (v5/*: any*/)
+    "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "f344ec1cbd5b2157686751e526e9127e",
+    "cacheID": "4ff104a40750929c5efbe275d3adbda3",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "32851751e76d8ba6da3f06b4e830347d";
+(node as any).hash = "843e3cf1407dcbc7bc3142aa61b9346f";
 
 export default node;

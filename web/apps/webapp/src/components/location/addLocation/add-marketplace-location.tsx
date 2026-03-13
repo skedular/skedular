@@ -3,6 +3,7 @@ import { Address, PhysicalAddress } from '@/components/address';
 import { BodyIconTypography, FormFieldLabel, FormStackColumn, HelperText, PushToRight, StackColumn, StackRow } from '@/components/commons';
 import { SingleChoinceTimezone } from '@/components/forms';
 import { DeleteIcon } from '@/components/icons';
+import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { MultipleChoicesLocationSpaceTypes, SingleChoiceLocationType } from '@/components/location';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
@@ -90,7 +91,7 @@ type LocationDetails = {
 
 const locationSchema = object({
   name: string().min(3, 'Location name must be at least three characters long.').required('Location name is required'),
-  about: string().nullable(),
+  ...listingMetadataSchemaShape,
   timezone: string().required('Timezone is required'),
   type: string().required('Type is required'),
   spaceTypeIds: array().nullable(),
@@ -127,6 +128,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             about
             title
             subTitle
+            includedFeatures
           }
           timezone
           type {
@@ -329,6 +331,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             about: about ?? '',
             title: '',
             subTitle: '',
+            includedFeatures: [],
           },
           organizationUniqueAlphanumericName,
           timezone,
@@ -411,6 +414,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
               about: about ?? '',
               title: '',
               subTitle: '',
+              includedFeatures: [],
             },
             timezone,
             type: {
@@ -558,7 +562,6 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
           validate={validateLocationDetails}
           render={({ handleSubmit, values, form }) => {
             debounceSetLocationName(values!.name);
-            debounceSetLocationAbout(values!.about);
             debounceSetLocationTimezone(values!.timezone);
             debounceSetLocationType(values!.type);
             debounceSetSpaceTypeIds(values!.spaceTypeIds);
@@ -645,17 +648,18 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
                   />
                 </FormFieldLabel>
 
-                <FormFieldLabel label="About" required={requiredFields.about}>
-                  <TextField
-                    name="about"
-                    required={requiredFields.about}
-                    multiline
-                    rows={3}
-                    helperText={
+                <ListingMetadata
+                  fields={['about']}
+                  helperTexts={{
+                    about: (
                       <HelperText text="Write a brief description of your co-working location. Highlight what makes it unique and the type of professionals or businesses it caters to." />
-                    }
-                  />
-                </FormFieldLabel>
+                    ),
+                  }}
+                  onChange={({ about }) => {
+                    debounceSetLocationAbout(about);
+                  }}
+                  requiredFields={requiredFields}
+                />
 
                 <FormFieldLabel label="Timezone" required={requiredFields.timezone}>
                   <SingleChoinceTimezone
