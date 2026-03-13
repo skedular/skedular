@@ -1,7 +1,11 @@
 import { BodyIconTypography, CaptionIconTypography, MediumHeadingIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { getMarketplaceLocationLink } from '@/components/links';
+import { useIntegratedPlatrform } from '@/libs/providers';
 import type { guestStoreFrontLocationsStrip_query$data, guestStoreFrontLocationsStrip_query$key } from '@/queries/__generated__/guestStoreFrontLocationsStrip_query.graphql';
+import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/system/Box';
+import { useRouter } from 'next/navigation';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
@@ -110,6 +114,8 @@ const getOpenState = (timezone: string | null | undefined, dayOpeningHours: DayO
 };
 
 const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Props) => {
+  const router = useRouter();
+  const { integratedPlatrform } = useIntegratedPlatrform();
   const rootData = useFragment<guestStoreFrontLocationsStrip_query$key>(
     graphql`
       fragment guestStoreFrontLocationsStrip_query on Query {
@@ -230,6 +236,17 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
               <Box sx={{ mt: 1, pt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider }}>
                 <CaptionIconTypography label={`Opening Hours: ${openState.label}`} sx={{ opacity: 0.9 }} />
               </Box>
+              <Button
+                variant="text"
+                size="small"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  router.push(getMarketplaceLocationLink(integratedPlatrform, location.id));
+                }}
+                sx={{ mt: 1.25, px: 0, textTransform: 'none', justifyContent: 'flex-start' }}
+              >
+                View location
+              </Button>
             </Box>
           );
         })}

@@ -1,12 +1,14 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { getMarketplaceProductBookingLink } from '@/components/links';
+import { getMarketplaceLocationLink, getMarketplaceProductBookingLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
+import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -168,7 +170,28 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
             {marketplaceLocations.length > 0 ? (
               <StackRow spacing={0.75}>
                 {marketplaceLocations.map((location) => (
-                  <CaptionIconTypography key={location.id} label={location.name} sx={{ px: 1, py: 0.5, borderRadius: 1, bgcolor: (theme) => theme.palette.action.hover }} />
+                  <Link
+                    key={location.id}
+                    component={NextLink}
+                    href={getMarketplaceLocationLink(integratedPlatrform, location.id)}
+                    underline="none"
+                    color="inherit"
+                    sx={{ display: 'inline-flex' }}
+                  >
+                    <CaptionIconTypography
+                      label={location.name}
+                      sx={{
+                        px: 1,
+                        py: 0.5,
+                        borderRadius: 1,
+                        bgcolor: (theme) => theme.palette.action.hover,
+                        transition: 'background-color 120ms ease',
+                        '&:hover': {
+                          bgcolor: (theme) => theme.palette.action.selected,
+                        },
+                      }}
+                    />
+                  </Link>
                 ))}
               </StackRow>
             ) : (
