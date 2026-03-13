@@ -2,7 +2,7 @@
 
 import { postSignOutReturnToKey } from '@/components/links';
 import { useKnownParams } from '@/libs/providers';
-import OrganizationStoreFrontPage from '@/rootPages/organization-store-front/page';
+import OrganizationStoreFrontPage from '@/rootPages/marketplace/page';
 import Page from '@/rootPages/page';
 import { memo, useEffect } from 'react';
 

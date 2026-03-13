@@ -1,6 +1,6 @@
 'use client';
 
-import OrganizationStoreFrontPage from '@/rootPages/organization-store-front/page';
+import OrganizationStoreFrontPage from '@/rootPages/marketplace/page';
 import { memo } from 'react';
 
 const RootPage = () => <OrganizationStoreFrontPage />;

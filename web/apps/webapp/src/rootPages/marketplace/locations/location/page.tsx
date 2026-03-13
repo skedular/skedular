@@ -1,7 +1,7 @@
 import { Loading } from '@/components/loading';
 import { MarketplaceLocation } from '@/components/location/marketplaceLocation';
 import { RelayError, toRootError } from '@/components/relayError';
-import { NoOrganizationRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
+import { NoOrganizationRootShell, OrganizationStoreFrontRootShell, UnauthenticatedOrganizationStoreFrontRootShell, UnauthenticatedRootShell } from '@/components/rootShell';
 import { useKnownParams } from '@/libs/providers';
 import type { pageMarketplaceLocation_rootQuery } from '@/queries/__generated__/pageMarketplaceLocation_rootQuery.graphql';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
@@ -24,24 +24,41 @@ const RootQuery = graphql`
 const RootPage = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<pageMarketplaceLocation_rootQuery>(RootQuery, queryReference);
   const { user, loading } = useAuth();
+  const { isCustomDomain } = useKnownParams();
 
   if (loading) {
     return null;
   }
 
   if (user) {
-    return (
-      <NoOrganizationRootShell collapsed={true}>
-        <MarketplaceLocation rootDataRelay={rootData} />
-      </NoOrganizationRootShell>
-    );
+    if (isCustomDomain) {
+      return (
+        <OrganizationStoreFrontRootShell>
+          <MarketplaceLocation rootDataRelay={rootData} />
+        </OrganizationStoreFrontRootShell>
+      );
+    } else {
+      return (
+        <NoOrganizationRootShell collapsed={true}>
+          <MarketplaceLocation rootDataRelay={rootData} />
+        </NoOrganizationRootShell>
+      );
+    }
   }
 
-  return (
-    <UnauthenticatedRootShell>
-      <MarketplaceLocation rootDataRelay={rootData} />
-    </UnauthenticatedRootShell>
-  );
+  if (isCustomDomain) {
+    return (
+      <UnauthenticatedOrganizationStoreFrontRootShell>
+        <MarketplaceLocation rootDataRelay={rootData} />
+      </UnauthenticatedOrganizationStoreFrontRootShell>
+    );
+  } else {
+    return (
+      <UnauthenticatedRootShell>
+        <MarketplaceLocation rootDataRelay={rootData} />
+      </UnauthenticatedRootShell>
+    );
+  }
 };
 
 const MemoRootPage = memo(RootPage);
