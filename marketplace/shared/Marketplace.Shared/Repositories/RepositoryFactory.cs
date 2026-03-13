@@ -16,8 +16,6 @@ public interface IRepositoryFactory
     IProductRepository ProductRepository { get; }
     IProductVersionRepository ProductVersionRepository { get; }
     IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    ILocationRepository LocationRepository { get; }
-    ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
 }
 
 public class RepositoryFactory : RepositoryFactoryBase<MarketplaceDbContext>, IRepositoryFactory
@@ -34,8 +32,6 @@ public class RepositoryFactory : RepositoryFactoryBase<MarketplaceDbContext>, IR
         ProductRepository = new ProductRepository(_dbContext, timeProvider);
         ProductVersionRepository = new ProductVersionRepository(_dbContext, timeProvider);
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
-        LocationPhysicalAddressRepository = new LocationPhysicalAddressRepository(_dbContext, timeProvider);
     }
 
     public ICustomerRepository CustomerRepository { get; }
@@ -46,6 +42,4 @@ public class RepositoryFactory : RepositoryFactoryBase<MarketplaceDbContext>, IR
     public IProductRepository ProductRepository { get; }
     public IProductVersionRepository ProductVersionRepository { get; }
     public IOrganizationSsoSettingRepository OrganizationSsoSettingRepository { get; }
-    public ILocationRepository LocationRepository { get; }
-    public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
 }

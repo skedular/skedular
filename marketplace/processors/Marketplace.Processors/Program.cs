@@ -31,10 +31,6 @@ public class Program
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
-                LocationSubscriber,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration)

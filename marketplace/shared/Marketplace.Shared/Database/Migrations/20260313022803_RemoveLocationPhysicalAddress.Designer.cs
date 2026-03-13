@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Marketplace.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Temporalio.Client;
@@ -14,9 +15,11 @@ using Temporalio.Client;
 namespace Marketplace.Shared.Database.Migrations
 {
     [DbContext(typeof(MarketplaceDbContext))]
-    partial class MarketplaceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260313022803_RemoveLocationPhysicalAddress")]
+    partial class RemoveLocationPhysicalAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,6 +165,21 @@ namespace Marketplace.Shared.Database.Migrations
                     b.ToTable("TemporalSignalOutbox");
                 });
 
+            modelBuilder.Entity("LocationOrganizationTag", b =>
+                {
+                    b.Property<string>("LocationsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("OrganizationTagsId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("LocationsId", "OrganizationTagsId");
+
+                    b.HasIndex("OrganizationTagsId");
+
+                    b.ToTable("LocationOrganizationTag");
+                });
+
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
@@ -248,6 +266,46 @@ namespace Marketplace.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.ToTable("Identity");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Location", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("EventRaisedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Organization", b =>
@@ -602,6 +660,21 @@ namespace Marketplace.Shared.Database.Migrations
                     b.ToTable("OrganizationTagProductVersion");
                 });
 
+            modelBuilder.Entity("LocationOrganizationTag", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Location", null)
+                        .WithMany()
+                        .HasForeignKey("LocationsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Marketplace.Shared.Database.Entities.OrganizationTag", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Identity", b =>
                 {
                     b.HasOne("Marketplace.Shared.Database.Entities.Customer", "Customer")
@@ -611,6 +684,15 @@ namespace Marketplace.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Marketplace.Shared.Database.Entities.Location", b =>
+                {
+                    b.HasOne("Marketplace.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("Locations")
+                        .HasForeignKey("OrganizationId");
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.OrganizationMember", b =>
@@ -700,6 +782,8 @@ namespace Marketplace.Shared.Database.Migrations
 
             modelBuilder.Entity("Marketplace.Shared.Database.Entities.Organization", b =>
                 {
+                    b.Navigation("Locations");
+
                     b.Navigation("OrganizationMembers");
 
                     b.Navigation("OrganizationSsoSettings");

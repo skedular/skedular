@@ -18,8 +18,6 @@ public class MarketplaceDbContext(DbContextOptions<MarketplaceDbContext> options
     public DbSet<OrganizationSsoSetting> OrganizationSsoSetting { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductVersion> ProductVersion { get; set; }
-    public DbSet<Location> Location { get; set; }
-    public DbSet<LocationPhysicalAddress> LocationPhysicalAddress { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
     public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }
