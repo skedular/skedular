@@ -1,13 +1,10 @@
 import { AreaIcon, ArrowLeftIcon, CheckIcon, ContactEmailIcon, ContactPhoneIcon, LocationIcon, OpeningHoursIcon, PersonIcon } from '@/components/icons';
-import { getMarketplaceProductLink } from '@/components/links';
-import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
+import { useKnownParams } from '@/libs/providers';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import '@/styles/leaflet/leaflet.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -16,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import type { LatLngTuple } from 'leaflet';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, type ReactNode, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
@@ -30,13 +26,12 @@ type Props = {
   rootDataRelay: marketplaceLocation_query$key;
 };
 
-type ProductCardData = {
+type PricingRow = {
+  amountLabel: string;
+  cadenceLabel: string;
   id: string;
-  imageUrl: string;
+  taxLabel: string;
   title: string;
-  subTitle: string;
-  priceLabel: string | null;
-  cadenceLabel: string | null;
 };
 
 type OpeningHoursDay = {
@@ -94,37 +89,6 @@ const InfoRow = ({ icon, label, children }: { icon: ReactNode; label: string; ch
       {children}
     </Box>
   </Box>
-);
-
-const ProductCard = ({ product, productLink }: { product: ProductCardData; productLink: string }) => (
-  <Card sx={{ ...sectionCardSx, height: '100%', overflow: 'hidden' }}>
-    <CardMedia component="img" image={product.imageUrl} alt={product.title} sx={{ height: 220, objectFit: 'cover', bgcolor: 'action.hover' }} />
-    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, p: 3 }}>
-      <Box>
-        <Typography sx={{ fontSize: '1.15rem', fontWeight: 700, color: 'text.primary', mb: 0.5 }}>{product.title}</Typography>
-        {product.subTitle ? <Typography sx={{ color: 'text.secondary', lineHeight: 1.6 }}>{product.subTitle}</Typography> : null}
-      </Box>
-
-      <Box sx={{ mt: 'auto', pt: 1 }}>
-        {product.priceLabel ? (
-          <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: 'text.primary' }}>
-            {product.priceLabel}
-            {product.cadenceLabel ? (
-              <Box component="span" sx={{ ml: 0.75, fontWeight: 500, color: 'text.secondary' }}>
-                / {product.cadenceLabel}
-              </Box>
-            ) : null}
-          </Typography>
-        ) : (
-          <Typography sx={{ color: 'text.secondary' }}>Contact for pricing</Typography>
-        )}
-      </Box>
-
-      <Button component={NextLink} href={productLink} variant="outlined" fullWidth sx={{ textTransform: 'none', borderRadius: 3 }}>
-        View product
-      </Button>
-    </CardContent>
-  </Card>
 );
 
 const MarketplaceLocation = ({ rootDataRelay }: Props) => {
@@ -248,8 +212,16 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             pricingOptions {
               id
               index
+              listingMetadata {
+                title
+              }
               cadence
               price
+              isTaxInclusive
+            }
+            amenities {
+              id
+              name
             }
           }
         }
@@ -261,8 +233,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationUniqueAlphanumericName } = useKnownParams();
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const [selectedHeroImageUrl, setSelectedHeroImageUrl] = useState<string>('');
   const locationDetails = rootData.location;
@@ -331,24 +302,39 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const primaryPhone = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactPhones);
   const primaryEmail = getFirstPopulatedValue(extraMetadata?.contactDetails?.contactEmails);
 
-  const products = useMemo<ProductCardData[]>(() => {
+  const products = useMemo<
+    {
+      amenities: readonly { id: string; name: string }[];
+      id: string;
+      imageUrl: string;
+      pricingRows: PricingRow[];
+      subTitle: string;
+      title: string;
+    }[]
+  >(() => {
     if (!locationDetails) {
       return [];
     }
 
     return [...locationDetails.products].map((product) => {
-      const primaryPricing = [...product.pricingOptions].sort((left, right) => left.index - right.index)[0];
-      const currencyLabel =
-        primaryPricing && product.currency?.type ? (rootData.currencies.find((item) => item.type === product.currency?.type)?.name ?? product.currency.type) : null;
-      const cadenceLabel = primaryPricing ? (rootData.productPricingCadences.find((item) => item.type === primaryPricing.cadence)?.name ?? primaryPricing.cadence) : null;
+      const currencyLabel = product.currency?.type ? (rootData.currencies.find((item) => item.type === product.currency?.type)?.name ?? product.currency.type) : null;
+      const pricingRows = [...product.pricingOptions]
+        .sort((left, right) => left.index - right.index)
+        .map((option) => ({
+          id: option.id,
+          title: option.listingMetadata.title ?? '',
+          cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.cadence)?.name ?? option.cadence,
+          amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
+          taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+        }));
 
       return {
+        amenities: product.amenities,
         id: product.id,
         imageUrl: product.featureImages[0]?.original?.url ?? heroImage,
         title: product.listingMetadata.title ?? 'Untitled product',
         subTitle: product.listingMetadata.subTitle ?? '',
-        priceLabel: primaryPricing ? `${currencyLabel ? `${currencyLabel} ` : ''}${primaryPricing.price}` : null,
-        cadenceLabel,
+        pricingRows,
       };
     });
   }, [heroImage, locationDetails, rootData.currencies, rootData.productPricingCadences]);
@@ -622,9 +608,14 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             <Grid container spacing={3}>
               {products.map((product) => (
                 <Grid key={product.id} size={{ xs: 12, sm: 6, lg: 4 }}>
-                  <ProductCard
-                    product={product}
-                    productLink={getMarketplaceProductLink(integratedPlatrform, isCustomDomain, effectiveOrganizationUniqueAlphanumericName, product.id)}
+                  <MarketplaceProductCard
+                    amenities={product.amenities}
+                    imageUrl={product.imageUrl}
+                    organizationUniqueAlphanumericName={effectiveOrganizationUniqueAlphanumericName}
+                    pricingRows={product.pricingRows}
+                    productId={product.id}
+                    subTitle={product.subTitle}
+                    title={product.title}
                   />
                 </Grid>
               ))}
