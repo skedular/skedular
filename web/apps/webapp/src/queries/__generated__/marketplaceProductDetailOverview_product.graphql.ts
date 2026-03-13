@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63b085dc43075c129dc4ac124a248970>>
+ * @generated SignedSource<<10796989561d29220de2c95304daf4de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingCadence = "DAILY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "WEEKLY_V1" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type marketplaceProductDetailSharedProductFragment_product$data = {
+export type marketplaceProductDetailOverview_product$data = {
   readonly amenities: ReadonlyArray<{
     readonly color: string | null | undefined;
     readonly id: string;
@@ -54,11 +54,11 @@ export type marketplaceProductDetailSharedProductFragment_product$data = {
     readonly numberOfResourcesToBook: number;
     readonly price: any;
   }>;
-  readonly " $fragmentType": "marketplaceProductDetailSharedProductFragment_product";
+  readonly " $fragmentType": "marketplaceProductDetailOverview_product";
 };
-export type marketplaceProductDetailSharedProductFragment_product$key = {
-  readonly " $data"?: marketplaceProductDetailSharedProductFragment_product$data;
-  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailSharedProductFragment_product">;
+export type marketplaceProductDetailOverview_product$key = {
+  readonly " $data"?: marketplaceProductDetailOverview_product$data;
+  readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailOverview_product">;
 };
 
 const node: ReaderFragment = (function(){
@@ -119,7 +119,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "marketplaceProductDetailSharedProductFragment_product",
+  "name": "marketplaceProductDetailOverview_product",
   "selections": [
     (v0/*: any*/),
     (v1/*: any*/),
@@ -268,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "4be9d12b283664512ace3d00b88cf5ec";
+(node as any).hash = "5863dada554331410bb1d86488639471";
 
 export default node;

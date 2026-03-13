@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8c953c0f6360fae7dc2f9f385e340878>>
+ * @generated SignedSource<<9f1ac21749a4d18a69ade40144f32295>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type marketplaceProductDetailBookingCard_query$data = {
     readonly type: Currency;
   }>;
   readonly product: {
-    readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailSharedProductFragment_product">;
+    readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailBookingCard_product">;
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
@@ -97,7 +97,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "marketplaceProductDetailSharedProductFragment_product"
+          "name": "marketplaceProductDetailBookingCard_product"
         }
       ],
       "storageKey": null
@@ -108,6 +108,6 @@ return {
 };
 })();
 
-(node as any).hash = "d394d1005501433abf22ac0d3414637c";
+(node as any).hash = "ee31f44a1ad9124a6ec4e1e3b30d6a20";
 
 export default node;

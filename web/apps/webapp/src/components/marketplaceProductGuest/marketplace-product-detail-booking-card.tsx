@@ -2,8 +2,8 @@ import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow
 import { PreferredIcon } from '@/components/icons';
 import { getMarketplaceProductBookingLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
+import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
-import type { marketplaceProductDetailSharedProductFragment_product$key } from '@/queries/__generated__/marketplaceProductDetailSharedProductFragment_product.graphql';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,7 +11,6 @@ import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import marketplaceProductDetailSharedProductFragment from './marketplace-product-detail-shared-product-fragment';
 import { marketplaceProductDetailLocationMocks } from './mock-data';
 import type { MarketplaceProductPricingPlan } from './types';
 
@@ -32,14 +31,60 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           name
         }
         product(id: $productId) {
-          ...marketplaceProductDetailSharedProductFragment_product
+          ...marketplaceProductDetailBookingCard_product
         }
       }
     `,
     rootDataRelay,
   );
 
-  const product = useFragment<marketplaceProductDetailSharedProductFragment_product$key>(marketplaceProductDetailSharedProductFragment, rootData.product);
+  const product = useFragment<marketplaceProductDetailBookingCard_product$key>(
+    graphql`
+      fragment marketplaceProductDetailBookingCard_product on ProductDetails {
+        id
+        name
+        listingMetadata {
+          about
+          title
+          subTitle
+          includedFeatures
+        }
+        featureImages {
+          original {
+            url
+          }
+        }
+        amenities {
+          id
+          name
+          color
+        }
+        currency {
+          type
+          name
+        }
+        pricingOptions {
+          id
+          index
+          name
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
+          cadence
+          price
+          isTaxInclusive
+          acceptedPaymentMethods
+          minDurationMinutes
+          maxDurationMinutes
+          numberOfResourcesToBook
+        }
+      }
+    `,
+    rootData.product,
+  );
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pricingPlans = useMemo<MarketplaceProductPricingPlan[]>(() => {

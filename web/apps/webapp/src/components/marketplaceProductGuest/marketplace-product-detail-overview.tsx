@@ -1,12 +1,11 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
+import type { marketplaceProductDetailOverview_product$key } from '@/queries/__generated__/marketplaceProductDetailOverview_product.graphql';
 import type { marketplaceProductDetailOverview_query$key } from '@/queries/__generated__/marketplaceProductDetailOverview_query.graphql';
-import type { marketplaceProductDetailSharedProductFragment_product$key } from '@/queries/__generated__/marketplaceProductDetailSharedProductFragment_product.graphql';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Box from '@mui/system/Box';
 import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import marketplaceProductDetailSharedProductFragment from './marketplace-product-detail-shared-product-fragment';
 
 type Props = {
   rootDataRelay: marketplaceProductDetailOverview_query$key;
@@ -17,14 +16,60 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
     graphql`
       fragment marketplaceProductDetailOverview_query on Query @argumentDefinitions(productId: { type: "String!" }) {
         product(id: $productId) {
-          ...marketplaceProductDetailSharedProductFragment_product
+          ...marketplaceProductDetailOverview_product
         }
       }
     `,
     rootDataRelay,
   );
 
-  const product = useFragment<marketplaceProductDetailSharedProductFragment_product$key>(marketplaceProductDetailSharedProductFragment, rootData.product);
+  const product = useFragment<marketplaceProductDetailOverview_product$key>(
+    graphql`
+      fragment marketplaceProductDetailOverview_product on ProductDetails {
+        id
+        name
+        listingMetadata {
+          about
+          title
+          subTitle
+          includedFeatures
+        }
+        featureImages {
+          original {
+            url
+          }
+        }
+        amenities {
+          id
+          name
+          color
+        }
+        currency {
+          type
+          name
+        }
+        pricingOptions {
+          id
+          index
+          name
+          listingMetadata {
+            about
+            title
+            subTitle
+            includedFeatures
+          }
+          cadence
+          price
+          isTaxInclusive
+          acceptedPaymentMethods
+          minDurationMinutes
+          maxDurationMinutes
+          numberOfResourcesToBook
+        }
+      }
+    `,
+    rootData.product,
+  );
   const imageUrls = useMemo(() => (product ? product.featureImages.map((item) => item.original?.url).filter((item): item is string => !!item) : []), [product]);
   const [selectedImageUrl, setSelectedImageUrl] = useState(imageUrls[0] ?? '');
   const effectiveSelectedImageUrl = useMemo(

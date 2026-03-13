@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<688c24890205c81650143e2e48dda8ac>>
+ * @generated SignedSource<<5b2f4ee0272ae36194820989a6d18698>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductDetailOverview_query$data = {
   readonly product: {
-    readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailSharedProductFragment_product">;
+    readonly " $fragmentSpreads": FragmentRefs<"marketplaceProductDetailOverview_product">;
   } | null | undefined;
   readonly " $fragmentType": "marketplaceProductDetailOverview_query";
 };
@@ -50,7 +50,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "marketplaceProductDetailSharedProductFragment_product"
+          "name": "marketplaceProductDetailOverview_product"
         }
       ],
       "storageKey": null
@@ -60,6 +60,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b68cbbfb0e225e2446883ea41dcc65b3";
+(node as any).hash = "b411a7d5d43b4e277de84ec73f9cd3dd";
 
 export default node;
