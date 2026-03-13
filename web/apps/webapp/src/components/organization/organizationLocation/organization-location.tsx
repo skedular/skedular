@@ -84,7 +84,9 @@ type Props = {
 
 type LocationDetails = {
   name: string;
-  about: string | null;
+  title: string | null;
+  subTitle: string | null;
+  includedFeatures: string | null;
   timezone: string;
   type: string;
   contactPeople: string | null;
@@ -205,7 +207,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id
           name
           listingMetadata {
-            about
             title
             subTitle
             includedFeatures
@@ -410,7 +411,6 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id
           name
           listingMetadata {
-            about
             title
             subTitle
             includedFeatures
@@ -705,8 +705,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
   const [locationName, setLocationName] = useState<string>(rootData.location?.name ?? '');
   const debounceSetLocationName = useDebounceCallback(setLocationName, keyboardTextFieldDebounceTimeout);
-  const [locationAbout, setLocationAbout] = useState(rootData.location?.listingMetadata.about ?? null);
-  const debounceSetLocationAbout = useDebounceCallback(setLocationAbout, keyboardTextFieldDebounceTimeout);
+  const [locationTitle, setLocationTitle] = useState(rootData.location?.listingMetadata.title ?? null);
+  const debounceSetLocationTitle = useDebounceCallback(setLocationTitle, keyboardTextFieldDebounceTimeout);
+  const [locationSubTitle, setLocationSubTitle] = useState(rootData.location?.listingMetadata.subTitle ?? null);
+  const debounceSetLocationSubTitle = useDebounceCallback(setLocationSubTitle, keyboardTextFieldDebounceTimeout);
+  const [locationIncludedFeatures, setLocationIncludedFeatures] = useState<string | null>(rootData.location?.listingMetadata.includedFeatures?.join('\n') ?? null);
+  const debounceSetLocationIncludedFeatures = useDebounceCallback(setLocationIncludedFeatures, keyboardTextFieldDebounceTimeout);
   const [locationTimezone, setLocationTimezone] = useState<string>(rootData.location?.timezone ?? '');
   const debounceSetLocationTimezone = useDebounceCallback(setLocationTimezone, keyboardTextFieldDebounceTimeout);
   const [locationType, setLocationType] = useState<string>(rootData.location?.type.type ?? '');
@@ -861,7 +865,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
 
   const handleLocationDetailUpdateClick = ({
     name,
-    about,
+    title,
+    subTitle,
+    includedFeatures,
     timezone,
     type,
     contactPeople,
@@ -896,10 +902,13 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           id: location.id,
           name,
           listingMetadata: {
-            about: about ?? '',
-            title: '',
-            subTitle: '',
-            includedFeatures: [],
+            about: '',
+            title: title ?? '',
+            subTitle: subTitle ?? '',
+            includedFeatures: (includedFeatures ?? '')
+              .split('\n')
+              .map((feature) => feature.trim())
+              .filter((feature) => feature !== ''),
           },
           timezone,
           type: type as LocationType,
@@ -959,10 +968,12 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             id: location.id,
             name,
             listingMetadata: {
-              about: about ?? '',
-              title: '',
-              subTitle: '',
-              includedFeatures: [],
+              title: title ?? '',
+              subTitle: subTitle ?? '',
+              includedFeatures: (includedFeatures ?? '')
+                .split('\n')
+                .map((feature) => feature.trim())
+                .filter((feature) => feature !== ''),
             },
             timezone,
             type: {
@@ -1812,7 +1823,9 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
               onSubmit={handleLocationDetailUpdateClick}
               initialValues={{
                 name: locationName,
-                about: locationAbout,
+                title: locationTitle,
+                subTitle: locationSubTitle,
+                includedFeatures: locationIncludedFeatures,
                 timezone: locationTimezone,
                 type: locationType,
                 spaceTypeIds,
@@ -1923,9 +1936,11 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                       </FormFieldLabel>
 
                       <ListingMetadata
-                        fields={['about']}
-                        onChange={({ about }) => {
-                          debounceSetLocationAbout(about);
+                        fields={['title', 'subTitle', 'includedFeatures']}
+                        onChange={({ title, subTitle, includedFeatures }) => {
+                          debounceSetLocationTitle(title);
+                          debounceSetLocationSubTitle(subTitle);
+                          debounceSetLocationIncludedFeatures(includedFeatures);
                         }}
                         requiredFields={requiredFields}
                       />

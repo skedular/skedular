@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85792485aac45a6e16524d78e5866eae>>
+ * @generated SignedSource<<bb4091366ff4ea6cde73f96c7be4e7df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -53,7 +53,6 @@ export type organizationLocation_query$data = {
     }>;
     readonly id: string;
     readonly listingMetadata: {
-      readonly about: string | null | undefined;
       readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
@@ -346,13 +345,6 @@ return {
           "name": "listingMetadata",
           "plural": false,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "about",
-              "storageKey": null
-            },
             {
               "alias": null,
               "args": null,
@@ -804,6 +796,6 @@ return {
 };
 })();
 
-(node as any).hash = "1b934f3b226d50bb3e29f6384af3cc12";
+(node as any).hash = "88070c241a35707a1a76dc65d448fa16";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87128eed9cc70ff5bd11a1cbde277088>>
+ * @generated SignedSource<<532cbc27b8f0a79da0476e7f305db2dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -102,7 +102,6 @@ export type organizationLocation_updateLocationMutation$data = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
@@ -162,7 +161,6 @@ export type organizationLocation_updateLocationMutation$rawResponse = {
       }>;
       readonly id: string;
       readonly listingMetadata: {
-        readonly about: string | null | undefined;
         readonly includedFeatures: ReadonlyArray<string> | null | undefined;
         readonly subTitle: string | null | undefined;
         readonly title: string | null | undefined;
@@ -276,13 +274,6 @@ v5 = [
             "name": "listingMetadata",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "about",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -530,16 +521,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "2ab1eb81ec228c724a951c672b997d40",
+    "cacheID": "ceee86b08804b87446188bb90912d79d",
     "id": null,
     "metadata": {},
     "name": "organizationLocation_updateLocationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationLocation_updateLocationMutation(\n  $input: UpdateLocationInput!\n) {\n  updateLocation(input: $input) {\n    location {\n      id\n      name\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      timezone\n      type {\n        type\n        name\n      }\n      extraMetadata {\n        contactDetails {\n          contactPeople\n          contactEmails\n          contactPhones\n        }\n        areaRange {\n          fromInSqm\n          toInSqm\n        }\n        peopleCapacity {\n          from\n          to\n        }\n        website\n        relatedImageLinks\n        relatedVideoLinks\n        otherLinks\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      spaceTypes {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a0c177cbd3b3b6dd4ad09a144274f39a";
+(node as any).hash = "9306ac146999dfcf70d079c83806180c";
 
 export default node;

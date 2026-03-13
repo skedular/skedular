@@ -35,7 +35,7 @@ const MarketplaceProductDetail = ({ queryReference }: Props) => {
         <Button variant="text" onClick={() => router.back()} sx={{ textTransform: 'none', px: 0, mb: 2 }}>
           <StackRow spacing={0.5} sx={{ flexWrap: 'nowrap' }}>
             <ArrowLeftIcon fontSize="small" />
-            <BodyIconTypography label="Back to listings" />
+            <BodyIconTypography label="Back" />
           </StackRow>
         </Button>
 
