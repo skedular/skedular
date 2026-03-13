@@ -2027,6 +2027,7 @@ input LocationWhereInput {
   nameContains: String
   notContactedYet: Boolean
   organizationUniqueAlphanumericName: String
+  productIds: [String!]
   resourceType: OrganizationTagType
   searchBoundaries: PolygonInput
   types: [LocationType!]
@@ -2044,6 +2045,7 @@ input MarketplaceLocationWhereInput {
   nameContains: String
   organizationId: String
   organizationUniqueAlphanumericName: String
+  productIds: [String!]
   resourceType: OrganizationTagType
   searchBoundaries: PolygonInput
   zoneIds: [String!]

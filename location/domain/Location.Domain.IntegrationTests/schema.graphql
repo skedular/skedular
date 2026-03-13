@@ -485,6 +485,7 @@ input LocationWhereInput {
   searchBoundaries: PolygonInput
   notContactedYet: Boolean
   resourceType: OrganizationTagType
+  productIds: [String!]
 }
 
 input MarketplaceLocationWhereInput {
@@ -496,6 +497,7 @@ input MarketplaceLocationWhereInput {
   zoneIds: [String!]
   searchBoundaries: PolygonInput
   resourceType: OrganizationTagType
+  productIds: [String!]
 }
 
 input OpeningHoursDetailsInput {

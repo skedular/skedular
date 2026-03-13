@@ -102,7 +102,8 @@ public class LocationGrpcService(
                 null,
                 request.Where.NotContactedYet,
                 null,
-                null),
+                null,
+                []),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending
@@ -169,7 +170,8 @@ public class LocationGrpcService(
                 null,
                 request.Where.NotContactedYet,
                 null,
-                null),
+                null,
+                []),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Location.V1.OrderDirection.Ascending

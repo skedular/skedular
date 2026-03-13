@@ -163,6 +163,13 @@ internal static class LocationExtensions
                     item.Organization.IsOwnershipVerified.HasValue && item.Organization.IsOwnershipVerified.Value);
             }
 
+            if (searchCriteria.ProductIds.Count > 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.PrecomputedLocationProducts.Any(precomputedLocationProduct =>
+                        searchCriteria.ProductIds.Contains(precomputedLocationProduct.Id)));
+            }
+
             return originalQuery;
         }
 

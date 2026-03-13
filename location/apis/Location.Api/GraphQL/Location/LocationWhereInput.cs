@@ -17,4 +17,5 @@ public class LocationWhereInput
     [GraphQLName("searchBoundaries")] public Polygon? SearchBoundaries { get; set; }
     [GraphQLName("notContactedYet")] public bool? NotContactedYet { get; set; }
     [GraphQLName("resourceType")] public OrganizationTagType? ResourceType { get; set; }
+    [GraphQLName("productIds")] public IEnumerable<string>? ProductIds { get; set; }
 }

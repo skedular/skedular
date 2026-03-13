@@ -14,7 +14,8 @@ public record LocationSearchCriteria(
     Polygon? SearchBoundaries,
     bool? NotContactedYet,
     OrganizationTagType? ResourceType,
-    bool? FilterThoseWithUnverifiedOrganization);
+    bool? FilterThoseWithUnverifiedOrganization,
+    ICollection<string> ProductIds);
 
 public record LocationOrder(OrderDirection Direction, LocationOrderField Field);
 
