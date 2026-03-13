@@ -92,7 +92,8 @@ public class RootQuery(IMapper mapper)
     {
         if (where.SearchBoundaries is null &&
             string.IsNullOrWhiteSpace(where.OrganizationId) &&
-            string.IsNullOrWhiteSpace(where.OrganizationUniqueAlphanumericName))
+            string.IsNullOrWhiteSpace(where.OrganizationUniqueAlphanumericName) &&
+            where.ProductIds.ToSafeCollection().Count == 0)
         {
             return Connection<LocationEdge>.Empty;
         }

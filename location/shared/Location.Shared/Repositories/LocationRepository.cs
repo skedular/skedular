@@ -31,7 +31,7 @@ public interface ILocationRepository : IRepository<Database.Entities.Location>
     Database.Entities.Location Remove(Database.Entities.Location location);
     Task<Database.Entities.Location?> GetByUniqueClaimCodeAsync(string uniqueClaimCode, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int )> GetPaginatedLocationsUntrackedAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Database.Entities.Location>>, int)> GetPaginatedLocationsUntrackedAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
@@ -167,7 +167,7 @@ internal static class LocationExtensions
             {
                 originalQuery = originalQuery.Where(item =>
                     item.PrecomputedLocationProducts.Any(precomputedLocationProduct =>
-                        searchCriteria.ProductIds.Contains(precomputedLocationProduct.Id)));
+                        searchCriteria.ProductIds.Contains(precomputedLocationProduct.Product.Id)));
             }
 
             return originalQuery;

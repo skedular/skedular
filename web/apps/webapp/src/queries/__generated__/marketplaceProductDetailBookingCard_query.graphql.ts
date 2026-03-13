@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2820960b77cfcafcac9ed1855935789d>>
+ * @generated SignedSource<<6f1aef6b1e7c0dc50e0ae0e6ba1de358>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,11 +62,6 @@ return {
     {
       "defaultValue": null,
       "kind": "LocalArgument",
-      "name": "organizationUniqueAlphanumericName"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
       "name": "productId"
     }
   ],
@@ -121,11 +116,6 @@ return {
       "args": [
         {
           "fields": [
-            {
-              "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
-            },
             {
               "items": [
                 {
@@ -186,6 +176,6 @@ return {
 };
 })();
 
-(node as any).hash = "41f53542e773edb1f117ddf54a14a278";
+(node as any).hash = "92ad79a56623cb3ffd8665e60a7d315b";
 
 export default node;

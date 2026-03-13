@@ -19,7 +19,7 @@ type Props = {
 const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<marketplaceProductDetailBookingCard_query$key>(
     graphql`
-      fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(organizationUniqueAlphanumericName: { type: "String!" }, productId: { type: "String!" }) {
+      fragment marketplaceProductDetailBookingCard_query on Query @argumentDefinitions(productId: { type: "String!" }) {
         productPricingCadences {
           type
           name
@@ -31,7 +31,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         product(id: $productId) {
           ...marketplaceProductDetailBookingCard_product
         }
-        marketplaceLocations(where: { productIds: [$productId], organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
+        marketplaceLocations(where: { productIds: [$productId] }) {
           edges {
             node {
               id
