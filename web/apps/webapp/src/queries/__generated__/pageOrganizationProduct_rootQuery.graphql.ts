@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f47105a252f7a880b5dad64e8f99b678>>
+ * @generated SignedSource<<fc22c9894c4f2c80ceac222ef49fc1fd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -387,6 +387,31 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "concreteType": "ProductPricingBillingSchedule",
+                "kind": "LinkedField",
+                "name": "acceptedBillingSchedules",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "mode",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "interval",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "kind": "ScalarField",
                 "name": "acceptedPaymentMethods",
                 "storageKey": null
@@ -403,6 +428,26 @@ return {
         "concreteType": "ProductPricingCadenceDetails",
         "kind": "LinkedField",
         "name": "productPricingCadences",
+        "plural": true,
+        "selections": (v8/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductPricingBillingModeDetails",
+        "kind": "LinkedField",
+        "name": "productPricingBillingModes",
+        "plural": true,
+        "selections": (v8/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductPricingBillingIntervalDetails",
+        "kind": "LinkedField",
+        "name": "productPricingBillingIntervals",
         "plural": true,
         "selections": (v8/*: any*/),
         "storageKey": null
@@ -575,12 +620,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a89b3a62f073280c37475db2f06de2c8",
+    "cacheID": "f03d1e99de8a2f7c68040aed7d37cf6a",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProduct_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    currency {\n      type\n      name\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    pricingOptions {\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedPaymentMethods\n    }\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...editProduct_query\n}\n\nfragment editProduct_query on Query {\n  product(id: $productId) {\n    id\n    inactive\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    currency {\n      type\n      name\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    amenities {\n      id\n      name\n      color\n    }\n    organization {\n      id\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    pricingOptions {\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      cadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      acceptedBillingSchedules {\n        mode\n        interval\n      }\n      acceptedPaymentMethods\n    }\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  ...multipleChoicesProductPricingBillingModes_query\n  ...multipleChoicesProductPricingBillingIntervals_query\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductPricingBillingIntervals_query on Query {\n  productPricingBillingIntervals {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductPricingBillingModes_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00661899618f03a3aacc21930578f322>>
+ * @generated SignedSource<<989409825523fbb82365f37d708de1ce>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ export type addProduct_rootQuery$data = {
     readonly name: string;
     readonly type: PaymentMethod;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductPricingBillingIntervals_query" | "multipleChoicesProductPricingBillingModes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
 };
 export type addProduct_rootQuery = {
   response: addProduct_rootQuery$data;
@@ -149,6 +149,16 @@ return {
       {
         "args": null,
         "kind": "FragmentSpread",
+        "name": "multipleChoicesProductPricingBillingModes_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "multipleChoicesProductPricingBillingIntervals_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
         "name": "multipleChoicesProductTags_query"
       },
       {
@@ -189,6 +199,26 @@ return {
       (v4/*: any*/),
       (v7/*: any*/),
       (v8/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductPricingBillingModeDetails",
+        "kind": "LinkedField",
+        "name": "productPricingBillingModes",
+        "plural": true,
+        "selections": (v6/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductPricingBillingIntervalDetails",
+        "kind": "LinkedField",
+        "name": "productPricingBillingIntervals",
+        "plural": true,
+        "selections": (v6/*: any*/),
+        "storageKey": null
+      },
       {
         "alias": null,
         "args": [
@@ -349,16 +379,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cfc9cad70250baf65d2129c62dae3a60",
+    "cacheID": "a10ad48bcd8196318adcf859cbc46d3c",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...multipleChoicesProductPricingBillingModes_query\n  ...multipleChoicesProductPricingBillingIntervals_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductPricingBillingIntervals_query on Query {\n  productPricingBillingIntervals {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductPricingBillingModes_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "95ebf03dbdbdbbba184689408479b9ce";
+(node as any).hash = "7c9cad0c8d653c1833f2974fc4c09919";
 
 export default node;

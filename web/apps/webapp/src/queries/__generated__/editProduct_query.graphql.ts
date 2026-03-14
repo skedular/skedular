@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ad81a8c61f2dc2097f5388c749b7ea2>>
+ * @generated SignedSource<<dc99261a10eb26b738d38727f487ccd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,8 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
+export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
+export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
@@ -54,6 +56,10 @@ export type editProduct_query$data = {
       readonly id: string;
     };
     readonly pricingOptions: ReadonlyArray<{
+      readonly acceptedBillingSchedules: ReadonlyArray<{
+        readonly interval: ProductPricingBillingInterval;
+        readonly mode: ProductPricingBillingMode;
+      }>;
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly cadence: ProductPricingCadence;
       readonly index: number;
@@ -79,7 +85,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductPricingBillingIntervals_query" | "multipleChoicesProductPricingBillingModes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -373,6 +379,31 @@ return {
             {
               "alias": null,
               "args": null,
+              "concreteType": "ProductPricingBillingSchedule",
+              "kind": "LinkedField",
+              "name": "acceptedBillingSchedules",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "mode",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "interval",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "kind": "ScalarField",
               "name": "acceptedPaymentMethods",
               "storageKey": null
@@ -392,6 +423,16 @@ return {
       "plural": true,
       "selections": (v4/*: any*/),
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "multipleChoicesProductPricingBillingModes_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "multipleChoicesProductPricingBillingIntervals_query"
     },
     {
       "alias": null,
@@ -455,6 +496,6 @@ return {
 };
 })();
 
-(node as any).hash = "b03d905e6157967681c12b3441eaa2b8";
+(node as any).hash = "2db984d90c56f33b0c57807e71eb0c29";
 
 export default node;

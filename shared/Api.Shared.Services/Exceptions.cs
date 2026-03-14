@@ -114,6 +114,9 @@ public class ProductPricingAcceptedBillingSchedulesCannotContainNotSet()
 public class ProductPricingAcceptedBillingSchedulesCannotContainDuplicates()
     : Exception("Accepted billing schedules cannot contain duplicate billing schedules");
 
+public class ProductPricingAcceptedBillingSchedulesContainInvalidCombination()
+    : Exception("Accepted billing schedules contain an invalid billing mode and interval combination");
+
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");

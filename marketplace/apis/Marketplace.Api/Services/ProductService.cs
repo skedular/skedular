@@ -351,6 +351,13 @@ public class ProductService(
             _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
         };
 
+    private static bool HasInvalidAcceptedBillingScheduleCombination(ICollection<ProductPricingBillingSchedule> acceptedBillingSchedules) =>
+        acceptedBillingSchedules.Any(item =>
+            item.Mode == ProductPricingBillingMode.Upfront &&
+            (item.Interval == ProductPricingBillingInterval.Weekly ||
+             item.Interval == ProductPricingBillingInterval.Fortnightly ||
+             item.Interval == ProductPricingBillingInterval.Monthly));
+
     private static void Validate(ProductPricing pricing)
     {
         if (pricing.AcceptedPaymentMethods.Count <= 0)
@@ -373,6 +380,11 @@ public class ProductService(
         if (acceptedBillingSchedules.Distinct().Count() != acceptedBillingSchedules.Count)
         {
             throw new ProductPricingAcceptedBillingSchedulesCannotContainDuplicates();
+        }
+
+        if (HasInvalidAcceptedBillingScheduleCombination(acceptedBillingSchedules))
+        {
+            throw new ProductPricingAcceptedBillingSchedulesContainInvalidCombination();
         }
 
         var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.Cadence);

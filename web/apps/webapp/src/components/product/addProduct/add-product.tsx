@@ -4,14 +4,28 @@ import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesPaymentMethodTypes, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
+import {
+  MultipleChoicesPaymentMethodTypes,
+  MultipleChoicesProductPricingBillingIntervals,
+  MultipleChoicesProductPricingBillingModes,
+  MultipleChoicesProductTags,
+  SingleChoiceCurrency,
+  SingleChoiceProductPricingCadence,
+} from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useKnownParams } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type {
+  addProduct_addProductMutation,
+  Currency,
+  PaymentMethod,
+  ProductPricingBillingInterval,
+  ProductPricingBillingMode,
+  ProductPricingCadence,
+} from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -49,6 +63,8 @@ const RootQuery = graphql`
       type
       name
     }
+    ...multipleChoicesProductPricingBillingModes_query
+    ...multipleChoicesProductPricingBillingIntervals_query
     ...multipleChoicesProductTags_query
     ...singleChoiceCurrency_query
     ...multipleChoicesPaymentMethodTypes_query
@@ -79,6 +95,8 @@ type PricingOptionForm = {
   isTaxInclusive: boolean;
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
+  acceptedBillingModes: string[];
+  acceptedBillingIntervals: string[];
   acceptedPaymentMethods: string[];
 };
 
@@ -94,8 +112,22 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   isTaxInclusive: true,
   maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
   maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
+  acceptedBillingModes: [],
+  acceptedBillingIntervals: [],
   acceptedPaymentMethods: [],
 });
+
+const isValidBillingScheduleCombination = (mode: string, interval: string) => !(mode === 'UPFRONT' && ['WEEKLY', 'FORTNIGHTLY', 'MONTHLY'].includes(interval));
+
+const buildAcceptedBillingSchedules = (acceptedBillingModes: string[], acceptedBillingIntervals: string[]) =>
+  acceptedBillingModes.flatMap((mode) =>
+    acceptedBillingIntervals
+      .filter((interval) => isValidBillingScheduleCombination(mode, interval))
+      .map((interval) => ({
+        mode: mode as ProductPricingBillingMode,
+        interval: interval as ProductPricingBillingInterval,
+      })),
+  );
 
 const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
   switch (cadence) {
@@ -222,6 +254,8 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Max allowed resources lock time paid via bank transfer is required.')
             .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
             .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
+          acceptedBillingModes: array().min(1, 'At least one accepted billing mode must be selected.').required('Billing modes are required.'),
+          acceptedBillingIntervals: array().min(1, 'At least one accepted billing interval must be selected.').required('Billing intervals are required.'),
           acceptedPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected.').required('Booking payment methods are required.'),
         }),
       )
@@ -299,6 +333,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
             maxAllowedResourcesLockTimePaidViaBankTransfer
+            acceptedBillingSchedules {
+              mode
+              interval
+            }
             acceptedPaymentMethods
           }
         }
@@ -378,6 +416,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             isTaxInclusive: pricingOption.isTaxInclusive,
             maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
             maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+            acceptedBillingSchedules: buildAcceptedBillingSchedules(pricingOption.acceptedBillingModes, pricingOption.acceptedBillingIntervals),
             acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
           })),
         },
@@ -442,6 +481,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
               maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
+              acceptedBillingSchedules: buildAcceptedBillingSchedules(pricingOption.acceptedBillingModes, pricingOption.acceptedBillingIntervals),
               acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
             })),
           },
@@ -640,6 +680,14 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
 
                             <FormFieldLabel label="Accepted Payment Methods">
                               <MultipleChoicesPaymentMethodTypes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Accepted Billing Modes">
+                              <MultipleChoicesProductPricingBillingModes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedBillingModes`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Accepted Billing Intervals">
+                              <MultipleChoicesProductPricingBillingIntervals rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedBillingIntervals`} required />
                             </FormFieldLabel>
                           </StackColumn>
                         </Box>
