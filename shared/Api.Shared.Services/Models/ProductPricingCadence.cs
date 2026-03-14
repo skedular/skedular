@@ -3,41 +3,43 @@ namespace Api.Shared.Services.Models;
 public enum ProductPricingCadence
 {
     NotSet = 0,
-    OneTimeV1 = 1,
-    PerMinuteV1 = 2,
-    PerHourV1 = 3,
-    DailyV1 = 4,
-    WeeklyV1 = 5,
-    MonthlyV1 = 6,
-    HalfDayV1 = 7,
-    Per15MinutesV1 = 8,
-    Per30MinutesV1 = 9,
-    TwoMonthsV1 = 10,
-    QuarterlyV1 = 11,
-    FourMonthsV1 = 12,
-    FiveMonthsV1 = 13,
-    SixMonthsV1 = 14,
-    YearlyV1 = 15
+    OneTime = 1,
+    PerMinute = 2,
+    PerHour = 3,
+    Daily = 4,
+    Weekly = 5,
+    Monthly = 6,
+    HalfDay = 7,
+    Per15Minutes = 8,
+    Per30Minutes = 9,
+    TwoMonths = 10,
+    Quarterly = 11,
+    FourMonths = 12,
+    FiveMonths = 13,
+    SixMonths = 14,
+    Yearly = 15,
+    Fortnightly = 16
 }
 
 public static class ProductPricingCadenceConstants
 {
     public const string NotSet = "NOT_SET";
-    public const string OneTimeV1 = "ONE_TIME_V1";
-    public const string PerMinuteV1 = "PER_MINUTE_V1";
-    public const string PerHourV1 = "PER_HOUR_V1";
-    public const string DailyV1 = "DAILY_V1";
-    public const string WeeklyV1 = "WEEKLY_V1";
-    public const string MonthlyV1 = "MONTHLY_V1";
-    public const string HalfDayV1 = "HALF_DAY_V1";
-    public const string Per15MinutesV1 = "PER_15_MINUTES_V1";
-    public const string Per30MinutesV1 = "PER_30_MINUTES_V1";
-    public const string TwoMonthsV1 = "TWO_MONTHS_V1";
-    public const string QuarterlyV1 = "QUARTERLY_V1";
-    public const string FourMonthsV1 = "FOUR_MONTHS_V1";
-    public const string FiveMonthsV1 = "FIVE_MONTHS_V1";
-    public const string SixMonthsV1 = "SIX_MONTHS_V1";
-    public const string YearlyV1 = "YEARLY_V1";
+    public const string OneTime = "ONE_TIME_V1";
+    public const string PerMinute = "PER_MINUTE";
+    public const string PerHour = "PER_HOUR";
+    public const string Daily = "DAILY";
+    public const string Weekly = "WEEKLY";
+    public const string Monthly = "MONTHLY";
+    public const string HalfDay = "HALF_DAY";
+    public const string Per15Minutes = "PER_15_MINUTES";
+    public const string Per30Minutes = "PER_30_MINUTES";
+    public const string TwoMonths = "TWO_MONTHS";
+    public const string Quarterly = "QUARTERLY";
+    public const string FourMonths = "FOUR_MONTHS";
+    public const string FiveMonths = "FIVE_MONTHS";
+    public const string SixMonths = "SIX_MONTHS";
+    public const string Yearly = "YEARLY";
+    public const string Fortnightly = "FORTNIGHTLY";
 }
 
 public static class ProductPricingCadenceExtensions
@@ -48,21 +50,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadence.NotSet => ProductPricingCadenceConstants.NotSet,
-                ProductPricingCadence.OneTimeV1 => ProductPricingCadenceConstants.OneTimeV1,
-                ProductPricingCadence.PerMinuteV1 => ProductPricingCadenceConstants.PerMinuteV1,
-                ProductPricingCadence.PerHourV1 => ProductPricingCadenceConstants.PerHourV1,
-                ProductPricingCadence.DailyV1 => ProductPricingCadenceConstants.DailyV1,
-                ProductPricingCadence.WeeklyV1 => ProductPricingCadenceConstants.WeeklyV1,
-                ProductPricingCadence.MonthlyV1 => ProductPricingCadenceConstants.MonthlyV1,
-                ProductPricingCadence.HalfDayV1 => ProductPricingCadenceConstants.HalfDayV1,
-                ProductPricingCadence.Per15MinutesV1 => ProductPricingCadenceConstants.Per15MinutesV1,
-                ProductPricingCadence.Per30MinutesV1 => ProductPricingCadenceConstants.Per30MinutesV1,
-                ProductPricingCadence.TwoMonthsV1 => ProductPricingCadenceConstants.TwoMonthsV1,
-                ProductPricingCadence.QuarterlyV1 => ProductPricingCadenceConstants.QuarterlyV1,
-                ProductPricingCadence.FourMonthsV1 => ProductPricingCadenceConstants.FourMonthsV1,
-                ProductPricingCadence.FiveMonthsV1 => ProductPricingCadenceConstants.FiveMonthsV1,
-                ProductPricingCadence.SixMonthsV1 => ProductPricingCadenceConstants.SixMonthsV1,
-                ProductPricingCadence.YearlyV1 => ProductPricingCadenceConstants.YearlyV1,
+                ProductPricingCadence.OneTime => ProductPricingCadenceConstants.OneTime,
+                ProductPricingCadence.PerMinute => ProductPricingCadenceConstants.PerMinute,
+                ProductPricingCadence.PerHour => ProductPricingCadenceConstants.PerHour,
+                ProductPricingCadence.Daily => ProductPricingCadenceConstants.Daily,
+                ProductPricingCadence.Weekly => ProductPricingCadenceConstants.Weekly,
+                ProductPricingCadence.Monthly => ProductPricingCadenceConstants.Monthly,
+                ProductPricingCadence.HalfDay => ProductPricingCadenceConstants.HalfDay,
+                ProductPricingCadence.Per15Minutes => ProductPricingCadenceConstants.Per15Minutes,
+                ProductPricingCadence.Per30Minutes => ProductPricingCadenceConstants.Per30Minutes,
+                ProductPricingCadence.TwoMonths => ProductPricingCadenceConstants.TwoMonths,
+                ProductPricingCadence.Quarterly => ProductPricingCadenceConstants.Quarterly,
+                ProductPricingCadence.FourMonths => ProductPricingCadenceConstants.FourMonths,
+                ProductPricingCadence.FiveMonths => ProductPricingCadenceConstants.FiveMonths,
+                ProductPricingCadence.SixMonths => ProductPricingCadenceConstants.SixMonths,
+                ProductPricingCadence.Yearly => ProductPricingCadenceConstants.Yearly,
+                ProductPricingCadence.Fortnightly => ProductPricingCadenceConstants.Fortnightly,
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -70,21 +73,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadence.NotSet => "Not Set",
-                ProductPricingCadence.OneTimeV1 => "One Time",
-                ProductPricingCadence.PerMinuteV1 => "Per Minute",
-                ProductPricingCadence.PerHourV1 => "Per Hour",
-                ProductPricingCadence.DailyV1 => "Daily",
-                ProductPricingCadence.WeeklyV1 => "Weekly",
-                ProductPricingCadence.MonthlyV1 => "Monthly",
-                ProductPricingCadence.HalfDayV1 => "Half Day",
-                ProductPricingCadence.Per15MinutesV1 => "Per 15 Minutes",
-                ProductPricingCadence.Per30MinutesV1 => "Per 30 Minutes",
-                ProductPricingCadence.TwoMonthsV1 => "2-Monthly",
-                ProductPricingCadence.QuarterlyV1 => "Quarterly",
-                ProductPricingCadence.FourMonthsV1 => "4-Monthly",
-                ProductPricingCadence.FiveMonthsV1 => "5-Monthly",
-                ProductPricingCadence.SixMonthsV1 => "6-Monthly",
-                ProductPricingCadence.YearlyV1 => "Yearly",
+                ProductPricingCadence.OneTime => "One Time",
+                ProductPricingCadence.PerMinute => "Per Minute",
+                ProductPricingCadence.PerHour => "Per Hour",
+                ProductPricingCadence.Daily => "Daily",
+                ProductPricingCadence.Weekly => "Weekly",
+                ProductPricingCadence.Monthly => "Monthly",
+                ProductPricingCadence.HalfDay => "Half Day",
+                ProductPricingCadence.Per15Minutes => "Per 15 Minutes",
+                ProductPricingCadence.Per30Minutes => "Per 30 Minutes",
+                ProductPricingCadence.TwoMonths => "2-Monthly",
+                ProductPricingCadence.Quarterly => "Quarterly",
+                ProductPricingCadence.FourMonths => "4-Monthly",
+                ProductPricingCadence.FiveMonths => "5-Monthly",
+                ProductPricingCadence.SixMonths => "6-Monthly",
+                ProductPricingCadence.Yearly => "Yearly",
+                ProductPricingCadence.Fortnightly => "Fortnightly",
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -92,21 +96,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadence.NotSet => "not-set",
-                ProductPricingCadence.OneTimeV1 => "one-time",
-                ProductPricingCadence.PerMinuteV1 => "p/m",
-                ProductPricingCadence.PerHourV1 => "p/h",
-                ProductPricingCadence.DailyV1 => "daily",
-                ProductPricingCadence.WeeklyV1 => "weekly",
-                ProductPricingCadence.MonthlyV1 => "monthly",
-                ProductPricingCadence.HalfDayV1 => "half-day",
-                ProductPricingCadence.Per15MinutesV1 => "p/15m",
-                ProductPricingCadence.Per30MinutesV1 => "p/30m",
-                ProductPricingCadence.TwoMonthsV1 => "2-monthly",
-                ProductPricingCadence.QuarterlyV1 => "quarterly",
-                ProductPricingCadence.FourMonthsV1 => "4-monthly",
-                ProductPricingCadence.FiveMonthsV1 => "5-monthly",
-                ProductPricingCadence.SixMonthsV1 => "6-monthly",
-                ProductPricingCadence.YearlyV1 => "yearly",
+                ProductPricingCadence.OneTime => "one-time",
+                ProductPricingCadence.PerMinute => "p/m",
+                ProductPricingCadence.PerHour => "p/h",
+                ProductPricingCadence.Daily => "daily",
+                ProductPricingCadence.Weekly => "weekly",
+                ProductPricingCadence.Monthly => "monthly",
+                ProductPricingCadence.HalfDay => "half-day",
+                ProductPricingCadence.Per15Minutes => "p/15m",
+                ProductPricingCadence.Per30Minutes => "p/30m",
+                ProductPricingCadence.TwoMonths => "2-monthly",
+                ProductPricingCadence.Quarterly => "quarterly",
+                ProductPricingCadence.FourMonths => "4-monthly",
+                ProductPricingCadence.FiveMonths => "5-monthly",
+                ProductPricingCadence.SixMonths => "6-monthly",
+                ProductPricingCadence.Yearly => "yearly",
+                ProductPricingCadence.Fortnightly => "fortnightly",
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -114,21 +119,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadence.NotSet => "Not-Set",
-                ProductPricingCadence.OneTimeV1 => "One-Time",
-                ProductPricingCadence.PerMinuteV1 => "Minute",
-                ProductPricingCadence.PerHourV1 => "Hour",
-                ProductPricingCadence.DailyV1 => "Daily",
-                ProductPricingCadence.WeeklyV1 => "Weekly",
-                ProductPricingCadence.MonthlyV1 => "Monthly",
-                ProductPricingCadence.HalfDayV1 => "Half-Day",
-                ProductPricingCadence.Per15MinutesV1 => "15-Minutes",
-                ProductPricingCadence.Per30MinutesV1 => "30-Minutes",
-                ProductPricingCadence.TwoMonthsV1 => "2-Monthly",
-                ProductPricingCadence.QuarterlyV1 => "Quarterly",
-                ProductPricingCadence.FourMonthsV1 => "4-Monthly",
-                ProductPricingCadence.FiveMonthsV1 => "5-Monthly",
-                ProductPricingCadence.SixMonthsV1 => "6-Monthly",
-                ProductPricingCadence.YearlyV1 => "Yearly",
+                ProductPricingCadence.OneTime => "One-Time",
+                ProductPricingCadence.PerMinute => "Minute",
+                ProductPricingCadence.PerHour => "Hour",
+                ProductPricingCadence.Daily => "Daily",
+                ProductPricingCadence.Weekly => "Weekly",
+                ProductPricingCadence.Monthly => "Monthly",
+                ProductPricingCadence.HalfDay => "Half-Day",
+                ProductPricingCadence.Per15Minutes => "15-Minutes",
+                ProductPricingCadence.Per30Minutes => "30-Minutes",
+                ProductPricingCadence.TwoMonths => "2-Monthly",
+                ProductPricingCadence.Quarterly => "Quarterly",
+                ProductPricingCadence.FourMonths => "4-Monthly",
+                ProductPricingCadence.FiveMonths => "5-Monthly",
+                ProductPricingCadence.SixMonths => "6-Monthly",
+                ProductPricingCadence.Yearly => "Yearly",
+                ProductPricingCadence.Fortnightly => "Fortnightly",
                 _ => throw new ArgumentOutOfRangeException()
             };
     }
@@ -139,21 +145,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadenceConstants.NotSet => "Not Set",
-                ProductPricingCadenceConstants.OneTimeV1 => "One Time",
-                ProductPricingCadenceConstants.PerMinuteV1 => "Per Minute",
-                ProductPricingCadenceConstants.PerHourV1 => "Per Hour",
-                ProductPricingCadenceConstants.DailyV1 => "Daily",
-                ProductPricingCadenceConstants.WeeklyV1 => "Weekly",
-                ProductPricingCadenceConstants.MonthlyV1 => "Monthly",
-                ProductPricingCadenceConstants.HalfDayV1 => "Half Day",
-                ProductPricingCadenceConstants.Per15MinutesV1 => "Per 15 Minutes",
-                ProductPricingCadenceConstants.Per30MinutesV1 => "Per 30 Minutes",
-                ProductPricingCadenceConstants.TwoMonthsV1 => "2-Monthly",
-                ProductPricingCadenceConstants.QuarterlyV1 => "Quarterly",
-                ProductPricingCadenceConstants.FourMonthsV1 => "4-Monthly",
-                ProductPricingCadenceConstants.FiveMonthsV1 => "5-Monthly",
-                ProductPricingCadenceConstants.SixMonthsV1 => "6-Monthly",
-                ProductPricingCadenceConstants.YearlyV1 => "Yearly",
+                ProductPricingCadenceConstants.OneTime => "One Time",
+                ProductPricingCadenceConstants.PerMinute => "Per Minute",
+                ProductPricingCadenceConstants.PerHour => "Per Hour",
+                ProductPricingCadenceConstants.Daily => "Daily",
+                ProductPricingCadenceConstants.Weekly => "Weekly",
+                ProductPricingCadenceConstants.Monthly => "Monthly",
+                ProductPricingCadenceConstants.HalfDay => "Half Day",
+                ProductPricingCadenceConstants.Per15Minutes => "Per 15 Minutes",
+                ProductPricingCadenceConstants.Per30Minutes => "Per 30 Minutes",
+                ProductPricingCadenceConstants.TwoMonths => "2-Monthly",
+                ProductPricingCadenceConstants.Quarterly => "Quarterly",
+                ProductPricingCadenceConstants.FourMonths => "4-Monthly",
+                ProductPricingCadenceConstants.FiveMonths => "5-Monthly",
+                ProductPricingCadenceConstants.SixMonths => "6-Monthly",
+                ProductPricingCadenceConstants.Yearly => "Yearly",
+                ProductPricingCadenceConstants.Fortnightly => "Fortnightly",
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -161,21 +168,22 @@ public static class ProductPricingCadenceExtensions
             src switch
             {
                 ProductPricingCadenceConstants.NotSet => ProductPricingCadence.NotSet,
-                ProductPricingCadenceConstants.OneTimeV1 => ProductPricingCadence.OneTimeV1,
-                ProductPricingCadenceConstants.PerMinuteV1 => ProductPricingCadence.PerMinuteV1,
-                ProductPricingCadenceConstants.PerHourV1 => ProductPricingCadence.PerHourV1,
-                ProductPricingCadenceConstants.DailyV1 => ProductPricingCadence.DailyV1,
-                ProductPricingCadenceConstants.WeeklyV1 => ProductPricingCadence.WeeklyV1,
-                ProductPricingCadenceConstants.MonthlyV1 => ProductPricingCadence.MonthlyV1,
-                ProductPricingCadenceConstants.HalfDayV1 => ProductPricingCadence.HalfDayV1,
-                ProductPricingCadenceConstants.Per15MinutesV1 => ProductPricingCadence.Per15MinutesV1,
-                ProductPricingCadenceConstants.Per30MinutesV1 => ProductPricingCadence.Per30MinutesV1,
-                ProductPricingCadenceConstants.TwoMonthsV1 => ProductPricingCadence.TwoMonthsV1,
-                ProductPricingCadenceConstants.QuarterlyV1 => ProductPricingCadence.QuarterlyV1,
-                ProductPricingCadenceConstants.FourMonthsV1 => ProductPricingCadence.FourMonthsV1,
-                ProductPricingCadenceConstants.FiveMonthsV1 => ProductPricingCadence.FiveMonthsV1,
-                ProductPricingCadenceConstants.SixMonthsV1 => ProductPricingCadence.SixMonthsV1,
-                ProductPricingCadenceConstants.YearlyV1 => ProductPricingCadence.YearlyV1,
+                ProductPricingCadenceConstants.OneTime => ProductPricingCadence.OneTime,
+                ProductPricingCadenceConstants.PerMinute => ProductPricingCadence.PerMinute,
+                ProductPricingCadenceConstants.PerHour => ProductPricingCadence.PerHour,
+                ProductPricingCadenceConstants.Daily => ProductPricingCadence.Daily,
+                ProductPricingCadenceConstants.Weekly => ProductPricingCadence.Weekly,
+                ProductPricingCadenceConstants.Monthly => ProductPricingCadence.Monthly,
+                ProductPricingCadenceConstants.HalfDay => ProductPricingCadence.HalfDay,
+                ProductPricingCadenceConstants.Per15Minutes => ProductPricingCadence.Per15Minutes,
+                ProductPricingCadenceConstants.Per30Minutes => ProductPricingCadence.Per30Minutes,
+                ProductPricingCadenceConstants.TwoMonths => ProductPricingCadence.TwoMonths,
+                ProductPricingCadenceConstants.Quarterly => ProductPricingCadence.Quarterly,
+                ProductPricingCadenceConstants.FourMonths => ProductPricingCadence.FourMonths,
+                ProductPricingCadenceConstants.FiveMonths => ProductPricingCadence.FiveMonths,
+                ProductPricingCadenceConstants.SixMonths => ProductPricingCadence.SixMonths,
+                ProductPricingCadenceConstants.Yearly => ProductPricingCadence.Yearly,
+                ProductPricingCadenceConstants.Fortnightly => ProductPricingCadence.Fortnightly,
                 _ => throw new ArgumentOutOfRangeException()
             };
     }

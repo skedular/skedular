@@ -35,7 +35,7 @@ const SingleChoiceLocation = ({ rootDataRelay, id, required }: Props) => {
     rootDataRelay,
   );
 
-  const locations = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
+  const items = useMemo(() => (rootData.locations?.edges ? rootData.locations.edges.map(({ node }) => node) : []), [rootData.locations]);
   const filter = createFilterOptions<LocationDetails>();
 
   return (
@@ -43,7 +43,7 @@ const SingleChoiceLocation = ({ rootDataRelay, id, required }: Props) => {
       name={id}
       multiple={false}
       required={required}
-      options={locations}
+      options={items}
       getOptionValue={(option) => (option as LocationDetails).id}
       getOptionLabel={(option: string | LocationDetails) => (option as LocationDetails).name}
       renderOption={(props, option) => {

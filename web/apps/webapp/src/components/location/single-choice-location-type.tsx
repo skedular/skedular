@@ -29,7 +29,7 @@ const SingleChoiceLocationType = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const locationTypes = useMemo<LocationTypeDetails[]>(() => rootData.locationTypes.map((item) => item), [rootData.locationTypes]);
+  const items = useMemo<LocationTypeDetails[]>(() => rootData.locationTypes.map((item) => item), [rootData.locationTypes]);
   const filter = createFilterOptions<LocationTypeDetails>();
 
   return (
@@ -37,7 +37,7 @@ const SingleChoiceLocationType = ({ rootDataRelay, name, required }: Props) => {
       name={name}
       multiple={false}
       required={required}
-      options={locationTypes}
+      options={items}
       getOptionValue={(option) => (option as LocationTypeDetails).type}
       getOptionLabel={(option: string | LocationTypeDetails) => (option as LocationTypeDetails).name}
       renderOption={(props, option) => {

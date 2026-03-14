@@ -62,6 +62,7 @@ public class MarketplaceRecurringBookingService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
+        marketplaceBooking.BillingSchedule = ResolveBillingSchedule(marketplaceBooking.ProductPricing, marketplaceBooking.BillingSchedule);
         if (!IsRecurringPurchaseCadence(marketplaceBooking.ProductPricing.Cadence))
         {
             throw new MarketplaceRecurringBookingCadenceMustBeRecurring();
@@ -137,12 +138,25 @@ public class MarketplaceRecurringBookingService(
     }
 
     private static bool IsRecurringPurchaseCadence(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.WeeklyV1 or
-            ProductPricingCadence.MonthlyV1 or
-            ProductPricingCadence.TwoMonthsV1 or
-            ProductPricingCadence.QuarterlyV1 or
-            ProductPricingCadence.FourMonthsV1 or
-            ProductPricingCadence.FiveMonthsV1 or
-            ProductPricingCadence.SixMonthsV1 or
-            ProductPricingCadence.YearlyV1;
+        cadence is ProductPricingCadence.Weekly or
+            ProductPricingCadence.Fortnightly or
+            ProductPricingCadence.Monthly or
+            ProductPricingCadence.TwoMonths or
+            ProductPricingCadence.Quarterly or
+            ProductPricingCadence.FourMonths or
+            ProductPricingCadence.FiveMonths or
+            ProductPricingCadence.SixMonths or
+            ProductPricingCadence.Yearly;
+
+    private static ProductPricingBillingSchedule ResolveBillingSchedule(
+        ProductPricing pricing,
+        ProductPricingBillingSchedule selectedBillingSchedule)
+    {
+        if (!pricing.AcceptedBillingSchedules.Contains(selectedBillingSchedule))
+        {
+            throw new MarketplaceBookingBillingScheduleNotAccepted();
+        }
+
+        return selectedBillingSchedule;
+    }
 }

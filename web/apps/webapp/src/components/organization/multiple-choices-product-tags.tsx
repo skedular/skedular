@@ -41,11 +41,11 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
     rootDataRelay,
   );
 
-  const productTags = useMemo<ProductTagDetails[]>(() => (rootData.organization ? rootData.organization.productTags.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const items = useMemo<ProductTagDetails[]>(() => (rootData.organization ? rootData.organization.productTags.edges.map(({ node }) => node) : []), [rootData.organization]);
   const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.productTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ProductTagDetails>();
 
-  if (productTags.length === 0) {
+  if (items.length === 0) {
     return <AddOrganizationProductTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
@@ -54,7 +54,7 @@ const MultipleChoicesProductTags = ({ rootDataRelay, name, required, organizatio
       name={name}
       multiple={true}
       required={required}
-      options={productTags}
+      options={items}
       getOptionValue={(option) => (option as ProductTagDetails).id}
       getOptionLabel={(option: string | ProductTagDetails) => (option as ProductTagDetails).name}
       renderOption={(props, option) => {

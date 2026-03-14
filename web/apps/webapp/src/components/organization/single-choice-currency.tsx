@@ -29,7 +29,7 @@ const SingleChoiceCurrency = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const currencies = useMemo<CurrencyDetails[]>(() => rootData.currencies.map((item) => item), [rootData.currencies]);
+  const items = useMemo<CurrencyDetails[]>(() => rootData.currencies.map((item) => item), [rootData.currencies]);
   const filter = createFilterOptions<CurrencyDetails>();
 
   return (
@@ -37,7 +37,7 @@ const SingleChoiceCurrency = ({ rootDataRelay, name, required }: Props) => {
       name={name}
       multiple={false}
       required={required}
-      options={currencies}
+      options={items}
       getOptionValue={(option) => (option as CurrencyDetails).type}
       getOptionLabel={(option: string | CurrencyDetails) => (option as CurrencyDetails).name}
       renderOption={(props, option) => {

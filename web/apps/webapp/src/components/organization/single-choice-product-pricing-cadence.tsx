@@ -29,7 +29,7 @@ const SingleChoiceProductPricingCadence = ({ rootDataRelay, name, required }: Pr
     rootDataRelay,
   );
 
-  const productPricingCadences = useMemo<ProductPricingCadenceDetails[]>(() => rootData.productPricingCadences.map((item) => item), [rootData.productPricingCadences]);
+  const items = useMemo<ProductPricingCadenceDetails[]>(() => rootData.productPricingCadences.map((item) => item), [rootData.productPricingCadences]);
   const filter = createFilterOptions<ProductPricingCadenceDetails>();
 
   return (
@@ -37,7 +37,7 @@ const SingleChoiceProductPricingCadence = ({ rootDataRelay, name, required }: Pr
       name={name}
       multiple={false}
       required={required}
-      options={productPricingCadences}
+      options={items}
       getOptionValue={(option) => (option as ProductPricingCadenceDetails).type}
       getOptionLabel={(option: string | ProductPricingCadenceDetails) => (option as ProductPricingCadenceDetails).name}
       renderOption={(props, option) => {

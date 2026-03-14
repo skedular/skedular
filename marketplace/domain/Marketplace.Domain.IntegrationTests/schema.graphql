@@ -95,11 +95,27 @@ type ProductPricing {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
+  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
+}
+
+type ProductPricingBillingIntervalDetails {
+  type: ProductPricingBillingInterval!
+  name: String!
+}
+
+type ProductPricingBillingModeDetails {
+  type: ProductPricingBillingMode!
+  name: String!
+}
+
+type ProductPricingBillingSchedule {
+  mode: ProductPricingBillingMode!
+  interval: ProductPricingBillingInterval!
 }
 
 type ProductPricingCadenceDetails {
@@ -134,6 +150,8 @@ type Query {
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   productPricingCadences: [ProductPricingCadenceDetails!]!
+  productPricingBillingIntervals: [ProductPricingBillingIntervalDetails!]!
+  productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
 }
 
@@ -194,6 +212,11 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
+input ProductPricingBillingScheduleInput {
+  mode: ProductPricingBillingMode!
+  interval: ProductPricingBillingInterval!
+}
+
 input ProductPricingInput {
   id: String!
   index: Int!
@@ -202,6 +225,7 @@ input ProductPricingInput {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
+  acceptedBillingSchedules: [ProductPricingBillingScheduleInput!]!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
@@ -417,23 +441,39 @@ enum ProductOrderField {
   NAME
 }
 
+enum ProductPricingBillingInterval {
+  NOT_SET
+  FULL_TERM
+  PER_BOOKING
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
+}
+
+enum ProductPricingBillingMode {
+  NOT_SET
+  UPFRONT
+  IN_ARREARS
+}
+
 enum ProductPricingCadence {
   NOT_SET
-  ONE_TIME_V1
-  PER_MINUTE_V1
-  PER_HOUR_V1
-  DAILY_V1
-  WEEKLY_V1
-  MONTHLY_V1
-  HALF_DAY_V1
-  PER15_MINUTES_V1
-  PER30_MINUTES_V1
-  TWO_MONTHS_V1
-  QUARTERLY_V1
-  FOUR_MONTHS_V1
-  FIVE_MONTHS_V1
-  SIX_MONTHS_V1
-  YEARLY_V1
+  ONE_TIME
+  PER_MINUTE
+  PER_HOUR
+  DAILY
+  WEEKLY
+  MONTHLY
+  HALF_DAY
+  PER15_MINUTES
+  PER30_MINUTES
+  TWO_MONTHS
+  QUARTERLY
+  FOUR_MONTHS
+  FIVE_MONTHS
+  SIX_MONTHS
+  YEARLY
+  FORTNIGHTLY
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

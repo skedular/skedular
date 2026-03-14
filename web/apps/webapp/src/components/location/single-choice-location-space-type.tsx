@@ -33,7 +33,7 @@ const SingleChoiceLocationSpaceType = ({ rootDataRelay, name, required }: Props)
     rootDataRelay,
   );
 
-  const locationSpaceTypes = useMemo<LocationSpaceTypeDetails[]>(
+  const items = useMemo<LocationSpaceTypeDetails[]>(
     () => (rootData.organization?.locationSpaceTypes ? rootData.organization.locationSpaceTypes.map((item) => item) : []),
     [rootData.organization],
   );
@@ -44,7 +44,7 @@ const SingleChoiceLocationSpaceType = ({ rootDataRelay, name, required }: Props)
       name={name}
       multiple={false}
       required={required}
-      options={locationSpaceTypes}
+      options={items}
       getOptionValue={(option) => (option as LocationSpaceTypeDetails).id}
       getOptionLabel={(option: string | LocationSpaceTypeDetails) => (option as LocationSpaceTypeDetails).name}
       renderOption={(props, option) => {

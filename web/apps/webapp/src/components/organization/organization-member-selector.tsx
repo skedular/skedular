@@ -64,7 +64,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
 
   const [, startTransition] = useTransition();
   const [bookingPeopleNameSearchText, setBookingPeopleNameSearchText] = useState<string>('');
-  const customers = useMemo<OrganizationMemberDetails[]>(
+  const items = useMemo<OrganizationMemberDetails[]>(
     () => (rootData.organization?.members ? rootData.organization.members.edges.map(({ node }) => node) : []),
     [rootData.organization],
   );
@@ -102,7 +102,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
       name={name}
       multiple={multiple}
       required={required}
-      options={customers}
+      options={items}
       getOptionValue={(option) => (useMemberId ? (option as OrganizationMemberDetails).id : (option as OrganizationMemberDetails).customer.id)}
       getOptionLabel={(option: string | OrganizationMemberDetails) => getCustomerFullName((option as OrganizationMemberDetails).customer)}
       renderOption={(props, option) => {

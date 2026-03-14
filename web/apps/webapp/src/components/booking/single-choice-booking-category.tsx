@@ -29,7 +29,7 @@ const SingleChoiceBookingCategory = ({ rootDataRelay, name, required }: Props) =
     rootDataRelay,
   );
 
-  const categories = useMemo<CategoryDetails[]>(() => rootData.bookingCategories.map((item) => item), [rootData.bookingCategories]);
+  const items = useMemo<CategoryDetails[]>(() => rootData.bookingCategories.map((item) => item), [rootData.bookingCategories]);
   const filter = createFilterOptions<CategoryDetails>();
 
   return (
@@ -37,7 +37,7 @@ const SingleChoiceBookingCategory = ({ rootDataRelay, name, required }: Props) =
       name={name}
       multiple={false}
       required={required}
-      options={categories}
+      options={items}
       getOptionValue={(option) => (option as CategoryDetails).category}
       getOptionLabel={(option: string | CategoryDetails) => (option as CategoryDetails).name}
       renderOption={(props, option) => {

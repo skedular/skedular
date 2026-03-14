@@ -33,7 +33,7 @@ const SingleChoiceResourceType = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const resourceTypes = useMemo<ResourceTypeDetails[]>(
+  const items = useMemo<ResourceTypeDetails[]>(
     () => (rootData.organization?.resourceTypes ? rootData.organization.resourceTypes.map((item) => item) : []),
     [rootData.organization],
   );
@@ -44,7 +44,7 @@ const SingleChoiceResourceType = ({ rootDataRelay, name, required }: Props) => {
       name={name}
       multiple={false}
       required={required}
-      options={resourceTypes}
+      options={items}
       getOptionValue={(option) => (option as ResourceTypeDetails).id}
       getOptionLabel={(option: string | ResourceTypeDetails) => (option as ResourceTypeDetails).name}
       renderOption={(props, option) => {

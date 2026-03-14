@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2f823c666ebc7626f7537f5a3b3f6c7a>>
+ * @generated SignedSource<<cd95bb605a5e22153c279a21e2b6368d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,9 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingCadence = "DAILY_V1" | "FIVE_MONTHS_V1" | "FOUR_MONTHS_V1" | "HALF_DAY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER15_MINUTES_V1" | "PER30_MINUTES_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "QUARTERLY_V1" | "SIX_MONTHS_V1" | "TWO_MONTHS_V1" | "WEEKLY_V1" | "YEARLY_V1" | "%future added value";
+export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
+export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type UpdateProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
@@ -37,6 +39,7 @@ export type ListingMetadataInput = {
   title?: string | null | undefined;
 };
 export type ProductPricingInput = {
+  acceptedBillingSchedules: ReadonlyArray<ProductPricingBillingScheduleInput>;
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   cadence: ProductPricingCadence;
   id: string;
@@ -49,6 +52,10 @@ export type ProductPricingInput = {
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
+};
+export type ProductPricingBillingScheduleInput = {
+  interval: ProductPricingBillingInterval;
+  mode: ProductPricingBillingMode;
 };
 export type editProduct_updateProductMutation$variables = {
   input: UpdateProductInput;

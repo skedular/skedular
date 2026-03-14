@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c7ca7d7391bdd6e4d9c81e0816252b38>>
+ * @generated SignedSource<<41cdb207b41294f68a43d4dabee47faa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingCadence = "DAILY_V1" | "FIVE_MONTHS_V1" | "FOUR_MONTHS_V1" | "HALF_DAY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER15_MINUTES_V1" | "PER30_MINUTES_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "QUARTERLY_V1" | "SIX_MONTHS_V1" | "TWO_MONTHS_V1" | "WEEKLY_V1" | "YEARLY_V1" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -57,7 +57,7 @@ export type bookProduct_query$data = {
       readonly price: any;
     }>;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceBookingPaymentMethodType_query" | "singleChoiceMarketplaceBookingCategory_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceMarketplaceBookingCategory_query" | "singleChoicePaymentMethodType_query">;
   readonly " $fragmentType": "bookProduct_query";
 };
 export type bookProduct_query$key = {
@@ -345,7 +345,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "singleChoiceBookingPaymentMethodType_query"
+      "name": "singleChoicePaymentMethodType_query"
     },
     {
       "args": null,
@@ -358,6 +358,6 @@ return {
 };
 })();
 
-(node as any).hash = "a4f8da0c09bc37e6f82b01d23f9b6ee4";
+(node as any).hash = "2b4cb8324c07a28f73fc582088d48059";
 
 export default node;

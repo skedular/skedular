@@ -25,4 +25,5 @@ public class AddMarketplaceBookingInput
     [GraphQLName("quantity")] public int Quantity { get; set; }
     [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
     [GraphQLName("pricingId")] public string PricingId { get; set; } = string.Empty;
+    [GraphQLName("billingSchedule")] public ProductPricingBillingSchedule BillingSchedule { get; set; } = ProductPricingBillingSchedule.Empty;
 }

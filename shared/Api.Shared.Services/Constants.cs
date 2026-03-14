@@ -112,6 +112,8 @@ public static class Constants
     public const int MaxStripePriceIdLength = 100;
     public const int MaxStripeCheckoutSessionIdLength = 100;
     public const int MaxProductPricingCadenceLength = 100;
+    public const int MaxProductPricingBillingModeLength = 32;
+    public const int MaxProductPricingBillingIntervalLength = 32;
 
     public const int MaxFloorPlanNameLength = 100;
 

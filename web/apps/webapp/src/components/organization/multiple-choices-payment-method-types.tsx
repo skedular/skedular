@@ -1,15 +1,14 @@
 import { BodyIconTypography } from '@/components/commons';
-import type { singleChoiceBookingPaymentMethodType_query$key } from '@/queries/__generated__/singleChoiceBookingPaymentMethodType_query.graphql';
+import type { multipleChoicesPaymentMethodTypes_query$key } from '@/queries/__generated__/multipleChoicesPaymentMethodTypes_query.graphql';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { Autocomplete } from 'mui-rff';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 
 type Props = {
-  rootDataRelay: singleChoiceBookingPaymentMethodType_query$key;
+  rootDataRelay: multipleChoicesPaymentMethodTypes_query$key;
   name: string;
   required?: boolean;
-  acceptedBookingPaymentMethods?: string[];
 };
 
 type BookingPaymentMethodTypeDetails = {
@@ -17,10 +16,10 @@ type BookingPaymentMethodTypeDetails = {
   name: string;
 };
 
-const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, acceptedBookingPaymentMethods }: Props) => {
-  const rootData = useFragment<singleChoiceBookingPaymentMethodType_query$key>(
+const MultipleChoicesPaymentMethodTypes = ({ rootDataRelay, name, required }: Props) => {
+  const rootData = useFragment<multipleChoicesPaymentMethodTypes_query$key>(
     graphql`
-      fragment singleChoiceBookingPaymentMethodType_query on Query {
+      fragment multipleChoicesPaymentMethodTypes_query on Query {
         paymentMethodTypes {
           type
           name
@@ -30,18 +29,15 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
     rootDataRelay,
   );
 
-  const paymentMethodTypes = useMemo<BookingPaymentMethodTypeDetails[]>(
-    () => rootData.paymentMethodTypes.filter((item) => !acceptedBookingPaymentMethods || acceptedBookingPaymentMethods.some((x) => item.type === x)).map((item) => item),
-    [rootData.paymentMethodTypes, acceptedBookingPaymentMethods],
-  );
+  const items = useMemo<BookingPaymentMethodTypeDetails[]>(() => rootData.paymentMethodTypes.map((item) => item), [rootData.paymentMethodTypes]);
   const filter = createFilterOptions<BookingPaymentMethodTypeDetails>();
 
   return (
     <Autocomplete
       name={name}
-      multiple={false}
+      multiple={true}
       required={required}
-      options={paymentMethodTypes}
+      options={items}
       getOptionValue={(option) => (option as BookingPaymentMethodTypeDetails).type}
       getOptionLabel={(option: string | BookingPaymentMethodTypeDetails) => (option as BookingPaymentMethodTypeDetails).name}
       renderOption={(props, option) => {
@@ -53,6 +49,7 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
           </li>
         );
       }}
+      disableCloseOnSelect
       filterOptions={(options, params) => filter(options as BookingPaymentMethodTypeDetails[], params)}
       selectOnFocus
       clearOnBlur
@@ -61,4 +58,4 @@ const SingleChoiceBookingPaymentMethodType = ({ rootDataRelay, name, required, a
   );
 };
 
-export default memo(SingleChoiceBookingPaymentMethodType);
+export default memo(MultipleChoicesPaymentMethodTypes);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7c37b7e4ae4e6438516ba9f34451803b>>
+ * @generated SignedSource<<b47529d1ddaa3167bcbd17c3f6a4cc19>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,23 +11,23 @@
 import { ReaderFragment } from 'relay-runtime';
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type singleChoiceBookingPaymentMethodType_query$data = {
+export type singleChoicePaymentMethodType_query$data = {
   readonly paymentMethodTypes: ReadonlyArray<{
     readonly name: string;
     readonly type: PaymentMethod;
   }>;
-  readonly " $fragmentType": "singleChoiceBookingPaymentMethodType_query";
+  readonly " $fragmentType": "singleChoicePaymentMethodType_query";
 };
-export type singleChoiceBookingPaymentMethodType_query$key = {
-  readonly " $data"?: singleChoiceBookingPaymentMethodType_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"singleChoiceBookingPaymentMethodType_query">;
+export type singleChoicePaymentMethodType_query$key = {
+  readonly " $data"?: singleChoicePaymentMethodType_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"singleChoicePaymentMethodType_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "singleChoiceBookingPaymentMethodType_query",
+  "name": "singleChoicePaymentMethodType_query",
   "selections": [
     {
       "alias": null,
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f552b2d533d1cde50502165c0677dc0a";
+(node as any).hash = "d8ff446f14425efdfdece10dc895fa55";
 
 export default node;

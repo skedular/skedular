@@ -40,7 +40,7 @@ const SingleChoiceOrganizationStripeConnectAccount = ({ rootDataRelay, name, req
     rootDataRelay,
   );
 
-  const accounts = useMemo<OrganizationStripeConnectAccount[]>(
+  const items = useMemo<OrganizationStripeConnectAccount[]>(
     () => rootData.organizationStripeConnectAccounts.edges.map(({ node }) => node),
     [rootData.organizationStripeConnectAccounts],
   );
@@ -51,7 +51,7 @@ const SingleChoiceOrganizationStripeConnectAccount = ({ rootDataRelay, name, req
       name={name}
       multiple={false}
       required={required}
-      options={accounts}
+      options={items}
       getOptionValue={(option) => (option as OrganizationStripeConnectAccount).id}
       getOptionLabel={(option: string | OrganizationStripeConnectAccount) => (option as OrganizationStripeConnectAccount).name}
       renderOption={(props, option) => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6792ab1e70cb5826aa865c35248680f>>
+ * @generated SignedSource<<0ad81a8c61f2dc2097f5388c749b7ea2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingCadence = "DAILY_V1" | "FIVE_MONTHS_V1" | "FOUR_MONTHS_V1" | "HALF_DAY_V1" | "MONTHLY_V1" | "NOT_SET" | "ONE_TIME_V1" | "PER15_MINUTES_V1" | "PER30_MINUTES_V1" | "PER_HOUR_V1" | "PER_MINUTE_V1" | "QUARTERLY_V1" | "SIX_MONTHS_V1" | "TWO_MONTHS_V1" | "WEEKLY_V1" | "YEARLY_V1" | "%future added value";
+export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -79,7 +79,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesBookingPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -437,7 +437,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "multipleChoicesBookingPaymentMethodTypes_query"
+      "name": "multipleChoicesPaymentMethodTypes_query"
     },
     {
       "args": null,
@@ -455,6 +455,6 @@ return {
 };
 })();
 
-(node as any).hash = "4deb5a28350d0fca9b591d05a2943bfe";
+(node as any).hash = "b03d905e6157967681c12b3441eaa2b8";
 
 export default node;

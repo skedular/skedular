@@ -33,7 +33,7 @@ const MultipleChoicesLocationSpaceTypes = ({ rootDataRelay, name, required }: Pr
     rootDataRelay,
   );
 
-  const locationSpaceTypes = useMemo<LocationSpaceTypeDetails[]>(
+  const items = useMemo<LocationSpaceTypeDetails[]>(
     () => (rootData.organization?.locationSpaceTypes ? rootData.organization.locationSpaceTypes.map((item) => item) : []),
     [rootData.organization],
   );
@@ -44,7 +44,7 @@ const MultipleChoicesLocationSpaceTypes = ({ rootDataRelay, name, required }: Pr
       name={name}
       multiple={true}
       required={required}
-      options={locationSpaceTypes}
+      options={items}
       getOptionValue={(option) => (option as LocationSpaceTypeDetails).id}
       getOptionLabel={(option: string | LocationSpaceTypeDetails) => (option as LocationSpaceTypeDetails).name}
       renderOption={(props, option) => {

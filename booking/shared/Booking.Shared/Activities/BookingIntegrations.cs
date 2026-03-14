@@ -59,21 +59,18 @@ public class BookingIntegrations(
         var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
         var totalPrice = marketplaceBooking.ProductPricing.Cadence switch
         {
-            ProductPricingCadence.OneTimeV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
-            ProductPricingCadence.PerMinuteV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * totalMinutes,
-            ProductPricingCadence.Per15MinutesV1 =>
+            ProductPricingCadence.OneTime => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.PerMinute => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * totalMinutes,
+            ProductPricingCadence.Per15Minutes =>
                 // ReSharper disable once PossibleLossOfFraction
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15),
-            ProductPricingCadence.Per30MinutesV1 =>
+            ProductPricingCadence.Per30Minutes =>
                 // ReSharper disable once PossibleLossOfFraction
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30),
-            ProductPricingCadence.PerHourV1 =>
+            ProductPricingCadence.PerHour =>
                 // ReSharper disable once PossibleLossOfFraction
                 marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60),
             // TODO: 20260302 : Morteza: Implement other cadence 
-            // ProductVersionPricingCadence.DailyV1 => expr,
-            // ProductVersionPricingCadence.WeeklyV1 => expr,
-            // ProductVersionPricingCadence.MonthlyV1 => expr,
             _ => throw new ArgumentOutOfRangeException()
         };
 

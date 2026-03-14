@@ -15,7 +15,7 @@ interface TimezoneDetails {
 }
 
 const SingleChoinceTimezone = ({ name, required, helperText }: Props) => {
-  const timezones = useMemo<TimezoneDetails[]>(
+  const items = useMemo<TimezoneDetails[]>(
     () =>
       Intl.supportedValuesOf('timeZone').map((item) => ({
         id: item,
@@ -31,7 +31,7 @@ const SingleChoinceTimezone = ({ name, required, helperText }: Props) => {
       name={name}
       multiple={false}
       required={required}
-      options={timezones}
+      options={items}
       getOptionValue={(option) => (option as TimezoneDetails).id}
       getOptionLabel={(option: string | TimezoneDetails) => (option as TimezoneDetails).label}
       renderOption={(props, option) => {

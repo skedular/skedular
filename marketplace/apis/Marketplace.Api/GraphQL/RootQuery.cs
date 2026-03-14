@@ -17,21 +17,44 @@ public class RootQuery(IVersionService versionService)
 
     public ICollection<ProductPricingCadenceDetails> ProductPricingCadences =>
     [
-        new() { Type = ProductPricingCadence.OneTimeV1, Name = ProductPricingCadence.OneTimeV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.PerMinuteV1, Name = ProductPricingCadence.PerMinuteV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.Per15MinutesV1, Name = ProductPricingCadence.Per15MinutesV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.Per30MinutesV1, Name = ProductPricingCadence.Per30MinutesV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.PerHourV1, Name = ProductPricingCadence.PerHourV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.HalfDayV1, Name = ProductPricingCadence.HalfDayV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.DailyV1, Name = ProductPricingCadence.DailyV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.WeeklyV1, Name = ProductPricingCadence.WeeklyV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.MonthlyV1, Name = ProductPricingCadence.MonthlyV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.TwoMonthsV1, Name = ProductPricingCadence.TwoMonthsV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.QuarterlyV1, Name = ProductPricingCadence.QuarterlyV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.FourMonthsV1, Name = ProductPricingCadence.FourMonthsV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.FiveMonthsV1, Name = ProductPricingCadence.FiveMonthsV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.SixMonthsV1, Name = ProductPricingCadence.SixMonthsV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.YearlyV1, Name = ProductPricingCadence.YearlyV1.ToProductPricingCadenceName() }
+        new() { Type = ProductPricingCadence.OneTime, Name = ProductPricingCadence.OneTime.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.PerMinute, Name = ProductPricingCadence.PerMinute.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Per15Minutes, Name = ProductPricingCadence.Per15Minutes.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Per30Minutes, Name = ProductPricingCadence.Per30Minutes.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.PerHour, Name = ProductPricingCadence.PerHour.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.HalfDay, Name = ProductPricingCadence.HalfDay.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Daily, Name = ProductPricingCadence.Daily.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Weekly, Name = ProductPricingCadence.Weekly.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Fortnightly, Name = ProductPricingCadence.Fortnightly.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Monthly, Name = ProductPricingCadence.Monthly.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.TwoMonths, Name = ProductPricingCadence.TwoMonths.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Quarterly, Name = ProductPricingCadence.Quarterly.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.FourMonths, Name = ProductPricingCadence.FourMonths.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.FiveMonths, Name = ProductPricingCadence.FiveMonths.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.SixMonths, Name = ProductPricingCadence.SixMonths.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Yearly, Name = ProductPricingCadence.Yearly.ToProductPricingCadenceName() }
+    ];
+
+    public ICollection<ProductPricingBillingIntervalDetails> ProductPricingBillingIntervals =>
+    [
+        new() { Type = ProductPricingBillingInterval.FullTerm, Name = ProductPricingBillingInterval.FullTerm.ToProductPricingBillingIntervalName() },
+        new()
+        {
+            Type = ProductPricingBillingInterval.PerBooking, Name = ProductPricingBillingInterval.PerBooking.ToProductPricingBillingIntervalName()
+        },
+        new() { Type = ProductPricingBillingInterval.Weekly, Name = ProductPricingBillingInterval.Weekly.ToProductPricingBillingIntervalName() },
+        new()
+        {
+            Type = ProductPricingBillingInterval.Fortnightly,
+            Name = ProductPricingBillingInterval.Fortnightly.ToProductPricingBillingIntervalName()
+        },
+        new() { Type = ProductPricingBillingInterval.Monthly, Name = ProductPricingBillingInterval.Monthly.ToProductPricingBillingIntervalName() }
+    ];
+
+    public ICollection<ProductPricingBillingModeDetails> ProductPricingBillingModes =>
+    [
+        new() { Type = ProductPricingBillingMode.Upfront, Name = ProductPricingBillingMode.Upfront.ToProductPricingBillingModeName() },
+        new() { Type = ProductPricingBillingMode.InArrears, Name = ProductPricingBillingMode.InArrears.ToProductPricingBillingModeName() }
     ];
 
     public ICollection<PaymentMethodTypeDetails> PaymentMethods =>

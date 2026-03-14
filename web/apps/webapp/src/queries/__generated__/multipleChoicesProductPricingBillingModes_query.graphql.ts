@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1169d98a85ef3756f9d9baa6a056af35>>
+ * @generated SignedSource<<f87de31503034656e845c0ef80a830ac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,32 +9,32 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
+export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type multipleChoicesBookingPaymentMethodTypes_query$data = {
-  readonly paymentMethodTypes: ReadonlyArray<{
+export type multipleChoicesProductPricingBillingModes_query$data = {
+  readonly productPricingBillingModes: ReadonlyArray<{
     readonly name: string;
-    readonly type: PaymentMethod;
+    readonly type: ProductPricingBillingMode;
   }>;
-  readonly " $fragmentType": "multipleChoicesBookingPaymentMethodTypes_query";
+  readonly " $fragmentType": "multipleChoicesProductPricingBillingModes_query";
 };
-export type multipleChoicesBookingPaymentMethodTypes_query$key = {
-  readonly " $data"?: multipleChoicesBookingPaymentMethodTypes_query$data;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesBookingPaymentMethodTypes_query">;
+export type multipleChoicesProductPricingBillingModes_query$key = {
+  readonly " $data"?: multipleChoicesProductPricingBillingModes_query$data;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesProductPricingBillingModes_query">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "multipleChoicesBookingPaymentMethodTypes_query",
+  "name": "multipleChoicesProductPricingBillingModes_query",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "PaymentMethodTypeDetails",
+      "concreteType": "ProductPricingBillingModeDetails",
       "kind": "LinkedField",
-      "name": "paymentMethodTypes",
+      "name": "productPricingBillingModes",
       "plural": true,
       "selections": [
         {
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "32ea139c40ffafef249ec1230bbc4c15";
+(node as any).hash = "409bb5f96251de982f93fa5fe485df77";
 
 export default node;

@@ -29,7 +29,7 @@ const SingleChoiceOrganizationType = ({ rootDataRelay, name, required }: Props) 
     rootDataRelay,
   );
 
-  const organizationTypes = useMemo<OrganizationTypeDetails[]>(() => rootData.organizationTypes.map((item) => item), [rootData.organizationTypes]);
+  const items = useMemo<OrganizationTypeDetails[]>(() => rootData.organizationTypes.map((item) => item), [rootData.organizationTypes]);
   const filter = createFilterOptions<OrganizationTypeDetails>();
 
   return (
@@ -37,7 +37,7 @@ const SingleChoiceOrganizationType = ({ rootDataRelay, name, required }: Props) 
       name={name}
       multiple={false}
       required={required}
-      options={organizationTypes}
+      options={items}
       getOptionValue={(option) => (option as OrganizationTypeDetails).type}
       getOptionLabel={(option: string | OrganizationTypeDetails) => (option as OrganizationTypeDetails).name}
       renderOption={(props, option) => {

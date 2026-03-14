@@ -24,6 +24,7 @@ public class MarketplaceBooking : EntityBase
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
     public ICollection<string> InvoiceEmailList { get; set; } = [];
+    public ProductPricingBillingSchedule BillingSchedule { get; set; } = ProductPricingBillingSchedule.Empty;
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? BookingId { get; set; }
@@ -61,6 +62,7 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
+        builder.Property(item => item.BillingSchedule).HasColumnType("jsonb");
         builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
         builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");
 

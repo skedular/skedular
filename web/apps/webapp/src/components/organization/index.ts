@@ -1,5 +1,8 @@
 export { default as MultipleChoicesAmenities } from './multiple-choices-amenities';
 export { default as MultipleChoicesCustomTags } from './multiple-choices-custom-tags';
+export { default as MultipleChoicesPaymentMethodTypes } from './multiple-choices-payment-method-types';
+export { default as MultipleChoicesProductPricingBillingIntervals } from './multiple-choices-product-pricing-billing-intervals';
+export { default as MultipleChoicesProductPricingBillingModes } from './multiple-choices-product-pricing-billing-modes';
 export { default as MultipleChoicesProductTags } from './multiple-choices-product-tags';
 export { default as MultipleChoicesZones } from './multiple-choices-zones';
 export { default as OrganizationMemberSelector } from './organization-member-selector';
@@ -10,5 +13,6 @@ export { default as OrganizationTermsOfUse } from './organization-terms-of-use';
 export { default as SingleChoiceCurrency } from './single-choice-currency';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
 export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
+export { default as SingleChoicePaymentMethodType } from './single-choice-payment-method-type';
 export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';
 export { default as SingleChoiceResourceType } from './single-choice-resource-type';

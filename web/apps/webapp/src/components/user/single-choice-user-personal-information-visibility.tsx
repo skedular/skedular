@@ -29,7 +29,7 @@ const SingleChoiceUserPersonalInformationVisibility = ({ rootDataRelay, name, re
     rootDataRelay,
   );
 
-  const visibilityTypes = useMemo<PersonalInformationVisibilityDetails[]>(
+  const items = useMemo<PersonalInformationVisibilityDetails[]>(
     () => rootData.personalInformationVisibilityTypes.map((item) => item),
     [rootData.personalInformationVisibilityTypes],
   );
@@ -40,7 +40,7 @@ const SingleChoiceUserPersonalInformationVisibility = ({ rootDataRelay, name, re
       name={name}
       multiple={false}
       required={required}
-      options={visibilityTypes}
+      options={items}
       getOptionValue={(option) => (option as PersonalInformationVisibilityDetails).type}
       getOptionLabel={(option: string | PersonalInformationVisibilityDetails) => (option as PersonalInformationVisibilityDetails).name}
       renderOption={(props, option) => {

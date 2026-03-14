@@ -1,10 +1,9 @@
 import { FileUploadResponse } from '@/clients/openapi/skedular/v1/core/fetch';
-import { MultipleChoicesBookingPaymentMethodTypes } from '@/components/booking';
 import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackColumn, SectionIconTypography, StackColumn, StackRow } from '@/components/commons';
 import { DeleteIcon } from '@/components/icons';
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import { MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
+import { MultipleChoicesPaymentMethodTypes, MultipleChoicesProductTags, SingleChoiceCurrency, SingleChoiceProductPricingCadence } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
@@ -62,7 +61,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   id: uuid(),
   title: null,
   subTitle: null,
-  cadence: 'ONE_TIME_V1',
+  cadence: 'ONE_TIME',
   price: '',
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
@@ -75,19 +74,19 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
 
 const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
   switch (cadence) {
-    case 'PER15_MINUTE_V1':
+    case 'PER15_MINUTE':
       return {
         durationStepMinutes: 15,
         durationStepLabel: '15 minutes',
       };
 
-    case 'PER30_MINUTES_V1':
+    case 'PER30_MINUTES':
       return {
         durationStepMinutes: 30,
         durationStepLabel: '30 minutes',
       };
 
-    case 'PER_HOUR_V1':
+    case 'PER_HOUR':
       return {
         durationStepMinutes: 60,
         durationStepLabel: '1 hour (60 minutes)',
@@ -293,7 +292,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
         defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
         ...multipleChoicesProductTags_query
         ...singleChoiceCurrency_query
-        ...multipleChoicesBookingPaymentMethodTypes_query
+        ...multipleChoicesPaymentMethodTypes_query
         ...singleChoiceProductPricingCadence_query
         ...multipleChoicesAmenities_query
       }
@@ -735,7 +734,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                             </FormFieldLabel>
 
                             <FormFieldLabel label="Accepted Payment Methods">
-                              <MultipleChoicesBookingPaymentMethodTypes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
+                              <MultipleChoicesPaymentMethodTypes rootDataRelay={rootData} name={`pricingOptions[${index}].acceptedPaymentMethods`} required />
                             </FormFieldLabel>
                           </StackColumn>
                         </Box>

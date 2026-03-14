@@ -22,7 +22,7 @@ const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: P
     rootDataRelay,
   );
 
-  const roles = useMemo<string[]>(() => rootData.organizationMemberRoles.map((role) => role), [rootData.organizationMemberRoles]);
+  const items = useMemo<string[]>(() => rootData.organizationMemberRoles.map((role) => role), [rootData.organizationMemberRoles]);
   const filter = createFilterOptions<string>();
 
   return (
@@ -30,7 +30,7 @@ const OrganizationSingleChoiceMemberRole = ({ rootDataRelay, name, required }: P
       name={name}
       multiple={false}
       required={required}
-      options={roles}
+      options={items}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string | string) => convertStringToLowercaseExceptFirstLetter(option as string)}
       renderOption={(props, option) => {

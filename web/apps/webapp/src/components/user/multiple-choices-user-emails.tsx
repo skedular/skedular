@@ -23,7 +23,7 @@ const MultipleChoicesUserEmails = ({ rootDataRelay, name, required }: Props) => 
     rootDataRelay,
   );
 
-  const zones = useMemo<string[]>(() => rootData.me.emails.map((item) => item), [rootData.me.emails]);
+  const items = useMemo<string[]>(() => rootData.me.emails.map((item) => item), [rootData.me.emails]);
   const filter = createFilterOptions<string>();
 
   return (
@@ -31,7 +31,7 @@ const MultipleChoicesUserEmails = ({ rootDataRelay, name, required }: Props) => 
       name={name}
       multiple={true}
       required={required}
-      options={zones}
+      options={items}
       getOptionValue={(option) => option as string}
       getOptionLabel={(option: string) => option as string}
       renderOption={(props, option) => {

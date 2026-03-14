@@ -33,7 +33,7 @@ const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }
     rootDataRelay,
   );
 
-  const industries = useMemo<SubCategoryDetails[]>(
+  const items = useMemo<SubCategoryDetails[]>(
     () =>
       rootData.organizationIndustryMainCategoriesReferences.flatMap((item) =>
         item.subCategories.map<SubCategoryDetails>(({ id, name }) => ({
@@ -53,7 +53,7 @@ const OrganizationMultipleChoicesIndustries = ({ rootDataRelay, name, required }
       multiple={true}
       groupBy={(option) => (option as SubCategoryDetails).mainCategoryName}
       required={required}
-      options={industries}
+      options={items}
       getOptionValue={(option) => (option as SubCategoryDetails).id}
       getOptionLabel={(option: string | SubCategoryDetails) => (option as SubCategoryDetails).name}
       renderOption={(props, option) => {

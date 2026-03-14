@@ -345,9 +345,9 @@ public class ProductService(
     private static (int DurationStepMinutes, string DurationStepLabel) GetDurationStepDetails(ProductPricingCadence cadence) =>
         cadence switch
         {
-            ProductPricingCadence.Per15MinutesV1 => (15, "15-minute"),
-            ProductPricingCadence.Per30MinutesV1 => (30, "30-minute"),
-            ProductPricingCadence.PerHourV1 => (60, "60-minute"),
+            ProductPricingCadence.Per15Minutes => (15, "15-minute"),
+            ProductPricingCadence.Per30Minutes => (30, "30-minute"),
+            ProductPricingCadence.PerHour => (60, "60-minute"),
             _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
         };
 
@@ -356,6 +356,23 @@ public class ProductService(
         if (pricing.AcceptedPaymentMethods.Count <= 0)
         {
             throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(pricing.AcceptedPaymentMethods));
+        }
+
+        var acceptedBillingSchedules = pricing.AcceptedBillingSchedules;
+        if (acceptedBillingSchedules.Count <= 0)
+        {
+            throw new ProductPricingAcceptedBillingSchedulesRequired();
+        }
+
+        if (acceptedBillingSchedules.Any(item =>
+                item.Mode == ProductPricingBillingMode.NotSet || item.Interval == ProductPricingBillingInterval.NotSet))
+        {
+            throw new ProductPricingAcceptedBillingSchedulesCannotContainNotSet();
+        }
+
+        if (acceptedBillingSchedules.Distinct().Count() != acceptedBillingSchedules.Count)
+        {
+            throw new ProductPricingAcceptedBillingSchedulesCannotContainDuplicates();
         }
 
         var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.Cadence);

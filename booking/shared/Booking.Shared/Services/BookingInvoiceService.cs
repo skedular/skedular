@@ -196,15 +196,12 @@ public class BookingInvoiceService(
                 var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
                 var quantity = pricing.Cadence switch
                 {
-                    ProductPricingCadence.OneTimeV1 => marketplaceBooking.Quantity,
-                    ProductPricingCadence.PerMinuteV1 => marketplaceBooking.Quantity * totalMinutes,
-                    ProductPricingCadence.Per15MinutesV1 => marketplaceBooking.Quantity * (totalMinutes / 15),
-                    ProductPricingCadence.Per30MinutesV1 => marketplaceBooking.Quantity * (totalMinutes / 30),
-                    ProductPricingCadence.PerHourV1 => marketplaceBooking.Quantity * (totalMinutes / 60),
+                    ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
+                    ProductPricingCadence.PerMinute => marketplaceBooking.Quantity * totalMinutes,
+                    ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15),
+                    ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30),
+                    ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60),
                     // TODO: 20260302 : Morteza: Implement other cadence 
-                    // ProductVersionPricingCadence.DailyV1 => expr,
-                    // ProductVersionPricingCadence.WeeklyV1 => expr,
-                    // ProductVersionPricingCadence.MonthlyV1 => expr,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 
@@ -221,15 +218,12 @@ public class BookingInvoiceService(
 
                 var totalPrice = pricing.Cadence switch
                 {
-                    ProductPricingCadence.OneTimeV1 => price * quantity,
-                    ProductPricingCadence.PerMinuteV1 => price * quantity,
-                    ProductPricingCadence.Per15MinutesV1 => price * quantity,
-                    ProductPricingCadence.Per30MinutesV1 => price * quantity,
-                    ProductPricingCadence.PerHourV1 => price * quantity,
+                    ProductPricingCadence.OneTime => price * quantity,
+                    ProductPricingCadence.PerMinute => price * quantity,
+                    ProductPricingCadence.Per15Minutes => price * quantity,
+                    ProductPricingCadence.Per30Minutes => price * quantity,
+                    ProductPricingCadence.PerHour => price * quantity,
                     // TODO: 20260302 : Morteza: Implement other cadence 
-                    // ProductVersionPricingCadence.DailyV1 => expr,
-                    // ProductVersionPricingCadence.WeeklyV1 => expr,
-                    // ProductVersionPricingCadence.MonthlyV1 => expr,
                     _ => throw new ArgumentOutOfRangeException()
                 };
 

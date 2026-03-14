@@ -59,22 +59,38 @@ message CdnFile {
 }
 
 enum ProductPricingCadence {
-  ProductPricingCadence_NotSet         = 0;
-  ProductPricingCadence_OneTimeV1      = 1;
-  ProductPricingCadence_PerMinuteV1    = 2;
-  ProductPricingCadence_PerHourV1      = 3;
-  ProductPricingCadence_HalfDayV1      = 4;
-  ProductPricingCadence_DailyV1        = 5;
-  ProductPricingCadence_WeeklyV1       = 6;
-  ProductPricingCadence_MonthlyV1      = 7;
-  ProductPricingCadence_Per15MinutesV1 = 8;
-  ProductPricingCadence_Per30MinutesV1 = 9;
-  ProductPricingCadence_TwoMonthsV1    = 10;
-  ProductPricingCadence_QuarterlyV1    = 11;
-  ProductPricingCadence_FourMonthsV1   = 12;
-  ProductPricingCadence_FiveMonthsV1   = 13;
-  ProductPricingCadence_SixMonthsV1    = 14;
-  ProductPricingCadence_YearlyV1       = 15;
+  ProductPricingCadence_NotSet       = 0;
+  ProductPricingCadence_OneTime      = 1;
+  ProductPricingCadence_PerMinute    = 2;
+  ProductPricingCadence_PerHour      = 3;
+  ProductPricingCadence_HalfDay      = 4;
+  ProductPricingCadence_Daily        = 5;
+  ProductPricingCadence_Weekly       = 6;
+  ProductPricingCadence_Monthly      = 7;
+  ProductPricingCadence_Per15Minutes = 8;
+  ProductPricingCadence_Per30Minutes = 9;
+  ProductPricingCadence_TwoMonths    = 10;
+  ProductPricingCadence_Quarterly    = 11;
+  ProductPricingCadence_FourMonths   = 12;
+  ProductPricingCadence_FiveMonths   = 13;
+  ProductPricingCadence_SixMonths    = 14;
+  ProductPricingCadence_Yearly       = 15;
+  ProductPricingCadence_Fortnightly  = 16;
+}
+
+enum ProductPricingBillingMode {
+  ProductPricingBillingMode_NotSet    = 0;
+  ProductPricingBillingMode_Upfront   = 1;
+  ProductPricingBillingMode_InArrears = 2;
+}
+
+enum ProductPricingBillingInterval {
+  ProductPricingBillingInterval_NotSet      = 0;
+  ProductPricingBillingInterval_FullTerm    = 1;
+  ProductPricingBillingInterval_PerBooking  = 2;
+  ProductPricingBillingInterval_Weekly      = 3;
+  ProductPricingBillingInterval_Fortnightly = 4;
+  ProductPricingBillingInterval_Monthly     = 5;
 }
 
 enum PaymentMethod {
@@ -88,19 +104,20 @@ enum Currency {
 }
 
 message ProductPricing {
-  string                 id                                             = 1;
-  int32                  index                                          = 2;
-  ListingMetadata        listingMetadata                                = 3;
-  ProductPricingCadence  cadence                                        = 4;
-  double                 price                                          = 5;
-  bool                   isTaxInclusive                                 = 6;
-  Currency               currency                                       = 7;
-  repeated PaymentMethod acceptedBookingPaymentMethods                  = 8;
-  int32                  minDurationMinutes                             = 9;
-  int32                  maxDurationMinutes                             = 10;
-  int32                  maxAllowedResourcesLockTimePaidViaCard         = 11;
-  int32                  maxAllowedResourcesLockTimePaidViaBankTransfer = 12;
-  int32                  numberOfResourcesToBook                        = 13;
+  string                                 id                                             = 1;
+  int32                                  index                                          = 2;
+  ListingMetadata                        listingMetadata                                = 3;
+  ProductPricingCadence                  cadence                                        = 4;
+  double                                 price                                          = 5;
+  bool                                   isTaxInclusive                                 = 6;
+  Currency                               currency                                       = 7;
+  repeated PaymentMethod                 acceptedBookingPaymentMethods                  = 8;
+  int32                                  minDurationMinutes                             = 9;
+  int32                                  maxDurationMinutes                             = 10;
+  int32                                  maxAllowedResourcesLockTimePaidViaCard         = 11;
+  int32                                  maxAllowedResourcesLockTimePaidViaBankTransfer = 12;
+  int32                                  numberOfResourcesToBook                        = 13;
+  repeated ProductPricingBillingSchedule acceptedBillingSchedules                       = 14;
 }
 
 message ListingMetadata {
@@ -108,4 +125,9 @@ message ListingMetadata {
   string          title            = 2;
   string          subTitle         = 3;
   repeated string includedFeatures = 4;
+}
+
+message ProductPricingBillingSchedule {
+  ProductPricingBillingMode     mode     = 1;
+  ProductPricingBillingInterval interval = 2;
 }

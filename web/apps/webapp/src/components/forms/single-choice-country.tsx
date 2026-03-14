@@ -16,7 +16,7 @@ interface CountryDetails {
 }
 
 const SingleChoiceCountry = ({ name, required }: Props) => {
-  const countries = useMemo<CountryDetails[]>(() => Object.entries(countriesList).map(([, { name }]) => ({ code: getCountryCode(name) as TCountryCode, name })), []);
+  const items = useMemo<CountryDetails[]>(() => Object.entries(countriesList).map(([, { name }]) => ({ code: getCountryCode(name) as TCountryCode, name })), []);
   const filter = createFilterOptions<CountryDetails>();
 
   return (
@@ -24,7 +24,7 @@ const SingleChoiceCountry = ({ name, required }: Props) => {
       name={name}
       multiple={false}
       required={required}
-      options={countries}
+      options={items}
       getOptionValue={(option) => (option as CountryDetails).code}
       getOptionLabel={(option: string | CountryDetails) => (option as CountryDetails).name}
       renderOption={(props, option) => {

@@ -88,6 +88,8 @@ public class MarketplaceBookingService(
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
 
+        marketplaceBooking.BillingSchedule = ResolveBillingSchedule(marketplaceBooking.ProductPricing, marketplaceBooking.BillingSchedule);
+
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
 
         var maxAllowedResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
@@ -451,13 +453,25 @@ public class MarketplaceBookingService(
     }
 
     private static bool IsSingleInstanceMarketplaceCadence(ProductPricingCadence cadence) =>
-        cadence is ProductPricingCadence.OneTimeV1 or
-            ProductPricingCadence.PerMinuteV1 or
-            ProductPricingCadence.Per15MinutesV1 or
-            ProductPricingCadence.Per30MinutesV1 or
-            ProductPricingCadence.PerHourV1 or
-            ProductPricingCadence.HalfDayV1 or
-            ProductPricingCadence.DailyV1;
+        cadence is ProductPricingCadence.OneTime or
+            ProductPricingCadence.PerMinute or
+            ProductPricingCadence.Per15Minutes or
+            ProductPricingCadence.Per30Minutes or
+            ProductPricingCadence.PerHour or
+            ProductPricingCadence.HalfDay or
+            ProductPricingCadence.Daily;
+
+    private static ProductPricingBillingSchedule ResolveBillingSchedule(
+        ProductPricing pricing,
+        ProductPricingBillingSchedule selectedBillingSchedule)
+    {
+        if (!pricing.AcceptedBillingSchedules.Contains(selectedBillingSchedule))
+        {
+            throw new MarketplaceBookingBillingScheduleNotAccepted();
+        }
+
+        return selectedBillingSchedule;
+    }
 
     private static void ValidateMarketplaceCadenceForBookingFlow(ProductPricingCadence cadence, RecurringBooking? recurringBooking)
     {
@@ -471,7 +485,7 @@ public class MarketplaceBookingService(
             return;
         }
 
-        if (cadence != ProductPricingCadence.DailyV1)
+        if (cadence != ProductPricingCadence.Daily)
         {
             throw new MarketplaceBookingCadenceRequiresRecurringFlow();
         }

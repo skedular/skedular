@@ -448,6 +448,7 @@ type LocationTypeDetails {
 }
 
 type MarketplaceBookingDetails {
+  billingSchedule: ProductPricingBillingSchedule!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   currency: String
   currencyToDisplay: String!
@@ -1009,6 +1010,7 @@ type ProductPayload {
 }
 
 type ProductPricing {
+  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
   acceptedPaymentMethods: [PaymentMethod!]!
   cadence: ProductPricingCadence!
   id: String!
@@ -1021,6 +1023,21 @@ type ProductPricing {
   minDurationMinutes: Int
   numberOfResourcesToBook: Int!
   price: Decimal!
+}
+
+type ProductPricingBillingIntervalDetails {
+  name: String!
+  type: ProductPricingBillingInterval!
+}
+
+type ProductPricingBillingModeDetails {
+  name: String!
+  type: ProductPricingBillingMode!
+}
+
+type ProductPricingBillingSchedule {
+  interval: ProductPricingBillingInterval!
+  mode: ProductPricingBillingMode!
 }
 
 type ProductPricingCadenceDetails {
@@ -1115,6 +1132,8 @@ type Query {
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
+  productPricingBillingIntervals: [ProductPricingBillingIntervalDetails!]!
+  productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   productPricingCadences: [ProductPricingCadenceDetails!]!
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
@@ -1422,6 +1441,7 @@ input AddLocationPhysicalAddressInput {
 }
 
 input AddMarketplaceBookingInput {
+  billingSchedule: ProductPricingBillingScheduleInput!
   category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
@@ -1441,6 +1461,7 @@ input AddMarketplaceBookingInput {
 }
 
 input AddMarketplaceRecurringBookingInput {
+  billingSchedule: ProductPricingBillingScheduleInput!
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
@@ -2141,7 +2162,13 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
+input ProductPricingBillingScheduleInput {
+  interval: ProductPricingBillingInterval!
+  mode: ProductPricingBillingMode!
+}
+
 input ProductPricingInput {
+  acceptedBillingSchedules: [ProductPricingBillingScheduleInput!]!
   acceptedPaymentMethods: [PaymentMethod!]!
   cadence: ProductPricingCadence!
   id: String!
@@ -3020,23 +3047,39 @@ enum ProductOrderField {
   NAME
 }
 
-enum ProductPricingCadence {
-  DAILY_V1
-  FIVE_MONTHS_V1
-  FOUR_MONTHS_V1
-  HALF_DAY_V1
-  MONTHLY_V1
+enum ProductPricingBillingInterval {
+  FORTNIGHTLY
+  FULL_TERM
+  MONTHLY
   NOT_SET
-  ONE_TIME_V1
-  PER_HOUR_V1
-  PER_MINUTE_V1
-  PER15_MINUTES_V1
-  PER30_MINUTES_V1
-  QUARTERLY_V1
-  SIX_MONTHS_V1
-  TWO_MONTHS_V1
-  WEEKLY_V1
-  YEARLY_V1
+  PER_BOOKING
+  WEEKLY
+}
+
+enum ProductPricingBillingMode {
+  IN_ARREARS
+  NOT_SET
+  UPFRONT
+}
+
+enum ProductPricingCadence {
+  DAILY
+  FIVE_MONTHS
+  FORTNIGHTLY
+  FOUR_MONTHS
+  HALF_DAY
+  MONTHLY
+  NOT_SET
+  ONE_TIME
+  PER_HOUR
+  PER_MINUTE
+  PER15_MINUTES
+  PER30_MINUTES
+  QUARTERLY
+  SIX_MONTHS
+  TWO_MONTHS
+  WEEKLY
+  YEARLY
 }
 
 enum RecurringBookingEndType {

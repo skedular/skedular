@@ -41,11 +41,11 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
     rootDataRelay,
   );
 
-  const customTags = useMemo<CustomTagDetails[]>(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const items = useMemo<CustomTagDetails[]>(() => (rootData.organization ? rootData.organization.customTags.edges.map(({ node }) => node) : []), [rootData.organization]);
   const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.customTags.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<CustomTagDetails>();
 
-  if (customTags.length === 0) {
+  if (items.length === 0) {
     return <AddOrganizationCustomTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
@@ -54,7 +54,7 @@ const MultipleChoicesCustomTags = ({ rootDataRelay, name, required, organization
       name={name}
       multiple={true}
       required={required}
-      options={customTags}
+      options={items}
       getOptionValue={(option) => (option as CustomTagDetails).id}
       getOptionLabel={(option: string | CustomTagDetails) => (option as CustomTagDetails).name}
       renderOption={(props, option) => {

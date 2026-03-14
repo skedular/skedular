@@ -207,6 +207,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 ProductVersion = new ProductVersion { Id = src.ProductVersionId },
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                BillingSchedule = src.BillingSchedule,
                 ProductPricing = ProductPricing.Empty(src.PricingId)
             }
         };
@@ -263,6 +264,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 ProductVersion = new ProductVersion { Id = src.ProductVersionId },
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                BillingSchedule = src.BillingSchedule,
                 ProductPricing = ProductPricing.Empty(src.PricingId)
             }
         };
@@ -515,6 +517,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
                 InvoiceEmailList = src.InvoiceEmailList,
+                BillingSchedule = src.BillingSchedule,
                 TotalAmountExcludeTax = src.TotalAmountExcludeTax,
                 TotalAmountExcludeTaxToDisplay = src.TotalAmountExcludeTax is null || string.IsNullOrWhiteSpace(src.Currency)
                     ? "N/A"

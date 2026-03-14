@@ -110,6 +110,7 @@ type MarketplaceBookingDetails {
   invoiceUrl: String
   invoiceNumber: String
   invoiceEmailList: [String!]!
+  billingSchedule: ProductPricingBillingSchedule!
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   paymentExpiry: DateTime!
@@ -184,11 +185,17 @@ type ProductPricing {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
+  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
+}
+
+type ProductPricingBillingSchedule {
+  mode: ProductPricingBillingMode!
+  interval: ProductPricingBillingInterval!
 }
 
 type ProductVersionDetails {
@@ -293,6 +300,7 @@ input AddMarketplaceBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
+  billingSchedule: ProductPricingBillingScheduleInput!
 }
 
 input AddMarketplaceRecurringBookingInput {
@@ -320,6 +328,7 @@ input AddMarketplaceRecurringBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
+  billingSchedule: ProductPricingBillingScheduleInput!
 }
 
 input AddPrivateBookingInput {
@@ -433,6 +442,11 @@ input OrganizationAvailableResourcesWhereInput {
   organizationUniqueAlphanumericName: String
   from: DateTime!
   until: DateTime!
+}
+
+input ProductPricingBillingScheduleInput {
+  mode: ProductPricingBillingMode!
+  interval: ProductPricingBillingInterval!
 }
 
 input RejectBookingPaymentInput {
@@ -721,23 +735,39 @@ enum PaymentStatus {
   NO_PAYMENT_REQUIRED
 }
 
+enum ProductPricingBillingInterval {
+  NOT_SET
+  FULL_TERM
+  PER_BOOKING
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
+}
+
+enum ProductPricingBillingMode {
+  NOT_SET
+  UPFRONT
+  IN_ARREARS
+}
+
 enum ProductPricingCadence {
   NOT_SET
-  ONE_TIME_V1
-  PER_MINUTE_V1
-  PER_HOUR_V1
-  DAILY_V1
-  WEEKLY_V1
-  MONTHLY_V1
-  HALF_DAY_V1
-  PER15_MINUTES_V1
-  PER30_MINUTES_V1
-  TWO_MONTHS_V1
-  QUARTERLY_V1
-  FOUR_MONTHS_V1
-  FIVE_MONTHS_V1
-  SIX_MONTHS_V1
-  YEARLY_V1
+  ONE_TIME
+  PER_MINUTE
+  PER_HOUR
+  DAILY
+  WEEKLY
+  MONTHLY
+  HALF_DAY
+  PER15_MINUTES
+  PER30_MINUTES
+  TWO_MONTHS
+  QUARTERLY
+  FOUR_MONTHS
+  FIVE_MONTHS
+  SIX_MONTHS
+  YEARLY
+  FORTNIGHTLY
 }
 
 enum RecurringBookingEndType {

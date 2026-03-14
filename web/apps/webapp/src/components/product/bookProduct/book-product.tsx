@@ -1,5 +1,5 @@
 import { LocationAvatar } from '@/components/avatars';
-import { SingleChoiceBookingPaymentMethodType, SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
+import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -17,6 +17,7 @@ import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { SingleChoicePaymentMethodType } from '@/components/organization';
 import { DefaultSelect } from '@/components/styled';
 import { MultipleChoicesUserEmails } from '@/components/user';
 import { Zones } from '@/components/zone';
@@ -178,7 +179,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         }
         bookingSlotSizeInMinutes
         ...singleChoiceMarketplaceBookingCategory_query
-        ...singleChoiceBookingPaymentMethodType_query
+        ...singleChoicePaymentMethodType_query
         ...multipleChoicesUserEmails_query
       }
     `,
@@ -490,11 +491,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     let totalPrice = 0.0;
     const price = Number(pricingOption.price);
     switch (pricingOption.cadence as ProductPricingCadence) {
-      case 'PER_MINUTE_V1':
+      case 'PER_MINUTE':
         totalPrice = price * quantity * totalMinutes;
         break;
 
-      case 'PER_HOUR_V1':
+      case 'PER_HOUR':
         totalPrice = (price / 60) * quantity * totalMinutes;
         break;
 
@@ -934,7 +935,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Payment Method">
-                      <SingleChoiceBookingPaymentMethodType
+                      <SingleChoicePaymentMethodType
                         rootDataRelay={rootData}
                         name="paymentMethod"
                         required={requiredFields.paymentMethod}

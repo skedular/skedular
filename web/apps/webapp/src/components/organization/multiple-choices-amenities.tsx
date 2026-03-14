@@ -33,7 +33,7 @@ const MultipleChoicesAmenities = ({ rootDataRelay, name, required }: Props) => {
     rootDataRelay,
   );
 
-  const amenities = useMemo<AmenityDetails[]>(() => (rootData.organization?.amenities ? rootData.organization.amenities.map((item) => item) : []), [rootData.organization]);
+  const items = useMemo<AmenityDetails[]>(() => (rootData.organization?.amenities ? rootData.organization.amenities.map((item) => item) : []), [rootData.organization]);
   const filter = createFilterOptions<AmenityDetails>();
 
   return (
@@ -41,7 +41,7 @@ const MultipleChoicesAmenities = ({ rootDataRelay, name, required }: Props) => {
       name={name}
       multiple={true}
       required={required}
-      options={amenities}
+      options={items}
       getOptionValue={(option) => (option as AmenityDetails).id}
       getOptionLabel={(option: string | AmenityDetails) => (option as AmenityDetails).name}
       renderOption={(props, option) => {

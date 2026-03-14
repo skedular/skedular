@@ -39,6 +39,7 @@ public class MarketplaceBookingDetails : Node
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
     [GraphQLName("invoiceNumber")] public string? InvoiceNumber { get; set; }
     [GraphQLName("invoiceEmailList")] public IEnumerable<string> InvoiceEmailList { get; set; } = [];
+    [GraphQLName("billingSchedule")] public ProductPricingBillingSchedule BillingSchedule { get; set; } = ProductPricingBillingSchedule.Empty;
     [GraphQLName("isPaymentRequired")] public bool IsPaymentRequired { get; set; }
 
     [GraphQLName("bookingCheckoutSession")]

@@ -102,6 +102,18 @@ public class MarketplaceBookingCadenceRequiresRecurringFlow()
 public class MarketplaceRecurringBookingCadenceMustBeRecurring()
     : Exception("Marketplace recurring booking must use a cadence greater than a single-day booking");
 
+public class MarketplaceBookingBillingScheduleNotAccepted()
+    : Exception("The selected marketplace booking billing schedule is not accepted by the product pricing option");
+
+public class ProductPricingAcceptedBillingSchedulesRequired()
+    : Exception("At least one accepted billing schedule must be selected");
+
+public class ProductPricingAcceptedBillingSchedulesCannotContainNotSet()
+    : Exception("Accepted billing schedules cannot contain a not-set billing mode or interval");
+
+public class ProductPricingAcceptedBillingSchedulesCannotContainDuplicates()
+    : Exception("Accepted billing schedules cannot contain duplicate billing schedules");
+
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");

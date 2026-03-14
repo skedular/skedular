@@ -41,11 +41,11 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqu
     rootDataRelay,
   );
 
-  const zones = useMemo<ZoneDetails[]>(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
+  const items = useMemo<ZoneDetails[]>(() => (rootData.organization ? rootData.organization.zones.edges.map(({ node }) => node) : []), [rootData.organization]);
   const connectionIds = useMemo(() => (rootData.organization ? [rootData.organization.zones.__id] : []), [rootData.organization]);
   const filter = createFilterOptions<ZoneDetails>();
 
-  if (zones.length === 0) {
+  if (items.length === 0) {
     return <AddOrganizationZoneButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
   }
 
@@ -54,7 +54,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqu
       name={name}
       multiple={true}
       required={required}
-      options={zones}
+      options={items}
       getOptionValue={(option) => (option as ZoneDetails).id}
       getOptionLabel={(option: string | ZoneDetails) => (option as ZoneDetails).name}
       renderOption={(props, option) => {
