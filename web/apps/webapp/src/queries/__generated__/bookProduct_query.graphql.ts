@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41cdb207b41294f68a43d4dabee47faa>>
+ * @generated SignedSource<<7bddcfbb57d00a7ae6ef99d5db68746e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,8 @@
 import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
+export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
+export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookProduct_query$data = {
@@ -40,6 +42,10 @@ export type bookProduct_query$data = {
       readonly title: string | null | undefined;
     };
     readonly pricingOptions: ReadonlyArray<{
+      readonly acceptedBillingSchedules: ReadonlyArray<{
+        readonly interval: ProductPricingBillingInterval;
+        readonly mode: ProductPricingBillingMode;
+      }>;
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly cadence: ProductPricingCadence;
       readonly id: string;
@@ -310,6 +316,31 @@ return {
             {
               "alias": null,
               "args": null,
+              "concreteType": "ProductPricingBillingSchedule",
+              "kind": "LinkedField",
+              "name": "acceptedBillingSchedules",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "mode",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "interval",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
               "kind": "ScalarField",
               "name": "acceptedPaymentMethods",
               "storageKey": null
@@ -358,6 +389,6 @@ return {
 };
 })();
 
-(node as any).hash = "2b4cb8324c07a28f73fc582088d48059";
+(node as any).hash = "7b68ace12f794abf52d61dd90dcd33be";
 
 export default node;

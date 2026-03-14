@@ -91,7 +91,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
       return [];
     }
 
-    const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name ?? product.currency.type;
+    const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name;
 
     return [...product.pricingOptions]
       .sort((left, right) => left.index - right.index)
@@ -100,7 +100,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         title: pricingOption.listingMetadata.title ?? '',
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence,
-        amountLabel: `${currencyLabel} - $${pricingOption.price}`,
+        amountLabel: `${currencyLabel}${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
       }));
   }, [product, rootData.currencies, rootData.productPricingCadences]);
