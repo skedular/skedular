@@ -53,6 +53,8 @@ public class PrivateBookingService(
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
+        ValidateBookingWindowWithinSingleDay(booking);
+
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -139,6 +141,8 @@ public class PrivateBookingService(
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
     {
+        ValidateBookingWindowWithinSingleDay(booking);
+
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Private)
         {
             throw new BookingIsNotPrivate();
@@ -274,6 +278,14 @@ public class PrivateBookingService(
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
 
         return deletedBooking;
+    }
+
+    private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
+    {
+        if (booking.From.UtcDateTime.Date != booking.Until.UtcDateTime.Date)
+        {
+            throw new BookingMustStartAndEndWithinSameDay();
+        }
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>

@@ -94,6 +94,8 @@ public class BookingPaymentMethodNotAccepted() : Exception("Booking payment meth
 
 public class BookingIsNotMarketplaceType() : Exception("Booking is not marketplace type");
 
+public class BookingMustStartAndEndWithinSameDay() : Exception("Booking must start and end within the same day");
+
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");

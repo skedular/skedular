@@ -63,6 +63,8 @@ public class MarketplaceBookingService(
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken)
     {
+        ValidateBookingWindowWithinSingleDay(booking);
+
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
@@ -201,6 +203,8 @@ public class MarketplaceBookingService(
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken)
     {
+        ValidateBookingWindowWithinSingleDay(booking);
+
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
         {
             throw new BookingIsNotMarketplace();
@@ -436,6 +440,14 @@ public class MarketplaceBookingService(
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+    }
+
+    private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
+    {
+        if (booking.From.UtcDateTime.Date != booking.Until.UtcDateTime.Date)
+        {
+            throw new BookingMustStartAndEndWithinSameDay();
+        }
     }
 
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
