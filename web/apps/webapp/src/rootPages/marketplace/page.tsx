@@ -13,7 +13,7 @@ const RootPage = () => {
   if (user) {
     return (
       <OrganizationStoreFrontRootShell>
-        <>User is signed in</>
+        <GuestStoreFront />
       </OrganizationStoreFrontRootShell>
     );
   }
