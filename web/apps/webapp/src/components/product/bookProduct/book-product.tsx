@@ -15,7 +15,7 @@ import {
 } from '@/components/commons';
 import { CustomTags } from '@/components/customTag';
 import { CustomTagIcon, LocationIcon, ZoneIcon } from '@/components/icons';
-import { getOrganizationBookingBaseLink } from '@/components/links';
+import { getOrganizationBookingBaseLink, getOrganizationBookingsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { SingleChoicePaymentMethodType } from '@/components/organization';
 import { DefaultSelect } from '@/components/styled';
@@ -31,6 +31,12 @@ import type {
   ProductPricingBillingInterval,
   ProductPricingBillingMode,
 } from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
+import type {
+  BookingFrequency,
+  bookProduct_addMarketplaceRecurringBookingMutation,
+  DayOfWeek,
+  RecurringBookingEndType,
+} from '@/queries/__generated__/bookProduct_addMarketplaceRecurringBookingMutation.graphql';
 import type { bookProduct_availableResources_query$key } from '@/queries/__generated__/bookProduct_availableResources_query.graphql';
 import type { bookProduct_availableResources_refetchableFragment } from '@/queries/__generated__/bookProduct_availableResources_refetchableFragment.graphql';
 import type { bookProduct_query$key, ProductPricingCadence } from '@/queries/__generated__/bookProduct_query.graphql';
@@ -89,6 +95,7 @@ type ResourceDetails = {
 type BookingDetails = {
   pricingOptionId: string;
   date: Dayjs;
+  recurringEndDate: Dayjs | null;
   notes: string;
   quantity: number;
   resources: string[];
@@ -117,7 +124,7 @@ type BillingScheduleChoice = {
   interval: ProductPricingBillingInterval;
 };
 
-const bookingSchema = (numberOfResourcesToBook: number) =>
+const bookingSchema = (numberOfResourcesToBook: number, selectedPricingOptionCadence?: ProductPricingCadence) =>
   object({
     pricingOptionId: string().required('Pricing option is required'),
     date: mixed<Dayjs>()
@@ -125,6 +132,27 @@ const bookingSchema = (numberOfResourcesToBook: number) =>
         return value != null && dayjs.isDayjs(value);
       })
       .required('Date is required'),
+    recurringEndDate: mixed<Dayjs>()
+      .nullable()
+      .test('recurring-end-date-required', 'End date is required for recurring bookings.', function (value) {
+        if (!isRecurringCadence(selectedPricingOptionCadence)) {
+          return true;
+        }
+
+        return value != null && dayjs.isDayjs(value);
+      })
+      .test('recurring-end-date-after-start-date', 'End date must be on or after the start date.', function (value) {
+        if (!isRecurringCadence(selectedPricingOptionCadence) || !value || !dayjs.isDayjs(value)) {
+          return true;
+        }
+
+        const { date } = this.parent;
+        if (!date || !dayjs.isDayjs(date)) {
+          return true;
+        }
+
+        return !value.isBefore(date, 'day');
+      }),
     quantity: number().min(1, 'At least one resource is required').required('Quantity is required'),
     resources: array().test('less-equal-number-of-resources-to-book', `You have selected more resources than allowed for this product.`, function (value) {
       if (!value) {
@@ -157,23 +185,74 @@ const parseBillingScheduleValue = (value: string) => {
   };
 };
 
-const toBillingModeName = (mode: ProductPricingBillingMode) =>
-  ({
-    UPFRONT: 'Upfront',
-    IN_ARREARS: 'In Arrears',
-  })[mode] ?? mode;
+const toBillingModeName = (mode: ProductPricingBillingMode) => {
+  switch (mode) {
+    case 'UPFRONT':
+      return 'Upfront';
+    case 'IN_ARREARS':
+      return 'In Arrears';
+    default:
+      return mode;
+  }
+};
 
-const toBillingIntervalName = (interval: ProductPricingBillingInterval) =>
-  ({
-    FULL_TERM: 'Full Term',
-    PER_BOOKING: 'Per Booking',
-    WEEKLY: 'Weekly',
-    FORTNIGHTLY: 'Fortnightly',
-    MONTHLY: 'Monthly',
-  })[interval] ?? interval;
+const toBillingIntervalName = (interval: ProductPricingBillingInterval) => {
+  switch (interval) {
+    case 'FULL_TERM':
+      return 'Full Term';
+    case 'PER_BOOKING':
+      return 'Per Booking';
+    case 'WEEKLY':
+      return 'Weekly';
+    case 'FORTNIGHTLY':
+      return 'Fortnightly';
+    case 'MONTHLY':
+      return 'Monthly';
+    default:
+      return interval;
+  }
+};
 
 const isValidBillingScheduleCombination = (mode: ProductPricingBillingMode, interval: ProductPricingBillingInterval) =>
   !(mode === 'UPFRONT' && ['WEEKLY', 'FORTNIGHTLY', 'MONTHLY'].includes(interval));
+
+const isRecurringCadence = (cadence?: ProductPricingCadence) =>
+  cadence === 'WEEKLY' ||
+  cadence === 'FORTNIGHTLY' ||
+  cadence === 'MONTHLY' ||
+  cadence === 'TWO_MONTHS' ||
+  cadence === 'QUARTERLY' ||
+  cadence === 'FOUR_MONTHS' ||
+  cadence === 'FIVE_MONTHS' ||
+  cadence === 'SIX_MONTHS' ||
+  cadence === 'YEARLY';
+
+const toRecurringRule = (cadence: ProductPricingCadence, startDate: Dayjs) => {
+  const weekdayNames: DayOfWeek[] = ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
+
+  switch (cadence) {
+    case 'WEEKLY':
+      return { frequency: 'WEEKLY' as BookingFrequency, interval: 1, byWeekDays: [weekdayNames[startDate.day()]], byMonthDay: null as number | null };
+    case 'FORTNIGHTLY':
+      return { frequency: 'WEEKLY' as BookingFrequency, interval: 2, byWeekDays: [weekdayNames[startDate.day()]], byMonthDay: null as number | null };
+    case 'MONTHLY':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 1, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'TWO_MONTHS':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 2, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'QUARTERLY':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 3, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'FOUR_MONTHS':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 4, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'FIVE_MONTHS':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 5, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'SIX_MONTHS':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 6, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    case 'YEARLY':
+      return { frequency: 'MONTHLY' as BookingFrequency, interval: 12, byWeekDays: [] as DayOfWeek[], byMonthDay: startDate.date() };
+    default:
+      throw new Error(`Unsupported recurring cadence: ${cadence}`);
+  }
+};
 
 const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationUniqueAlphanumericName, defaultDate }: Props) => {
   const rootData = useFragment<bookProduct_query$key>(
@@ -324,6 +403,15 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
       }
     }
   `);
+  const [commitAddMarketplaceRecurringBooking] = useMutation<bookProduct_addMarketplaceRecurringBookingMutation>(graphql`
+    mutation bookProduct_addMarketplaceRecurringBookingMutation($input: AddMarketplaceRecurringBookingInput!) @raw_response_type {
+      addMarketplaceRecurringBooking(input: $input) {
+        recurringBooking {
+          id
+        }
+      }
+    }
+  `);
 
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
@@ -386,9 +474,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [billingSchedule, setBillingSchedule] = useState<string>(billingScheduleChoices[0]?.value ?? '');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
+  const [recurringEndDate, setRecurringEndDate] = useState<Dayjs | null>(null);
+  const selectedPricingOptionIsRecurring = isRecurringCadence(selectedPricingOption?.cadence as ProductPricingCadence | undefined);
 
-  const validate = makeValidate(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1));
-  const requiredFields = makeRequired(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1));
+  const validate = makeValidate(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.cadence as ProductPricingCadence | undefined));
+  const requiredFields = makeRequired(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.cadence as ProductPricingCadence | undefined));
 
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
@@ -618,6 +708,71 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const parsedBillingSchedule = parseBillingScheduleValue(billingSchedule);
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
+    if (isRecurringCadence(selectedPricingOption.cadence as ProductPricingCadence)) {
+      if (!recurringEndDate) {
+        return;
+      }
+
+      const recurringRule = toRecurringRule(selectedPricingOption.cadence as ProductPricingCadence, dayjs(date));
+
+      commitAddMarketplaceRecurringBooking({
+        variables: {
+          input: {
+            clientMutationId: uuid(),
+            id,
+            customerIds: [customerId],
+            from,
+            until,
+            frequency: recurringRule.frequency,
+            interval: recurringRule.interval,
+            byMonthDay: recurringRule.byMonthDay,
+            bySetPosition: null,
+            byWeekDays: recurringRule.byWeekDays,
+            endType: 'UNTIL_DATE' as RecurringBookingEndType,
+            startDate: dayjs(date).utc().startOf('day').toISOString(),
+            endDate: recurringEndDate.utc().endOf('day').toISOString(),
+            occurrenceCount: null,
+            skippedDates: [],
+            category: category as BookingCategory,
+            paymentMethod: paymentMethod as PaymentMethod,
+            invoiceEmailList,
+            quantity: Number(quantity),
+            productVersionId: product.latestProductVersionId,
+            pricingId: selectedPricingOption.id,
+            billingSchedule: parsedBillingSchedule,
+            organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+            organizationIds: [],
+            teamIds: [],
+          },
+        },
+        onCompleted: (_, errors) => {
+          if (errors && errors.length > 0) {
+            toast.update(toastId, {
+              ...errorNotificationOptions,
+              render: <NotificationContent content={`Failed to create recurring booking starting '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
+            });
+
+            return;
+          }
+
+          toast.update(toastId, {
+            ...successNotificationOptions,
+            render: <NotificationContent content={`Recurring booking created starting on ${fromToPrint}.`} />,
+          });
+
+          router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+        },
+        onError: (error) => {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to create recurring booking starting '${fromToPrint}'. Error: ${error.message}.`} />,
+          });
+        },
+      });
+
+      return;
+    }
+
     commitAddMarketplaceBooking({
       variables: {
         connectionIds,
@@ -750,6 +905,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             initialValues={{
               pricingOptionId: selectedPricingOptionId,
               date,
+              recurringEndDate,
               resources: resourceIds,
               quantity,
               category,
@@ -770,6 +926,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
 
               setSelectedPricingOptionId(values!.pricingOptionId);
               setDate(values!.date);
+              setRecurringEndDate(values!.recurringEndDate);
               setResourceIds(values!.resources);
               setQuantity(values!.quantity);
               setCategory(values!.category);
@@ -825,14 +982,36 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       </Box>
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Date/Time">
-                      <StackRow>
-                        <Box sx={{ width: 'fit-content' }}>
-                          <DatePicker name="date" required={requiredFields.date} />
-                        </Box>
-                        <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} defaultValue={timeRange} onChange={setTimeRange} />
+                    {selectedPricingOptionIsRecurring ? (
+                      <StackRow sx={{ alignItems: 'flex-start', flexWrap: 'wrap' }}>
+                        <FormFieldLabel label="Start Date">
+                          <Box sx={{ width: 'fit-content' }}>
+                            <DatePicker name="date" required={requiredFields.date} />
+                          </Box>
+                        </FormFieldLabel>
+
+                        <FormFieldLabel label="End Date">
+                          <Box sx={{ width: 'fit-content' }}>
+                            <DatePicker name="recurringEndDate" required={requiredFields.recurringEndDate} />
+                          </Box>
+                        </FormFieldLabel>
+
+                        <FormFieldLabel label="Repeating Time">
+                          <StackRow>
+                            <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} defaultValue={timeRange} onChange={setTimeRange} />
+                          </StackRow>
+                        </FormFieldLabel>
                       </StackRow>
-                    </FormFieldLabel>
+                    ) : (
+                      <FormFieldLabel label="Date/Time">
+                        <StackRow>
+                          <Box sx={{ width: 'fit-content' }}>
+                            <DatePicker name="date" required={requiredFields.date} />
+                          </Box>
+                          <TimeRangePicker minutesStep={rootData.bookingSlotSizeInMinutes} defaultValue={timeRange} onChange={setTimeRange} />
+                        </StackRow>
+                      </FormFieldLabel>
+                    )}
 
                     <FormFieldLabel>
                       <ErrorTypography errorMessage={dateTimeErrorMessage} />
@@ -850,163 +1029,171 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                       <SingleChoiceMarketplaceBookingCategory rootDataRelay={rootData} name="category" required={requiredFields.category} />
                     </FormFieldLabel>
 
-                    <FormFieldLabel label="Filters">
-                      <StackColumn>
-                        <DefaultSelect
-                          value={selectedLocationId}
-                          onChange={handleLocationChanged}
-                          size="small"
-                          renderValue={(selectedId) => {
-                            const selectedItem = locations.find((item) => item.id === selectedId);
-                            if (selectedItem) {
+                    {!selectedPricingOptionIsRecurring ? (
+                      <FormFieldLabel label="Filters">
+                        <StackColumn>
+                          <DefaultSelect
+                            value={selectedLocationId}
+                            onChange={handleLocationChanged}
+                            size="small"
+                            renderValue={(selectedId) => {
+                              const selectedItem = locations.find((item) => item.id === selectedId);
+                              if (selectedItem) {
+                                return (
+                                  <StackRow>
+                                    <LeadIconTypography label="Location" startElement={<LocationIcon />} />
+                                    <Divider orientation="vertical" flexItem />
+                                    <PushToRight />
+                                    <SmallIconTypography label={selectedItem.name} />
+                                  </StackRow>
+                                );
+                              }
+
                               return (
                                 <StackRow>
                                   <LeadIconTypography label="Location" startElement={<LocationIcon />} />
                                   <Divider orientation="vertical" flexItem />
                                   <PushToRight />
-                                  <SmallIconTypography label={selectedItem.name} />
+                                  <SmallIconTypography label="All" />
                                 </StackRow>
                               );
-                            }
-
-                            return (
-                              <StackRow>
-                                <LeadIconTypography label="Location" startElement={<LocationIcon />} />
-                                <Divider orientation="vertical" flexItem />
-                                <PushToRight />
-                                <SmallIconTypography label="All" />
-                              </StackRow>
-                            );
-                          }}
-                        >
-                          <MenuItem value={allId}>
-                            <BodyIconTypography label="All" />
-                          </MenuItem>
-
-                          {locations.map((item) => (
-                            <MenuItem key={item.id} value={item.id}>
-                              <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+                            }}
+                          >
+                            <MenuItem value={allId}>
+                              <BodyIconTypography label="All" />
                             </MenuItem>
-                          ))}
-                        </DefaultSelect>
 
-                        <StackRow>
-                          <DefaultSelect
-                            value={selectedCustomTagId}
-                            onChange={handleCustomTagChanged}
-                            size="small"
-                            renderValue={(selectedId) => {
-                              const selectedItem = customTags.find((item) => item.id === selectedId);
-                              if (selectedItem) {
+                            {locations.map((item) => (
+                              <MenuItem key={item.id} value={item.id}>
+                                <BodyIconTypography startElement={<LocationAvatar name={{ name: item.name }} size="small" />} label={item.name} />
+                              </MenuItem>
+                            ))}
+                          </DefaultSelect>
+
+                          <StackRow>
+                            <DefaultSelect
+                              value={selectedCustomTagId}
+                              onChange={handleCustomTagChanged}
+                              size="small"
+                              renderValue={(selectedId) => {
+                                const selectedItem = customTags.find((item) => item.id === selectedId);
+                                if (selectedItem) {
+                                  return (
+                                    <StackRow>
+                                      <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
+                                      <Divider orientation="vertical" flexItem />
+                                      <PushToRight />
+                                      <SmallIconTypography label={selectedItem.name} />
+                                    </StackRow>
+                                  );
+                                }
+
                                 return (
                                   <StackRow>
                                     <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
                                     <Divider orientation="vertical" flexItem />
                                     <PushToRight />
-                                    <SmallIconTypography label={selectedItem.name} />
+                                    <SmallIconTypography label="All" />
                                   </StackRow>
                                 );
-                              }
-
-                              return (
-                                <StackRow>
-                                  <LeadIconTypography label="Tag" startElement={<CustomTagIcon />} />
-                                  <Divider orientation="vertical" flexItem />
-                                  <PushToRight />
-                                  <SmallIconTypography label="All" />
-                                </StackRow>
-                              );
-                            }}
-                          >
-                            <MenuItem value={allId}>
-                              <BodyIconTypography label="All" />
-                            </MenuItem>
-
-                            {customTags.map((item) => (
-                              <MenuItem key={item.id} value={item.id}>
-                                <BodyIconTypography startElement={<CustomTagIcon />} label={item.name} />
+                              }}
+                            >
+                              <MenuItem value={allId}>
+                                <BodyIconTypography label="All" />
                               </MenuItem>
-                            ))}
-                          </DefaultSelect>
 
-                          <DefaultSelect
-                            value={selectedZoneId}
-                            onChange={handleZoneChanged}
-                            size="small"
-                            renderValue={(selectedId) => {
-                              const selectedItem = zones.find((item) => item.id === selectedId);
-                              if (selectedItem) {
+                              {customTags.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                  <BodyIconTypography startElement={<CustomTagIcon />} label={item.name} />
+                                </MenuItem>
+                              ))}
+                            </DefaultSelect>
+
+                            <DefaultSelect
+                              value={selectedZoneId}
+                              onChange={handleZoneChanged}
+                              size="small"
+                              renderValue={(selectedId) => {
+                                const selectedItem = zones.find((item) => item.id === selectedId);
+                                if (selectedItem) {
+                                  return (
+                                    <StackRow>
+                                      <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
+                                      <Divider orientation="vertical" flexItem />
+                                      <PushToRight />
+                                      <SmallIconTypography label={selectedItem.name} />
+                                    </StackRow>
+                                  );
+                                }
+
                                 return (
                                   <StackRow>
                                     <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
                                     <Divider orientation="vertical" flexItem />
                                     <PushToRight />
-                                    <SmallIconTypography label={selectedItem.name} />
+                                    <SmallIconTypography label="All" />
                                   </StackRow>
                                 );
-                              }
+                              }}
+                            >
+                              <MenuItem value={allId}>
+                                <BodyIconTypography label="All" />
+                              </MenuItem>
+
+                              {zones.map((item) => (
+                                <MenuItem key={item.id} value={item.id}>
+                                  <BodyIconTypography startElement={<ZoneIcon />} label={item.name} />
+                                </MenuItem>
+                              ))}
+                            </DefaultSelect>
+                          </StackRow>
+                        </StackColumn>
+                      </FormFieldLabel>
+                    ) : null}
+
+                    {!selectedPricingOptionIsRecurring ? (
+                      <FormFieldLabel label="Resources">
+                        {filteredResources.length > 0 && quantity > 0 && (
+                          <BodyIconTypography
+                            label={`Feel free to choose up to ${(selectedPricingOption?.numberOfResourcesToBook ?? 1) * quantity} resources from the list below!`}
+                          />
+                        )}
+                        {filteredResources.length > 0 && (
+                          <Autocomplete
+                            name="resources"
+                            multiple={true}
+                            required={requiredFields.resources}
+                            options={filteredResources}
+                            getOptionValue={(option) => (option as ResourceDetails).id}
+                            getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
+                            renderOption={(props, option) => {
+                              const castedOption = option as ResourceDetails;
 
                               return (
-                                <StackRow>
-                                  <LeadIconTypography label="Zone" startElement={<ZoneIcon />} />
-                                  <Divider orientation="vertical" flexItem />
-                                  <PushToRight />
-                                  <SmallIconTypography label="All" />
-                                </StackRow>
+                                <li {...props} key={castedOption.id}>
+                                  <StackRow sx={{ alignItems: 'center' }}>
+                                    <BodyIconTypography label={castedOption.name} />
+                                    <CustomTags customTags={castedOption.customTags} hideNAText />
+                                    <Zones zones={castedOption.zones} hideIcon hideNAText />
+                                  </StackRow>
+                                </li>
                               );
                             }}
-                          >
-                            <MenuItem value={allId}>
-                              <BodyIconTypography label="All" />
-                            </MenuItem>
+                            disableCloseOnSelect
+                            filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
+                            selectOnFocus
+                            clearOnBlur
+                            handleHomeEndKeys
+                          />
+                        )}
 
-                            {zones.map((item) => (
-                              <MenuItem key={item.id} value={item.id}>
-                                <BodyIconTypography startElement={<ZoneIcon />} label={item.name} />
-                              </MenuItem>
-                            ))}
-                          </DefaultSelect>
-                        </StackRow>
-                      </StackColumn>
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Resources">
-                      {filteredResources.length > 0 && quantity > 0 && (
-                        <BodyIconTypography
-                          label={`Feel free to choose up to ${(selectedPricingOption?.numberOfResourcesToBook ?? 1) * quantity} resources from the list below!`}
-                        />
-                      )}
-                      {filteredResources.length > 0 && (
-                        <Autocomplete
-                          name="resources"
-                          multiple={true}
-                          required={requiredFields.resources}
-                          options={filteredResources}
-                          getOptionValue={(option) => (option as ResourceDetails).id}
-                          getOptionLabel={(option: string | ResourceDetails) => (option as ResourceDetails).name}
-                          renderOption={(props, option) => {
-                            const castedOption = option as ResourceDetails;
-
-                            return (
-                              <li {...props} key={castedOption.id}>
-                                <StackRow sx={{ alignItems: 'center' }}>
-                                  <BodyIconTypography label={castedOption.name} />
-                                  <CustomTags customTags={castedOption.customTags} hideNAText />
-                                  <Zones zones={castedOption.zones} hideIcon hideNAText />
-                                </StackRow>
-                              </li>
-                            );
-                          }}
-                          disableCloseOnSelect
-                          filterOptions={(options, params) => filterResource(options as ResourceDetails[], params)}
-                          selectOnFocus
-                          clearOnBlur
-                          handleHomeEndKeys
-                        />
-                      )}
-
-                      {filteredResources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
-                    </FormFieldLabel>
+                        {filteredResources.length === 0 && <BodyIconTypography label="There are currently no available resources." />}
+                      </FormFieldLabel>
+                    ) : (
+                      <FormFieldLabel label="Resources">
+                        <BodyIconTypography label="Resources will be allocated by the recurring booking workflow." />
+                      </FormFieldLabel>
+                    )}
 
                     <FormFieldLabel label="Payment Method">
                       <SingleChoicePaymentMethodType

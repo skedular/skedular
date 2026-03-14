@@ -96,6 +96,12 @@ public class BookingIsNotMarketplaceType() : Exception("Booking is not marketpla
 
 public class BookingMustStartAndEndWithinSameDay() : Exception("Booking must start and end within the same day");
 
+public class RecurringBookingEndDateRequiredForUntilDate()
+    : Exception("Recurring booking end date is required when the end type is Until Date");
+
+public class RecurringBookingEndDateMustBeOnOrAfterStartDate()
+    : Exception("Recurring booking end date must be on or after the start date");
+
 public class MarketplaceBookingCadenceRequiresRecurringFlow()
     : Exception("This marketplace booking cadence must be booked through the recurring marketplace flow");
 

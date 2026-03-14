@@ -1,12 +1,15 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
+using Customer = Booking.Shared.Database.Entities.Customer;
+using Organization = Booking.Shared.Database.Entities.Organization;
 using RecurringBooking = Booking.Shared.Models.RecurringBooking;
+using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Shared.Services;
 
@@ -40,6 +43,24 @@ public class MarketplaceRecurringBookingService(
         ICollection<Team> teams,
         CancellationToken cancellationToken)
     {
+        if (recurringBooking.From.UtcDateTime.Date != recurringBooking.Until.UtcDateTime.Date)
+        {
+            throw new BookingMustStartAndEndWithinSameDay();
+        }
+
+        if (recurringBooking.EndType == RecurringBookingEndType.UntilDate)
+        {
+            if (!recurringBooking.EndDate.HasValue)
+            {
+                throw new RecurringBookingEndDateRequiredForUntilDate();
+            }
+
+            if (recurringBooking.EndDate.Value < recurringBooking.StartDate)
+            {
+                throw new RecurringBookingEndDateMustBeOnOrAfterStartDate();
+            }
+        }
+
         var customerIds = recurringBooking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
         var customerEntities = await repositoryFactory.CustomerRepository.GetByIdsAsync(customerIds, true, cancellationToken);
         if (customerEntities.Count != customerIds.Count)
