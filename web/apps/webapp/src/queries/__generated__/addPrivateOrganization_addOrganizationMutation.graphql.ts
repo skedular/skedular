@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7aadbae84b0fdad019aa62cf02360884>>
+ * @generated SignedSource<<ebeea1f03bb7b816df2fdb21d3986244>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,11 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type AddOrganizationInput = {
   agreedToTermsOfUse: boolean;
+  billingCycle: OrganizationBillingCycle;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;

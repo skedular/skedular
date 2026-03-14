@@ -65,6 +65,12 @@ public interface IOrganizationService
         string? organizationUniqueAlphanumericName,
         ListingMetadata marketplaceListingMetadata,
         CancellationToken cancellationToken);
+
+    Task<Shared.Models.Organization> UpdateOrganizationBillingCycleAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        OrganizationBillingCycle billingCycle,
+        CancellationToken cancellationToken);
 }
 
 public class OrganizationService(
@@ -385,6 +391,45 @@ public class OrganizationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingOrganization.MarketplaceListingMetadata = marketplaceListingMetadata;
+
+        var organization = mapper.MapTo(
+            repositoryFactory.OrganizationRepository.Update(existingOrganization),
+            organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
+
+        organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.UpdateByIdOrUniqueAlphanumericNameAsync(
+            organization.Id,
+            organization.UniqueAlphanumericName,
+            cancellationToken);
+
+        return organization;
+    }
+
+    public async Task<Shared.Models.Organization> UpdateOrganizationBillingCycleAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        OrganizationBillingCycle billingCycle,
+        CancellationToken cancellationToken)
+    {
+        var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                                       organizationId,
+                                       organizationUniqueAlphanumericName,
+                                       cancellationToken) ??
+                                   throw new OrganizationNotFound();
+
+        if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        existingOrganization.BillingCycle = billingCycle.ToOrganizationBillingCycle();
 
         var organization = mapper.MapTo(
             repositoryFactory.OrganizationRepository.Update(existingOrganization),

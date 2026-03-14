@@ -93,27 +93,34 @@ message TermsOfUse {
 }
 
 message Admin_AddInput {
-  string                id                         = 1;
-  string                uniqueAlphanumericName     = 2;
-  string                name                       = 3;
-  ListingMetadata       listingMetadata            = 4;
-  string                logoUrl                    = 5;
-  string                website                    = 6;
-  bool                  agreedToTermsOfUse         = 7;
-  string                termsOfUseId               = 8;
-  repeated string       industrySubCategoryIds     = 9;
-  string                offeringCode               = 10;
-  OrganizationType      type                       = 11;
-  string                contactEmail               = 12;
-  string                contactPhone               = 13;
-  repeated CdnImageFile featureImages              = 14;
-  ListingMetadata       marketplaceListingMetadata = 15;
+  string                   id                         = 1;
+  string                   uniqueAlphanumericName     = 2;
+  string                   name                       = 3;
+  ListingMetadata          listingMetadata            = 4;
+  string                   logoUrl                    = 5;
+  string                   website                    = 6;
+  bool                     agreedToTermsOfUse         = 7;
+  string                   termsOfUseId               = 8;
+  repeated string          industrySubCategoryIds     = 9;
+  string                   offeringCode               = 10;
+  OrganizationType         type                       = 11;
+  string                   contactEmail               = 12;
+  string                   contactPhone               = 13;
+  repeated CdnImageFile    featureImages              = 14;
+  ListingMetadata          marketplaceListingMetadata = 15;
+  OrganizationBillingCycle billingCycle               = 16;
 }
 
 enum OrganizationType {
   OrganizationType_Private     = 0;
   OrganizationType_Marketplace = 1;
   OrganizationType_Individual  = 2;
+}
+
+enum OrganizationBillingCycle {
+  OrganizationBillingCycle_Weekly      = 0;
+  OrganizationBillingCycle_Fortnightly = 1;
+  OrganizationBillingCycle_Monthly     = 2;
 }
 
 message Admin_GetOrganizationStripeConnectAccountsResponse {
@@ -149,6 +156,7 @@ message Organization {
   bool                          isOwnershipVerified        = 26;
   repeated CdnImageFile         featureImages              = 27;
   ListingMetadata               marketplaceListingMetadata = 28;
+  OrganizationBillingCycle      billingCycle               = 29;
 }
 
 message IndustrySubCategory {
@@ -178,16 +186,16 @@ message GetInput {
   string uniqueAlphanumericName = 2;
 }
 
-enum Role {
-  Role_Owner         = 0;
-  Role_Administrator = 1;
-  Role_Member        = 2;
+enum OrganizationMemberRole {
+  OrganizationMemberRole_Owner         = 0;
+  OrganizationMemberRole_Administrator = 1;
+  OrganizationMemberRole_Member        = 2;
 }
 
 message OrganizationMember {
   string                   id                           = 1;
   string                   customerId                   = 2;
-  Role                     role                         = 3;
+  OrganizationMemberRole   role                         = 3;
   bool                     isOrganizationOnboardingDone = 4;
   OrganizationMemberStatus status                       = 5;
 }

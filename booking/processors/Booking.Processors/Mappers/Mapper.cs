@@ -1,4 +1,4 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Team.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Booking.Shared.Database.Entities;
@@ -18,13 +18,15 @@ using ProductPricingBillingInterval = Api.Shared.Clients.Events.Skedular.Marketp
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode;
 using ProductPricingBillingSchedule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingSchedule;
 using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence;
-using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
 using Team = Booking.Shared.Models.Team;
 using TeamMember = Booking.Shared.Database.Entities.TeamMember;
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
+using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 
 namespace Booking.Processors.Mappers;
 
@@ -177,6 +179,13 @@ public class Mapper : IMapper
                 OrganizationType.Marketplace => Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
+            },
+            BillingCycle = organizationAfterState.BillingCycle switch
+            {
+                OrganizationBillingCycle.Weekly => Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
+                OrganizationBillingCycle.Fortnightly => Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
+                OrganizationBillingCycle.Monthly => Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
+                _ => throw new ArgumentOutOfRangeException()
             }
         };
 
@@ -185,15 +194,15 @@ public class Mapper : IMapper
             Id = item.Id,
             Role = item.Role switch
             {
-                Role.Owner => OrganizationMemberRole.Owner,
-                Role.Administrator => OrganizationMemberRole.Administrator,
-                Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Status.Active => OrganizationMemberStatus.Active,
-                Status.Inactive => OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -290,15 +299,15 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Role = item.Role switch
             {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Owner => TeamMemberRole.Owner,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Administrator => TeamMemberRole.Administrator,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Role.Member => TeamMemberRole.Member,
+                Role.Owner => TeamMemberRole.Owner,
+                Role.Administrator => TeamMemberRole.Administrator,
+                Role.Member => TeamMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Active => TeamMemberStatus.Active,
-                Api.Shared.Clients.Events.Skedular.Team.V1.Value.Status.Inactive => TeamMemberStatus.Inactive,
+                Status.Active => TeamMemberStatus.Active,
+                Status.Inactive => TeamMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },
@@ -320,6 +329,7 @@ public class Mapper : IMapper
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();
+        dest.BillingCycle = src.BillingCycle.ToOrganizationBillingCycle();
         return dest;
     }
 

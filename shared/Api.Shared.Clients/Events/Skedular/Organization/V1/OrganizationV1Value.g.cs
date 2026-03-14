@@ -33,7 +33,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
             "aW9uSWQYBiABKAkicQoERGF0YRIyCgxvcmdhbml6YXRpb24YASABKAsyGi5v",
             "cmdhbml6YXRpb24uT3JnYW5pemF0aW9uSAASKgoIb2ZmZXJpbmcYAiABKAsy",
-            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIqQGCgxPcmdh",
+            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIuIGCgxPcmdh",
             "bml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
             "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIeChZ1bmlxdWVBbHBoYW51bWVyaWNO",
             "YW1lGAMgASgJEgwKBG5hbWUYBCABKAkSNgoPbGlzdGluZ01ldGFkYXRhGAUg",
@@ -51,51 +51,59 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "aXBWZXJpZmllZBgSIAEoCBIgChhoYXNBdHRhY2hlZFBheW1lbnRNZXRob2QY",
             "EyABKAgSMQoNZmVhdHVyZUltYWdlcxgUIAMoCzIaLm9yZ2FuaXphdGlvbi5D",
             "ZG5JbWFnZUZpbGUSQQoabWFya2V0cGxhY2VMaXN0aW5nTWV0YWRhdGEYFSAB",
-            "KAsyHS5vcmdhbml6YXRpb24uTGlzdGluZ01ldGFkYXRhInwKEk9yZ2FuaXph",
-            "dGlvbk1lbWJlchIKCgJpZBgBIAEoCRISCgpjdXN0b21lcklkGAIgASgJEiAK",
-            "BHJvbGUYAyABKA4yEi5vcmdhbml6YXRpb24uUm9sZRIkCgZzdGF0dXMYBCAB",
-            "KA4yFC5vcmdhbml6YXRpb24uU3RhdHVzItEBCghPZmZlcmluZxIKCgJpZBgB",
-            "IAEoCRIMCgRjb2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhouZ29vZ2xlLnBy",
-            "b3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29nbGUucHJvdG9i",
-            "dWYuVGltZXN0YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1bml0UHJpY2UY",
-            "BiABKAUSGQoRYWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoOb3JnYW5pemF0",
-            "aW9uSWQYCCABKAkiFgoITG9jYXRpb24SCgoCaWQYASABKAkiUQoDVGFnEgoK",
-            "AmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyABKAkS",
-            "DAoEdHlwZRgEIAEoCRINCgVjb2xvchgFIAEoCSJ9ChdPcmdhbml6YXRpb25T",
-            "c29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQCghlbnRpdHlJZBgCIAEoCRIQCghs",
-            "b2dpblVybBgDIAEoCRIgChhhcHBGZWRlcmF0aW9uTWV0YWRhdGFVcmwYBCAB",
-            "KAkSEAoIaXNBY3RpdmUYBSABKAgiTgoWT3JnYW5pemF0aW9uVGF4RGV0YWls",
-            "cxIKCgJpZBgBIAEoCRINCgV0YXhJZBgCIAEoCRIZChF0YXhSYXRlUGVyY2Vu",
-            "dGFnZRgDIAEoASKrAgoPUGh5c2ljYWxBZGRyZXNzEgoKAmlkGAEgASgJEhQK",
-            "DGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRyZXNzTGluZTIYAyABKAkSDgoG",
-            "c3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkSEAoIcHJvdmluY2UYBiABKAkS",
-            "DwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5GAggASgJEhMKC2NvdW50cnlD",
-            "b2RlGAkgASgJEhgKEGZvcm1hdHRlZEFkZHJlc3MYCiABKAkSDwoHb3NtVHlw",
-            "ZRgLIAEoCRINCgVvc21JZBgMIAEoCRIPCgdwbGFjZUlkGA0gASgJEi4KC2Nv",
-            "b3JkaW5hdGVzGA4gASgLMhkub3JnYW5pemF0aW9uLkNvb3JkaW5hdGVzIjIK",
-            "C0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVkZRgBIAEoARIQCghsYXRpdHVkZRgC",
-            "IAEoASJhCgxDZG5JbWFnZUZpbGUSJwoIb3JpZ2luYWwYASABKAsyFS5vcmdh",
-            "bml6YXRpb24uQ2RuRmlsZRIoCgl0aHVtYm5haWwYAiABKAsyFS5vcmdhbml6",
-            "YXRpb24uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEoCRIOCgZoZWln",
-            "aHQYAiABKAUSDQoFd2lkdGgYAyABKAUiWwoPTGlzdGluZ01ldGFkYXRhEg0K",
-            "BWFib3V0GAEgASgJEg0KBXRpdGxlGAIgASgJEhAKCHN1YlRpdGxlGAMgASgJ",
-            "EhgKEGluY2x1ZGVkRmVhdHVyZXMYBCADKAkqaQoEVHlwZRIdChlUeXBlX09y",
-            "Z2FuaXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6YXRpb25EZWxl",
-            "dGVkEAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1VwZGF0ZWQQAipz",
-            "ChBPcmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5cGVfUHJpdmF0",
-            "ZRAAEiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQARIfChtPcmdh",
-            "bml6YXRpb25UeXBlX0luZGl2aWR1YWwQAio/CgRSb2xlEg4KClJvbGVfT3du",
-            "ZXIQABIWChJSb2xlX0FkbWluaXN0cmF0b3IQARIPCgtSb2xlX01lbWJlchAC",
-            "KjAKBlN0YXR1cxIRCg1TdGF0dXNfQWN0aXZlEAASEwoPU3RhdHVzX0luYWN0",
-            "aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
-            "T3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
+            "KAsyHS5vcmdhbml6YXRpb24uTGlzdGluZ01ldGFkYXRhEjwKDGJpbGxpbmdD",
+            "eWNsZRgWIAEoDjImLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRpb25CaWxsaW5n",
+            "Q3ljbGUioAEKEk9yZ2FuaXphdGlvbk1lbWJlchIKCgJpZBgBIAEoCRISCgpj",
+            "dXN0b21lcklkGAIgASgJEjIKBHJvbGUYAyABKA4yJC5vcmdhbml6YXRpb24u",
+            "T3JnYW5pemF0aW9uTWVtYmVyUm9sZRI2CgZzdGF0dXMYBCABKA4yJi5vcmdh",
+            "bml6YXRpb24uT3JnYW5pemF0aW9uTWVtYmVyU3RhdHVzItEBCghPZmZlcmlu",
+            "ZxIKCgJpZBgBIAEoCRIMCgRjb2RlGAIgASgJEikKBXN0YXJ0GAMgASgLMhou",
+            "Z29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcBInCgNlbmQYBCABKAsyGi5nb29n",
+            "bGUucHJvdG9idWYuVGltZXN0YW1wEhEKCWF1dG9SZW5ldxgFIAEoCBIRCgl1",
+            "bml0UHJpY2UYBiABKAUSGQoRYWN0aXZlQ3VzdG9tZXJJZHMYByADKAkSFgoO",
+            "b3JnYW5pemF0aW9uSWQYCCABKAkiFgoITG9jYXRpb24SCgoCaWQYASABKAki",
+            "UQoDVGFnEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRp",
+            "b24YAyABKAkSDAoEdHlwZRgEIAEoCRINCgVjb2xvchgFIAEoCSJ9ChdPcmdh",
+            "bml6YXRpb25Tc29TZXR0aW5ncxIKCgJpZBgBIAEoCRIQCghlbnRpdHlJZBgC",
+            "IAEoCRIQCghsb2dpblVybBgDIAEoCRIgChhhcHBGZWRlcmF0aW9uTWV0YWRh",
+            "dGFVcmwYBCABKAkSEAoIaXNBY3RpdmUYBSABKAgiTgoWT3JnYW5pemF0aW9u",
+            "VGF4RGV0YWlscxIKCgJpZBgBIAEoCRINCgV0YXhJZBgCIAEoCRIZChF0YXhS",
+            "YXRlUGVyY2VudGFnZRgDIAEoASKrAgoPUGh5c2ljYWxBZGRyZXNzEgoKAmlk",
+            "GAEgASgJEhQKDGFkZHJlc3NMaW5lMRgCIAEoCRIUCgxhZGRyZXNzTGluZTIY",
+            "AyABKAkSDgoGc3VidXJiGAQgASgJEgwKBGNpdHkYBSABKAkSEAoIcHJvdmlu",
+            "Y2UYBiABKAkSDwoHemlwY29kZRgHIAEoCRIPCgdjb3VudHJ5GAggASgJEhMK",
+            "C2NvdW50cnlDb2RlGAkgASgJEhgKEGZvcm1hdHRlZEFkZHJlc3MYCiABKAkS",
+            "DwoHb3NtVHlwZRgLIAEoCRINCgVvc21JZBgMIAEoCRIPCgdwbGFjZUlkGA0g",
+            "ASgJEi4KC2Nvb3JkaW5hdGVzGA4gASgLMhkub3JnYW5pemF0aW9uLkNvb3Jk",
+            "aW5hdGVzIjIKC0Nvb3JkaW5hdGVzEhEKCWxvbmdpdHVkZRgBIAEoARIQCghs",
+            "YXRpdHVkZRgCIAEoASJhCgxDZG5JbWFnZUZpbGUSJwoIb3JpZ2luYWwYASAB",
+            "KAsyFS5vcmdhbml6YXRpb24uQ2RuRmlsZRIoCgl0aHVtYm5haWwYAiABKAsy",
+            "FS5vcmdhbml6YXRpb24uQ2RuRmlsZSI1CgdDZG5GaWxlEgsKA3VybBgBIAEo",
+            "CRIOCgZoZWlnaHQYAiABKAUSDQoFd2lkdGgYAyABKAUiWwoPTGlzdGluZ01l",
+            "dGFkYXRhEg0KBWFib3V0GAEgASgJEg0KBXRpdGxlGAIgASgJEhAKCHN1YlRp",
+            "dGxlGAMgASgJEhgKEGluY2x1ZGVkRmVhdHVyZXMYBCADKAkqaQoEVHlwZRId",
+            "ChlUeXBlX09yZ2FuaXphdGlvblVwc2VydGVkEAASHAoYVHlwZV9Pcmdhbml6",
+            "YXRpb25EZWxldGVkEAESJAogVHlwZV9Pcmdhbml6YXRpb25PZmZlcmluZ1Vw",
+            "ZGF0ZWQQAipzChBPcmdhbml6YXRpb25UeXBlEhwKGE9yZ2FuaXphdGlvblR5",
+            "cGVfUHJpdmF0ZRAAEiAKHE9yZ2FuaXphdGlvblR5cGVfTWFya2V0cGxhY2UQ",
+            "ARIfChtPcmdhbml6YXRpb25UeXBlX0luZGl2aWR1YWwQAiqPAQoYT3JnYW5p",
+            "emF0aW9uQmlsbGluZ0N5Y2xlEiMKH09yZ2FuaXphdGlvbkJpbGxpbmdDeWNs",
+            "ZV9XZWVrbHkQABIoCiRPcmdhbml6YXRpb25CaWxsaW5nQ3ljbGVfRm9ydG5p",
+            "Z2h0bHkQARIkCiBPcmdhbml6YXRpb25CaWxsaW5nQ3ljbGVfTW9udGhseRAC",
+            "KocBChZPcmdhbml6YXRpb25NZW1iZXJSb2xlEiAKHE9yZ2FuaXphdGlvbk1l",
+            "bWJlclJvbGVfT3duZXIQABIoCiRPcmdhbml6YXRpb25NZW1iZXJSb2xlX0Fk",
+            "bWluaXN0cmF0b3IQARIhCh1Pcmdhbml6YXRpb25NZW1iZXJSb2xlX01lbWJl",
+            "chACKmYKGE9yZ2FuaXphdGlvbk1lbWJlclN0YXR1cxIjCh9Pcmdhbml6YXRp",
+            "b25NZW1iZXJTdGF0dXNfQWN0aXZlEAASJQohT3JnYW5pemF0aW9uTWVtYmVy",
+            "U3RhdHVzX0luYWN0aXZlEAFCO6oCOEFwaS5TaGFyZWQuQ2xpZW50cy5FdmVu",
+            "dHMuU2tlZHVsYXIuT3JnYW5pemF0aW9uLlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "UniqueAlphanumericName", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "UniqueAlphanumericName", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata", "BillingCycle" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -125,15 +133,21 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [pbr::OriginalName("OrganizationType_Individual")] Individual = 2,
   }
 
-  public enum Role {
-    [pbr::OriginalName("Role_Owner")] Owner = 0,
-    [pbr::OriginalName("Role_Administrator")] Administrator = 1,
-    [pbr::OriginalName("Role_Member")] Member = 2,
+  public enum OrganizationBillingCycle {
+    [pbr::OriginalName("OrganizationBillingCycle_Weekly")] Weekly = 0,
+    [pbr::OriginalName("OrganizationBillingCycle_Fortnightly")] Fortnightly = 1,
+    [pbr::OriginalName("OrganizationBillingCycle_Monthly")] Monthly = 2,
   }
 
-  public enum Status {
-    [pbr::OriginalName("Status_Active")] Active = 0,
-    [pbr::OriginalName("Status_Inactive")] Inactive = 1,
+  public enum OrganizationMemberRole {
+    [pbr::OriginalName("OrganizationMemberRole_Owner")] Owner = 0,
+    [pbr::OriginalName("OrganizationMemberRole_Administrator")] Administrator = 1,
+    [pbr::OriginalName("OrganizationMemberRole_Member")] Member = 2,
+  }
+
+  public enum OrganizationMemberStatus {
+    [pbr::OriginalName("OrganizationMemberStatus_Active")] Active = 0,
+    [pbr::OriginalName("OrganizationMemberStatus_Inactive")] Inactive = 1,
   }
 
   #endregion
@@ -1134,6 +1148,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       hasAttachedPaymentMethod_ = other.hasAttachedPaymentMethod_;
       featureImages_ = other.featureImages_.Clone();
       marketplaceListingMetadata_ = other.marketplaceListingMetadata_ != null ? other.marketplaceListingMetadata_.Clone() : null;
+      billingCycle_ = other.billingCycle_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1391,6 +1406,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "billingCycle" field.</summary>
+    public const int BillingCycleFieldNumber = 22;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle billingCycle_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle BillingCycle {
+      get { return billingCycle_; }
+      set {
+        billingCycle_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1427,6 +1454,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (HasAttachedPaymentMethod != other.HasAttachedPaymentMethod) return false;
       if(!featureImages_.Equals(other.featureImages_)) return false;
       if (!object.Equals(MarketplaceListingMetadata, other.MarketplaceListingMetadata)) return false;
+      if (BillingCycle != other.BillingCycle) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1455,6 +1483,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (HasAttachedPaymentMethod != false) hash ^= HasAttachedPaymentMethod.GetHashCode();
       hash ^= featureImages_.GetHashCode();
       if (marketplaceListingMetadata_ != null) hash ^= MarketplaceListingMetadata.GetHashCode();
+      if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) hash ^= BillingCycle.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1545,6 +1574,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(170, 1);
         output.WriteMessage(MarketplaceListingMetadata);
       }
+      if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
+        output.WriteRawTag(176, 1);
+        output.WriteEnum((int) BillingCycle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1627,6 +1660,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(170, 1);
         output.WriteMessage(MarketplaceListingMetadata);
       }
+      if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
+        output.WriteRawTag(176, 1);
+        output.WriteEnum((int) BillingCycle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1691,6 +1728,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       size += featureImages_.CalculateSize(_repeated_featureImages_codec);
       if (marketplaceListingMetadata_ != null) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(MarketplaceListingMetadata);
+      }
+      if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
+        size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) BillingCycle);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1779,6 +1819,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           MarketplaceListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata();
         }
         MarketplaceListingMetadata.MergeFrom(other.MarketplaceListingMetadata);
+      }
+      if (other.BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
+        BillingCycle = other.BillingCycle;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1902,6 +1945,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
               MarketplaceListingMetadata = new global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.ListingMetadata();
             }
             input.ReadMessage(MarketplaceListingMetadata);
+            break;
+          }
+          case 176: {
+            BillingCycle = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle) input.ReadEnum();
             break;
           }
         }
@@ -2028,6 +2075,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             input.ReadMessage(MarketplaceListingMetadata);
             break;
           }
+          case 176: {
+            BillingCycle = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle) input.ReadEnum();
+            break;
+          }
         }
       }
     }
@@ -2109,10 +2160,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
 
     /// <summary>Field number for the "role" field.</summary>
     public const int RoleFieldNumber = 3;
-    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role role_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole role_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role Role {
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole Role {
       get { return role_; }
       set {
         role_ = value;
@@ -2121,10 +2172,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
 
     /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status status_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active;
+    private global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus status_ = global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status Status {
+    public global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus Status {
       get { return status_; }
       set {
         status_ = value;
@@ -2159,8 +2210,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       int hash = 1;
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (CustomerId.Length != 0) hash ^= CustomerId.GetHashCode();
-      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner) hash ^= Role.GetHashCode();
-      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active) hash ^= Status.GetHashCode();
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner) hash ^= Role.GetHashCode();
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active) hash ^= Status.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2187,11 +2238,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(CustomerId);
       }
-      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner) {
         output.WriteRawTag(24);
         output.WriteEnum((int) Role);
       }
-      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active) {
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Status);
       }
@@ -2213,11 +2264,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(18);
         output.WriteString(CustomerId);
       }
-      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner) {
         output.WriteRawTag(24);
         output.WriteEnum((int) Role);
       }
-      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active) {
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Status);
       }
@@ -2237,10 +2288,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (CustomerId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(CustomerId);
       }
-      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner) {
+      if (Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Role);
       }
-      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active) {
+      if (Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Status);
       }
       if (_unknownFields != null) {
@@ -2261,10 +2312,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if (other.CustomerId.Length != 0) {
         CustomerId = other.CustomerId;
       }
-      if (other.Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role.Owner) {
+      if (other.Role != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole.Owner) {
         Role = other.Role;
       }
-      if (other.Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status.Active) {
+      if (other.Status != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus.Active) {
         Status = other.Status;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -2295,11 +2346,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 24: {
-            Role = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole) input.ReadEnum();
             break;
           }
           case 32: {
-            Status = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status) input.ReadEnum();
+            Status = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus) input.ReadEnum();
             break;
           }
         }
@@ -2330,11 +2381,11 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             break;
           }
           case 24: {
-            Role = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role) input.ReadEnum();
+            Role = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole) input.ReadEnum();
             break;
           }
           case 32: {
-            Status = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status) input.ReadEnum();
+            Status = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus) input.ReadEnum();
             break;
           }
         }

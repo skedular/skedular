@@ -10,6 +10,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
     public OrganizationType Type { get; set; }
+    public OrganizationBillingCycle BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool? IsOwnershipVerified { get; set; }

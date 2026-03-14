@@ -1,4 +1,3 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using MsTeams.Shared.Models;
@@ -9,9 +8,10 @@ using Identity = MsTeams.Shared.Database.Entities.Identity;
 using Location = MsTeams.Shared.Models.Location;
 using Organization = MsTeams.Shared.Models.Organization;
 using OrganizationMember = MsTeams.Shared.Database.Entities.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
 using OrganizationSsoSetting = MsTeams.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
-using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 using Team = MsTeams.Shared.Models.Team;
 
 namespace MsTeams.Processors.Mappers;
@@ -133,15 +133,15 @@ public class Mapper : IMapper
             Id = item.Id,
             Role = item.Role switch
             {
-                Role.Owner => OrganizationMemberRole.Owner,
-                Role.Administrator => OrganizationMemberRole.Administrator,
-                Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Status.Active => OrganizationMemberStatus.Active,
-                Status.Inactive => OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = item.CustomerId },

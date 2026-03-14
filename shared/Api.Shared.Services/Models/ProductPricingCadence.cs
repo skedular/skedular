@@ -141,29 +141,6 @@ public static class ProductPricingCadenceExtensions
 
     extension(string src)
     {
-        public string ToProductPricingCadenceName() =>
-            src switch
-            {
-                ProductPricingCadenceConstants.NotSet => "Not Set",
-                ProductPricingCadenceConstants.OneTime => "One Time",
-                ProductPricingCadenceConstants.PerMinute => "Per Minute",
-                ProductPricingCadenceConstants.PerHour => "Per Hour",
-                ProductPricingCadenceConstants.Daily => "Daily",
-                ProductPricingCadenceConstants.Weekly => "Weekly",
-                ProductPricingCadenceConstants.Monthly => "Monthly",
-                ProductPricingCadenceConstants.HalfDay => "Half Day",
-                ProductPricingCadenceConstants.Per15Minutes => "Per 15 Minutes",
-                ProductPricingCadenceConstants.Per30Minutes => "Per 30 Minutes",
-                ProductPricingCadenceConstants.TwoMonths => "2-Monthly",
-                ProductPricingCadenceConstants.Quarterly => "Quarterly",
-                ProductPricingCadenceConstants.FourMonths => "4-Monthly",
-                ProductPricingCadenceConstants.FiveMonths => "5-Monthly",
-                ProductPricingCadenceConstants.SixMonths => "6-Monthly",
-                ProductPricingCadenceConstants.Yearly => "Yearly",
-                ProductPricingCadenceConstants.Fortnightly => "Fortnightly",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
         public ProductPricingCadence ToProductPricingCadence() =>
             src switch
             {

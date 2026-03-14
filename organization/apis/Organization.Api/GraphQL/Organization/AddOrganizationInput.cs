@@ -17,6 +17,7 @@ public class AddOrganizationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("type")] public OrganizationType Type { get; set; }
+    [GraphQLName("billingCycle")] public OrganizationBillingCycle BillingCycle { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 

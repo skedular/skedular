@@ -149,7 +149,9 @@ export const getOrganizationMarketplaceSetupBaseLink = (integratedPlatrform: str
 export const getOrganizationMarketplaceSetupProductTagsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=product-tags-setup`;
 export const getOrganizationMarketplaceSetupMarketplaceListingBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=marketplace-listing-setup`;
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=marketplace-listing`;
+export const getOrganizationMarketplaceSetupBillingCycleBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=billing-cycle`;
 export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=stripe-connect-accounts-setup`;
 export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>

@@ -60,8 +60,7 @@ public static class CustomerPersonalDetailsExtensions
 
     extension(string? src)
     {
-        public string? FullRedact(PersonalInformationVisibility policy) =>
-            policy == PersonalInformationVisibility.Visible ? src : string.Empty;
+        public string? FullRedact(PersonalInformationVisibility policy) => policy == PersonalInformationVisibility.Visible ? src : string.Empty;
 
         private string? Redact(PersonalInformationVisibility policy) =>
             policy == PersonalInformationVisibility.Visible ? src : src?.Length > 1 ? $"{src[..1]}[*****]" : src;

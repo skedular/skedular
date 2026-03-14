@@ -47,7 +47,7 @@
       "sharp"
     ],
     "patchedDependencies": {
-      "globalize@1.7.0": "patches/globalize@1.7.0.patch"
+      "globalize@1.7.1": "patches/globalize@1.7.1.patch"
     }
   }
 }

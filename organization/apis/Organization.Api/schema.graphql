@@ -113,6 +113,7 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingCycle(input: UpdateOrganizationBillingCycleInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
@@ -186,6 +187,11 @@ type OrganizationBankAccountsPayload {
   organizationBankAccounts: [OrganizationBankAccountDetails!]!
 }
 
+type OrganizationBillingCycleDetails {
+  type: OrganizationBillingCycle!
+  name: String!
+}
+
 type OrganizationBillingDetails {
   companyName: String
   email: String!
@@ -225,6 +231,7 @@ type OrganizationDetails {
   website: String
   logoUrl: String
   type: OrganizationTypeDetails!
+  billingCycle: OrganizationBillingCycleDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -496,6 +503,7 @@ type Query {
   organizationMemberRoles: [OrganizationMemberRole!]!
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
+  organizationBillingCycles: [OrganizationBillingCycleDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -598,6 +606,7 @@ input AddOrganizationInput {
   name: String!
   website: String
   type: OrganizationType!
+  billingCycle: OrganizationBillingCycle!
   contactEmail: String
   contactPhone: String
   agreedToTermsOfUse: Boolean!
@@ -895,6 +904,13 @@ input UpdateOrganizationBankAccountInput {
   countryCode: String
 }
 
+input UpdateOrganizationBillingCycleInput {
+  clientMutationId: String
+  id: String
+  uniqueAlphanumericName: String
+  billingCycle: OrganizationBillingCycle!
+}
+
 input UpdateOrganizationBillingDetailsInput {
   clientMutationId: String
   id: String!
@@ -922,6 +938,7 @@ input UpdateOrganizationInput {
   uniqueAlphanumericName: String
   name: String!
   website: String
+  billingCycle: OrganizationBillingCycle!
   contactEmail: String
   contactPhone: String
   industrySubCategoryIds: [String!]!
@@ -1027,6 +1044,12 @@ enum OrderDirection {
 
 enum OrganizationBankAccountOrderField {
   NAME
+}
+
+enum OrganizationBillingCycle {
+  WEEKLY
+  FORTNIGHTLY
+  MONTHLY
 }
 
 enum OrganizationMemberOrderField {

@@ -1,7 +1,8 @@
 import { BodyIconTypography } from '@/components/commons';
-import { BankAccountIcon, EditIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
+import { BankAccountIcon, BillingIcon, EditIcon, ProductTagIcon, StripeConnectAccountIcon } from '@/components/icons';
 import {
   getOrganizationMarketplaceSetupBankAccountsBaseLink,
+  getOrganizationMarketplaceSetupBillingCycleBaseLink,
   getOrganizationMarketplaceSetupMarketplaceListingBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
@@ -66,6 +67,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
   const marketplaceListingLink = getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const billingCycleLink = getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
@@ -94,6 +96,25 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <EditIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === marketplaceListingLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={billingCycleLink}>
+          <ListItemButton selected={fullPath === billingCycleLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === billingCycleLink) }}>
+            {collapsed && (
+              <BodyIconTypography startElement={!hideIcons && <BillingIcon color="inherit" />} invertDefaultColor={fullPath === billingCycleLink && paletteMode === 'dark'} />
+            )}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Billing Cycle"
+                startElement={!hideIcons && <BillingIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === billingCycleLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

@@ -33,19 +33,6 @@ public static class PaymentMethodExtensions
             };
     }
 
-    extension(string? src)
-    {
-        public PaymentMethod? ToNullablePaymentMethod() =>
-            string.IsNullOrWhiteSpace(src)
-                ? null
-                : src switch
-                {
-                    PaymentMethodConstants.Card => PaymentMethod.Card,
-                    PaymentMethodConstants.BankTransfer => PaymentMethod.BankTransfer,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-    }
-
     extension(PaymentMethod src)
     {
         public string ToPaymentMethod() =>
@@ -63,18 +50,5 @@ public static class PaymentMethodExtensions
                 PaymentMethod.BankTransfer => "Bank Transfer",
                 _ => throw new ArgumentOutOfRangeException()
             };
-    }
-
-    extension(PaymentMethod? src)
-    {
-        public string? ToNullablePaymentMethod() =>
-            src is null
-                ? null
-                : src switch
-                {
-                    PaymentMethod.Card => PaymentMethodConstants.Card,
-                    PaymentMethod.BankTransfer => PaymentMethodConstants.BankTransfer,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
     }
 }

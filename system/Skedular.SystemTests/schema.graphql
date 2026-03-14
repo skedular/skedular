@@ -578,6 +578,7 @@ type Mutation {
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
+  updateOrganizationBillingCycle(input: UpdateOrganizationBillingCycleInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
@@ -661,6 +662,11 @@ type OrganizationBankAccountsPayload {
   organizationBankAccounts: [OrganizationBankAccountDetails!]!
 }
 
+type OrganizationBillingCycleDetails {
+  name: String!
+  type: OrganizationBillingCycle!
+}
+
 type OrganizationBillingDetails {
   addressLine1: String!
   addressLine2: String
@@ -701,6 +707,7 @@ type OrganizationDetails {
   amenities: [OrganizationTagDetails!]!
   analytics(from: DateTime! until: DateTime!): OrganizationAnalytics! @cost(weight: "10")
   availableOfferings: [OrganizationOfferingDetails!]!
+  billingCycle: OrganizationBillingCycleDetails!
   billingDetails: OrganizationBillingDetails
   canDelete: Boolean!
   canInvitePeople: Boolean!
@@ -1110,6 +1117,7 @@ type Query {
   organization(id: String uniqueAlphanumericName: String): OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")
   organizationBankAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationBankAccountOrderInput!] where: OrganizationBankAccountWhereInput!): ConnectionOfOrganizationBankAccountEdge! @cost(weight: "10")
+  organizationBillingCycles: [OrganizationBillingCycleDetails!]!
   organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -1547,6 +1555,7 @@ input AddOrganizationBillingDetailsInput {
 
 input AddOrganizationInput {
   agreedToTermsOfUse: Boolean!
+  billingCycle: OrganizationBillingCycle!
   clientMutationId: String
   contactEmail: String
   contactPhone: String
@@ -2479,6 +2488,13 @@ input UpdateOrganizationBankAccountInput {
   name: String!
 }
 
+input UpdateOrganizationBillingCycleInput {
+  billingCycle: OrganizationBillingCycle!
+  clientMutationId: String
+  id: String
+  uniqueAlphanumericName: String
+}
+
 input UpdateOrganizationBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
@@ -2501,6 +2517,7 @@ input UpdateOrganizationBillingDetailsInput {
 }
 
 input UpdateOrganizationInput {
+  billingCycle: OrganizationBillingCycle!
   clientMutationId: String
   contactEmail: String
   contactPhone: String
@@ -2808,6 +2825,12 @@ enum OrderDirection {
 
 enum OrganizationBankAccountOrderField {
   NAME
+}
+
+enum OrganizationBillingCycle {
+  FORTNIGHTLY
+  MONTHLY
+  WEEKLY
 }
 
 enum OrganizationMemberOrderField {

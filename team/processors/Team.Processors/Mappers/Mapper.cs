@@ -1,4 +1,3 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
@@ -13,6 +12,8 @@ using Organization = Team.Shared.Models.Organization;
 using OrganizationMember = Team.Shared.Database.Entities.OrganizationMember;
 using OrganizationSsoSetting = Team.Shared.Database.Entities.OrganizationSsoSetting;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 
 namespace Team.Processors.Mappers;
 
@@ -125,15 +126,15 @@ public class Mapper : IMapper
             Id = item.Id,
             Role = item.Role switch
             {
-                Role.Owner => OrganizationMemberRole.Owner,
-                Role.Administrator => OrganizationMemberRole.Administrator,
-                Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Status.Active => OrganizationMemberStatus.Active,
-                Status.Inactive => OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Customer { Id = item.CustomerId },

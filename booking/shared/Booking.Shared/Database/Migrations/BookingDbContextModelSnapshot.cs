@@ -469,6 +469,13 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("BillingCycle")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("MONTHLY");
+
                     b.Property<string>("ContactEmail")
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
@@ -521,6 +528,8 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(63)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillingCycle");
 
                     b.HasIndex("CreatedAt");
 

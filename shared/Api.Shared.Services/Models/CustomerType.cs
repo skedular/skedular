@@ -25,16 +25,6 @@ public static class CustomerTypeExtensions
                     CustomerType.Registered => CustomerTypeConstants.Registered,
                     _ => throw new ArgumentOutOfRangeException()
                 };
-
-        public string? ToNullableCustomerTypeName() =>
-            src is null
-                ? null
-                : src switch
-                {
-                    CustomerType.Guest => "Guest",
-                    CustomerType.Registered => "Registered",
-                    _ => throw new ArgumentOutOfRangeException()
-                };
     }
 
     extension(CustomerType src)
@@ -46,28 +36,10 @@ public static class CustomerTypeExtensions
                 CustomerType.Registered => CustomerTypeConstants.Registered,
                 _ => throw new ArgumentOutOfRangeException()
             };
-
-        public string ToCustomerTypeName() =>
-            src switch
-            {
-                CustomerType.Guest => "Guest",
-                CustomerType.Registered => "Registered",
-                _ => throw new ArgumentOutOfRangeException()
-            };
     }
 
     extension(string? src)
     {
-        public string? ToNullableCustomerTypeName() =>
-            src is null
-                ? null
-                : src switch
-                {
-                    CustomerTypeConstants.Guest => "Guest",
-                    CustomerTypeConstants.Registered => "Registered",
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-
         public CustomerType? ToNullableCustomerType() =>
             src is null
                 ? null
@@ -81,14 +53,6 @@ public static class CustomerTypeExtensions
 
     extension(string src)
     {
-        public string ToCustomerTypeName() =>
-            src switch
-            {
-                CustomerTypeConstants.Guest => "Guest",
-                CustomerTypeConstants.Registered => "Registered",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
         public CustomerType ToCustomerType() =>
             src switch
             {

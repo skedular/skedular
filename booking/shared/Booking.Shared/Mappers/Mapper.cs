@@ -607,7 +607,8 @@ public class Mapper : IMapper
                 IsOwnershipVerified = src.IsOwnershipVerified,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,
-                Type = src.Type.ToOrganizationType()
+                Type = src.Type.ToOrganizationType(),
+                BillingCycle = src.BillingCycle.ToOrganizationBillingCycle()
             };
 
     private static IEnumerable<Models.Location> MapTo(IEnumerable<Location> src) => src.Select(MapTo)!;

@@ -49,7 +49,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.20",
     "final-form": "^5.0.0",
-    "globalize": "1.7.0",
+    "globalize": "1.7.1",
     "graphql-sse": "^2.6.0",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",

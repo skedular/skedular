@@ -20,7 +20,9 @@ using OrganizationType = Api.Shared.Services.Models.OrganizationType;
 using PaymentMethod = Stripe.PaymentMethod;
 using PersonalInformationVisibility = Api.Shared.Services.Grpc.Skedular.Customer.V1.PersonalInformationVisibility;
 using PhysicalAddress = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.PhysicalAddress;
-using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 using Team = Organization.Shared.Models.Team;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
@@ -74,6 +76,13 @@ public class Mapper : IMapper
                 OrganizationType.Individual => Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            BillingCycle = src.BillingCycle switch
+            {
+                Api.Shared.Services.Models.OrganizationBillingCycle.Weekly => OrganizationBillingCycle.Weekly,
+                Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly => OrganizationBillingCycle.Fortnightly,
+                Api.Shared.Services.Models.OrganizationBillingCycle.Monthly => OrganizationBillingCycle.Monthly,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
             Offering = new Offering
@@ -113,15 +122,15 @@ public class Mapper : IMapper
             CustomerId = item.Customer.Id,
             Role = item.Role switch
             {
-                OrganizationMemberRole.Owner => Role.Owner,
-                OrganizationMemberRole.Administrator => Role.Administrator,
-                OrganizationMemberRole.Member => Role.Member,
+                Api.Shared.Services.Models.OrganizationMemberRole.Owner => OrganizationMemberRole.Owner,
+                Api.Shared.Services.Models.OrganizationMemberRole.Administrator => OrganizationMemberRole.Administrator,
+                Api.Shared.Services.Models.OrganizationMemberRole.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                OrganizationMemberStatus.Active => Status.Active,
-                OrganizationMemberStatus.Inactive => Status.Inactive,
+                Api.Shared.Services.Models.OrganizationMemberStatus.Active => OrganizationMemberStatus.Active,
+                Api.Shared.Services.Models.OrganizationMemberStatus.Inactive => OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             }
         }));
@@ -164,6 +173,7 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
+            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,

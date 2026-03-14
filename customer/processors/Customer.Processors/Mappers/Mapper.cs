@@ -11,8 +11,8 @@ using OrganizationSsoSetting = Customer.Shared.Models.OrganizationSsoSetting;
 using OrganizationTag = Customer.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Resource = Customer.Shared.Database.Entities.Resource;
-using Role = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Role;
-using Status = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Status;
+using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
+using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 
 namespace Customer.Processors.Mappers;
 
@@ -88,15 +88,15 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Role = item.Role switch
             {
-                Role.Owner => OrganizationMemberRole.Owner,
-                Role.Administrator => OrganizationMemberRole.Administrator,
-                Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = item.Status switch
             {
-                Status.Active => OrganizationMemberStatus.Active,
-                Status.Inactive => OrganizationMemberStatus.Inactive,
+                OrganizationMemberStatus.Active => Api.Shared.Services.Models.OrganizationMemberStatus.Active,
+                OrganizationMemberStatus.Inactive => Api.Shared.Services.Models.OrganizationMemberStatus.Inactive,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Customer = new Shared.Models.Customer { Id = item.CustomerId },

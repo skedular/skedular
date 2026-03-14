@@ -49,8 +49,10 @@ using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
 using Member = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMember;
 using OrganizationBankAccount = Organization.Shared.Database.Entities.OrganizationBankAccount;
+using OrganizationBillingCycle = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingCycle;
 using OrganizationBillingDetails = Organization.Shared.Database.Entities.OrganizationBillingDetails;
 using OrganizationDetails = Organization.Api.GraphQL.Organization.OrganizationDetails;
+using OrganizationMemberRole = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
 using OrganizationTaxDetails = Organization.Shared.Models.OrganizationTaxDetails;
 using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.OrganizationStripeConnectAccount;
@@ -238,6 +240,7 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
+            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
@@ -309,6 +312,7 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
+            BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
@@ -331,6 +335,7 @@ public class Mapper : IMapper
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
+        dest.BillingCycle = src.BillingCycle.ToOrganizationBillingCycle();
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
@@ -426,6 +431,8 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
+            BillingCycle =
+                new OrganizationBillingCycleDetails { Type = src.BillingCycle, Name = src.BillingCycle.ToOrganizationBillingCycleName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
@@ -520,6 +527,7 @@ public class Mapper : IMapper
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
             Type = src.Type,
+            BillingCycle = src.BillingCycle,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -537,6 +545,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            BillingCycle = src.BillingCycle,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -560,6 +569,13 @@ public class Mapper : IMapper
                 OrganizationType.Private => global::Api.Shared.Services.Models.OrganizationType.Private,
                 OrganizationType.Marketplace => global::Api.Shared.Services.Models.OrganizationType.Marketplace,
                 OrganizationType.Individual => global::Api.Shared.Services.Models.OrganizationType.Individual,
+                _ => throw new ArgumentOutOfRangeException()
+            },
+            BillingCycle = src.BillingCycle switch
+            {
+                OrganizationBillingCycle.Weekly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
+                OrganizationBillingCycle.Fortnightly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
+                OrganizationBillingCycle.Monthly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException()
             },
             ContactEmail = src.ContactEmail,
@@ -1455,9 +1471,9 @@ public class Mapper : IMapper
             Id = src.Id,
             Role = src.Role switch
             {
-                OrganizationMemberRole.Owner => Role.Owner,
-                OrganizationMemberRole.Administrator => Role.Administrator,
-                OrganizationMemberRole.Member => Role.Member,
+                global::Api.Shared.Services.Models.OrganizationMemberRole.Owner => OrganizationMemberRole.Owner,
+                global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator => OrganizationMemberRole.Administrator,
+                global::Api.Shared.Services.Models.OrganizationMemberRole.Member => OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch
@@ -1478,9 +1494,9 @@ public class Mapper : IMapper
             Id = src.Id,
             Role = src.Role switch
             {
-                Role.Owner => OrganizationMemberRole.Owner,
-                Role.Administrator => OrganizationMemberRole.Administrator,
-                Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => global::Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => global::Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => global::Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch

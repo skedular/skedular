@@ -253,6 +253,10 @@ const OrganizationAdmin = ({
           id
           uniqueAlphanumericName
           name
+          billingCycle {
+            type
+            name
+          }
           logoUrl
           listingMetadata {
             about
@@ -423,6 +427,10 @@ const OrganizationAdmin = ({
           id
           uniqueAlphanumericName
           name
+          billingCycle {
+            type
+            name
+          }
           listingMetadata {
             about
             title
@@ -974,6 +982,7 @@ const OrganizationAdmin = ({
           contactEmail,
           contactPhone,
           featureImages: finalFeatureImages,
+          billingCycle: organization.billingCycle.type,
         },
       },
       onCompleted: (_, errors) => {
@@ -1017,6 +1026,7 @@ const OrganizationAdmin = ({
             contactEmail,
             contactPhone,
             featureImages: finalFeatureImages,
+            billingCycle: organization.billingCycle,
           },
         },
       },
@@ -2388,7 +2398,7 @@ const OrganizationAdmin = ({
                         paddingTop: defaultPadding,
                       }}
                       ref={(divElement) => {
-                        sectionRefs.current['marketplace-listing-setup'] = divElement;
+                        sectionRefs.current['setup'] = divElement;
                       }}
                     >
                       <SectionIconTypography label="Organization Setup" />

@@ -21,6 +21,8 @@ using CustomerType = Api.Shared.Services.Models.CustomerType;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using LocationType = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationType;
 using Models_OrganizationCustomTag = Slack.Shared.Models.OrganizationCustomTag;
+using OrganizationBillingCycle = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationBillingCycle;
+using OrganizationMemberRole = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberStatus;
 using OrganizationTag = Slack.Shared.Models.OrganizationTag;
 using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
@@ -263,6 +265,13 @@ public class Mapper : IMapper
                 OrganizationType.Individual => Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            BillingCycle = src.BillingCycle switch
+            {
+                OrganizationBillingCycle.Weekly => Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
+                OrganizationBillingCycle.Fortnightly => Api.Shared.Services.Models.OrganizationBillingCycle.Fortnightly,
+                OrganizationBillingCycle.Monthly => Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             IsOwnershipVerified = src.IsOwnershipVerified,
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
             HasFutureBooking = src.HasFutureBooking,
@@ -381,9 +390,9 @@ public class Mapper : IMapper
             Id = src.Id,
             Role = src.Role switch
             {
-                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Owner => OrganizationMemberRole.Owner,
-                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Administrator => OrganizationMemberRole.Administrator,
-                Api.Shared.Services.Grpc.Skedular.Organization.V1.Role.Member => OrganizationMemberRole.Member,
+                OrganizationMemberRole.Owner => Api.Shared.Services.Models.OrganizationMemberRole.Owner,
+                OrganizationMemberRole.Administrator => Api.Shared.Services.Models.OrganizationMemberRole.Administrator,
+                OrganizationMemberRole.Member => Api.Shared.Services.Models.OrganizationMemberRole.Member,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Status = src.Status switch

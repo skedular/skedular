@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<505103ad5433dd2dddc720c639f0911e>>
+ * @generated SignedSource<<3552bb35c0d7f1615590c080a3a44152>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,9 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
 export type UpdateOrganizationInput = {
+  billingCycle: OrganizationBillingCycle;
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
@@ -43,6 +45,10 @@ export type organizationAdmin_updateOrganizationMutation$variables = {
 export type organizationAdmin_updateOrganizationMutation$data = {
   readonly updateOrganization: {
     readonly organization: {
+      readonly billingCycle: {
+        readonly name: string;
+        readonly type: OrganizationBillingCycle;
+      };
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
@@ -82,6 +88,10 @@ export type organizationAdmin_updateOrganizationMutation$data = {
 export type organizationAdmin_updateOrganizationMutation$rawResponse = {
   readonly updateOrganization: {
     readonly organization: {
+      readonly billingCycle: {
+        readonly name: string;
+        readonly type: OrganizationBillingCycle;
+      };
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
@@ -225,6 +235,25 @@ v7 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "OrganizationBillingCycleDetails",
+            "kind": "LinkedField",
+            "name": "billingCycle",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "ListingMetadata",
             "kind": "LinkedField",
             "name": "listingMetadata",
@@ -347,16 +376,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "4ff104a40750929c5efbe275d3adbda3",
+    "cacheID": "fed1153af26da073a9fd4c1379f72984",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      billingCycle {\n        type\n        name\n      }\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "843e3cf1407dcbc7bc3142aa61b9346f";
+(node as any).hash = "e44b74c1230050bd54b42207df79e09e";
 
 export default node;

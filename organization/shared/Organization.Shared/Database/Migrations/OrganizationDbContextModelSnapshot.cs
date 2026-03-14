@@ -21,7 +21,7 @@ namespace Organization.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.4")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -2135,6 +2135,13 @@ namespace Organization.Shared.Database.Migrations
                     b.Property<bool>("AgreedToTermsOfUse")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("BillingCycle")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("MONTHLY");
+
                     b.Property<string>("ContactEmail")
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
@@ -2198,6 +2205,8 @@ namespace Organization.Shared.Database.Migrations
                         .HasColumnType("character varying(2000)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillingCycle");
 
                     b.HasIndex("CreatedAt");
 

@@ -28,6 +28,7 @@ public class OrganizationDetails : Node
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
+    [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
 
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }

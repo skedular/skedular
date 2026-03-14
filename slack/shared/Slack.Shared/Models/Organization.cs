@@ -13,6 +13,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public OrganizationType Type { get; set; }
+    public OrganizationBillingCycle BillingCycle { get; set; }
     public bool? IsOwnershipVerified { get; set; }
     public bool HasAttachedPaymentMethod { get; set; }
     public ICollection<OrganizationCustomTag> Tags { get; set; } = [];

@@ -56,4 +56,20 @@ public class RootMutation(IMapper mapper)
                     input.MarketplaceListingMetadata,
                     cancellationToken))!
         };
+
+    [UseResolverScope]
+    public async Task<OrganizationPayload> UpdateOrganizationBillingCycleAsync(
+        UpdateOrganizationBillingCycleInput input,
+        [Service] IOrganizationService organizationService,
+        CancellationToken cancellationToken) =>
+        new()
+        {
+            ClientMutationId = input.ClientMutationId,
+            Organization = mapper.MapTo(
+                await organizationService.UpdateOrganizationBillingCycleAsync(
+                    input.Id,
+                    input.UniqueAlphanumericName,
+                    input.BillingCycle,
+                    cancellationToken))!
+        };
 }

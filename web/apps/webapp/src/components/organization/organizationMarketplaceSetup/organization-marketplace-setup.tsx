@@ -2,6 +2,7 @@ import { NewBankAccountButton } from '@/components/bankAccount/addBankAccount';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
+  FormFieldLabel,
   FormStackColumn,
   GridContainer,
   PushToRight,
@@ -15,6 +16,7 @@ import { getOrganizationBankAccountBaseLink, getOrganizationBaseLink, getOrganiz
 import { ListingMetadata, listingMetadataSchemaShape } from '@/components/listingMetadata';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
+import { SingleChoiceOrganizationBillingCycle } from '@/components/organization';
 import { AddOrganizationProductTagButton } from '@/components/organization/addOrganizationProductTag';
 import { EditOrganizationProductTagDialog } from '@/components/organization/editOrganizationProductTag';
 import { ProductTag } from '@/components/productTag';
@@ -37,6 +39,10 @@ import type { organizationMarketplaceSetup_productTags_refetchableFragment } fro
 import type { organizationMarketplaceSetup_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_query.graphql';
 import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
+import type {
+  OrganizationBillingCycle,
+  organizationMarketplaceSetup_updateOrganizationBillingCycleMutation,
+} from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingCycleMutation.graphql';
 import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -55,7 +61,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { object } from 'yup';
+import { object, string } from 'yup';
 import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
@@ -111,6 +117,14 @@ const organizationMarketplaceListingMetadataSchema = object({
   ...listingMetadataSchemaShape,
 });
 
+type OrganizationBillingCycleDetails = {
+  billingCycle: string;
+};
+
+const organizationBillingCycleSchema = object({
+  billingCycle: string().required('Billing Cycle is required'),
+});
+
 const OrganizationMarketplaceSetup = ({
   rootDataRelay,
   rootDataProductTagsRelay,
@@ -131,8 +145,13 @@ const OrganizationMarketplaceSetup = ({
             subTitle
             includedFeatures
           }
+          billingCycle {
+            type
+            name
+          }
         }
         ...existingStripeConnectAccountButton_query
+        ...singleChoiceOrganizationBillingCycle_query
       }
     `,
     rootDataRelay,
@@ -316,6 +335,20 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
+  const [commitUpdateOrganizationBillingCycle] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingCycleMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationBillingCycleMutation($input: UpdateOrganizationBillingCycleInput!) @raw_response_type {
+      updateOrganizationBillingCycle(input: $input) {
+        organization {
+          id
+          billingCycle {
+            type
+            name
+          }
+        }
+      }
+    }
+  `);
+
   const { integratedPlatrform } = useIntegratedPlatrform();
   const [, startTransition] = useTransition();
   const paletteMode = useContext(PaletteModeContext);
@@ -332,6 +365,12 @@ const OrganizationMarketplaceSetup = ({
   const debounceSetOrganizationTitle = useDebounceCallback(setOrganizationTitle, keyboardTextFieldDebounceTimeout);
   const [organizationSubTitle, setOrganizationSubTitle] = useState(rootData.organization?.marketplaceListingMetadata.subTitle ?? null);
   const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
+
+  const validateOrganizationBillingCycleDetails = makeValidate(organizationBillingCycleSchema);
+  const requiredOrganizationBillingCycleDetailsFields = makeRequired(organizationBillingCycleSchema);
+
+  const [organizationBillingCycle, setOrganizationBillingCycle] = useState(rootData.organization?.billingCycle.type ?? '');
+  const debounceSetOrganizationBillingCycle = useDebounceCallback(setOrganizationBillingCycle, keyboardTextFieldDebounceTimeout);
 
   const [productTagNameSearchText, setProductTagNameSearchText] = useState<string>('');
   const [seledctedProductTags, setSeledctedProductTags] = useState<GridRowSelectionModel>(defaultGridRowSelectionModelValue);
@@ -1243,7 +1282,7 @@ const OrganizationMarketplaceSetup = ({
     },
   ];
 
-  const handleOrganizationDetailUpdateClick = ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
+  const handleOrganizationMarketplaceListingMetadataDetailUpdateClick = ({ title, subTitle }: OrganizationMarketplaceListingMetadataDetails) => {
     const organization = rootData.organization;
     if (!organization) {
       return;
@@ -1301,6 +1340,57 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
+  const handleOrganizationBillingCycleDetailUpdateClick = ({ billingCycle }: OrganizationBillingCycleDetails) => {
+    const organization = rootData.organization;
+    if (!organization) {
+      return;
+    }
+
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing cycle...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationBillingCycle({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: organization.id,
+          billingCycle: billingCycle as OrganizationBillingCycle,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${joinErrors(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} billing cycle updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationBillingCycle: {
+          organization: {
+            id: organization.id,
+            billingCycle: {
+              type: billingCycle as OrganizationBillingCycle,
+              name: '',
+            },
+          },
+        },
+      },
+    });
+  };
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -1308,7 +1398,7 @@ const OrganizationMarketplaceSetup = ({
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Marketplace Information">
             <Form
-              onSubmit={handleOrganizationDetailUpdateClick}
+              onSubmit={handleOrganizationMarketplaceListingMetadataDetailUpdateClick}
               initialValues={{
                 title: organizationTitle,
                 subTitle: organizationSubTitle,
@@ -1324,7 +1414,7 @@ const OrganizationMarketplaceSetup = ({
                         paddingTop: defaultPadding,
                       }}
                       ref={(divElement) => {
-                        sectionRefs.current['setup'] = divElement;
+                        sectionRefs.current['marketplace-listing'] = divElement;
                       }}
                     >
                       <SectionIconTypography label="Organization Marketplace Listing Setup" />
@@ -1341,6 +1431,56 @@ const OrganizationMarketplaceSetup = ({
                         }}
                         requiredFields={requiredOrganizationMarketplaceListingMetadataDetailsFields}
                       />
+                    </StackColumn>
+
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                    >
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle}>
+                          Update
+                        </Button>
+                      </StackRow>
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
+            />
+
+            <Form
+              onSubmit={handleOrganizationBillingCycleDetailUpdateClick}
+              initialValues={{
+                billingCycle: organizationBillingCycle,
+              }}
+              validate={validateOrganizationBillingCycleDetails}
+              render={({ handleSubmit, values }) => {
+                debounceSetOrganizationBillingCycle(values!.billingCycle);
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                      ref={(divElement) => {
+                        sectionRefs.current['billing-cycle'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Organization Billing Cycle Setup" />
+                      <BodyIconTypography label="Edit your organization billing cycle details" />
+                      <Divider />
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Billing Cycle">
+                        <SingleChoiceOrganizationBillingCycle rootDataRelay={rootData} name="billingCycle" required={requiredOrganizationBillingCycleDetailsFields.billingCycle} />
+                      </FormFieldLabel>
                     </StackColumn>
 
                     <StackColumn

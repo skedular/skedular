@@ -110,6 +110,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
+          billingCycle: 'MONTHLY',
         },
       },
       onCompleted: (response, errors) => {

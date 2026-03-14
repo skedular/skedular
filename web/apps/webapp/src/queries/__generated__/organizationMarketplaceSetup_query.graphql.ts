@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b524c08874bf9662a089987e0429bba1>>
+ * @generated SignedSource<<45c11fab715b7c7b1fa55403fb9d680d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,9 +9,14 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_query$data = {
   readonly organization: {
+    readonly billingCycle: {
+      readonly name: string;
+      readonly type: OrganizationBillingCycle;
+    };
     readonly id: string;
     readonly marketplaceListingMetadata: {
       readonly about: string | null | undefined;
@@ -21,7 +26,7 @@ export type organizationMarketplaceSetup_query$data = {
     };
     readonly name: string;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"existingStripeConnectAccountButton_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"existingStripeConnectAccountButton_query" | "singleChoiceOrganizationBillingCycle_query">;
   readonly " $fragmentType": "organizationMarketplaceSetup_query";
 };
 export type organizationMarketplaceSetup_query$key = {
@@ -29,7 +34,15 @@ export type organizationMarketplaceSetup_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_query">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -61,13 +74,7 @@ const node: ReaderFragment = {
           "name": "id",
           "storageKey": null
         },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -106,6 +113,25 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationBillingCycleDetails",
+          "kind": "LinkedField",
+          "name": "billingCycle",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v0/*: any*/)
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -114,12 +140,18 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "existingStripeConnectAccountButton_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceOrganizationBillingCycle_query"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "7ea1b680b4aafb5d1d17d26263e08236";
+(node as any).hash = "ce2cdcabff01dc34bc23192b7b019737";
 
 export default node;

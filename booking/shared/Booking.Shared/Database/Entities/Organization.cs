@@ -15,6 +15,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
     public string Type { get; set; }
+    public string BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool? IsOwnershipVerified { get; set; }
@@ -45,11 +46,15 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
+        builder.Property(item => item.BillingCycle)
+            .HasMaxLength(Constants.MaxOrganizationBillingCycleLength)
+            .HasDefaultValue(OrganizationBillingCycleConstants.Monthly);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
         builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
         builder.HasIndex(item => item.Type);
+        builder.HasIndex(item => item.BillingCycle);
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.IsOwnershipVerified);
     }

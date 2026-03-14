@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c44b5b549bc425dc4a6de13ec366ba7d>>
+ * @generated SignedSource<<eb7473211ccdbdd3d75fed8fdb898007>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationAdmin_organization_query$data = {
   readonly organization: {
@@ -32,6 +33,10 @@ export type organizationAdmin_organization_query$data = {
       readonly underPriceLines: ReadonlyArray<string>;
       readonly unitPrice: number;
     }>;
+    readonly billingCycle: {
+      readonly name: string;
+      readonly type: OrganizationBillingCycle;
+    };
     readonly billingDetails: {
       readonly addressLine1: string;
       readonly addressLine2: string | null | undefined;
@@ -377,6 +382,25 @@ return {
         {
           "alias": null,
           "args": null,
+          "concreteType": "OrganizationBillingCycleDetails",
+          "kind": "LinkedField",
+          "name": "billingCycle",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "type",
+              "storageKey": null
+            },
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "kind": "ScalarField",
           "name": "logoUrl",
           "storageKey": null
@@ -716,6 +740,6 @@ return {
 };
 })();
 
-(node as any).hash = "dd0597f87a7c42d481e5a02f2e050910";
+(node as any).hash = "9876c7f28449e477cb0d8c43ddcffcd9";
 
 export default node;

@@ -24,6 +24,14 @@ public class RootQuery(IMapper mapper)
     ];
 
     [UseResolverScope]
+    public IEnumerable<OrganizationBillingCycleDetails> OrganizationBillingCycles() =>
+    [
+        new() { Type = OrganizationBillingCycle.Weekly, Name = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycleName() },
+        new() { Type = OrganizationBillingCycle.Fortnightly, Name = OrganizationBillingCycle.Fortnightly.ToOrganizationBillingCycleName() },
+        new() { Type = OrganizationBillingCycle.Monthly, Name = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycleName() }
+    ];
+
+    [UseResolverScope]
     public async Task<bool> OrganizationCustomerRecordSyncedAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         CancellationToken cancellationToken) =>

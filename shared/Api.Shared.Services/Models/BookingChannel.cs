@@ -23,14 +23,6 @@ public static class BookingChannelExtensions
                 BookingChannelConstants.Marketplace => BookingChannel.Marketplace,
                 _ => throw new ArgumentOutOfRangeException()
             };
-
-        public string ToBookingChannelName() =>
-            src switch
-            {
-                BookingChannelConstants.Private => "Private",
-                BookingChannelConstants.Marketplace => "Marketplace",
-                _ => throw new ArgumentOutOfRangeException()
-            };
     }
 
     extension(string? src)
@@ -63,18 +55,5 @@ public static class BookingChannelExtensions
                 BookingChannel.Marketplace => "Marketplace",
                 _ => throw new ArgumentOutOfRangeException()
             };
-    }
-
-    extension(BookingChannel? src)
-    {
-        public string? ToNullableBookingChannel() =>
-            src is null
-                ? null
-                : src switch
-                {
-                    BookingChannel.Private => BookingChannelConstants.Private,
-                    BookingChannel.Marketplace => BookingChannelConstants.Marketplace,
-                    _ => throw new ArgumentOutOfRangeException()
-                };
     }
 }

@@ -54,6 +54,7 @@ message Organization {
   bool                        hasAttachedPaymentMethod   = 19;
   repeated CdnImageFile       featureImages              = 20;
   ListingMetadata             marketplaceListingMetadata = 21;
+  OrganizationBillingCycle    billingCycle               = 22;
 }
 
 enum OrganizationType {
@@ -62,22 +63,28 @@ enum OrganizationType {
   OrganizationType_Individual  = 2;
 }
 
-enum Role {
-  Role_Owner         = 0;
-  Role_Administrator = 1;
-  Role_Member        = 2;
+enum OrganizationBillingCycle {
+  OrganizationBillingCycle_Weekly      = 0;
+  OrganizationBillingCycle_Fortnightly = 1;
+  OrganizationBillingCycle_Monthly     = 2;
 }
 
 message OrganizationMember {
-  string id         = 1;
-  string customerId = 2;
-  Role   role       = 3;
-  Status status     = 4;
+  string                   id         = 1;
+  string                   customerId = 2;
+  OrganizationMemberRole   role       = 3;
+  OrganizationMemberStatus status     = 4;
 }
 
-enum Status {
-  Status_Active   = 0;
-  Status_Inactive = 1;
+enum OrganizationMemberRole {
+  OrganizationMemberRole_Owner         = 0;
+  OrganizationMemberRole_Administrator = 1;
+  OrganizationMemberRole_Member        = 2;
+}
+
+enum OrganizationMemberStatus {
+  OrganizationMemberStatus_Active   = 0;
+  OrganizationMemberStatus_Inactive = 1;
 }
 
 message Offering {

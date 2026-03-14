@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fbd901becdde0db8f205dc9769804f0a>>
+ * @generated SignedSource<<07802cc9062bb05381a641484400390b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,7 +69,17 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = {
+v7 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v5/*: any*/)
+],
+v8 = {
   "kind": "Literal",
   "name": "orderBy",
   "value": [
@@ -79,8 +89,8 @@ v7 = {
     }
   ]
 },
-v8 = [
-  (v7/*: any*/),
+v9 = [
+  (v8/*: any*/),
   {
     "fields": [
       {
@@ -93,28 +103,28 @@ v8 = [
     "name": "where"
   }
 ],
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -139,7 +149,7 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v14 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -151,17 +161,17 @@ v13 = {
     }
   ]
 },
-v14 = [
+v15 = [
   "where",
   "orderBy"
 ],
-v15 = {
+v16 = {
   "kind": "Variable",
   "name": "organizationUniqueAlphanumericName",
   "variableName": "organizationUniqueAlphanumericName"
 },
-v16 = [
-  (v7/*: any*/),
+v17 = [
+  (v8/*: any*/),
   {
     "fields": [
       {
@@ -169,27 +179,27 @@ v16 = [
         "name": "nameContains",
         "variableName": "organizationStripeConnectAccountNameSearchText"
       },
-      (v15/*: any*/)
+      (v16/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v17 = {
+v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isDefault",
   "storageKey": null
 },
-v18 = {
+v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "country",
   "storageKey": null
 },
-v19 = {
+v20 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationDetails",
@@ -208,8 +218,8 @@ v19 = {
   ],
   "storageKey": null
 },
-v20 = [
-  (v7/*: any*/),
+v21 = [
+  (v8/*: any*/),
   {
     "fields": [
       {
@@ -217,7 +227,7 @@ v20 = [
         "name": "nameContains",
         "variableName": "organizationBankAccountNameSearchText"
       },
-      (v15/*: any*/)
+      (v16/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -334,19 +344,29 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "OrganizationBillingCycleDetails",
+            "kind": "LinkedField",
+            "name": "billingCycle",
+            "plural": false,
+            "selections": (v7/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "stripeAuthorizeExistingConnectAccountUrl",
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
+            "args": (v9/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": false,
             "selections": [
-              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -379,23 +399,23 @@ return {
                         "name": "color",
                         "storageKey": null
                       },
-                      (v10/*: any*/)
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/),
-              (v13/*: any*/)
+              (v13/*: any*/),
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v8/*: any*/),
-            "filters": (v14/*: any*/),
+            "args": (v9/*: any*/),
+            "filters": (v15/*: any*/),
             "handle": "connection",
             "key": "organizationMarketplaceSetup_productTags",
             "kind": "LinkedHandle",
@@ -406,13 +426,23 @@ return {
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
+        "args": null,
+        "concreteType": "OrganizationBillingCycleDetails",
+        "kind": "LinkedField",
+        "name": "organizationBillingCycles",
+        "plural": true,
+        "selections": (v7/*: any*/),
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v17/*: any*/),
         "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccounts",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v10/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -430,9 +460,9 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v17/*: any*/),
-                  (v5/*: any*/),
                   (v18/*: any*/),
+                  (v5/*: any*/),
+                  (v19/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -524,24 +554,24 @@ return {
                     "name": "isOnboardingCompleted",
                     "storageKey": null
                   },
-                  (v19/*: any*/),
-                  (v10/*: any*/)
+                  (v20/*: any*/),
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v12/*: any*/),
-          (v13/*: any*/)
+          (v13/*: any*/),
+          (v14/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v16/*: any*/),
-        "filters": (v14/*: any*/),
+        "args": (v17/*: any*/),
+        "filters": (v15/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_organizationStripeConnectAccounts",
         "kind": "LinkedHandle",
@@ -549,13 +579,13 @@ return {
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
+        "args": (v21/*: any*/),
         "concreteType": "ConnectionOfOrganizationBankAccountEdge",
         "kind": "LinkedField",
         "name": "organizationBankAccounts",
         "plural": false,
         "selections": [
-          (v9/*: any*/),
+          (v10/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -573,7 +603,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v17/*: any*/),
+                  (v18/*: any*/),
                   (v5/*: any*/),
                   {
                     "alias": null,
@@ -596,25 +626,25 @@ return {
                     "name": "accountNumber",
                     "storageKey": null
                   },
-                  (v18/*: any*/),
                   (v19/*: any*/),
-                  (v10/*: any*/)
+                  (v20/*: any*/),
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v12/*: any*/),
-          (v13/*: any*/)
+          (v13/*: any*/),
+          (v14/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
-        "filters": (v14/*: any*/),
+        "args": (v21/*: any*/),
+        "filters": (v15/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_organizationBankAccounts",
         "kind": "LinkedHandle",
@@ -623,12 +653,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "184ff3b425f62e5738e63d2dd4622d77",
+    "cacheID": "b4bb93a7c1266ac30d9eadc856222965",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

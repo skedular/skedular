@@ -135,6 +135,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
           featureImages: finalFeatureImages,
+          billingCycle: 'MONTHLY',
         },
       },
       onCompleted: (response, errors) => {

@@ -1,12 +1,12 @@
 ﻿using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
-using Api.Shared.Services.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using Enterprise.Shared.Grpc;
 using Slack.Shared.Mappers;
 using Slack.Shared.Models;
 using OrganizationMember = Slack.Shared.Models.OrganizationMember;
+using OrganizationMemberRole = Api.Shared.Services.Models.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using PageInfo = Enterprise.Shared.GraphQL.Types.PageInfo;
 
@@ -46,9 +46,10 @@ public class OrganizationMemberService(
                     IsOrganizationOnboardingDone = true,
                     Role = organizationMember.Role switch
                     {
-                        OrganizationMemberRole.Owner => Role.Owner,
-                        OrganizationMemberRole.Administrator => Role.Administrator,
-                        OrganizationMemberRole.Member => Role.Member,
+                        OrganizationMemberRole.Owner => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole.Owner,
+                        OrganizationMemberRole.Administrator => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole
+                            .Administrator,
+                        OrganizationMemberRole.Member => Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationMemberRole.Member,
                         _ => throw new ArgumentOutOfRangeException()
                     },
                     Status = organizationMember.Status switch
