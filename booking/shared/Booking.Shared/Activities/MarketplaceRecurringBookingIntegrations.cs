@@ -77,7 +77,9 @@ public class MarketplaceRecurringBookingIntegrations(
 
             var marketplaceBooking = mapper.MapTo(marketplaceBookingEntity)!;
             marketplaceBooking.Id = randomHelper.Generate();
-            marketplaceBooking.PaymentStatus = PaymentStatus.Pending;
+            marketplaceBooking.ProductPricing = marketplaceBooking.ProductPricing with { Cadence = ProductPricingCadence.DailyV1 };
+            marketplaceBooking.IsPaymentRequired = false;
+            marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;
 
             booking.MarketplaceBooking = marketplaceBooking;
 

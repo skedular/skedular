@@ -88,6 +88,8 @@ public class MarketplaceBookingService(
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
 
+        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
+
         var maxAllowedResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
         var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
             booking.From,
@@ -101,8 +103,8 @@ public class MarketplaceBookingService(
         }
 
         marketplaceBooking.Id = randomHelper.Generate();
-        marketplaceBooking.IsPaymentRequired = true;
-        marketplaceBooking.PaymentStatus = PaymentStatus.Pending;
+        marketplaceBooking.IsPaymentRequired = recurringBooking is null;
+        marketplaceBooking.PaymentStatus = recurringBooking is null ? PaymentStatus.Pending : PaymentStatus.NotSet;
 
         if (!marketplaceBooking.ProductPricing.AcceptedPaymentMethods.Contains(marketplaceBooking.PaymentMethod))
         {
@@ -163,26 +165,30 @@ public class MarketplaceBookingService(
 
         bookingOutboxPublisher.PublishBookings([booking], repositoryFactory.UnitOfWork);
 
-        switch (marketplaceBooking.PaymentMethod)
+        if (recurringBooking is null)
         {
-            case PaymentMethod.Card:
-                temporalOutboxService.StartWorkflowPayBookingViaCard(
-                    new PayBookingViaCardInput(
-                        booking.Id,
-                        paymentExpiry,
-                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
-                break;
+            switch (marketplaceBooking.PaymentMethod)
+            {
+                case PaymentMethod.Card:
+                    temporalOutboxService.StartWorkflowPayBookingViaCard(
+                        new PayBookingViaCardInput(
+                            booking.Id,
+                            paymentExpiry,
+                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
+                    break;
 
-            case PaymentMethod.BankTransfer:
-                temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
-                    new PayBookingViaBankTransferInput(
-                        booking.Id,
-                        paymentExpiry,
-                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
-                    repositoryFactory.UnitOfWork);
-                break;
+                case PaymentMethod.BankTransfer:
+                    temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
+                        new PayBookingViaBankTransferInput(
+                            booking.Id,
+                            paymentExpiry,
+                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
+                        repositoryFactory.UnitOfWork);
+                    break;
 
-            default: throw new ArgumentOutOfRangeException();
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -234,6 +240,8 @@ public class MarketplaceBookingService(
         {
             throw new ProductMissingProductTag();
         }
+
+        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
 
         var resourceIds = booking.Resources.Count == 0
             ? existingBooking.InvolvedResources.Select(item => item.Id).ToList()
@@ -440,6 +448,33 @@ public class MarketplaceBookingService(
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
 
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+    }
+
+    private static bool IsSingleInstanceMarketplaceCadence(ProductPricingCadence cadence) =>
+        cadence is ProductPricingCadence.OneTimeV1 or
+            ProductPricingCadence.PerMinuteV1 or
+            ProductPricingCadence.Per15MinutesV1 or
+            ProductPricingCadence.Per30MinutesV1 or
+            ProductPricingCadence.PerHourV1 or
+            ProductPricingCadence.HalfDayV1 or
+            ProductPricingCadence.DailyV1;
+
+    private static void ValidateMarketplaceCadenceForBookingFlow(ProductPricingCadence cadence, RecurringBooking? recurringBooking)
+    {
+        if (recurringBooking is null)
+        {
+            if (!IsSingleInstanceMarketplaceCadence(cadence))
+            {
+                throw new MarketplaceBookingCadenceRequiresRecurringFlow();
+            }
+
+            return;
+        }
+
+        if (cadence != ProductPricingCadence.DailyV1)
+        {
+            throw new MarketplaceBookingCadenceRequiresRecurringFlow();
+        }
     }
 
     private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)

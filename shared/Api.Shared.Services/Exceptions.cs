@@ -96,6 +96,12 @@ public class BookingIsNotMarketplaceType() : Exception("Booking is not marketpla
 
 public class BookingMustStartAndEndWithinSameDay() : Exception("Booking must start and end within the same day");
 
+public class MarketplaceBookingCadenceRequiresRecurringFlow()
+    : Exception("This marketplace booking cadence must be booked through the recurring marketplace flow");
+
+public class MarketplaceRecurringBookingCadenceMustBeRecurring()
+    : Exception("Marketplace recurring booking must use a cadence greater than a single-day booking");
+
 public class OrganizationPhysicalAddressNotFound() : Exception("Organization physical address not found");
 
 public class LocationPhysicalAddressNotFound() : Exception("Location physical address not found");
