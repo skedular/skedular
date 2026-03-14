@@ -14,5 +14,7 @@ export { default as SingleChoiceCurrency } from './single-choice-currency';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
 export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
 export { default as SingleChoicePaymentMethodType } from './single-choice-payment-method-type';
+export { default as SingleChoiceProductPricingBillingInterval } from './single-choice-product-pricing-billing-interval';
+export { default as SingleChoiceProductPricingBillingMode } from './single-choice-product-pricing-billing-mode';
 export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';
 export { default as SingleChoiceResourceType } from './single-choice-resource-type';
