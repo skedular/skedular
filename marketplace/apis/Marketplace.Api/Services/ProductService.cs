@@ -30,7 +30,7 @@ public interface IProductService
     Task<ICollection<Product>> ActivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<ICollection<Product>> DeactivateAsync(ICollection<string> ids, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Product>>, int )> GetPaginatedProductsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<Product>>, int)> GetPaginatedProductsAsync(
         PaginationInputParam paginationInputParam,
         ProductSearchCriteria searchCriteria,
         ICollection<ProductOrder> orderByFields,
@@ -342,12 +342,23 @@ public class ProductService(
         }
     }
 
+    private static (int DurationStepMinutes, string DurationStepLabel) GetDurationStepDetails(ProductPricingCadence cadence) =>
+        cadence switch
+        {
+            ProductPricingCadence.Per15MinutesV1 => (15, "15-minute"),
+            ProductPricingCadence.Per30MinutesV1 => (30, "30-minute"),
+            ProductPricingCadence.PerHourV1 => (60, "60-minute"),
+            _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
+        };
+
     private static void Validate(ProductPricing pricing)
     {
         if (pricing.AcceptedPaymentMethods.Count <= 0)
         {
             throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(pricing.AcceptedPaymentMethods));
         }
+
+        var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.Cadence);
 
         if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)
         {
@@ -356,11 +367,9 @@ public class ProductService(
                 throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
             }
 
-            if (pricing.MinDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
+            if (pricing.MinDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException(
-                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
-                    nameof(pricing.MinDurationMinutes));
+                throw new ArgumentException($"MinDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MinDurationMinutes));
             }
 
             if (pricing.MaxDurationMinutes <= 0)
@@ -368,11 +377,9 @@ public class ProductService(
                 throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
             }
 
-            if (pricing.MaxDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
+            if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException(
-                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
-                    nameof(pricing.MaxDurationMinutes));
+                throw new ArgumentException($"MaxDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MaxDurationMinutes));
             }
 
             if (pricing.MaxDurationMinutes < pricing.MinDurationMinutes)
@@ -389,11 +396,9 @@ public class ProductService(
                 throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
             }
 
-            if (pricing.MinDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
+            if (pricing.MinDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException(
-                    $"MinDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
-                    nameof(pricing.MinDurationMinutes));
+                throw new ArgumentException($"MinDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MinDurationMinutes));
             }
         }
         else if (pricing.MinDurationMinutes is null && pricing.MaxDurationMinutes is not null)
@@ -403,11 +408,9 @@ public class ProductService(
                 throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
             }
 
-            if (pricing.MaxDurationMinutes % OpeningHoursDetails.BookingSlotSizeInMinutes != 0)
+            if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException(
-                    $"MaxDurationMinutes must be must be in {OpeningHoursDetails.BookingSlotSizeInMinutes}-minute increments",
-                    nameof(pricing.MaxDurationMinutes));
+                throw new ArgumentException($"MaxDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MaxDurationMinutes));
             }
         }
     }
