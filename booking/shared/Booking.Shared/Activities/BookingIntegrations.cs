@@ -61,8 +61,15 @@ public class BookingIntegrations(
         {
             ProductPricingCadence.OneTimeV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.PerMinuteV1 => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * totalMinutes,
+            ProductPricingCadence.Per15MinutesV1 =>
+                // ReSharper disable once PossibleLossOfFraction
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15),
+            ProductPricingCadence.Per30MinutesV1 =>
+                // ReSharper disable once PossibleLossOfFraction
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30),
             ProductPricingCadence.PerHourV1 =>
-                marketplaceBooking.ProductPricing.Price / 60 * marketplaceBooking.Quantity * totalMinutes,
+                // ReSharper disable once PossibleLossOfFraction
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60),
             // TODO: 20260302 : Morteza: Implement other cadence 
             // ProductVersionPricingCadence.DailyV1 => expr,
             // ProductVersionPricingCadence.WeeklyV1 => expr,

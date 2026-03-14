@@ -141,9 +141,14 @@ public class StripeIntegrations(
             Quantity = marketplaceBooking.ProductPricing.Cadence switch
             {
                 ProductPricingCadence.OneTimeV1 => marketplaceBooking.Quantity,
-                ProductPricingCadence.PerMinuteV1 => Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) *
-                                                            marketplaceBooking.Quantity,
-                ProductPricingCadence.PerHourV1 => Convert.ToInt32((schedule.Until - schedule.From).TotalHours) * marketplaceBooking.Quantity,
+                ProductPricingCadence.PerMinuteV1 =>
+                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * marketplaceBooking.Quantity,
+                ProductPricingCadence.Per15MinutesV1 =>
+                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 15 * marketplaceBooking.Quantity,
+                ProductPricingCadence.Per30MinutesV1 =>
+                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 30 * marketplaceBooking.Quantity,
+                ProductPricingCadence.PerHourV1 =>
+                    Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 60 * marketplaceBooking.Quantity,
                 // TODO: 20260302 : Morteza: Implement other cadence 
                 // ProductVersionPricingCadence.DailyV1 => expr,
                 // ProductVersionPricingCadence.WeeklyV1 => expr,
