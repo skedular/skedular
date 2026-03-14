@@ -583,12 +583,22 @@ public class Mapper : IMapper
             MapTo(src.ListingMetadata),
             src.Cadence switch
             {
+                ProductPricingCadence.NotSet => Api.Shared.Services.Models.ProductPricingCadence.NotSet,
                 ProductPricingCadence.OneTimeV1 => Api.Shared.Services.Models.ProductPricingCadence.OneTimeV1,
                 ProductPricingCadence.PerMinuteV1 => Api.Shared.Services.Models.ProductPricingCadence.PerMinuteV1,
+                ProductPricingCadence.Per15MinuteV1 => Api.Shared.Services.Models.ProductPricingCadence.Per15MinuteV1,
+                ProductPricingCadence.Per30MinuteV1 => Api.Shared.Services.Models.ProductPricingCadence.Per30MinuteV1,
                 ProductPricingCadence.PerHourV1 => Api.Shared.Services.Models.ProductPricingCadence.PerHourV1,
+                ProductPricingCadence.HalfDayV1 => Api.Shared.Services.Models.ProductPricingCadence.HalfDayV1,
                 ProductPricingCadence.DailyV1 => Api.Shared.Services.Models.ProductPricingCadence.DailyV1,
                 ProductPricingCadence.WeeklyV1 => Api.Shared.Services.Models.ProductPricingCadence.WeeklyV1,
                 ProductPricingCadence.MonthlyV1 => Api.Shared.Services.Models.ProductPricingCadence.MonthlyV1,
+                ProductPricingCadence.TwoMonthsV1 => Api.Shared.Services.Models.ProductPricingCadence.TwoMonthsV1,
+                ProductPricingCadence.QuarterlyV1 => Api.Shared.Services.Models.ProductPricingCadence.QuarterlyV1,
+                ProductPricingCadence.FourMonthsV1 => Api.Shared.Services.Models.ProductPricingCadence.FourMonthsV1,
+                ProductPricingCadence.FiveMonthsV1 => Api.Shared.Services.Models.ProductPricingCadence.FiveMonthsV1,
+                ProductPricingCadence.SixMonthsV1 => Api.Shared.Services.Models.ProductPricingCadence.SixMonthsV1,
+                ProductPricingCadence.YearlyV1 => Api.Shared.Services.Models.ProductPricingCadence.YearlyV1,
                 _ => throw new ArgumentOutOfRangeException()
             },
             Convert.ToDecimal(src.Price),

@@ -3022,12 +3022,21 @@ enum ProductOrderField {
 
 enum ProductPricingCadence {
   DAILY_V1
+  FIVE_MONTHS_V1
+  FOUR_MONTHS_V1
+  HALF_DAY_V1
   MONTHLY_V1
   NOT_SET
   ONE_TIME_V1
   PER_HOUR_V1
   PER_MINUTE_V1
+  PER15_MINUTE_V1
+  PER30_MINUTE_V1
+  QUARTERLY_V1
+  SIX_MONTHS_V1
+  TWO_MONTHS_V1
   WEEKLY_V1
+  YEARLY_V1
 }
 
 enum RecurringBookingEndType {

@@ -59,12 +59,22 @@ message CdnFile {
 }
 
 enum ProductPricingCadence {
-  ProductPricingCadence_OneTimeV1   = 0;
-  ProductPricingCadence_PerMinuteV1 = 1;
-  ProductPricingCadence_PerHourV1   = 2;
-  ProductPricingCadence_DailyV1     = 3;
-  ProductPricingCadence_WeeklyV1    = 4;
-  ProductPricingCadence_MonthlyV1   = 5;
+  ProductPricingCadence_NotSet        = 0;
+  ProductPricingCadence_OneTimeV1     = 1;
+  ProductPricingCadence_PerMinuteV1   = 2;
+  ProductPricingCadence_PerHourV1     = 3;
+  ProductPricingCadence_HalfDayV1     = 4;
+  ProductPricingCadence_DailyV1       = 5;
+  ProductPricingCadence_WeeklyV1      = 6;
+  ProductPricingCadence_MonthlyV1     = 7;
+  ProductPricingCadence_Per15MinuteV1 = 8;
+  ProductPricingCadence_Per30MinuteV1 = 9;
+  ProductPricingCadence_TwoMonthsV1   = 10;
+  ProductPricingCadence_QuarterlyV1   = 11;
+  ProductPricingCadence_FourMonthsV1  = 12;
+  ProductPricingCadence_FiveMonthsV1  = 13;
+  ProductPricingCadence_SixMonthsV1   = 14;
+  ProductPricingCadence_YearlyV1      = 15;
 }
 
 enum PaymentMethod {

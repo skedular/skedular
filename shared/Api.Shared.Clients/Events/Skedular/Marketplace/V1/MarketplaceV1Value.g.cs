@@ -59,17 +59,25 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "DSABKAUiWwoPTGlzdGluZ01ldGFkYXRhEg0KBWFib3V0GAEgASgJEg0KBXRp",
             "dGxlGAIgASgJEhAKCHN1YlRpdGxlGAMgASgJEhgKEGluY2x1ZGVkRmVhdHVy",
             "ZXMYBCADKAkqOQoEVHlwZRIYChRUeXBlX1Byb2R1Y3RVcHNlcnRlZBAAEhcK",
-            "E1R5cGVfUHJvZHVjdERlbGV0ZWQQASr0AQoVUHJvZHVjdFByaWNpbmdDYWRl",
-            "bmNlEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9PbmVUaW1lVjEQABIlCiFQ",
-            "cm9kdWN0UHJpY2luZ0NhZGVuY2VfUGVyTWludXRlVjEQARIjCh9Qcm9kdWN0",
-            "UHJpY2luZ0NhZGVuY2VfUGVySG91clYxEAISIQodUHJvZHVjdFByaWNpbmdD",
-            "YWRlbmNlX0RhaWx5VjEQAxIiCh5Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfV2Vl",
-            "a2x5VjEQBBIjCh9Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfTW9udGhseVYxEAUq",
-            "RwoNUGF5bWVudE1ldGhvZBIWChJQYXltZW50TWV0aG9kX0NhcmQQABIeChpQ",
-            "YXltZW50TWV0aG9kX0JhbmtUcmFuc2ZlchABKi4KCEN1cnJlbmN5EhAKDEN1",
-            "cnJlbmN5X056ZBAAEhAKDEN1cnJlbmN5X1VzZBABQjqqAjdBcGkuU2hhcmVk",
-            "LkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNlLlYxLlZhbHVl",
-            "YgZwcm90bzM="));
+            "E1R5cGVfUHJvZHVjdERlbGV0ZWQQASr2BAoVUHJvZHVjdFByaWNpbmdDYWRl",
+            "bmNlEiAKHFByb2R1Y3RQcmljaW5nQ2FkZW5jZV9Ob3RTZXQQABIjCh9Qcm9k",
+            "dWN0UHJpY2luZ0NhZGVuY2VfT25lVGltZVYxEAESJQohUHJvZHVjdFByaWNp",
+            "bmdDYWRlbmNlX1Blck1pbnV0ZVYxEAISIwofUHJvZHVjdFByaWNpbmdDYWRl",
+            "bmNlX1BlckhvdXJWMRADEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9IYWxm",
+            "RGF5VjEQBBIhCh1Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfRGFpbHlWMRAFEiIK",
+            "HlByb2R1Y3RQcmljaW5nQ2FkZW5jZV9XZWVrbHlWMRAGEiMKH1Byb2R1Y3RQ",
+            "cmljaW5nQ2FkZW5jZV9Nb250aGx5VjEQBxInCiNQcm9kdWN0UHJpY2luZ0Nh",
+            "ZGVuY2VfUGVyMTVNaW51dGVWMRAIEicKI1Byb2R1Y3RQcmljaW5nQ2FkZW5j",
+            "ZV9QZXIzME1pbnV0ZVYxEAkSJQohUHJvZHVjdFByaWNpbmdDYWRlbmNlX1R3",
+            "b01vbnRoc1YxEAoSJQohUHJvZHVjdFByaWNpbmdDYWRlbmNlX1F1YXJ0ZXJs",
+            "eVYxEAsSJgoiUHJvZHVjdFByaWNpbmdDYWRlbmNlX0ZvdXJNb250aHNWMRAM",
+            "EiYKIlByb2R1Y3RQcmljaW5nQ2FkZW5jZV9GaXZlTW9udGhzVjEQDRIlCiFQ",
+            "cm9kdWN0UHJpY2luZ0NhZGVuY2VfU2l4TW9udGhzVjEQDhIiCh5Qcm9kdWN0",
+            "UHJpY2luZ0NhZGVuY2VfWWVhcmx5VjEQDypHCg1QYXltZW50TWV0aG9kEhYK",
+            "ElBheW1lbnRNZXRob2RfQ2FyZBAAEh4KGlBheW1lbnRNZXRob2RfQmFua1Ry",
+            "YW5zZmVyEAEqLgoIQ3VycmVuY3kSEAoMQ3VycmVuY3lfTnpkEAASEAoMQ3Vy",
+            "cmVuY3lfVXNkEAFCOqoCN0FwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tl",
+            "ZHVsYXIuTWFya2V0cGxhY2UuVjEuVmFsdWViBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -94,12 +102,22 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
   }
 
   public enum ProductPricingCadence {
-    [pbr::OriginalName("ProductPricingCadence_OneTimeV1")] OneTimeV1 = 0,
-    [pbr::OriginalName("ProductPricingCadence_PerMinuteV1")] PerMinuteV1 = 1,
-    [pbr::OriginalName("ProductPricingCadence_PerHourV1")] PerHourV1 = 2,
-    [pbr::OriginalName("ProductPricingCadence_DailyV1")] DailyV1 = 3,
-    [pbr::OriginalName("ProductPricingCadence_WeeklyV1")] WeeklyV1 = 4,
-    [pbr::OriginalName("ProductPricingCadence_MonthlyV1")] MonthlyV1 = 5,
+    [pbr::OriginalName("ProductPricingCadence_NotSet")] NotSet = 0,
+    [pbr::OriginalName("ProductPricingCadence_OneTimeV1")] OneTimeV1 = 1,
+    [pbr::OriginalName("ProductPricingCadence_PerMinuteV1")] PerMinuteV1 = 2,
+    [pbr::OriginalName("ProductPricingCadence_PerHourV1")] PerHourV1 = 3,
+    [pbr::OriginalName("ProductPricingCadence_HalfDayV1")] HalfDayV1 = 4,
+    [pbr::OriginalName("ProductPricingCadence_DailyV1")] DailyV1 = 5,
+    [pbr::OriginalName("ProductPricingCadence_WeeklyV1")] WeeklyV1 = 6,
+    [pbr::OriginalName("ProductPricingCadence_MonthlyV1")] MonthlyV1 = 7,
+    [pbr::OriginalName("ProductPricingCadence_Per15MinuteV1")] Per15MinuteV1 = 8,
+    [pbr::OriginalName("ProductPricingCadence_Per30MinuteV1")] Per30MinuteV1 = 9,
+    [pbr::OriginalName("ProductPricingCadence_TwoMonthsV1")] TwoMonthsV1 = 10,
+    [pbr::OriginalName("ProductPricingCadence_QuarterlyV1")] QuarterlyV1 = 11,
+    [pbr::OriginalName("ProductPricingCadence_FourMonthsV1")] FourMonthsV1 = 12,
+    [pbr::OriginalName("ProductPricingCadence_FiveMonthsV1")] FiveMonthsV1 = 13,
+    [pbr::OriginalName("ProductPricingCadence_SixMonthsV1")] SixMonthsV1 = 14,
+    [pbr::OriginalName("ProductPricingCadence_YearlyV1")] YearlyV1 = 15,
   }
 
   public enum PaymentMethod {
@@ -2344,7 +2362,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
 
     /// <summary>Field number for the "cadence" field.</summary>
     public const int CadenceFieldNumber = 4;
-    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence cadence_ = global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1;
+    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence cadence_ = global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence Cadence {
@@ -2499,7 +2517,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (Id.Length != 0) hash ^= Id.GetHashCode();
       if (Index != 0) hash ^= Index.GetHashCode();
       if (listingMetadata_ != null) hash ^= ListingMetadata.GetHashCode();
-      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) hash ^= Cadence.GetHashCode();
+      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet) hash ^= Cadence.GetHashCode();
       if (Price != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Price);
       if (IsTaxInclusive != false) hash ^= IsTaxInclusive.GetHashCode();
       if (Currency != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency.Nzd) hash ^= Currency.GetHashCode();
@@ -2539,7 +2557,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteMessage(ListingMetadata);
       }
-      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
+      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Cadence);
       }
@@ -2598,7 +2616,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(26);
         output.WriteMessage(ListingMetadata);
       }
-      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
+      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Cadence);
       }
@@ -2654,7 +2672,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (listingMetadata_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ListingMetadata);
       }
-      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
+      if (Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Cadence);
       }
       if (Price != 0D) {
@@ -2706,7 +2724,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         }
         ListingMetadata.MergeFrom(other.ListingMetadata);
       }
-      if (other.Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTimeV1) {
+      if (other.Cadence != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet) {
         Cadence = other.Cadence;
       }
       if (other.Price != 0D) {
