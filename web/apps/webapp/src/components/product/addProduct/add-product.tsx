@@ -98,6 +98,34 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   acceptedPaymentMethods: [],
 });
 
+const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
+  switch (cadence) {
+    case 'PER15_MINUTE_V1':
+      return {
+        durationStepMinutes: 15,
+        durationStepLabel: '15 minutes',
+      };
+
+    case 'PER30_MINUTES_V1':
+      return {
+        durationStepMinutes: 30,
+        durationStepLabel: '30 minutes',
+      };
+
+    case 'PER_HOUR_V1':
+      return {
+        durationStepMinutes: 60,
+        durationStepLabel: '1 hour (60 minutes)',
+      };
+
+    default:
+      return {
+        durationStepMinutes: bookingSlotSizeInMinutes,
+        durationStepLabel: `${bookingSlotSizeInMinutes} minutes`,
+      };
+  }
+};
+
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     ...listingMetadataSchemaShape,
@@ -124,8 +152,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-greater-than-zero', 'Minimum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const durationStepMinutes = cadence === 'PER_HOUR_V1' ? 60 : bookingSlotSizeInMinutes;
-              const durationStepLabel = cadence === 'PER_HOUR_V1' ? '1 hour (60 minutes)' : `${bookingSlotSizeInMinutes} minutes`;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
 
               const minDurationMinutes = Number(value);
               if (isNaN(minDurationMinutes)) {
@@ -158,8 +185,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .test('is-greater-than-zero', 'Maximum duration in minutes must be greater than 0.', (value) => Number(value) > 0)
             .test('is-valid-duration-step', function (value) {
               const { cadence } = this.parent;
-              const durationStepMinutes = cadence === 'PER_HOUR_V1' ? 60 : bookingSlotSizeInMinutes;
-              const durationStepLabel = cadence === 'PER_HOUR_V1' ? '1 hour (60 minutes)' : `${bookingSlotSizeInMinutes} minutes`;
+              const { durationStepMinutes, durationStepLabel } = getDurationStepDetails(cadence, bookingSlotSizeInMinutes);
 
               const maxDurationMinutes = Number(value);
               if (isNaN(maxDurationMinutes)) {

@@ -19,8 +19,8 @@ public class RootQuery(IVersionService versionService)
     [
         new() { Type = ProductPricingCadence.OneTimeV1, Name = ProductPricingCadence.OneTimeV1.ToProductPricingCadenceName() },
         new() { Type = ProductPricingCadence.PerMinuteV1, Name = ProductPricingCadence.PerMinuteV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.Per15MinuteV1, Name = ProductPricingCadence.Per15MinuteV1.ToProductPricingCadenceName() },
-        new() { Type = ProductPricingCadence.Per30MinuteV1, Name = ProductPricingCadence.Per30MinuteV1.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Per15MinutesV1, Name = ProductPricingCadence.Per15MinutesV1.ToProductPricingCadenceName() },
+        new() { Type = ProductPricingCadence.Per30MinutesV1, Name = ProductPricingCadence.Per30MinutesV1.ToProductPricingCadenceName() },
         new() { Type = ProductPricingCadence.PerHourV1, Name = ProductPricingCadence.PerHourV1.ToProductPricingCadenceName() },
         new() { Type = ProductPricingCadence.HalfDayV1, Name = ProductPricingCadence.HalfDayV1.ToProductPricingCadenceName() },
         new() { Type = ProductPricingCadence.DailyV1, Name = ProductPricingCadence.DailyV1.ToProductPricingCadenceName() },
