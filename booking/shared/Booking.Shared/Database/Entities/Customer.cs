@@ -17,7 +17,6 @@ public class Customer : ReplicatedEntityBaseWithDeleted, ICustomerPersonalDetail
     public virtual ICollection<RecurringBooking> CreatedRecurringBookings { get; set; } = [];
     public virtual ICollection<RecurringBooking> LastModifiedRecurringBookings { get; set; } = [];
     public virtual ICollection<RecurringBooking> DeletedRecurringBookings { get; set; } = [];
-
     public virtual ICollection<Identity> Identities { get; set; } = [];
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
@@ -29,6 +28,10 @@ public class Customer : ReplicatedEntityBaseWithDeleted, ICustomerPersonalDetail
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
     public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> CreatedMarketplaceBookingSubscriptions { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> LastModifiedMarketplaceBookingSubscriptions { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> DeletedMarketplaceBookingSubscriptions { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
     public string? Type { get; set; }
     public string? Designation { get; set; }
     public string? Title { get; set; }

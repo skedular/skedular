@@ -32,6 +32,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<MarketplaceBooking> PaidMarketplaceBookings { get; set; } = [];
     public virtual ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
     public virtual ICollection<OrganizationInvoiceCounter> OrganizationInvoiceCounters { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

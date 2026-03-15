@@ -33,6 +33,7 @@ internal static class RecurringBookingExtensions
     {
         internal IIncludableQueryable<RecurringBooking, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .Include(query => query.MarketplaceBookingSubscription)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.InvolvedCustomers)

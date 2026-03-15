@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using Booking.Shared.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -19,8 +18,14 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public bool CancelAtPeriodEnd { get; set; }
     public ProductPricing ProductPricing { get; set; }
 
+    public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
+    public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
+    public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual Customer? CreatedByCustomer { get; set; }
+    public virtual Customer? LastModifiedByCustomer { get; set; }
+    public virtual Customer? DeletedByCustomer { get; set; }
     public virtual ProductVersion ProductVersion { get; set; }
-    public virtual ICollection<RecurringBooking> RecurringBookings { get; set; }
+    public virtual ICollection<RecurringBooking> RecurringBookings { get; set; } = [];
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -34,6 +39,12 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
         builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
 
+        builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
+        builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
+        builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
+        builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedMarketplaceBookingSubscriptions);
+        builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedMarketplaceBookingSubscriptions);
+        builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedMarketplaceBookingSubscriptions);
         builder.HasOne(item => item.ProductVersion).WithMany(item => item.MarketplaceBookingSubscriptions);
 
         builder.HasIndex(item => item.StartedAt);

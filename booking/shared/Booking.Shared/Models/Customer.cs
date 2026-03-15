@@ -23,6 +23,10 @@ public class Customer : ReplicatedModelBaseWithDeleted, ICustomerPersonalDetails
     public ICollection<RecurringBooking> LastModifiedRecurringBookings { get; set; } = [];
     public ICollection<RecurringBooking> DeletedRecurringBookings { get; set; } = [];
     public ICollection<StripeCustomer> StripeCustomers { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> CreatedMarketplaceBookingSubscriptions { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> LastModifiedMarketplaceBookingSubscriptions { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> DeletedMarketplaceBookingSubscriptions { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
     public string DisplayableName => this.ToDisplayableName();
     public CustomerType? Type { get; set; }
     public string? Designation { get; set; }

@@ -12,6 +12,7 @@ public class Team : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<TeamMember> TeamMembers { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<RecurringBooking> InvolvedRecurringBooking { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> InvolvedMarketplaceBookingSubscription { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
