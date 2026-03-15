@@ -90,7 +90,7 @@ public class MarketplaceBookingService(
 
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
 
-        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
+        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
         var maxAllowedResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
         var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
@@ -243,7 +243,7 @@ public class MarketplaceBookingService(
             throw new ProductMissingProductTag();
         }
 
-        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
+        ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
         var resourceIds = booking.Resources.Count == 0
             ? existingBooking.InvolvedResources.Select(item => item.Id).ToList()

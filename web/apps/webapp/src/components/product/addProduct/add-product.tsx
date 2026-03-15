@@ -55,7 +55,7 @@ const RootQuery = graphql`
       type
       name
     }
-    ...multipleChoicesProductPricingBillingModes_query
+    ...singleChoiceProductPricingBillingMode_query
     ...multipleChoicesProductTags_query
     ...singleChoiceCurrency_query
     ...multipleChoicesPaymentMethodTypes_query
@@ -307,7 +307,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               title
               subTitle
             }
-            cadence
+            purchaseCadence
+            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -387,7 +388,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               subTitle: pricingOption.subTitle ?? '',
               includedFeatures: [],
             },
-            cadence: pricingOption.cadence as ProductPricingCadence,
+            purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+            bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
@@ -452,7 +454,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                 subTitle: pricingOption.subTitle ?? '',
                 includedFeatures: [],
               },
-              cadence: pricingOption.cadence as ProductPricingCadence,
+              purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+              bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,

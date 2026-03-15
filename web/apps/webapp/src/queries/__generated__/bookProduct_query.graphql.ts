@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6cf4899f739120c8d4e911b32ebd2cc9>>
+ * @generated SignedSource<<35c4df589db597cd12ea345dcdfcf71e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -43,7 +43,7 @@ export type bookProduct_query$data = {
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
-      readonly cadence: ProductPricingCadence;
+      readonly bookingCadence: ProductPricingCadence;
       readonly id: string;
       readonly index: number;
       readonly isTaxInclusive: boolean;
@@ -57,6 +57,7 @@ export type bookProduct_query$data = {
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
+      readonly purchaseCadence: ProductPricingCadence;
     }>;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceMarketplaceBookingCategory_query" | "singleChoicePaymentMethodType_query">;
@@ -257,7 +258,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "cadence",
+              "name": "purchaseCadence",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "bookingCadence",
               "storageKey": null
             },
             {
@@ -367,6 +375,6 @@ return {
 };
 })();
 
-(node as any).hash = "7e84f724f44ebf1289c6667d15491b01";
+(node as any).hash = "8b940df8a49d407902e68e4d7216742e";
 
 export default node;

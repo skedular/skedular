@@ -59,27 +59,8 @@ public class Mapper : IMapper
             Id = src.Id,
             Index = src.Index,
             ListingMetadata = MapTo(src.ListingMetadata),
-            Cadence = src.Cadence switch
-            {
-                ProductPricingCadence.NotSet => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet,
-                ProductPricingCadence.OneTime => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTime,
-                ProductPricingCadence.PerMinute => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.PerMinute,
-                ProductPricingCadence.Per15Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Per15Minutes,
-                ProductPricingCadence.Per30Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Per30Minutes,
-                ProductPricingCadence.PerHour => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.PerHour,
-                ProductPricingCadence.HalfDay => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.HalfDay,
-                ProductPricingCadence.Daily => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Daily,
-                ProductPricingCadence.Weekly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Weekly,
-                ProductPricingCadence.Fortnightly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Fortnightly,
-                ProductPricingCadence.Monthly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Monthly,
-                ProductPricingCadence.TwoMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.TwoMonths,
-                ProductPricingCadence.Quarterly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Quarterly,
-                ProductPricingCadence.FourMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.FourMonths,
-                ProductPricingCadence.FiveMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.FiveMonths,
-                ProductPricingCadence.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.SixMonths,
-                ProductPricingCadence.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Yearly,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            PurchaseCadence = MapTo(src.PurchaseCadence),
+            BookingCadence = MapTo(src.BookingCadence),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
             MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
@@ -92,6 +73,29 @@ public class Mapper : IMapper
 
         return productPricing;
     }
+
+    private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence MapTo(ProductPricingCadence src) =>
+        src switch
+        {
+            ProductPricingCadence.NotSet => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.NotSet,
+            ProductPricingCadence.OneTime => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.OneTime,
+            ProductPricingCadence.PerMinute => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.PerMinute,
+            ProductPricingCadence.Per15Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Per15Minutes,
+            ProductPricingCadence.Per30Minutes => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Per30Minutes,
+            ProductPricingCadence.PerHour => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.PerHour,
+            ProductPricingCadence.HalfDay => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.HalfDay,
+            ProductPricingCadence.Daily => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Daily,
+            ProductPricingCadence.Weekly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Weekly,
+            ProductPricingCadence.Fortnightly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Fortnightly,
+            ProductPricingCadence.Monthly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Monthly,
+            ProductPricingCadence.TwoMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.TwoMonths,
+            ProductPricingCadence.Quarterly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Quarterly,
+            ProductPricingCadence.FourMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.FourMonths,
+            ProductPricingCadence.FiveMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.FiveMonths,
+            ProductPricingCadence.SixMonths => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.SixMonths,
+            ProductPricingCadence.Yearly => Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence.Yearly,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     private static ProductPricingBillingMode MapTo(Api.Shared.Services.Models.ProductPricingBillingMode src) =>
         src switch

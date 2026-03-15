@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea11a7a1b8eb744741acf26f07ca1500>>
+ * @generated SignedSource<<b2498f4f4b676ac97a2a10f25243f9e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -127,7 +127,6 @@ export type marketplaceLocation_query$data = {
         readonly title: string | null | undefined;
       };
       readonly pricingOptions: ReadonlyArray<{
-        readonly cadence: ProductPricingCadence;
         readonly id: string;
         readonly index: number;
         readonly isTaxInclusive: boolean;
@@ -135,6 +134,7 @@ export type marketplaceLocation_query$data = {
           readonly title: string | null | undefined;
         };
         readonly price: any;
+        readonly purchaseCadence: ProductPricingCadence;
       }>;
     }>;
     readonly timezone: string | null | undefined;
@@ -692,7 +692,7 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "cadence",
+                  "name": "purchaseCadence",
                   "storageKey": null
                 },
                 {
@@ -725,6 +725,6 @@ return {
 };
 })();
 
-(node as any).hash = "f127500bf6454d53bd424232c547d0be";
+(node as any).hash = "05152928edd05d1cbb4a7df1c1a1d18f";
 
 export default node;

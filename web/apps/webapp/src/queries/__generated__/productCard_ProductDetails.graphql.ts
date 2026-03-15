@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7ed15f649b5be8bd5fffaa151a65b8b>>
+ * @generated SignedSource<<f67633ba4035c0084b424d3ca58d5cf6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,6 @@ export type productCard_ProductDetails$data = {
     readonly id: string;
   };
   readonly pricingOptions: ReadonlyArray<{
-    readonly cadence: ProductPricingCadence;
     readonly index: number;
     readonly isTaxInclusive: boolean;
     readonly listingMetadata: {
@@ -41,6 +40,7 @@ export type productCard_ProductDetails$data = {
       readonly title: string | null | undefined;
     };
     readonly price: any;
+    readonly purchaseCadence: ProductPricingCadence;
   }>;
   readonly " $fragmentType": "productCard_ProductDetails";
 };
@@ -190,7 +190,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "cadence",
+          "name": "purchaseCadence",
           "storageKey": null
         },
         {
@@ -216,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "b74c9054f4e896fef1f77d0fca879519";
+(node as any).hash = "40a8cbb3c6db3f9639bcbf8e320ae534";
 
 export default node;

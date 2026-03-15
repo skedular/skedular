@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0d2ac66f5103eb9f966873319cbb1cf5>>
+ * @generated SignedSource<<7e839e6e24e3b87b157b4db87c810bde>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,7 +40,7 @@ export type ListingMetadataInput = {
 export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   billingMode: ProductPricingBillingMode;
-  cadence: ProductPricingCadence;
+  bookingCadence: ProductPricingCadence;
   id: string;
   index: number;
   isTaxInclusive: boolean;
@@ -51,6 +51,7 @@ export type ProductPricingInput = {
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
+  purchaseCadence: ProductPricingCadence;
 };
 export type editProduct_updateProductMutation$variables = {
   input: UpdateProductInput;
@@ -88,7 +89,7 @@ export type editProduct_updateProductMutation$data = {
       };
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-        readonly cadence: ProductPricingCadence;
+        readonly bookingCadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -101,6 +102,7 @@ export type editProduct_updateProductMutation$data = {
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
+        readonly purchaseCadence: ProductPricingCadence;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -143,7 +145,7 @@ export type editProduct_updateProductMutation$rawResponse = {
       };
       readonly pricingOptions: ReadonlyArray<{
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
-        readonly cadence: ProductPricingCadence;
+        readonly bookingCadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -156,6 +158,7 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly minDurationMinutes: number | null | undefined;
         readonly numberOfResourcesToBook: number;
         readonly price: any;
+        readonly purchaseCadence: ProductPricingCadence;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -394,7 +397,14 @@ v7 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "cadence",
+                "name": "purchaseCadence",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "bookingCadence",
                 "storageKey": null
               },
               {
@@ -481,16 +491,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "c11d2b6d8f2f9f680fd6c0ef55b5436e",
+    "cacheID": "53ff828777ee7e730c0436baa361bdc2",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "809599d10ede0b582301a1d614bb7a7b";
+(node as any).hash = "697e87b28f880c52151c2549d5474346";
 
 export default node;

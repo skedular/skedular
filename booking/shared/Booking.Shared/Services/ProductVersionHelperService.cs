@@ -14,14 +14,15 @@ public class ProductVersionHelperService : IProductVersionHelperService
     public ProductPricing? FindMatchingPricing(ICollection<ProductPricing> pricingOptions, ProductPricing pricing) =>
         pricingOptions.FirstOrDefault(item => item.Id == pricing.Id) ??
         pricingOptions.FirstOrDefault(item =>
-            item.Cadence == pricing.Cadence &&
+            item.PurchaseCadence == pricing.PurchaseCadence &&
+            item.BookingCadence == pricing.BookingCadence &&
             item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook &&
             item.BillingMode == pricing.BillingMode);
 
     public StripeProduct? FindMatchingPricing(ICollection<StripeProduct> stripeProducts, ProductPricing pricing) =>
         stripeProducts.FirstOrDefault(item => item.Id == pricing.Id) ??
         stripeProducts.FirstOrDefault(item =>
-            item.PricingCadence.ToProductPricingCadence() == pricing.Cadence &&
+            item.PricingCadence.ToProductPricingCadence() == pricing.PurchaseCadence &&
             item.BillingMode.ToProductPricingBillingMode() == pricing.BillingMode &&
             item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
 }

@@ -215,7 +215,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               listingMetadata {
                 title
               }
-              cadence
+              purchaseCadence
               price
               isTaxInclusive
             }
@@ -323,7 +323,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
         .map((option) => ({
           id: option.id,
           title: option.listingMetadata.title ?? '',
-          cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.cadence)?.name ?? option.cadence,
+          cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         }));

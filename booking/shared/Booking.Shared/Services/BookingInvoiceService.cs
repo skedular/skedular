@@ -193,7 +193,7 @@ public class BookingInvoiceService(
                         $"{productVersion.ListingMetadata?.Title}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}");
 
                 var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
-                var quantity = pricing.Cadence switch
+                var quantity = pricing.BookingCadence switch
                 {
                     ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
                     ProductPricingCadence.PerMinute => marketplaceBooking.Quantity * totalMinutes,
@@ -212,10 +212,9 @@ public class BookingInvoiceService(
                         ? pricing.Price * 100 / (Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage) + 100)
                         : pricing.Price;
 
-                table.Cell().Element(CellStyle).AlignRight()
-                    .Text($"{price.ToRoundedPrice()} {pricing.Cadence.ToInvoicePriceUnitName()}");
+                table.Cell().Element(CellStyle).AlignRight().Text($"{price.ToRoundedPrice()} {pricing.BookingCadence.ToInvoicePriceUnitName()}");
 
-                var totalPrice = pricing.Cadence switch
+                var totalPrice = pricing.BookingCadence switch
                 {
                     ProductPricingCadence.OneTime => price * quantity,
                     ProductPricingCadence.PerMinute => price * quantity,

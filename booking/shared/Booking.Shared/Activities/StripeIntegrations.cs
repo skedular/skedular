@@ -138,7 +138,7 @@ public class StripeIntegrations(
         var lineItems = booking.Schedules.Select(schedule => new SessionLineItemOptions
         {
             Price = productVersion.StripeProducts.First().StripePrice!.StripePriceId,
-            Quantity = marketplaceBooking.ProductPricing.Cadence switch
+            Quantity = marketplaceBooking.ProductPricing.BookingCadence switch
             {
                 ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
                 ProductPricingCadence.PerMinute =>

@@ -228,7 +228,8 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
               title
               subTitle
             }
-            cadence
+            purchaseCadence
+            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -401,10 +402,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
   const [recurringEndDate, setRecurringEndDate] = useState<Dayjs | null>(null);
-  const selectedPricingOptionIsRecurring = isRecurringCadence(selectedPricingOption?.cadence as ProductPricingCadence | undefined);
+  const selectedPricingOptionIsRecurring = isRecurringCadence(selectedPricingOption?.purchaseCadence as ProductPricingCadence | undefined);
 
-  const validate = makeValidate(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.cadence as ProductPricingCadence | undefined));
-  const requiredFields = makeRequired(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.cadence as ProductPricingCadence | undefined));
+  const validate = makeValidate(bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.purchaseCadence as ProductPricingCadence | undefined));
+  const requiredFields = makeRequired(
+    bookingSchema(selectedPricingOption?.numberOfResourcesToBook ?? 1, selectedPricingOption?.purchaseCadence as ProductPricingCadence | undefined),
+  );
 
   const handleRefetchAvailableResources = useCallback(
     ({ from, until }: { from: Dayjs | Date; until: Dayjs | Date }) => {
@@ -568,7 +571,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const totalMinutes = dateRange.until.diff(dateRange.from, 'minutes');
     let totalPrice = 0.0;
     const price = Number(pricingOption.price);
-    switch (pricingOption.cadence as ProductPricingCadence) {
+    switch (pricingOption.bookingCadence as ProductPricingCadence) {
       case 'PER_MINUTE':
         totalPrice = price * quantity * totalMinutes;
         break;
@@ -633,12 +636,12 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const customerId = rootData.me?.id;
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
-    if (isRecurringCadence(selectedPricingOption.cadence as ProductPricingCadence)) {
+    if (isRecurringCadence(selectedPricingOption.purchaseCadence as ProductPricingCadence)) {
       if (!recurringEndDate) {
         return;
       }
 
-      const recurringRule = toRecurringRule(selectedPricingOption.cadence as ProductPricingCadence, dayjs(date));
+      const recurringRule = toRecurringRule(selectedPricingOption.purchaseCadence as ProductPricingCadence, dayjs(date));
 
       commitAddMarketplaceRecurringBooking({
         variables: {

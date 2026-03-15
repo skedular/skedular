@@ -363,7 +363,7 @@ public class ProductService(
             throw new ProductPricingBillingModeRequired();
         }
 
-        var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.Cadence);
+        var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.BookingCadence);
 
         if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)
         {

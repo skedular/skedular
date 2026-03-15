@@ -84,7 +84,7 @@ public class MarketplaceRecurringBookingService(
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
-        if (!IsRecurringPurchaseCadence(marketplaceBooking.ProductPricing.Cadence))
+        if (!IsRecurringPurchaseCadence(marketplaceBooking.ProductPricing.PurchaseCadence))
         {
             throw new MarketplaceRecurringBookingCadenceMustBeRecurring();
         }

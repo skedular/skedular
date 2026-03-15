@@ -283,7 +283,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               title
               subTitle
             }
-            cadence
+            purchaseCadence
+            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -299,7 +300,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
           type
           name
         }
-        ...multipleChoicesProductPricingBillingModes_query
+        ...singleChoiceProductPricingBillingMode_query
         currencies {
           type
           name
@@ -360,7 +361,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               title
               subTitle
             }
-            cadence
+            purchaseCadence
+            bookingCadence
             price
             numberOfResourcesToBook
             minDurationMinutes
@@ -458,7 +460,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
               subTitle: pricingOption.subTitle ?? '',
               includedFeatures: [],
             },
-            cadence: pricingOption.cadence as ProductPricingCadence,
+            purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+            bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
@@ -522,7 +525,8 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                 subTitle: pricingOption.subTitle ?? '',
                 includedFeatures: [],
               },
-              cadence: pricingOption.cadence as ProductPricingCadence,
+              purchaseCadence: pricingOption.cadence as ProductPricingCadence,
+              bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
@@ -588,7 +592,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                       id: uuid(),
                       title: pricingOption.listingMetadata.title ?? null,
                       subTitle: pricingOption.listingMetadata.subTitle ?? null,
-                      cadence: pricingOption.cadence,
+                      cadence: pricingOption.purchaseCadence,
                       price: pricingOption.price.toString(),
                       numberOfResourcesToBook: pricingOption.numberOfResourcesToBook.toString(),
                       minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',

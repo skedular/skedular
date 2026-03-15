@@ -72,7 +72,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
             title
             subTitle
           }
-          cadence
+          purchaseCadence
           price
           isTaxInclusive
           acceptedPaymentMethods
@@ -99,7 +99,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         id: pricingOption.id,
         title: pricingOption.listingMetadata.title ?? '',
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
-        cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence,
+        cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
         amountLabel: `${currencyLabel}${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
       }));

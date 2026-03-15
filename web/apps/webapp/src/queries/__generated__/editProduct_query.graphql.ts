@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b656e2c4eb667520b575b71317c2aba8>>
+ * @generated SignedSource<<a6a5d8dc253a6427fcf214a3a37ccab9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,7 +57,7 @@ export type editProduct_query$data = {
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
-      readonly cadence: ProductPricingCadence;
+      readonly bookingCadence: ProductPricingCadence;
       readonly index: number;
       readonly isTaxInclusive: boolean;
       readonly listingMetadata: {
@@ -70,6 +70,7 @@ export type editProduct_query$data = {
       readonly minDurationMinutes: number | null | undefined;
       readonly numberOfResourcesToBook: number;
       readonly price: any;
+      readonly purchaseCadence: ProductPricingCadence;
     }>;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -81,7 +82,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductPricingBillingModes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -320,7 +321,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "cadence",
+              "name": "purchaseCadence",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "bookingCadence",
               "storageKey": null
             },
             {
@@ -405,7 +413,7 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "multipleChoicesProductPricingBillingModes_query"
+      "name": "singleChoiceProductPricingBillingMode_query"
     },
     {
       "alias": null,
@@ -469,6 +477,6 @@ return {
 };
 })();
 
-(node as any).hash = "7eb535e076bd8374e1665bf302a6e231";
+(node as any).hash = "5cd776aa0dfab12ba7d90662619aaab0";
 
 export default node;

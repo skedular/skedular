@@ -155,7 +155,7 @@ public class Mapper : IMapper
         new()
         {
             Name = productVersion.ListingMetadata?.Title ?? "Name not set",
-            UnitLabel = pricing.Cadence.ToStripePriceUnitName(),
+            UnitLabel = pricing.PurchaseCadence.ToStripePriceUnitName(),
             TaxCode = "txcd_10103001",
             Metadata = new Dictionary<string, string>
             {

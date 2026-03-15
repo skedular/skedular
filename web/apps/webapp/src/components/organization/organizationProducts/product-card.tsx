@@ -83,7 +83,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
             title
             subTitle
           }
-          cadence
+          purchaseCadence
           price
           isTaxInclusive
         }
@@ -364,7 +364,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
             <SmallIconTypography label="No pricing options configured." />
           ) : (
             pricingOptions.map((pricingOption) => {
-              const cadence = rootData.productPricingCadences.find((item) => item.type === pricingOption.cadence)?.name ?? pricingOption.cadence;
+              const cadence = rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence;
 
               return (
                 <Box

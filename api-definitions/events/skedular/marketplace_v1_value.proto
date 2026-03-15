@@ -98,17 +98,18 @@ message ProductPricing {
   string                    id                                             = 1;
   int32                     index                                          = 2;
   ListingMetadata           listingMetadata                                = 3;
-  ProductPricingCadence     cadence                                        = 4;
-  double                    price                                          = 5;
-  bool                      isTaxInclusive                                 = 6;
-  Currency                  currency                                       = 7;
-  repeated PaymentMethod    acceptedBookingPaymentMethods                  = 8;
-  int32                     minDurationMinutes                             = 9;
-  int32                     maxDurationMinutes                             = 10;
-  int32                     maxAllowedResourcesLockTimePaidViaCard         = 11;
-  int32                     maxAllowedResourcesLockTimePaidViaBankTransfer = 12;
-  int32                     numberOfResourcesToBook                        = 13;
-  ProductPricingBillingMode billingMode                                    = 14;
+  ProductPricingCadence     purchaseCadence                                = 4;
+  ProductPricingCadence     bookingCadence                                 = 5;
+  double                    price                                          = 6;
+  bool                      isTaxInclusive                                 = 7;
+  Currency                  currency                                       = 8;
+  repeated PaymentMethod    acceptedBookingPaymentMethods                  = 9;
+  int32                     minDurationMinutes                             = 10;
+  int32                     maxDurationMinutes                             = 11;
+  int32                     maxAllowedResourcesLockTimePaidViaCard         = 12;
+  int32                     maxAllowedResourcesLockTimePaidViaBankTransfer = 13;
+  int32                     numberOfResourcesToBook                        = 14;
+  ProductPricingBillingMode billingMode                                    = 15;
 }
 
 message ListingMetadata {

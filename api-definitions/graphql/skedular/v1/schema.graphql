@@ -1019,7 +1019,7 @@ type ProductPayload {
 type ProductPricing {
   acceptedPaymentMethods: [PaymentMethod!]!
   billingMode: ProductPricingBillingMode!
-  cadence: ProductPricingCadence!
+  bookingCadence: ProductPricingCadence!
   id: String!
   index: Int!
   isTaxInclusive: Boolean!
@@ -1030,6 +1030,7 @@ type ProductPricing {
   minDurationMinutes: Int
   numberOfResourcesToBook: Int!
   price: Decimal!
+  purchaseCadence: ProductPricingCadence!
 }
 
 type ProductPricingBillingModeDetails {
@@ -2161,7 +2162,7 @@ input ProductOrderInput {
 input ProductPricingInput {
   acceptedPaymentMethods: [PaymentMethod!]!
   billingMode: ProductPricingBillingMode!
-  cadence: ProductPricingCadence!
+  bookingCadence: ProductPricingCadence!
   id: String!
   index: Int!
   isTaxInclusive: Boolean!
@@ -2172,6 +2173,7 @@ input ProductPricingInput {
   minDurationMinutes: Int
   numberOfResourcesToBook: Int!
   price: Decimal!
+  purchaseCadence: ProductPricingCadence!
 }
 
 input ProductTagOrganizationTagWhereInput {
