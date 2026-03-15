@@ -16,12 +16,7 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
-import type {
-  Currency,
-  editProduct_updateProductMutation,
-  PaymentMethod,
-  ProductPricingCadence,
-} from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
+import type { Currency, editProduct_updateProductMutation, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -210,28 +205,34 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Max allowed resources lock time paid via bank transfer is required.')
             .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
             .test('is-greater-than-zero', 'Max allowed resources lock time must be greater than 0.', (value) => Number(value) > 0),
-          billingMode: string().required('Billing mode is required.').test('is-not-not-set', 'Billing mode is required.', (value) => value !== 'NOT_SET'),
+          billingMode: string()
+            .required('Billing mode is required.')
+            .test('is-not-not-set', 'Billing mode is required.', (value) => value !== 'NOT_SET'),
           acceptedPaymentMethods: array().min(1, 'At least one accepted booking payment method must be selected.').required('Booking payment methods are required.'),
         }),
       )
       .min(1, 'At least one pricing option is required.')
-      .test('is-unique-cadence-and-numberOfResourcesToBook', 'Cadence and number of resources to book combination must be unique for each pricing option.', (value) => {
-        if (!value || value.length === 0) {
-          return true;
-        }
-
-        const seenCombinations = new Set<string>();
-        for (const pricingOption of value as PricingOptionForm[]) {
-          const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}`;
-          if (seenCombinations.has(combination)) {
-            return false;
+      .test(
+        'is-unique-cadence-numberOfResourcesToBook-and-billingMode',
+        'Cadence, number of resources to book, and billing mode combination must be unique for each pricing option.',
+        (value) => {
+          if (!value || value.length === 0) {
+            return true;
           }
 
-          seenCombinations.add(combination);
-        }
+          const seenCombinations = new Set<string>();
+          for (const pricingOption of value as PricingOptionForm[]) {
+            const combination = `${pricingOption.cadence}|${pricingOption.numberOfResourcesToBook}|${pricingOption.billingMode}`;
+            if (seenCombinations.has(combination)) {
+              return false;
+            }
 
-        return true;
-      })
+            seenCombinations.add(combination);
+          }
+
+          return true;
+        },
+      )
       .required('Pricing options are required.'),
   });
 
@@ -595,7 +596,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                       isTaxInclusive: pricingOption.isTaxInclusive,
                       maxAllowedResourcesLockTimePaidViaCard: pricingOption.maxAllowedResourcesLockTimePaidViaCard.toString(),
                       maxAllowedResourcesLockTimePaidViaBankTransfer: (pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
-                      billingMode: ((pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET'),
+                      billingMode: (pricingOption as unknown as { billingMode?: string }).billingMode ?? 'NOT_SET',
                       acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((item) => item),
                     }))
                   : [createPricingOption(rootData.defaultMaxAllowedResourcesLockTimePaidViaCard, rootData.defaultMaxAllowedResourcesLockTimePaidViaBankTransfer)],

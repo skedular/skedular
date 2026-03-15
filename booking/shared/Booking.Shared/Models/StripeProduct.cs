@@ -7,6 +7,7 @@ public class StripeProduct : ModelBaseWithDeleted
 {
     public string ProductPricingId { get; set; } = string.Empty;
     public ProductPricingCadence PricingCadence { get; set; }
+    public ProductPricingBillingMode BillingMode { get; set; }
     public int NumberOfResourcesToBook { get; set; }
     public string StripeProductId { get; set; } = string.Empty;
     public string StripeAccountId { get; set; } = string.Empty;

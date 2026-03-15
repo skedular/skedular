@@ -24,11 +24,7 @@ import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { getCustomerFullName, isMidnight, joinErrors, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
-import type {
-  BookingCategory,
-  bookProduct_addMarketplaceBookingMutation,
-  PaymentMethod,
-} from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
+import type { BookingCategory, bookProduct_addMarketplaceBookingMutation, PaymentMethod } from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
 import type {
   BookingFrequency,
   bookProduct_addMarketplaceRecurringBookingMutation,
@@ -832,14 +828,14 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             initialValues={{
               pricingOptionId: selectedPricingOptionId,
               date,
-            recurringEndDate,
-            resources: resourceIds,
-            quantity,
-            category,
-            paymentMethod,
-            notes,
-            invoiceEmailList,
-          }}
+              recurringEndDate,
+              resources: resourceIds,
+              quantity,
+              category,
+              paymentMethod,
+              notes,
+              invoiceEmailList,
+            }}
             validate={validate}
             render={({ handleSubmit, values }) => {
               setSelectedPricingOptionId(values!.pricingOptionId);

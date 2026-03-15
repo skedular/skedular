@@ -42,6 +42,7 @@ public class StripeProductPricingService(
                     Id = productId,
                     ProductPricingId = pricing.Id,
                     PricingCadence = pricing.Cadence.ToProductPricingCadence(),
+                    BillingMode = pricing.BillingMode.ToProductPricingBillingMode(),
                     NumberOfResourcesToBook = pricing.NumberOfResourcesToBook,
                     StripeProductId = stripeProduct.Id,
                     StripeAccountId = stripeAccountId,

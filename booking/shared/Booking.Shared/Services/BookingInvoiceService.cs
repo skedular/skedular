@@ -184,8 +184,7 @@ public class BookingInvoiceService(
 
                 ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
-                var pricing = productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions,
-                    marketplaceBooking.ProductPricing);
+                var pricing = productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing);
 
                 ArgumentNullException.ThrowIfNull(pricing);
 

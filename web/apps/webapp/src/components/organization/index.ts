@@ -17,4 +17,3 @@ export { default as SingleChoicePaymentMethodType } from './single-choice-paymen
 export { default as SingleChoiceProductPricingBillingMode } from './single-choice-product-pricing-billing-mode';
 export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';
 export { default as SingleChoiceResourceType } from './single-choice-resource-type';
-
