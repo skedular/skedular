@@ -335,9 +335,10 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<ProductPricingBillingSchedule>("BillingSchedule")
+                    b.Property<string>("BillingMode")
                         .IsRequired()
-                        .HasColumnType("jsonb");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("BookingId")
                         .HasColumnType("character varying(100)");
@@ -423,6 +424,8 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("DECIMAL(18,4)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillingMode");
 
                     b.HasIndex("BookingId")
                         .IsUnique();

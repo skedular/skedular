@@ -12,11 +12,11 @@ public interface IProductVersionHelperService
 public class ProductVersionHelperService : IProductVersionHelperService
 {
     public ProductPricing? FindMatchingPricing(ICollection<ProductPricing> pricingOptions, ProductPricing pricing) =>
-        pricingOptions.FirstOrDefault(item => item.Id == pricing.Id) ?? pricingOptions.FirstOrDefault(item =>
-            item.Cadence == pricing.Cadence && item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
+        pricingOptions.FirstOrDefault(item => item.Id == pricing.Id) ??
+        pricingOptions.FirstOrDefault(item => item.Cadence == pricing.Cadence && item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
 
     public StripeProduct? FindMatchingPricing(ICollection<StripeProduct> stripeProducts, ProductPricing pricing) =>
-        stripeProducts.FirstOrDefault(item => item.Id == pricing.Id) ?? stripeProducts.FirstOrDefault(item =>
-            item.PricingCadence.ToProductPricingCadence() == pricing.Cadence &&
-            item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
+        stripeProducts.FirstOrDefault(item => item.Id == pricing.Id) ??
+        stripeProducts.FirstOrDefault(item =>
+            item.PricingCadence.ToProductPricingCadence() == pricing.Cadence && item.NumberOfResourcesToBook == pricing.NumberOfResourcesToBook);
 }

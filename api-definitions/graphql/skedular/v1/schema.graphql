@@ -448,7 +448,7 @@ type LocationTypeDetails {
 }
 
 type MarketplaceBookingDetails {
-  billingSchedule: ProductPricingBillingSchedule!
+  billingMode: ProductPricingBillingMode!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   currency: String
   currencyToDisplay: String!
@@ -1017,8 +1017,8 @@ type ProductPayload {
 }
 
 type ProductPricing {
-  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
   acceptedPaymentMethods: [PaymentMethod!]!
+  billingMode: ProductPricingBillingMode!
   cadence: ProductPricingCadence!
   id: String!
   index: Int!
@@ -1032,19 +1032,9 @@ type ProductPricing {
   price: Decimal!
 }
 
-type ProductPricingBillingIntervalDetails {
-  name: String!
-  type: ProductPricingBillingInterval!
-}
-
 type ProductPricingBillingModeDetails {
   name: String!
   type: ProductPricingBillingMode!
-}
-
-type ProductPricingBillingSchedule {
-  interval: ProductPricingBillingInterval!
-  mode: ProductPricingBillingMode!
 }
 
 type ProductPricingCadenceDetails {
@@ -1140,7 +1130,6 @@ type Query {
   pendingTeamInvitationsCount: Int! @cost(weight: "10")
   personalInformationVisibilityTypes: [PersonalInformationVisibilityDetails!]!
   product(id: String!): ProductDetails @cost(weight: "10")
-  productPricingBillingIntervals: [ProductPricingBillingIntervalDetails!]!
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   productPricingCadences: [ProductPricingCadenceDetails!]!
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
@@ -1449,7 +1438,6 @@ input AddLocationPhysicalAddressInput {
 }
 
 input AddMarketplaceBookingInput {
-  billingSchedule: ProductPricingBillingScheduleInput!
   category: BookingCategory
   clientMutationId: String
   customerIds: [String!]!
@@ -1469,7 +1457,6 @@ input AddMarketplaceBookingInput {
 }
 
 input AddMarketplaceRecurringBookingInput {
-  billingSchedule: ProductPricingBillingScheduleInput!
   byMonthDay: Int
   bySetPosition: Int
   byWeekDays: [DayOfWeek!]!
@@ -2171,14 +2158,9 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
-input ProductPricingBillingScheduleInput {
-  interval: ProductPricingBillingInterval!
-  mode: ProductPricingBillingMode!
-}
-
 input ProductPricingInput {
-  acceptedBillingSchedules: [ProductPricingBillingScheduleInput!]!
   acceptedPaymentMethods: [PaymentMethod!]!
+  billingMode: ProductPricingBillingMode!
   cadence: ProductPricingCadence!
   id: String!
   index: Int!
@@ -3068,15 +3050,6 @@ enum PersonalInformationVisibility {
 
 enum ProductOrderField {
   NAME
-}
-
-enum ProductPricingBillingInterval {
-  FORTNIGHTLY
-  FULL_TERM
-  MONTHLY
-  NOT_SET
-  PER_BOOKING
-  WEEKLY
 }
 
 enum ProductPricingBillingMode {

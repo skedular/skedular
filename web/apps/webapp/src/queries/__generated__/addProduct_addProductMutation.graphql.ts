@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1436c1382621633ab205462416b97bbd>>
+ * @generated SignedSource<<e4cd14c4e5d00209c9c9a4fb5181c7e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type AddProductInput = {
@@ -41,8 +40,8 @@ export type ListingMetadataInput = {
   title?: string | null | undefined;
 };
 export type ProductPricingInput = {
-  acceptedBillingSchedules: ReadonlyArray<ProductPricingBillingScheduleInput>;
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+  billingMode: ProductPricingBillingMode;
   cadence: ProductPricingCadence;
   id: string;
   index: number;
@@ -54,10 +53,6 @@ export type ProductPricingInput = {
   minDurationMinutes?: number | null | undefined;
   numberOfResourcesToBook: number;
   price: any;
-};
-export type ProductPricingBillingScheduleInput = {
-  interval: ProductPricingBillingInterval;
-  mode: ProductPricingBillingMode;
 };
 export type addProduct_addProductMutation$variables = {
   input: AddProductInput;
@@ -94,11 +89,8 @@ export type addProduct_addProductMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly pricingOptions: ReadonlyArray<{
-        readonly acceptedBillingSchedules: ReadonlyArray<{
-          readonly interval: ProductPricingBillingInterval;
-          readonly mode: ProductPricingBillingMode;
-        }>;
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+        readonly billingMode: ProductPricingBillingMode;
         readonly cadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
@@ -153,11 +145,8 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly pricingOptions: ReadonlyArray<{
-        readonly acceptedBillingSchedules: ReadonlyArray<{
-          readonly interval: ProductPricingBillingInterval;
-          readonly mode: ProductPricingBillingMode;
-        }>;
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+        readonly billingMode: ProductPricingBillingMode;
         readonly cadence: ProductPricingCadence;
         readonly index: number;
         readonly isTaxInclusive: boolean;
@@ -464,26 +453,8 @@ v7 = [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "ProductPricingBillingSchedule",
-                "kind": "LinkedField",
-                "name": "acceptedBillingSchedules",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mode",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "interval",
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "billingMode",
                 "storageKey": null
               },
               {
@@ -521,16 +492,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "eb17d6515a74415f7f03e52bee12c7bd",
+    "cacheID": "8d9b7a50be2f298675b02d244834c1a5",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedBillingSchedules {\n          mode\n          interval\n        }\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        cadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bcc3f5285205d3302bf1c0751a284186";
+(node as any).hash = "d198c37108f346b21805c016e1f4a949";
 
 export default node;

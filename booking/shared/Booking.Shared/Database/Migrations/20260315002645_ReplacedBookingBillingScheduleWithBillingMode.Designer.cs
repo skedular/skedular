@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database;
-using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -16,8 +15,8 @@ using Temporalio.Client;
 namespace Booking.Shared.Database.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20260314041835_AddBillingScheduleToMarketplaceBooking")]
-    partial class AddBillingScheduleToMarketplaceBooking
+    [Migration("20260315002645_ReplacedBookingBillingScheduleWithBillingMode")]
+    partial class ReplacedBookingBillingScheduleWithBillingMode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -339,9 +338,10 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<DeprecatedType>("BillingSchedule")
+                    b.Property<string>("BillingMode")
                         .IsRequired()
-                        .HasColumnType("jsonb");
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<string>("BookingId")
                         .HasColumnType("character varying(100)");
@@ -428,6 +428,8 @@ namespace Booking.Shared.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BillingMode");
+
                     b.HasIndex("BookingId")
                         .IsUnique();
 
@@ -472,6 +474,13 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("Id")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<string>("BillingCycle")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("MONTHLY");
 
                     b.Property<string>("ContactEmail")
                         .HasMaxLength(320)
@@ -525,6 +534,8 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(63)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BillingCycle");
 
                     b.HasIndex("CreatedAt");
 

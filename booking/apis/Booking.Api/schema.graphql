@@ -110,7 +110,7 @@ type MarketplaceBookingDetails {
   invoiceUrl: String
   invoiceNumber: String
   invoiceEmailList: [String!]!
-  billingSchedule: ProductPricingBillingSchedule!
+  billingMode: ProductPricingBillingMode!
   isPaymentRequired: Boolean!
   bookingCheckoutSession: BookingCheckoutSessionDetails
   paymentExpiry: DateTime!
@@ -185,17 +185,12 @@ type ProductPricing {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
-  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
+  billingMode: ProductPricingBillingMode!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
-}
-
-type ProductPricingBillingSchedule {
-  mode: ProductPricingBillingMode!
-  interval: ProductPricingBillingInterval!
 }
 
 type ProductVersionDetails {
@@ -300,7 +295,6 @@ input AddMarketplaceBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
-  billingSchedule: ProductPricingBillingScheduleInput!
 }
 
 input AddMarketplaceRecurringBookingInput {
@@ -328,7 +322,6 @@ input AddMarketplaceRecurringBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
-  billingSchedule: ProductPricingBillingScheduleInput!
 }
 
 input AddPrivateBookingInput {
@@ -442,11 +435,6 @@ input OrganizationAvailableResourcesWhereInput {
   organizationUniqueAlphanumericName: String
   from: DateTime!
   until: DateTime!
-}
-
-input ProductPricingBillingScheduleInput {
-  mode: ProductPricingBillingMode!
-  interval: ProductPricingBillingInterval!
 }
 
 input RejectBookingPaymentInput {
@@ -733,15 +721,6 @@ enum PaymentStatus {
   EXPIRED
   RECORD_NEVER_CREATED
   NO_PAYMENT_REQUIRED
-}
-
-enum ProductPricingBillingInterval {
-  NOT_SET
-  FULL_TERM
-  PER_BOOKING
-  WEEKLY
-  FORTNIGHTLY
-  MONTHLY
 }
 
 enum ProductPricingBillingMode {

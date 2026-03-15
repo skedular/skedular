@@ -6,10 +6,7 @@ using CdnImageFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Cdn
 using Product = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Product;
 using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion;
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
-using ProductPricingBillingInterval = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingInterval;
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode;
-using ProductPricingBillingSchedule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingSchedule;
-using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
 using ProductPricingCadence = Api.Shared.Services.Models.ProductPricingCadence;
 
@@ -89,11 +86,9 @@ public class Mapper : IMapper
             MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            NumberOfResourcesToBook = src.NumberOfResourcesToBook
+            NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            BillingMode = MapTo(src.BillingMode)
         };
-
-        productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
-        productPricing.AcceptedBillingSchedules.AddRange(MapTo(src.AcceptedBillingSchedules));
 
         return productPricing;
     }
@@ -104,29 +99,6 @@ public class Mapper : IMapper
             Api.Shared.Services.Models.ProductPricingBillingMode.NotSet => ProductPricingBillingMode.NotSet,
             Api.Shared.Services.Models.ProductPricingBillingMode.Upfront => ProductPricingBillingMode.Upfront,
             Api.Shared.Services.Models.ProductPricingBillingMode.InArrears => ProductPricingBillingMode.InArrears,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
-        };
-
-    private static ProductPricingBillingInterval MapTo(Api.Shared.Services.Models.ProductPricingBillingInterval src) =>
-        src switch
-        {
-            Api.Shared.Services.Models.ProductPricingBillingInterval.NotSet => ProductPricingBillingInterval.NotSet,
-            Api.Shared.Services.Models.ProductPricingBillingInterval.FullTerm => ProductPricingBillingInterval.FullTerm,
-            Api.Shared.Services.Models.ProductPricingBillingInterval.PerBooking => ProductPricingBillingInterval.PerBooking,
-            Api.Shared.Services.Models.ProductPricingBillingInterval.Weekly => ProductPricingBillingInterval.Weekly,
-            Api.Shared.Services.Models.ProductPricingBillingInterval.Fortnightly => ProductPricingBillingInterval.Fortnightly,
-            Api.Shared.Services.Models.ProductPricingBillingInterval.Monthly => ProductPricingBillingInterval.Monthly,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
-        };
-
-    private static IEnumerable<PaymentMethod> MapTo(IEnumerable<Api.Shared.Services.Models.PaymentMethod> src) =>
-        src.Select(MapTo);
-
-    private static PaymentMethod MapTo(Api.Shared.Services.Models.PaymentMethod src) =>
-        src switch
-        {
-            Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
-            Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankTransfer,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 
@@ -149,10 +121,4 @@ public class Mapper : IMapper
 
         return listingMetadata;
     }
-
-    private static IEnumerable<ProductPricingBillingSchedule> MapTo(IEnumerable<Api.Shared.Services.Models.ProductPricingBillingSchedule> src) =>
-        src.Select(MapTo);
-
-    private static ProductPricingBillingSchedule MapTo(Api.Shared.Services.Models.ProductPricingBillingSchedule src) =>
-        new() { Mode = MapTo(src.Mode), Interval = MapTo(src.Interval) };
 }

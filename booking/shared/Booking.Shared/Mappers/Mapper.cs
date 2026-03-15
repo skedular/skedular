@@ -473,7 +473,7 @@ public class Mapper : IMapper
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
-                BillingSchedule = src.BillingSchedule,
+                BillingMode = src.BillingMode.ToProductPricingBillingMode(),
                 StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
                 PaymentExpiry = src.PaymentExpiry
             };
@@ -515,7 +515,7 @@ public class Mapper : IMapper
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
         dest.InvoiceEmailList = src.InvoiceEmailList;
-        dest.BillingSchedule = src.BillingSchedule;
+        dest.BillingMode = src.BillingMode.ToProductPricingBillingMode();
         dest.PaymentExpiry = src.PaymentExpiry;
         return dest;
     }

@@ -14,9 +14,7 @@ using OrganizationSsoSetting = Booking.Shared.Models.OrganizationSsoSetting;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
-using ProductPricingBillingInterval = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingInterval;
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode;
-using ProductPricingBillingSchedule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingSchedule;
 using ProductPricingCadence = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
 using Team = Booking.Shared.Models.Team;
@@ -594,45 +592,39 @@ public class Mapper : IMapper
             src.Id,
             src.Index,
             MapTo(src.ListingMetadata),
-            src.Cadence switch
-            {
-                ProductPricingCadence.NotSet => Api.Shared.Services.Models.ProductPricingCadence.NotSet,
-                ProductPricingCadence.OneTime => Api.Shared.Services.Models.ProductPricingCadence.OneTime,
-                ProductPricingCadence.PerMinute => Api.Shared.Services.Models.ProductPricingCadence.PerMinute,
-                ProductPricingCadence.Per15Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per15Minutes,
-                ProductPricingCadence.Per30Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per30Minutes,
-                ProductPricingCadence.PerHour => Api.Shared.Services.Models.ProductPricingCadence.PerHour,
-                ProductPricingCadence.HalfDay => Api.Shared.Services.Models.ProductPricingCadence.HalfDay,
-                ProductPricingCadence.Daily => Api.Shared.Services.Models.ProductPricingCadence.Daily,
-                ProductPricingCadence.Weekly => Api.Shared.Services.Models.ProductPricingCadence.Weekly,
-                ProductPricingCadence.Fortnightly => Api.Shared.Services.Models.ProductPricingCadence.Fortnightly,
-                ProductPricingCadence.Monthly => Api.Shared.Services.Models.ProductPricingCadence.Monthly,
-                ProductPricingCadence.TwoMonths => Api.Shared.Services.Models.ProductPricingCadence.TwoMonths,
-                ProductPricingCadence.Quarterly => Api.Shared.Services.Models.ProductPricingCadence.Quarterly,
-                ProductPricingCadence.FourMonths => Api.Shared.Services.Models.ProductPricingCadence.FourMonths,
-                ProductPricingCadence.FiveMonths => Api.Shared.Services.Models.ProductPricingCadence.FiveMonths,
-                ProductPricingCadence.SixMonths => Api.Shared.Services.Models.ProductPricingCadence.SixMonths,
-                ProductPricingCadence.Yearly => Api.Shared.Services.Models.ProductPricingCadence.Yearly,
-                _ => throw new ArgumentOutOfRangeException()
-            },
+            MapTo(src.Cadence),
             Convert.ToDecimal(src.Price),
             src.IsTaxInclusive,
             MapTo(src.AcceptedBookingPaymentMethods).ToList(),
-            MapTo(src.AcceptedBillingSchedules).ToList(),
+            MapTo(src.BillingMode),
             src.MinDurationMinutes.FromNullInt(),
             src.MaxDurationMinutes.FromNullInt(),
             src.MaxAllowedResourcesLockTimePaidViaCard,
             src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             src.NumberOfResourcesToBook);
 
-    private static IEnumerable<Api.Shared.Services.Models.ProductPricingBillingSchedule> MapTo(
-        IEnumerable<ProductPricingBillingSchedule> src) =>
-        src.Select(MapTo);
-
-    private static Api.Shared.Services.Models.ProductPricingBillingSchedule MapTo(ProductPricingBillingSchedule src) =>
-        new(
-            MapTo(src.Mode),
-            MapTo(src.Interval));
+    private static Api.Shared.Services.Models.ProductPricingCadence MapTo(ProductPricingCadence src) =>
+        src switch
+        {
+            ProductPricingCadence.NotSet => Api.Shared.Services.Models.ProductPricingCadence.NotSet,
+            ProductPricingCadence.OneTime => Api.Shared.Services.Models.ProductPricingCadence.OneTime,
+            ProductPricingCadence.PerMinute => Api.Shared.Services.Models.ProductPricingCadence.PerMinute,
+            ProductPricingCadence.Per15Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per15Minutes,
+            ProductPricingCadence.Per30Minutes => Api.Shared.Services.Models.ProductPricingCadence.Per30Minutes,
+            ProductPricingCadence.PerHour => Api.Shared.Services.Models.ProductPricingCadence.PerHour,
+            ProductPricingCadence.HalfDay => Api.Shared.Services.Models.ProductPricingCadence.HalfDay,
+            ProductPricingCadence.Daily => Api.Shared.Services.Models.ProductPricingCadence.Daily,
+            ProductPricingCadence.Weekly => Api.Shared.Services.Models.ProductPricingCadence.Weekly,
+            ProductPricingCadence.Fortnightly => Api.Shared.Services.Models.ProductPricingCadence.Fortnightly,
+            ProductPricingCadence.Monthly => Api.Shared.Services.Models.ProductPricingCadence.Monthly,
+            ProductPricingCadence.TwoMonths => Api.Shared.Services.Models.ProductPricingCadence.TwoMonths,
+            ProductPricingCadence.Quarterly => Api.Shared.Services.Models.ProductPricingCadence.Quarterly,
+            ProductPricingCadence.FourMonths => Api.Shared.Services.Models.ProductPricingCadence.FourMonths,
+            ProductPricingCadence.FiveMonths => Api.Shared.Services.Models.ProductPricingCadence.FiveMonths,
+            ProductPricingCadence.SixMonths => Api.Shared.Services.Models.ProductPricingCadence.SixMonths,
+            ProductPricingCadence.Yearly => Api.Shared.Services.Models.ProductPricingCadence.Yearly,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     private static Api.Shared.Services.Models.ProductPricingBillingMode MapTo(ProductPricingBillingMode src) =>
         src switch
@@ -640,18 +632,6 @@ public class Mapper : IMapper
             ProductPricingBillingMode.NotSet => Api.Shared.Services.Models.ProductPricingBillingMode.NotSet,
             ProductPricingBillingMode.Upfront => Api.Shared.Services.Models.ProductPricingBillingMode.Upfront,
             ProductPricingBillingMode.InArrears => Api.Shared.Services.Models.ProductPricingBillingMode.InArrears,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
-        };
-
-    private static Api.Shared.Services.Models.ProductPricingBillingInterval MapTo(ProductPricingBillingInterval src) =>
-        src switch
-        {
-            ProductPricingBillingInterval.NotSet => Api.Shared.Services.Models.ProductPricingBillingInterval.NotSet,
-            ProductPricingBillingInterval.FullTerm => Api.Shared.Services.Models.ProductPricingBillingInterval.FullTerm,
-            ProductPricingBillingInterval.PerBooking => Api.Shared.Services.Models.ProductPricingBillingInterval.PerBooking,
-            ProductPricingBillingInterval.Weekly => Api.Shared.Services.Models.ProductPricingBillingInterval.Weekly,
-            ProductPricingBillingInterval.Fortnightly => Api.Shared.Services.Models.ProductPricingBillingInterval.Fortnightly,
-            ProductPricingBillingInterval.Monthly => Api.Shared.Services.Models.ProductPricingBillingInterval.Monthly,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 

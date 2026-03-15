@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -338,7 +339,7 @@ namespace Booking.Shared.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<ProductPricingBillingSchedule>("BillingSchedule")
+                    b.Property<DeprecatedType>("BillingSchedule")
                         .IsRequired()
                         .HasColumnType("jsonb");
 

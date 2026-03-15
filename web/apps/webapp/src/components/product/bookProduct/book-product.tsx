@@ -28,8 +28,6 @@ import type {
   BookingCategory,
   bookProduct_addMarketplaceBookingMutation,
   PaymentMethod,
-  ProductPricingBillingInterval,
-  ProductPricingBillingMode,
 } from '@/queries/__generated__/bookProduct_addMarketplaceBookingMutation.graphql';
 import type {
   BookingFrequency,
@@ -100,7 +98,6 @@ type BookingDetails = {
   quantity: number;
   resources: string[];
   category: string;
-  billingSchedule: string;
   paymentMethod: string;
   invoiceEmailList: string[];
 };
@@ -115,13 +112,6 @@ type DateRangeValidationResult = {
 type PricingOptionChoice = {
   id: string;
   name: string;
-};
-
-type BillingScheduleChoice = {
-  value: string;
-  name: string;
-  mode: ProductPricingBillingMode;
-  interval: ProductPricingBillingInterval;
 };
 
 const bookingSchema = (numberOfResourcesToBook: number, selectedPricingOptionCadence?: ProductPricingCadence) =>
@@ -167,54 +157,11 @@ const bookingSchema = (numberOfResourcesToBook: number, selectedPricingOptionCad
     }),
     notes: string().notRequired(),
     category: string().required('Category is required'),
-    billingSchedule: string().required('Billing schedule is required'),
     paymentMethod: string().required('Payment method is required'),
     invoiceEmailList: array().notRequired(),
   });
 
 const allId = 'kkigMVsUXwi2YMSSrXv7i';
-
-const toBillingScheduleValue = (mode: ProductPricingBillingMode, interval: ProductPricingBillingInterval) => `${mode}:${interval}`;
-
-const parseBillingScheduleValue = (value: string) => {
-  const [mode, interval] = value.split(':');
-
-  return {
-    mode: mode as ProductPricingBillingMode,
-    interval: interval as ProductPricingBillingInterval,
-  };
-};
-
-const toBillingModeName = (mode: ProductPricingBillingMode) => {
-  switch (mode) {
-    case 'UPFRONT':
-      return 'Upfront';
-    case 'IN_ARREARS':
-      return 'In Arrears';
-    default:
-      return mode;
-  }
-};
-
-const toBillingIntervalName = (interval: ProductPricingBillingInterval) => {
-  switch (interval) {
-    case 'FULL_TERM':
-      return 'Full Term';
-    case 'PER_BOOKING':
-      return 'Per Booking';
-    case 'WEEKLY':
-      return 'Weekly';
-    case 'FORTNIGHTLY':
-      return 'Fortnightly';
-    case 'MONTHLY':
-      return 'Monthly';
-    default:
-      return interval;
-  }
-};
-
-const isValidBillingScheduleCombination = (mode: ProductPricingBillingMode, interval: ProductPricingBillingInterval) =>
-  !(mode === 'UPFRONT' && ['WEEKLY', 'FORTNIGHTLY', 'MONTHLY'].includes(interval));
 
 const isRecurringCadence = (cadence?: ProductPricingCadence) =>
   cadence === 'WEEKLY' ||
@@ -293,10 +240,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
             maxAllowedResourcesLockTimePaidViaBankTransfer
-            acceptedBillingSchedules {
-              mode
-              interval
-            }
+            billingMode
             acceptedPaymentMethods
           }
         }
@@ -436,19 +380,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     () => sortedPricingOptions.find((pricingOption) => pricingOption.id === selectedPricingOptionId) ?? sortedPricingOptions[0],
     [sortedPricingOptions, selectedPricingOptionId],
   );
-  const billingScheduleChoices = useMemo<BillingScheduleChoice[]>(
-    () =>
-      (selectedPricingOption?.acceptedBillingSchedules ?? [])
-        .filter((item) => isValidBillingScheduleCombination(item.mode as ProductPricingBillingMode, item.interval as ProductPricingBillingInterval))
-        .map((item) => ({
-          value: toBillingScheduleValue(item.mode as ProductPricingBillingMode, item.interval as ProductPricingBillingInterval),
-          name: `${toBillingModeName(item.mode as ProductPricingBillingMode)} · ${toBillingIntervalName(item.interval as ProductPricingBillingInterval)}`,
-          mode: item.mode as ProductPricingBillingMode,
-          interval: item.interval as ProductPricingBillingInterval,
-        })),
-    [selectedPricingOption?.acceptedBillingSchedules],
-  );
-  const filterBillingSchedule = createFilterOptions<BillingScheduleChoice>();
   const [date, setDate] = useState<Dayjs>(defaultDate ?? startOfDay());
   const [timeRange, setTimeRange] = useState<DateRange<Dayjs>>(() => {
     const start = toOpeningHoursFromTime('08:00');
@@ -471,7 +402,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
   const [selectedZoneId, setSelectedZoneId] = useState<string>(allId);
   const [notes, setNotes] = useState<string>('');
   const [category, setCategory] = useState<string>('WORKING_FROM_COWORKING_SPACE');
-  const [billingSchedule, setBillingSchedule] = useState<string>(billingScheduleChoices[0]?.value ?? '');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>([]);
   const [recurringEndDate, setRecurringEndDate] = useState<Dayjs | null>(null);
@@ -689,7 +619,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     router.back();
   };
 
-  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, category, billingSchedule, paymentMethod, invoiceEmailList }: BookingDetails) => {
+  const handleAddClick = ({ date, notes, quantity, resources: resourceIds, category, paymentMethod, invoiceEmailList }: BookingDetails) => {
     const id = uuid();
     if (!selectedPricingOption) {
       return;
@@ -705,7 +635,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     const until = dateRange.until.toISOString();
     const fromToPrint = toShortDate(dateRange.from);
     const customerId = rootData.me?.id;
-    const parsedBillingSchedule = parseBillingScheduleValue(billingSchedule);
     const toastId = themedToast(<NotificationContent content={`Making a booking on '${fromToPrint}'...`} />, infoNotificationOptions);
 
     if (isRecurringCadence(selectedPricingOption.cadence as ProductPricingCadence)) {
@@ -739,12 +668,11 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             quantity: Number(quantity),
             productVersionId: product.latestProductVersionId,
             pricingId: selectedPricingOption.id,
-            billingSchedule: parsedBillingSchedule,
             organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
             organizationIds: [],
             teamIds: [],
           },
-        },
+        } as never,
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             toast.update(toastId, {
@@ -790,11 +718,10 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           productVersionId: product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
           quantity: Number(quantity),
-          billingSchedule: parsedBillingSchedule,
           paymentMethod: paymentMethod as PaymentMethod,
           invoiceEmailList,
         },
-      },
+      } as never,
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
@@ -905,32 +832,22 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             initialValues={{
               pricingOptionId: selectedPricingOptionId,
               date,
-              recurringEndDate,
-              resources: resourceIds,
-              quantity,
-              category,
-              billingSchedule,
-              paymentMethod,
-              notes,
-              invoiceEmailList,
-            }}
+            recurringEndDate,
+            resources: resourceIds,
+            quantity,
+            category,
+            paymentMethod,
+            notes,
+            invoiceEmailList,
+          }}
             validate={validate}
-            render={({ handleSubmit, values, form }) => {
-              const availableBillingScheduleChoices = billingScheduleChoices;
-              const selectedBillingScheduleExists = availableBillingScheduleChoices.some((item) => item.value === values!.billingSchedule);
-              if (!selectedBillingScheduleExists && availableBillingScheduleChoices[0]) {
-                form.change('billingSchedule', availableBillingScheduleChoices[0].value);
-              } else if (!selectedBillingScheduleExists && availableBillingScheduleChoices.length === 0 && values!.billingSchedule) {
-                form.change('billingSchedule', '');
-              }
-
+            render={({ handleSubmit, values }) => {
               setSelectedPricingOptionId(values!.pricingOptionId);
               setDate(values!.date);
               setRecurringEndDate(values!.recurringEndDate);
               setResourceIds(values!.resources);
               setQuantity(values!.quantity);
               setCategory(values!.category);
-              setBillingSchedule(values!.billingSchedule);
               setPaymentMethod(values!.paymentMethod);
               setNotes(values!.notes);
               setInvoiceEmailList(values!.invoiceEmailList);
@@ -1202,32 +1119,6 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
                         required={requiredFields.paymentMethod}
                         acceptedBookingPaymentMethods={selectedPricingOption?.acceptedPaymentMethods.map((method) => method as PaymentMethod) ?? []}
                       />
-                    </FormFieldLabel>
-
-                    <FormFieldLabel label="Billing Schedule">
-                      <Box sx={{ width: { xs: '100%', sm: 380 } }}>
-                        <Autocomplete
-                          name="billingSchedule"
-                          required={requiredFields.billingSchedule}
-                          multiple={false}
-                          options={billingScheduleChoices}
-                          getOptionValue={(option) => (option as BillingScheduleChoice).value}
-                          getOptionLabel={(option: string | BillingScheduleChoice) => (option as BillingScheduleChoice).name}
-                          renderOption={(props, option) => {
-                            const castedOption = option as BillingScheduleChoice;
-
-                            return (
-                              <li {...props} key={castedOption.value}>
-                                <BodyIconTypography label={castedOption.name} />
-                              </li>
-                            );
-                          }}
-                          filterOptions={(options, params) => filterBillingSchedule(options as BillingScheduleChoice[], params)}
-                          selectOnFocus
-                          clearOnBlur
-                          handleHomeEndKeys
-                        />
-                      </Box>
                     </FormFieldLabel>
 
                     <FormFieldLabel label="Email Invoice To">

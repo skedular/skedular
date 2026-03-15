@@ -88,7 +88,7 @@ public class MarketplaceBookingService(
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
 
-        marketplaceBooking.BillingSchedule = ResolveBillingSchedule(marketplaceBooking.ProductPricing, marketplaceBooking.BillingSchedule);
+        marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
 
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.Cadence, recurringBooking);
 
@@ -460,18 +460,6 @@ public class MarketplaceBookingService(
             ProductPricingCadence.PerHour or
             ProductPricingCadence.HalfDay or
             ProductPricingCadence.Daily;
-
-    private static ProductPricingBillingSchedule ResolveBillingSchedule(
-        ProductPricing pricing,
-        ProductPricingBillingSchedule selectedBillingSchedule)
-    {
-        if (!pricing.AcceptedBillingSchedules.Contains(selectedBillingSchedule))
-        {
-            throw new MarketplaceBookingBillingScheduleNotAccepted();
-        }
-
-        return selectedBillingSchedule;
-    }
 
     private static void ValidateMarketplaceCadenceForBookingFlow(ProductPricingCadence cadence, RecurringBooking? recurringBooking)
     {

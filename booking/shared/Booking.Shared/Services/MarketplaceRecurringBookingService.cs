@@ -83,7 +83,7 @@ public class MarketplaceRecurringBookingService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
-        marketplaceBooking.BillingSchedule = ResolveBillingSchedule(marketplaceBooking.ProductPricing, marketplaceBooking.BillingSchedule);
+        marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
         if (!IsRecurringPurchaseCadence(marketplaceBooking.ProductPricing.Cadence))
         {
             throw new MarketplaceRecurringBookingCadenceMustBeRecurring();
@@ -168,16 +168,4 @@ public class MarketplaceRecurringBookingService(
             ProductPricingCadence.FiveMonths or
             ProductPricingCadence.SixMonths or
             ProductPricingCadence.Yearly;
-
-    private static ProductPricingBillingSchedule ResolveBillingSchedule(
-        ProductPricing pricing,
-        ProductPricingBillingSchedule selectedBillingSchedule)
-    {
-        if (!pricing.AcceptedBillingSchedules.Contains(selectedBillingSchedule))
-        {
-            throw new MarketplaceBookingBillingScheduleNotAccepted();
-        }
-
-        return selectedBillingSchedule;
-    }
 }

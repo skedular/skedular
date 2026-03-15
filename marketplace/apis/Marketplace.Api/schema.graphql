@@ -95,7 +95,7 @@ type ProductPricing {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
-  acceptedBillingSchedules: [ProductPricingBillingSchedule!]!
+  billingMode: ProductPricingBillingMode!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
@@ -103,19 +103,9 @@ type ProductPricing {
   numberOfResourcesToBook: Int!
 }
 
-type ProductPricingBillingIntervalDetails {
-  type: ProductPricingBillingInterval!
-  name: String!
-}
-
 type ProductPricingBillingModeDetails {
   type: ProductPricingBillingMode!
   name: String!
-}
-
-type ProductPricingBillingSchedule {
-  mode: ProductPricingBillingMode!
-  interval: ProductPricingBillingInterval!
 }
 
 type ProductPricingCadenceDetails {
@@ -150,7 +140,6 @@ type Query {
   defaultMaxAllowedResourcesLockTimePaidViaCard: Int!
   defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   productPricingCadences: [ProductPricingCadenceDetails!]!
-  productPricingBillingIntervals: [ProductPricingBillingIntervalDetails!]!
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
 }
@@ -212,11 +201,6 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
-input ProductPricingBillingScheduleInput {
-  mode: ProductPricingBillingMode!
-  interval: ProductPricingBillingInterval!
-}
-
 input ProductPricingInput {
   id: String!
   index: Int!
@@ -225,7 +209,7 @@ input ProductPricingInput {
   price: Decimal!
   isTaxInclusive: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
-  acceptedBillingSchedules: [ProductPricingBillingScheduleInput!]!
+  billingMode: ProductPricingBillingMode!
   minDurationMinutes: Int
   maxDurationMinutes: Int
   maxAllowedResourcesLockTimePaidViaCard: Int!
@@ -439,15 +423,6 @@ enum PaymentMethod {
 
 enum ProductOrderField {
   NAME
-}
-
-enum ProductPricingBillingInterval {
-  NOT_SET
-  FULL_TERM
-  PER_BOOKING
-  WEEKLY
-  FORTNIGHTLY
-  MONTHLY
 }
 
 enum ProductPricingBillingMode {

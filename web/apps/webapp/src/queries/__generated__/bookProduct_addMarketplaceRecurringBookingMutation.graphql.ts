@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<91271faa340aae5bd6255157f75aed9a>>
+ * @generated SignedSource<<490a2d0e7df5fb1737a31d3da31be4c7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,11 +13,8 @@ export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DA
 export type BookingFrequency = "DAILY" | "MONTHLY" | "WEEKLY" | "%future added value";
 export type DayOfWeek = "FRIDAY" | "MONDAY" | "SATURDAY" | "SUNDAY" | "THURSDAY" | "TUESDAY" | "WEDNESDAY" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
-export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type RecurringBookingEndType = "AFTER_OCCURRENCES" | "NEVER" | "UNTIL_DATE" | "%future added value";
 export type AddMarketplaceRecurringBookingInput = {
-  billingSchedule: ProductPricingBillingScheduleInput;
   byMonthDay?: number | null | undefined;
   bySetPosition?: number | null | undefined;
   byWeekDays: ReadonlyArray<DayOfWeek>;
@@ -42,10 +39,6 @@ export type AddMarketplaceRecurringBookingInput = {
   startDate: any;
   teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;
-};
-export type ProductPricingBillingScheduleInput = {
-  interval: ProductPricingBillingInterval;
-  mode: ProductPricingBillingMode;
 };
 export type bookProduct_addMarketplaceRecurringBookingMutation$variables = {
   input: AddMarketplaceRecurringBookingInput;

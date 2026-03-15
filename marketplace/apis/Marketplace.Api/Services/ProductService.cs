@@ -351,13 +351,6 @@ public class ProductService(
             _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
         };
 
-    private static bool HasInvalidAcceptedBillingScheduleCombination(ICollection<ProductPricingBillingSchedule> acceptedBillingSchedules) =>
-        acceptedBillingSchedules.Any(item =>
-            item.Mode == ProductPricingBillingMode.Upfront &&
-            (item.Interval == ProductPricingBillingInterval.Weekly ||
-             item.Interval == ProductPricingBillingInterval.Fortnightly ||
-             item.Interval == ProductPricingBillingInterval.Monthly));
-
     private static void Validate(ProductPricing pricing)
     {
         if (pricing.AcceptedPaymentMethods.Count <= 0)
@@ -365,26 +358,9 @@ public class ProductService(
             throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(pricing.AcceptedPaymentMethods));
         }
 
-        var acceptedBillingSchedules = pricing.AcceptedBillingSchedules;
-        if (acceptedBillingSchedules.Count <= 0)
+        if (pricing.BillingMode == ProductPricingBillingMode.NotSet)
         {
-            throw new ProductPricingAcceptedBillingSchedulesRequired();
-        }
-
-        if (acceptedBillingSchedules.Any(item =>
-                item.Mode == ProductPricingBillingMode.NotSet || item.Interval == ProductPricingBillingInterval.NotSet))
-        {
-            throw new ProductPricingAcceptedBillingSchedulesCannotContainNotSet();
-        }
-
-        if (acceptedBillingSchedules.Distinct().Count() != acceptedBillingSchedules.Count)
-        {
-            throw new ProductPricingAcceptedBillingSchedulesCannotContainDuplicates();
-        }
-
-        if (HasInvalidAcceptedBillingScheduleCombination(acceptedBillingSchedules))
-        {
-            throw new ProductPricingAcceptedBillingSchedulesContainInvalidCombination();
+            throw new ProductPricingBillingModeRequired();
         }
 
         var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.Cadence);

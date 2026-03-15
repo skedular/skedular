@@ -35,22 +35,6 @@ public class RootQuery(IVersionService versionService)
         new() { Type = ProductPricingCadence.Yearly, Name = ProductPricingCadence.Yearly.ToProductPricingCadenceName() }
     ];
 
-    public ICollection<ProductPricingBillingIntervalDetails> ProductPricingBillingIntervals =>
-    [
-        new() { Type = ProductPricingBillingInterval.FullTerm, Name = ProductPricingBillingInterval.FullTerm.ToProductPricingBillingIntervalName() },
-        new()
-        {
-            Type = ProductPricingBillingInterval.PerBooking, Name = ProductPricingBillingInterval.PerBooking.ToProductPricingBillingIntervalName()
-        },
-        new() { Type = ProductPricingBillingInterval.Weekly, Name = ProductPricingBillingInterval.Weekly.ToProductPricingBillingIntervalName() },
-        new()
-        {
-            Type = ProductPricingBillingInterval.Fortnightly,
-            Name = ProductPricingBillingInterval.Fortnightly.ToProductPricingBillingIntervalName()
-        },
-        new() { Type = ProductPricingBillingInterval.Monthly, Name = ProductPricingBillingInterval.Monthly.ToProductPricingBillingIntervalName() }
-    ];
-
     public ICollection<ProductPricingBillingModeDetails> ProductPricingBillingModes =>
     [
         new() { Type = ProductPricingBillingMode.Upfront, Name = ProductPricingBillingMode.Upfront.ToProductPricingBillingModeName() },

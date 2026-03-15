@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<847515f79c64bc8278bfe61d5e7a3a4a>>
+ * @generated SignedSource<<1d91dc4c3a23fdae905fee715823ee7f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,10 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
-export type ProductPricingBillingInterval = "FORTNIGHTLY" | "FULL_TERM" | "MONTHLY" | "NOT_SET" | "PER_BOOKING" | "WEEKLY" | "%future added value";
-export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type AddMarketplaceBookingInput = {
-  billingSchedule: ProductPricingBillingScheduleInput;
   category?: BookingCategory | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
@@ -31,10 +28,6 @@ export type AddMarketplaceBookingInput = {
   resourceIds?: ReadonlyArray<string> | null | undefined;
   teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;
-};
-export type ProductPricingBillingScheduleInput = {
-  interval: ProductPricingBillingInterval;
-  mode: ProductPricingBillingMode;
 };
 export type bookProduct_addMarketplaceBookingMutation$variables = {
   connectionIds: ReadonlyArray<string>;

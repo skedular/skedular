@@ -1,4 +1,5 @@
 ﻿using Api.Shared.Services.Models;
+using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -11,7 +12,7 @@ namespace Booking.Shared.Database.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<ProductPricingBillingSchedule>(
+            migrationBuilder.AddColumn<DeprecatedType>(
                 name: "BillingSchedule",
                 table: "MarketplaceBooking",
                 type: "jsonb",
