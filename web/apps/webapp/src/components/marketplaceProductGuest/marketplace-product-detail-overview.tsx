@@ -144,7 +144,7 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
         <Card variant="outlined" sx={{ borderRadius: 3 }}>
           <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
             <SubtitleIconTypography label="Amenities" sx={{ mb: 1.5 }} />
-            <StackRow spacing={1}>
+            <StackRow>
               {product.amenities.map((amenity) => (
                 <CaptionIconTypography key={amenity.id} label={amenity.name} sx={{ px: 1.1, py: 0.65, borderRadius: 1.25, bgcolor: (theme) => theme.palette.action.hover }} />
               ))}

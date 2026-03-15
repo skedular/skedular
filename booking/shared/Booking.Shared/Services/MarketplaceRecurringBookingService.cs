@@ -8,6 +8,7 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using RecurringBooking = Booking.Shared.Models.RecurringBooking;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -43,11 +44,6 @@ public class MarketplaceRecurringBookingService(
         ICollection<Team> teams,
         CancellationToken cancellationToken)
     {
-        if (recurringBooking.From.UtcDateTime.Date != recurringBooking.Until.UtcDateTime.Date)
-        {
-            throw new BookingMustStartAndEndWithinSameDay();
-        }
-
         if (recurringBooking.EndType == RecurringBookingEndType.UntilDate)
         {
             if (!recurringBooking.EndDate.HasValue)
@@ -83,13 +79,16 @@ public class MarketplaceRecurringBookingService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
-        marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
+        // Marketplace recurring bookings need to stay visible to the product-owning organization
+        // in addition to any buyer-side organizations passed by the caller.
+        organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
         if (!IsRecurringPurchaseCadence(marketplaceBooking.ProductPricing.PurchaseCadence))
         {
             throw new MarketplaceRecurringBookingCadenceMustBeRecurring();
         }
 
         marketplaceBooking.Id = randomHelper.Generate();
+        marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
         marketplaceBooking.IsPaymentRequired = true;
         marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;
 
@@ -100,14 +99,12 @@ public class MarketplaceRecurringBookingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var marketplaceBookingEntity = mapper.MapTo(
+        var marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(mapper.MapTo(
             marketplaceBooking,
             customer,
             null,
             productVersion,
-            null);
-
-        marketplaceBookingEntity = repositoryFactory.MarketplaceBookingRepository.Add(marketplaceBookingEntity);
+            null));
 
         var recurringBookingEntity = mapper.MapTo(
             recurringBooking,
@@ -168,4 +165,18 @@ public class MarketplaceRecurringBookingService(
             ProductPricingCadence.FiveMonths or
             ProductPricingCadence.SixMonths or
             ProductPricingCadence.Yearly;
+
+    private static List<Organization> MergeOrganizationsWithProductOwner(
+        ICollection<Organization> organizations,
+        ProductVersion productVersion)
+    {
+        ArgumentNullException.ThrowIfNull(productVersion.Product);
+        ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
+
+        return organizations
+            .Append(productVersion.Product.Organization)
+            .GroupBy(item => item.Id)
+            .Select(item => item.First())
+            .ToList();
+    }
 }

@@ -159,6 +159,11 @@ public class StripeIntegrations(
             return new CreateCheckoutSessionAsyncResponse(marketplaceBooking.PaymentStatus);
         }
 
+        // Hosted Stripe checkout must return the customer to the exact storefront page they
+        // started from. Marketplace bookings persist that URL up front because the checkout
+        // session is created later inside a workflow, outside the original HTTP request.
+        var checkoutReturnUrl = marketplaceBooking.CheckoutReturnUrl ?? applicationConfiguration.WebAppBaseDomain.ToString();
+
         var session = await sessionCreateService.CreateAsync(
             new SessionCreateOptions
             {
@@ -168,8 +173,8 @@ public class StripeIntegrations(
                 UiMode = "hosted",
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = booking.Id,
-                SuccessUrl = applicationConfiguration.WebAppBaseDomain.ToString(),
-                CancelUrl = applicationConfiguration.WebAppBaseDomain.ToString(),
+                SuccessUrl = checkoutReturnUrl,
+                CancelUrl = checkoutReturnUrl,
                 AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
                 CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
             },

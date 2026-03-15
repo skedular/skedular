@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d91dc4c3a23fdae905fee715823ee7f>>
+ * @generated SignedSource<<04dfe6426054e887679290c9c89f4f63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DA
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type AddMarketplaceBookingInput = {
   category?: BookingCategory | null | undefined;
+  checkoutReturnUrl?: string | null | undefined;
   clientMutationId?: string | null | undefined;
   customerIds: ReadonlyArray<string>;
   from: any;

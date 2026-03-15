@@ -1,6 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { getMarketplaceLocationLink, getMarketplaceProductBookingLink } from '@/components/links';
-import { useIntegratedPlatrform } from '@/libs/providers';
+import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
+import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
 import Button from '@mui/material/Button';
@@ -100,6 +101,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         id: pricingOption.id,
         title: pricingOption.listingMetadata.title ?? '',
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
+        cadence: pricingOption.purchaseCadence,
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
         amountLabel: `${currencyLabel}${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
@@ -110,6 +112,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     [rootData.marketplaceLocations.edges],
   );
   const canBookProduct = marketplaceLocations.length > 0;
+  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
 
   if (!product) {
     return null;
@@ -156,11 +159,15 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                       return;
                     }
 
-                    router.push(getMarketplaceProductBookingLink(integratedPlatrform, product.id, pricingPlan.id));
+                    router.push(
+                      isSubscriptionCadence(pricingPlan.cadence)
+                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, pricingPlan.id)
+                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, pricingPlan.id),
+                    );
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}
                 >
-                  {canBookProduct ? 'Book now' : 'Unavailable'}
+                  {canBookProduct ? (isSubscriptionCadence(pricingPlan.cadence) ? 'Choose plan' : 'Book now') : 'Unavailable'}
                 </Button>
               </Box>
             ))}

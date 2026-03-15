@@ -23,6 +23,7 @@ public class MarketplaceBooking : EntityBase
     public string? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
+    public string? CheckoutReturnUrl { get; set; }
     public ICollection<string> InvoiceEmailList { get; set; } = [];
     public string BillingMode { get; set; }
 
@@ -33,6 +34,10 @@ public class MarketplaceBooking : EntityBase
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string? RecurringBookingId { get; set; }
     public virtual RecurringBooking? RecurringBooking { get; set; }
+
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
+    public string? MarketplaceBookingSubscriptionId { get; set; }
+    public virtual MarketplaceBookingSubscription? MarketplaceBookingSubscription { get; set; }
 
     public virtual ProductVersion ProductVersion { get; set; }
     public virtual Customer? PaidByCustomer { get; set; }
@@ -62,6 +67,7 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
         builder.Property(item => item.Currency).HasMaxLength(Constants.MaxCurrencyLength);
         builder.Property(item => item.InvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.InvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
+        builder.Property(item => item.CheckoutReturnUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.BillingMode).HasMaxLength(Constants.MaxProductPricingBillingModeLength);
         builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
         builder.Property(item => item.InvoiceEmailList).HasColumnType("jsonb");
@@ -75,6 +81,11 @@ public class MarketplaceBookingConfiguration : IEntityTypeConfiguration<Marketpl
             .HasOne(item => item.RecurringBooking)
             .WithOne(item => item.MarketplaceBooking)
             .HasForeignKey<MarketplaceBooking>(item => item.RecurringBookingId);
+
+        builder
+            .HasOne(item => item.MarketplaceBookingSubscription)
+            .WithOne(item => item.MarketplaceBooking)
+            .HasForeignKey<MarketplaceBooking>(item => item.MarketplaceBookingSubscriptionId);
 
         builder.HasOne(item => item.ProductVersion).WithMany(item => item.MarketplaceBookings);
         builder.HasOne(item => item.PaidByCustomer).WithMany(item => item.PaidMarketplaceBookings);

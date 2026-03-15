@@ -1,0 +1,19 @@
+using HotChocolate;
+
+namespace Booking.Api.GraphQL.ResourceAvailability;
+
+[GraphQLName("AvailableResourcesCountWhereInput")]
+public class AvailableResourcesCountWhereInput
+{
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
+
+    [GraphQLName("organizationUniqueAlphanumericName")]
+    public string? OrganizationUniqueAlphanumericName { get; set; }
+
+    [GraphQLName("locationId")] public string? LocationId { get; set; }
+    [GraphQLName("from")] public DateTimeOffset From { get; set; }
+    [GraphQLName("until")] public DateTimeOffset Until { get; set; }
+    [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }
+    [GraphQLName("zoneIds")] public IEnumerable<string>? ZoneIds { get; set; }
+    [GraphQLName("productId")] public string? ProductId { get; set; }
+}

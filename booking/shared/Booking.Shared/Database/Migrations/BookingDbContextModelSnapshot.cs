@@ -343,6 +343,10 @@ namespace Booking.Shared.Database.Migrations
                     b.Property<string>("BookingId")
                         .HasColumnType("character varying(100)");
 
+                    b.Property<string>("CheckoutReturnUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -372,6 +376,9 @@ namespace Booking.Shared.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("MarketplaceBookingSubscriptionId")
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone");
@@ -435,6 +442,9 @@ namespace Booking.Shared.Database.Migrations
                     b.HasIndex("Currency");
 
                     b.HasIndex("IsPaymentRequired");
+
+                    b.HasIndex("MarketplaceBookingSubscriptionId")
+                        .IsUnique();
 
                     b.HasIndex("ModifiedAt");
 
@@ -507,10 +517,6 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Property<DateTimeOffset?>("NextRenewalAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<ProductPricing>("ProductPricing")
-                        .IsRequired()
-                        .HasColumnType("jsonb");
 
                     b.Property<string>("ProductVersionId")
                         .IsRequired()
@@ -1994,6 +2000,10 @@ namespace Booking.Shared.Database.Migrations
                         .WithOne("MarketplaceBooking")
                         .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "BookingId");
 
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", "MarketplaceBookingSubscription")
+                        .WithOne("MarketplaceBooking")
+                        .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "MarketplaceBookingSubscriptionId");
+
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "PaidByCustomer")
                         .WithMany("PaidMarketplaceBookings")
                         .HasForeignKey("PaidByCustomerId");
@@ -2013,6 +2023,8 @@ namespace Booking.Shared.Database.Migrations
                         .HasForeignKey("Booking.Shared.Database.Entities.MarketplaceBooking", "RecurringBookingId");
 
                     b.Navigation("Booking");
+
+                    b.Navigation("MarketplaceBookingSubscription");
 
                     b.Navigation("PaidByCustomer");
 
@@ -2588,6 +2600,9 @@ namespace Booking.Shared.Database.Migrations
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceBookingSubscription", b =>
                 {
+                    b.Navigation("MarketplaceBooking")
+                        .IsRequired();
+
                     b.Navigation("RecurringBookings");
                 });
 

@@ -3,7 +3,7 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public record ResourceCustomersPair(Resource Resource, List<Customer> Customers);
+public record ResourceCustomersPair(Resource Resource, ICollection<Customer> Customers);
 
 public class Booking : ModelBaseWithDeleted
 {

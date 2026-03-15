@@ -1,8 +1,12 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database;
-using Booking.Shared.Database.Entities;
+using Booking.Shared.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Pagination;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 
 namespace Booking.Shared.Repositories;
@@ -14,6 +18,12 @@ public interface IMarketplaceBookingSubscriptionRepository : IRepository<Marketp
     MarketplaceBookingSubscription Add(MarketplaceBookingSubscription recurringBooking);
     MarketplaceBookingSubscription Update(MarketplaceBookingSubscription recurringBooking);
     MarketplaceBookingSubscription Remove(MarketplaceBookingSubscription recurringBooking);
+
+    Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
+        PaginationInputParam paginationInputParam,
+        MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
+        ICollection<MarketplaceBookingSubscriptionOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
 internal static class MarketplaceBookingSubscriptionExtensions
@@ -22,8 +32,14 @@ internal static class MarketplaceBookingSubscriptionExtensions
     {
         internal IIncludableQueryable<MarketplaceBookingSubscription, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-            .Include(query => query.RecurringBookings)
+            .Include(query => query.MarketplaceBooking)
+            .ThenInclude(query => query.ProductVersion)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query =>
+                query.RecurringBookings.Where(recurringBooking =>
+                    !recurringBooking.DeletedAt.HasValue && recurringBooking.MarketplaceBooking != null))
             .Include(query => query.ProductVersion)
+            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.InvolvedCustomers)
             .ThenInclude(query => query.Identities)
             .Include(query => query.InvolvedOrganizations)
@@ -32,6 +48,117 @@ internal static class MarketplaceBookingSubscriptionExtensions
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer);
+
+        internal IQueryable<MarketplaceBookingSubscription> AddSearchCriteria(MarketplaceBookingSubscriptionSearchCriteria searchCriteria)
+        {
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
+
+            if (searchCriteria.StartedAtGt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.StartedAt > searchCriteria.StartedAtGt);
+            }
+
+            if (searchCriteria.StartedAtGte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.StartedAt >= searchCriteria.StartedAtGte);
+            }
+
+            if (searchCriteria.StartedAtLt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.StartedAt < searchCriteria.StartedAtLt);
+            }
+
+            if (searchCriteria.StartedAtLte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.StartedAt <= searchCriteria.StartedAtLte);
+            }
+
+            if (searchCriteria.CancelledAtGt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.CancelledAt > searchCriteria.CancelledAtGt);
+            }
+
+            if (searchCriteria.CancelledAtGte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.CancelledAt >= searchCriteria.CancelledAtGte);
+            }
+
+            if (searchCriteria.CancelledAtLt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.CancelledAt < searchCriteria.CancelledAtLt);
+            }
+
+            if (searchCriteria.CancelledAtLte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.CancelledAt <= searchCriteria.CancelledAtLte);
+            }
+
+            if (searchCriteria.NextRenewalAtGt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.NextRenewalAt > searchCriteria.NextRenewalAtGt);
+            }
+
+            if (searchCriteria.NextRenewalAtGte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.NextRenewalAt >= searchCriteria.NextRenewalAtGte);
+            }
+
+            if (searchCriteria.NextRenewalAtLt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.NextRenewalAt < searchCriteria.NextRenewalAtLt);
+            }
+
+            if (searchCriteria.NextRenewalAtLte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.NextRenewalAt <= searchCriteria.NextRenewalAtLte);
+            }
+
+            if (searchCriteria.CustomerIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedCustomers.Any(customer =>
+                    !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
+            }
+
+            if (searchCriteria.Status is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Status == searchCriteria.Status.Value.ToMarketplaceBookingSubscriptionStatus());
+            }
+
+            if (searchCriteria.OrganizationIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
+            }
+
+            if (searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue &&
+                    organization.UniqueAlphanumericName != null &&
+                    searchCriteria.OrganizationUniqueAlphanumericNames.Contains(organization.UniqueAlphanumericName)));
+            }
+
+            if (searchCriteria.TeamIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.InvolvedCustomers.Any(customer => (customer.Name != null &&
+                                                            EF.Functions.ILike(customer.Name, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.GivenName != null &&
+                                                            EF.Functions.ILike(customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.MiddleName != null &&
+                                                            EF.Functions.ILike(customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.FamilyName != null &&
+                                                            EF.Functions.ILike(customer.FamilyName, $"%{searchCriteria.NameContains}%"))));
+            }
+
+            return originalQuery;
+        }
     }
 }
 
@@ -67,5 +194,53 @@ public class MarketplaceBookingSubscriptionRepository(BookingDbContext dbContext
         var now = TimeProvider.GetUtcNow();
         recurringBooking.DeletedAt = now;
         return DbContext.MarketplaceBookingSubscription.Update(recurringBooking).Entity;
+    }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)>
+        GetPaginatedMarketplaceBookingSubscriptionsUntrackedAsync(
+            PaginationInputParam paginationInputParam,
+            MarketplaceBookingSubscriptionSearchCriteria searchCriteria,
+            ICollection<MarketplaceBookingSubscriptionOrder> orderByFields,
+            CancellationToken cancellationToken) =>
+        await DbContext.MarketplaceBookingSubscription
+            .AddSearchCriteria(searchCriteria)
+            .AddDependentObjects(false)
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<MarketplaceBookingSubscription>> GetPaginationFields(
+        ICollection<MarketplaceBookingSubscriptionOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<MarketplaceBookingSubscription>.Create(
+                    nameof(MarketplaceBookingSubscription.StartedAt),
+                    query => query.StartedAt,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                MarketplaceBookingSubscriptionOrderField.StartedAt => KeysetPaginationField<MarketplaceBookingSubscription>.Create(
+                    nameof(MarketplaceBookingSubscription.StartedAt),
+                    query => query.StartedAt,
+                    orderField.Direction),
+                MarketplaceBookingSubscriptionOrderField.CancelledAt => KeysetPaginationField<MarketplaceBookingSubscription>.Create(
+                    nameof(MarketplaceBookingSubscription.CancelledAt),
+                    query => query.CancelledAt,
+                    orderField.Direction),
+                MarketplaceBookingSubscriptionOrderField.NextRenewalAt => KeysetPaginationField<MarketplaceBookingSubscription>.Create(
+                    nameof(MarketplaceBookingSubscription.NextRenewalAt),
+                    query => query.NextRenewalAt,
+                    orderField.Direction),
+                MarketplaceBookingSubscriptionOrderField.Status => KeysetPaginationField<MarketplaceBookingSubscription>.Create(
+                    nameof(MarketplaceBookingSubscription.Status),
+                    query => query.Status,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
     }
 }

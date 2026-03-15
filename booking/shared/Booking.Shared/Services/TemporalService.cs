@@ -10,6 +10,11 @@ public interface ITemporalService
 {
     Task StartWorkflowGenerateLocationResourcesSlotsAsync(GenerateLocationResourcesSlotsInput args, CancellationToken cancellationToken);
     Task StartWorkflowGenerateResourcesSlotsAsync(string locationId, GenerateResourcesSlotsInput args, CancellationToken cancellationToken);
+
+    Task StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(
+        BookMarketplaceBookingSubscriptionResourcesInput args,
+        CancellationToken cancellationToken);
+
     Task SignalPayBookingViaCardWorkflowAsync(string bookingId, SetPaymentStatusArgs args, CancellationToken cancellationToken);
 }
 
@@ -40,6 +45,21 @@ public class TemporalService(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId($"{Constants.GenerateResourcesSlotsPrefix}-{locationId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    public async Task StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(
+        BookMarketplaceBookingSubscriptionResourcesInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (BookMarketplaceBookingSubscriptionResources workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId(args.MarketplaceBookingSubscriptionId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

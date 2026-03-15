@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Repositories;
+using Enterprise.Shared;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
@@ -79,6 +80,11 @@ public class MarketplaceBookingService(
             customer.Id,
             false,
             cancellationToken);
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        marketplaceBooking.ProductPricing =
+            productVersion.PricingOptions.ToSafeCollection().First(item => item.Id == marketplaceBooking.ProductPricing.Id);
 
         return await sharedMarketplaceBookingService.AddAsync(booking, customer, organizations, teams, null, cancellationToken);
     }

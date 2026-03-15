@@ -19,7 +19,7 @@ public class LocationResourceBookingSlotsHelperService(IRandomHelper randomHelpe
     public ICollection<ResourceBookingSlot> CreateAllAvailableSlots(Resource resource)
     {
         var startPeriod = GetStartPeriod();
-        var endPeriod = startPeriod.AddDays(14).AddYears(1);
+        var endPeriod = startPeriod.AddDays(14).AddYears(1).AddMonths(2);
         var count = (endPeriod - startPeriod).TotalMinutes / OpeningHoursDetails.BookingSlotSizeInMinutes;
 
         return Enumerable

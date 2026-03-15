@@ -70,6 +70,12 @@ type ConnectionOfBookingEdge {
   totalCount: Int!
 }
 
+type ConnectionOfMarketplaceBookingSubscriptionEdge {
+  pageInfo: PageInfo!
+  edges: [MarketplaceBookingSubscriptionEdge!]!
+  totalCount: Int!
+}
+
 type ConnectionOfRecurringBookingEdge {
   pageInfo: PageInfo!
   edges: [RecurringBookingEdge!]!
@@ -124,6 +130,39 @@ type MarketplaceBookingDetails {
   id: ID!
 }
 
+type MarketplaceBookingSubscriptionDetails {
+  involvedCustomers: [CustomerDetails!]!
+  createdByCustomer: CustomerDetails
+  lastModifiedByCustomer: CustomerDetails
+  deletedByCustomer: CustomerDetails
+  involvedOrganizations: [OrganizationDetails!]!
+  involvedTeams: [TeamDetails!]!
+  startedAt: DateTime!
+  cancelledAt: DateTime
+  nextRenewalAt: DateTime
+  status: MarketplaceBookingSubscriptionStatusDetails!
+  autoRenew: Boolean!
+  cancelAtPeriodEnd: Boolean!
+  marketplaceBooking: MarketplaceBookingDetails!
+  recurringBookings: [RecurringBookingDetails!]!
+  id: ID!
+}
+
+type MarketplaceBookingSubscriptionEdge {
+  node: MarketplaceBookingSubscriptionDetails!
+  cursor: String!
+}
+
+type MarketplaceBookingSubscriptionPayload {
+  clientMutationId: String
+  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails!
+}
+
+type MarketplaceBookingSubscriptionStatusDetails {
+  type: MarketplaceBookingSubscriptionStatus!
+  name: String!
+}
+
 type Mutation {
   addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
@@ -131,6 +170,8 @@ type Mutation {
   addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
   deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+  addMarketplaceBookingSubscription(input: AddMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
+  deleteMarketplaceBookingSubscription(input: DeleteMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
@@ -212,6 +253,10 @@ type Query {
   bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
   bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
+  marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails @lookup @internal @cost(weight: "10")
+  marketplaceBookingSubscriptions(after: String first: Int before: String last: Int where: MarketplaceBookingSubscriptionWhereInput! orderBy: [MarketplaceBookingSubscriptionOrderInput!]): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
+  allMarketplaceBookingSubscriptions(where: MarketplaceBookingSubscriptionWhereInput!): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
   organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
@@ -221,6 +266,7 @@ type Query {
   recurringBookings(after: String first: Int before: String last: Int where: RecurringBookingWhereInput! orderBy: [RecurringBookingOrderInput!]): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
   allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
+  availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   bookingVersion: Version!
   bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
@@ -312,6 +358,25 @@ input AddMarketplaceBookingInput {
   quantity: Int!
   productVersionId: String!
   pricingId: String!
+  checkoutReturnUrl: String
+}
+
+input AddMarketplaceBookingSubscriptionInput {
+  clientMutationId: String
+  id: String
+  customerIds: [String!]!
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  startedAt: DateTime!
+  autoRenew: Boolean!
+  cancelAtPeriodEnd: Boolean!
+  paymentMethod: PaymentMethod!
+  invoiceEmailList: [String!]
+  quantity: Int!
+  productVersionId: String!
+  pricingId: String!
+  checkoutReturnUrl: String
 }
 
 input AddMarketplaceRecurringBookingInput {
@@ -377,6 +442,17 @@ input AddPrivateRecurringBookingInput {
   category: BookingCategory
 }
 
+input AvailableResourcesCountWhereInput {
+  organizationId: String
+  organizationUniqueAlphanumericName: String
+  locationId: String
+  from: DateTime!
+  until: DateTime!
+  customTagIds: [String!]
+  zoneIds: [String!]
+  productId: String
+}
+
 input AvailableResourcesWhereInput {
   organizationId: String
   organizationUniqueAlphanumericName: String
@@ -427,6 +503,11 @@ input DeleteMarketplaceBookingInput {
   id: String!
 }
 
+input DeleteMarketplaceBookingSubscriptionInput {
+  clientMutationId: String
+  id: String!
+}
+
 input DeleteMarketplaceRecurringBookingInput {
   clientMutationId: String
   id: String!
@@ -445,6 +526,33 @@ input DeletePrivateRecurringBookingInput {
 input MakeBookingPaymentNotRequiredInput {
   clientMutationId: String
   id: String!
+}
+
+input MarketplaceBookingSubscriptionOrderInput {
+  direction: OrderDirection!
+  field: MarketplaceBookingSubscriptionOrderField!
+}
+
+input MarketplaceBookingSubscriptionWhereInput {
+  startedAtGt: DateTime
+  startedAtGte: DateTime
+  startedAtLt: DateTime
+  startedAtLte: DateTime
+  cancelledAtGt: DateTime
+  cancelledAtGte: DateTime
+  cancelledAtLt: DateTime
+  cancelledAtLte: DateTime
+  nextRenewalAtGt: DateTime
+  nextRenewalAtGte: DateTime
+  nextRenewalAtLt: DateTime
+  nextRenewalAtLte: DateTime
+  status: MarketplaceBookingSubscriptionStatus
+  nameContains: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  customerIds: [String!]
+  includeMineOnly: Boolean
 }
 
 input OrganizationAvailableResourcesWhereInput {
@@ -571,6 +679,21 @@ enum DayOfWeek {
   THURSDAY
   FRIDAY
   SATURDAY
+}
+
+enum MarketplaceBookingSubscriptionOrderField {
+  STARTED_AT
+  CANCELLED_AT
+  NEXT_RENEWAL_AT
+  STATUS
+}
+
+enum MarketplaceBookingSubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  RENEWAL_FAILED
+  PAUSED
 }
 
 enum OrderDirection {

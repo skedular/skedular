@@ -90,6 +90,13 @@ public class MarketplaceBookingService(
             {
                 BookingCadence = marketplaceBooking.ProductPricing.BookingCadence
             };
+        // Stripe checkout is created asynchronously in Temporal, so we persist the exact
+        // storefront page that should receive the user again after success or cancellation.
+        marketplaceBooking.CheckoutReturnUrl = NormalizeCheckoutReturnUrl(marketplaceBooking.CheckoutReturnUrl);
+        // Marketplace bookings should remain manageable by the coworking-space owner as well
+        // as by any buyer-side organizations supplied by the caller. The product's owning
+        // organization is therefore always merged into the involved organizations set here.
+        organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
 
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
 
@@ -238,6 +245,8 @@ public class MarketplaceBookingService(
 
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
+        var existingCheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl;
+        var existingStripeCheckoutSession = marketplaceBooking.StripeCheckoutSession;
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
@@ -245,6 +254,11 @@ public class MarketplaceBookingService(
         {
             throw new ProductMissingProductTag();
         }
+
+        // Keep the product owner organization attached even when the booking is updated later.
+        // That way marketplace admins on the product-owning organization do not lose visibility
+        // if the caller only sends their own organizations back on update.
+        organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
 
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
@@ -285,7 +299,7 @@ public class MarketplaceBookingService(
         else
         {
             // Non-recurring or customized instances keep strict behavior:
-            // caller-provided resources must all be available.
+            // caller-provided resources must all be available in the original persisted window.
             resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
                 existingBooking.From,
                 existingBooking.Until,
@@ -318,6 +332,14 @@ public class MarketplaceBookingService(
             null,
             existingBooking.MarketplaceBooking,
             recurringBooking);
+
+        // Marketplace booking updates must not replace the original hosted-checkout wiring.
+        // Once a booking exists, the Stripe checkout session URL and the stored storefront
+        // return URL stay tied to that original booking/payment flow rather than to later
+        // edits to notes, people, or resources.
+        ArgumentNullException.ThrowIfNull(bookingEntity.MarketplaceBooking);
+        bookingEntity.MarketplaceBooking.CheckoutReturnUrl = existingCheckoutReturnUrl;
+        bookingEntity.MarketplaceBooking.StripeCheckoutSession = existingStripeCheckoutSession;
 
         bookingEntity = repositoryFactory.BookingRepository.Update(bookingEntity);
         booking = mapper.MapTo(bookingEntity);
@@ -484,7 +506,10 @@ public class MarketplaceBookingService(
 
     private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
     {
-        if (booking.From.UtcDateTime.Date != booking.Until.UtcDateTime.Date)
+        var from = booking.From.UtcDateTime;
+        var until = booking.Until.UtcDateTime;
+
+        if (from.Date != until.Date && (from.Date.AddDays(1) != until.Date || until.TimeOfDay != TimeSpan.Zero))
         {
             throw new BookingMustStartAndEndWithinSameDay();
         }
@@ -498,6 +523,20 @@ public class MarketplaceBookingService(
             .Select(item => item.First())
             .ToList()!;
 
+    private static List<Organization> MergeOrganizationsWithProductOwner(
+        ICollection<Organization> organizations,
+        ProductVersion productVersion)
+    {
+        ArgumentNullException.ThrowIfNull(productVersion.Product);
+        ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
+
+        return organizations
+            .Append(productVersion.Product.Organization)
+            .GroupBy(item => item.Id)
+            .Select(item => item.First())
+            .ToList();
+    }
+
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
         paymentMethod switch
         {
@@ -505,4 +544,20 @@ public class MarketplaceBookingService(
             PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    private static string? NormalizeCheckoutReturnUrl(string? checkoutReturnUrl)
+    {
+        if (string.IsNullOrWhiteSpace(checkoutReturnUrl))
+        {
+            return null;
+        }
+
+        if (!Uri.TryCreate(checkoutReturnUrl, UriKind.Absolute, out var returnUri) ||
+            (returnUri.Scheme != Uri.UriSchemeHttps && returnUri.Scheme != Uri.UriSchemeHttp))
+        {
+            throw new MarketplaceBookingCheckoutReturnUrlInvalid();
+        }
+
+        return returnUri.ToString();
+    }
 }

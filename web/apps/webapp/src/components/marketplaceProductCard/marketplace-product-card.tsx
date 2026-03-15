@@ -1,5 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { getMarketplaceProductBookingLink, getMarketplaceProductLink } from '@/components/links';
+import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -12,6 +13,7 @@ import { memo, useMemo, useState } from 'react';
 
 type PricingRow = {
   amountLabel: string;
+  cadence: string;
   cadenceLabel: string;
   id: string;
   taxLabel: string;
@@ -122,7 +124,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationUniqueAlphanu
           )}
         </Box>
 
-        <StackRow spacing={1} sx={{ mt: 'auto', flexWrap: 'nowrap' }}>
+        <StackRow sx={{ mt: 'auto', flexWrap: 'nowrap' }}>
           <Button
             fullWidth
             variant="contained"
@@ -131,12 +133,16 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationUniqueAlphanu
                 return;
               }
 
-              router.push(getMarketplaceProductBookingLink(integratedPlatrform, productId, selectedPricing.id));
+              router.push(
+                isSubscriptionCadence(selectedPricing.cadence)
+                  ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, productId, selectedPricing.id)
+                  : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, productId, selectedPricing.id),
+              );
             }}
             disabled={!selectedPricing}
             sx={{ textTransform: 'none' }}
           >
-            Book now
+            {selectedPricing && isSubscriptionCadence(selectedPricing.cadence) ? 'Choose plan' : 'Book now'}
           </Button>
           <Button
             fullWidth

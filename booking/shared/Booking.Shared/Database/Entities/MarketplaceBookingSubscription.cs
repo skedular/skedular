@@ -1,5 +1,4 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,8 +15,6 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public string Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
-    public ProductPricing ProductPricing { get; set; }
-
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
@@ -26,6 +23,7 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public virtual Customer? DeletedByCustomer { get; set; }
     public virtual ProductVersion ProductVersion { get; set; }
     public virtual ICollection<RecurringBooking> RecurringBookings { get; set; } = [];
+    public virtual MarketplaceBooking MarketplaceBooking { get; set; }
 }
 
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -37,7 +35,6 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.ConfigureEntityBaseWithDeleted();
 
         builder.Property(item => item.Status).HasMaxLength(Constants.MaxMarketplaceBookingSubscriptionStatusLength);
-        builder.Property(item => item.ProductPricing).HasColumnType("jsonb");
 
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedMarketplaceBookingSubscription);

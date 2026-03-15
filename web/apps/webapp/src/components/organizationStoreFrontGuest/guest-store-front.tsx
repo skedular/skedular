@@ -2,18 +2,22 @@ import { BodyIconTypography, LargeHeadingIconTypography, MediumHeadingIconTypogr
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useKnownParams } from '@/libs/providers';
+import { convertCalendarDayToStartOfDay, endOfWeek } from '@/libs/utils';
 import type { guestStoreFrontProductsRefetchQuery } from '@/queries/__generated__/guestStoreFrontProductsRefetchQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Container from '@mui/material/Container';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
+import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import GuestStoreFrontFooter from './guest-store-front-footer';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
+import GuestStoreFrontUpcomingBookingsStrip from './guest-store-front-upcoming-bookings-strip';
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;
@@ -21,7 +25,12 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query guestStoreFront_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query guestStoreFront_rootQuery(
+    $organizationUniqueAlphanumericName: String!
+    $bookingsSearchCriteriaFrom: DateTime!
+    $bookingsSearchCriteriaTo: DateTime!
+    $includeUpcomingBookings: Boolean!
+  ) {
     organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
       name
       listingMetadata {
@@ -47,6 +56,13 @@ const RootQuery = graphql`
     ...guestStoreFrontLocationsStrip_query
     ...guestStoreFrontProductCard_query
     ...guestStoreFrontFooter_query
+    ...guestStoreFrontUpcomingBookingsStrip_query
+      @arguments(
+        bookingsSearchCriteriaFrom: $bookingsSearchCriteriaFrom
+        bookingsSearchCriteriaTo: $bookingsSearchCriteriaTo
+        includeUpcomingBookings: $includeUpcomingBookings
+        organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+      )
   }
 `;
 
@@ -122,6 +138,10 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
   return (
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 4 } }}>
+        <GuestStoreFrontUpcomingBookingsStrip rootDataRelay={rootData} />
+      </Container>
+
+      <Container maxWidth="xl" sx={{ mt: { xs: 2, md: 3 } }}>
         <GuestStoreFrontLocationsStrip rootDataRelay={rootData} onLocationChange={setSelectedLocationId} />
       </Container>
 
@@ -205,21 +225,31 @@ const MemoGuestStoreFront = memo(GuestStoreFront);
 const GuestStoreFrontWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<guestStoreFront_rootQuery>(RootQuery);
   const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { user, loading } = useAuth();
 
   if (!organizationUniqueAlphanumericName) {
     throw new Error('organizationUniqueAlphanumericName is required');
   }
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
+
+    const today = convertCalendarDayToStartOfDay(dayjs());
+
     loadQuery(
       {
         organizationUniqueAlphanumericName,
+        bookingsSearchCriteriaFrom: today.toISOString(),
+        bookingsSearchCriteriaTo: endOfWeek(today).add(-1, 'milliseconds').toISOString(),
+        includeUpcomingBookings: !!user,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationUniqueAlphanumericName]);
+  }, [loadQuery, loading, organizationUniqueAlphanumericName, user]);
 
   if (!queryReference) {
     return <Loading />;

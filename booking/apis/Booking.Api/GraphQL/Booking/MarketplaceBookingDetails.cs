@@ -12,7 +12,7 @@ public class MarketplaceBookingDetails : Node
 {
     [GraphQLName("quantity")] public int Quantity { get; set; }
     [GraphQLName("productVersionId")] public string ProductVersionId { get; set; } = string.Empty;
-    [GraphQLName("productPricing")] public required ProductPricing ProductPricing { get; set; }
+    [GraphQLName("productPricing")] public ProductPricing ProductPricing { get; set; } = ProductPricing.Empty(string.Empty);
     [GraphQLName("paidByCustomerId")] public string? PaidByCustomerId { get; set; }
     [GraphQLName("paidByOrganizationId")] public string? PaidByOrganizationId { get; set; }
 

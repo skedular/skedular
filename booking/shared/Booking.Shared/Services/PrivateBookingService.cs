@@ -282,7 +282,10 @@ public class PrivateBookingService(
 
     private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
     {
-        if (booking.From.UtcDateTime.Date != booking.Until.UtcDateTime.Date)
+        var from = booking.From.UtcDateTime;
+        var until = booking.Until.UtcDateTime;
+
+        if (from.Date != until.Date && (from.Date.AddDays(1) != until.Date || until.TimeOfDay != TimeSpan.Zero))
         {
             throw new BookingMustStartAndEndWithinSameDay();
         }

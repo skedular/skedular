@@ -1,0 +1,133 @@
+using Api.Shared.Services.Models;
+using AutoFixture.Xunit3;
+using Booking.Shared.Activities;
+using Booking.Shared.Database.Entities;
+using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using FakeItEasy;
+using Shouldly;
+using Temporalio.Testing;
+using Testing.Shared;
+
+namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingSubscriptionIntegrationsTests;
+
+public class MarketplaceBookingSubscriptionIntegrationsShould
+{
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Return_Deleted_Response_When_Subscription_Does_Not_Exist(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        MarketplaceBookingSubscriptionIntegrations sut)
+    {
+        var environment = new ActivityEnvironment();
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+            .Returns(Task.FromResult<MarketplaceBookingSubscription?>(null));
+
+        var result = await environment.RunAsync(() =>
+            sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+
+        result.Deleted.ShouldBeTrue();
+        result.Ended.ShouldBeTrue();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Keep_Workflow_Alive_When_Subscription_Is_Paused(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        MarketplaceBookingSubscriptionIntegrations sut)
+    {
+        var environment = new ActivityEnvironment();
+        var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Paused, new DateTimeOffset(2026, 3, 17, 0, 0, 0, TimeSpan.Zero));
+
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token)).Returns(subscription);
+
+        var result = await environment.RunAsync(() =>
+            sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+
+        result.Deleted.ShouldBeFalse();
+        result.Ended.ShouldBeFalse();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Delete_Future_Bookings_When_Releasing_Subscription_Resources(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen] IMarketplaceBookingService marketplaceBookingService,
+        MarketplaceBookingSubscriptionIntegrations sut,
+        IBookingRepository bookingRepository)
+    {
+        var environment = new ActivityEnvironment();
+        var recurringBooking = new RecurringBooking { Id = "rb-1", DeletedAt = null };
+        var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, null);
+        subscription.RecurringBookings = [recurringBooking];
+        var booking1 = new Database.Entities.Booking
+        {
+            Id = "b-1",
+            Channel = BookingChannelConstants.Marketplace,
+            Category = BookingCategoryConstants.WorkingFromCoworkingSpace,
+            Schedules = []
+        };
+        var booking2 = new Database.Entities.Booking
+        {
+            Id = "b-2",
+            Channel = BookingChannelConstants.Marketplace,
+            Category = BookingCategoryConstants.WorkingFromCoworkingSpace,
+            Schedules = []
+        };
+
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token)).Returns(subscription);
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync("rb-1", A<DateTimeOffset>._, null, environment.CancellationTokenSource.Token))
+            .Returns([booking1, booking2]);
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(A<Database.Entities.Booking>._, null, environment.CancellationTokenSource.Token))
+            .ReturnsLazily((Database.Entities.Booking booking, Customer? _, CancellationToken _) =>
+                Task.FromResult(new Models.Booking { Id = booking.Id }));
+
+        await environment.RunAsync(() =>
+            sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(
+                new ReleaseMarketplaceBookingSubscriptionResourcesInput("sub-1")));
+
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking1, subscription.DeletedByCustomer, environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking2, subscription.DeletedByCustomer, environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    private static MarketplaceBookingSubscription CreateSubscription(
+        MarketplaceBookingSubscriptionStatus status,
+        DateTimeOffset? nextRenewalAt) =>
+        new()
+        {
+            Id = "sub-1",
+            StartedAt = new DateTimeOffset(2026, 3, 16, 0, 0, 0, TimeSpan.Zero),
+            NextRenewalAt = nextRenewalAt,
+            Status = status.ToMarketplaceBookingSubscriptionStatus(),
+            AutoRenew = false,
+            CancelAtPeriodEnd = false,
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = ProductPricingCadence.Daily,
+                    BookingCadence = ProductPricingCadence.Daily,
+                    SupportsSubscriptionAutoRenewal = true,
+                    NumberOfResourcesToBook = 1
+                },
+                ProductVersion = new ProductVersion()
+            },
+            InvolvedCustomers = [new Customer { Id = "customer-1" }],
+            InvolvedOrganizations = [],
+            InvolvedTeams = [],
+            RecurringBookings = [],
+            CreatedByCustomer = new Customer { Id = "customer-1" },
+            DeletedByCustomer = null
+        };
+}

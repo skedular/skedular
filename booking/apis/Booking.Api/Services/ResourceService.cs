@@ -22,6 +22,17 @@ public interface IResourceService
         string? productId,
         CancellationToken cancellationToken);
 
+    Task<int> GetAvailableResourcesCountAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> customTagIds,
+        ICollection<string> zoneIds,
+        string? productId,
+        CancellationToken cancellationToken);
+
     Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
         string? organizationId,
         string? organizationUniqueAlphanumericName,
@@ -48,7 +59,6 @@ public class ResourceService(
         string? productId,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
                                organizationId,
                                organizationUniqueAlphanumericName,
@@ -56,16 +66,25 @@ public class ResourceService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-
-        if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+        if (organization.Type == OrganizationTypeConstants.Private)
         {
-            throw new UnauthorizedAccessException();
+            var customer = await cachedCustomerService.GetAsync(cancellationToken);
+
+            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         ICollection<string> productRelatedTags = [];
         if (!string.IsNullOrWhiteSpace(productId))
         {
             var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
+            if (product.OrganizationId != organization.Id)
+            {
+                throw new ProductOrganizationDidNotMatch();
+            }
+
             var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
             productRelatedTags = productVersion.OrganizationTags
                 .Where(item => item.Type == OrganizationTagTypeConstants.Product)
@@ -137,5 +156,60 @@ public class ResourceService(
         }
 
         return (resourceCount, availableResourceCount);
+    }
+
+    public async Task<int> GetAvailableResourcesCountAsync(
+        string? organizationId,
+        string? organizationUniqueAlphanumericName,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> customTagIds,
+        ICollection<string> zoneIds,
+        string? productId,
+        CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                               organizationId,
+                               organizationUniqueAlphanumericName,
+                               false,
+                               false,
+                               cancellationToken) ??
+                           throw new OrganizationNotFound();
+        if (organization.Type == OrganizationTypeConstants.Private)
+        {
+            var customer = await cachedCustomerService.GetAsync(cancellationToken);
+
+            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
+        }
+
+        ICollection<string> productRelatedTags = [];
+        if (!string.IsNullOrWhiteSpace(productId))
+        {
+            var product = await repositoryFactory.ProductRepository.GetByIdAsync(productId, cancellationToken) ?? throw new ProductNotFound();
+            if (product.OrganizationId != organization.Id)
+            {
+                throw new ProductOrganizationDidNotMatch();
+            }
+
+            var productVersion = product.ProductVersions.OrderByDescending(item => item.CreatedAt).First();
+            productRelatedTags = productVersion.OrganizationTags
+                .Where(item => item.Type == OrganizationTagTypeConstants.Product)
+                .Select(item => item.Id)
+                .ToList();
+        }
+
+        return await repositoryFactory.ResourceRepository.GetAvailableResourcesCountAsync(
+            organization.Id,
+            locationId,
+            from,
+            until,
+            [],
+            customTagIds.Concat(zoneIds).Concat(productRelatedTags).ToList(),
+            [],
+            cancellationToken);
     }
 }

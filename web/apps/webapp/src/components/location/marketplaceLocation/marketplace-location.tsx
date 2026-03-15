@@ -28,6 +28,7 @@ type Props = {
 
 type PricingRow = {
   amountLabel: string;
+  cadence: string;
   cadenceLabel: string;
   id: string;
   taxLabel: string;
@@ -324,6 +325,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
         .map((option) => ({
           id: option.id,
           title: option.listingMetadata.title ?? '',
+          cadence: option.purchaseCadence,
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',

@@ -1,8 +1,3 @@
 'use client';
 
-import Page from '@/rootPages/welcome/page';
-import { memo } from 'react';
-
-const RootPage = () => <Page />;
-
-export default memo(RootPage);
+export { default } from '@/rootPages/welcome//page';

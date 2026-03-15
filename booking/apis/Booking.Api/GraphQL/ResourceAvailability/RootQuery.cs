@@ -29,6 +29,22 @@ public class RootQuery(IMapper mapper)
                 cancellationToken));
 
     [UseResolverScope]
+    public async Task<int> AvailableResourcesCountAsync(
+        AvailableResourcesCountWhereInput where,
+        [Service] IResourceService resourceService,
+        CancellationToken cancellationToken) =>
+        await resourceService.GetAvailableResourcesCountAsync(
+            where.OrganizationId,
+            where.OrganizationUniqueAlphanumericName,
+            where.LocationId,
+            where.From,
+            where.Until,
+            where.CustomTagIds.ToSafeCollection(),
+            where.ZoneIds.ToSafeCollection(),
+            where.ProductId,
+            cancellationToken);
+
+    [UseResolverScope]
     public async Task<OrganizationAvailableResources> OrganizationResourcesAvailabilityAsync(
         OrganizationAvailableResourcesWhereInput where,
         [Service] IResourceService resourceService,

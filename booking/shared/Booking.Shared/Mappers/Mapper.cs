@@ -93,6 +93,7 @@ public interface IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
+        MarketplaceBooking marketplaceBooking,
         ProductVersion productVersion);
 
     Models.MarketplaceBooking? MapTo(MarketplaceBooking? src);
@@ -283,14 +284,13 @@ public class Mapper : IMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
-            ProductPricing = src.ProductPricing,
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            ProductVersion = MapTo(src.ProductVersion),
             RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList()
         };
 
@@ -503,6 +503,7 @@ public class Mapper : IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
+        MarketplaceBooking marketplaceBooking,
         ProductVersion productVersion) =>
         MergeTo(
             src,
@@ -513,6 +514,7 @@ public class Mapper : IMapper
             createdByCustomer,
             lastModifiedByCustomer,
             deletedByCustomer,
+            marketplaceBooking,
             productVersion);
 
     public Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
@@ -538,6 +540,7 @@ public class Mapper : IMapper
                 Currency = src.Currency,
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
+                CheckoutReturnUrl = src.CheckoutReturnUrl,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
                 BillingMode = src.BillingMode.ToProductPricingBillingMode(),
                 StripeCheckoutSession = MapTo(src.StripeCheckoutSession),
@@ -555,7 +558,7 @@ public class Mapper : IMapper
             PricingOptions = src.PricingOptions.ToSafeCollection()
         };
 
-    private static MarketplaceBookingSubscription MapToSubscriptionShallow(Database.Entities.MarketplaceBookingSubscription src) =>
+    private MarketplaceBookingSubscription MapToSubscriptionShallow(Database.Entities.MarketplaceBookingSubscription src) =>
         new()
         {
             Id = src.Id,
@@ -568,7 +571,7 @@ public class Mapper : IMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
-            ProductPricing = src.ProductPricing
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)!
         };
 
     private RecurringBooking MapToRecurringBookingWithoutSubscription(Database.Entities.RecurringBooking src) =>
@@ -627,6 +630,7 @@ public class Mapper : IMapper
         dest.Currency = src.Currency;
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
+        dest.CheckoutReturnUrl = src.CheckoutReturnUrl;
         dest.InvoiceEmailList = src.InvoiceEmailList;
         dest.BillingMode = src.BillingMode.ToProductPricingBillingMode();
         dest.PaymentExpiry = src.PaymentExpiry;
@@ -642,6 +646,7 @@ public class Mapper : IMapper
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
+        MarketplaceBooking marketplaceBooking,
         ProductVersion productVersion)
     {
         dest.Id = src.Id;
@@ -651,13 +656,13 @@ public class Mapper : IMapper
         dest.Status = src.Status.ToMarketplaceBookingSubscriptionStatus();
         dest.AutoRenew = src.AutoRenew;
         dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
-        dest.ProductPricing = src.ProductPricing;
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedTeams = involvedTeams;
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
+        dest.MarketplaceBooking = marketplaceBooking;
         dest.ProductVersion = productVersion;
         return dest;
     }

@@ -719,6 +719,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           pricingId: selectedPricingOption.id,
           quantity: Number(quantity),
           paymentMethod: paymentMethod as PaymentMethod,
+          checkoutReturnUrl: new URL(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, id), window.location.origin).toString(),
           invoiceEmailList,
         },
       } as never,

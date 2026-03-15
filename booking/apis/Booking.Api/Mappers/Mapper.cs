@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Booking;
+using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.GraphQL.Payment;
 using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Shared.Models;
@@ -27,10 +28,12 @@ public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
     RecurringBookingDetails MapTo(RecurringBooking src);
+    MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
     RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src);
     RecurringBooking MapTo(AddMarketplaceRecurringBookingInput src);
+    MarketplaceBookingSubscription MapTo(AddMarketplaceBookingSubscriptionInput src);
     Shared.Models.Booking MapTo(UpdatePrivateBookingInput src);
     Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
     Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src);
@@ -40,8 +43,10 @@ public interface IMapper
     Shared.Models.Booking MapTo(UpdatePrivateInput src);
     Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src);
     Edge<RecurringBooking> MapTo(Edge<Shared.Database.Entities.RecurringBooking> src);
+    Edge<MarketplaceBookingSubscription> MapTo(Edge<Shared.Database.Entities.MarketplaceBookingSubscription> src);
     BookingEdge MapTo(Edge<Shared.Models.Booking> src);
     RecurringBookingEdge MapTo(Edge<RecurringBooking> src);
+    MarketplaceBookingSubscriptionEdge MapTo(Edge<MarketplaceBookingSubscription> src);
     global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src);
     IEnumerable<Resource> MapTo(IEnumerable<Shared.Database.Entities.Resource> src);
     IEnumerable<BookingResourceDetails> MapTo(IEnumerable<Resource> src);
@@ -94,6 +99,29 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id
+        };
+
+    public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src) =>
+        new()
+        {
+            Id = src.Id,
+            StartedAt = src.StartedAt,
+            CancelledAt = src.CancelledAt,
+            NextRenewalAt = src.NextRenewalAt,
+            Status = new MarketplaceBookingSubscriptionStatusDetails
+                {
+                    Type = src.Status, Name = src.Status.ToMarketplaceBookingSubscriptionStatus()
+                },
+            AutoRenew = src.AutoRenew,
+            CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
+            InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
+            InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.UniqueAlphanumericName.ToSafeString())),
+            InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
+            CreatedByCustomerId = src.CreatedByCustomer?.Id,
+            LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
+            DeletedByCustomerId = src.DeletedByCustomer?.Id,
+            RecurringBookings = src.RecurringBookings.Select(MapTo).ToList()
         };
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
@@ -214,6 +242,35 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
     }
 
+    public MarketplaceBookingSubscription MapTo(AddMarketplaceBookingSubscriptionInput src)
+    {
+        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+
+        return new MarketplaceBookingSubscription
+        {
+            Id = src.Id.ToSafeString(),
+            StartedAt = src.StartedAt,
+            Status = MarketplaceBookingSubscriptionStatus.Active,
+            AutoRenew = src.AutoRenew,
+            CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            InvolvedCustomers = customers,
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationUniqueAlphanumericNames.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                    new Organization { UniqueAlphanumericName = item }))
+                .ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Quantity = src.Quantity,
+                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
+                PaymentMethod = src.PaymentMethod,
+                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
+                ProductPricing = ProductPricing.Empty(src.PricingId),
+                CheckoutReturnUrl = src.CheckoutReturnUrl
+            }
+        };
+    }
+
     public Shared.Models.Booking MapTo(UpdatePrivateBookingInput src)
     {
         var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
@@ -265,7 +322,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 ProductVersion = new ProductVersion { Id = src.ProductVersionId },
                 PaymentMethod = src.PaymentMethod,
                 InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
-                ProductPricing = ProductPricing.Empty(src.PricingId)
+                ProductPricing = ProductPricing.Empty(src.PricingId),
+                CheckoutReturnUrl = src.CheckoutReturnUrl
             }
         };
     }
@@ -398,8 +456,12 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
     public Edge<Shared.Models.Booking> MapTo(Edge<Shared.Database.Entities.Booking> src) => new(sharedMapper.MapTo(src.Node), src.Cursor);
     public Edge<RecurringBooking> MapTo(Edge<Shared.Database.Entities.RecurringBooking> src) => new(sharedMapper.MapTo(src.Node), src.Cursor);
 
+    public Edge<MarketplaceBookingSubscription> MapTo(Edge<Shared.Database.Entities.MarketplaceBookingSubscription> src) =>
+        new(sharedMapper.MapTo(src.Node), src.Cursor);
+
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
     public RecurringBookingEdge MapTo(Edge<RecurringBooking> src) => new(MapTo(src.Node), src.Cursor);
+    public MarketplaceBookingSubscriptionEdge MapTo(Edge<MarketplaceBookingSubscription> src) => new(MapTo(src.Node), src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
         new() { Cursor = src.Cursor, Node = MapToGrpcResponse(src.Node) };

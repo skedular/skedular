@@ -98,6 +98,10 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
     handleThemeMenuCloseClick();
   };
 
+  const handleOrganizationHomeClick = () => {
+    window.location.href = window.location.origin;
+  };
+
   const toggleMobileDrawerOpen = (newOpen: boolean) => () => {
     setMobileDrawerOpen(newOpen);
   };
@@ -139,17 +143,32 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
               py: 2.5,
             }}
           >
-            <LeadIconTypography
-              label={rootData.organizationPublic?.name}
-              fontWeight={600}
+            <Box
+              onClick={handleOrganizationHomeClick}
               sx={{
-                letterSpacing: '-0.03em',
-                fontSize: {
-                  xs: '1.25rem',
-                  sm: '1.5rem',
+                cursor: 'pointer',
+                borderRadius: 2,
+                px: 0.5,
+                py: 0.25,
+                ml: -0.5,
+                transition: 'background-color 120ms ease',
+                '&:hover': {
+                  backgroundColor: (theme) => theme.palette.action.hover,
                 },
               }}
-            />
+            >
+              <LeadIconTypography
+                label={rootData.organizationPublic?.name}
+                fontWeight={600}
+                sx={{
+                  letterSpacing: '-0.03em',
+                  fontSize: {
+                    xs: '1.25rem',
+                    sm: '1.5rem',
+                  },
+                }}
+              />
+            </Box>
 
             <PushToRight />
 

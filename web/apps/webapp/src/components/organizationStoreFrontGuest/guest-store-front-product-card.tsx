@@ -74,6 +74,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationU
         .map((option) => ({
           id: option.id,
           title: option.listingMetadata.title ?? '',
+          cadence: option.purchaseCadence,
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
           amountLabel: currency ? `${currency} ${option.price}` : `${option.price}`,
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',

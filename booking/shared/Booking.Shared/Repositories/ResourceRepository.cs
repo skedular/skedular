@@ -25,6 +25,16 @@ public interface IResourceRepository : IRepository<Resource>
         ICollection<string> tagIds,
         ICollection<string> tagTypes,
         CancellationToken cancellationToken);
+
+    Task<int> GetAvailableResourcesCountAsync(
+        string? organizationId,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        ICollection<string> tagIds,
+        ICollection<string> tagTypes,
+        CancellationToken cancellationToken);
 }
 
 public class ResourceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -103,6 +113,44 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
         ICollection<string> tagTypes,
         CancellationToken cancellationToken)
     {
+        var availableResourceIds =
+            await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, cancellationToken);
+
+        var resources = await DbContext.Resource
+            .Where(query => availableResourceIds.Contains(query.Id))
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
+            .ThenInclude(query => query.Bookings)
+            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
+            .ThenInclude(query => query.Customers)
+            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
+            .Include(query => query.Location)
+            .OrderBy(query => query.Id)
+            .ToListAsync(cancellationToken);
+
+        return resources;
+    }
+
+    public async Task<int> GetAvailableResourcesCountAsync(
+        string? organizationId,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        ICollection<string> tagIds,
+        ICollection<string> tagTypes,
+        CancellationToken cancellationToken) =>
+        (await GetAvailableResourceIdsAsync(organizationId, locationId, from, until, resourceIds, tagIds, tagTypes, cancellationToken)).Count;
+
+    private async Task<ICollection<string>> GetAvailableResourceIdsAsync(
+        string? organizationId,
+        string? locationId,
+        DateTimeOffset from,
+        DateTimeOffset until,
+        ICollection<string> resourceIds,
+        ICollection<string> tagIds,
+        ICollection<string> tagTypes,
+        CancellationToken cancellationToken)
+    {
         var slots = await DbContext.ResourceBookingSlot
             .Where(query => !query.Resource.DeletedAt.HasValue &&
                             !query.Resource.Inactive &&
@@ -127,25 +175,12 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
             .AsNoTracking()
             .ToListAsync(cancellationToken);
 
-        var availableResourceIds = slots
+        return slots
             .GroupBy(slot => slot.Resource.Id)
             .Select(group => new { group.First().Resource, Slots = group.ToList() })
             .Where(grouped => grouped.Slots.All(slot => slot is { Available: true, Bookings.Count: 0 }))
             .GroupBy(slot => slot.Resource.Id)
             .Select(item => item.Key)
             .ToList();
-
-        var resources = await DbContext.Resource
-            .Where(query => availableResourceIds.Contains(query.Id))
-            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
-            .ThenInclude(query => query.Bookings)
-            .Include(query => query.ResourceBookingSlots.Where(slot => slot.Start >= from && slot.Start < until).OrderBy(slot => slot.Start))
-            .ThenInclude(query => query.Customers)
-            .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.Location)
-            .OrderBy(query => query.Id)
-            .ToListAsync(cancellationToken);
-
-        return resources;
     }
 }

@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
@@ -19,6 +20,7 @@ public class MarketplaceRecurringBookingIntegrations(
     TimeProvider timeProvider,
     IRecurringBookingScheduleService recurringBookingScheduleService,
     IMarketplaceBookingService marketplaceBookingService,
+    IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     IMapper mapper,
     IRandomHelper randomHelper)
 {
@@ -52,6 +54,7 @@ public class MarketplaceRecurringBookingIntegrations(
             until,
             existingBookings);
 
+        // Clear stale generated instances before repairing the remaining booking days.
         foreach (var existingBooking in reconciliationPlan.BookingsToRemove)
         {
             await marketplaceBookingService.DeleteAsync(existingBooking, null, cancellationToken);
@@ -63,23 +66,66 @@ public class MarketplaceRecurringBookingIntegrations(
         var bookingsToRemoveIds = reconciliationPlan.BookingsToRemove.Select(item => item.Id).ToHashSet();
         var existingBookingsToRefresh = existingBookings
             .Where(item => !bookingsToRemoveIds.Contains(item.Id))
-            .Where(item => item.HasRecurringInstanceOverrides != true);
+            .Where(item => item.HasRecurringInstanceOverrides != true)
+            .ToList();
+        var useOpeningHoursWindow =
+            marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(marketplaceBookingEntity.ProductPricing.PurchaseCadence);
 
         foreach (var existingBooking in existingBookingsToRefresh)
         {
+            // Existing marketplace instances keep the original time window they were created with.
+            // Reconciliation here only repairs resource assignment; it does not move the booking
+            // to match later opening-hours changes.
             await marketplaceBookingService.AdjustRequiredResourcesAsync(existingBooking, cancellationToken);
         }
+
+        var customer = recurringBooking.InvolvedCustomers.Count == 1
+            ? await repositoryFactory.CustomerRepository.GetByIdAsync(recurringBooking.InvolvedCustomers.First().Id, true, cancellationToken)
+            : null;
+        var preferredLocationId = existingBookingsToRefresh
+            .Select(marketplaceBookingOpeningHoursService.ResolveLocation)
+            .FirstOrDefault(item => item is not null)?.Id;
+        var requiredResourceCount = marketplaceBookingEntity.Quantity * marketplaceBookingEntity.ProductPricing.NumberOfResourcesToBook;
 
         foreach (var missingBookingDay in reconciliationPlan.MissingBookingDays)
         {
             var booking = mapper.MapTo(recurringBooking, missingBookingDay);
             booking.Id = randomHelper.Generate();
+            if (useOpeningHoursWindow)
+            {
+                // Closed days are intentionally skipped. Only open location/day combinations can
+                // materialize a new generated marketplace booking.
+                // The opening-hours service will prefer resource-level overridden availability
+                // over the parent location opening hours when selecting the booking window.
+                var dailyPlan = await marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
+                    customer,
+                    marketplaceBookingEntity.ProductVersion,
+                    marketplaceBookingEntity.ProductPricing,
+                    missingBookingDay,
+                    requiredResourceCount,
+                    preferredLocationId,
+                    cancellationToken);
+                if (dailyPlan is null)
+                {
+                    continue;
+                }
+
+                booking.From = dailyPlan.From;
+                booking.Until = dailyPlan.Until;
+                booking.Schedules = [new BookingSchedule(booking.From, booking.Until)];
+                booking.Resources = dailyPlan.Resources
+                    .Select(item => new ResourceCustomersPair(new Resource { Id = item.Id }, booking.InvolvedCustomers))
+                    .ToList();
+            }
 
             var marketplaceBooking = mapper.MapTo(marketplaceBookingEntity)!;
             marketplaceBooking.Id = randomHelper.Generate();
             marketplaceBooking.IsPaymentRequired = false;
             marketplaceBooking.PaymentStatus = PaymentStatus.NotSet;
-            marketplaceBooking.ProductPricing = marketplaceBooking.ProductPricing with { BookingCadence = ProductPricingCadence.Daily };
+            marketplaceBooking.ProductPricing = marketplaceBooking.ProductPricing with
+            {
+                BookingCadence = useOpeningHoursWindow ? ProductPricingCadence.Daily : marketplaceBooking.ProductPricing.BookingCadence
+            };
 
             booking.MarketplaceBooking = marketplaceBooking;
 

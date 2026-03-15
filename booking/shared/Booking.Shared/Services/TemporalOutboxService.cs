@@ -17,6 +17,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
     void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork);
     void StartBookMarketplaceRecurringResources(BookMarketplaceRecurringResourcesInput args, IUnitOfWork unitOfWork);
+    void StartBookMarketplaceBookingSubscriptionResources(BookMarketplaceBookingSubscriptionResourcesInput args, IUnitOfWork unitOfWork);
 
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
     void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
@@ -25,6 +26,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void SignalWorkflowBookPrivateRecurringResourcesUpdated(string recurringBookingId, IUnitOfWork unitOfWork);
     void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
     void SignalWorkflowBookMarketplaceRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
+    void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(string marketplaceBookingSubscriptionId, IUnitOfWork unitOfWork);
 }
 
 public class TemporalOutboxService(
@@ -39,6 +41,9 @@ public class TemporalOutboxService(
     private static readonly string s_bookPrivateRecurringResources = typeof(BookPrivateRecurringResources).ToWorkflowType();
 
     private static readonly string s_bookMarketplaceRecurringResources = typeof(BookMarketplaceRecurringResources).ToWorkflowType();
+
+    private static readonly string s_bookMarketplaceBookingSubscriptionResources =
+        typeof(BookMarketplaceBookingSubscriptionResources).ToWorkflowType();
 
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
@@ -60,6 +65,11 @@ public class TemporalOutboxService(
 
     private static readonly string s_bookMarketplaceRecurringResourcesRecurringBookingDeletedAsync =
         typeof(BookMarketplaceRecurringResources).GetMethod(nameof(BookMarketplaceRecurringResources.RecurringBookingDeletedAsync))!
+            .ToWorkflowSignalType();
+
+    private static readonly string s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync =
+        typeof(BookMarketplaceBookingSubscriptionResources)
+            .GetMethod(nameof(BookMarketplaceBookingSubscriptionResources.MarketplaceBookingSubscriptionDeletedAsync))!
             .ToWorkflowSignalType();
 
     public void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork) =>
@@ -105,6 +115,21 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId(args.RecurringBookingId),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+            },
+            unitOfWork);
+
+    public void StartBookMarketplaceBookingSubscriptionResources(
+        BookMarketplaceBookingSubscriptionResourcesInput args,
+        IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<BookMarketplaceBookingSubscriptionResources, BookMarketplaceBookingSubscriptionResourcesInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId(args.MarketplaceBookingSubscriptionId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -172,6 +197,16 @@ public class TemporalOutboxService(
             new WorkflowSignalOptions(),
             unitOfWork);
 
+    public void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+        string marketplaceBookingSubscriptionId,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId(marketplaceBookingSubscriptionId),
+            s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync,
+            new MarketplaceBookingSubscriptionDeletedArgs(marketplaceBookingSubscriptionId),
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
     public async Task StartWorkflowAsync(
         string workflowType,
         string? executionArgs,
@@ -234,6 +269,22 @@ public class TemporalOutboxService(
 
                 _ = await temporalClient.StartWorkflowAsync(
                     (BookMarketplaceRecurringResources workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_bookMarketplaceBookingSubscriptionResources)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<BookMarketplaceBookingSubscriptionResourcesInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (BookMarketplaceBookingSubscriptionResources workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
@@ -377,6 +428,35 @@ public class TemporalOutboxService(
                     new WorkflowOptions
                     {
                         Id = temporalHelperService.ToId(input.RecurringBookingId),
+                        TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                        RetryPolicy = null,
+                        IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+                    });
+            }
+        }
+        else if (signalType == s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+            var input = JsonSerializer.Deserialize<MarketplaceBookingSubscriptionDeletedArgs>(executionArgs);
+            ArgumentNullException.ThrowIfNull(input);
+
+            if (await temporalHelperService.IsRunningAsync<BookMarketplaceBookingSubscriptionResources>(workflowId, cancellationToken))
+            {
+                await temporalClient
+                    .GetWorkflowHandle<BookMarketplaceBookingSubscriptionResources>(workflowId)
+                    .SignalAsync(
+                        workflow => workflow.MarketplaceBookingSubscriptionDeletedAsync(input),
+                        workflowSignalOptions);
+            }
+            else
+            {
+                _ = await temporalClient.StartWorkflowAsync(
+                    (BookMarketplaceBookingSubscriptionResources workflow) =>
+                        workflow.ExecuteAsync(new BookMarketplaceBookingSubscriptionResourcesInput(input.MarketplaceBookingSubscriptionId)),
+                    new WorkflowOptions
+                    {
+                        Id = temporalHelperService.ToId(input.MarketplaceBookingSubscriptionId),
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
