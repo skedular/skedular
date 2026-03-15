@@ -136,3 +136,7 @@ public class RecurringBookingIsNotPrivate() : Exception("Recurring booking is no
 public class RecurringBookingIsNotMarketplace() : Exception("Recurring booking is not marketplace");
 
 public class MarketplaceRecurringBookingCannotBeUpdated() : Exception("Marketplace recurring booking cannot be updated");
+
+public class MarketplaceBookingSubscriptionNotFound() : Exception("Marketplace booking subscription not found");
+
+public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("Marketplace booking subscription cannot be updated");
