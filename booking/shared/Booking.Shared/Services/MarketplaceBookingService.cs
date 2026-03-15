@@ -85,8 +85,11 @@ public class MarketplaceBookingService(
         ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
         marketplaceBooking.ProductPricing =
-            productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
-            throw new ProductPricingNotFound();
+            (productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions!, marketplaceBooking.ProductPricing) ??
+             throw new ProductPricingNotFound()) with
+            {
+                BookingCadence = marketplaceBooking.ProductPricing.BookingCadence
+            };
 
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
 

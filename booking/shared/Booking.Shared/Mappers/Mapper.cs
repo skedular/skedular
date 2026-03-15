@@ -312,8 +312,9 @@ public class Mapper : IMapper
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
         MarketplaceBooking? marketplaceBooking,
-        Database.Entities.RecurringBooking? recurringBooking) =>
-        MergeTo(
+        Database.Entities.RecurringBooking? recurringBooking)
+    {
+        var booking = MergeTo(
             src,
             new Database.Entities.Booking { Channel = src.Channel.ToBookingChannel() },
             involvedCustomers,
@@ -326,6 +327,13 @@ public class Mapper : IMapper
             deletedByCustomer,
             marketplaceBooking,
             recurringBooking);
+
+        booking.From = src.From;
+        booking.Until = src.Until;
+        booking.Schedules = src.Schedules;
+
+        return booking;
+    }
 
     public Database.Entities.Booking MergeTo(
         Models.Booking src,
