@@ -613,7 +613,7 @@ public class HomePage(
             new HomeViewDefinition
             {
                 CallbackId = HomeCallback,
-                Blocks = asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
+                Blocks = asyncBlocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,
@@ -716,7 +716,7 @@ public class HomePage(
             ]
         };
 
-        return [new ActionsBlock { Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Concat([actionMenus]).ToList() }];
+        return [new ActionsBlock { Elements = backButton.Concat(addBookingButton).Concat(feedbackButton).Append(actionMenus).ToList() }];
     }
 
     private async Task<ICollection<Block>> GetBookingCalendarSettingBlocksAsync(

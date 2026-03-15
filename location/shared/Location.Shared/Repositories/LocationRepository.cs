@@ -172,42 +172,6 @@ internal static class LocationExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Database.Entities.Location> AddSortingOrders(ICollection<LocationOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                LocationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                LocationOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Timezone)
-                    : originalQuery.OrderByDescending(x => x.Timezone),
-                LocationOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Type)
-                    : originalQuery.OrderByDescending(x => x.Type),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    LocationOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    LocationOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Timezone)
-                        : query.ThenByDescending(x => x.Timezone),
-                    LocationOrderField.Type => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Type)
-                        : query.ThenByDescending(x => x.Type),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -297,10 +261,40 @@ public class LocationRepository(LocationDbContext dbContext, TimeProvider timePr
         LocationSearchCriteria searchCriteria,
         ICollection<LocationOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Location
+        await DbContext.Location
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false, false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Database.Entities.Location>> GetPaginationFields(ICollection<LocationOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Database.Entities.Location>.Create(
+                    nameof(Database.Entities.Location.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                LocationOrderField.Name => KeysetPaginationField<Database.Entities.Location>.Create(
+                    nameof(Database.Entities.Location.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                LocationOrderField.Timezone => KeysetPaginationField<Database.Entities.Location>.Create(
+                    nameof(Database.Entities.Location.Timezone),
+                    query => query.Timezone,
+                    orderField.Direction),
+                LocationOrderField.Type => KeysetPaginationField<Database.Entities.Location>.Create(
+                    nameof(Database.Entities.Location.Type),
+                    query => query.Type,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

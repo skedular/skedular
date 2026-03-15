@@ -49,7 +49,7 @@ public class CustomerLocationSettingsService(
             return mapper.MapTo(customer);
         }
 
-        customer.PreferredLocations = customer.PreferredLocations.Concat([location]).ToList();
+        customer.PreferredLocations = customer.PreferredLocations.Append(location).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 
@@ -81,7 +81,7 @@ public class CustomerLocationSettingsService(
             return mapper.MapTo(customer);
         }
 
-        customer.FavouriteLocations = customer.FavouriteLocations.Concat([location]).ToList();
+        customer.FavouriteLocations = customer.FavouriteLocations.Append(location).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 

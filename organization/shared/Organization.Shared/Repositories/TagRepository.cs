@@ -59,42 +59,6 @@ internal static class TagExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Tag> AddSortingOrders(ICollection<TagOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                OrganizationTagOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                OrganizationTagOrderField.Description => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Description)
-                    : originalQuery.OrderByDescending(x => x.Description),
-                OrganizationTagOrderField.Type => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Type)
-                    : originalQuery.OrderByDescending(x => x.Type),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    OrganizationTagOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    OrganizationTagOrderField.Description => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Description)
-                        : query.ThenByDescending(x => x.Description),
-                    OrganizationTagOrderField.Type => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Type)
-                        : query.ThenByDescending(x => x.Type),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -140,10 +104,40 @@ public class TagRepository(OrganizationDbContext dbContext, TimeProvider timePro
         TagSearchCriteria searchCriteria,
         ICollection<TagOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Tag
+        await DbContext.Tag
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Tag>> GetPaginationFields(ICollection<TagOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Tag>.Create(
+                    nameof(Tag.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                OrganizationTagOrderField.Name => KeysetPaginationField<Tag>.Create(
+                    nameof(Tag.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                OrganizationTagOrderField.Description => KeysetPaginationField<Tag>.Create(
+                    nameof(Tag.Description),
+                    query => query.Description,
+                    orderField.Direction),
+                OrganizationTagOrderField.Type => KeysetPaginationField<Tag>.Create(
+                    nameof(Tag.Type),
+                    query => query.Type,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

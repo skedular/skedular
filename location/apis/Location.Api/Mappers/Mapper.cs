@@ -422,7 +422,7 @@ public class Mapper : IMapper
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
                 .Concat(src.ProductTagIds)
-                .Concat([src.OrganizationResourceTypeId])
+                .Append(src.OrganizationResourceTypeId)
                 .Select(item => new OrganizationTag { Id = item })
                 .ToList(),
             Location = new Shared.Models.Location { Id = src.LocationId }
@@ -440,7 +440,7 @@ public class Mapper : IMapper
             Tags = src.CustomTagIds
                 .Concat(src.ZoneIds)
                 .Concat(src.ProductTagIds)
-                .Concat([src.OrganizationResourceTypeId])
+                .Append(src.OrganizationResourceTypeId)
                 .Select(item => new OrganizationTag { Id = item })
                 .ToList()
         };

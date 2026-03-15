@@ -113,30 +113,6 @@ internal static class OrganizationExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Database.Entities.Organization> AddSortingOrders(ICollection<OrganizationOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                OrganizationOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    OrganizationOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -255,10 +231,33 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         OrganizationSearchCriteria searchCriteria,
         ICollection<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Organization
+        await DbContext.Organization
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(
+        ICollection<OrganizationOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Database.Entities.Organization>.Create(
+                    nameof(Database.Entities.Organization.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                OrganizationOrderField.Name => KeysetPaginationField<Database.Entities.Organization>.Create(
+                    nameof(Database.Entities.Organization.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

@@ -81,7 +81,7 @@ public class AddBookingButtonHandler(
                 Title = "Make a booking",
                 Close = "Cancel",
                 Submit = "Add",
-                Blocks = new List<Block> { bookingDate }.Concat(asyncBlocks[0]).Concat(asyncBlocks[1]).Concat([notes]).ToList(),
+                Blocks = new List<Block> { bookingDate }.Concat(asyncBlocks[0]).Concat(asyncBlocks[1]).Append(notes).ToList(),
                 PrivateMetadata = action.Value
             },
             cancellationToken);

@@ -87,36 +87,6 @@ internal static class TeamExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Database.Entities.Team> AddSortingOrders(ICollection<TeamOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                TeamOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                TeamOrderField.About => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.About)
-                    : originalQuery.OrderByDescending(x => x.About),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    TeamOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    TeamOrderField.About => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.About)
-                        : query.ThenByDescending(x => x.About),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -187,10 +157,36 @@ public class TeamRepository(TeamDbContext dbContext, TimeProvider timeProvider)
         TeamSearchCriteria searchCriteria,
         ICollection<TeamOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Team
+        await DbContext.Team
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Database.Entities.Team>> GetPaginationFields(ICollection<TeamOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Database.Entities.Team>.Create(
+                    nameof(Database.Entities.Team.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                TeamOrderField.Name => KeysetPaginationField<Database.Entities.Team>.Create(
+                    nameof(Database.Entities.Team.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                TeamOrderField.About => KeysetPaginationField<Database.Entities.Team>.Create(
+                    nameof(Database.Entities.Team.About),
+                    query => query.About,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

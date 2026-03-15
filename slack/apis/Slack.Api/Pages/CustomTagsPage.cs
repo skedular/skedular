@@ -395,7 +395,7 @@ public class CustomTagsPage(
             new HomeViewDefinition
             {
                 CallbackId = CustomTagsCallback,
-                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Concat([new DividerBlock()])).SkipLast(1).ToList(),
+                Blocks = blocks.SelectMany(item => item.Count == 0 ? item : item.Append(new DividerBlock())).SkipLast(1).ToList(),
                 PrivateMetadata = commonPageContext.Serialize()
             },
             hash,

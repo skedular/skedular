@@ -27,16 +27,13 @@ public class Location : ModelBaseWithDeleted
 
     public ICollection<OrganizationTag> CustomTags =>
         Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom).Select(customTag =>
-                new OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Custom }))
+            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Custom))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
             .ToList();
 
     public ICollection<OrganizationTag> Zones =>
-        Resources
-            .SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone).Select(customTag =>
-                new OrganizationTag { Id = customTag.Id, Type = OrganizationTagType.Zone }))
+        Resources.SelectMany(item => item.Tags.Where(tag => tag.Type == OrganizationTagType.Zone))
             .GroupBy(item => item.Id)
             .Select(group => group.First())
             .ToList();

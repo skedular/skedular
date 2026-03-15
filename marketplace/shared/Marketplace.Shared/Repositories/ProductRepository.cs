@@ -69,9 +69,6 @@ internal static class ProductExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Product> AddSortingOrders(ICollection<ProductOrder> orderByFields) =>
-            originalQuery.OrderBy(query => query.Id).ThenBy(query => query.Id);
     }
 }
 
@@ -132,10 +129,10 @@ public class ProductRepository(MarketplaceDbContext dbContext, TimeProvider time
         ProductSearchCriteria searchCriteria,
         ICollection<ProductOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Product
+        await DbContext.Product
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Product>> GetPaginationFields(ICollection<ProductOrder> orderByFields) => [];
 }

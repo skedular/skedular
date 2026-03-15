@@ -44,7 +44,7 @@ public class CustomerResourceSettingsService(
             return mapper.MapTo(customer);
         }
 
-        customer.PreferredResources = customer.PreferredResources.Concat([resource]).ToList();
+        customer.PreferredResources = customer.PreferredResources.Append(resource).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 

@@ -45,30 +45,6 @@ internal static class FloorPlanExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<FloorPlan> AddSortingOrders(ICollection<FloorPlanOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                FloorPlanOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    FloorPlanOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -106,10 +82,32 @@ public class FloorPlanRepository(LocationDbContext dbContext, TimeProvider timeP
         FloorPlanSearchCriteria searchCriteria,
         ICollection<FloorPlanOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.FloorPlan
+        await DbContext.FloorPlan
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<FloorPlan>> GetPaginationFields(ICollection<FloorPlanOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<FloorPlan>.Create(
+                    nameof(FloorPlan.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                FloorPlanOrderField.Name => KeysetPaginationField<FloorPlan>.Create(
+                    nameof(FloorPlan.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

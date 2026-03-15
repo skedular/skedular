@@ -73,78 +73,6 @@ internal static class CustomerExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Database.Entities.Customer> AddSortingOrders(ICollection<CustomerOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                CustomerOrderField.Designation => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Designation)
-                    : originalQuery.OrderByDescending(x => x.Designation),
-                CustomerOrderField.Title => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Title)
-                    : originalQuery.OrderByDescending(x => x.Title),
-                CustomerOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                CustomerOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.GivenName)
-                    : originalQuery.OrderByDescending(x => x.GivenName),
-                CustomerOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.MiddleName)
-                    : originalQuery.OrderByDescending(x => x.MiddleName),
-                CustomerOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.FamilyName)
-                    : originalQuery.OrderByDescending(x => x.FamilyName),
-                CustomerOrderField.Timezone => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Timezone)
-                    : originalQuery.OrderByDescending(x => x.Timezone),
-                CustomerOrderField.Locale => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Locale)
-                    : originalQuery.OrderByDescending(x => x.Locale),
-                CustomerOrderField.PhoneNumber => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.PhoneNumber)
-                    : originalQuery.OrderByDescending(x => x.PhoneNumber),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    CustomerOrderField.Designation => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Designation)
-                        : query.ThenByDescending(x => x.Designation),
-                    CustomerOrderField.Title => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Title)
-                        : query.ThenByDescending(x => x.Title),
-                    CustomerOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    CustomerOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.GivenName)
-                        : query.ThenByDescending(x => x.GivenName),
-                    CustomerOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.MiddleName)
-                        : query.ThenByDescending(x => x.MiddleName),
-                    CustomerOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.FamilyName)
-                        : query.ThenByDescending(x => x.FamilyName),
-                    CustomerOrderField.Timezone => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Timezone)
-                        : query.ThenByDescending(x => x.Timezone),
-                    CustomerOrderField.Locale => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Locale)
-                        : query.ThenByDescending(x => x.Locale),
-                    CustomerOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.PhoneNumber)
-                        : query.ThenByDescending(x => x.PhoneNumber),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -219,10 +147,64 @@ public class CustomerRepository(CustomerDbContext dbContext, TimeProvider timePr
         CustomerSearchCriteria searchCriteria,
         ICollection<CustomerOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Customer
+        await DbContext.Customer
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Database.Entities.Customer>> GetPaginationFields(ICollection<CustomerOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                CustomerOrderField.Designation => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Designation),
+                    query => query.Designation,
+                    orderField.Direction),
+                CustomerOrderField.Title => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Title),
+                    query => query.Title,
+                    orderField.Direction),
+                CustomerOrderField.Name => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                CustomerOrderField.GivenName => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.GivenName),
+                    query => query.GivenName,
+                    orderField.Direction),
+                CustomerOrderField.MiddleName => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.MiddleName),
+                    query => query.MiddleName,
+                    orderField.Direction),
+                CustomerOrderField.FamilyName => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.FamilyName),
+                    query => query.FamilyName,
+                    orderField.Direction),
+                CustomerOrderField.Timezone => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Timezone),
+                    query => query.Timezone,
+                    orderField.Direction),
+                CustomerOrderField.Locale => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.Locale),
+                    query => query.Locale,
+                    orderField.Direction),
+                CustomerOrderField.PhoneNumber => KeysetPaginationField<Database.Entities.Customer>.Create(
+                    nameof(Database.Entities.Customer.PhoneNumber),
+                    query => query.PhoneNumber,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

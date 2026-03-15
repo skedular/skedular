@@ -232,7 +232,7 @@ public class CustomerService(
         {
             var identity = mapper.MapToIdentity(context);
             identity.CreatedAt = timeProvider.GetUtcNow();
-            existingCustomer.Identities = existingCustomer.Identities.Concat([identity]).ToList();
+            existingCustomer.Identities = existingCustomer.Identities.Append(identity).ToList();
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
             customer = mapper.MapTo(existingCustomer);
         }
@@ -269,7 +269,7 @@ public class CustomerService(
 
             var identityToAdd = mapper.MapTo(identity, existingCustomer);
             repositoryFactory.IdentityRepository.Add(identityToAdd);
-            existingCustomer.Identities = existingCustomer.Identities.Concat([identityToAdd]).ToList();
+            existingCustomer.Identities = existingCustomer.Identities.Append(identityToAdd).ToList();
             existingCustomer = repositoryFactory.CustomerRepository.Update(existingCustomer);
 
             customerOutboxPublisher.PublishCustomers([mapper.MapTo(existingCustomer)], repositoryFactory.UnitOfWork);

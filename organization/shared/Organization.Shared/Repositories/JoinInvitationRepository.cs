@@ -70,36 +70,6 @@ internal static class JoinInvitationExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<JoinInvitation> AddSortingOrders(ICollection<JoinOrganizationInvitationOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.CreatedBy).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                JoinOrganizationInvitationOrderField.CreatedAt => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.CreatedAt)
-                    : originalQuery.OrderByDescending(x => x.CreatedAt),
-                JoinOrganizationInvitationOrderField.Status => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Status)
-                    : originalQuery.OrderByDescending(x => x.Status),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    JoinOrganizationInvitationOrderField.CreatedAt => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.CreatedAt)
-                        : query.ThenByDescending(x => x.CreatedAt),
-                    JoinOrganizationInvitationOrderField.Status => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Status)
-                        : query.ThenByDescending(x => x.Status),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -162,12 +132,10 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
         JoinInvitationSearchCriteria searchCriteria,
         ICollection<JoinOrganizationInvitationOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.JoinInvitation
+        await DbContext.JoinInvitation
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     public async Task<ICollection<JoinInvitation>> GetPendingInvitationsWithoutInviteeMatchingEmailsAsync(
         ICollection<string> emails,
@@ -178,4 +146,32 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                 query.Invitee == null &&
                 emails.Any(email => query.Email != null && EF.Functions.ILike(query.Email, email)))
             .ToListAsync(cancellationToken);
+
+    private static List<KeysetPaginationField<JoinInvitation>> GetPaginationFields(ICollection<JoinOrganizationInvitationOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<JoinInvitation>.Create(
+                    $"{nameof(JoinInvitation.CreatedBy)}{nameof(Customer.Id)}",
+                    query => query.CreatedBy.Id,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                JoinOrganizationInvitationOrderField.CreatedAt => KeysetPaginationField<JoinInvitation>.Create(
+                    nameof(JoinInvitation.CreatedAt),
+                    query => query.CreatedAt,
+                    orderField.Direction),
+                JoinOrganizationInvitationOrderField.Status => KeysetPaginationField<JoinInvitation>.Create(
+                    nameof(JoinInvitation.Status),
+                    query => query.Status,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

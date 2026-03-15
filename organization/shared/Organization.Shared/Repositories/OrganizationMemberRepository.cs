@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
+using Customer = Organization.Shared.Database.Entities.Customer;
 using Identity = Organization.Shared.Database.Entities.Identity;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
 
@@ -71,63 +72,6 @@ internal static class OrganizationMemberExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<OrganizationMember> AddSortingOrders(ICollection<OrganizationMemberOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Customer.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                OrganizationMemberOrderField.Role => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Role)
-                    : originalQuery.OrderByDescending(x => x.Role),
-                OrganizationMemberOrderField.Status => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Status)
-                    : originalQuery.OrderByDescending(x => x.Status),
-                OrganizationMemberOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Customer.Name)
-                    : originalQuery.OrderByDescending(x => x.Customer.Name),
-                OrganizationMemberOrderField.GivenName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Customer.GivenName)
-                    : originalQuery.OrderByDescending(x => x.Customer.GivenName),
-                OrganizationMemberOrderField.MiddleName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Customer.MiddleName)
-                    : originalQuery.OrderByDescending(x => x.Customer.MiddleName),
-                OrganizationMemberOrderField.FamilyName => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Customer.FamilyName)
-                    : originalQuery.OrderByDescending(x => x.Customer.FamilyName),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    OrganizationMemberOrderField.Role => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Role)
-                        : query.ThenByDescending(x => x.Role),
-                    OrganizationMemberOrderField.Status => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Status)
-                        : query.ThenByDescending(x => x.Status),
-                    OrganizationMemberOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Customer.Name)
-                        : query.ThenByDescending(x => x.Customer.Name),
-                    OrganizationMemberOrderField.GivenName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Customer.GivenName)
-                        : query.ThenByDescending(x => x.Customer.GivenName),
-                    OrganizationMemberOrderField.MiddleName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Customer.MiddleName)
-                        : query.ThenByDescending(x => x.Customer.MiddleName),
-                    OrganizationMemberOrderField.FamilyName => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Customer.FamilyName)
-                        : query.ThenByDescending(x => x.Customer.FamilyName),
-                    OrganizationMemberOrderField.PhoneNumber => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Customer.PhoneNumber)
-                        : query.ThenByDescending(x => x.Customer.PhoneNumber),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -181,10 +125,56 @@ public class OrganizationMemberRepository(OrganizationDbContext dbContext, TimeP
             OrganizationMemberSearchCriteria searchCriteria,
             ICollection<OrganizationMemberOrder> orderByFields,
             CancellationToken cancellationToken) =>
-        (await DbContext.OrganizationMember
+        await DbContext.OrganizationMember
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<OrganizationMember>> GetPaginationFields(ICollection<OrganizationMemberOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.Name),
+                    query => query.Customer.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                OrganizationMemberOrderField.Role => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(OrganizationMember.Role),
+                    query => query.Role,
+                    orderField.Direction),
+                OrganizationMemberOrderField.Status => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(OrganizationMember.Status),
+                    query => query.Status,
+                    orderField.Direction),
+                OrganizationMemberOrderField.Name => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.Name),
+                    query => query.Customer.Name,
+                    orderField.Direction),
+                OrganizationMemberOrderField.GivenName => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.GivenName),
+                    query => query.Customer.GivenName,
+                    orderField.Direction),
+                OrganizationMemberOrderField.MiddleName => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.MiddleName),
+                    query => query.Customer.MiddleName,
+                    orderField.Direction),
+                OrganizationMemberOrderField.FamilyName => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.FamilyName),
+                    query => query.Customer.FamilyName,
+                    orderField.Direction),
+                OrganizationMemberOrderField.PhoneNumber => KeysetPaginationField<OrganizationMember>.Create(
+                    nameof(Customer.PhoneNumber),
+                    query => query.Customer.PhoneNumber,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

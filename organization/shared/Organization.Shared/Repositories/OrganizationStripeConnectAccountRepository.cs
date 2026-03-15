@@ -69,30 +69,6 @@ internal static class OrganizationStripeConnectAccountExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<OrganizationStripeConnectAccount> AddSortingOrders(ICollection<OrganizationStripeConnectAccountOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.Name).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                OrganizationStripeConnectAccountOrderField.Name => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Name)
-                    : originalQuery.OrderByDescending(x => x.Name),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    OrganizationStripeConnectAccountOrderField.Name => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Name)
-                        : query.ThenByDescending(x => x.Name),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -145,10 +121,33 @@ public class OrganizationStripeConnectAccountRepository(OrganizationDbContext db
         OrganizationStripeConnectAccountSearchCriteria searchCriteria,
         ICollection<OrganizationStripeConnectAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.OrganizationStripeConnectAccount
+        await DbContext.OrganizationStripeConnectAccount
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<OrganizationStripeConnectAccount>> GetPaginationFields(
+        ICollection<OrganizationStripeConnectAccountOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<OrganizationStripeConnectAccount>.Create(
+                    nameof(OrganizationStripeConnectAccount.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                OrganizationStripeConnectAccountOrderField.Name => KeysetPaginationField<OrganizationStripeConnectAccount>.Create(
+                    nameof(OrganizationStripeConnectAccount.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

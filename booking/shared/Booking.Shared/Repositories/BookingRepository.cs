@@ -250,54 +250,6 @@ internal static class BookingExtensions
 
             return originalQuery;
         }
-
-        internal IQueryable<Database.Entities.Booking> AddSortingOrders(ICollection<BookingOrder> orderByFields)
-        {
-            if (orderByFields.Count == 0)
-            {
-                return originalQuery.OrderBy(query => query.From).ThenBy(query => query.Id);
-            }
-
-            var orderByField = orderByFields.First();
-            return orderByFields.Skip(1).Aggregate(orderByField.Field switch
-            {
-                BookingOrderField.From => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.From)
-                    : originalQuery.OrderByDescending(x => x.From),
-                BookingOrderField.To => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Until)
-                    : originalQuery.OrderByDescending(x => x.Until),
-                BookingOrderField.Notes => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Notes)
-                    : originalQuery.OrderByDescending(x => x.Notes),
-                BookingOrderField.Category => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Category)
-                    : originalQuery.OrderByDescending(x => x.Category),
-                BookingOrderField.Channel => orderByField.Direction == OrderDirection.Ascending
-                    ? originalQuery.OrderBy(x => x.Channel)
-                    : originalQuery.OrderByDescending(x => x.Channel),
-                _ => throw new ArgumentOutOfRangeException()
-            }, (query, orderField) =>
-                orderField.Field switch
-                {
-                    BookingOrderField.From => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.From)
-                        : query.ThenByDescending(x => x.From),
-                    BookingOrderField.To => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Until)
-                        : query.ThenByDescending(x => x.Until),
-                    BookingOrderField.Notes => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Notes)
-                        : query.ThenByDescending(x => x.Notes),
-                    BookingOrderField.Category => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Category)
-                        : query.ThenByDescending(x => x.Category),
-                    BookingOrderField.Channel => orderField.Direction == OrderDirection.Ascending
-                        ? query.ThenBy(x => x.Channel)
-                        : query.ThenByDescending(x => x.Channel),
-                    _ => throw new ArgumentOutOfRangeException()
-                }).ThenBy(query => query.Id);
-        }
     }
 }
 
@@ -358,10 +310,48 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.Booking
+        await DbContext.Booking
             .AddSearchCriteria(searchCriteria, TimeProvider)
-            .AddSortingOrders(orderByFields)
             .AddPaginatedBookingsMinimumDependentObjects(false)
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(ICollection<BookingOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.From),
+                    query => query.From,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                BookingOrderField.From => KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.From),
+                    query => query.From,
+                    orderField.Direction),
+                BookingOrderField.To => KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.Until),
+                    query => query.Until,
+                    orderField.Direction),
+                BookingOrderField.Notes => KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.Notes),
+                    query => query.Notes,
+                    orderField.Direction),
+                BookingOrderField.Category => KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.Category),
+                    query => query.Category,
+                    orderField.Direction),
+                BookingOrderField.Channel => KeysetPaginationField<Database.Entities.Booking>.Create(
+                    nameof(Database.Entities.Booking.Channel),
+                    query => query.Channel,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

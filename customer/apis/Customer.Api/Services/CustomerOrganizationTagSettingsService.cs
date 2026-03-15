@@ -55,7 +55,7 @@ public class CustomerOrganizationTagSettingsService(
             return mapper.MapTo(customer);
         }
 
-        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Concat([organizationTag]).ToList();
+        customer.PreferredOrganizationTags = customer.PreferredOrganizationTags.Append(organizationTag).ToList();
         return await customerHelperService.UpdateAndPublishEventAsync(customer, cancellationToken);
     }
 

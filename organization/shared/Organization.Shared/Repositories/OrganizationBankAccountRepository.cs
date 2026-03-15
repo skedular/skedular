@@ -126,10 +126,33 @@ public class OrganizationBankAccountRepository(OrganizationDbContext dbContext, 
         OrganizationBankAccountSearchCriteria searchCriteria,
         ICollection<OrganizationBankAccountOrder> orderByFields,
         CancellationToken cancellationToken) =>
-        (await DbContext.OrganizationBankAccount
+        await DbContext.OrganizationBankAccount
             .AddSearchCriteria(searchCriteria)
-            .AddSortingOrders(orderByFields)
             .AddDependentObjects()
-            .ToListAsync(cancellationToken))
-        .ToPaginated(paginationInputParam);
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<OrganizationBankAccount>> GetPaginationFields(
+        ICollection<OrganizationBankAccountOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<OrganizationBankAccount>.Create(
+                    nameof(OrganizationBankAccount.Name),
+                    query => query.Name,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                OrganizationBankAccountOrderField.Name => KeysetPaginationField<OrganizationBankAccount>.Create(
+                    nameof(OrganizationBankAccount.Name),
+                    query => query.Name,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
+    }
 }

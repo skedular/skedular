@@ -81,7 +81,7 @@ public class BookPrivateRecurringResources
     {
         ArgumentNullException.ThrowIfNull(_state);
 
-        _state = _state with { UpdateQueue = _state.UpdateQueue.Concat([true]).ToList() };
+        _state = _state with { UpdateQueue = _state.UpdateQueue.Append(true).ToList() };
 
         return Task.CompletedTask;
     }
