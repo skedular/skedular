@@ -71,8 +71,21 @@ public class Mapper : IMapper
             BillingMode = MapTo(src.BillingMode)
         };
 
+        productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
+
         return productPricing;
     }
+
+    private static IEnumerable<PaymentMethod> MapTo(IEnumerable<Api.Shared.Services.Models.PaymentMethod> src) =>
+        src.Select(MapTo);
+
+    private static PaymentMethod MapTo(Api.Shared.Services.Models.PaymentMethod src) =>
+        src switch
+        {
+            Api.Shared.Services.Models.PaymentMethod.Card => PaymentMethod.Card,
+            Api.Shared.Services.Models.PaymentMethod.BankTransfer => PaymentMethod.BankTransfer,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
 
     private static Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence MapTo(ProductPricingCadence src) =>
         src switch
