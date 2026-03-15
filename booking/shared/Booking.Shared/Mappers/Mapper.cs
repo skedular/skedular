@@ -26,6 +26,7 @@ public interface IMapper
     CustomerCreateOptions MapToCustomerCreateOption(Customer src);
     Models.Booking MapTo(Database.Entities.Booking src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
+    MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, Models.Booking booking, MarketplaceBooking? marketplaceBooking, DateOnly? date);
 
@@ -83,6 +84,16 @@ public interface IMapper
         Organization? paidByOrganization,
         ProductVersion productVersion,
         StripeCheckoutSession? stripeCheckoutSession);
+
+    Database.Entities.MarketplaceBookingSubscription MapTo(
+        MarketplaceBookingSubscription src,
+        ICollection<Customer> involvedCustomers,
+        ICollection<Organization> involvedOrganizations,
+        ICollection<Team> involvedTeams,
+        Customer? createdByCustomer,
+        Customer? lastModifiedByCustomer,
+        Customer? deletedByCustomer,
+        ProductVersion productVersion);
 
     Models.MarketplaceBooking? MapTo(MarketplaceBooking? src);
 }
@@ -253,7 +264,34 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)
+            MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            MarketplaceBookingSubscription = src.MarketplaceBookingSubscription is null
+                ? null
+                : MapToSubscriptionShallow(src.MarketplaceBookingSubscription)
+        };
+
+    public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            StartedAt = src.StartedAt,
+            CancelledAt = src.CancelledAt,
+            NextRenewalAt = src.NextRenewalAt,
+            Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
+            AutoRenew = src.AutoRenew,
+            CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            ProductPricing = src.ProductPricing,
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            ProductVersion = MapTo(src.ProductVersion),
+            RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList()
         };
 
     public Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date)
@@ -457,6 +495,26 @@ public class Mapper : IMapper
             productVersion,
             stripeCheckoutSession);
 
+    public Database.Entities.MarketplaceBookingSubscription MapTo(
+        MarketplaceBookingSubscription src,
+        ICollection<Customer> involvedCustomers,
+        ICollection<Organization> involvedOrganizations,
+        ICollection<Team> involvedTeams,
+        Customer? createdByCustomer,
+        Customer? lastModifiedByCustomer,
+        Customer? deletedByCustomer,
+        ProductVersion productVersion) =>
+        MergeTo(
+            src,
+            new Database.Entities.MarketplaceBookingSubscription(),
+            involvedCustomers,
+            involvedOrganizations,
+            involvedTeams,
+            createdByCustomer,
+            lastModifiedByCustomer,
+            deletedByCustomer,
+            productVersion);
+
     public Models.MarketplaceBooking? MapTo(MarketplaceBooking? src) =>
         src is null
             ? null
@@ -497,6 +555,53 @@ public class Mapper : IMapper
             PricingOptions = src.PricingOptions.ToSafeCollection()
         };
 
+    private static MarketplaceBookingSubscription MapToSubscriptionShallow(Database.Entities.MarketplaceBookingSubscription src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            StartedAt = src.StartedAt,
+            CancelledAt = src.CancelledAt,
+            NextRenewalAt = src.NextRenewalAt,
+            Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
+            AutoRenew = src.AutoRenew,
+            CancelAtPeriodEnd = src.CancelAtPeriodEnd,
+            ProductPricing = src.ProductPricing
+        };
+
+    private RecurringBooking MapToRecurringBookingWithoutSubscription(Database.Entities.RecurringBooking src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            DeletedAt = src.DeletedAt,
+            ModifiedAt = src.ModifiedAt,
+            From = src.From,
+            Until = src.Until,
+            Category = src.Category.ToBookingCategory(),
+            Channel = src.Channel.ToBookingChannel(),
+            Frequency = src.Frequency.ToBookingFrequency(),
+            Interval = src.Interval,
+            ByMonthDay = src.ByMonthDay,
+            BySetPosition = src.BySetPosition,
+            ByWeekDays = src.ByWeekDays.Select(item => item.ToDayOfWeek()).ToList(),
+            EndType = src.EndType.ToRecurringBookingEndType(),
+            StartDate = src.StartDate,
+            EndDate = src.EndDate,
+            OccurrenceCount = src.OccurrenceCount,
+            SkippedDates = src.SkippedDates,
+            InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
+            InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
+            InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            CreatedByCustomer = MapTo(src.CreatedByCustomer),
+            LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
+            DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            MarketplaceBookingSubscription = null
+        };
+
     private static MarketplaceBooking MergeTo(
         Models.MarketplaceBooking src,
         MarketplaceBooking dest,
@@ -525,6 +630,35 @@ public class Mapper : IMapper
         dest.InvoiceEmailList = src.InvoiceEmailList;
         dest.BillingMode = src.BillingMode.ToProductPricingBillingMode();
         dest.PaymentExpiry = src.PaymentExpiry;
+        return dest;
+    }
+
+    private static Database.Entities.MarketplaceBookingSubscription MergeTo(
+        MarketplaceBookingSubscription src,
+        Database.Entities.MarketplaceBookingSubscription dest,
+        ICollection<Customer> involvedCustomers,
+        ICollection<Organization> involvedOrganizations,
+        ICollection<Team> involvedTeams,
+        Customer? createdByCustomer,
+        Customer? lastModifiedByCustomer,
+        Customer? deletedByCustomer,
+        ProductVersion productVersion)
+    {
+        dest.Id = src.Id;
+        dest.StartedAt = src.StartedAt;
+        dest.CancelledAt = src.CancelledAt;
+        dest.NextRenewalAt = src.NextRenewalAt;
+        dest.Status = src.Status.ToMarketplaceBookingSubscriptionStatus();
+        dest.AutoRenew = src.AutoRenew;
+        dest.CancelAtPeriodEnd = src.CancelAtPeriodEnd;
+        dest.ProductPricing = src.ProductPricing;
+        dest.InvolvedCustomers = involvedCustomers;
+        dest.InvolvedOrganizations = involvedOrganizations;
+        dest.InvolvedTeams = involvedTeams;
+        dest.CreatedByCustomer = createdByCustomer;
+        dest.LastModifiedByCustomer = lastModifiedByCustomer;
+        dest.DeletedByCustomer = deletedByCustomer;
+        dest.ProductVersion = productVersion;
         return dest;
     }
 

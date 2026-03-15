@@ -108,6 +108,12 @@ public class MarketplaceBookingCadenceRequiresRecurringFlow()
 public class MarketplaceRecurringBookingCadenceMustBeRecurring()
     : Exception("Marketplace recurring booking must use a cadence greater than a single-day booking");
 
+public class MarketplaceBookingSubscriptionCadenceMustBeRecurring()
+    : Exception("Marketplace booking subscription must use a recurring purchase cadence");
+
+public class MarketplaceBookingSubscriptionAutoRenewalNotSupported()
+    : Exception("The selected product pricing does not support subscription auto renewal");
+
 public class MarketplaceBookingBillingModeNotAccepted()
     : Exception("The selected marketplace booking billing mode is not accepted by the product pricing option");
 

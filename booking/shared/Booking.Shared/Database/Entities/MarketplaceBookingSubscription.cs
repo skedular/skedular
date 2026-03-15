@@ -12,7 +12,7 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
 {
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset? CancelledAt { get; set; }
-    public DateTimeOffset NextRenewalAt { get; set; }
+    public DateTimeOffset? NextRenewalAt { get; set; }
     public string Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }

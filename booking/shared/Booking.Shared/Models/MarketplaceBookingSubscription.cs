@@ -3,11 +3,11 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class MarketplaceBookingSubscription : ModelBase
+public class MarketplaceBookingSubscription : ModelBaseWithDeleted
 {
     public DateTimeOffset StartedAt { get; set; }
     public DateTimeOffset? CancelledAt { get; set; }
-    public DateTimeOffset NextRenewalAt { get; set; }
+    public DateTimeOffset? NextRenewalAt { get; set; }
     public MarketplaceBookingSubscriptionStatus Status { get; set; }
     public bool AutoRenew { get; set; }
     public bool CancelAtPeriodEnd { get; set; }
