@@ -95,6 +95,7 @@ type ProductPricing {
   bookingCadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!
+  supportsSubscriptionAutoRenewal: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
   billingMode: ProductPricingBillingMode!
   minDurationMinutes: Int
@@ -210,6 +211,7 @@ input ProductPricingInput {
   bookingCadence: ProductPricingCadence!
   price: Decimal!
   isTaxInclusive: Boolean!
+  supportsSubscriptionAutoRenewal: Boolean!
   acceptedPaymentMethods: [PaymentMethod!]!
   billingMode: ProductPricingBillingMode!
   minDurationMinutes: Int

@@ -58,6 +58,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationU
           purchaseCadence
           price
           isTaxInclusive
+          supportsSubscriptionAutoRenewal
         }
       }
     `,

@@ -1037,6 +1037,7 @@ type ProductPricing {
   numberOfResourcesToBook: Int!
   price: Decimal!
   purchaseCadence: ProductPricingCadence!
+  supportsSubscriptionAutoRenewal: Boolean!
 }
 
 type ProductPricingBillingModeDetails {
@@ -2188,6 +2189,7 @@ input ProductPricingInput {
   numberOfResourcesToBook: Int!
   price: Decimal!
   purchaseCadence: ProductPricingCadence!
+  supportsSubscriptionAutoRenewal: Boolean!
 }
 
 input ProductTagOrganizationTagWhereInput {

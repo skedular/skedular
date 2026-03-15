@@ -110,6 +110,7 @@ message ProductPricing {
   int32                     maxAllowedResourcesLockTimePaidViaBankTransfer = 13;
   int32                     numberOfResourcesToBook                        = 14;
   ProductPricingBillingMode billingMode                                    = 15;
+  bool                      supportsSubscriptionAutoRenewal                = 16;
 }
 
 message ListingMetadata {

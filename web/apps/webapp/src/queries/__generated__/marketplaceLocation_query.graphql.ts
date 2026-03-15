@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b2498f4f4b676ac97a2a10f25243f9e7>>
+ * @generated SignedSource<<20584dc216a1a34b073ce5cb5155d54b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -135,6 +135,7 @@ export type marketplaceLocation_query$data = {
         };
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
+        readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
     }>;
     readonly timezone: string | null | undefined;
@@ -708,6 +709,13 @@ return {
                   "kind": "ScalarField",
                   "name": "isTaxInclusive",
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "supportsSubscriptionAutoRenewal",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -725,6 +733,6 @@ return {
 };
 })();
 
-(node as any).hash = "05152928edd05d1cbb4a7df1c1a1d18f";
+(node as any).hash = "ad67a5f34393c8235cd59bb5b5d13f07";
 
 export default node;

@@ -75,6 +75,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           purchaseCadence
           price
           isTaxInclusive
+          supportsSubscriptionAutoRenewal
           acceptedPaymentMethods
           minDurationMinutes
           maxDurationMinutes

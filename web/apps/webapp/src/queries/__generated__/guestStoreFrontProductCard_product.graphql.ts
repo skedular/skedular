@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4bc29bb85530cfee35248067b9c6e1bf>>
+ * @generated SignedSource<<0afd1a360083dd9a3539021ad95c4bba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,6 +41,7 @@ export type guestStoreFrontProductCard_product$data = {
     };
     readonly price: any;
     readonly purchaseCadence: ProductPricingCadence;
+    readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
   readonly " $fragmentType": "guestStoreFrontProductCard_product";
 };
@@ -195,6 +196,13 @@ return {
           "kind": "ScalarField",
           "name": "isTaxInclusive",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "supportsSubscriptionAutoRenewal",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -205,6 +213,6 @@ return {
 };
 })();
 
-(node as any).hash = "3d4c13f06b34e430614e7fa79aefe46b";
+(node as any).hash = "23f235ab9b88406607e6b5ea4b3737e9";
 
 export default node;

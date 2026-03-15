@@ -596,6 +596,7 @@ public class Mapper : IMapper
             MapTo(src.BookingCadence),
             Convert.ToDecimal(src.Price),
             src.IsTaxInclusive,
+            src.SupportsSubscriptionAutoRenewal,
             MapTo(src.AcceptedBookingPaymentMethods).ToList(),
             MapTo(src.BillingMode),
             src.MinDurationMinutes.FromNullInt(),

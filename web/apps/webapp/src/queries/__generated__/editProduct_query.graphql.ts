@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6a5d8dc253a6427fcf214a3a37ccab9>>
+ * @generated SignedSource<<4a554761f322ba38362cbd0d02800ccd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -71,6 +71,7 @@ export type editProduct_query$data = {
       readonly numberOfResourcesToBook: number;
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
+      readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -321,6 +322,13 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "supportsSubscriptionAutoRenewal",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "purchaseCadence",
               "storageKey": null
             },
@@ -477,6 +485,6 @@ return {
 };
 })();
 
-(node as any).hash = "5cd776aa0dfab12ba7d90662619aaab0";
+(node as any).hash = "c6afbaab822d6503a51a19486057f2e2";
 
 export default node;

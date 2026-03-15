@@ -235,6 +235,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             minDurationMinutes
             maxDurationMinutes
             isTaxInclusive
+            supportsSubscriptionAutoRenewal
             maxAllowedResourcesLockTimePaidViaCard
             maxAllowedResourcesLockTimePaidViaBankTransfer
             billingMode

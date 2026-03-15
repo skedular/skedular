@@ -218,6 +218,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               purchaseCadence
               price
               isTaxInclusive
+              supportsSubscriptionAutoRenewal
             }
             amenities {
               id

@@ -63,6 +63,7 @@ public class Mapper : IMapper
             BookingCadence = MapTo(src.BookingCadence),
             Price = Convert.ToDouble(src.Price),
             IsTaxInclusive = src.IsTaxInclusive,
+            SupportsSubscriptionAutoRenewal = src.SupportsSubscriptionAutoRenewal,
             MinDurationMinutes = src.MinDurationMinutes.ToNullInt(),
             MaxDurationMinutes = src.MaxDurationMinutes.ToNullInt(),
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,

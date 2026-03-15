@@ -86,6 +86,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
           purchaseCadence
           price
           isTaxInclusive
+          supportsSubscriptionAutoRenewal
         }
       }
     `,

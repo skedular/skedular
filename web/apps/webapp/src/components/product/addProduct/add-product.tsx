@@ -84,6 +84,7 @@ type PricingOptionForm = {
   minDurationMinutes: string;
   maxDurationMinutes: string;
   isTaxInclusive: boolean;
+  supportsSubscriptionAutoRenewal: boolean;
   maxAllowedResourcesLockTimePaidViaCard: string;
   maxAllowedResourcesLockTimePaidViaBankTransfer: string;
   billingMode: string;
@@ -100,6 +101,7 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   minDurationMinutes: '',
   maxDurationMinutes: '',
   isTaxInclusive: true,
+  supportsSubscriptionAutoRenewal: false,
   maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
   maxAllowedResourcesLockTimePaidViaBankTransfer: (defaultMaxAllowedResourcesLockTimePaidViaBankTransfer / (60 * 24)).toString(),
   billingMode: 'NOT_SET',
@@ -223,6 +225,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
               return maxDurationMinutes >= minDurationMinutes;
             }),
           isTaxInclusive: boolean().required(),
+          supportsSubscriptionAutoRenewal: boolean().required(),
           maxAllowedResourcesLockTimePaidViaCard: string()
             .required('Max allowed resources lock time paid via card is required.')
             .test('is-number', 'Max allowed resources lock time must be a valid number.', (value) => !isNaN(Number(value)))
@@ -307,6 +310,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               title
               subTitle
             }
+            supportsSubscriptionAutoRenewal
             purchaseCadence
             bookingCadence
             price
@@ -391,6 +395,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
             bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
+            supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
@@ -457,6 +462,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
+              supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
@@ -642,6 +648,13 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
 
                             <FormFieldLabel>
                               <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel>
+                              <Switches
+                                name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
+                                data={{ label: 'Supports subscription auto renewal?', value: 'supportsSubscriptionAutoRenewal' }}
+                              />
                             </FormFieldLabel>
 
                             <FormFieldLabel label="Minimum Duration (minutes)">

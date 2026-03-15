@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e839e6e24e3b87b157b4db87c810bde>>
+ * @generated SignedSource<<45582d3c3b6ac94945e32ee850a1243d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,6 +52,7 @@ export type ProductPricingInput = {
   numberOfResourcesToBook: number;
   price: any;
   purchaseCadence: ProductPricingCadence;
+  supportsSubscriptionAutoRenewal: boolean;
 };
 export type editProduct_updateProductMutation$variables = {
   input: UpdateProductInput;
@@ -103,6 +104,7 @@ export type editProduct_updateProductMutation$data = {
         readonly numberOfResourcesToBook: number;
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
+        readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -159,6 +161,7 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly numberOfResourcesToBook: number;
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
+        readonly supportsSubscriptionAutoRenewal: boolean;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -397,6 +400,13 @@ v7 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "supportsSubscriptionAutoRenewal",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "purchaseCadence",
                 "storageKey": null
               },
@@ -491,16 +501,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "53ff828777ee7e730c0436baa361bdc2",
+    "cacheID": "a8239651b6335566b3af0eb41f137b21",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "697e87b28f880c52151c2549d5474346";
+(node as any).hash = "64aa193458affdbc6adc642e6e0543c7";
 
 export default node;

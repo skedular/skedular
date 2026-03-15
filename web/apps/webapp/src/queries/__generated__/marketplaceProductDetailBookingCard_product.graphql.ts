@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<243d94be15f6a54fff504df9c88991ea>>
+ * @generated SignedSource<<5612f30d481c2bfccec1dddfd7dfc537>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,6 +44,7 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly numberOfResourcesToBook: number;
     readonly price: any;
     readonly purchaseCadence: ProductPricingCadence;
+    readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
   readonly " $fragmentType": "marketplaceProductDetailBookingCard_product";
 };
@@ -208,6 +209,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "supportsSubscriptionAutoRenewal",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "acceptedPaymentMethods",
           "storageKey": null
         },
@@ -241,6 +249,6 @@ return {
 };
 })();
 
-(node as any).hash = "202be8dd00a8a4f7e6934506dcabacdf";
+(node as any).hash = "c393bc342f42ee03d00ce74af3e37ae6";
 
 export default node;

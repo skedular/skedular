@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb345cb040b2e5f5997177b17e914452>>
+ * @generated SignedSource<<345f5dd314c7329b28183a57aec507e4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -117,6 +117,13 @@ v5 = [
         "args": null,
         "kind": "ScalarField",
         "name": "isTaxInclusive",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "supportsSubscriptionAutoRenewal",
         "storageKey": null
       }
     ],
@@ -338,12 +345,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a40bf7baf95da35720fd0f11dfa84d8d",
+    "cacheID": "1741356201c89aa18d022598807ac294",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontProductsRefetchQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...guestStoreFrontProducts_query_CPnhj\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n  }\n}\n\nfragment guestStoreFrontProducts_query_CPnhj on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...guestStoreFrontProducts_query_CPnhj\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment guestStoreFrontProducts_query_CPnhj on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
   }
 };
 })();

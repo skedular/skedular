@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<35c4df589db597cd12ea345dcdfcf71e>>
+ * @generated SignedSource<<3427c02a39954dff95bb042097103097>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -58,6 +58,7 @@ export type bookProduct_query$data = {
       readonly numberOfResourcesToBook: number;
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
+      readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesUserEmails_query" | "singleChoiceMarketplaceBookingCategory_query" | "singleChoicePaymentMethodType_query">;
@@ -307,6 +308,13 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "supportsSubscriptionAutoRenewal",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "maxAllowedResourcesLockTimePaidViaCard",
               "storageKey": null
             },
@@ -375,6 +383,6 @@ return {
 };
 })();
 
-(node as any).hash = "8b940df8a49d407902e68e4d7216742e";
+(node as any).hash = "0bebd42c337c0da7728896b947d6c33f";
 
 export default node;
