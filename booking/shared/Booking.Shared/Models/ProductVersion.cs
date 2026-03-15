@@ -16,4 +16,5 @@ public class ProductVersion : ReplicatedModelBase
         OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 
     public ICollection<StripeProduct> StripeProducts { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> MarketplaceBookingSubscriptions { get; set; } = [];
 }
