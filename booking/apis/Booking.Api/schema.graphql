@@ -70,6 +70,12 @@ type ConnectionOfBookingEdge {
   totalCount: Int!
 }
 
+type ConnectionOfRecurringBookingEdge {
+  pageInfo: PageInfo!
+  edges: [RecurringBookingEdge!]!
+  totalCount: Int!
+}
+
 type CustomerDetails {
   id: ID!
 }
@@ -209,6 +215,10 @@ type Query {
   paymentStatuses: [PaymentStatusDetails!]!
   organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
+  recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
+  recurringBookingById(id: String!): RecurringBookingDetails @lookup @internal @cost(weight: "10")
+  recurringBookings(after: String first: Int before: String last: Int where: RecurringBookingWhereInput! orderBy: [RecurringBookingOrderInput!]): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
+  allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
   bookingVersion: Version!
@@ -237,6 +247,11 @@ type RecurringBookingDetails {
   occurrenceCount: Int
   skippedDates: [DateTime!]!
   id: ID!
+}
+
+type RecurringBookingEdge {
+  node: RecurringBookingDetails!
+  cursor: String!
 }
 
 type RecurringBookingPayload {
@@ -436,6 +451,31 @@ input OrganizationAvailableResourcesWhereInput {
   organizationUniqueAlphanumericName: String
   from: DateTime!
   until: DateTime!
+}
+
+input RecurringBookingOrderInput {
+  direction: OrderDirection!
+  field: RecurringBookingOrderField!
+}
+
+input RecurringBookingWhereInput {
+  fromGt: DateTime
+  fromGte: DateTime
+  fromLt: DateTime
+  fromLte: DateTime
+  toGt: DateTime
+  toGte: DateTime
+  toLt: DateTime
+  toLte: DateTime
+  category: BookingCategory
+  channel: BookingChannel
+  nameContains: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  customerIds: [String!]
+  includeMineOnly: Boolean
+  includeFutureBookingsOnly: Boolean
 }
 
 input RejectBookingPaymentInput {
@@ -754,6 +794,13 @@ enum RecurringBookingEndType {
   NEVER
   UNTIL_DATE
   AFTER_OCCURRENCES
+}
+
+enum RecurringBookingOrderField {
+  FROM
+  TO
+  CATEGORY
+  CHANNEL
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

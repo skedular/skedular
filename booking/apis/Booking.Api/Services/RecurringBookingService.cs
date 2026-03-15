@@ -9,48 +9,47 @@ using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Customer = Booking.Shared.Database.Entities.Customer;
-using Location = Booking.Shared.Database.Entities.Location;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
 
-public interface IBookingService
+public interface IRecurringBookingService
 {
-    Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<RecurringBooking> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int )> GetPaginatedBookingsAsync(
+    Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
-        BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        RecurringBookingSearchCriteria searchCriteria,
+        ICollection<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 }
 
-public class BookingService(
+public class RecurringBookingService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
     ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
     Shared.Mappers.IMapper sharedMapper,
-    ICachedBookingService cachedBookingService) : IBookingService
+    ICachedRecurringBookingService cachedRecurringBookingService) : IRecurringBookingService
 {
-    public async Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken)
+    public async Task<RecurringBooking> GetByIdAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var booking = await cachedBookingService.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
+        var booking = await cachedRecurringBookingService.GetByIdAsync(id, cancellationToken) ?? throw new RecurringBookingNotFound();
 
-        await EnsureCustomerCanViewBookingAsync(booking, customer, cancellationToken);
+        await EnsureCustomerCanViewRecurringBookingAsync(booking, customer, cancellationToken);
 
         return sharedMapper.MapTo(booking);
     }
 
-    public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(
+    public async Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsAsync(
         PaginationInputParam paginationInputParam,
-        BookingSearchCriteria searchCriteria,
-        ICollection<BookingOrder> orderByFields,
+        RecurringBookingSearchCriteria searchCriteria,
+        ICollection<RecurringBookingOrder> orderByFields,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
@@ -67,7 +66,6 @@ public class BookingService(
 
         List<string>? organizationIds = null;
         List<string>? organizationUniqueAlphanumericNames = null;
-        List<string>? locationIds = null;
         List<string>? teamIds = null;
 
         if (searchCriteria.CustomerIds.Count != 0 &&
@@ -135,29 +133,6 @@ public class BookingService(
             }
         }
 
-        if (customer is not null && searchCriteria.LocationIds.Count != 0)
-        {
-            var criteria = searchCriteria;
-            var locations = await repositoryFactory.LocationRepository.Query(
-                    new Specification<Location> { Criteria = query => !query.DeletedAt.HasValue && criteria.LocationIds.Contains(query.Id) }
-                        .AddInclude(query => query.Organization!))
-                .ToListAsync(cancellationToken);
-
-            foreach (var location in locations)
-            {
-                if (organizationIds is null)
-                {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-                }
-
-                if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
-                {
-                    throw new UnauthorizedAccessException();
-                }
-            }
-        }
-
         if (customer is not null && searchCriteria.TeamIds.Count != 0)
         {
             var criteria = searchCriteria;
@@ -185,7 +160,6 @@ public class BookingService(
             (!searchCriteria.IncludeMineOnly.HasValue || !searchCriteria.IncludeMineOnly.Value) &&
             searchCriteria.OrganizationIds.Count == 0 &&
             searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0 &&
-            searchCriteria.LocationIds.Count == 0 &&
             searchCriteria.TeamIds.Count == 0)
         {
             if (organizationIds is null)
@@ -194,18 +168,17 @@ public class BookingService(
                 organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
             }
 
-            locationIds ??= await GetCustomerLocationIdsAsync(customer, cancellationToken);
             teamIds ??= await GetCustomerTeamIdsAsync(customer, cancellationToken);
 
-            if (organizationIds.Count == 0 && locationIds.Count == 0 && teamIds.Count == 0)
+            if (organizationIds.Count == 0 && teamIds.Count == 0)
             {
                 return (new PaginatedInfo(false, false, null, null), [], 0);
             }
 
-            searchCriteria = searchCriteria with { OrganizationIds = organizationIds, LocationIds = locationIds, TeamIds = teamIds };
+            searchCriteria = searchCriteria with { OrganizationIds = organizationIds, TeamIds = teamIds };
         }
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.BookingRepository.GetPaginatedBookingsUntrackedAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.RecurringBookingRepository.GetPaginatedRecurringBookingsUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
@@ -229,20 +202,14 @@ public class BookingService(
                     item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
     }
 
-    private async Task<List<string>> GetCustomerLocationIdsAsync(Customer customer, CancellationToken cancellationToken)
-    {
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdAsync(customer.Id, false, cancellationToken);
-        return locations.Select(item => item.Id).ToList();
-    }
-
     private async Task<List<string>> GetCustomerTeamIdsAsync(Customer customer, CancellationToken cancellationToken)
     {
         var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
         return teams.Select(item => item.Id).ToList();
     }
 
-    private async Task EnsureCustomerCanViewBookingAsync(
-        Shared.Database.Entities.Booking booking,
+    private async Task EnsureCustomerCanViewRecurringBookingAsync(
+        Shared.Database.Entities.RecurringBooking booking,
         Customer customer,
         CancellationToken cancellationToken)
     {

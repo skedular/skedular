@@ -162,6 +162,12 @@ type ConnectionOfProductEdge {
   totalCount: Int!
 }
 
+type ConnectionOfRecurringBookingEdge {
+  edges: [RecurringBookingEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type ConnectionOfResourceEdge {
   edges: [ResourceEdge!]!
   pageInfo: PageInfo!
@@ -1061,6 +1067,7 @@ type ProductsPayload {
 type Query {
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+  allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
   availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
   azureTenantAdminConsentUrl: String! @cost(weight: "10")
   azureTenantOrganization: OrganizationDetails @cost(weight: "10")
@@ -1136,6 +1143,8 @@ type Query {
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
   productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
+  recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
+  recurringBookings(after: String before: String first: Int last: Int orderBy: [RecurringBookingOrderInput!] where: RecurringBookingWhereInput!): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resourceTypes: [OrganizationTagTypeDetails!]!
   roomResourceType: OrganizationTagType!
@@ -1173,6 +1182,11 @@ type RecurringBookingDetails {
   skippedDates: [DateTime!]!
   startDate: DateTime!
   until: DateTime!
+}
+
+type RecurringBookingEdge {
+  cursor: String!
+  node: RecurringBookingDetails!
 }
 
 type RecurringBookingPayload {
@@ -2187,6 +2201,31 @@ input ProductWhereInput {
   productIds: [String!]
 }
 
+input RecurringBookingOrderInput {
+  direction: OrderDirection!
+  field: RecurringBookingOrderField!
+}
+
+input RecurringBookingWhereInput {
+  category: BookingCategory
+  channel: BookingChannel
+  customerIds: [String!]
+  fromGt: DateTime
+  fromGte: DateTime
+  fromLt: DateTime
+  fromLte: DateTime
+  includeFutureBookingsOnly: Boolean
+  includeMineOnly: Boolean
+  nameContains: String
+  organizationIds: [String!]
+  organizationUniqueAlphanumericNames: [String!]
+  teamIds: [String!]
+  toGt: DateTime
+  toGte: DateTime
+  toLt: DateTime
+  toLte: DateTime
+}
+
 input RejectBookingPaymentInput {
   clientMutationId: String
   id: String!
@@ -3084,6 +3123,13 @@ enum RecurringBookingEndType {
   AFTER_OCCURRENCES
   NEVER
   UNTIL_DATE
+}
+
+enum RecurringBookingOrderField {
+  CATEGORY
+  CHANNEL
+  FROM
+  TO
 }
 
 enum ResourceOrderField {

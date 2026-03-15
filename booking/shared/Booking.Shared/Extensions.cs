@@ -43,6 +43,7 @@ public static class Extensions
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
                 .AddScoped<ICachedTeamService, CachedTeamService>()
                 .AddScoped<ICachedBookingService, CachedBookingService>()
+                .AddScoped<ICachedRecurringBookingService, CachedRecurringBookingService>()
                 .AddScoped<ILocationResourceBookingSlotsHelperService, LocationResourceBookingSlotsHelperService>()
                 .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()

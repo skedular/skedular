@@ -130,8 +130,7 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion);
 
-        internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria,
-            TimeProvider timeProvider)
+        internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria, TimeProvider timeProvider)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 

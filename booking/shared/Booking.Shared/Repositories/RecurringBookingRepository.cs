@@ -1,8 +1,14 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Database;
-using Booking.Shared.Database.Entities;
+using Booking.Shared.Models;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Pagination;
+using Enterprise.Shared.Time;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Customer = Booking.Shared.Database.Entities.Customer;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Repositories;
 
@@ -13,6 +19,12 @@ public interface IRecurringBookingRepository : IRepository<RecurringBooking>
     RecurringBooking Add(RecurringBooking recurringBooking);
     RecurringBooking Update(RecurringBooking recurringBooking);
     RecurringBooking Remove(RecurringBooking recurringBooking);
+
+    Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
+        PaginationInputParam paginationInputParam,
+        RecurringBookingSearchCriteria searchCriteria,
+        ICollection<RecurringBookingOrder> orderByFields,
+        CancellationToken cancellationToken);
 }
 
 internal static class RecurringBookingExtensions
@@ -31,6 +43,107 @@ internal static class RecurringBookingExtensions
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer);
+
+        internal IQueryable<RecurringBooking> AddSearchCriteria(RecurringBookingSearchCriteria searchCriteria, TimeProvider timeProvider)
+        {
+            originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
+
+            if (searchCriteria.IncludeFutureBookingsOnly is not null && searchCriteria.IncludeFutureBookingsOnly.Value)
+            {
+                originalQuery = originalQuery.Where(item => item.From >= timeProvider.GetUtcNow().StartOfDay());
+            }
+
+            if (searchCriteria.FromGt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.From > searchCriteria.FromGt);
+            }
+
+            if (searchCriteria.FromGte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.From >= searchCriteria.FromGte);
+            }
+
+            if (searchCriteria.FromLt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.From < searchCriteria.FromLt);
+            }
+
+            if (searchCriteria.FromLte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.From <= searchCriteria.FromLte);
+            }
+
+            if (searchCriteria.ToGt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Until > searchCriteria.ToGt);
+            }
+
+            if (searchCriteria.ToGte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Until >= searchCriteria.ToGte);
+            }
+
+            if (searchCriteria.ToLt is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Until < searchCriteria.ToLt);
+            }
+
+            if (searchCriteria.ToLte is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Until <= searchCriteria.ToLte);
+            }
+
+            if (searchCriteria.CustomerIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedCustomers.Any(customer =>
+                    !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
+            }
+
+            if (searchCriteria.Category is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Category == searchCriteria.Category.Value.ToBookingCategory());
+            }
+
+            if (searchCriteria.Channel is not null)
+            {
+                originalQuery = originalQuery.Where(item => item.Channel == searchCriteria.Channel.Value.ToBookingChannel());
+            }
+
+            if (searchCriteria.OrganizationIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
+            }
+
+            if (searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
+                    !organization.DeletedAt.HasValue &&
+                    organization.UniqueAlphanumericName != null &&
+                    searchCriteria.OrganizationUniqueAlphanumericNames.Contains(organization.UniqueAlphanumericName)));
+            }
+
+            if (searchCriteria.TeamIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && searchCriteria.TeamIds.Contains(team.Id)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.InvolvedCustomers.Any(customer => (customer.Name != null &&
+                                                            EF.Functions.ILike(customer.Name, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.GivenName != null &&
+                                                            EF.Functions.ILike(customer.GivenName, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.MiddleName != null &&
+                                                            EF.Functions.ILike(customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
+                                                           (customer.FamilyName != null &&
+                                                            EF.Functions.ILike(customer.FamilyName, $"%{searchCriteria.NameContains}%"))));
+            }
+
+            return originalQuery;
+        }
     }
 }
 
@@ -66,5 +179,51 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
         var now = TimeProvider.GetUtcNow();
         recurringBooking.DeletedAt = now;
         return DbContext.RecurringBooking.Update(recurringBooking).Entity;
+    }
+
+    public async Task<(PaginatedInfo, ICollection<Edge<RecurringBooking>>, int)> GetPaginatedRecurringBookingsUntrackedAsync(
+        PaginationInputParam paginationInputParam,
+        RecurringBookingSearchCriteria searchCriteria,
+        ICollection<RecurringBookingOrder> orderByFields,
+        CancellationToken cancellationToken) =>
+        await DbContext.RecurringBooking
+            .AddSearchCriteria(searchCriteria, TimeProvider)
+            .AddDependentObjects(false)
+            .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
+
+    private static List<KeysetPaginationField<RecurringBooking>> GetPaginationFields(ICollection<RecurringBookingOrder> orderByFields)
+    {
+        if (orderByFields.Count == 0)
+        {
+            return
+            [
+                KeysetPaginationField<RecurringBooking>.Create(
+                    nameof(RecurringBooking.From),
+                    query => query.From,
+                    OrderDirection.Ascending)
+            ];
+        }
+
+        return orderByFields.Select(orderField => orderField.Field switch
+            {
+                RecurringBookingOrderField.From => KeysetPaginationField<RecurringBooking>.Create(
+                    nameof(RecurringBooking.From),
+                    query => query.From,
+                    orderField.Direction),
+                RecurringBookingOrderField.To => KeysetPaginationField<RecurringBooking>.Create(
+                    nameof(RecurringBooking.Until),
+                    query => query.Until,
+                    orderField.Direction),
+                RecurringBookingOrderField.Category => KeysetPaginationField<RecurringBooking>.Create(
+                    nameof(RecurringBooking.Category),
+                    query => query.Category,
+                    orderField.Direction),
+                RecurringBookingOrderField.Channel => KeysetPaginationField<RecurringBooking>.Create(
+                    nameof(RecurringBooking.Channel),
+                    query => query.Channel,
+                    orderField.Direction),
+                _ => throw new ArgumentOutOfRangeException()
+            })
+            .ToList();
     }
 }
