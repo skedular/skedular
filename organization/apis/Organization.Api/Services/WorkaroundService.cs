@@ -27,7 +27,7 @@ public class WorkaroundService(
 {
     public async Task RepublishOrganizationAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
             null,
             cancellationToken);
@@ -85,7 +85,7 @@ public class WorkaroundService(
 
     public async Task RegenerateDailyAnalyticsAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
             null,
             cancellationToken);

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ebd071e7f9069bbdb66502b75e481948>>
+ * @generated SignedSource<<7092c4a93590f2c9762cd5e5f9d452a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,9 +16,9 @@ export type AddTeamInput = {
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   name: string;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
   organizationMemberIds: ReadonlyArray<string>;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   primaryLocationId?: string | null | undefined;
   timezone?: string | null | undefined;
 };

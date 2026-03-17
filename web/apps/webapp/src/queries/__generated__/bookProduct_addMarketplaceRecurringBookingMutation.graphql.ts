@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<490a2d0e7df5fb1737a31d3da31be4c7>>
+ * @generated SignedSource<<ee72fc8a737777287b0cb2abe80b2e08>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,8 +29,8 @@ export type AddMarketplaceRecurringBookingInput = {
   interval: number;
   invoiceEmailList?: ReadonlyArray<string> | null | undefined;
   occurrenceCount?: number | null | undefined;
+  organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
-  organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   paymentMethod: PaymentMethod;
   pricingId: string;
   productVersionId: string;

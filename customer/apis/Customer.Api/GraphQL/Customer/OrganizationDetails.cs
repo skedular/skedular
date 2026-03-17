@@ -4,8 +4,7 @@ using HotChocolate;
 namespace Customer.Api.GraphQL.Customer;
 
 [GraphQLName("OrganizationDetails")]
-public class OrganizationDetails(string id, string uniqueAlphanumericName) : Node(id)
+public class OrganizationDetails(string id, string customDomain) : Node(id)
 {
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; } = uniqueAlphanumericName;
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; } = customDomain;
 }

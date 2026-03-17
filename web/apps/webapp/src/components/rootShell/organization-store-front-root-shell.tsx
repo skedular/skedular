@@ -23,7 +23,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query organizationStoreFrontRootShell_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query organizationStoreFrontRootShell_rootQuery($organizationCustomDomain: String!) {
     me {
       id
     }
@@ -111,20 +111,20 @@ const OrganizationStoreFrontRootShellWithRelay = ({ children }: PropsWithChildre
   const [queryReference, loadQuery] = useQueryLoader<organizationStoreFrontRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
-      { organizationUniqueAlphanumericName },
+      { organizationCustomDomain },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

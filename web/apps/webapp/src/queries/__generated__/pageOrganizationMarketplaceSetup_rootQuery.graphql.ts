@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07802cc9062bb05381a641484400390b>>
+ * @generated SignedSource<<0cb601de1d4aa52abc08598a55df0866>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationMarketplaceSetup_rootQuery$variables = {
   organizationBankAccountNameSearchText?: string | null | undefined;
+  organizationCustomDomain: string;
   organizationStripeConnectAccountNameSearchText?: string | null | undefined;
-  organizationUniqueAlphanumericName: string;
   productTagNameSearchText?: string | null | undefined;
 };
 export type pageOrganizationMarketplaceSetup_rootQuery$data = {
@@ -36,12 +36,12 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationStripeConnectAccountNameSearchText"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationStripeConnectAccountNameSearchText"
 },
 v3 = {
   "defaultValue": null,
@@ -51,8 +51,8 @@ v3 = {
 v4 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v5 = {
@@ -167,8 +167,8 @@ v15 = [
 ],
 v16 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v17 = [
   (v8/*: any*/),
@@ -211,7 +211,7 @@ v20 = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "uniqueAlphanumericName",
+      "name": "customDomain",
       "storageKey": null
     },
     (v6/*: any*/)
@@ -284,9 +284,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
-      (v3/*: any*/),
       (v1/*: any*/),
+      (v3/*: any*/),
+      (v2/*: any*/),
       (v0/*: any*/)
     ],
     "kind": "Operation",
@@ -653,16 +653,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b4bb93a7c1266ac30d9eadc856222965",
+    "cacheID": "b04d9a701127071c2b3875823a992ba3",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationCustomDomain: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "662208527cd44515f135d106ccf706d1";
+(node as any).hash = "5527ebacd603d542bf9c1ceac5ad93d4";
 
 export default node;

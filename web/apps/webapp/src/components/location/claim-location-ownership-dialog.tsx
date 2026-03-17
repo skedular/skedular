@@ -19,7 +19,7 @@ type Props = {
   isDialogOpen: boolean;
   onClaimClicked: () => void;
   onCancel: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type LocationClaimOwnershipDetails = {
@@ -30,7 +30,7 @@ const locationClaimOwnershipSchema = object({
   uniqueClaimCode: string().required('Location claim code is required'),
 });
 
-const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClicked, onCancel, organizationUniqueAlphanumericName }: Props) => {
+const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClicked, onCancel, organizationCustomDomain }: Props) => {
   const [commitClaimLocationOwnership] = useMutation<claimLocationOwnershipDialog_claimLocationOwnershipMutation>(graphql`
     mutation claimLocationOwnershipDialog_claimLocationOwnershipMutation($connectionIds: [ID!]!, $input: ClaimLocationOwnershipInput!) {
       claimLocationOwnership(input: $input) {
@@ -57,7 +57,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
           canModify
           canDelete
           organization {
-            uniqueAlphanumericName
+            customDomain
           }
         }
       }
@@ -80,7 +80,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
           clientMutationId: uuid(),
           id,
           uniqueClaimCode: uniqueClaimCode.toLocaleUpperCase(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (response, errors) => {

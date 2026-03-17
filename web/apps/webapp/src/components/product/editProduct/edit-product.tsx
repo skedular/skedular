@@ -35,7 +35,7 @@ import { array, boolean, object, string } from 'yup';
 type Props = {
   rootDataRelay: editProduct_query$key;
   onReloadRequired?: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type ProductDetails = {
@@ -239,7 +239,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
       .required('Pricing options are required.'),
   });
 
-const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
+const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<editProduct_query$key>(
     graphql`
       fragment editProduct_query on Query {
@@ -695,7 +695,7 @@ const EditProduct = ({ rootDataRelay, organizationUniqueAlphanumericName }: Prop
                         rootDataRelay={rootData}
                         name="productTagIds"
                         required={requiredFields.productTagIds}
-                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                        organizationCustomDomain={organizationCustomDomain}
                       />
                     </FormFieldLabel>
 

@@ -18,7 +18,7 @@ public interface IPaymentService
 
     Task<string> AddPaymentMethodIntentAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task RemovePaymentMethodAsync(string paymentMethodId, CancellationToken cancellationToken);
@@ -46,13 +46,13 @@ public class PaymentService(
 
     public async Task<string> AddPaymentMethodIntentAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanManagePaymentMethodAsync(organization, customer.Id, cancellationToken))
@@ -81,7 +81,7 @@ public class PaymentService(
             await repositoryFactory.OrganizationStripePaymentMethodRepository.GetByIdAsync(paymentMethodId, cancellationToken) ??
             throw new OrganizationPaymentMethodNotFound();
         var organization = organizationStripePaymentMethod.Organization;
-        organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                            organization.Id,
                            null,
                            cancellationToken) ??

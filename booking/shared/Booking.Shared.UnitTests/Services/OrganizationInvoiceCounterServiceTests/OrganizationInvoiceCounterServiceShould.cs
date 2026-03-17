@@ -21,7 +21,7 @@ public class OrganizationInvoiceCounterServiceShould
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
-        A.CallTo(() => organizationRepository.GetByIdOrUniqueAlphanumericNameAsync("org-1", null, false, false, cancellationToken))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken))
             .Returns(Task.FromResult<Organization?>(null));
 
         await Should.ThrowAsync<OrganizationNotFound>(async () =>
@@ -44,7 +44,7 @@ public class OrganizationInvoiceCounterServiceShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationInvoiceCounterRepository).Returns(organizationInvoiceCounterRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => organizationRepository.GetByIdOrUniqueAlphanumericNameAsync("org-1", null, false, false, cancellationToken))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken))
             .Returns(organization);
         A.CallTo(() => organizationInvoiceCounterRepository.GetByOrganizationIdAsync("org-1", cancellationToken))
             .Returns(Task.FromResult<OrganizationInvoiceCounter?>(null));
@@ -76,7 +76,7 @@ public class OrganizationInvoiceCounterServiceShould
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
         A.CallTo(() => repositoryFactory.OrganizationInvoiceCounterRepository).Returns(organizationInvoiceCounterRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
-        A.CallTo(() => organizationRepository.GetByIdOrUniqueAlphanumericNameAsync("org-1", null, false, false, cancellationToken))
+        A.CallTo(() => organizationRepository.GetByIdOrCustomDomainAsync("org-1", null, false, false, cancellationToken))
             .Returns(organization);
         A.CallTo(() => organizationInvoiceCounterRepository.GetByOrganizationIdAsync("org-1", cancellationToken))
             .Returns(existingCounter);

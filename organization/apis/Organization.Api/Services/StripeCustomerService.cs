@@ -21,7 +21,7 @@ public class StripeCustomerService(
 {
     public async Task<OrganizationStripeCustomer> AddAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                null,
                                cancellationToken) ??

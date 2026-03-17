@@ -18,12 +18,12 @@ public interface IOrganizationAuthorizationService
 
     ValueTask<OrganizationPermissions> GetPermissionsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
         ICollection<string> ids,
-        ICollection<string> uniqueAlphanumericNames,
+        ICollection<string> customDomains,
         string customerId,
         bool existing,
         CancellationToken cancellationToken);
@@ -39,7 +39,7 @@ public class OrganizationAuthorizationService(
 {
     public async ValueTask<bool> CanViewOrganizationDetailsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -51,7 +51,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanViewBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -63,7 +63,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanAddBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -75,7 +75,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanUpdateBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -87,7 +87,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanDeleteBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -99,7 +99,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanModifyPaymentMethodAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -111,13 +111,13 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<OrganizationPermissions> GetPermissionsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             cancellationToken) ?? throw new OrganizationNotFound();
 
         return new OrganizationPermissions
@@ -132,12 +132,12 @@ public class OrganizationAuthorizationService(
 
     public async Task<ICollection<Organization>> GetOrganizationsAndValidatePermissionsAsync(
         ICollection<string> ids,
-        ICollection<string> uniqueAlphanumericNames,
+        ICollection<string> customDomains,
         string customerId,
         bool existing,
         CancellationToken cancellationToken)
     {
-        if (ids.Count == 0 && uniqueAlphanumericNames.Count == 0)
+        if (ids.Count == 0 && customDomains.Count == 0)
         {
             return [];
         }
@@ -146,13 +146,13 @@ public class OrganizationAuthorizationService(
 
         if (ids.Count != 0)
         {
-            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
                 ids,
                 null,
                 false,
                 false,
                 cancellationToken);
-            if (ids.Count + uniqueAlphanumericNames.Count != organizations.Count)
+            if (ids.Count + customDomains.Count != organizations.Count)
             {
                 throw new OrganizationNotFound();
             }
@@ -183,22 +183,22 @@ public class OrganizationAuthorizationService(
                 result.Add(organizationEntity);
             }
         }
-        else if (uniqueAlphanumericNames.Count != 0)
+        else if (customDomains.Count != 0)
         {
-            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
                 null,
-                uniqueAlphanumericNames,
+                customDomains,
                 false,
                 false,
                 cancellationToken);
-            if (ids.Count + uniqueAlphanumericNames.Count != organizations.Count)
+            if (ids.Count + customDomains.Count != organizations.Count)
             {
                 throw new OrganizationNotFound();
             }
 
-            foreach (var uniqueAlphanumericName in uniqueAlphanumericNames)
+            foreach (var customDomain in customDomains)
             {
-                var organizationEntity = organizations.First(item => item.UniqueAlphanumericName == uniqueAlphanumericName);
+                var organizationEntity = organizations.First(item => item.CustomDomain == customDomain);
                 if (existing)
                 {
                     if (!await CanUpdateBookingAsync(organizationEntity.Id, customerId, cancellationToken))

@@ -17,12 +17,12 @@ public interface IOrganizationSsoService
 {
     Task<bool> IsSsoTokenValidAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task<string> SsoLoginAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string redirectUrl,
         CancellationToken cancellationToken);
 
@@ -30,7 +30,7 @@ public interface IOrganizationSsoService
 
     Task<Shared.Models.Organization> RemoveAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task ProcessSsoResponseAsync(HttpResponse httpResponse, string rawSamlResponse, CancellationToken cancellationToken);
@@ -52,22 +52,22 @@ public class OrganizationSsoService(
 {
     public async Task<bool> IsSsoTokenValidAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(organizationUniqueAlphanumericName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationCustomDomain);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationUniqueAlphanumericNameAsync(
+        var ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             cancellationToken);
         if (ssoSettings is null || !ssoSettings.IsActive)
         {
             return true;
         }
 
-        var userSsoContext = context.GetUserSsoContext(organizationUniqueAlphanumericName);
+        var userSsoContext = context.GetUserSsoContext(organizationCustomDomain);
         if (userSsoContext is null)
         {
             return false;
@@ -79,13 +79,13 @@ public class OrganizationSsoService(
 
     public async Task<string> SsoLoginAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string redirectUrl,
         CancellationToken cancellationToken)
     {
-        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationUniqueAlphanumericNameAsync(
+        var existingOrganizationSsoSetting = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             cancellationToken);
         if (existingOrganizationSsoSetting is null)
         {
@@ -101,16 +101,16 @@ public class OrganizationSsoService(
                 existingOrganizationSsoSetting.LoginUrl);
         }
 
-        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
             return samlLoginRequestFactory.GenerateSamlLoginRequest(
-                $"uniquename{organizationUniqueAlphanumericName}",
+                $"uniquename{organizationCustomDomain}",
                 redirectUrl,
                 existingOrganizationSsoSetting.EntityId,
                 existingOrganizationSsoSetting.LoginUrl);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
     public async Task<Shared.Models.Organization> UpdateAsync(OrganizationSsoSettings ssoSettings, CancellationToken cancellationToken)
@@ -125,9 +125,9 @@ public class OrganizationSsoService(
         }
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                ssoSettings.Organization.Id,
-                               ssoSettings.Organization.UniqueAlphanumericName,
+                               ssoSettings.Organization.CustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -166,13 +166,13 @@ public class OrganizationSsoService(
 
     public async Task<Shared.Models.Organization> RemoveAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
@@ -219,7 +219,7 @@ public class OrganizationSsoService(
         Shared.Database.Entities.OrganizationSsoSettings ssoSettings;
         if (samlOriginId.StartsWith("id"))
         {
-            ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationUniqueAlphanumericNameAsync(
+            ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationCustomDomainAsync(
                               samlOriginId["id".Length..],
                               null,
                               cancellationToken) ??
@@ -227,7 +227,7 @@ public class OrganizationSsoService(
         }
         else if (samlOriginId.StartsWith("uniquename"))
         {
-            ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationUniqueAlphanumericNameAsync(
+            ssoSettings = await repositoryFactory.OrganizationSsoSettingsRepository.GetByOrganizationCustomDomainAsync(
                               null,
                               samlOriginId["uniquename".Length..],
                               cancellationToken) ??

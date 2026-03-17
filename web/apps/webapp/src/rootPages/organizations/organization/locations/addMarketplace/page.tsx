@@ -8,10 +8,10 @@ const RootPage = () => {
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirectUrl');
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   const handleAdded = () => {
@@ -34,12 +34,7 @@ const RootPage = () => {
 
   return (
     <RootShell collapsed>
-      <AddMarketplaceLocation
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-        onAdded={handleAdded}
-        onCancel={handleCancelled}
-        onReloadRequired={handleReloadRequired}
-      />
+      <AddMarketplaceLocation organizationCustomDomain={organizationCustomDomain} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

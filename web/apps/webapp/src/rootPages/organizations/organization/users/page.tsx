@@ -10,10 +10,10 @@ import { memo } from 'react';
 
 const OrganizationsPage = () => {
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   const handleBackClick = () => {
@@ -35,7 +35,7 @@ const OrganizationsPage = () => {
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationUsers organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <OrganizationUsers organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };

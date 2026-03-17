@@ -21,7 +21,7 @@ const MultipleChoicesLocationSpaceTypes = ({ rootDataRelay, name, required }: Pr
   const rootData = useFragment<multipleChoicesLocationSpaceTypes_query$key>(
     graphql`
       fragment multipleChoicesLocationSpaceTypes_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           locationSpaceTypes {
             id
             name

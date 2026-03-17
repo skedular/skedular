@@ -223,7 +223,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,

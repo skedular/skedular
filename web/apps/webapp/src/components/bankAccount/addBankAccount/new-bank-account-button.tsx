@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { memo } from 'react';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -14,12 +14,12 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewBankAccountButton = ({ organizationUniqueAlphanumericName, fullWidth, label, hideIcon, variant, size }: Props) => {
+const NewBankAccountButton = ({ organizationCustomDomain, fullWidth, label, hideIcon, variant, size }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
 
   return (
     <Button
-      href={getOrganizationBankAccountAddLink(integratedPlatrform, organizationUniqueAlphanumericName)}
+      href={getOrganizationBankAccountAddLink(integratedPlatrform, organizationCustomDomain)}
       variant={variant ?? 'text'}
       fullWidth={fullWidth}
       sx={{ textTransform: 'none' }}

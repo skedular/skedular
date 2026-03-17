@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4cbedc1142f9934ecdee6f7654eba4a4>>
+ * @generated SignedSource<<d0ca45c5d996c8f5ef2656465d07fb35>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type OrganizationTagOrderInput = {
 };
 export type addProduct_rootQuery$variables = {
   multipleChoicesProductTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type addProduct_rootQuery$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -50,7 +50,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "alias": null,
@@ -209,8 +209,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -364,16 +364,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "24d4fd5f159eb4a44a5d0c5130307b29",
+    "cacheID": "929d6a5bfae26014710a50d32fc729e6",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6dc75fbc4f1143ef87c5bfa9995f1eb1";
+(node as any).hash = "45704b0b8062468c7f1dc914e864cc01";
 
 export default node;

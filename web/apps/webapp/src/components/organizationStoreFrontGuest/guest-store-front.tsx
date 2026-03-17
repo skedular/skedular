@@ -6,10 +6,10 @@ import { convertCalendarDayToStartOfDay, endOfWeek } from '@/libs/utils';
 import type { guestStoreFrontProductsRefetchQuery } from '@/queries/__generated__/guestStoreFrontProductsRefetchQuery.graphql';
 import type { guestStoreFrontProducts_query$key } from '@/queries/__generated__/guestStoreFrontProducts_query.graphql';
 import type { guestStoreFront_rootQuery } from '@/queries/__generated__/guestStoreFront_rootQuery.graphql';
-import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import Container from '@mui/material/Container';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/system/Box';
+import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import dayjs from 'dayjs';
 import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -21,17 +21,17 @@ import GuestStoreFrontUpcomingBookingsStrip from './guest-store-front-upcoming-b
 
 type Props = {
   queryReference: PreloadedQuery<guestStoreFront_rootQuery, Record<string, unknown>>;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
   query guestStoreFront_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
     $includeUpcomingBookings: Boolean!
   ) {
-    organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organizationPublic(customDomain: $organizationCustomDomain) {
       name
       listingMetadata {
         title
@@ -52,7 +52,7 @@ const RootQuery = graphql`
         }
       }
     }
-    ...guestStoreFrontProducts_query @arguments(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName)
+    ...guestStoreFrontProducts_query @arguments(organizationCustomDomain: $organizationCustomDomain)
     ...guestStoreFrontLocationsStrip_query
     ...guestStoreFrontProductCard_query
     ...guestStoreFrontFooter_query
@@ -61,19 +61,19 @@ const RootQuery = graphql`
         bookingsSearchCriteriaFrom: $bookingsSearchCriteriaFrom
         bookingsSearchCriteriaTo: $bookingsSearchCriteriaTo
         includeUpcomingBookings: $includeUpcomingBookings
-        organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
+        organizationCustomDomain: $organizationCustomDomain
       )
   }
 `;
 
-const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
+const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFront_rootQuery>(RootQuery, queryReference);
   const [productsData, refetchProducts] = useRefetchableFragment<guestStoreFrontProductsRefetchQuery, guestStoreFrontProducts_query$key>(
     graphql`
       fragment guestStoreFrontProducts_query on Query
       @refetchable(queryName: "guestStoreFrontProductsRefetchQuery")
-      @argumentDefinitions(organizationUniqueAlphanumericName: { type: "String!" }, locationSelected: { type: "Boolean", defaultValue: false }) {
-        marketplaceLocations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) @include(if: $locationSelected) {
+      @argumentDefinitions(organizationCustomDomain: { type: "String!" }, locationSelected: { type: "Boolean", defaultValue: false }) {
+        marketplaceLocations(where: { organizationCustomDomain: $organizationCustomDomain }) @include(if: $locationSelected) {
           edges {
             node {
               id
@@ -87,7 +87,7 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
             }
           }
         }
-        products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false }) @skip(if: $locationSelected) {
+        products(where: { organizationCustomDomains: [$organizationCustomDomain], includeInactive: false }) @skip(if: $locationSelected) {
           edges {
             node {
               id
@@ -122,14 +122,14 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
   useEffect(() => {
     refetchProducts(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         locationSelected: selectedLocationId !== '',
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [organizationUniqueAlphanumericName, refetchProducts, selectedLocationId]);
+  }, [organizationCustomDomain, refetchProducts, selectedLocationId]);
 
   if (!rootData.organizationPublic) {
     return null;
@@ -210,7 +210,7 @@ const GuestStoreFront = ({ queryReference, organizationUniqueAlphanumericName }:
           }}
         >
           {displayedProducts.map((product) => (
-            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+            <GuestStoreFrontProductCard key={product.id} rootDataRelay={rootData} productRelay={product} organizationCustomDomain={organizationCustomDomain} />
           ))}
         </Box>
       </Container>
@@ -224,11 +224,11 @@ const MemoGuestStoreFront = memo(GuestStoreFront);
 
 const GuestStoreFrontWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<guestStoreFront_rootQuery>(RootQuery);
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
   const { user, loading } = useAuth();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
@@ -240,7 +240,7 @@ const GuestStoreFrontWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         bookingsSearchCriteriaFrom: today.toISOString(),
         bookingsSearchCriteriaTo: endOfWeek(today).add(-1, 'milliseconds').toISOString(),
         includeUpcomingBookings: !!user,
@@ -249,7 +249,7 @@ const GuestStoreFrontWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, loading, organizationUniqueAlphanumericName, user]);
+  }, [loadQuery, loading, organizationCustomDomain, user]);
 
   if (!queryReference) {
     return <Loading />;
@@ -257,7 +257,7 @@ const GuestStoreFrontWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoGuestStoreFront queryReference={queryReference} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoGuestStoreFront queryReference={queryReference} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

@@ -57,7 +57,7 @@ type Props = {
   rootDataAvailableResourcesRelay: bookProduct_availableResources_query$key;
   onReloadRequired?: () => void;
   connectionIds: string[];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   defaultDate?: Dayjs;
 };
 
@@ -197,7 +197,7 @@ const toRecurringRule = (cadence: ProductPricingCadence, startDate: Dayjs) => {
   }
 };
 
-const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationUniqueAlphanumericName, defaultDate }: Props) => {
+const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectionIds, organizationCustomDomain, defaultDate }: Props) => {
   const rootData = useFragment<bookProduct_query$key>(
     graphql`
       fragment bookProduct_query on Query {
@@ -205,7 +205,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           id
           emails
         }
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           taxDetails {
             taxId
             taxRatePercentage
@@ -262,12 +262,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
     graphql`
       fragment bookProduct_availableResources_query on Query @refetchable(queryName: "bookProduct_availableResources_refetchableFragment") {
         availableResources(
-          where: {
-            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
-            productId: $productId
-            from: $dateFromToGetAvailableResources
-            until: $dateUntilToGetAvailableResources
-          }
+          where: { organizationCustomDomain: $organizationCustomDomain, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }
         ) {
           location {
             id
@@ -668,7 +663,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             quantity: Number(quantity),
             productVersionId: product.latestProductVersionId,
             pricingId: selectedPricingOption.id,
-            organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+            organizationCustomDomains: [organizationCustomDomain],
             organizationIds: [],
             teamIds: [],
           },
@@ -688,7 +683,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
             render: <NotificationContent content={`Recurring booking created starting on ${fromToPrint}.`} />,
           });
 
-          router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+          router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain));
         },
         onError: (error) => {
           toast.update(toastId, {
@@ -711,7 +706,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           from,
           until,
           notes,
-          organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+          organizationCustomDomains: [organizationCustomDomain],
           teamIds: [],
           resourceIds,
           category: category as BookingCategory,
@@ -719,7 +714,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           pricingId: selectedPricingOption.id,
           quantity: Number(quantity),
           paymentMethod: paymentMethod as PaymentMethod,
-          checkoutReturnUrl: new URL(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, id), window.location.origin).toString(),
+          checkoutReturnUrl: new URL(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, id), window.location.origin).toString(),
           invoiceEmailList,
         },
       } as never,
@@ -755,7 +750,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           render: <NotificationContent content={message} />,
         });
 
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, response.addMarketplaceBooking!.booking.id));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, response.addMarketplaceBooking!.booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {

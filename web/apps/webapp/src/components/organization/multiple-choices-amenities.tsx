@@ -21,7 +21,7 @@ const MultipleChoicesAmenities = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<multipleChoicesAmenities_query$key>(
     graphql`
       fragment multipleChoicesAmenities_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           amenities {
             id
             name

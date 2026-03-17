@@ -20,7 +20,7 @@ namespace Team.Shared.Database.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -452,6 +452,10 @@ namespace Team.Shared.Database.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CustomDomain")
+                        .HasMaxLength(63)
+                        .HasColumnType("character varying(63)");
+
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -488,13 +492,12 @@ namespace Team.Shared.Database.Migrations
                         .HasColumnType("character varying(50)")
                         .HasDefaultValue("PRIVATE");
 
-                    b.Property<string>("UniqueAlphanumericName")
-                        .HasMaxLength(63)
-                        .HasColumnType("character varying(63)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedAt");
+
+                    b.HasIndex("CustomDomain")
+                        .IsUnique();
 
                     b.HasIndex("DeletedAt");
 
@@ -503,9 +506,6 @@ namespace Team.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.HasIndex("Name");
-
-                    b.HasIndex("UniqueAlphanumericName")
-                        .IsUnique();
 
                     b.ToTable("Organization");
                 });

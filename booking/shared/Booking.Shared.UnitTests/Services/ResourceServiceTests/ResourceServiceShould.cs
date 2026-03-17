@@ -43,11 +43,7 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[]
-        {
-            new Resource { Id = "res-1" },
-            new Resource { Id = "res-2" }
-        };
+        var availableResources = new[] { new Resource { Id = "res-1" }, new Resource { Id = "res-2" } };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -84,10 +80,7 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[]
-        {
-            new Resource { Id = "res-1" }
-        };
+        var availableResources = new[] { new Resource { Id = "res-1" } };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
@@ -123,11 +116,7 @@ public class ResourceServiceShould
         var until = from.AddHours(1);
         var resourceIds = new[] { "res-1", "res-2" };
         var tagIds = new[] { "tag-1" };
-        var availableResources = new[]
-        {
-            new Resource { Id = "res-1" },
-            new Resource { Id = "res-3" }
-        };
+        var availableResources = new[] { new Resource { Id = "res-1" }, new Resource { Id = "res-3" } };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(

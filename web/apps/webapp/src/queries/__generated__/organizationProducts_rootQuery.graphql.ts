@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<634e13e9aac77fd5a84a0de68db7d546>>
+ * @generated SignedSource<<8608c06dee45a397f457fe5f4650f040>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type ProductOrderInput = {
   field: ProductOrderField;
 };
 export type organizationProducts_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   productsSortingValues?: ReadonlyArray<ProductOrderInput> | null | undefined;
 };
 export type organizationProducts_rootQuery$data = {
@@ -49,7 +49,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -74,12 +74,12 @@ v1 = [
         "items": [
           {
             "kind": "Variable",
-            "name": "organizationUniqueAlphanumericNames.0",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "organizationCustomDomains.0",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "kind": "ListValue",
-        "name": "organizationUniqueAlphanumericNames"
+        "name": "organizationCustomDomains"
       }
     ],
     "kind": "ObjectValue",
@@ -395,8 +395,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -438,16 +438,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c777407fcb48bf328c40f9ff3fab2c84",
+    "cacheID": "e1f301a3a1e7c135bfed79c4df9fd145",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  organization {\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationCustomDomain: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  organization {\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8fac45d0e5fc6b51ee4b35237ef699bb";
+(node as any).hash = "c3d46369fee5db01e815cf23387832e0";
 
 export default node;

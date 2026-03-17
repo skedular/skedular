@@ -18,7 +18,7 @@ public class LocationAuthorizationService(
     {
         ArgumentNullException.ThrowIfNull(location.Organization);
 
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(location.Organization.Id, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(location.Organization.Id, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return await organizationAuthorizationService.IsOrganizationMemberAsync(organization.Id, customerId, cancellationToken);

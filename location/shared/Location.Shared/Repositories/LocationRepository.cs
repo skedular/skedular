@@ -60,7 +60,7 @@ internal static class LocationExtensions
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && !item.Organization.DeletedAt.HasValue);
 
             if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
-                string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+                string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
             {
                 originalQuery = originalQuery.Where(item => !item.Organization.DeletedAt.HasValue &&
                                                             (searchCriteria.CustomerId == null ||
@@ -80,12 +80,12 @@ internal static class LocationExtensions
                                                                      organizationMember.Customer.Id == searchCriteria.CustomerId)));
                 }
 
-                if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+                if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
                 {
                     originalQuery = originalQuery.Where(item => !item.Organization.DeletedAt.HasValue &&
-                                                                item.Organization.UniqueAlphanumericName != null &&
-                                                                item.Organization.UniqueAlphanumericName ==
-                                                                searchCriteria.OrganizationUniqueAlphanumericName &&
+                                                                item.Organization.CustomDomain != null &&
+                                                                item.Organization.CustomDomain ==
+                                                                searchCriteria.OrganizationCustomDomain &&
                                                                 (searchCriteria.CustomerId == null ||
                                                                  item.Organization.OrganizationMembers.Any(organizationMember =>
                                                                      !organizationMember.DeletedAt.HasValue &&

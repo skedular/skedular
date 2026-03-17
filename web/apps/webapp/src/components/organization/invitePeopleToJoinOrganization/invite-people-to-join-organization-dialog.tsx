@@ -18,7 +18,7 @@ type Props = {
   isDialogOpen: boolean;
   onInviteClicked: () => void;
   onCancel: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type PeopleToJoin = {
@@ -38,7 +38,7 @@ const peopleToInviteSchema = object({
     .required('List of emails separated by comma is required'),
 });
 
-const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, onCancel, organizationUniqueAlphanumericName }: Props) => {
+const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, onCancel, organizationCustomDomain }: Props) => {
   const [commitInviteCustomersToJoinOrganization] = useMutation<invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation>(graphql`
     mutation invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation($input: InviteCustomersToJoinOrganizationInput!) {
       inviteCustomersToJoinOrganization(input: $input) {
@@ -68,7 +68,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           emails: emails
             .split(/[\s,]+/)
             .map((email) => email.trim())

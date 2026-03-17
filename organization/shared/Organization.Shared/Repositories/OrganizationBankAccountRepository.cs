@@ -41,11 +41,11 @@ internal static class OrganizationBankAccountExtensions
                 originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue && item.Organization.Id == searchCriteria.OrganizationId);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
             {
                 originalQuery = originalQuery.Where(item =>
-                    !item.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+                    !item.DeletedAt.HasValue && item.Organization.CustomDomain != null &&
+                    item.Organization.CustomDomain == searchCriteria.OrganizationCustomDomain);
             }
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.NameContains))

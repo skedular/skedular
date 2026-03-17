@@ -6,5 +6,7 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 public class MarketplaceBookingSubscriptionPayload
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
-    [GraphQLName("marketplaceBookingSubscription")] public MarketplaceBookingSubscriptionDetails MarketplaceBookingSubscription { get; set; } = new();
+
+    [GraphQLName("marketplaceBookingSubscription")]
+    public MarketplaceBookingSubscriptionDetails MarketplaceBookingSubscription { get; set; } = new();
 }

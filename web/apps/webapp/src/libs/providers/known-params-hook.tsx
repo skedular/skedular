@@ -13,24 +13,14 @@ const getKnownParamValue = (value: string | string[] | undefined): string => {
 };
 
 const useKnownParams = () => {
-  const {
-    organizationUniqueAlphanumericName,
-    locationId,
-    bookingId,
-    productId,
-    resourceId,
-    organizationBankAccountId,
-    customerId,
-    floorPlanId,
-    teamId,
-    organizationStripeConnectAccountId,
-  } = useParams();
+  const { organizationCustomDomain, locationId, bookingId, productId, resourceId, organizationBankAccountId, customerId, floorPlanId, teamId, organizationStripeConnectAccountId } =
+    useParams();
   const host = typeof window !== 'undefined' ? window.location.hostname : '';
   const isCustomDomain = host !== 'localhost' && host !== '127.0.0.1' && host !== 'skedular.app' && host !== 'staging.skedular.app' && host !== 'www.skedular.app';
 
   return {
     isCustomDomain,
-    organizationUniqueAlphanumericName: isCustomDomain ? host.split('.')[0] : getKnownParamValue(organizationUniqueAlphanumericName),
+    organizationCustomDomain: isCustomDomain ? host.split('.')[0] : getKnownParamValue(organizationCustomDomain),
     locationId: getKnownParamValue(locationId),
     bookingId: getKnownParamValue(bookingId),
     productId: getKnownParamValue(productId),

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<acf9865f6d77d01ec60490be8575194e>>
+ * @generated SignedSource<<73413f337247468b96077b0da83187df>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type ClaimLocationOwnershipInput = {
   clientMutationId?: string | null | undefined;
   id?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   uniqueClaimCode: string;
 };
 export type pageAddIndividualOrganization_claimLocationOwnershipMutation$variables = {

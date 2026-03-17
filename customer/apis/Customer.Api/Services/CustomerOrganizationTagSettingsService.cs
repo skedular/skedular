@@ -37,7 +37,7 @@ public class CustomerOrganizationTagSettingsService(
             : await customerHelperService.GetCustomerAsync(customerId, cancellationToken);
         var organizationTag = await repositoryFactory.OrganizationTagRepository.GetByIdAsync(organizationTagId, cancellationToken) ??
                               throw new OrganizationTagNotFound();
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationTag.Organization.Id,
                                null,
                                false,

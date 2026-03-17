@@ -21,7 +21,7 @@ public class RootMutation(IMapper mapper)
                 await productService.AddAsync(
                     input.Id,
                     input.OrganizationId,
-                    input.OrganizationUniqueAlphanumericName,
+                    input.OrganizationCustomDomain,
                     mapper.MapTo(input),
                     cancellationToken))!
         };

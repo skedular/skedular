@@ -108,7 +108,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           id
           name
           organization {
-            uniqueAlphanumericName
+            customDomain
           }
           listingMetadata {
             about
@@ -235,7 +235,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const [selectedHeroImageUrl, setSelectedHeroImageUrl] = useState<string>('');
   const locationDetails = rootData.location;
@@ -369,7 +369,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     return null;
   }
 
-  const effectiveOrganizationUniqueAlphanumericName = organizationUniqueAlphanumericName || locationDetails.organization?.uniqueAlphanumericName || '';
+  const effectiveOrganizationCustomDomain = organizationCustomDomain || locationDetails.organization?.customDomain || '';
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
@@ -614,7 +614,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                   <MarketplaceProductCard
                     amenities={product.amenities}
                     imageUrl={product.imageUrl}
-                    organizationUniqueAlphanumericName={effectiveOrganizationUniqueAlphanumericName}
+                    organizationCustomDomain={effectiveOrganizationCustomDomain}
                     pricingRows={product.pricingRows}
                     productId={product.id}
                     subTitle={product.subTitle}

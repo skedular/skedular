@@ -20,7 +20,7 @@ public class OrganizationAuthorizationService(
 {
     public async ValueTask<bool> CanViewAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -32,7 +32,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanModifyAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -44,7 +44,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanDeleteAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -56,7 +56,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> CanInvitePeopleAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
@@ -71,7 +71,7 @@ public class OrganizationAuthorizationService(
         string customerId,
         CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is

@@ -55,7 +55,7 @@ public class RootMutation(IMapper mapper)
     {
         await organizationMemberService.CompleteOrganizationMemberOnboardingAsync(
             input.OrganizationId,
-            input.OrganizationUniqueAlphanumericName,
+            input.OrganizationCustomDomain,
             cancellationToken);
         return new OrganizationMemberPayload { ClientMutationId = input.ClientMutationId };
     }

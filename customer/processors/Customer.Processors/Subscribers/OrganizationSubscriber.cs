@@ -46,7 +46,7 @@ public class OrganizationSubscriber(
             case Type.OrganizationDeleted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                         organization.Id,
                         null,
                         true,
@@ -87,10 +87,7 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await cachedOrganizationService.UpdateByIdOrUniqueAlphanumericNameAsync(
-            existingOrganization.Id,
-            existingOrganization.UniqueAlphanumericName,
-            cancellationToken);
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
@@ -100,13 +97,10 @@ public class OrganizationSubscriber(
             cancellationToken);
         customers = customers.Concat(await UpdateCustomerDefaultOrganizationAsync(existingOrganization, cancellationToken)).ToList();
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
-        existingOrganization.UniqueAlphanumericName = null;
+        existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await cachedOrganizationService.RemoveByIdOrUniqueAlphanumericNameAsync(
-            existingOrganization.Id,
-            existingOrganization.UniqueAlphanumericName,
-            cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
 
         await cachedCustomerService.RemoveAsync(customers, cancellationToken);
     }

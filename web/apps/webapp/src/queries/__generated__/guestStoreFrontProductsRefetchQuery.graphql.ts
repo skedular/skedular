@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<345f5dd314c7329b28183a57aec507e4>>
+ * @generated SignedSource<<4794334d0443c865db0b3a0aae57e03c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type guestStoreFrontProductsRefetchQuery$variables = {
   locationSelected?: boolean | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type guestStoreFrontProductsRefetchQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"guestStoreFrontProducts_query">;
@@ -32,13 +32,13 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v2 = {
   "alias": null,
@@ -299,12 +299,12 @@ return {
                     "items": [
                       {
                         "kind": "Variable",
-                        "name": "organizationUniqueAlphanumericNames.0",
-                        "variableName": "organizationUniqueAlphanumericName"
+                        "name": "organizationCustomDomains.0",
+                        "variableName": "organizationCustomDomain"
                       }
                     ],
                     "kind": "ListValue",
-                    "name": "organizationUniqueAlphanumericNames"
+                    "name": "organizationCustomDomains"
                   }
                 ],
                 "kind": "ObjectValue",
@@ -345,16 +345,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1741356201c89aa18d022598807ac294",
+    "cacheID": "5a0951bf521cd39c77754470528af912",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontProductsRefetchQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...guestStoreFrontProducts_query_CPnhj\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment guestStoreFrontProducts_query_CPnhj on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontProductsRefetchQuery(\n  $locationSelected: Boolean = false\n  $organizationCustomDomain: String!\n) {\n  ...guestStoreFrontProducts_query_2IcS7w\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment guestStoreFrontProducts_query_2IcS7w on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) @include(if: $locationSelected) {\n    edges {\n      node {\n        id\n        products {\n          id\n          pricingOptions {\n            index\n          }\n          ...guestStoreFrontProductCard_product\n        }\n      }\n    }\n  }\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) @skip(if: $locationSelected) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8c5341534425bb0a1472dc95620a4d05";
+(node as any).hash = "a8764b4ddf31ff0dd2bb430ec1178bb4";
 
 export default node;

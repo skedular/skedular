@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { memo } from 'react';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -14,11 +14,11 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewTeamButton = ({ organizationUniqueAlphanumericName, fullWidth, label, hideIcon, variant, size }: Props) => {
+const NewTeamButton = ({ organizationCustomDomain, fullWidth, label, hideIcon, variant, size }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
 
   return (
-    <Button href={getOrganizationTeamAddLink(integratedPlatrform, organizationUniqueAlphanumericName)} variant={variant ?? 'text'} fullWidth={fullWidth}>
+    <Button href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)} variant={variant ?? 'text'} fullWidth={fullWidth}>
       {size === 'small' && <SmallIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'small'} />} />}
       {size === 'medium' && <BodyIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
       {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Create a Team'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}

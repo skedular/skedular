@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d448d8f3352751ff75d38c8b30db15ed>>
+ * @generated SignedSource<<d8f8397acf5862e358ce29f239ae4364>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type rootShell_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type rootShell_rootQuery$data = {
   readonly azureTenantOrganization: {
@@ -56,7 +56,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = {
@@ -159,8 +159,8 @@ v14 = {
 v15 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v16 = {
@@ -213,7 +213,7 @@ v21 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueAlphanumericName",
+  "name": "customDomain",
   "storageKey": null
 },
 v22 = {
@@ -459,16 +459,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fe7f376207e8aa5fff5809e95da47a0b",
+    "cacheID": "7f3017e607d68ba87977485e055bdf81",
     "id": null,
     "metadata": {},
     "name": "rootShell_rootQuery",
     "operationKind": "query",
-    "text": "query rootShell_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  myOrganizations {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    logoUrl\n    name\n    isSsoTokenValid\n    isOwnershipVerified\n    type {\n      type\n    }\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    uniqueAlphanumericName\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    uniqueAlphanumericName\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
+    "text": "query rootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n    isOnboardingDone\n  }\n  myOrganizations {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  pendingOrganizationInvitationsCount\n  isAzureTenantInstalled\n  azureTenantOrganization {\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    logoUrl\n    name\n    isSsoTokenValid\n    isOwnershipVerified\n    type {\n      type\n    }\n    id\n  }\n  ...appBar_query\n  ...leftSideNavigationMenu_query\n  ...observability_query\n}\n\nfragment appBar_query on Query {\n  me {\n    id\n    emails\n    email\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  myOrganizations {\n    id\n    customDomain\n    logoUrl\n    name\n    canModify\n    canViewAnalytics\n  }\n  pendingOrganizationInvitationsCount\n  pendingTeamInvitationsCount\n  ...mobileLeftSideNavigationMenu_query\n  ...newFeedbackDialog_query\n}\n\nfragment leftSideNavigationMenuContent_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    type {\n      type\n    }\n    canModify\n    canViewAnalytics\n    activeOffering {\n      free\n      earlyBird\n      id\n    }\n  }\n}\n\nfragment leftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment mobileLeftSideNavigationMenu_query on Query {\n  ...leftSideNavigationMenuContent_query\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e9290777a9b8bc8caa55154b24b243be";
+(node as any).hash = "0329ccc84ebfedf4f5e6dba088052608";
 
 export default node;

@@ -17,7 +17,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationProductBook_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $productId: String!
     $dateFromToGetAvailableResources: DateTime!
     $dateUntilToGetAvailableResources: DateTime!
@@ -35,10 +35,10 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationProductBook_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationProductBook_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -71,7 +71,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
         rootDataAvailableResourcesRelay={rootData}
         onReloadRequired={onReloadRequired}
         connectionIds={[]}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
       />
     </RootShell>
   );
@@ -83,10 +83,10 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationProductBook_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, productId } = useKnownParams();
+  const { organizationCustomDomain, productId } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   if (!productId) {
@@ -100,7 +100,7 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         productId,
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
@@ -109,7 +109,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, productId]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, productId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -123,7 +123,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

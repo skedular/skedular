@@ -31,15 +31,15 @@ type Props = {
   rootDataRelay: productCard_query$key;
   productDetailsRelay: productCard_ProductDetails$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
 };
 
-const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlphanumericName, connectionIds }: Props) => {
+const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDomain, connectionIds }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment productCard_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           canModify
         }
         productPricingCadences {
@@ -132,7 +132,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
   let moreActionsOption: MoreActionsMenuItemType[] = [];
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
-  const editLink = getOrganizationProductBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, productDetails.id);
+  const editLink = getOrganizationProductBaseLink(integratedPlatrform, organizationCustomDomain, productDetails.id);
 
   if (rootData.organization?.canModify) {
     moreActionsOption = moreActionsOption.concat(
@@ -331,7 +331,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationUniqueAlp
               )}
 
               <BookProductButton
-                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                organizationCustomDomain={organizationCustomDomain}
                 productId={productDetails.id}
                 label="Book Now"
                 hideIcon

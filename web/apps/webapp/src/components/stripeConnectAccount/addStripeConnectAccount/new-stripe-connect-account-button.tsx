@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import { memo } from 'react';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -14,12 +14,12 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const NewStripeConnectAccountButton = ({ organizationUniqueAlphanumericName, fullWidth, label, hideIcon, variant, size }: Props) => {
+const NewStripeConnectAccountButton = ({ organizationCustomDomain, fullWidth, label, hideIcon, variant, size }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
 
   return (
     <Button
-      href={getOrganizationStripeConnectAccountAddLink(integratedPlatrform, organizationUniqueAlphanumericName)}
+      href={getOrganizationStripeConnectAccountAddLink(integratedPlatrform, organizationCustomDomain)}
       variant={variant ?? 'text'}
       fullWidth={fullWidth}
       sx={{ textTransform: 'none' }}

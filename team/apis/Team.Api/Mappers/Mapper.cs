@@ -127,7 +127,7 @@ public class Mapper : IMapper
                 CanDelete = src.Permissions.CanDelete,
                 CanInvitePeople = src.Permissions.CanInvitePeople,
                 OrganizationId = src.Organization.Id,
-                OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
+                OrganizationCustomDomain = src.Organization.CustomDomain.ToSafeString(),
                 PrimaryLocationId = src.PrimaryLocation?.Id
             };
 
@@ -167,10 +167,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
-                new Shared.Models.Organization
-                {
-                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
-                },
+                new Shared.Models.Organization { Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString() },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })
@@ -198,10 +195,7 @@ public class Mapper : IMapper
             Timezone = src.Timezone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
-                new Shared.Models.Organization
-                {
-                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
-                },
+                new Shared.Models.Organization { Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString() },
             PrimaryLocation = string.IsNullOrWhiteSpace(src.PrimaryLocationId) ? null : new Shared.Models.Location { Id = src.PrimaryLocationId },
             TeamMembers = src.CustomerIds
                 .Select(item => new TeamMember { Customer = new Customer { Id = item } })
@@ -418,7 +412,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,

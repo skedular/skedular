@@ -18,7 +18,7 @@ public class RootQuery(IMapper mapper)
         mapper.MapTo(
             await resourceService.GetAvailableResourcesAsync(
                 where.OrganizationId,
-                where.OrganizationUniqueAlphanumericName,
+                where.OrganizationCustomDomain,
                 where.LocationId,
                 where.From,
                 where.Until,
@@ -35,7 +35,7 @@ public class RootQuery(IMapper mapper)
         CancellationToken cancellationToken) =>
         await resourceService.GetAvailableResourcesCountAsync(
             where.OrganizationId,
-            where.OrganizationUniqueAlphanumericName,
+            where.OrganizationCustomDomain,
             where.LocationId,
             where.From,
             where.Until,
@@ -52,7 +52,7 @@ public class RootQuery(IMapper mapper)
     {
         var (resourcesCount, availableResourcesCount) = await resourceService.GetOrganizationResourceAvailabilityAsync(
             where.OrganizationId,
-            where.OrganizationUniqueAlphanumericName,
+            where.OrganizationCustomDomain,
             where.From,
             where.Until,
             cancellationToken);

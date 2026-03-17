@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<65190773878ced5ed299f3dd70a85be2>>
+ * @generated SignedSource<<d9e218a4f7ca31972096240ab4e49d40>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -40,7 +40,7 @@ export type locationCard_LocationDetails$data = {
   readonly id: string;
   readonly name: string;
   readonly organization: {
-    readonly uniqueAlphanumericName: string | null | undefined;
+    readonly customDomain: string | null | undefined;
   };
   readonly physicalAddress: {
     readonly latitude: number | null | undefined;
@@ -243,7 +243,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueAlphanumericName",
+          "name": "customDomain",
           "storageKey": null
         }
       ],
@@ -333,6 +333,6 @@ return {
 };
 })();
 
-(node as any).hash = "13f280d784fb3a6b19212baceb0a5cdd";
+(node as any).hash = "5dd3dba845ce653e3e5c1bf1b4896cd4";
 
 export default node;

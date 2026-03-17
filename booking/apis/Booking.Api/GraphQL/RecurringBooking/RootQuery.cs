@@ -40,7 +40,7 @@ public class RootQuery(IMapper mapper)
         CancellationToken cancellationToken)
     {
         where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
-        where.OrganizationUniqueAlphanumericNames = where.OrganizationUniqueAlphanumericNames.RemoveInvalidIds();
+        where.OrganizationCustomDomains = where.OrganizationCustomDomains.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
@@ -61,7 +61,7 @@ public class RootQuery(IMapper mapper)
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
                 where.OrganizationIds.ToSafeCollection(),
-                where.OrganizationUniqueAlphanumericNames.ToSafeCollection(),
+                where.OrganizationCustomDomains.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new RecurringBookingOrder(item.Direction, item.Field)).ToList(),

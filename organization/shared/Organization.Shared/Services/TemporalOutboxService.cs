@@ -103,7 +103,7 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId(
-                    $"{Constants.NewOrganizationJoinedPrefix}-{args.OrganizationId ?? string.Empty}-{args.OrganizationUniqueAlphanumericName ?? string.Empty}"),
+                    $"{Constants.NewOrganizationJoinedPrefix}-{args.OrganizationId ?? string.Empty}-{args.OrganizationCustomDomain ?? string.Empty}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

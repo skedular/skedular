@@ -47,7 +47,7 @@ public class OrganizationOfferingService(
         CancellationToken cancellationToken)
     {
         var offering = offeringCode.GetOffering();
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                organizationUniqueAlphanumericNam,
                                cancellationToken) ??
@@ -88,7 +88,7 @@ public class OrganizationOfferingService(
             matchingOffering = await repositoryFactory.OrganizationOfferingRepository.Query(
                 new Specification<OrganizationOffering>
                 {
-                    Criteria = query => query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericNam &&
+                    Criteria = query => query.Organization.CustomDomain == organizationUniqueAlphanumericNam &&
                                         query.Code == offeringCode &&
                                         query.Start <= now && query.End >= now
                 }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
@@ -138,7 +138,7 @@ public class OrganizationOfferingService(
                 repositoryFactory.UnitOfWork);
         }
 
-        organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
             organizationUniqueAlphanumericNam,
             cancellationToken);

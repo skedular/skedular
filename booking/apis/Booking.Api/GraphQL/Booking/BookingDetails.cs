@@ -16,7 +16,7 @@ public class BookingDetails : Node
     [GraphQLName("involvedCustomerIds")] public IEnumerable<string> InvolvedCustomerIds { get; set; } = [];
 
     [GraphQLName("involvedOrganizationIds")]
-    public IEnumerable<(string Id, string UniqueAlphanumericName)> InvolvedOrganizationIds { get; set; } = [];
+    public IEnumerable<(string Id, string CustomDomain)> InvolvedOrganizationIds { get; set; } = [];
 
     [GraphQLName("involvedLocationIds")] public IEnumerable<string> InvolvedLocationIds { get; set; } = [];
     [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
@@ -59,7 +59,7 @@ public static partial class BookingDetailsType
         string.IsNullOrWhiteSpace(item.DeletedByCustomerId) ? null : new CustomerDetails(item.DeletedByCustomerId);
 
     public static IEnumerable<OrganizationDetails> GetInvolvedOrganizations([Parent] BookingDetails item) =>
-        item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.UniqueAlphanumericName));
+        item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.CustomDomain));
 
     public static IEnumerable<LocationDetails> GetInvolvedLocations([Parent] BookingDetails item) =>
         item.InvolvedLocationIds.Select(id => new LocationDetails(id));

@@ -9,7 +9,7 @@ import InvitePeopleToJoinOrganizationDialog from './invite-people-to-join-organi
 type Props = {
   sx?: SxProps<Theme>;
   color?: CSSProperties['color'];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   fullWidth?: boolean;
   label?: string;
   hideIcon?: boolean;
@@ -17,7 +17,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const InvitePeopleToJoinOrganizationButton = ({ sx, color, organizationUniqueAlphanumericName, fullWidth, label, hideIcon, variant, size }: Props) => {
+const InvitePeopleToJoinOrganizationButton = ({ sx, color, organizationCustomDomain, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -47,7 +47,7 @@ const InvitePeopleToJoinOrganizationButton = ({ sx, color, organizationUniqueAlp
         isDialogOpen={isDialogOpen}
         onInviteClicked={handleInviteClicked}
         onCancel={handleCancelClicked}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
       />
     </>
   );

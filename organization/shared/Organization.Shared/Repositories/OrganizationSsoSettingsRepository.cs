@@ -10,9 +10,9 @@ public interface IOrganizationSsoSettingsRepository : IRepository<OrganizationSs
     void Add(OrganizationSsoSettings organizationSsoSettings);
     void Update(OrganizationSsoSettings organizationSsoSettings);
 
-    Task<OrganizationSsoSettings?> GetByOrganizationUniqueAlphanumericNameAsync(
+    Task<OrganizationSsoSettings?> GetByOrganizationCustomDomainAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 }
 
@@ -33,9 +33,9 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
         DbContext.OrganizationSsoSettings.Update(organizationSsoSettings);
     }
 
-    public async Task<OrganizationSsoSettings?> GetByOrganizationUniqueAlphanumericNameAsync(
+    public async Task<OrganizationSsoSettings?> GetByOrganizationCustomDomainAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(organizationId))
@@ -45,16 +45,16 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
                 .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
             return await DbContext.OrganizationSsoSettings
                 .Include(query => query.Organization)
                 .FirstOrDefaultAsync(
-                    query => query.Organization.UniqueAlphanumericName != null &&
-                             query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericName,
+                    query => query.Organization.CustomDomain != null &&
+                             query.Organization.CustomDomain == organizationCustomDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 }

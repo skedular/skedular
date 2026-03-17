@@ -53,8 +53,8 @@ public class MarketplaceRecurringBookingService(
                 .Distinct()
                 .ToList(),
             recurringBooking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                .Select(item => item.UniqueAlphanumericName!)
+                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                .Select(item => item.CustomDomain!)
                 .Distinct()
                 .ToList(),
             customer.Id,
@@ -84,7 +84,7 @@ public class MarketplaceRecurringBookingService(
         var organizationIds = existingRecurringBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
-            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
                 organizationIds,
                 null,
                 false,

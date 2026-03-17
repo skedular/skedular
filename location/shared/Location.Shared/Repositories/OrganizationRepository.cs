@@ -10,16 +10,16 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+    Task<Organization?> GetByIdOrCustomDomainUntrackedAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
@@ -52,12 +52,12 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, true, true, cancellationToken))!;
+        return (await GetByIdOrCustomDomainAsync(id, null, true, true, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
@@ -69,21 +69,21 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainUntrackedAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
@@ -95,16 +95,16 @@ public class OrganizationRepository(LocationDbContext dbContext, TimeProvider ti
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
     public Organization Remove(Organization location)

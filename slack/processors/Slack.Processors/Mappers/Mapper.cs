@@ -206,7 +206,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
+        dest.CustomDomain = src.CustomDomain;
         dest.Type = src.Type.ToOrganizationType();
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
         return dest;

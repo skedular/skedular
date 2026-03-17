@@ -19,8 +19,8 @@ public class TeamDetails : Node
     [GraphQLName("about")] public string? About { get; set; }
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+    [GraphQLName("organizationCustomDomain")]
+    public string OrganizationCustomDomain { get; set; } = string.Empty;
 
     [GraphQLName("primaryLocationId")] public string? PrimaryLocationId { get; set; }
     [GraphQLName("timezone")] public string? Timezone { get; set; }
@@ -67,7 +67,7 @@ public class TeamDetails : Node
         [Parent] TeamDetails team,
         [Service] ITeamService teamService,
         CancellationToken cancellationToken) =>
-        team.OrganizationUniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName &&
+        team.OrganizationCustomDomain != Constants.SkedularPublicLocationsCustomDomainName &&
         await teamService.HasFutureBookingAsync(team.Id, false, cancellationToken);
 }
 
@@ -77,11 +77,11 @@ public static partial class TeamDetailsType
     static partial void Configure(IObjectTypeDescriptor<TeamDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
-        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.OrganizationCustomDomain);
         descriptor.Ignore(item => item.PrimaryLocationId);
     }
 
-    public static OrganizationDetails GetOrganization([Parent] TeamDetails item) => new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
+    public static OrganizationDetails GetOrganization([Parent] TeamDetails item) => new(item.OrganizationId, item.OrganizationCustomDomain);
 
     public static LocationDetails? GetPrimaryLocation([Parent] TeamDetails item) => string.IsNullOrWhiteSpace(item.PrimaryLocationId)
         ? null

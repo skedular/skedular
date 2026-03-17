@@ -3,7 +3,6 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using FakeItEasy;
 using Shouldly;

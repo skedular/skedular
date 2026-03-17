@@ -6,7 +6,7 @@ import AddResourceDialog from './add-resource-dialog';
 
 type Props = {
   onReloadRequired?: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   locationId: string;
   connectionIds: string[];
   fullWidth?: boolean;
@@ -16,7 +16,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddResourceButton = ({ onReloadRequired, locationId, organizationUniqueAlphanumericName, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddResourceButton = ({ onReloadRequired, locationId, organizationCustomDomain, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -44,7 +44,7 @@ const AddResourceButton = ({ onReloadRequired, locationId, organizationUniqueAlp
       </Button>
       <AddResourceDialog
         onReloadRequired={onReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         locationId={locationId}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}

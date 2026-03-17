@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c305b137517df1163d615ad96656f877>>
+ * @generated SignedSource<<9a281d984663ff87784886eaacfa8228>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,8 +27,8 @@ export type organizationBookings_rootQuery$variables = {
   customerIds: ReadonlyArray<string>;
   locationIds: ReadonlyArray<string>;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
+  organizationCustomDomain: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
   teamIds: ReadonlyArray<string>;
 };
@@ -89,12 +89,12 @@ v4 = {
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationCustomDomain"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationMembersSortingValues"
 },
 v7 = {
   "defaultValue": null,
@@ -109,8 +109,8 @@ v8 = {
 v9 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v10 = {
@@ -134,8 +134,8 @@ v12 = [
 v13 = [
   {
     "kind": "Variable",
-    "name": "organizationUniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v14 = [
@@ -275,12 +275,12 @@ v22 = [
         "items": [
           {
             "kind": "Variable",
-            "name": "organizationUniqueAlphanumericNames.0",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "organizationCustomDomains.0",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "kind": "ListValue",
-        "name": "organizationUniqueAlphanumericNames"
+        "name": "organizationCustomDomains"
       },
       {
         "kind": "Variable",
@@ -365,7 +365,7 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       (v3/*: any*/),
       (v8/*: any*/),
       (v2/*: any*/),
@@ -373,7 +373,7 @@ return {
       (v1/*: any*/),
       (v4/*: any*/),
       (v7/*: any*/),
-      (v5/*: any*/)
+      (v6/*: any*/)
     ],
     "kind": "Operation",
     "name": "organizationBookings_rootQuery",
@@ -843,16 +843,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "37e2b4f641e8d0194d36c3fa13412e3e",
+    "cacheID": "1bfc9260b79ab02258c1960edf9c9015",
     "id": null,
     "metadata": {},
     "name": "organizationBookings_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookings_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationIds: [String!]!\n  $teamIds: [String!]!\n  $customerIds: [String!]!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n  }\n  myLocations(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n    organization {\n      id\n      name\n    }\n  }\n  myTeams(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n    organization {\n      id\n      name\n    }\n  }\n  ...organizationUserSelector_organizationMembers_query\n  ...locationSelector_allLocations_query\n  ...teamSelector_allTeams_query\n  ...bookings_query\n  ...bookings_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    id\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n\nfragment bookings_bookings_query on Query {\n  bookings(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], locationIds: $locationIds, teamIds: $teamIds, customerIds: $customerIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        channel {\n          channel\n        }\n        category {\n          category\n          name\n        }\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedOrganizations {\n          id\n        }\n        involvedLocations {\n          id\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n            color\n            customTags {\n              id\n              name\n              color\n            }\n            zones {\n              id\n              name\n              color\n            }\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookings_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...bookingCard_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationUserSelector_organizationMembers_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query organizationBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $locationIds: [String!]!\n  $teamIds: [String!]!\n  $customerIds: [String!]!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $locationsSortingValues: [LocationOrderInput!]\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n  }\n  myLocations(organizationCustomDomain: $organizationCustomDomain) {\n    id\n    name\n    organization {\n      id\n      name\n    }\n  }\n  myTeams(organizationCustomDomain: $organizationCustomDomain) {\n    id\n    name\n    organization {\n      id\n      name\n    }\n  }\n  ...organizationUserSelector_organizationMembers_query\n  ...locationSelector_allLocations_query\n  ...teamSelector_allTeams_query\n  ...bookings_query\n  ...bookings_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    id\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n\nfragment bookings_bookings_query on Query {\n  bookings(where: {organizationCustomDomains: [$organizationCustomDomain], locationIds: $locationIds, teamIds: $teamIds, customerIds: $customerIds, fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        notes\n        channel {\n          channel\n        }\n        category {\n          category\n          name\n        }\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n          photoUrl\n        }\n        involvedOrganizations {\n          id\n        }\n        involvedLocations {\n          id\n          name\n        }\n        involvedTeams {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n            color\n            customTags {\n              id\n              name\n              color\n            }\n            zones {\n              id\n              name\n              color\n            }\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment bookings_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  ...bookingCard_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationUserSelector_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment teamSelector_allTeams_query on Query {\n  teams(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "167f2e381697d4cfdd80b4f8800869f3";
+(node as any).hash = "db6ba8759e0f34c03004426c40edc403";
 
 export default node;

@@ -14,7 +14,7 @@ const GuestStoreFrontFooter = ({ rootDataRelay }: Props) => {
   const rootData = useFragment<guestStoreFrontFooter_query$key>(
     graphql`
       fragment guestStoreFrontFooter_query on Query {
-        organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organizationPublic(customDomain: $organizationCustomDomain) {
           name
           contactPhone
           contactEmail

@@ -9,9 +9,9 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
@@ -28,12 +28,12 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, true, true, cancellationToken))!;
+        return (await GetByIdOrCustomDomainAsync(id, null, true, true, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
@@ -53,7 +53,7 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .Include(query => query.OrganizationSsoSettings)
@@ -65,12 +65,10 @@ public class OrganizationRepository(CustomerDbContext dbContext, TimeProvider ti
                 .Include(query => query.Tags.Where(tag => includeDeletedOrganizationTags || !tag.DeletedAt.HasValue))
                 .Include(query => query.Locations)
                 .Include(query => query.DefaultedByCustomers)
-                .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
-                    cancellationToken);
+                .FirstOrDefaultAsync(query => query.CustomDomain != null && query.CustomDomain == customDomain, cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
     public async Task<ICollection<Organization>> GetByCustomerIdAsync(

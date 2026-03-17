@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a82221c0a4d243c38f93f957eb72dd9b>>
+ * @generated SignedSource<<63955fa6eed9b247e1e6a6936da8298f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type AddOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  customDomain?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
@@ -25,7 +26,6 @@ export type AddOrganizationInput = {
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
-  uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -49,6 +49,7 @@ export type addIndividualOrganization_addOrganizationMutation$variables = {
 export type addIndividualOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
+      readonly customDomain: string | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
@@ -57,7 +58,6 @@ export type addIndividualOrganization_addOrganizationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -65,6 +65,7 @@ export type addIndividualOrganization_addOrganizationMutation$data = {
 export type addIndividualOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
+      readonly customDomain: string | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
@@ -73,7 +74,6 @@ export type addIndividualOrganization_addOrganizationMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -126,7 +126,7 @@ v1 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "uniqueAlphanumericName",
+            "name": "customDomain",
             "storageKey": null
           },
           {
@@ -207,16 +207,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "8d4529b0dcc8aa5ded6ad3f6d8195be3",
+    "cacheID": "b57663620c7ab4deb2e35c59d2718f55",
     "id": null,
     "metadata": {},
     "name": "addIndividualOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addIndividualOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n    }\n  }\n}\n"
+    "text": "mutation addIndividualOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "731349249a9fb7c7f0654d041134f711";
+(node as any).hash = "b14d8b7493a73598803b400346188866";
 
 export default node;

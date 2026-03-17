@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<19e60ec4627f88e7e753f0453ea47264>>
+ * @generated SignedSource<<61c621201950b227b09baef4858161ab>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,7 +21,7 @@ export type pageOrganizationLocationResource_rootQuery$variables = {
   multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesProductTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   resourceId: string;
 };
 export type pageOrganizationLocationResource_rootQuery$data = {
@@ -59,7 +59,7 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v5 = {
   "defaultValue": null,
@@ -466,8 +466,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -602,16 +602,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d999bbcc13dd3440cb7510cded80b23a",
+    "cacheID": "176cdec1034293f2b5f402404aeb9ee8",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationResource_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationResource_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationId: String!\n  $resourceId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  resource(id: $resourceId) {\n    name\n    id\n  }\n  ...editResource_query\n}\n\nfragment editResource_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    id\n  }\n  resource(id: $resourceId) {\n    id\n    name\n    inactive\n    requireBookingApproval\n    color\n    capacity\n    customTags {\n      id\n      name\n      color\n    }\n    zones {\n      id\n      name\n      color\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    resourceType {\n      id\n      name\n      color\n    }\n    isAvailableHoursOverridden\n    availableHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n  ...weekOpeningHours_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  bookingSlotSizeInMinutes\n}\n"
+    "text": "query pageOrganizationLocationResource_rootQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n  $resourceId: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  resource(id: $resourceId) {\n    name\n    id\n  }\n  ...editResource_query\n}\n\nfragment editResource_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  location(id: $locationId) {\n    openingHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n    id\n  }\n  resource(id: $resourceId) {\n    id\n    name\n    inactive\n    requireBookingApproval\n    color\n    capacity\n    customTags {\n      id\n      name\n      color\n    }\n    zones {\n      id\n      name\n      color\n    }\n    productTags {\n      id\n      name\n      color\n    }\n    resourceType {\n      id\n      name\n      color\n    }\n    isAvailableHoursOverridden\n    availableHours {\n      weekOpeningHours {\n        monday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        tuesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        wednesday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        thursday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        friday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        saturday {\n          closed\n          openAllDay\n          from\n          until\n        }\n        sunday {\n          closed\n          openAllDay\n          from\n          until\n        }\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n  ...weekOpeningHours_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment weekOpeningHours_query on Query {\n  bookingSlotSizeInMinutes\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b0e40b29f798ad8175c4126cf6457d94";
+(node as any).hash = "ffb94d39811d1fef0c68e535e2cdb6fa";
 
 export default node;

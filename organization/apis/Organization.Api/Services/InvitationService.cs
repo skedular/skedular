@@ -22,7 +22,7 @@ public interface IInvitationService
 {
     Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         ICollection<string> emails,
         CancellationToken cancellationToken);
 
@@ -52,7 +52,7 @@ public class InvitationService(
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         ICollection<string> emails,
         CancellationToken cancellationToken)
     {
@@ -62,9 +62,9 @@ public class InvitationService(
         }
 
         var (customer, customerEntity) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -88,9 +88,9 @@ public class InvitationService(
             return [];
         }
 
-        var pendingInvitations = await repositoryFactory.JoinInvitationRepository.GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+        var pendingInvitations = await repositoryFactory.JoinInvitationRepository.GetByOrganizationIdOrOrganizationCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             InvitationStatus.Pending,
             cancellationToken);
 
@@ -143,7 +143,7 @@ public class InvitationService(
 
         EnsureCustomerAuthorizedToChangeJoinInvitationStatus(joinInvitation, customer);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                joinInvitation.Organization.Id,
                                null,
                                cancellationToken) ??
@@ -216,7 +216,7 @@ public class InvitationService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new OrganizationJoinInvitationNotFound();
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                joinInvitation.Organization.Id,
                                null,
                                cancellationToken) ??

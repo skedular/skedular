@@ -17,7 +17,7 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   isDialogOpen: boolean;
   onCancel: () => void;
 };
@@ -27,7 +27,7 @@ enum AddOrganizationPaymentMethodState {
   WAITING_FOR_PAYMENT_METHOD_DETAILS,
 }
 
-const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName, isDialogOpen, onCancel }: Props) => {
+const AddOrganizationPaymentMethodDialog = ({ organizationCustomDomain, isDialogOpen, onCancel }: Props) => {
   const [commitAddOrganizationPaymentMethodIntent] = useMutation<addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation>(graphql`
     mutation addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation($input: AddOrganizationPaymentMethodIntentInput!) {
       addOrganizationPaymentMethodIntent(input: $input) {
@@ -62,7 +62,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (response, errors) => {
@@ -82,7 +82,7 @@ const AddOrganizationPaymentMethodDialog = ({ organizationUniqueAlphanumericName
         handleDialogClose();
       },
     });
-  }, [commitAddOrganizationPaymentMethodIntent, handleDialogClose, organizationUniqueAlphanumericName, themedToast]);
+  }, [commitAddOrganizationPaymentMethodIntent, handleDialogClose, organizationCustomDomain, themedToast]);
 
   useEffect(() => {
     if (!isDialogOpen) {

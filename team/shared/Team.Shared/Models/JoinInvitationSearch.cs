@@ -3,7 +3,7 @@ using Enterprise.Shared.Pagination;
 
 namespace Team.Shared.Models;
 
-public record JoinInvitationSearchCriteria(string? OrganizationUniqueAlphanumericName, string? TeamId, InvitationStatus? Status, string? InviteeId);
+public record JoinInvitationSearchCriteria(string? OrganizationUniqueCustomDomain, string? TeamId, InvitationStatus? Status, string? InviteeId);
 
 public record JoinTeamInvitationOrder(OrderDirection Direction, JoinTeamInvitationOrderField Field);
 

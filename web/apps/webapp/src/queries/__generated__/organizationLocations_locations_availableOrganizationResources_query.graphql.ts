@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ea3d9612fe82cc7fb31a3286f58158e>>
+ * @generated SignedSource<<75ecf94923e76c0d73a4329260babd77>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type organizationLocations_locations_availableOrganizationResources_query
         readonly id: string;
         readonly name: string;
         readonly organization: {
-          readonly uniqueAlphanumericName: string | null | undefined;
+          readonly customDomain: string | null | undefined;
         };
         readonly physicalAddress: {
           readonly formattedAddress: string | null | undefined;
@@ -77,8 +77,8 @@ v1 = {
 },
 v2 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v3 = {
   "kind": "Variable",
@@ -147,7 +147,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     },
     {
       "kind": "RootArgument",
@@ -327,7 +327,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "uniqueAlphanumericName",
+                      "name": "customDomain",
                       "storageKey": null
                     }
                   ],
@@ -483,6 +483,6 @@ return {
 };
 })();
 
-(node as any).hash = "f6c96309109560b6665b1f423e571d1e";
+(node as any).hash = "40e91bd4a72c7d8b503264b3b9e82838";
 
 export default node;

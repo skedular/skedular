@@ -9,7 +9,7 @@ public interface ICustomerOrganizationSettingsService
 {
     Task<Shared.Models.Customer> SetCustomerDefaultOrganizationAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? customerId,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
@@ -25,7 +25,7 @@ public class CustomerOrganizationSettingsService(
 {
     public async Task<Shared.Models.Customer> SetCustomerDefaultOrganizationAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? customerId,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
@@ -39,18 +39,18 @@ public class CustomerOrganizationSettingsService(
         {
             organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organizationId, cancellationToken);
         }
-        else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        else if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                 organizationId,
-                organizationUniqueAlphanumericName,
+                organizationCustomDomain,
                 false,
                 false,
                 cancellationToken) ?? throw new OrganizationNotFound();
         }
         else
         {
-            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+            throw new InvalidOperationException("Either id or customDomain must be provided.");
         }
 
         if (!ignoreAuthorizationCheck &&

@@ -6,8 +6,8 @@ namespace Location.Api.GraphQL.Location;
 [GraphQLName("LocationWhereInput")]
 public class LocationWhereInput
 {
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string? OrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; } = [];
     [GraphQLName("nameContains")] public string? NameContains { get; set; }

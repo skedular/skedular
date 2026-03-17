@@ -121,7 +121,7 @@ public class InvoiceIntegrations(
             return;
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                null,
                                false,

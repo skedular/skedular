@@ -41,7 +41,7 @@ type Props = {
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -125,7 +125,7 @@ const NewBookingDialog = ({
   isDialogOpen,
   onAddClicked,
   onCancel,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -136,7 +136,7 @@ const NewBookingDialog = ({
         me {
           id
         }
-        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationCustomDomain: $organizationCustomDomain }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
@@ -161,7 +161,7 @@ const NewBookingDialog = ({
       fragment newBookingDialog_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "newBookingDialog_organizationMembers_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
             @connection(key: "bookingDetailsSelectorQuery_members") {
             __id
@@ -189,8 +189,7 @@ const NewBookingDialog = ({
   const [rootDataTeams, refetchTeams] = useRefetchableFragment<newBookingDialog_customerTeams_refetchableFragment, newBookingDialog_customerTeams_query$key>(
     graphql`
       fragment newBookingDialog_customerTeams_query on Query @refetchable(queryName: "newBookingDialog_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @include(if: $customerExists) {
+        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
           __id
           totalCount
           edges {
@@ -212,12 +211,7 @@ const NewBookingDialog = ({
     graphql`
       fragment newBookingDialog_availableResources_query on Query @refetchable(queryName: "newBookingDialog_availableResources_refetchableFragment") {
         availableResources(
-          where: {
-            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
-            locationId: $locationId
-            from: $dateFromToGetAvailableResources
-            until: $dateUntilToGetAvailableResources
-          }
+          where: { organizationCustomDomain: $organizationCustomDomain, locationId: $locationId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }
         ) {
           resource {
             id
@@ -462,7 +456,7 @@ const NewBookingDialog = ({
           notes,
           category: category as BookingCategory,
           customerIds: [customerId],
-          organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+          organizationCustomDomains: [organizationCustomDomain],
           teamIds: teamId ? [teamId] : [],
           resourceIds,
         },

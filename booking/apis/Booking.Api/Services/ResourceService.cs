@@ -12,7 +12,7 @@ public interface IResourceService
 {
     Task<ICollection<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -24,7 +24,7 @@ public interface IResourceService
 
     Task<int> GetAvailableResourcesCountAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -35,7 +35,7 @@ public interface IResourceService
 
     Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -49,7 +49,7 @@ public class ResourceService(
 {
     public async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -59,9 +59,9 @@ public class ResourceService(
         string? productId,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                false,
                                false,
                                cancellationToken) ??
@@ -118,15 +118,15 @@ public class ResourceService(
 
     public async Task<(int, int)> GetOrganizationResourceAvailabilityAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                false,
                                false,
                                cancellationToken) ??
@@ -160,7 +160,7 @@ public class ResourceService(
 
     public async Task<int> GetAvailableResourcesCountAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string? locationId,
         DateTimeOffset from,
         DateTimeOffset until,
@@ -169,9 +169,9 @@ public class ResourceService(
         string? productId,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                false,
                                false,
                                cancellationToken) ??

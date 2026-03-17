@@ -5,7 +5,7 @@ namespace Slack.Shared.Models;
 
 public class Organization : ReplicatedModelBaseWithDeleted
 {
-    public string? UniqueAlphanumericName { get; set; }
+    public string? CustomDomain { get; set; }
     public string? Name { get; set; }
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;

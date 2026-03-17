@@ -27,13 +27,13 @@ import { graphql, useFragment } from 'react-relay';
 
 type Props = {
   rootDataRelay: organizationUserLeftSideNavigationMenuContent_query$key;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   customerId: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organizationUniqueAlphanumericName, customerId, collapsed, hideIcons }: Props) => {
+const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organizationCustomDomain, customerId, collapsed, hideIcons }: Props) => {
   const rootData = useFragment<organizationUserLeftSideNavigationMenuContent_query$key>(
     graphql`
       fragment organizationUserLeftSideNavigationMenuContent_query on Query {
@@ -80,10 +80,10 @@ const OrganizationUserLeftSideNavigationMenuContent = ({ rootDataRelay, organiza
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
-  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
-  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
-  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, customerId);
+  const porofileLink = getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
+  const manageTeamsLink = getOrganizationUserManageTeamsBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
+  const billingAndPaymentLink = getOrganizationUserBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
+  const manageUserLink = getOrganizationUserManageBaseLink(integratedPlatrform, organizationCustomDomain, customerId);
 
   return (
     <List

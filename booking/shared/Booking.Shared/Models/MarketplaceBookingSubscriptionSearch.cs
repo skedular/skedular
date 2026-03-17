@@ -20,7 +20,7 @@ public record MarketplaceBookingSubscriptionSearchCriteria(
     MarketplaceBookingSubscriptionStatus? Status,
     bool? IncludeMineOnly,
     ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationUniqueAlphanumericNames,
+    ICollection<string> OrganizationCustomDomains,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);
 

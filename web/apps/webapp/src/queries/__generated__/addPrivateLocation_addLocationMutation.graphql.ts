@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab548fab725b693473992c0209aa2356>>
+ * @generated SignedSource<<1f59d091b0fc8f5609b6cba925cb782a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,8 @@ export type AddLocationInput = {
   id?: string | null | undefined;
   listingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   physicalAddress?: LocationPhysicalAddressInput | null | undefined;
   tagIds: ReadonlyArray<string>;
   timezone?: string | null | undefined;

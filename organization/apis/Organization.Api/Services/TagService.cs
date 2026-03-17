@@ -54,7 +54,7 @@ public class TagService(
         }
 
         var tag = await cachedTagService.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
-        var existingOrganization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
                                        tag.Organization.Id,
                                        null,
                                        cancellationToken) ??
@@ -89,9 +89,9 @@ public class TagService(
         }
 
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                 tag.Organization.Id,
-                tag.Organization.UniqueAlphanumericName,
+                tag.Organization.CustomDomain,
                 cancellationToken) ??
             throw new OrganizationNotFound();
 
@@ -161,7 +161,7 @@ public class TagService(
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tag = await repositoryFactory.TagRepository.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        tag.Organization.Id,
                                        null,
                                        cancellationToken) ??
@@ -200,7 +200,7 @@ public class TagService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var tags = await repositoryFactory.TagRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = tags.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -250,9 +250,9 @@ public class TagService(
             customer = await cachedCustomerService.GetAsync(cancellationToken);
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
-                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -281,7 +281,7 @@ public class TagService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        existingTag.Organization.Id,
                                        null,
                                        cancellationToken) ??

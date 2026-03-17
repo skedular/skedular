@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1cf4e8c174b0b0e2d7406c1baae68904>>
+ * @generated SignedSource<<afc89edaaa5ca5e815d708bbce657f71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,7 @@ export type addOrganizationTeamMemberDialog_organizationMembers_refetchableFragm
   addTeamMemberDialogOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
 export type addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment$data = {
@@ -51,7 +51,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -132,8 +132,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -299,16 +299,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2e82846a9ff9bdbc750e33b6fb418d60",
+    "cacheID": "2644b52b0c22e34a5f6cc2e224eed6ed",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment(\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String\n  $peopleNameSearchText: String\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment(\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $peopleNameSearchText: String\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9509a0dcdcf032efb30456e2bcd7bb62";
+(node as any).hash = "1275044292b994a9bcd941095fdba3b6";
 
 export default node;

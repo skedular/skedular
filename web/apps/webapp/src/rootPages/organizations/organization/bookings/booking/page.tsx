@@ -20,7 +20,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationBooking_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $bookingId: String!
     $peopleNameSearchText: String
     $organizationMembersSortingValues: [OrganizationMemberOrderInput!]
@@ -59,10 +59,10 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationBooking_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationBooking_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const shouldPay = useMemo(() => {
@@ -101,7 +101,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
       {rootData.booking.channel.channel === 'MARKETPLACE' && shouldPay && (
-        <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+        <PayMarketplaceBooking rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
       )}
       {rootData.booking.channel.channel === 'MARKETPLACE' && !shouldPay && (
         <EditMarketplaceBooking
@@ -131,10 +131,10 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationBooking_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, bookingId } = useKnownParams();
+  const { organizationCustomDomain, bookingId } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   if (!bookingId) {
@@ -148,7 +148,7 @@ const RootPageWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         bookingId,
         organizationMembersSortingValues: [
           {
@@ -178,7 +178,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, bookingId]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, bookingId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -192,7 +192,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

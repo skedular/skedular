@@ -15,11 +15,7 @@ import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader } from 'reac
 import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
-  query pageOrganizationProduct_rootQuery(
-    $organizationUniqueAlphanumericName: String!
-    $productId: String!
-    $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]
-  ) {
+  query pageOrganizationProduct_rootQuery($organizationCustomDomain: String!, $productId: String!, $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]) {
     product(id: $productId) {
       listingMetadata {
         title
@@ -32,10 +28,10 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationProduct_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationProduct_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -63,7 +59,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <EditProduct rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <EditProduct rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };
@@ -74,10 +70,10 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationProduct_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, productId } = useKnownParams();
+  const { organizationCustomDomain, productId } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   if (!productId) {
@@ -87,7 +83,7 @@ const RootPageWithRelay = () => {
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         productId,
         multipleChoicesProductTagsSortingValues: [
           {
@@ -100,7 +96,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, productId]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, productId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -114,7 +110,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

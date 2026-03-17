@@ -63,7 +63,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             DeletedAt = src.DeletedAt?.ToTimestamp(),
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
@@ -165,7 +165,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,

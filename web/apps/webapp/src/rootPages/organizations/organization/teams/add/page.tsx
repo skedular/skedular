@@ -6,10 +6,10 @@ import { memo } from 'react';
 
 const RootPage = () => {
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   const handleAdded = () => {
@@ -24,13 +24,7 @@ const RootPage = () => {
 
   return (
     <RootShell>
-      <AddTeam
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-        showDismiss={false}
-        onAdded={handleAdded}
-        onCancel={handleCancelled}
-        onReloadRequired={handleReloadRequired}
-      />
+      <AddTeam organizationCustomDomain={organizationCustomDomain} showDismiss={false} onAdded={handleAdded} onCancel={handleCancelled} onReloadRequired={handleReloadRequired} />
     </RootShell>
   );
 };

@@ -29,12 +29,12 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, collapsed, hideIcons }: Props) => {
+const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationCustomDomain, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -70,15 +70,15 @@ const OrganizationAdminLeftSideNavigationMenuContent = ({ organizationUniqueAlph
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const setupLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const physcialAddressLink = getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const ssoSettingsLink = getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const taxDetailsLink = getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const zonesLink = getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const setupLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, organizationCustomDomain);
+  const physcialAddressLink = getOrganizationAdminPhysicalAddressBaseLink(integratedPlatrform, organizationCustomDomain);
+  const billingAndPaymentLink = getOrganizationAdminBillingAndPaymentBaseLink(integratedPlatrform, organizationCustomDomain);
+  const ssoSettingsLink = getOrganizationAdminSsoSettingsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const taxDetailsLink = getOrganizationAdminTaxDetailsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const zonesLink = getOrganizationAdminZonesBaseLink(integratedPlatrform, organizationCustomDomain);
+  const customTagsLink = getOrganizationAdminCustomTagsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const subscriptionsLink = getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const manageOrganizationLink = getOrganizationAdminManageOrganizationBaseLink(integratedPlatrform, organizationCustomDomain);
 
   return (
     <List

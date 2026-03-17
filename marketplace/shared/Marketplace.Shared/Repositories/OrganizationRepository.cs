@@ -12,14 +12,14 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         CancellationToken cancellationToken);
 
     Organization Update(Organization organization);
@@ -47,12 +47,12 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken))!;
+        return (await GetByIdOrCustomDomainAsync(id, null, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
@@ -62,32 +62,32 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects()
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    public async Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         CancellationToken cancellationToken)
     {
         if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
-            uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+            customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query => ids.Contains(query.Id) && query.UniqueAlphanumericName != null &&
-                                uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .Where(query => ids.Contains(query.Id) && query.CustomDomain != null &&
+                                customDomains.Contains(query.CustomDomain))
                 .AddDependentObjects()
                 .ToListAsync(cancellationToken);
         }
@@ -102,17 +102,17 @@ public class OrganizationRepository(MarketplaceDbContext dbContext, TimeProvider
                 .ToListAsync(cancellationToken);
         }
 
-        if (uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        if (customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .Where(query => query.CustomDomain != null && customDomains.Contains(query.CustomDomain))
                 .AddDependentObjects()
                 .ToListAsync(cancellationToken);
         }
 
-        throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
+        throw new InvalidOperationException("Either ids or customDomains must be provided.");
     }
 
     public Organization Update(Organization organization)

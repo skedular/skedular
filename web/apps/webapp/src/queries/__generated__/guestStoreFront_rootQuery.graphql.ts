@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6ffc825bc9420f61663ebea09354ea2>>
+ * @generated SignedSource<<32db34cd0dfd63a0b8d1b3b9b0c044d0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type guestStoreFront_rootQuery$variables = {
   bookingsSearchCriteriaFrom: any;
   bookingsSearchCriteriaTo: any;
   includeUpcomingBookings: boolean;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type guestStoreFront_rootQuery$data = {
   readonly organizationPublic: {
@@ -64,13 +64,13 @@ v2 = {
 v3 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v4 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v5 = {
@@ -182,8 +182,8 @@ v12 = {
 },
 v13 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v14 = [
   (v13/*: any*/)
@@ -199,12 +199,12 @@ v16 = {
   "items": [
     {
       "kind": "Variable",
-      "name": "organizationUniqueAlphanumericNames.0",
-      "variableName": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomains.0",
+      "variableName": "organizationCustomDomain"
     }
   ],
   "kind": "ListValue",
-  "name": "organizationUniqueAlphanumericNames"
+  "name": "organizationCustomDomains"
 },
 v17 = {
   "alias": null,
@@ -915,16 +915,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0e14db73c178031a22b1e6385c4d7044",
+    "cacheID": "8415c2711cb75179ccf9033b7a68e3dc",
     "id": null,
     "metadata": {},
     "name": "guestStoreFront_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFront_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $includeUpcomingBookings: Boolean!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_Lxbsd\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontUpcomingBookingsStrip_query_29yRhj\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_Lxbsd on Query {\n  products(where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontUpcomingBookingsStrip_query_29yRhj on Query {\n  bookings(first: 6, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo, includeMineOnly: true, channel: MARKETPLACE}, orderBy: [{field: FROM, direction: ASCENDING}]) @include(if: $includeUpcomingBookings) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFront_rootQuery(\n  $organizationCustomDomain: String!\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n  $includeUpcomingBookings: Boolean!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    listingMetadata {\n      title\n      subTitle\n      includedFeatures\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n    }\n  }\n  ...guestStoreFrontProducts_query_VqntA\n  ...guestStoreFrontLocationsStrip_query\n  ...guestStoreFrontProductCard_query\n  ...guestStoreFrontFooter_query\n  ...guestStoreFrontUpcomingBookingsStrip_query_366k58\n}\n\nfragment guestStoreFrontFooter_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    contactPhone\n    contactEmail\n    physicalAddress {\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      id\n    }\n  }\n}\n\nfragment guestStoreFrontLocationsStrip_query on Query {\n  marketplaceLocations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        timezone\n        physicalAddress {\n          formattedAddress\n          id\n        }\n        openingHours {\n          weekOpeningHours {\n            monday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            tuesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            wednesday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            thursday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            friday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            saturday {\n              closed\n              openAllDay\n              from\n              until\n            }\n            sunday {\n              closed\n              openAllDay\n              from\n              until\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontProductCard_product on ProductDetails {\n  id\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  currency {\n    type\n    name\n  }\n  amenities {\n    id\n    name\n  }\n  pricingOptions {\n    id\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment guestStoreFrontProductCard_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n\nfragment guestStoreFrontProducts_query_VqntA on Query {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: false}) {\n    edges {\n      node {\n        id\n        pricingOptions {\n          index\n        }\n        ...guestStoreFrontProductCard_product\n      }\n    }\n  }\n}\n\nfragment guestStoreFrontUpcomingBookingsStrip_query_366k58 on Query {\n  bookings(first: 6, where: {organizationCustomDomains: [$organizationCustomDomain], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo, includeMineOnly: true, channel: MARKETPLACE}, orderBy: [{field: FROM, direction: ASCENDING}]) @include(if: $includeUpcomingBookings) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "651c27f59459b061ee8a43fd32d0094d";
+(node as any).hash = "add795734160ba1d1c1e2edd6f76a50a";
 
 export default node;

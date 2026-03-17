@@ -85,7 +85,7 @@ public class OrganizationInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                account.Organization.Id,
                                null,
                                cancellationToken) ??
@@ -116,7 +116,7 @@ public class OrganizationInternalSubscriber(
         account = repositoryFactory.OrganizationStripeConnectAccountRepository.Remove(account);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                account.Organization.Id,
                                null,
                                cancellationToken) ??
@@ -140,7 +140,7 @@ public class OrganizationInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                account.Organization.Id,
                                null,
                                cancellationToken) ??

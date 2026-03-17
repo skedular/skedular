@@ -4,7 +4,7 @@ using Enterprise.Shared.Pagination;
 namespace Organization.Shared.Models;
 
 public record JoinInvitationSearchCriteria(
-    string? OrganizationUniqueAlphanumericName,
+    string? OrganizationCustomDomain,
     InvitationStatus? Status,
     string? InviteeId,
     ICollection<string>? CustomerEmails);

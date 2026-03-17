@@ -15,7 +15,7 @@ public interface IOrganizationAnalyticsService
 {
     Task<OrganizationAnalytics> GetAnalyticsAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken);
@@ -28,16 +28,13 @@ public class OrganizationAnalyticsService(
 {
     public async Task<OrganizationAnalytics> GetAnalyticsAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         DateTimeOffset from,
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
-                               id,
-                               uniqueAlphanumericName,
-                               cancellationToken) ??
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(id, customDomain, cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customer.Id, cancellationToken))
         {

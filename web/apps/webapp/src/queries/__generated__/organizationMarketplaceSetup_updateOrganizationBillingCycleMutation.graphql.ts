@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4d1365b81b8b9906973ab23ded65b76>>
+ * @generated SignedSource<<f8291404eed18c00492a34b2dcaf4fed>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,8 @@ export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%
 export type UpdateOrganizationBillingCycleInput = {
   billingCycle: OrganizationBillingCycle;
   clientMutationId?: string | null | undefined;
+  customDomain?: string | null | undefined;
   id?: string | null | undefined;
-  uniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$variables = {
   input: UpdateOrganizationBillingCycleInput;

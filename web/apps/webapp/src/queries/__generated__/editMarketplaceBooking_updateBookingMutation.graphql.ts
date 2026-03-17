@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03436e28872f2fa0f4b0656347c5ce68>>
+ * @generated SignedSource<<de9771a7c8aa079eca0a64b963c6ffc6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,8 +16,8 @@ export type UpdateMarketplaceBookingInput = {
   customerIds: ReadonlyArray<string>;
   id: string;
   notes?: string | null | undefined;
+  organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
-  organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   teamIds?: ReadonlyArray<string> | null | undefined;
 };
 export type editMarketplaceBooking_updateBookingMutation$variables = {

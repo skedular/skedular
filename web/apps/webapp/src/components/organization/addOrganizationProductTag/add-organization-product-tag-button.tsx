@@ -6,7 +6,7 @@ import AddOrganizationProductTagDialog from './add-organization-product-tag-dial
 
 type Props = {
   onReloadRequired?: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   fullWidth?: boolean;
   label?: string;
@@ -15,7 +15,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddOrganizationProductTagButton = ({ organizationUniqueAlphanumericName, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddOrganizationProductTagButton = ({ organizationCustomDomain, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -42,7 +42,7 @@ const AddOrganizationProductTagButton = ({ organizationUniqueAlphanumericName, o
         {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Product Tag'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
       <AddOrganizationProductTagDialog
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}

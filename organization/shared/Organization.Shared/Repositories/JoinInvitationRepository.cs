@@ -16,9 +16,9 @@ public interface IJoinInvitationRepository : IRepository<JoinInvitation>
     Task<int> PendingInvitationsCountAsync(string inviteeId, ICollection<string> customerEmails, CancellationToken cancellationToken);
     Task<JoinInvitation?> GetByIdAsync(string id, CancellationToken cancellationToken);
 
-    Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+    Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         InvitationStatus status,
         CancellationToken cancellationToken);
 
@@ -56,11 +56,11 @@ internal static class JoinInvitationExtensions
                     (item.Email != null && searchCriteria.CustomerEmails != null && searchCriteria.CustomerEmails.Contains(item.Email)));
             }
 
-            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
             {
                 originalQuery = originalQuery.Where(item =>
-                    item.Organization.UniqueAlphanumericName != null &&
-                    item.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+                    item.Organization.CustomDomain != null &&
+                    item.Organization.CustomDomain == searchCriteria.OrganizationCustomDomain);
             }
 
             if (searchCriteria.Status is not null)
@@ -87,9 +87,9 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
             .AddDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationUniqueAlphanumericNameAsync(
+    public async Task<ICollection<JoinInvitation>> GetByOrganizationIdOrOrganizationCustomDomainAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         InvitationStatus status,
         CancellationToken cancellationToken)
     {
@@ -101,16 +101,16 @@ public class JoinInvitationRepository(OrganizationDbContext dbContext, TimeProvi
                 .ToListAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
             return await DbContext.JoinInvitation
-                .Where(query => query.Organization.UniqueAlphanumericName == organizationUniqueAlphanumericName &&
+                .Where(query => query.Organization.CustomDomain == organizationCustomDomain &&
                                 query.Status == status.ToInvitationStatus())
                 .AddDependentObjects(true)
                 .ToListAsync(cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
     public JoinInvitation Add(JoinInvitation joinInvitation)

@@ -5,7 +5,7 @@ namespace Marketplace.Shared.Models;
 
 public class Organization : ReplicatedModelBaseWithDeleted
 {
-    public string? UniqueAlphanumericName { get; set; }
+    public string? CustomDomain { get; set; }
     public Offering? Offering { get; set; }
     public OrganizationType Type { get; set; }
     public bool? IsOwnershipVerified { get; set; }

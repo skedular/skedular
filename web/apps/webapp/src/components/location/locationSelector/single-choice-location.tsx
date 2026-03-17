@@ -20,7 +20,7 @@ const SingleChoiceLocation = ({ rootDataRelay, id, required }: Props) => {
   const rootData = useFragment<singleChoiceLocation_locations_query$key>(
     graphql`
       fragment singleChoiceLocation_locations_query on Query {
-        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
+        locations(where: { organizationCustomDomain: $organizationCustomDomain }) {
           __id
           totalCount
           edges {

@@ -78,7 +78,7 @@ type Props = {
   rootDataResourcesRelay: organizationLocation_resources_query$key;
   rootDataFloorPlansRelay: organizationLocation_floorPlans_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   locationId: string;
 };
 
@@ -186,7 +186,7 @@ type ResourceRowType = {
   capacity: number;
 };
 
-const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataFloorPlansRelay, onReloadRequired, organizationUniqueAlphanumericName, locationId }: Props) => {
+const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataFloorPlansRelay, onReloadRequired, organizationCustomDomain, locationId }: Props) => {
   const rootData = useFragment<organizationLocation_query$key>(
     graphql`
       fragment organizationLocation_query on Query {
@@ -198,7 +198,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
             id
           }
         }
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           type {
             type
           }
@@ -1191,7 +1191,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const handleResourceNameSearchTextChange = (str: string) => {
@@ -1224,7 +1224,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
     switch (id) {
       case MoreActionsMenuOptionType.EditResource:
         if (resourceDetails) {
-          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, resourceDetails.id));
+          router.push(getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceDetails.id));
           return;
         }
 
@@ -1560,7 +1560,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   };
 
   const handleViewLocationBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { locationId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { locationId }));
   };
 
   const handleRemoveLocationClicked = () => {
@@ -1593,7 +1593,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           render: <NotificationContent content={`Location '${location.name}' removed.`} />,
         });
 
-        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+        router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -1816,7 +1816,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationLocationLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} locationId={locationId} hideIcons />
+        <OrganizationLocationLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} locationId={locationId} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Location Information">
             <Form
@@ -2145,7 +2145,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 </Grid>
 
                 <Grid>
-                  <NewFloorplanButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} locationId={locationId} />
+                  <NewFloorplanButton organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -2156,7 +2156,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                     <FloorPlanCard
                       floorPlanDetailsRelay={floorPlan}
                       connectionIds={floorPlansConnectionIds}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      organizationCustomDomain={organizationCustomDomain}
                       locationId={locationId}
                     />
                   </Grid>
@@ -2179,7 +2179,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
                 <Grid>
                   <AddResourceButton
                     onReloadRequired={onReloadRequired}
-                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    organizationCustomDomain={organizationCustomDomain}
                     locationId={locationId}
                     connectionIds={resourcesConnectionIds}
                   />

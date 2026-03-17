@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b018c49e22ef0ed8b4ce8de9f9108913>>
+ * @generated SignedSource<<f1fb27de7ac61068b4da3410a7555542>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TeamOrderInput = {
 };
 export type pageOrganizationUser_rootQuery$variables = {
   customerId: string;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
 export type pageOrganizationUser_rootQuery$data = {
@@ -44,7 +44,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -136,8 +136,8 @@ v13 = [
       (v12/*: any*/),
       {
         "kind": "Variable",
-        "name": "organizationUniqueAlphanumericName",
-        "variableName": "organizationUniqueAlphanumericName"
+        "name": "organizationCustomDomain",
+        "variableName": "organizationCustomDomain"
       }
     ],
     "kind": "ObjectValue",
@@ -313,7 +313,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "uniqueAlphanumericName",
+                        "name": "customDomain",
                         "storageKey": null
                       }
                     ],
@@ -519,8 +519,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -603,16 +603,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "64ccd89baacda730137f6b9fdf46bb5a",
+    "cacheID": "4b13f403730b6572dedef1b57a194906",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationUser_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationUser_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $customerId: String!\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  customer(id: $customerId) {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n  ...organizationUser_query\n}\n\nfragment organizationUserLeftSideNavigationMenuContent_query on Query {\n  me {\n    id\n  }\n}\n\nfragment organizationUser_query on Query {\n  me {\n    id\n  }\n  customer(id: $customerId) {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n    personalInformationVisibility {\n      type\n      name\n    }\n  }\n  customerTeams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                  personalInformationVisibility {\n                    type\n                    name\n                  }\n                }\n              }\n              id\n            }\n          }\n        }\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(where: {customerId: $customerId}) {\n      totalCount\n      edges {\n        node {\n          id\n          status\n          role\n        }\n      }\n    }\n    id\n  }\n  ...organizationUserLeftSideNavigationMenuContent_query\n  ...singleChoiceUserPersonalInformationVisibility_query\n}\n\nfragment singleChoiceUserPersonalInformationVisibility_query on Query {\n  personalInformationVisibilityTypes {\n    type\n    name\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
+    "text": "query pageOrganizationUser_rootQuery(\n  $organizationCustomDomain: String!\n  $customerId: String!\n  $teamsSortingValues: [TeamOrderInput!]\n) {\n  customer(id: $customerId) {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n  ...organizationUser_query\n}\n\nfragment organizationUserLeftSideNavigationMenuContent_query on Query {\n  me {\n    id\n  }\n}\n\nfragment organizationUser_query on Query {\n  me {\n    id\n  }\n  customer(id: $customerId) {\n    id\n    email\n    photoUrl\n    designation\n    title\n    name\n    givenName\n    middleName\n    familyName\n    timezone\n    phoneNumber\n    personalInformationVisibility {\n      type\n      name\n    }\n  }\n  customerTeams(where: {organizationCustomDomain: $organizationCustomDomain, customerId: $customerId}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                  personalInformationVisibility {\n                    type\n                    name\n                  }\n                }\n              }\n              id\n            }\n          }\n        }\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {customerId: $customerId}) {\n      totalCount\n      edges {\n        node {\n          id\n          status\n          role\n        }\n      }\n    }\n    id\n  }\n  ...organizationUserLeftSideNavigationMenuContent_query\n  ...singleChoiceUserPersonalInformationVisibility_query\n}\n\nfragment singleChoiceUserPersonalInformationVisibility_query on Query {\n  personalInformationVisibilityTypes {\n    type\n    name\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    customDomain\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
   }
 };
 })();
 
-(node as any).hash = "aa66bbb2de5df60d4d3d05492d952a76";
+(node as any).hash = "6e551a920d55effa72631b25b0d8273d";
 
 export default node;

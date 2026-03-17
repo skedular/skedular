@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f40af10c99dbba9b6e08f7b88f673c5b>>
+ * @generated SignedSource<<1fbe343dce111f9ae291974ea31c1be4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type organizationAdmin_customTags_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   customTagNameSearchText?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
 };
 export type organizationAdmin_customTags_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationAdmin_customTags_query">;
@@ -44,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = [
@@ -125,8 +125,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -266,16 +266,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0f955a9a07185670745aeac7fcd0ec7a",
+    "cacheID": "0fc67d0b657d694228487356b894ec8d",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_customTags_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(first: $count, after: $cursor, where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationAdmin_customTags_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $customTagNameSearchText: String\n  $organizationCustomDomain: String\n) {\n  ...organizationAdmin_customTags_query_1G22uz\n}\n\nfragment organizationAdmin_customTags_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(first: $count, after: $cursor, where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2f3f563779f51f278f87dd0dfb0a6401";
+(node as any).hash = "72a61af084aba91e341dfcaedb8f2884";
 
 export default node;

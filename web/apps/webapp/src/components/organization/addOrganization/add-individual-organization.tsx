@@ -25,14 +25,14 @@ import { boolean, object, string } from 'yup';
 type Props = {
   rootDataRelay: addIndividualOrganization_query$key;
   onReloadRequired: () => void;
-  onAdded: (id: string, uniqueAlphanumericName: string) => void;
+  onAdded: (id: string, customDomain: string) => void;
   onCancel?: () => void;
   cancelLabel?: string;
   createLabel?: string;
 };
 
 type OrganizationDetails = {
-  uniqueAlphanumericName: string | null;
+  customDomain: string | null;
   name: string;
   about: string | null;
   website: string | null;
@@ -40,7 +40,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
-  uniqueAlphanumericName: string().nullable(),
+  customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
   website: string().nullable(),
@@ -69,7 +69,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
       addOrganization(input: $input) {
         organization {
           id
-          uniqueAlphanumericName
+          customDomain
           name
           listingMetadata {
             about
@@ -88,7 +88,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ uniqueAlphanumericName, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, about, website }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -97,7 +97,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
         input: {
           clientMutationId: uuid(),
           id,
-          uniqueAlphanumericName,
+          customDomain,
           name,
           listingMetadata: {
             about: about ?? '',
@@ -128,7 +128,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
           render: <NotificationContent content={`Organization ${name} added.`} />,
         });
 
-        onAdded(response.addOrganization.organization.id, response.addOrganization.organization.uniqueAlphanumericName!);
+        onAdded(response.addOrganization.organization.id, response.addOrganization.organization.customDomain!);
         onReloadRequired();
       },
       onError: (error) => {
@@ -141,7 +141,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
         addOrganization: {
           organization: {
             id,
-            uniqueAlphanumericName,
+            customDomain,
             name,
             listingMetadata: {
               about: about ?? '',
@@ -196,7 +196,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
         <Form
           onSubmit={handleOrganizationAddClick}
           initialValues={{
-            uniqueAlphanumericName: null,
+            customDomain: null,
             name: '',
             about: null,
             website: null,
@@ -217,8 +217,8 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
               </FormFieldLabel>
 
               {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
-                  <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
+                <FormFieldLabel label="Custom Domain" required={requiredFields.customDomain}>
+                  <TextField name="customDomain" required={requiredFields.customDomain} />
                 </FormFieldLabel>
               )}
 

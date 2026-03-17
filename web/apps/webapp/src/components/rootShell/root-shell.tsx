@@ -30,11 +30,11 @@ type Props = {
   hideWelcomeMessage?: boolean;
   showBreadcrumps?: boolean;
   breadcrumbs?: React.ReactNode | JSX.Element;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query rootShell_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query rootShell_rootQuery($organizationCustomDomain: String!) {
     me {
       id
       isOnboardingDone
@@ -55,7 +55,7 @@ const RootQuery = graphql`
     azureTenantOrganization {
       id
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organization(customDomain: $organizationCustomDomain) {
       logoUrl
       name
       isSsoTokenValid
@@ -81,7 +81,7 @@ const RootShell = ({
   hideWelcomeMessage,
   showBreadcrumps,
   breadcrumbs,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
 }: PropsWithChildren<Props>) => {
   const rootData = usePreloadedQuery<rootShell_rootQuery>(RootQuery, queryReference);
   const { integratedPlatrform } = useIntegratedPlatrform();
@@ -181,7 +181,7 @@ const RootShell = ({
                   <PushToRight />
                   <Button
                     variant="contained"
-                    href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationUniqueAlphanumericName)}
+                    href={getOrganizationSsoSignInBaseLink(integratedPlatrform, organizationCustomDomain)}
                     sx={{ whiteSpace: 'nowrap', textTransform: 'none' }}
                   >
                     Single sign-on
@@ -220,22 +220,22 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
   const [queryReference, loadQuery] = useQueryLoader<rootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -257,7 +257,7 @@ const RootShellWithRelay = ({ children, collapsed, hideOrganizationSelector, hid
         hideWelcomeMessage={hideWelcomeMessage}
         showBreadcrumps={showBreadcrumps}
         breadcrumbs={breadcrumbs}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
       >
         {children}
       </MemoRootShell>

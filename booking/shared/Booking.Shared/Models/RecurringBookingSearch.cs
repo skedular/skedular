@@ -18,7 +18,7 @@ public record RecurringBookingSearchCriteria(
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
     ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationUniqueAlphanumericNames,
+    ICollection<string> OrganizationCustomDomains,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);
 

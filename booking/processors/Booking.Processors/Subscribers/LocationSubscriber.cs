@@ -91,7 +91,7 @@ public class LocationSubscriber(
 
         if (locationOpeningHoursChanged)
         {
-            if (existingLocation.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
+            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
             {
                 // Regenerate all
                 await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
@@ -101,7 +101,7 @@ public class LocationSubscriber(
         }
         else
         {
-            if (existingLocation.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
+            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
             {
                 // Regenerate those changed
                 await temporalService.StartWorkflowGenerateResourcesSlotsAsync(

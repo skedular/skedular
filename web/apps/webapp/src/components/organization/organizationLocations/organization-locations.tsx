@@ -57,12 +57,12 @@ import LocationCard from './location-card';
 type Props = {
   queryReference: PreloadedQuery<organizationLocations_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
   query organizationLocations_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $locationsSortingValues: [LocationOrderInput!]
     $zonesSortingValues: [OrganizationTagOrderInput!]
     $customTagsSortingValues: [OrganizationTagOrderInput!]
@@ -79,7 +79,7 @@ const RootQuery = graphql`
         id
       }
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organization(customDomain: $organizationCustomDomain) {
       members(orderBy: $organizationMembersSortingValues) {
         __id
         totalCount
@@ -98,7 +98,7 @@ const RootQuery = graphql`
         }
       }
       canModify
-      uniqueAlphanumericName
+      customDomain
     }
     ...newLocationButton_query
     ...locationCard_query
@@ -142,7 +142,7 @@ type RowType = {
   preferred: boolean;
 };
 
-const OrganizationLocations = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const OrganizationLocations = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationLocations_rootQuery>(RootQuery, queryReference);
   const [rootDataRefetchable, refetch] = useRefetchableFragment<
     organizationLocations_locations_availableOrganizationResources_refetchableFragment,
@@ -155,12 +155,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
         locations(
           first: $count
           after: $cursor
-          where: {
-            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
-            zoneIds: $zoneIds
-            customTagIds: $customTagIds
-            notContactedYet: $locationNotContactedYet
-          }
+          where: { organizationCustomDomain: $organizationCustomDomain, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet }
           orderBy: $locationsSortingValues
         ) @connection(key: "organizationLocations_locations") {
           __id
@@ -191,7 +186,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
               canModify
               canDelete
               organization {
-                uniqueAlphanumericName
+                customDomain
               }
               extraMetadata {
                 contactDetails {
@@ -204,13 +199,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           }
         }
         availableResources(
-          where: {
-            organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName
-            from: $fromTodayDate
-            until: $untilTodayDate
-            zoneIds: $zoneIds
-            customTagIds: $customTagIds
-          }
+          where: { organizationCustomDomain: $organizationCustomDomain, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds }
         ) {
           location {
             id
@@ -271,7 +260,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const [locationRemoveConfirmationDialogOpen, setLocationRemoveConfirmationDialogOpen] = useState(false);
   const [preferredLocations, setPreferredLocations] = useState(rootData.me?.preferredLocations.map(({ id }) => id) ?? []);
-  const [filterThoseWithoutCoordites, setFilterThoseWithoutCoordites] = useState(organizationUniqueAlphanumericName === 'skedularpubliclocations');
+  const [filterThoseWithoutCoordites, setFilterThoseWithoutCoordites] = useState(organizationCustomDomain === 'skedularpubliclocations');
   const [filterThoseWithCoordites, setFilterThoseWithCoordites] = useState(false);
   const [filterThoseWithEmails, setFilterThoseWithEmails] = useState(false);
   const [filterThoseWithPhones, setFilterThoseWithPhones] = useState(false);
@@ -336,7 +325,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           return;
         }
 
-        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, locationDetails.id));
+        router.push(getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id));
         break;
 
       case MoreActionsMenuOptionType.DeleteLocation:
@@ -348,7 +337,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
         break;
     }
   };
@@ -582,7 +571,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
       headerName: '',
       editable: false,
       renderCell: (params) => {
-        if (rootData.organization?.uniqueAlphanumericName === 'skedularpubliclocations') {
+        if (rootData.organization?.customDomain === 'skedularpubliclocations') {
           return null;
         }
 
@@ -590,7 +579,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           <NewBookingButton
             onReloadRequired={onReloadRequired}
             defaultDate={defaultDate}
-            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+            organizationCustomDomain={organizationCustomDomain}
             defaultLocationId={params.id as string}
             label="Book Now"
             hideIcon
@@ -684,13 +673,11 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
           <CustomTagSelector rootDataRelay={rootData} onChange={handleCustomTagChanged} />
           <ListGridToggle defaultValue={viewMode} onChange={handlViewModeChanged} />
           <PushToRight />
-          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />}
-          {rootData.organization?.canModify && (
-            <ClaimLocationOwnershipButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} />
-          )}
+          {rootData.organization?.canModify && <NewLocationButton rootDataRelay={rootData} organizationCustomDomain={organizationCustomDomain} />}
+          {rootData.organization?.canModify && <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} />}
         </GridContainer>
         <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-          {organizationUniqueAlphanumericName === 'skedularpubliclocations' && (
+          {organizationCustomDomain === 'skedularpubliclocations' && (
             <StackRow>
               <BodyIconTypography label="Filter those without address" />
               <Switch defaultChecked={filterThoseWithoutCoordites} onChange={handleFilterThoseWithoutCoorditesChange} />
@@ -730,7 +717,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
                       rootDataRelay={rootData}
                       locationDetailsRelay={location}
                       onReloadRequired={onReloadRequired}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      organizationCustomDomain={organizationCustomDomain}
                       defaultDate={defaultDate}
                       connectionIds={connectionIds}
                       availableResourcesCount={availableResourcesCount}
@@ -787,10 +774,10 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationU
 const MemoOrganizationLocations = memo(OrganizationLocations);
 
 type RelayProps = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
+const OrganizationLocationsWithRelay = ({ organizationCustomDomain }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationLocations_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -800,7 +787,7 @@ const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: 
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         locationsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -833,7 +820,7 @@ const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: 
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -847,7 +834,7 @@ const OrganizationLocationsWithRelay = ({ organizationUniqueAlphanumericName }: 
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoOrganizationLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoOrganizationLocations queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

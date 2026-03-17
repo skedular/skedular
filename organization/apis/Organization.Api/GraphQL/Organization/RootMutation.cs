@@ -38,7 +38,7 @@ public class RootMutation(IMapper mapper)
         new()
         {
             ClientMutationId = input.ClientMutationId,
-            Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, input.UniqueAlphanumericName, cancellationToken))!
+            Organization = mapper.MapTo(await organizationService.DeleteAsync(input.Id, input.CustomDomain, cancellationToken))!
         };
 
     [UseResolverScope]
@@ -52,7 +52,7 @@ public class RootMutation(IMapper mapper)
             Organization = mapper.MapTo(
                 await organizationService.UpdateMarketplaceListingMetadataAsync(
                     input.Id,
-                    input.UniqueAlphanumericName,
+                    input.CustomDomain,
                     input.MarketplaceListingMetadata,
                     cancellationToken))!
         };
@@ -68,7 +68,7 @@ public class RootMutation(IMapper mapper)
             Organization = mapper.MapTo(
                 await organizationService.UpdateOrganizationBillingCycleAsync(
                     input.Id,
-                    input.UniqueAlphanumericName,
+                    input.CustomDomain,
                     input.BillingCycle,
                     cancellationToken))!
         };

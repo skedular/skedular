@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e46d6e5a784821c570a49245ec809687>>
+ * @generated SignedSource<<caa8d4b2080027291426ce1516fffb0a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,8 +32,8 @@ export type organizationLocations_rootQuery$variables = {
   fromTodayDate: any;
   locationNotContactedYet: boolean;
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
+  organizationCustomDomain: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
   untilTodayDate: any;
   zoneIds?: ReadonlyArray<string> | null | undefined;
   zonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
@@ -47,6 +47,7 @@ export type organizationLocations_rootQuery$data = {
   };
   readonly organization: {
     readonly canModify: boolean;
+    readonly customDomain: string | null | undefined;
     readonly members: {
       readonly __id: string;
       readonly edges: ReadonlyArray<{
@@ -64,7 +65,6 @@ export type organizationLocations_rootQuery$data = {
       }>;
       readonly totalCount: number;
     };
-    readonly uniqueAlphanumericName: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"customTagSelector_allCustomTags_query" | "locationCard_query" | "newLocationButton_query" | "organizationLocations_locations_availableOrganizationResources_query" | "zoneSelector_allZones_query">;
 };
@@ -102,12 +102,12 @@ v4 = {
 v5 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationCustomDomain"
 },
 v6 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationMembersSortingValues"
 },
 v7 = {
   "defaultValue": null,
@@ -159,8 +159,8 @@ v12 = {
 v13 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v14 = {
@@ -283,7 +283,7 @@ v19 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueAlphanumericName",
+  "name": "customDomain",
   "storageKey": null
 },
 v20 = [
@@ -329,8 +329,8 @@ v22 = {
 },
 v23 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v24 = {
   "kind": "Variable",
@@ -423,13 +423,13 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v6/*: any*/),
+      (v5/*: any*/),
       (v4/*: any*/),
       (v9/*: any*/),
       (v1/*: any*/),
       (v2/*: any*/),
       (v7/*: any*/),
-      (v5/*: any*/),
+      (v6/*: any*/),
       (v8/*: any*/),
       (v0/*: any*/),
       (v3/*: any*/)
@@ -856,16 +856,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9e6a8d535dbcc66a88c534fccf65d90f",
+    "cacheID": "aac28e3f4e493269c6a73e5ff9e3a488",
     "id": null,
     "metadata": {},
     "name": "organizationLocations_rootQuery",
     "operationKind": "query",
-    "text": "query organizationLocations_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $fromTodayDate: DateTime!\n  $untilTodayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n  $locationNotContactedYet: Boolean!\n) {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    canModify\n    uniqueAlphanumericName\n    id\n  }\n  ...newLocationButton_query\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationResources_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  extraMetadata {\n    contactDetails {\n      contactPeople\n      contactEmails\n      contactPhones\n    }\n  }\n  uniqueClaimCode\n  contactedViaEmail\n  contactedViaCall\n  contactedViaSms\n  contactedViaWhatsapp\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n}\n\nfragment newLocationButton_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationLocations_rootQuery(\n  $organizationCustomDomain: String!\n  $locationsSortingValues: [LocationOrderInput!]\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $fromTodayDate: DateTime!\n  $untilTodayDate: DateTime!\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $zoneIds: [String!]\n  $customTagIds: [String!]\n  $locationNotContactedYet: Boolean!\n) {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    members(orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    canModify\n    customDomain\n    id\n  }\n  ...newLocationButton_query\n  ...locationCard_query\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...organizationLocations_locations_availableOrganizationResources_query\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment locationCard_LocationDetails on LocationDetails {\n  id\n  name\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  resources {\n    totalCount\n  }\n  physicalAddress {\n    multilinesFormattedAddress\n    latitude\n    longitude\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n  organization {\n    customDomain\n    id\n  }\n  extraMetadata {\n    contactDetails {\n      contactPeople\n      contactEmails\n      contactPhones\n    }\n  }\n  uniqueClaimCode\n  contactedViaEmail\n  contactedViaCall\n  contactedViaSms\n  contactedViaWhatsapp\n}\n\nfragment locationCard_query on Query {\n  me {\n    id\n    preferredLocations {\n      id\n    }\n  }\n}\n\nfragment newLocationButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n}\n\nfragment organizationLocations_locations_availableOrganizationResources_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain, zoneIds: $zoneIds, customTagIds: $customTagIds, notContactedYet: $locationNotContactedYet}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        customTags {\n          id\n          name\n          color\n        }\n        zones {\n          id\n          name\n          color\n        }\n        resources {\n          totalCount\n        }\n        physicalAddress {\n          formattedAddress\n          longitude\n          latitude\n          id\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        organization {\n          customDomain\n          id\n        }\n        extraMetadata {\n          contactDetails {\n            contactEmails\n            contactPhones\n          }\n        }\n        ...locationCard_LocationDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds}) {\n    location {\n      id\n    }\n  }\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e856e27b47d75bef81145a1a41e96a9d";
+(node as any).hash = "6572e711c35a89b8db5a803a1402f576";
 
 export default node;

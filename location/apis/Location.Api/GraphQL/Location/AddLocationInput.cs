@@ -14,8 +14,8 @@ public class AddLocationInput
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string? OrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationType Type { get; set; }

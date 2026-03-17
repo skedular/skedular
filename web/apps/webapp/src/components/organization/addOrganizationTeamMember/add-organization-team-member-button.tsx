@@ -23,7 +23,7 @@ type Props = {
 
 const RootQuery = graphql`
   query addOrganizationTeamMemberButton_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $peopleNameSearchText: String
     $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
@@ -73,7 +73,7 @@ const AddOrganizationTeamMemberButton = ({ queryReference, onReloadRequired, con
 const MemoAddOrganizationTeamMemberButton = memo(AddOrganizationTeamMemberButton);
 
 type RelayProps = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onReloadRequired?: () => void;
   connectionIds: string[];
   teamId: string;
@@ -84,23 +84,13 @@ type RelayProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddOrganizationTeamMemberButtonWithRelay = ({
-  organizationUniqueAlphanumericName,
-  onReloadRequired,
-  connectionIds,
-  teamId,
-  fullWidth,
-  label,
-  hideIcon,
-  variant,
-  size,
-}: RelayProps) => {
+const AddOrganizationTeamMemberButtonWithRelay = ({ organizationCustomDomain, onReloadRequired, connectionIds, teamId, fullWidth, label, hideIcon, variant, size }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addOrganizationTeamMemberButton_rootQuery>(RootQuery);
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         addTeamMemberDialogOrganizationMembersSortingValues: [
           {
             direction: 'ASCENDING',
@@ -112,7 +102,7 @@ const AddOrganizationTeamMemberButtonWithRelay = ({
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationUniqueAlphanumericName]);
+  }, [loadQuery, organizationCustomDomain]);
 
   if (!queryReference) {
     return <Loading />;

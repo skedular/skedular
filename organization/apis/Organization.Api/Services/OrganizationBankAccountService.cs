@@ -55,9 +55,9 @@ public class OrganizationBankAccountService(
             organizationBankAccount.Id = randomHelper.Generate();
         }
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationBankAccount.Organization.Id,
-                                       organizationBankAccount.Organization.UniqueAlphanumericName,
+                                       organizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
@@ -96,9 +96,9 @@ public class OrganizationBankAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganizationBankAccount = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ??
                                               throw new ResourceNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        existingOrganizationBankAccount.Organization.Id,
-                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       existingOrganizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
@@ -125,7 +125,7 @@ public class OrganizationBankAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var resources = await repositoryFactory.OrganizationBankAccountRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = resources.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -157,9 +157,9 @@ public class OrganizationBankAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganizationBankAccount = await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ??
                                               throw new OrganizationBankAccountNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        existingOrganizationBankAccount.Organization.Id,
-                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       existingOrganizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))
@@ -190,9 +190,9 @@ public class OrganizationBankAccountService(
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingOrganizationBankAccount =
             await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        existingOrganizationBankAccount.Organization.Id,
-                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       existingOrganizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
@@ -210,9 +210,9 @@ public class OrganizationBankAccountService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
-                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -241,9 +241,9 @@ public class OrganizationBankAccountService(
         Customer? customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        existingOrganizationBankAccount.Organization.Id,
-                                       existingOrganizationBankAccount.Organization.UniqueAlphanumericName,
+                                       existingOrganizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (customer is not null && !await organizationAuthorizationService.CanModifyAsync(existingOrganization, customer.Id, cancellationToken))

@@ -136,7 +136,7 @@ public class Mapper : IMapper
             Identities = MapTo(src.Identities),
             IsOnboardingDone = src.IsOnboardingDone,
             DefaultOrganizationId = src.DefaultOrganization?.Id,
-            DefaultOrganizationUniqueAlphanumericName = src.DefaultOrganization?.UniqueAlphanumericName,
+            DefaultOrganizationCustomDomain = src.DefaultOrganization?.CustomDomain,
             PreferredLocationIds = src.PreferredLocations.Select(item => item.Id),
             PreferredZones = MapTo(src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Zone)),
             PreferredCustomTags = MapTo(src.PreferredOrganizationTags.Where(item => item.Type == OrganizationTagType.Custom)),
@@ -558,7 +558,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                UniqueAlphanumericName = src.UniqueAlphanumericName,
+                CustomDomain = src.CustomDomain,
                 Type = src.Type.ToOrganizationType(),
                 IsOwnershipVerified = src.IsOwnershipVerified
             };

@@ -60,7 +60,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
   const searchParams = useSearchParams();
   const locationUniqueClaimCode = searchParams.get('locationUniqueClaimCode');
 
-  const handleAdded = (id: string, uniqueAlphanumericName: string) => {
+  const handleAdded = (id: string, customDomain: string) => {
     if (locationUniqueClaimCode) {
       commitClaimLocationOwnership({
         variables: {
@@ -78,7 +78,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             );
           }
 
-          router.push(getOrganizationLocationsBaseLink(integratedPlatrform, uniqueAlphanumericName));
+          router.push(getOrganizationLocationsBaseLink(integratedPlatrform, customDomain));
           onReloadRequired();
         },
         onError: (error) => {
@@ -86,8 +86,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
 
           if (rootData.me.isOnboardingDone) {
             router.push(
-              getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-                redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+              getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+                redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
               }),
             );
             onReloadRequired();
@@ -106,8 +106,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               }
 
               router.push(
-                getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+                getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
                 }),
               );
               onReloadRequired();
@@ -116,8 +116,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
               themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
               router.push(
-                getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+                getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+                  redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
                 }),
               );
               onReloadRequired();
@@ -137,8 +137,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
     } else {
       if (rootData.me.isOnboardingDone) {
         router.push(
-          getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-            redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+          getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+            redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
           }),
         );
         onReloadRequired();
@@ -158,8 +158,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           }
 
           router.push(
-            getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+            getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
             }),
           );
           onReloadRequired();
@@ -168,8 +168,8 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
           themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${error.message}.`} />, errorNotificationOptions);
 
           router.push(
-            getOrganizationLocationAddIndividualLink(integratedPlatrform, uniqueAlphanumericName, {
-              redirectUrl: getOrganizationBaseLink(integratedPlatrform, uniqueAlphanumericName),
+            getOrganizationLocationAddIndividualLink(integratedPlatrform, customDomain, {
+              redirectUrl: getOrganizationBaseLink(integratedPlatrform, customDomain),
             }),
           );
           onReloadRequired();

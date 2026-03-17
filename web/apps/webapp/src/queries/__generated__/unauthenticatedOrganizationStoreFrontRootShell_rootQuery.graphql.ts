@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5f2d360ca12d58b4871394ea7ef08f66>>
+ * @generated SignedSource<<d8efa20495f5ee8e9721013ca1a7fc43>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type unauthenticatedOrganizationStoreFrontRootShell_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type unauthenticatedOrganizationStoreFrontRootShell_rootQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"unauthenticatedOrganizationStoreFrontAppBar_query">;
@@ -26,7 +26,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ];
 return {
@@ -56,8 +56,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationPublicDetails",
@@ -78,16 +78,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2e473cdc1e2b78cde1ff19e38551ff9a",
+    "cacheID": "82a6ec3626673e89581e79bb5196fbdd",
     "id": null,
     "metadata": {},
     "name": "unauthenticatedOrganizationStoreFrontRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query unauthenticatedOrganizationStoreFrontRootShell_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...unauthenticatedOrganizationStoreFrontAppBar_query\n}\n\nfragment unauthenticatedOrganizationStoreFrontAppBar_query on Query {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n  }\n}\n"
+    "text": "query unauthenticatedOrganizationStoreFrontRootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  ...unauthenticatedOrganizationStoreFrontAppBar_query\n}\n\nfragment unauthenticatedOrganizationStoreFrontAppBar_query on Query {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ce8f5220f713a3f5828d453680012feb";
+(node as any).hash = "59af04bd525cb1eb4e52c52aaafd283f";
 
 export default node;

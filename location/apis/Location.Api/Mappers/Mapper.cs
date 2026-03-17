@@ -234,7 +234,7 @@ public class Mapper : IMapper
                 DeskCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceDesk)),
                 RoomCapacity = src.Resources.Count(item => item.Tags.Any(tag => tag.Type == OrganizationTagType.ResourceRoom)),
                 OrganizationId = src.Organization.Id,
-                OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
+                OrganizationCustomDomain = src.Organization.CustomDomain.ToSafeString(),
                 CustomTags = MapTo(src.CustomTags),
                 Zones = MapTo(src.Zones),
                 SpaceTypes = MapTo(src.SpaceTypes),
@@ -388,10 +388,7 @@ public class Mapper : IMapper
             ExtraMetadata = src.ExtraMetadata,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             Organization =
-                new Shared.Models.Organization
-                {
-                    Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
-                },
+                new Shared.Models.Organization { Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString() },
             OrganizationTags = src.TagIds.Select(item => new OrganizationTag { Id = item }).ToList(),
             PhysicalAddress = MapTo(src.PhysicalAddress),
             OpeningHours = src.WeekOpeningHours is null ? null : new OpeningHours(MapTo(src.WeekOpeningHours)!, [], [])
@@ -817,7 +814,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             LogoUrl = src.LogoUrl,
             Offering = src.Offering,

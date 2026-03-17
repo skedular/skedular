@@ -39,15 +39,15 @@ import OrganizationUsersLeftSideNavigationMenuContent from './organization-users
 type Props = {
   queryReference: PreloadedQuery<organizationUsers_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query organizationUsers_rootQuery($organizationUniqueAlphanumericName: String!, $peopleNameSearchText: String) {
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+  query organizationUsers_rootQuery($organizationCustomDomain: String!, $peopleNameSearchText: String) {
+    organization(customDomain: $organizationCustomDomain) {
       canInvitePeople
     }
-    teams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
+    teams(where: { organizationCustomDomain: $organizationCustomDomain }) {
       __id
       totalCount
       edges {
@@ -97,7 +97,7 @@ type RowType = {
   status: boolean;
 };
 
-const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName }: Props) => {
+const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationUsers_rootQuery>(RootQuery, queryReference);
   const [rootDataOrganizationUsers, refetchOrganizationUsers] = useRefetchableFragment<
     organizationUsers_organizationUsers_refetchableFragment,
@@ -107,7 +107,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
       fragment organizationUsers_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationUsers_organizationUsers_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }) @connection(key: "organizationMembers_members") {
             __id
             totalCount
@@ -406,7 +406,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
           return;
         }
 
-        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, memberDetails.customer.id));
+        router.push(getOrganizationUserProfileBaseLink(integratedPlatrform, organizationCustomDomain, memberDetails.customer.id));
         break;
 
       case MoreActionsMenuOptionType.ViewUserBookings:
@@ -414,7 +414,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
           return;
         }
 
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { customerId: memberDetails.customer.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { customerId: memberDetails.customer.id }));
         break;
 
       case MoreActionsMenuOptionType.DeactivateOrganizationUser:
@@ -603,7 +603,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const rows: RowType[] = members.map((member) => ({
@@ -731,7 +731,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationUsersLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
+        <OrganizationUsersLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Users">
             <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
@@ -742,7 +742,7 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
                 </Grid>
 
                 <Grid>
-                  <InvitePeopleToJoinOrganizationButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+                  <InvitePeopleToJoinOrganizationButton organizationCustomDomain={organizationCustomDomain} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -821,10 +821,10 @@ const OrganizationUsers = ({ queryReference, organizationUniqueAlphanumericName 
 const MemoOrganizationUsers = memo(OrganizationUsers);
 
 type RelayProps = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const OrganizationUsersWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
+const OrganizationUsersWithRelay = ({ organizationCustomDomain }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationUsers_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -832,13 +832,13 @@ const OrganizationUsersWithRelay = ({ organizationUniqueAlphanumericName }: Rela
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -852,7 +852,7 @@ const OrganizationUsersWithRelay = ({ organizationUniqueAlphanumericName }: Rela
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoOrganizationUsers queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoOrganizationUsers queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

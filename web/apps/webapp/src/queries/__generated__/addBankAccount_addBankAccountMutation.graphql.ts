@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e15d8930764c4e548280832582bc725d>>
+ * @generated SignedSource<<4008c5ba74fa79a0dce83c85335a31e0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,8 +18,8 @@ export type AddOrganizationBankAccountInput = {
   countryCode?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type addBankAccount_addBankAccountMutation$variables = {
   input: AddOrganizationBankAccountInput;

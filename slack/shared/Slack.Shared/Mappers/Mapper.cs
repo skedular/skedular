@@ -251,7 +251,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
@@ -498,7 +498,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt

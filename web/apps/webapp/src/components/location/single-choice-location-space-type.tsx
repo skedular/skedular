@@ -21,7 +21,7 @@ const SingleChoiceLocationSpaceType = ({ rootDataRelay, name, required }: Props)
   const rootData = useFragment<singleChoiceLocationSpaceType_query$key>(
     graphql`
       fragment singleChoiceLocationSpaceType_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           locationSpaceTypes {
             id
             name

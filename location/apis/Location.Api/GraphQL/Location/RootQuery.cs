@@ -50,7 +50,7 @@ public class RootQuery(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
                 null,
-                where.OrganizationUniqueAlphanumericName,
+                where.OrganizationCustomDomain,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
@@ -92,7 +92,7 @@ public class RootQuery(IMapper mapper)
     {
         if (where.SearchBoundaries is null &&
             string.IsNullOrWhiteSpace(where.OrganizationId) &&
-            string.IsNullOrWhiteSpace(where.OrganizationUniqueAlphanumericName) &&
+            string.IsNullOrWhiteSpace(where.OrganizationCustomDomain) &&
             where.ProductIds.ToSafeCollection().Count == 0)
         {
             return Connection<LocationEdge>.Empty;
@@ -102,7 +102,7 @@ public class RootQuery(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new LocationSearchCriteria(
                 where.OrganizationId,
-                where.OrganizationUniqueAlphanumericName,
+                where.OrganizationCustomDomain,
                 where.LocationIds.ToSafeCollection(),
                 where.NameContains,
                 where.ZoneIds.ToSafeCollection().Concat(where.CustomTagIds.ToSafeCollection()).ToList(),
@@ -134,11 +134,11 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<IEnumerable<LocationDetails>?> MyLocationsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
         await cachedCustomerService.DoesCustomerExistAsync(cancellationToken)
-            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken))
+            ? mapper.MapTo(await locationService.GetMyLocationsAsync(organizationId, organizationCustomDomain, cancellationToken))
             : null;
 }

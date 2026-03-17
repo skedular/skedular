@@ -35,7 +35,7 @@ message Data {
 message Organization {
   string                      id                         = 1;
   google.protobuf.Timestamp   deletedAt                  = 2;
-  string                      uniqueAlphanumericName     = 3;
+  string                      customDomain               = 3;
   string                      name                       = 4;
   ListingMetadata             listingMetadata            = 5;
   string                      logoUrl                    = 6;

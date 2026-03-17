@@ -10,7 +10,7 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
-    public string? UniqueAlphanumericName { get; set; }
+    public string? CustomDomain { get; set; }
     public string? Name { get; set; }
     public string? LogoUrl { get; set; }
     public Offering? Offering { get; set; }
@@ -42,7 +42,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
-        builder.Property(item => item.UniqueAlphanumericName).HasMaxLength(Constants.MaxOrganizationUniqueAlphanumericNameLength);
+        builder.Property(item => item.CustomDomain).HasMaxLength(Constants.MaxOrganizationCustomDomainLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
@@ -53,7 +53,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
 
-        builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
+        builder.HasIndex(item => item.CustomDomain).IsUnique();
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.BillingCycle);
         builder.HasIndex(item => item.Name);

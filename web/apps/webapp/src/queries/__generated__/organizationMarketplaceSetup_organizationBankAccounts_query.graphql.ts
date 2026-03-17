@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5b89b9e0d12bca15f00a8864f1b03540>>
+ * @generated SignedSource<<4f3f6b77441225a2ee2d1c90065e40c1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type organizationMarketplaceSetup_organizationBankAccounts_query$data = {
         readonly isDefault: boolean;
         readonly name: string;
         readonly organization: {
-          readonly uniqueAlphanumericName: string | null | undefined;
+          readonly customDomain: string | null | undefined;
         };
       };
     }>;
@@ -60,7 +60,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     }
   ],
   "kind": "Fragment",
@@ -110,8 +110,8 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
+              "name": "organizationCustomDomain",
+              "variableName": "organizationCustomDomain"
             }
           ],
           "kind": "ObjectValue",
@@ -207,7 +207,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "uniqueAlphanumericName",
+                      "name": "customDomain",
                       "storageKey": null
                     }
                   ],
@@ -279,6 +279,6 @@ return {
 };
 })();
 
-(node as any).hash = "c9930fcadd007408c14f3f10e5f67201";
+(node as any).hash = "c4d94bd5cfd32de1e453f3663c4d89c4";
 
 export default node;

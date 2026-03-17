@@ -173,9 +173,9 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                existingTeam.Organization.Id,
-                               existingTeam.Organization.UniqueAlphanumericName,
+                               existingTeam.Organization.CustomDomain,
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
@@ -281,9 +281,9 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
                                existingTeam.Organization.Id,
-                               existingTeam.Organization.UniqueAlphanumericName,
+                               existingTeam.Organization.CustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
@@ -367,7 +367,7 @@ public class TeamMemberService(
             throw new UnauthorizedAccessException();
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                existingTeam.Organization.Id,
                                null,
                                false,

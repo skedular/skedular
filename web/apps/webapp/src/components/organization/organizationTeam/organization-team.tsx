@@ -57,7 +57,7 @@ type Props = {
   rootDataRelay: organizationTeam_query$key;
   rootDataTeamMembersRelay: organizationTeam_teamMembers_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   teamId: string;
 };
 
@@ -95,7 +95,7 @@ type RowType = {
   status: boolean;
 };
 
-const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationUniqueAlphanumericName, teamId }: Props) => {
+const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembersRelay, organizationCustomDomain, teamId }: Props) => {
   const rootData = useFragment<organizationTeam_query$key>(
     graphql`
       fragment organizationTeam_query on Query {
@@ -425,7 +425,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const handleDeactivateMembersClick = () => {
@@ -731,7 +731,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   };
 
   const handleViewBookingsClick = () => {
-    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, { teamId }));
+    router.push(getOrganizationBookingsBaseLink(integratedPlatrform, organizationCustomDomain, { teamId }));
   };
 
   const handleRemoveTeamClicked = () => {
@@ -764,7 +764,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
           render: <NotificationContent content={`Team '${team.name}' removed.`} />,
         });
 
-        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+        router.push(getOrganizationTeamsBaseLink(integratedPlatrform, organizationCustomDomain));
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -922,7 +922,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationTeamLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} teamId={teamId} hideIcons />
+        <OrganizationTeamLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} teamId={teamId} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Team Information">
             <Form
@@ -1059,7 +1059,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
                   <AddOrganizationTeamMemberButton
                     onReloadRequired={onReloadRequired}
                     connectionIds={connectionIds}
-                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    organizationCustomDomain={organizationCustomDomain}
                     teamId={teamId}
                   />
                 </Grid>

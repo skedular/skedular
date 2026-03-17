@@ -35,7 +35,7 @@ import { array, number, object, string } from 'yup';
 type Props = {
   rootDataRelay: editResource_query$key;
   onReloadRequired?: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type ResourceDetails = {
@@ -56,11 +56,11 @@ const ResourceSchema = object({
   capacity: number().required('Capacity is required').min(1, 'Capacity must be greater than 0'),
 });
 
-const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Props) => {
+const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<editResource_query$key>(
     graphql`
       fragment editResource_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           type {
             type
           }
@@ -620,17 +620,12 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
                       rootDataRelay={rootData}
                       name="customTagIds"
                       required={requiredFields.customTagIds}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                      organizationCustomDomain={organizationCustomDomain}
                     />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Zones">
-                    <MultipleChoicesZones
-                      rootDataRelay={rootData}
-                      name="zoneIds"
-                      required={requiredFields.zoneIds}
-                      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-                    />
+                    <MultipleChoicesZones rootDataRelay={rootData} name="zoneIds" required={requiredFields.zoneIds} organizationCustomDomain={organizationCustomDomain} />
                   </FormFieldLabel>
 
                   {rootData.organization?.type.type === 'MARKETPLACE' && (
@@ -639,7 +634,7 @@ const EditResource = ({ rootDataRelay, organizationUniqueAlphanumericName }: Pro
                         rootDataRelay={rootData}
                         name="productTagIds"
                         required={requiredFields.productTagIds}
-                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                        organizationCustomDomain={organizationCustomDomain}
                       />
                     </FormFieldLabel>
                   )}

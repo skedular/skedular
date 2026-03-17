@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0c6627ca930768375555790a5080025>>
+ * @generated SignedSource<<e8032a0cf56eb38994a709c3c45d77ae>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,8 +19,8 @@ export type OrganizationMemberOrderInput = {
 export type editPrivateBooking_organizationMembers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
 export type editPrivateBooking_organizationMembers_refetchableFragment$data = {
@@ -46,12 +46,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationMembersSortingValues"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationMembersSortingValues"
   },
   {
     "defaultValue": null,
@@ -132,8 +132,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -299,16 +299,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c5e469639923947e22983b941c1bb31e",
+    "cacheID": "c2df114cd06e2ce8338f9d47a26562b0",
     "id": null,
     "metadata": {},
     "name": "editPrivateBooking_organizationMembers_refetchableFragment",
     "operationKind": "query",
-    "text": "query editPrivateBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $organizationUniqueAlphanumericName: String\n  $peopleNameSearchText: String\n) {\n  ...editPrivateBooking_organizationMembers_query_1G22uz\n}\n\nfragment editPrivateBooking_organizationMembers_query_1G22uz on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query editPrivateBooking_organizationMembers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $peopleNameSearchText: String\n) {\n  ...editPrivateBooking_organizationMembers_query_1G22uz\n}\n\nfragment editPrivateBooking_organizationMembers_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "67a16eb227ad1d3f8200dfb5071fded0";
+(node as any).hash = "fd24ed73e9fd2e2142d3eb9151ebb869";
 
 export default node;

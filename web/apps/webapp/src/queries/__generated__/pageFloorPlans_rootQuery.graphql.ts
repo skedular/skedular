@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbc0126d3a2a7fa1b965f572b35785a6>>
+ * @generated SignedSource<<b8474d1db6c857ace8b2990eebfd59c4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,8 +39,8 @@ export type pageFloorPlans_rootQuery$variables = {
   floorPlanId: string;
   floorPlansSortingValues?: ReadonlyArray<FloorPlanOrderInput> | null | undefined;
   locationId: string;
+  organizationCustomDomain: string;
   organizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
   peopleNameSearchText?: string | null | undefined;
   resourcesSortingValues?: ReadonlyArray<ResourceOrderInput> | null | undefined;
   zonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
@@ -95,12 +95,12 @@ v6 = {
 v7 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMembersSortingValues"
+  "name": "organizationCustomDomain"
 },
 v8 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationMembersSortingValues"
 },
 v9 = {
   "defaultValue": null,
@@ -346,7 +346,7 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v8/*: any*/),
+      (v7/*: any*/),
       (v6/*: any*/),
       (v4/*: any*/),
       (v3/*: any*/),
@@ -355,7 +355,7 @@ return {
       (v5/*: any*/),
       (v10/*: any*/),
       (v9/*: any*/),
-      (v7/*: any*/),
+      (v8/*: any*/),
       (v0/*: any*/),
       (v1/*: any*/)
     ],
@@ -518,8 +518,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -682,8 +682,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "organizationUniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "organizationCustomDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationBookingPermissions",
@@ -1067,16 +1067,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c14c7af2ad5d897b5977701781b1e35a",
+    "cacheID": "1db47f9516cad0b897e5bc66227237f9",
     "id": null,
     "metadata": {},
     "name": "pageFloorPlans_rootQuery",
     "operationKind": "query",
-    "text": "query pageFloorPlans_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationId: String!\n  $floorPlanId: String!\n  $floorPlanExists: Boolean!\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $floorPlansSortingValues: [FloorPlanOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...floorPlans_query\n  ...floorPlans_floorPlan_query\n  ...floorPlans_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    id\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment floorPlanSelector_allFloorPlans_query on Query {\n  floorPlans(where: {locationId: $locationId}, orderBy: $floorPlansSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment floorPlans_bookings_query on Query {\n  bookings(where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment floorPlans_floorPlan_query on Query {\n  floorPlan(id: $floorPlanId) @include(if: $floorPlanExists) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {\n      edges {\n        node {\n          id\n          name\n          resourceType {\n            tagType\n            id\n          }\n          ...resourceCard_ResourceDetails\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment floorPlans_query on Query {\n  me {\n    id\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...floorPlanSelector_allFloorPlans_query\n  ...organizationUserSelector_organizationMembers_query\n  ...bookingCard_query\n  ...resourceCard_query\n}\n\nfragment organizationUserSelector_organizationMembers_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment resourceCard_ResourceDetails on ResourceDetails {\n  id\n  name\n  inactive\n  color\n  capacity\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  productTags {\n    id\n    name\n    color\n  }\n  resourceType {\n    id\n    name\n    color\n    tagType\n  }\n}\n\nfragment resourceCard_query on Query {\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query pageFloorPlans_rootQuery(\n  $organizationCustomDomain: String!\n  $locationId: String!\n  $floorPlanId: String!\n  $floorPlanExists: Boolean!\n  $zonesSortingValues: [OrganizationTagOrderInput!]\n  $customTagsSortingValues: [OrganizationTagOrderInput!]\n  $floorPlansSortingValues: [FloorPlanOrderInput!]\n  $resourcesSortingValues: [ResourceOrderInput!]\n  $peopleNameSearchText: String\n  $organizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $bookingsSearchCriteriaFrom: DateTime!\n  $bookingsSearchCriteriaTo: DateTime!\n) {\n  location(id: $locationId) {\n    name\n    id\n  }\n  ...floorPlans_query\n  ...floorPlans_floorPlan_query\n  ...floorPlans_bookings_query\n}\n\nfragment bookingCard_BookingDetails on BookingDetails {\n  id\n  from\n  until\n  notes\n  category {\n    category\n    name\n  }\n  channel {\n    channel\n    name\n  }\n  involvedCustomers {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  involvedOrganizations {\n    id\n  }\n  involvedLocations {\n    id\n    name\n  }\n  involvedTeams {\n    id\n    name\n  }\n  bookingResources {\n    resource {\n      id\n      name\n      color\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n  marketplaceBooking {\n    isPaymentRequired\n    paymentStatus {\n      type\n      name\n    }\n    invoiceUrl\n    id\n  }\n}\n\nfragment bookingCard_query on Query {\n  me {\n    id\n    name\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canModifyPaymentMethod\n  }\n  paymentStatuses {\n    type\n    name\n  }\n}\n\nfragment customTagSelector_allCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $customTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment floorPlanSelector_allFloorPlans_query on Query {\n  floorPlans(where: {locationId: $locationId}, orderBy: $floorPlansSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment floorPlans_bookings_query on Query {\n  bookings(where: {locationIds: [$locationId], fromGte: $bookingsSearchCriteriaFrom, fromLte: $bookingsSearchCriteriaTo}) {\n    totalCount\n    edges {\n      node {\n        id\n        involvedCustomers {\n          id\n        }\n        bookingResources {\n          resource {\n            id\n          }\n        }\n        ...bookingCard_BookingDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment floorPlans_floorPlan_query on Query {\n  floorPlan(id: $floorPlanId) @include(if: $floorPlanExists) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) @include(if: $floorPlanExists) {\n      edges {\n        node {\n          id\n          name\n          resourceType {\n            tagType\n            id\n          }\n          ...resourceCard_ResourceDetails\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment floorPlans_query on Query {\n  me {\n    id\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n  ...customTagSelector_allCustomTags_query\n  ...zoneSelector_allZones_query\n  ...floorPlanSelector_allFloorPlans_query\n  ...organizationUserSelector_organizationMembers_query\n  ...bookingCard_query\n  ...resourceCard_query\n}\n\nfragment organizationUserSelector_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $organizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n        }\n      }\n    }\n    id\n  }\n}\n\nfragment resourceCard_ResourceDetails on ResourceDetails {\n  id\n  name\n  inactive\n  color\n  capacity\n  customTags {\n    id\n    name\n    color\n  }\n  zones {\n    id\n    name\n    color\n  }\n  productTags {\n    id\n    name\n    color\n  }\n  resourceType {\n    id\n    name\n    color\n    tagType\n  }\n}\n\nfragment resourceCard_query on Query {\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment zoneSelector_allZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $zonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n        }\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "48fa3d9ae4705a5203a807ac580aa018";
+(node as any).hash = "713bcbe5d464eb87d8c6f6628145cecb";
 
 export default node;

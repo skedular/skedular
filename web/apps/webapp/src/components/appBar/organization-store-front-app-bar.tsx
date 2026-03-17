@@ -18,11 +18,11 @@ import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/system/Box';
 import { useAuth } from '@workos-inc/authkit-nextjs/components';
 import NextLink from 'next/link';
 import { memo, useContext, useState } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import Box from '@mui/system/Box';
 
 type Props = {
   rootDataRelay: organizationStoreFrontAppBar_query$key;
@@ -41,7 +41,7 @@ const OrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) => {
           familyName
           photoUrl
         }
-        organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organizationPublic(customDomain: $organizationCustomDomain) {
           name
         }
         ...newFeedbackDialog_query

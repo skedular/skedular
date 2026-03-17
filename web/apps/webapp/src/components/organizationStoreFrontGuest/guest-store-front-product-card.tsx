@@ -7,10 +7,10 @@ import { graphql, useFragment } from 'react-relay';
 type Props = {
   rootDataRelay: guestStoreFrontProductCard_query$key;
   productRelay: guestStoreFrontProductCard_product$key;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationUniqueAlphanumericName }: Props) => {
+const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationCustomDomain }: Props) => {
   const rootData = useFragment<guestStoreFrontProductCard_query$key>(
     graphql`
       fragment guestStoreFrontProductCard_query on Query {
@@ -86,7 +86,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationU
     <MarketplaceProductCard
       amenities={product.amenities}
       imageUrl={product.featureImages[0]?.original?.url ?? ''}
-      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      organizationCustomDomain={organizationCustomDomain}
       pricingRows={pricingRows}
       productId={product.id}
       subTitle={product.listingMetadata.subTitle ?? ''}

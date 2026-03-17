@@ -11,7 +11,7 @@ public interface IPrivateBookingPreferenceService
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> involvedOrganizationIds,
-        ICollection<string> involvedOrganizationUniqueAlphanumericNames,
+        ICollection<string> involvedOrganizationCustomDomains,
         CancellationToken cancellationToken);
 }
 
@@ -22,12 +22,12 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
         DateTimeOffset from,
         DateTimeOffset until,
         ICollection<string> involvedOrganizationIds,
-        ICollection<string> involvedOrganizationUniqueAlphanumericNames,
+        ICollection<string> involvedOrganizationCustomDomains,
         CancellationToken cancellationToken)
     {
         var (organization, location) = await ResolveOrganizationAndLocationAsync(
             involvedOrganizationIds.FirstOrDefault(),
-            involvedOrganizationUniqueAlphanumericNames.FirstOrDefault(),
+            involvedOrganizationCustomDomains.FirstOrDefault(),
             customer,
             cancellationToken);
         if (location is null)
@@ -43,11 +43,11 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
 
     private async Task<(Organization?, Location?)> ResolveOrganizationAndLocationAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         Customer customer,
         CancellationToken cancellationToken)
     {
-        var organizationEntity = await ResolveBookingOrganizationAsync(organizationId, organizationUniqueAlphanumericName, cancellationToken);
+        var organizationEntity = await ResolveBookingOrganizationAsync(organizationId, organizationCustomDomain, cancellationToken);
         if (organizationEntity is null)
         {
             return await ResolveWithoutBookingOrganizationAsync(customer, cancellationToken);
@@ -62,11 +62,11 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
 
     private async Task<Organization?> ResolveBookingOrganizationAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken) =>
-        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             false,
             false,
             cancellationToken);

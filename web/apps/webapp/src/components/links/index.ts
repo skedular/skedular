@@ -9,14 +9,14 @@ export const getSettingsLink = (integratedPlatrform: string | undefined) => (int
 export const getMarketplaceLocationLink = (integratedPlatrform: string | undefined, locationId: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
 
-export const getMarketplaceBookingsLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationUniqueAlphanumericName: string) => {
-  const baseLink = isCustomDomain ? 'bookings' : `organizations/${organizationUniqueAlphanumericName}/bookings`;
+export const getMarketplaceBookingsLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string) => {
+  const baseLink = isCustomDomain ? 'bookings' : `organizations/${organizationCustomDomain}/bookings`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
-export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationUniqueAlphanumericName: string, productId: string) => {
-  const baseLink = isCustomDomain ? `products/${productId}` : `organizations/${organizationUniqueAlphanumericName}/products/${productId}`;
+export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string, productId: string) => {
+  const baseLink = isCustomDomain ? `products/${productId}` : `organizations/${organizationCustomDomain}/products/${productId}`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
@@ -24,13 +24,13 @@ export const getMarketplaceProductLink = (integratedPlatrform: string | undefine
 export const getMarketplaceProductBookingLink = (
   integratedPlatrform: string | undefined,
   isCustomDomain: boolean,
-  organizationUniqueAlphanumericName: string,
+  organizationCustomDomain: string,
   productId: string,
   pricingOptionId: string,
 ) => {
   const baseLink = isCustomDomain
     ? `products/${productId}/book?pricingOptionId=${pricingOptionId}`
-    : `organizations/${organizationUniqueAlphanumericName}/products/${productId}/book?pricingOptionId=${pricingOptionId}`;
+    : `organizations/${organizationCustomDomain}/products/${productId}/book?pricingOptionId=${pricingOptionId}`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
@@ -38,24 +38,17 @@ export const getMarketplaceProductBookingLink = (
 export const getMarketplaceProductBookingDetailsLink = (
   integratedPlatrform: string | undefined,
   isCustomDomain: boolean,
-  organizationUniqueAlphanumericName: string,
+  organizationCustomDomain: string,
   productId: string,
   bookingId: string,
 ) => {
-  const baseLink = isCustomDomain
-    ? `products/${productId}/bookings/${bookingId}`
-    : `organizations/${organizationUniqueAlphanumericName}/products/${productId}/bookings/${bookingId}`;
+  const baseLink = isCustomDomain ? `products/${productId}/bookings/${bookingId}` : `organizations/${organizationCustomDomain}/products/${productId}/bookings/${bookingId}`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
-export const getMarketplaceBookingDetailsLink = (
-  integratedPlatrform: string | undefined,
-  isCustomDomain: boolean,
-  organizationUniqueAlphanumericName: string,
-  bookingId: string,
-) => {
-  const baseLink = isCustomDomain ? `bookings/${bookingId}` : `organizations/${organizationUniqueAlphanumericName}/bookings/${bookingId}`;
+export const getMarketplaceBookingDetailsLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string, bookingId: string) => {
+  const baseLink = isCustomDomain ? `bookings/${bookingId}` : `organizations/${organizationCustomDomain}/bookings/${bookingId}`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
@@ -63,13 +56,13 @@ export const getMarketplaceBookingDetailsLink = (
 export const getMarketplaceProductSubscribeLink = (
   integratedPlatrform: string | undefined,
   isCustomDomain: boolean,
-  organizationUniqueAlphanumericName: string,
+  organizationCustomDomain: string,
   productId: string,
   pricingOptionId: string,
 ) => {
   const baseLink = isCustomDomain
     ? `products/${productId}/subscribe?pricingOptionId=${pricingOptionId}`
-    : `organizations/${organizationUniqueAlphanumericName}/products/${productId}/subscribe?pricingOptionId=${pricingOptionId}`;
+    : `organizations/${organizationCustomDomain}/products/${productId}/subscribe?pricingOptionId=${pricingOptionId}`;
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };

@@ -141,7 +141,7 @@ public class EmailIntegrations(
     }
 
     [Activity]
-    public async Task SendNewOrganizationJoinedEmailAsync(string? organizationId, string? organizationUniqueAlphanumericName)
+    public async Task SendNewOrganizationJoinedEmailAsync(string? organizationId, string? organizationCustomDomain)
     {
         if (!emailConfiguration.EnableNewOrganizationJoinedEmail)
         {
@@ -149,9 +149,9 @@ public class EmailIntegrations(
         }
 
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             cancellationToken);
         if (organization is null)
         {

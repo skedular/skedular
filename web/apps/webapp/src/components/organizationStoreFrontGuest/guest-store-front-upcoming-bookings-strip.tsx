@@ -30,12 +30,12 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
         bookingsSearchCriteriaFrom: { type: "DateTime!" }
         bookingsSearchCriteriaTo: { type: "DateTime!" }
         includeUpcomingBookings: { type: "Boolean!", defaultValue: false }
-        organizationUniqueAlphanumericName: { type: "String!" }
+        organizationCustomDomain: { type: "String!" }
       ) {
         bookings(
           first: 6
           where: {
-            organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName]
+            organizationCustomDomains: [$organizationCustomDomain]
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
             includeMineOnly: true
@@ -74,7 +74,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
     rootDataRelay,
   );
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const upcomingBookings = useMemo(
     () => rootData.bookings?.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item) ?? [],
     [rootData.bookings?.edges],
@@ -112,7 +112,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
 
           <Button
             component={NextLink}
-            href={getMarketplaceBookingsLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName)}
+            href={getMarketplaceBookingsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain)}
             variant="text"
             sx={{ textTransform: 'none', whiteSpace: 'nowrap' }}
           >
@@ -130,7 +130,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
             }}
           >
             {upcomingBookings.map((booking) => {
-              const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, booking.id);
+              const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
               const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
               const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
               const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';

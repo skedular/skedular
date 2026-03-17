@@ -30,7 +30,7 @@ public class RootMutation(IMapper mapper)
             ClientMutationId = input.ClientMutationId,
             Organization = mapper.MapTo(await organizationTaxDetailsService.RemoveAsync(
                 input.OrganizationId,
-                input.OrganizationUniqueAlphanumericName,
+                input.OrganizationCustomDomain,
                 cancellationToken))!
         };
 }

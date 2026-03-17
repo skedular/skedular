@@ -16,8 +16,8 @@ public class MarketplaceBookingDetails : Node
     [GraphQLName("paidByCustomerId")] public string? PaidByCustomerId { get; set; }
     [GraphQLName("paidByOrganizationId")] public string? PaidByOrganizationId { get; set; }
 
-    [GraphQLName("paidByOrganizationUniqueAlphanumericName")]
-    public string? PaidByOrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("paidByOrganizationUniqueCustomDomain")]
+    public string? PaidByOrganizationUniqueCustomDomain { get; set; }
 
     [GraphQLName("paymentMethod")] public PaymentMethodTypeDetails PaymentMethod { get; set; } = new();
     [GraphQLName("totalAmountExcludeTax")] public decimal? TotalAmountExcludeTax { get; set; }
@@ -56,7 +56,7 @@ public static partial class MarketplaceBookingDetailsType
     {
         descriptor.Ignore(item => item.PaidByCustomerId);
         descriptor.Ignore(item => item.PaidByOrganizationId);
-        descriptor.Ignore(item => item.PaidByOrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.PaidByOrganizationUniqueCustomDomain);
         descriptor.Ignore(item => item.ProductVersionId);
     }
 
@@ -67,7 +67,7 @@ public static partial class MarketplaceBookingDetailsType
     public static OrganizationDetails? GetPaidByOrganization([Parent] MarketplaceBookingDetails item) =>
         string.IsNullOrWhiteSpace(item.PaidByOrganizationId)
             ? null
-            : new OrganizationDetails(item.PaidByOrganizationId, item.PaidByOrganizationUniqueAlphanumericName.ToSafeString());
+            : new OrganizationDetails(item.PaidByOrganizationId, item.PaidByOrganizationUniqueCustomDomain.ToSafeString());
 
     public static ProductVersionDetails GetProductVersion([Parent] MarketplaceBookingDetails item) => new(item.ProductVersionId);
 }

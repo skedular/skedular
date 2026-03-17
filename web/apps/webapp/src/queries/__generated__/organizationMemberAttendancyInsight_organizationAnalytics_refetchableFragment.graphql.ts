@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0994045dd7d737bee255471f8cd70feb>>
+ * @generated SignedSource<<44f89d2531285f476a40e7a979376275>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment$variables = {
   from: any;
-  organizationUniqueAlphanumericName?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   to: any;
 };
 export type organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment$data = {
@@ -33,7 +33,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -68,8 +68,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -137,16 +137,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f697242447a60ffaad45ca5a02ad0430",
+    "cacheID": "d551cdb6cfc44613dc0d8603c51b5d36",
     "id": null,
     "metadata": {},
     "name": "organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationUniqueAlphanumericName: String\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    analytics(from: $from, until: $to) {\n      memberAttendancePercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationMemberAttendancyInsight_organizationAnalytics_refetchableFragment(\n  $from: DateTime!\n  $organizationCustomDomain: String\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    analytics(from: $from, until: $to) {\n      memberAttendancePercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "df14cdc661c2724605a498bf1e55025e";
+(node as any).hash = "5f8d20b871e5221360f00ceee613b273";
 
 export default node;

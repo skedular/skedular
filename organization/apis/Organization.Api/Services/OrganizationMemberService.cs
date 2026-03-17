@@ -29,11 +29,7 @@ public interface IOrganizationMemberService
 
     Task<ICollection<OrganizationMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> AdminAddMemberAsync(string organizationId, OrganizationMember member, CancellationToken cancellationToken);
-
-    Task CompleteOrganizationMemberOnboardingAsync(
-        string? organizationId,
-        string? organizationUniqueAlphanumericName,
-        CancellationToken cancellationToken);
+    Task CompleteOrganizationMemberOnboardingAsync(string? organizationId, string? organizationCustomDomain, CancellationToken cancellationToken);
 }
 
 public class OrganizationMemberService(
@@ -55,9 +51,9 @@ public class OrganizationMemberService(
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
-                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -91,7 +87,7 @@ public class OrganizationMemberService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var organizationMember = await repositoryFactory.OrganizationMemberRepository.GetByIdAsync(organizationMemberId, cancellationToken) ??
                                  throw new OrganizationMemberNotFound();
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationMember.Organization.Id,
                                null,
                                cancellationToken) ??
@@ -165,7 +161,7 @@ public class OrganizationMemberService(
         }
 
         var organizationIds = organizationMembers.Select(item => item.Organization.Id).Distinct().ToList();
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -233,7 +229,7 @@ public class OrganizationMemberService(
         }
 
         var organizationIds = organizationMembers.Select(item => item.Organization.Id).Distinct().ToList();
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -281,7 +277,7 @@ public class OrganizationMemberService(
         OrganizationMember member,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                null,
                                cancellationToken) ??
@@ -314,13 +310,13 @@ public class OrganizationMemberService(
 
     public async Task CompleteOrganizationMemberOnboardingAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -336,9 +332,9 @@ public class OrganizationMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedOrganizationService.RemoveByIdOrUniqueAlphanumericNameAsync(
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(
             organization.Id,
-            organization.UniqueAlphanumericName,
+            organization.CustomDomain,
             cancellationToken);
     }
 }

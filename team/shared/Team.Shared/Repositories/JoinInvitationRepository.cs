@@ -48,11 +48,11 @@ internal static class JoinInvitationExtensions
                     item.Invitee != null && item.Invitee.Id == searchCriteria.InviteeId);
             }
 
-            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueCustomDomain))
             {
                 originalQuery = originalQuery.Where(item =>
-                    item.Team.Organization.UniqueAlphanumericName != null &&
-                    item.Team.Organization.UniqueAlphanumericName == searchCriteria.OrganizationUniqueAlphanumericName);
+                    item.Team.Organization.CustomDomain != null &&
+                    item.Team.Organization.CustomDomain == searchCriteria.OrganizationUniqueCustomDomain);
             }
 
             if (!string.IsNullOrWhiteSpace(searchCriteria.TeamId))

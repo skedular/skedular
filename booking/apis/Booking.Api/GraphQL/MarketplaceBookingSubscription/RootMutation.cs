@@ -17,8 +17,7 @@ public class RootMutation(IMapper mapper)
         var subscription = await marketplaceBookingSubscriptionService.AddAsync(mapper.MapTo(input), cancellationToken);
         return new MarketplaceBookingSubscriptionPayload
         {
-            ClientMutationId = input.ClientMutationId,
-            MarketplaceBookingSubscription = mapper.MapTo(subscription)
+            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = mapper.MapTo(subscription)
         };
     }
 
@@ -31,8 +30,7 @@ public class RootMutation(IMapper mapper)
         var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(input.Id, cancellationToken);
         return new MarketplaceBookingSubscriptionPayload
         {
-            ClientMutationId = input.ClientMutationId,
-            MarketplaceBookingSubscription = mapper.MapTo(subscription)
+            ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = mapper.MapTo(subscription)
         };
     }
 }

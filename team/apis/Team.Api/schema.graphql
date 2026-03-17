@@ -78,7 +78,7 @@ type Mutation {
 }
 
 type OrganizationDetails {
-  uniqueAlphanumericName: String
+  customDomain: String
   id: ID!
 }
 
@@ -100,7 +100,7 @@ type Query {
   teamById(id: String!): TeamDetails @lookup @internal @cost(weight: "10")
   teams(after: String first: Int before: String last: Int where: TeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
   customerTeams(after: String first: Int before: String last: Int where: CustomerTeamWhereInput orderBy: [TeamOrderInput!]): ConnectionOfTeamEdge! @cost(weight: "10")
-  myTeams(organizationId: String organizationUniqueAlphanumericName: String): [TeamDetails!]! @cost(weight: "10")
+  myTeams(organizationId: String organizationCustomDomain: String): [TeamDetails!]! @cost(weight: "10")
 }
 
 type TeamDetails {
@@ -189,7 +189,7 @@ input AddTeamInput {
   name: String!
   about: String
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   primaryLocationId: String
   timezone: String
   customerIds: [String!]!
@@ -234,7 +234,7 @@ input ChangeTeamMembersStatusInput {
 
 input CustomerTeamWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   customerId: String!
   nameContains: String
   primaryLocationIds: [String!]
@@ -257,7 +257,7 @@ input JoinTeamInvitationOrderInput {
 }
 
 input MyInvitationsToJoinTeamsWhereInput {
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   teamId: String
   status: InvitationStatus
 }
@@ -293,7 +293,7 @@ input TeamOrderInput {
 
 input TeamWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   nameContains: String
   primaryLocationIds: [String!]
 }
@@ -304,7 +304,7 @@ input UpdateTeamAndTeamMembersInput {
   name: String!
   about: String
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   primaryLocationId: String
   timezone: String
   featureImages: [CdnImageFileInput!]

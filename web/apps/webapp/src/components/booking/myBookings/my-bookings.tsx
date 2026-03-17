@@ -34,7 +34,7 @@ type Props = {
   rootDataRelay: myBookings_query$key;
   rootDataBookingRelay: myBookings_bookings_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   from: Dayjs;
   to: Dayjs;
   locationIds: string[];
@@ -88,7 +88,7 @@ type RowType = {
   date: string;
 };
 
-const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlphanumericName, from, to, locationIds, teamIds, viewMode }: Props) => {
+const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomain, from, to, locationIds, teamIds, viewMode }: Props) => {
   const rootData = useFragment<myBookings_query$key>(
     graphql`
       fragment myBookings_query on Query {
@@ -109,7 +109,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
           first: $count
           after: $cursor
           where: {
-            organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName]
+            organizationCustomDomains: [$organizationCustomDomain]
             locationIds: $locationIds
             teamIds: $teamIds
             fromGte: $bookingsSearchCriteriaFrom
@@ -258,7 +258,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
 
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
-        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingId));
+        router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingId));
 
         break;
 
@@ -505,7 +505,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationUniqueAlp
                 <Grid key={myBooking.id}>
                   <MyBookingCard
                     bookingDetailsRelay={myBooking}
-                    organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                    organizationCustomDomain={organizationCustomDomain}
                     connectionIds={connectionIds}
                     otherTeammates={otherTeammates}
                   />

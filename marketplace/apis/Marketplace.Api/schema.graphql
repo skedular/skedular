@@ -41,7 +41,7 @@ type Mutation {
 }
 
 type OrganizationDetails {
-  uniqueAlphanumericName: String
+  customDomain: String
   id: ID!
 }
 
@@ -162,7 +162,7 @@ input AddProductInput {
   clientMutationId: String
   id: String
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
@@ -223,7 +223,7 @@ input ProductPricingInput {
 
 input ProductWhereInput {
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   productIds: [String!]
   includeInactive: Boolean!
 }

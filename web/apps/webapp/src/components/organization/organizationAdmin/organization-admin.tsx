@@ -93,11 +93,11 @@ type Props = {
   rootDataZonesRelay: organizationAdmin_zones_query$key;
   rootDataCustomTagsRelay: organizationAdmin_customTags_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type OrganizationDetails = {
-  uniqueAlphanumericName: string | null;
+  customDomain: string | null;
   name: string;
   about: string | null;
   title: string | null;
@@ -109,7 +109,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
-  uniqueAlphanumericName: string().nullable(),
+  customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
   website: string().url('Website must be a valid Url').nullable(),
@@ -212,14 +212,7 @@ type CustomTagRowType = {
   preferred: boolean;
 };
 
-const OrganizationAdmin = ({
-  rootDataRelay,
-  rootDataOrganizationRelay,
-  rootDataZonesRelay,
-  rootDataCustomTagsRelay,
-  onReloadRequired,
-  organizationUniqueAlphanumericName,
-}: Props) => {
+const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZonesRelay, rootDataCustomTagsRelay, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = useFragment<organizationAdmin_query$key>(
     graphql`
       fragment organizationAdmin_query on Query {
@@ -249,9 +242,9 @@ const OrganizationAdmin = ({
   const [rootDataOrganization, refetchOrganization] = useRefetchableFragment<organizationAdmin_organization_refetchableFragment, organizationAdmin_organization_query$key>(
     graphql`
       fragment organizationAdmin_organization_query on Query @refetchable(queryName: "organizationAdmin_organization_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           id
-          uniqueAlphanumericName
+          customDomain
           name
           billingCycle {
             type
@@ -376,7 +369,7 @@ const OrganizationAdmin = ({
       fragment organizationAdmin_zones_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationAdmin_zones_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           zones(first: $count, after: $cursor, where: { nameContains: $zoneNameSearchText }) @connection(key: "organizationAdmin_zones") {
             __id
             totalCount
@@ -400,7 +393,7 @@ const OrganizationAdmin = ({
       fragment organizationAdmin_customTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationAdmin_customTags_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           customTags(first: $count, after: $cursor, where: { nameContains: $customTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
             @connection(key: "organizationAdmin_customTags") {
             __id
@@ -425,7 +418,7 @@ const OrganizationAdmin = ({
       updateOrganization(input: $input) {
         organization {
           id
-          uniqueAlphanumericName
+          customDomain
           name
           billingCycle {
             type
@@ -733,8 +726,8 @@ const OrganizationAdmin = ({
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredOrganizationDetailsFields = makeRequired(organizationSchema);
 
-  const [organizationEditableUniqueAlphanumericName, setOrganizationEditableUniqueAlphanumericName] = useState(rootDataOrganization.organization?.uniqueAlphanumericName);
-  const debounceSetOrganizationEditableUniqueAlphanumericName = useDebounceCallback(setOrganizationEditableUniqueAlphanumericName, keyboardTextFieldDebounceTimeout);
+  const [organizationEditableCustomDomain, setOrganizationEditableCustomDomain] = useState(rootDataOrganization.organization?.customDomain);
+  const debounceSetOrganizationEditableCustomDomain = useDebounceCallback(setOrganizationEditableCustomDomain, keyboardTextFieldDebounceTimeout);
   const [organizationName, setOrganizationName] = useState<string>(rootDataOrganization.organization?.name ?? '');
   const debounceSetOrganizationName = useDebounceCallback(setOrganizationName, keyboardTextFieldDebounceTimeout);
   const [organizationAbout, setOrganizationAbout] = useState(rootDataOrganization.organization?.listingMetadata.about ?? null);
@@ -942,7 +935,7 @@ const OrganizationAdmin = ({
   }, [startTransition, refetchOrganization]);
 
   const handleOrganizationDetailUpdateClick = ({
-    uniqueAlphanumericName,
+    customDomain,
     name,
     about,
     title,
@@ -969,7 +962,7 @@ const OrganizationAdmin = ({
         input: {
           clientMutationId: uuid(),
           id: organization.id,
-          uniqueAlphanumericName,
+          customDomain,
           name,
           listingMetadata: {
             about: about ?? '',
@@ -1010,7 +1003,7 @@ const OrganizationAdmin = ({
         updateOrganization: {
           organization: {
             id: organization.id,
-            uniqueAlphanumericName: organization.uniqueAlphanumericName,
+            customDomain: organization.customDomain,
             name,
             listingMetadata: {
               about: about ?? '',
@@ -1146,7 +1139,7 @@ const OrganizationAdmin = ({
         variables: {
           input: {
             clientMutationId: uuid(),
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             id,
             companyName,
             email,
@@ -1326,7 +1319,7 @@ const OrganizationAdmin = ({
         variables: {
           input: {
             clientMutationId: uuid(),
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             id,
             osmType: physicalAddressOsmType,
             osmId: physicalAddressOsmId,
@@ -1405,7 +1398,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName: organization.uniqueAlphanumericName,
+          organizationCustomDomain: organization.customDomain,
           entityId,
           loginUrl,
           appFederationMetadataUrl,
@@ -1468,7 +1461,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (_, errors) => {
@@ -1523,7 +1516,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           taxId,
           taxRatePercentage: parseFloat(taxRatePercentage),
         },
@@ -1582,7 +1575,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (_, errors) => {
@@ -1845,7 +1838,7 @@ const OrganizationAdmin = ({
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const handleRemovePaymentMethodClick = (id: string) => {
@@ -1896,7 +1889,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (_, errors) => {
@@ -1941,7 +1934,7 @@ const OrganizationAdmin = ({
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           offeringCode: code,
         },
       },
@@ -2364,13 +2357,13 @@ const OrganizationAdmin = ({
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationAdminLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
+        <OrganizationAdminLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Organization Information">
             <Form
               onSubmit={handleOrganizationDetailUpdateClick}
               initialValues={{
-                uniqueAlphanumericName: organizationEditableUniqueAlphanumericName,
+                customDomain: organizationEditableCustomDomain,
                 name: organizationName,
                 about: organizationAbout,
                 title: organizationTitle,
@@ -2382,7 +2375,7 @@ const OrganizationAdmin = ({
               }}
               validate={validateOrganizationDetails}
               render={({ handleSubmit, values }) => {
-                debounceSetOrganizationEditableUniqueAlphanumericName(values!.uniqueAlphanumericName);
+                debounceSetOrganizationEditableCustomDomain(values!.customDomain);
                 debounceSetOrganizationName(values!.name);
                 debounceSetOrganizationWebsite(values!.website);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
@@ -2457,8 +2450,8 @@ const OrganizationAdmin = ({
                       </FormFieldLabel>
 
                       {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                        <FormFieldLabel label="Unique Name" required={requiredOrganizationDetailsFields.uniqueAlphanumericName}>
-                          <TextField name="uniqueAlphanumericName" required={requiredOrganizationDetailsFields.uniqueAlphanumericName} />
+                        <FormFieldLabel label="Custom Domain" required={requiredOrganizationDetailsFields.customDomain}>
+                          <TextField name="customDomain" required={requiredOrganizationDetailsFields.customDomain} />
                         </FormFieldLabel>
                       )}
 
@@ -2927,7 +2920,7 @@ const OrganizationAdmin = ({
                 </Grid>
 
                 <Grid>
-                  <AddOrganizationZoneButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={zonesConnectionIds} />
+                  <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={zonesConnectionIds} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -3001,7 +2994,7 @@ const OrganizationAdmin = ({
                 </Grid>
 
                 <Grid>
-                  <AddOrganizationCustomTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={customTagsConnectionIds} />
+                  <AddOrganizationCustomTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={customTagsConnectionIds} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -3268,7 +3261,7 @@ const OrganizationAdmin = ({
 
       {!paymentMethodExist && isAddPaymentMethodDialogOpen && (
         <AddOrganizationPaymentMethodDialog
-          organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+          organizationCustomDomain={organizationCustomDomain}
           isDialogOpen={isAddPaymentMethodDialogOpen}
           onCancel={handleAddPaymentMethodCancel}
         />

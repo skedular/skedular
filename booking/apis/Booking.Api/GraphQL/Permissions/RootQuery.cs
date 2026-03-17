@@ -10,18 +10,18 @@ public class RootQuery
     [UseResolverScope]
     public async Task<OrganizationBookingPermissions> OrganizationBookingPermissionsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         [Service] IOrganizationAuthorizationService organizationAuthorizationService,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (string.IsNullOrWhiteSpace(organizationId) && string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
             return new OrganizationBookingPermissions { CanAddBooking = false, CanUpdateBooking = false, CanDeleteBooking = false };
         }
 
         var permissions = await organizationAuthorizationService.GetPermissionsAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             cancellationToken);
 
         return new OrganizationBookingPermissions

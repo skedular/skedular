@@ -30,7 +30,7 @@ import { array, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addTeam_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (teamId: string) => void;
   onCancel: () => void;
   addLabel?: string;
@@ -39,14 +39,14 @@ type Props = {
 
 const RootQuery = graphql`
   query addTeam_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $bookingPeopleNameSearchText: String
     $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]
   ) {
     me {
       id
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organization(customDomain: $organizationCustomDomain) {
       id
       name
     }
@@ -71,7 +71,7 @@ const teamSchema = object({
   primaryLocationId: string().nullable(),
 });
 
-const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, addLabel, showDismiss }: Props) => {
+const AddTeam = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel, addLabel, showDismiss }: Props) => {
   const rootData = usePreloadedQuery<addTeam_rootQuery>(RootQuery, queryReference);
   const [commitAddTeam] = useMutation<addTeam_addTeamMutation>(graphql`
     mutation addTeam_addTeamMutation($input: AddTeamInput!) @raw_response_type {
@@ -112,7 +112,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
 
   const handleTeamAddClick = ({ name, about, timezone, organizationMemberIds, primaryLocationId }: TeamDetails) => {
     const id = uuid();
-    const customerIds = !organizationUniqueAlphanumericName ? [rootData.me.id] : [];
+    const customerIds = !organizationCustomDomain ? [rootData.me.id] : [];
     const toastId = themedToast(<NotificationContent content={`Adding team '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
@@ -129,7 +129,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
           timezone,
           featureImages: finalFeatureImages,
           customerIds,
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           organizationMemberIds: [...new Set(organizationMemberIds)],
           primaryLocationId,
         },
@@ -325,7 +325,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationUniqueAlphanume
 const MemoAddTeam = memo(AddTeam);
 
 type RelayProps = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onReloadRequired: () => void;
   onAdded: (teamId: string) => void;
   onCancel: () => void;
@@ -333,7 +333,7 @@ type RelayProps = {
   showDismiss: boolean;
 };
 
-const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
+const AddTeamWithRelay = ({ organizationCustomDomain, onReloadRequired, onAdded, onCancel, addLabel, showDismiss }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addTeam_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -341,7 +341,7 @@ const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         organizationMemberSelectorOrganizationMembersSortingValues: [
           {
             direction: 'ASCENDING',
@@ -353,7 +353,7 @@ const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -372,7 +372,7 @@ const AddTeamWithRelay = ({ organizationUniqueAlphanumericName, onReloadRequired
       <MemoAddTeam
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         onAdded={onAdded}
         onCancel={onCancel}
         addLabel={addLabel}

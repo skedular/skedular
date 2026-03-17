@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<20584dc216a1a34b073ce5cb5155d54b>>
+ * @generated SignedSource<<4cc2c67d920da8f18a2b6b54b24e20fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -101,7 +101,7 @@ export type marketplaceLocation_query$data = {
       };
     };
     readonly organization: {
-      readonly uniqueAlphanumericName: string | null | undefined;
+      readonly customDomain: string | null | undefined;
     };
     readonly physicalAddress: {
       readonly latitude: number | null | undefined;
@@ -301,7 +301,7 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "uniqueAlphanumericName",
+              "name": "customDomain",
               "storageKey": null
             }
           ],
@@ -733,6 +733,6 @@ return {
 };
 })();
 
-(node as any).hash = "ad67a5f34393c8235cd59bb5b5d13f07";
+(node as any).hash = "45da4795d36a6946b2d4e080c60393af";
 
 export default node;

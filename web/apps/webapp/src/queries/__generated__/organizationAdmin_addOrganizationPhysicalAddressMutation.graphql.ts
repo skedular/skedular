@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<28f66f6b72c28d1b73cada55d5f046a0>>
+ * @generated SignedSource<<b77319935d2c71d632d285951dd905e6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,8 +20,8 @@ export type AddOrganizationPhysicalAddressInput = {
   id?: string | null | undefined;
   latitude?: number | null | undefined;
   longitude?: number | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   osmId?: string | null | undefined;
   osmType?: string | null | undefined;
   placeId?: string | null | undefined;

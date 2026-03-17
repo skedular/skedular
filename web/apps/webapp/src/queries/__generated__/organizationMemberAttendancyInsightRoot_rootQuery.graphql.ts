@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56638ef3455d72a6d19b14c403dcd7b0>>
+ * @generated SignedSource<<af2c6e74c20e105b2406fce1501c9b10>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationMemberAttendancyInsightRoot_rootQuery$variables = {
   from: any;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   to: any;
 };
 export type organizationMemberAttendancyInsightRoot_rootQuery$data = {
@@ -32,7 +32,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -74,8 +74,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -143,16 +143,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b92b41bf7b8b92353f16e7f0155aae1e",
+    "cacheID": "de5425154d85549a51a09c8d3cd760d2",
     "id": null,
     "metadata": {},
     "name": "organizationMemberAttendancyInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    analytics(from: $from, until: $to) {\n      memberAttendancePercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationMemberAttendancyInsightRoot_rootQuery(\n  $organizationCustomDomain: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationMemberAttendancyInsight_organizationAnalytics_query\n}\n\nfragment organizationMemberAttendancyInsight_organizationAnalytics_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    analytics(from: $from, until: $to) {\n      memberAttendancePercentage {\n        date\n        percentage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b002c44f2887f80f746558e5e45238e5";
+(node as any).hash = "3189ab62a10f06ed9cba746ddfc266b9";
 
 export default node;

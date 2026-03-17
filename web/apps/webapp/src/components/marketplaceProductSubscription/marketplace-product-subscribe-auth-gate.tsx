@@ -81,7 +81,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const pricingOptionId = searchParams.get('pricingOptionId');
 
   const availablePricingOptions = useMemo(() => {
@@ -120,7 +120,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
     return null;
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, rootData.product.id);
+  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id);
   const priceLabel = `${currencyLabel} ${selectedPricingOption.price}`;
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
 

@@ -20,7 +20,7 @@ public class RootMutation(IMapper mapper)
             Location = mapper.MapTo(await locationOwnershipService.ClaimOwnershipAsync(
                 input.UniqueClaimCode,
                 input.OrganizationId,
-                input.OrganizationUniqueAlphanumericName,
+                input.OrganizationCustomDomain,
                 cancellationToken))!
         };
 }

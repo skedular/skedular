@@ -17,19 +17,19 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationAnalytics_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query pageOrganizationAnalytics_rootQuery($organizationUniqueAlphanumericName: String!, $locationsSortingValues: [LocationOrderInput!]) {
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+  query pageOrganizationAnalytics_rootQuery($organizationCustomDomain: String!, $locationsSortingValues: [LocationOrderInput!]) {
+    organization(customDomain: $organizationCustomDomain) {
       name
     }
     ...organizationAnalytics_query
   }
 `;
 
-const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationAnalytics_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -53,7 +53,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
 
   return (
     <RootShell collapsed hideOrganizationSelector hideWelcomeMessage showBreadcrumps breadcrumbs={breadcrumbs}>
-      <OrganizationAnalytics rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <OrganizationAnalytics rootDataRelay={rootData} onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };
@@ -64,16 +64,16 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationAnalytics_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         locationsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -85,7 +85,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -99,7 +99,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

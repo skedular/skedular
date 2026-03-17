@@ -4,7 +4,7 @@ namespace Organization.Shared.Models;
 
 public record OrganizationStripeConnectAccountSearchCriteria(
     string? OrganizationId,
-    string? OrganizationUniqueAlphanumericName,
+    string? OrganizationCustomDomain,
     string? NameContains,
     bool? OnboardingCompleted);
 

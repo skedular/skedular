@@ -126,7 +126,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const router = useRouter();
   const searchParams = useSearchParams();
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
 
   const bookingPricingOptions = useMemo(
@@ -254,7 +254,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
   const durationLabel = dateRangeValidation.valid ? `${dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes')} minutes` : 'Invalid time';
   const paymentLabel = availablePaymentMethods.find((item) => item.type === effectivePaymentMethod)?.name ?? 'Select payment method';
-  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, rootData.product.id) : '';
+  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id) : '';
   const handleSignInClick = () => {
     const returnTo = `${window.location.pathname}${window.location.search}`;
     router.push(`${getSignInLink()}?returnTo=${encodeURIComponent(returnTo)}`);
@@ -294,7 +294,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           from: dateRangeValidation.from.toISOString(),
           until: dateRangeValidation.until.toISOString(),
           notes,
-          organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+          organizationCustomDomains: [organizationCustomDomain],
           organizationIds: [],
           teamIds: [],
           resourceIds: [],
@@ -305,7 +305,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           productVersionId: product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
           checkoutReturnUrl: new URL(
-            getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, id),
+            getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, id),
             window.location.origin,
           ).toString(),
         },
@@ -333,7 +333,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           render: <NotificationContent content={`Booking confirmed for ${toShortDate(booking?.from)}.`} />,
         });
 
-        router.push(getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, booking.id));
+        router.push(getMarketplaceProductBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, booking.id));
       },
       onError: (error) => {
         toast.update(toastId, {

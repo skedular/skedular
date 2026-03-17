@@ -37,12 +37,12 @@ import { v7 as uuid } from 'uuid';
 import { array, object, string } from 'yup';
 
 const RootQuery = graphql`
-  query addMarketplaceLocation_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query addMarketplaceLocation_rootQuery($organizationCustomDomain: String!) {
     emailsToShowLatestCapabilities
     me {
       emails
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organization(customDomain: $organizationCustomDomain) {
       type {
         type
       }
@@ -55,7 +55,7 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<addMarketplaceLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
@@ -112,7 +112,7 @@ const locationSchema = object({
   countryCode: string().required('Country is required'),
 });
 
-const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
+const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
   const rootData = usePreloadedQuery<addMarketplaceLocation_rootQuery>(RootQuery, queryReference);
 
   const [commitAddLocation] = useMutation<addMarketplaceLocation_addLocationMutation>(graphql`
@@ -327,7 +327,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
             subTitle: '',
             includedFeatures: [],
           },
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           timezone,
           type: type as LocationType,
           extraMetadata: {
@@ -777,14 +777,14 @@ const MemoAddMarketplaceLocation = memo(AddMarketplaceLocation);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
   createLabel?: string;
 };
 
-const AddMarketplaceLocationWithRelay = ({ onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
+const AddMarketplaceLocationWithRelay = ({ onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addMarketplaceLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -792,13 +792,13 @@ const AddMarketplaceLocationWithRelay = ({ onReloadRequired, organizationUniqueA
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -816,7 +816,7 @@ const AddMarketplaceLocationWithRelay = ({ onReloadRequired, organizationUniqueA
       <MemoAddMarketplaceLocation
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         onAdded={onAdded}
         onCancel={onCancel}
         cancelLabel={cancelLabel}

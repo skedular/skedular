@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ada96c39d826e3d0dab218a9e4b55ba7>>
+ * @generated SignedSource<<1a6fefb456b65f3a60a62d30149a1299>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,11 +19,11 @@ export type leftSideNavigationMenuContent_query$data = {
     };
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
+    readonly customDomain: string | null | undefined;
     readonly id: string;
     readonly type: {
       readonly type: OrganizationType;
     };
-    readonly uniqueAlphanumericName: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "leftSideNavigationMenuContent_query";
 };
@@ -36,7 +36,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     }
   ],
   "kind": "Fragment",
@@ -48,8 +48,8 @@ const node: ReaderFragment = {
       "args": [
         {
           "kind": "Variable",
-          "name": "uniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "customDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "concreteType": "OrganizationDetails",
@@ -68,7 +68,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueAlphanumericName",
+          "name": "customDomain",
           "storageKey": null
         },
         {
@@ -136,6 +136,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "75020234983c8def56939542f3c8184a";
+(node as any).hash = "198e1bec68cc341b47752790a5b473f7";
 
 export default node;

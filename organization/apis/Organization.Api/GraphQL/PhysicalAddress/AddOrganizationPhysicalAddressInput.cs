@@ -9,8 +9,8 @@ public class AddOrganizationPhysicalAddressInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string? OrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("osmType")] public string? OsmType { get; set; }
     [GraphQLName("osmId")] public string? OsmId { get; set; }

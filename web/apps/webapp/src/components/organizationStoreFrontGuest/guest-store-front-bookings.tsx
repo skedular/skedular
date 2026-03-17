@@ -28,8 +28,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query guestStoreFrontBookings_rootQuery($organizationUniqueAlphanumericName: String!, $today: DateTime!) {
-    organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+  query guestStoreFrontBookings_rootQuery($organizationCustomDomain: String!, $today: DateTime!) {
+    organizationPublic(customDomain: $organizationCustomDomain) {
       name
       marketplaceListingMetadata {
         title
@@ -38,7 +38,7 @@ const RootQuery = graphql`
     }
     upcomingBookings: bookings(
       first: 24
-      where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today }
+      where: { organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today }
       orderBy: [{ field: FROM, direction: ASCENDING }]
     ) {
       totalCount
@@ -69,7 +69,7 @@ const RootQuery = graphql`
     }
     recentBookings: bookings(
       first: 24
-      where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today }
+      where: { organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today }
       orderBy: [{ field: FROM, direction: DESCENDING }]
     ) {
       totalCount
@@ -105,7 +105,7 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
   const rootData = usePreloadedQuery<guestStoreFrontBookings_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const upcomingBookings = useMemo(
     () => rootData.upcomingBookings.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
     [rootData.upcomingBookings.edges],
@@ -165,7 +165,7 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
           integratedPlatrform={integratedPlatrform}
           isCustomDomain={isCustomDomain}
           label="Coming up"
-          organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+          organizationCustomDomain={organizationCustomDomain}
           title="Upcoming bookings"
         />
 
@@ -174,7 +174,7 @@ const GuestStoreFrontBookings = ({ queryReference }: Props) => {
           integratedPlatrform={integratedPlatrform}
           isCustomDomain={isCustomDomain}
           label="Already happened"
-          organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+          organizationCustomDomain={organizationCustomDomain}
           title="Recent bookings"
         />
       </Container>
@@ -187,14 +187,14 @@ const BookingsSection = ({
   integratedPlatrform,
   isCustomDomain,
   label,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   title,
 }: {
   bookings: ReadonlyArray<NonNullable<guestStoreFrontBookings_rootQuery['response']['upcomingBookings']['edges'][number]['node']>>;
   integratedPlatrform: string | undefined;
   isCustomDomain: boolean;
   label: string;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   title: string;
 }) => (
   <Box sx={{ mt: 4 }}>
@@ -211,7 +211,7 @@ const BookingsSection = ({
         }}
       >
         {bookings.map((booking) => {
-          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, booking.id);
+          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
           const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
           const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
           const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
@@ -295,10 +295,10 @@ const MemoGuestStoreFrontBookings = memo(GuestStoreFrontBookings);
 
 const GuestStoreFrontBookingsWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<guestStoreFrontBookings_rootQuery>(RootQuery);
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
@@ -306,14 +306,14 @@ const GuestStoreFrontBookingsWithRelay = () => {
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         today: today.toISOString(),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationUniqueAlphanumericName]);
+  }, [loadQuery, organizationCustomDomain]);
 
   if (!queryReference) {
     return <Loading />;

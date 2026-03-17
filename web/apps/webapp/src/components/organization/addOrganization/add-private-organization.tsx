@@ -30,14 +30,14 @@ import { boolean, object, string } from 'yup';
 type Props = {
   rootDataRelay: addPrivateOrganization_query$key;
   onReloadRequired: () => void;
-  onAdded: (id: string, uniqueAlphanumericName: string) => void;
+  onAdded: (id: string, customDomain: string) => void;
   onCancel?: () => void;
   cancelLabel?: string;
   createLabel?: string;
 };
 
 type OrganizationDetails = {
-  uniqueAlphanumericName: string | null;
+  customDomain: string | null;
   name: string;
   about: string | null;
   website: string | null;
@@ -45,7 +45,7 @@ type OrganizationDetails = {
 };
 
 const organizationSchema = object({
-  uniqueAlphanumericName: string().nullable(),
+  customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
   website: string().nullable(),
@@ -74,7 +74,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
       addOrganization(input: $input) {
         organization {
           id
-          uniqueAlphanumericName
+          customDomain
           name
           listingMetadata {
             about
@@ -108,7 +108,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
-  const handleOrganizationAddClick = ({ uniqueAlphanumericName, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, about, website }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -121,7 +121,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         input: {
           clientMutationId: uuid(),
           id,
-          uniqueAlphanumericName,
+          customDomain,
           name,
           listingMetadata: {
             about: about ?? '',
@@ -153,7 +153,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           render: <NotificationContent content={`Organization ${name} added.`} />,
         });
 
-        onAdded(response.addOrganization.organization.id, response.addOrganization.organization.uniqueAlphanumericName!);
+        onAdded(response.addOrganization.organization.id, response.addOrganization.organization.customDomain!);
         onReloadRequired();
       },
       onError: (error) => {
@@ -166,7 +166,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         addOrganization: {
           organization: {
             id,
-            uniqueAlphanumericName,
+            customDomain,
             name,
             listingMetadata: {
               about: about ?? '',
@@ -240,7 +240,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         <Form
           onSubmit={handleOrganizationAddClick}
           initialValues={{
-            uniqueAlphanumericName: null,
+            customDomain: null,
             name: '',
             about: null,
             website: null,
@@ -309,8 +309,8 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
               </FormFieldLabel>
 
               {rootData.me.emails.some((item) => !!rootData.emailsToShowLatestCapabilities.find((email) => email.toLocaleLowerCase() === item.toLocaleLowerCase())) && (
-                <FormFieldLabel label="Unique Name" required={requiredFields.uniqueAlphanumericName}>
-                  <TextField name="uniqueAlphanumericName" required={requiredFields.uniqueAlphanumericName} />
+                <FormFieldLabel label="Unique Name" required={requiredFields.customDomain}>
+                  <TextField name="customDomain" required={requiredFields.customDomain} />
                 </FormFieldLabel>
               )}
 

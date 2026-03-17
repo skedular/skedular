@@ -66,9 +66,9 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await organizationService.GetByIdOrCustomDomainAsync(
                                request.Id,
-                               request.UniqueAlphanumericName,
+                               request.CustomDomain,
                                true,
                                context.CancellationToken) ??
                            throw new OrganizationNotFound();
@@ -180,9 +180,9 @@ public class OrganizationGrpcService(
     {
         grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
 
-        var organization = await organizationService.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await organizationService.GetByIdOrCustomDomainAsync(
                                request.Id,
-                               request.UniqueAlphanumericName,
+                               request.CustomDomain,
                                false,
                                context.CancellationToken) ??
                            throw new OrganizationNotFound();

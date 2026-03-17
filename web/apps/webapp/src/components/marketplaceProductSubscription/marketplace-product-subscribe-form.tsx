@@ -1,7 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceProductLink } from '@/components/links';
-import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { joinErrors, startOfDay, toShortDate } from '@/libs/utils';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
@@ -136,7 +136,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { integratedPlatrform } = useIntegratedPlatrform();
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
 
   const subscriptionPricingOptions = useMemo(
@@ -229,7 +229,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           id,
           customerIds: [rootData.me.id],
           organizationIds: [],
-          organizationUniqueAlphanumericNames: [organizationUniqueAlphanumericName],
+          organizationCustomDomains: [organizationCustomDomain],
           teamIds: [],
           startedAt: startedAt.utc().startOf('day').toISOString(),
           autoRenew: selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
@@ -289,7 +289,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     );
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, rootData.product.id);
+  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id);
 
   if (createdSubscriptionId) {
     return (

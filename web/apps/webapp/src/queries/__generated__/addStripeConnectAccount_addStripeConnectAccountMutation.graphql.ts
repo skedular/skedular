@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<834f7365d8df4eb87a608f1f2c43fc08>>
+ * @generated SignedSource<<00701d536e6c84e4813a71107c0d0ed2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,8 @@ export type AddOrganizationStripeConnectAccountInput = {
   clientMutationId?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   redirectUrl: string;
 };
 export type addStripeConnectAccount_addStripeConnectAccountMutation$variables = {

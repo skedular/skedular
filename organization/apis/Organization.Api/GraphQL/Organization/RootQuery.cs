@@ -52,18 +52,18 @@ public class RootQuery(IMapper mapper)
     [UseResolverScope]
     public async Task<OrganizationDetails?> OrganizationAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapTo(await organizationService.GetByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, false, cancellationToken));
+        mapper.MapTo(await organizationService.GetByIdOrCustomDomainAsync(id, customDomain, false, cancellationToken));
 
     [UseResolverScope]
     public async Task<OrganizationPublicDetails?> OrganizationPublicAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
-        mapper.MapToPublic(await organizationService.GetByIdOrUniqueAlphanumericNamePublicAsync(id, uniqueAlphanumericName, cancellationToken));
+        mapper.MapToPublic(await organizationService.GetByIdOrCustomDomainPublicAsync(id, customDomain, cancellationToken));
 
     [UseResolverScope]
     [Lookup]

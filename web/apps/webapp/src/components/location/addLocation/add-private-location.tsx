@@ -35,12 +35,12 @@ import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 const RootQuery = graphql`
-  query addPrivateLocation_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query addPrivateLocation_rootQuery($organizationCustomDomain: String!) {
     emailsToShowLatestCapabilities
     me {
       emails
     }
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+    organization(customDomain: $organizationCustomDomain) {
       type {
         type
       }
@@ -52,7 +52,7 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<addPrivateLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
@@ -71,7 +71,7 @@ const locationSchema = object({
   type: string().required('Type is required'),
 });
 
-const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
+const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: Props) => {
   const rootData = usePreloadedQuery<addPrivateLocation_rootQuery>(RootQuery, queryReference);
 
   const [commitAddLocation] = useMutation<addPrivateLocation_addLocationMutation>(graphql`
@@ -153,7 +153,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationUniq
             subTitle: '',
             includedFeatures: [],
           },
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           timezone,
           type: type as LocationType,
           featureImages: finalFeatureImages,
@@ -375,14 +375,14 @@ const MemoAddPrivateLocation = memo(AddPrivateLocation);
 
 type RelayProps = {
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (id: string) => void;
   onCancel: () => void;
   cancelLabel?: string;
   createLabel?: string;
 };
 
-const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
+const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationCustomDomain, onAdded, onCancel, cancelLabel, createLabel }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<addPrivateLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -390,13 +390,13 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationUniqueAlpha
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -414,7 +414,7 @@ const AddPrivateLocationWithRelay = ({ onReloadRequired, organizationUniqueAlpha
       <MemoAddPrivateLocation
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         onAdded={onAdded}
         onCancel={onCancel}
         cancelLabel={cancelLabel}

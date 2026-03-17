@@ -747,7 +747,7 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
-                UniqueAlphanumericName = src.UniqueAlphanumericName,
+                CustomDomain = src.CustomDomain,
                 Name = src.Name,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,

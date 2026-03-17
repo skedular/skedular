@@ -16,12 +16,12 @@ import ProductCard from './product-card';
 type Props = {
   queryReference: PreloadedQuery<organizationProducts_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 const RootQuery = graphql`
-  query organizationProducts_rootQuery($organizationUniqueAlphanumericName: String!, $productsSortingValues: [ProductOrderInput!]) {
-    products(where: { organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeInactive: true }, orderBy: $productsSortingValues) {
+  query organizationProducts_rootQuery($organizationCustomDomain: String!, $productsSortingValues: [ProductOrderInput!]) {
+    products(where: { organizationCustomDomains: [$organizationCustomDomain], includeInactive: true }, orderBy: $productsSortingValues) {
       __id
       totalCount
       edges {
@@ -41,7 +41,7 @@ const RootQuery = graphql`
   }
 `;
 
-const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const OrganizationProducts = ({ queryReference, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = usePreloadedQuery<organizationProducts_rootQuery>(RootQuery, queryReference);
   const connectionIds = useMemo(() => [rootData.products.__id], [rootData.products]);
   const products = useMemo(() => rootData.products.edges.map((edge) => edge.node), [rootData.products]);
@@ -54,7 +54,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
     <StackColumn sx={{ maxWidth: maxScreenWidth }}>
       <GridContainer spacing={1} sx={{ padding: defaultPadding }}>
         <PushToRight />
-        <NewProductButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+        <NewProductButton organizationCustomDomain={organizationCustomDomain} />
       </GridContainer>
       <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
         <SectionIconTypography label="Products" />
@@ -68,7 +68,7 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
                 rootDataRelay={rootData}
                 productDetailsRelay={product}
                 onReloadRequired={onReloadRequired}
-                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                organizationCustomDomain={organizationCustomDomain}
                 connectionIds={connectionIds}
               />
             </Grid>
@@ -82,10 +82,10 @@ const OrganizationProducts = ({ queryReference, onReloadRequired, organizationUn
 const MemoOrganizationProducts = memo(OrganizationProducts);
 
 type RelayProps = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: RelayProps) => {
+const OrganizationProductsWithRelay = ({ organizationCustomDomain }: RelayProps) => {
   const [queryReference, loadQuery] = useQueryLoader<organizationProducts_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
@@ -93,7 +93,7 @@ const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: R
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         productsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -105,7 +105,7 @@ const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: R
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -119,7 +119,7 @@ const OrganizationProductsWithRelay = ({ organizationUniqueAlphanumericName }: R
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <MemoOrganizationProducts queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} />
     </ErrorBoundary>
   );
 };

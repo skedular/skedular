@@ -30,7 +30,7 @@ public static class Constants
 
     public const int MaxDescriptionLength = 100000;
 
-    public const int MaxOrganizationUniqueAlphanumericNameLength = 63;
+    public const int MaxOrganizationCustomDomainLength = 63;
     public const int MaxOrganizationNameLength = 200;
     public const int MaxOrganizationIndustryMainCategoryNameLength = 100;
     public const int MaxOrganizationIndustrySubCategoryNameLength = 100;
@@ -129,7 +129,7 @@ public static class Constants
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
     public const int MaxCustomerTypeLength = 20;
 
-    public const string SkedularPublicLocationsUniqueAlphanumericName = "skedularpubliclocations";
+    public const string SkedularPublicLocationsCustomDomainName = "skedularpubliclocations";
 
     public const int MaxRecurringBookingFrequencyLength = 10;
     public const int MaxRecurringBookingEndTypeLength = 10;

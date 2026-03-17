@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b07ee646c95d68a6f8dabadb130000b>>
+ * @generated SignedSource<<5631633f05dc0895afc1f0997276bc3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type AddOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  customDomain?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
@@ -25,7 +26,6 @@ export type AddOrganizationInput = {
   name: string;
   termsOfUseId: string;
   type: OrganizationType;
-  uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -49,6 +49,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$variables = {
 export type addMarketplaceOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
+      readonly customDomain: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -69,7 +70,6 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -77,6 +77,7 @@ export type addMarketplaceOrganization_addOrganizationMutation$data = {
 export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
+      readonly customDomain: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -97,7 +98,6 @@ export type addMarketplaceOrganization_addOrganizationMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -173,7 +173,7 @@ v2 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "uniqueAlphanumericName",
+            "name": "customDomain",
             "storageKey": null
           },
           {
@@ -285,16 +285,16 @@ return {
     "selections": (v2/*: any*/)
   },
   "params": {
-    "cacheID": "8a8736e861bf395d5b626cd04466ce5c",
+    "cacheID": "a9a759fcb689350d227d2624afc2801d",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation addMarketplaceOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c9735393c95b440327f7f292acd4ded4";
+(node as any).hash = "ea40aff7d09c99cd51d08a49fc141e93";
 
 export default node;

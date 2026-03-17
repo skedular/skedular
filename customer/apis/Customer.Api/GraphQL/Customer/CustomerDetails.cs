@@ -37,8 +37,8 @@ public class CustomerDetails : Node
     [GraphQLName("isOnboardingDone")] public bool IsOnboardingDone { get; set; }
     [GraphQLName("defaultOrganizationId")] public string? DefaultOrganizationId { get; set; }
 
-    [GraphQLName("defaultOrganizationUniqueAlphanumericName")]
-    public string? DefaultOrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("defaultOrganizationCustomDomain")]
+    public string? DefaultOrganizationCustomDomain { get; set; }
 
     [GraphQLName("preferredLocationIds")] public IEnumerable<string> PreferredLocationIds { get; set; } = [];
     [GraphQLName("preferredZones")] public IEnumerable<OrganizationTagDetails> PreferredZones { get; set; } = [];
@@ -80,7 +80,7 @@ public static partial class CustomerDetailsType
     static partial void Configure(IObjectTypeDescriptor<CustomerDetails> descriptor)
     {
         descriptor.Ignore(item => item.DefaultOrganizationId);
-        descriptor.Ignore(item => item.DefaultOrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.DefaultOrganizationCustomDomain);
         descriptor.Ignore(item => item.PreferredLocationIds);
         descriptor.Ignore(item => item.PreferredResourceIds);
         descriptor.Ignore(item => item.FavouriteLocationIds);
@@ -88,7 +88,7 @@ public static partial class CustomerDetailsType
 
     public static OrganizationDetails? GetOrganization([Parent] CustomerDetails item) => string.IsNullOrWhiteSpace(item.DefaultOrganizationId)
         ? null
-        : new OrganizationDetails(item.DefaultOrganizationId, item.DefaultOrganizationUniqueAlphanumericName.ToSafeString());
+        : new OrganizationDetails(item.DefaultOrganizationId, item.DefaultOrganizationCustomDomain.ToSafeString());
 
     public static IEnumerable<LocationDetails> GetPreferredLocations([Parent] CustomerDetails item) =>
         item.PreferredLocationIds.Select(id => new LocationDetails(id));

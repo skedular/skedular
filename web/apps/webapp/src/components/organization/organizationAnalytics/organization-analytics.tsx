@@ -19,15 +19,15 @@ import OrganizationAnalyticsLeftSideNavigationMenuContent from './organization-a
 type Props = {
   rootDataRelay: organizationAnalytics_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = useFragment<organizationAnalytics_query$key>(
     graphql`
       fragment organizationAnalytics_query on Query {
         ...locationSelector_allLocations_query
-        locations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }, orderBy: $locationsSortingValues) {
+        locations(where: { organizationCustomDomain: $organizationCustomDomain }, orderBy: $locationsSortingValues) {
           __id
           totalCount
           edges {
@@ -76,12 +76,12 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationUn
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <OrganizationAnalyticsLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
+      <OrganizationAnalyticsLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
       <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
         <AppBarWithStackColumn onClose={handleCloseClick} label="Analytics">
           <StackColumn
@@ -96,10 +96,10 @@ const OrganizationAnalytics = ({ rootDataRelay, onReloadRequired, organizationUn
 
           <GridContainer sx={{ padding: defaultPadding }}>
             <Grid>
-              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+              <OrganizationBookingInsightRoot onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
             </Grid>
             <Grid>
-              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+              <OrganizationMemberAttendancyInsightRoot onReloadRequired={onReloadRequired} organizationCustomDomain={organizationCustomDomain} />
             </Grid>
           </GridContainer>
 

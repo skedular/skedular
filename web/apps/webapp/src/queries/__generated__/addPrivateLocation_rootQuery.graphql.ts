@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39b047f060489e26315bcf5edafd798e>>
+ * @generated SignedSource<<1bb1074324a7d8835bf8c12da96100de>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type addPrivateLocation_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type addPrivateLocation_rootQuery$data = {
   readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
@@ -36,7 +36,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = {
@@ -56,8 +56,8 @@ v2 = {
 v3 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v4 = {
@@ -182,16 +182,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1ac4dfc2dc27cc258b24a7be599c1ec9",
+    "cacheID": "8cf0ed69c8d4898d5ba9162b91031680",
     "id": null,
     "metadata": {},
     "name": "addPrivateLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addPrivateLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    emails\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...singleChoiceLocationType_query\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addPrivateLocation_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    emails\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  ...singleChoiceLocationType_query\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "13ba51fabb2377576ebdde181c3aaab4";
+(node as any).hash = "3da12aeedea0a5b602347626344b2ad8";
 
 export default node;

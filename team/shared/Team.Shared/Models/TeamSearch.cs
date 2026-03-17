@@ -4,7 +4,7 @@ namespace Team.Shared.Models;
 
 public record TeamSearchCriteria(
     string? OrganizationId,
-    string? OrganizationUniqueAlphanumericName,
+    string? OrganizationCustomDomain,
     string? CustomerId,
     string? NameContains,
     ICollection<string> PrimaryLocationIds);

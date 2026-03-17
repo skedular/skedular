@@ -88,7 +88,7 @@ public class LocationGrpcService(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new LocationSearchCriteria(
                 request.Where.OrganizationId,
-                request.Where.OrganizationUniqueAlphanumericName,
+                request.Where.OrganizationCustomDomain,
                 request.Where.LocationIds,
                 request.Where.NameContains,
                 request.Where.TagIds,
@@ -156,7 +156,7 @@ public class LocationGrpcService(
             new PaginationInputParam(request.After, request.First.FromNullInt(), request.Before, request.Last.FromNullInt()),
             new LocationSearchCriteria(
                 request.Where.OrganizationId,
-                request.Where.OrganizationUniqueAlphanumericName,
+                request.Where.OrganizationCustomDomain,
                 request.Where.LocationIds,
                 request.Where.NameContains,
                 request.Where.TagIds,

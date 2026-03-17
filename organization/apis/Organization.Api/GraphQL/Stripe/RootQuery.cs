@@ -44,7 +44,7 @@ public class RootQuery(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new OrganizationStripeConnectAccountSearchCriteria(
                 where.OrganizationId,
-                where.OrganizationUniqueAlphanumericName,
+                where.OrganizationCustomDomain,
                 where.NameContains,
                 where.OnboardingCompleted),
             orderBy.ToSafeCollection().Select(item => new OrganizationStripeConnectAccountOrder(item.Direction, item.Field)).ToList(),

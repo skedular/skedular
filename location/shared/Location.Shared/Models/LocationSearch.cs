@@ -5,7 +5,7 @@ namespace Location.Shared.Models;
 
 public record LocationSearchCriteria(
     string? OrganizationId,
-    string? OrganizationUniqueAlphanumericName,
+    string? OrganizationCustomDomain,
     ICollection<string> LocationIds,
     string? NameContains,
     ICollection<string> TagIds,

@@ -13,14 +13,11 @@ namespace Organization.Shared.Repositories;
 
 public interface IOrganizationRepository : IRepository<Database.Entities.Organization>
 {
-    Task<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
-        string? id,
-        string? uniqueAlphanumericName,
-        CancellationToken cancellationToken);
+    Task<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    Task<ICollection<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
@@ -133,9 +130,9 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         return DbContext.Organization.Update(organization).Entity;
     }
 
-    public async Task<Database.Entities.Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
@@ -145,33 +142,30 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects(false)
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Database.Entities.Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    public async Task<ICollection<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         CancellationToken cancellationToken)
     {
-        if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
-            uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        if (ids is not null && ids.RemoveInvalidIds()!.Any() && customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query =>
-                    ids.Contains(query.Id) ||
-                    (query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName)))
+                .Where(query => ids.Contains(query.Id) || (query.CustomDomain != null && customDomains.Contains(query.CustomDomain)))
                 .AddDependentObjects(false)
                 .ToListAsync(cancellationToken);
         }
@@ -186,17 +180,17 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .ToListAsync(cancellationToken);
         }
 
-        if (uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        if (customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .Where(query => query.CustomDomain != null && customDomains.Contains(query.CustomDomain))
                 .AddDependentObjects(false)
                 .ToListAsync(cancellationToken);
         }
 
-        throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
+        throw new InvalidOperationException("Either ids or customDomains must be provided.");
     }
 
     public async Task<ICollection<Database.Entities.Organization>> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>

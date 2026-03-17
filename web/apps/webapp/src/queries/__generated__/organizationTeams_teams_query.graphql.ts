@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<67ecf472f037ed84037c190b16525fac>>
+ * @generated SignedSource<<d55e5e7e356efb89131e1bd2c2ed3fd0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,7 +38,7 @@ export type organizationTeams_teams_query$data = {
         };
         readonly name: string;
         readonly organization: {
-          readonly uniqueAlphanumericName: string | null | undefined;
+          readonly customDomain: string | null | undefined;
         };
         readonly " $fragmentSpreads": FragmentRefs<"teamCard_TeamDetails">;
       };
@@ -86,7 +86,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     },
     {
       "kind": "RootArgument",
@@ -134,8 +134,8 @@ return {
           "fields": [
             {
               "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
+              "name": "organizationCustomDomain",
+              "variableName": "organizationCustomDomain"
             },
             {
               "kind": "Variable",
@@ -189,7 +189,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "uniqueAlphanumericName",
+                      "name": "customDomain",
                       "storageKey": null
                     }
                   ],
@@ -379,6 +379,6 @@ return {
 };
 })();
 
-(node as any).hash = "ff46c41e9f2f916afda5bd7638ecba3e";
+(node as any).hash = "d04499b5b0d601f359ab39bdf5c2f6c6";
 
 export default node;

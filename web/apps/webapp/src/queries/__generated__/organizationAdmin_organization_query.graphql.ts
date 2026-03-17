@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb7473211ccdbdd3d75fed8fdb898007>>
+ * @generated SignedSource<<99775078be5a3f066429ac069f4a1c4c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -59,6 +59,7 @@ export type organizationAdmin_organization_query$data = {
     readonly canModify: boolean;
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
+    readonly customDomain: string | null | undefined;
     readonly featureImages: ReadonlyArray<{
       readonly original: {
         readonly height: number | null | undefined;
@@ -126,7 +127,6 @@ export type organizationAdmin_organization_query$data = {
       readonly taxId: string;
       readonly taxRatePercentage: any;
     } | null | undefined;
-    readonly uniqueAlphanumericName: string | null | undefined;
     readonly website: string | null | undefined;
   } | null | undefined;
   readonly " $fragmentType": "organizationAdmin_organization_query";
@@ -343,7 +343,7 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     }
   ],
   "kind": "Fragment",
@@ -361,8 +361,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "uniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "customDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "concreteType": "OrganizationDetails",
@@ -375,7 +375,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueAlphanumericName",
+          "name": "customDomain",
           "storageKey": null
         },
         (v1/*: any*/),
@@ -740,6 +740,6 @@ return {
 };
 })();
 
-(node as any).hash = "9876c7f28449e477cb0d8c43ddcffcd9";
+(node as any).hash = "8152763743759de1ffb75d5b799905c0";
 
 export default node;

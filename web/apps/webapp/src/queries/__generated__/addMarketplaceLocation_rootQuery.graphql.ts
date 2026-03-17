@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b3a5aa01987d69d745a95c026902e6f>>
+ * @generated SignedSource<<f92f93978ec17e497facf19cf68080d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type OrganizationType = "INDIVIDUAL" | "MARKETPLACE" | "PRIVATE" | "%future added value";
 export type addMarketplaceLocation_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type addMarketplaceLocation_rootQuery$data = {
   readonly emailsToShowLatestCapabilities: ReadonlyArray<string>;
@@ -36,7 +36,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = {
@@ -56,8 +56,8 @@ v2 = {
 v3 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v4 = {
@@ -208,16 +208,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5671fff5b82e57c8488d94445a65611f",
+    "cacheID": "531c8f53588ebf1f0e2205d76c3cede8",
     "id": null,
     "metadata": {},
     "name": "addMarketplaceLocation_rootQuery",
     "operationKind": "query",
-    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    emails\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  ...singleChoiceLocationType_query\n  ...multipleChoicesLocationSpaceTypes_query\n}\n\nfragment multipleChoicesLocationSpaceTypes_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    locationSpaceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addMarketplaceLocation_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  emailsToShowLatestCapabilities\n  me {\n    emails\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  ...singleChoiceLocationType_query\n  ...multipleChoicesLocationSpaceTypes_query\n}\n\nfragment multipleChoicesLocationSpaceTypes_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    locationSpaceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocationType_query on Query {\n  locationTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8092ddfe1babf67859646d0bdb76841f";
+(node as any).hash = "ee0dbbfa897b1e2ac5e93864e78eb4ba";
 
 export default node;

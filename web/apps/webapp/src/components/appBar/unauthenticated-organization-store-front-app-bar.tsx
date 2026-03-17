@@ -25,7 +25,7 @@ const UnauthenticatedOrganizationStoreFrontAppBar = ({ rootDataRelay }: Props) =
   const rootData = useFragment<unauthenticatedOrganizationStoreFrontAppBar_query$key>(
     graphql`
       fragment unauthenticatedOrganizationStoreFrontAppBar_query on Query {
-        organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organizationPublic(customDomain: $organizationCustomDomain) {
           name
         }
       }

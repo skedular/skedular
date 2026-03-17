@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c4a2b4c174feb53fd2b12e66d3031935>>
+ * @generated SignedSource<<5bda2fdb998ccedf0e817257f984d785>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,8 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationStripeConnectAccountNameSearchText?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_organizationStripeConnectAccounts_query">;
@@ -39,12 +39,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationStripeConnectAccountNameSearchText"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationStripeConnectAccountNameSearchText"
   }
 ],
 v1 = [
@@ -77,8 +77,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationUniqueAlphanumericName",
-        "variableName": "organizationUniqueAlphanumericName"
+        "name": "organizationCustomDomain",
+        "variableName": "organizationCustomDomain"
       }
     ],
     "kind": "ObjectValue",
@@ -281,7 +281,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "uniqueAlphanumericName",
+                        "name": "customDomain",
                         "storageKey": null
                       },
                       (v2/*: any*/)
@@ -363,16 +363,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "736d5b4f2dd41781681e7cccfdbe1722",
+    "cacheID": "8db75db56f49276e89f9b6a6b74365e6",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationUniqueAlphanumericName: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_organizationStripeConnectAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $organizationStripeConnectAccountNameSearchText: String\n) {\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query_1G22uz on Query {\n  organizationStripeConnectAccounts(first: $count, after: $cursor, where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5014183289c952b3883fb85d8fe57009";
+(node as any).hash = "7ef9d8682e860f8626284bc2ea126d55";
 
 export default node;

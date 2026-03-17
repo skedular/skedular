@@ -23,6 +23,7 @@ import type { locationCard_toggleContactedViaCallMutation } from '@/queries/__ge
 import type { locationCard_toggleContactedViaEmailMutation } from '@/queries/__generated__/locationCard_toggleContactedViaEmailMutation.graphql';
 import type { locationCard_toggleContactedViaSmsMutation } from '@/queries/__generated__/locationCard_toggleContactedViaSmsMutation.graphql';
 import type { locationCard_toggleContactedViaWhatsappMutation } from '@/queries/__generated__/locationCard_toggleContactedViaWhatsappMutation.graphql';
+import '@/styles/leaflet/leaflet.css';
 import AvatarGroup from '@mui/material/AvatarGroup';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -39,7 +40,6 @@ import Switch from '@mui/material/Switch';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
-import '@/styles/leaflet/leaflet.css';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
@@ -56,7 +56,7 @@ type Props = {
   rootDataRelay: locationCard_query$key;
   locationDetailsRelay: locationCard_LocationDetails$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   sharedWithTeammates: CustomerDetails[];
   availableResourcesCount: number;
@@ -78,7 +78,7 @@ const LocationCard = ({
   locationDetailsRelay,
   connectionIds,
   onReloadRequired,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   sharedWithTeammates,
   availableResourcesCount,
   availablePercentage,
@@ -132,7 +132,7 @@ const LocationCard = ({
         canModify
         canDelete
         organization {
-          uniqueAlphanumericName
+          customDomain
         }
         extraMetadata {
           contactDetails {
@@ -274,7 +274,7 @@ const LocationCard = ({
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewLocationBookings]);
 
-  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, locationDetails.id);
+  const editLink = getOrganizationLocationSetupBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, locationDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -293,7 +293,7 @@ const LocationCard = ({
         break;
 
       case MoreActionsMenuOptionType.ViewLocationBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.uniqueAlphanumericName!, { locationId: locationDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, locationDetails.organization!.customDomain!, { locationId: locationDetails.id }));
         break;
     }
   };
@@ -307,7 +307,7 @@ const LocationCard = ({
   };
 
   const handleViewFloorPlanClick = () => {
-    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationUniqueAlphanumericName, locationDetails.id));
+    router.push(getOrganizationLocationFloorPlansLink(integratedPlatrform, organizationCustomDomain, locationDetails.id));
   };
 
   const handleConfirmRemovingLocationClick = () => {
@@ -576,11 +576,11 @@ const LocationCard = ({
                   Floor Plan
                 </Button>
               </Tooltip>
-              {locationDetails.organization?.uniqueAlphanumericName !== 'skedularpubliclocations' && (
+              {locationDetails.organization?.customDomain !== 'skedularpubliclocations' && (
                 <NewBookingButton
                   onReloadRequired={onReloadRequired}
                   defaultDate={defaultDate}
-                  organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                  organizationCustomDomain={organizationCustomDomain}
                   defaultLocationId={locationDetails.id}
                   label="Book Now"
                   hideIcon
@@ -627,7 +627,7 @@ const LocationCard = ({
           </StackRow>
           <Divider />
 
-          {locationDetails.organization?.uniqueAlphanumericName === 'skedularpubliclocations' && (
+          {locationDetails.organization?.customDomain === 'skedularpubliclocations' && (
             <>
               <StackRow>
                 <BodyIconTypography label="Email" />

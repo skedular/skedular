@@ -4,7 +4,7 @@ namespace Organization.Shared.Models;
 
 public record OrganizationMemberSearchCriteria(
     string? OrganizationId,
-    string? OrganizationUniqueAlphanumericName,
+    string? OrganizationCustomDomain,
     string? NameContains,
     string? CustomerId);
 

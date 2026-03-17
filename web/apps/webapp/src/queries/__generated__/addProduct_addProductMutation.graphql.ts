@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0987c1e4be2410134e03a3adc9229611>>
+ * @generated SignedSource<<aa4e6084fbb03e34a88b7a875f05b0b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -19,8 +19,8 @@ export type AddProductInput = {
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   listingMetadata?: ListingMetadataInput | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
   tagIds: ReadonlyArray<string>;
 };

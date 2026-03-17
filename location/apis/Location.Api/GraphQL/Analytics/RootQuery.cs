@@ -25,7 +25,7 @@ public class RootQuery(IMapper mapper)
             until,
             new LocationSearchCriteria(
                 null,
-                where?.OrganizationUniqueAlphanumericName,
+                where?.OrganizationCustomDomain,
                 where is null ? [] : where.LocationIds.ToSafeCollection(),
                 where?.NameContains,
                 where is null ? [] : where.CustomTagIds.ToSafeCollection().Concat(where.ZoneIds.ToSafeCollection()).ToList(),

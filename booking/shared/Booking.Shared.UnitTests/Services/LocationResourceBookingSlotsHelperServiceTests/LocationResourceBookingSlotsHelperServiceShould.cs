@@ -1,10 +1,6 @@
-using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Time;
-using FakeItEasy;
 using Shouldly;
 using Testing.Shared;
 

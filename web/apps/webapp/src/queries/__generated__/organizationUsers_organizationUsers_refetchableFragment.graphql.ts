@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ebc1eeec2bf89ad685d7b841dd37e09>>
+ * @generated SignedSource<<7f92b7e4434ca27e4bad805cec1f6976>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationUsers_organizationUsers_refetchableFragment$variables = {
   count?: number | null | undefined;
   cursor?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   peopleNameSearchText?: string | null | undefined;
 };
 export type organizationUsers_organizationUsers_refetchableFragment$data = {
@@ -39,7 +39,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -115,8 +115,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -309,16 +309,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a98e7261cb86a7579215d8e34f44c593",
+    "cacheID": "a5d37b2068b5e6a74f834712e33ac841",
     "id": null,
     "metadata": {},
     "name": "organizationUsers_organizationUsers_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationUniqueAlphanumericName: String\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status\n          role\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationUsers_organizationUsers_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $peopleNameSearchText: String\n) {\n  ...organizationUsers_organizationMembers_query_1G22uz\n}\n\nfragment organizationUsers_organizationMembers_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status\n          role\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8d6c2c4d2cc87eb541fdc2b3c89263ca";
+(node as any).hash = "68acaa9705f2b8dd5cc46cd1c38fd7ae";
 
 export default node;

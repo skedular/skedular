@@ -76,7 +76,7 @@ public class BookingSubscriber(
             return;
         }
 
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -122,7 +122,7 @@ public class BookingSubscriber(
 
     private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
     {
-        var involvedOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var involvedOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             booking.InvolvedOrganizations.Select(item => item.Id).ToList(),
             null,
             cancellationToken);

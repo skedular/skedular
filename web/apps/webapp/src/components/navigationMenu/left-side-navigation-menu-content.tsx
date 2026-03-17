@@ -54,9 +54,9 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const rootData = useFragment<leftSideNavigationMenuContent_query$key>(
     graphql`
       fragment leftSideNavigationMenuContent_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           id
-          uniqueAlphanumericName
+          customDomain
           type {
             type
           }
@@ -75,7 +75,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathName = usePathname();
   const paletteMode = useContext(PaletteModeContext);
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
   const maxWidth = collapsed ? secondDrawerCollapsedDrawerWidth : secondDrawerExpandedDrawerWidth;
   const logoUrl =
     paletteMode === 'dark'
@@ -113,8 +113,8 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     ...selectedListItemPaddings,
   };
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   const handleCollpaseClicked = () => {
@@ -133,15 +133,15 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
     return null;
   }
 
-  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
-  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.uniqueAlphanumericName!);
+  const organizationBaseLink = getOrganizationBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationBookingsBaseLink = getOrganizationBookingsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationLocationsBaseLink = getOrganizationLocationsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationTeamsBaseLink = getOrganizationTeamsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationMembersBaseLink = getOrganizationUsersBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
     <>
@@ -391,14 +391,14 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
         </List>
       </Box>
 
-      {!collapsed && organizationUniqueAlphanumericName && (
+      {!collapsed && organizationCustomDomain && (
         <>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName)}
+                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain)}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
@@ -409,7 +409,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
 
               <InvitePeopleToJoinOrganizationButton
                 variant="contained"
-                organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                organizationCustomDomain={organizationCustomDomain}
                 label="Invite Teammates"
                 size="medium"
                 sx={{ backgroundColor: paletteMode === 'dark' ? coal : emerald, paddingTop: 1, paddingBottom: 1, width: 210 }}

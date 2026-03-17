@@ -24,7 +24,7 @@ public class TeamSubscriber(ILogger<TeamSubscriber> logger, IMapper mapper, IRep
                     }
                     else
                     {
-                        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                                team.Organization.Id,
                                                null,
                                                cancellationToken) ??

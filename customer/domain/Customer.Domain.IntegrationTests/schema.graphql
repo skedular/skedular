@@ -127,7 +127,7 @@ type Mutation {
 }
 
 type OrganizationDetails {
-  uniqueAlphanumericName: String
+  customDomain: String
   id: ID!
 }
 
@@ -270,7 +270,7 @@ input RemoveCustomerPreferredResourceInput {
 input SetCustomerDefaultOrganizationInput {
   clientMutationId: String
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
 }
 
 input SubmitCustomerFeedbackInput {

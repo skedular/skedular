@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<beae34433ce2e904e36361b6dbc831ba>>
+ * @generated SignedSource<<057b6b81670bea03ba240297bc777faf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,8 +15,8 @@ export type AddProductTagInput = {
   description?: string | null | undefined;
   id?: string | null | undefined;
   name: string;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type addOrganizationProductTagDialog_addProductTagMutation$variables = {
   connectionIds: ReadonlyArray<string>;

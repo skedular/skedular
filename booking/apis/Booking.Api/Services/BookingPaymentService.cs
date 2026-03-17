@@ -56,7 +56,7 @@ public class BookingPaymentService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             productVersion.Product.Organization.Id,
             null,
             false,

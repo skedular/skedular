@@ -1,8 +1,6 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
-using FakeItEasy;
 using Shouldly;
 using Testing.Shared;
 
@@ -100,9 +98,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
-            NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
         };
         var stripeProduct = new StripeProduct
         {
@@ -125,9 +121,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
-            NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
         };
         var matchingStripeProduct = new StripeProduct
         {
@@ -150,9 +144,7 @@ public class ProductVersionHelperServiceShould
     {
         var pricing = ProductPricing.Empty("pricing-1") with
         {
-            PurchaseCadence = ProductPricingCadence.Daily,
-            NumberOfResourcesToBook = 1,
-            BillingMode = ProductPricingBillingMode.Upfront
+            PurchaseCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1, BillingMode = ProductPricingBillingMode.Upfront
         };
         var stripeProducts = new[]
         {

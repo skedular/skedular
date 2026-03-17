@@ -47,7 +47,7 @@ public class WorkaroundService(
             return;
         }
 
-        if (location.Organization?.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        if (location.Organization?.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return;
         }
@@ -63,7 +63,7 @@ public class WorkaroundService(
 
         foreach (var location in locations
                      .Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted())
-                     .Where(item => item.Organization?.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName))
+                     .Where(item => item.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName))
         {
             await temporalService.StartWorkflowGenerateLocationResourcesSlotsAsync(
                 new GenerateLocationResourcesSlotsInput(location.Id, null),

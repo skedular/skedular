@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4ec109fe4e141aa7998eaa8b9770fb0>>
+ * @generated SignedSource<<aa3d4099a9eccb2473c262f0d64f4b61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationAdmin_rootQuery$variables = {
   customTagNameSearchText?: string | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   zoneNameSearchText?: string | null | undefined;
 };
 export type pageOrganizationAdmin_rootQuery$data = {
@@ -35,7 +35,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -45,8 +45,8 @@ v2 = {
 v3 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v4 = {
@@ -461,7 +461,7 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "uniqueAlphanumericName",
+            "name": "customDomain",
             "storageKey": null
           },
           {
@@ -932,16 +932,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "04091180bfac2983c7ee5b9e9512d3a4",
+    "cacheID": "c73554d63c3627a6aebd9c6e962eb040",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organization_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    uniqueAlphanumericName\n    name\n    billingCycle {\n      type\n      name\n    }\n    logoUrl\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n    preferredZones {\n      id\n    }\n    preferredCustomTags {\n      id\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(where: {nameContains: $zoneNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAdmin_rootQuery(\n  $organizationCustomDomain: String!\n  $zoneNameSearchText: String\n  $customTagNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAdmin_query\n  ...organizationAdmin_organization_query\n  ...organizationAdmin_zones_query\n  ...organizationAdmin_customTags_query\n}\n\nfragment organizationAdmin_customTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(where: {nameContains: $customTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationAdmin_organization_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    customDomain\n    name\n    billingCycle {\n      type\n      name\n    }\n    logoUrl\n    listingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    website\n    canModify\n    industrySubCategories {\n      id\n      name\n    }\n    contactEmail\n    contactPhone\n    physicalAddress {\n      id\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    hasAttachedPaymentMethod\n    paymentMethods {\n      id\n      cardBrand\n      cardExpiryMonth\n      cardExpiryYear\n      cardLastFourDigit\n    }\n    activeOffering {\n      id\n      isEnterprise\n      name\n      start\n      end\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    availableOfferings {\n      isEnterprise\n      code\n      name\n      unitPrice\n      featureSet\n      underPriceLines\n      free\n    }\n    ssoSettings {\n      id\n      isActive\n      entityId\n      loginUrl\n      appFederationMetadataUrl\n    }\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n  }\n}\n\nfragment organizationAdmin_query on Query {\n  emailsToShowLatestCapabilities\n  me {\n    id\n    emails\n    preferredZones {\n      id\n    }\n    preferredCustomTags {\n      id\n    }\n  }\n  organizationIndustryMainCategoriesReferences {\n    subCategories {\n      id\n      name\n    }\n    id\n  }\n  ...organizationMultipleChoicesIndustries_query\n}\n\nfragment organizationAdmin_zones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(where: {nameContains: $zoneNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMultipleChoicesIndustries_query on Query {\n  organizationIndustryMainCategoriesReferences {\n    id\n    name\n    subCategories {\n      id\n      name\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1f5a48731b165eda090b6878d2560334";
+(node as any).hash = "8b61d6c451e16fae315c52979cef1dca";
 
 export default node;

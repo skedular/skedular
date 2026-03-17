@@ -20,7 +20,7 @@ public class OrganizationOwnershipService(
 {
     public async Task VerifyAsync(string? organizationId, string? organizationUniqueAlphanumericNam, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                organizationUniqueAlphanumericNam,
                                cancellationToken) ??

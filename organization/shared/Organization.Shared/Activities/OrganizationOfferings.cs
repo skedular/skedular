@@ -90,7 +90,7 @@ public class OrganizationOfferings(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             args.OrganizationId,
             null,
             cancellationToken);

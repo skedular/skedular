@@ -50,7 +50,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         id
         name
         organization {
-          uniqueAlphanumericName
+          customDomain
         }
         members {
           edges {
@@ -110,7 +110,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
 
   moreActionsOption = moreActionsOption.concat(moreActionsMenuAllOptions[MoreActionsMenuOptionType.ViewTeamBookings]);
 
-  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, teamDetails.id);
+  const editLink = getOrganizationTeamSetupBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, teamDetails.id);
 
   const handleMoreActionsMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setMoreActionsAnchorEl(event.currentTarget);
@@ -129,7 +129,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         break;
 
       case MoreActionsMenuOptionType.ViewTeamBookings:
-        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.uniqueAlphanumericName!, { teamId: teamDetails.id }));
+        router.push(getOrganizationBookingsBaseLink(integratedPlatrform, teamDetails.organization!.customDomain!, { teamId: teamDetails.id }));
         break;
     }
   };

@@ -13,7 +13,7 @@ public interface IOrganizationBillingService
 {
     Task<OrganizationBillingDetails?> GetAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken);
@@ -32,13 +32,13 @@ public class OrganizationBillingService(
 {
     public async Task<OrganizationBillingDetails?> GetAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationId,
-                                       organizationUniqueAlphanumericName,
+                                       organizationCustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
@@ -54,9 +54,9 @@ public class OrganizationBillingService(
         ArgumentNullException.ThrowIfNull(organizationBillingDetails.Organization);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationBillingDetails.Organization.Id,
-                                       organizationBillingDetails.Organization.UniqueAlphanumericName,
+                                       organizationBillingDetails.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 
@@ -118,9 +118,9 @@ public class OrganizationBillingService(
             organizationBillingDetails.Id,
             cancellationToken) ?? throw new OrganizationBillingDetailsNotFound();
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationBillingDetails.Organization.Id,
-                                       organizationBillingDetails.Organization.UniqueAlphanumericName,
+                                       organizationBillingDetails.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 

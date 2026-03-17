@@ -196,7 +196,7 @@ type OrganizationBookingPermissions {
 }
 
 type OrganizationDetails {
-  uniqueAlphanumericName: String
+  customDomain: String
   id: ID!
 }
 
@@ -259,7 +259,7 @@ type Query {
   allMarketplaceBookingSubscriptions(where: MarketplaceBookingSubscriptionWhereInput!): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
   paymentMethodTypes: [PaymentMethodTypeDetails!]!
   paymentStatuses: [PaymentStatusDetails!]!
-  organizationBookingPermissions(organizationId: String organizationUniqueAlphanumericName: String): OrganizationBookingPermissions! @cost(weight: "10")
+  organizationBookingPermissions(organizationId: String organizationCustomDomain: String): OrganizationBookingPermissions! @cost(weight: "10")
   teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
   recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
   recurringBookingById(id: String!): RecurringBookingDetails @lookup @internal @cost(weight: "10")
@@ -346,7 +346,7 @@ input AddMarketplaceBookingInput {
   id: String
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
@@ -366,7 +366,7 @@ input AddMarketplaceBookingSubscriptionInput {
   id: String
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   startedAt: DateTime!
   autoRenew: Boolean!
@@ -384,7 +384,7 @@ input AddMarketplaceRecurringBookingInput {
   id: String
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
@@ -411,7 +411,7 @@ input AddPrivateBookingInput {
   id: String
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
@@ -425,7 +425,7 @@ input AddPrivateRecurringBookingInput {
   id: String
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
@@ -444,7 +444,7 @@ input AddPrivateRecurringBookingInput {
 
 input AvailableResourcesCountWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   locationId: String
   from: DateTime!
   until: DateTime!
@@ -455,7 +455,7 @@ input AvailableResourcesCountWhereInput {
 
 input AvailableResourcesWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   locationId: String
   from: DateTime!
   until: DateTime!
@@ -485,7 +485,7 @@ input BookingWhereInput {
   paymentStatuses: [PaymentStatus!]
   nameContains: String
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   locationIds: [String!]
   teamIds: [String!]
   customerIds: [String!]
@@ -549,7 +549,7 @@ input MarketplaceBookingSubscriptionWhereInput {
   status: MarketplaceBookingSubscriptionStatus
   nameContains: String
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   customerIds: [String!]
   includeMineOnly: Boolean
@@ -557,7 +557,7 @@ input MarketplaceBookingSubscriptionWhereInput {
 
 input OrganizationAvailableResourcesWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   from: DateTime!
   until: DateTime!
 }
@@ -580,7 +580,7 @@ input RecurringBookingWhereInput {
   channel: BookingChannel
   nameContains: String
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   customerIds: [String!]
   includeMineOnly: Boolean
@@ -597,7 +597,7 @@ input UpdateMarketplaceBookingInput {
   id: String!
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   notes: String
   category: BookingCategory
@@ -608,7 +608,7 @@ input UpdatePrivateBookingInput {
   id: String!
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!
@@ -622,7 +622,7 @@ input UpdatePrivateRecurringBookingInput {
   id: String!
   customerIds: [String!]!
   organizationIds: [String!]
-  organizationUniqueAlphanumericNames: [String!]
+  organizationCustomDomains: [String!]
   teamIds: [String!]
   from: DateTime!
   until: DateTime!

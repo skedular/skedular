@@ -85,8 +85,8 @@ public class PrivateBookingService(
                         .Select(item => item.Id)
                         .ToList(),
                     booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                        .Select(item => item.UniqueAlphanumericName!)
+                        .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                        .Select(item => item.CustomDomain!)
                         .ToList(),
                     cancellationToken);
             }
@@ -193,8 +193,8 @@ public class PrivateBookingService(
                         .Select(item => item.Id)
                         .ToList(),
                     booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                        .Select(item => item.UniqueAlphanumericName!)
+                        .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                        .Select(item => item.CustomDomain!)
                         .ToList(),
                     cancellationToken);
             }

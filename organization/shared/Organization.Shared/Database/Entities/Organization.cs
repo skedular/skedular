@@ -10,7 +10,7 @@ namespace Organization.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Organization : EntityBaseWithDeleted
 {
-    public string? UniqueAlphanumericName { get; set; }
+    public string? CustomDomain { get; set; }
     public string Name { get; set; }
     public string? Website { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
@@ -52,7 +52,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
     {
         builder.ConfigureEntityBaseWithDeleted();
 
-        builder.Property(item => item.UniqueAlphanumericName).HasMaxLength(Constants.MaxOrganizationUniqueAlphanumericNameLength);
+        builder.Property(item => item.CustomDomain).HasMaxLength(Constants.MaxOrganizationCustomDomainLength);
         builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
@@ -70,7 +70,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
         builder.HasMany(item => item.OrganizationStripePaymentMethods).WithOne(item => item.Organization);
 
-        builder.HasIndex(item => item.UniqueAlphanumericName).IsUnique();
+        builder.HasIndex(item => item.CustomDomain).IsUnique();
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);

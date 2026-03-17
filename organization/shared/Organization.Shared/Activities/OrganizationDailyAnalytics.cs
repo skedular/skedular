@@ -17,7 +17,7 @@ public class OrganizationDailyAnalytics(
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var organization =
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken);
+            await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken);
         if (organization is null || organization.IsDeleted())
         {
             return false;

@@ -4,7 +4,7 @@ using Temporalio.Workflows;
 
 namespace Organization.Shared.Workflows;
 
-public record NewOrganizationJoinedInput(string? OrganizationId, string? OrganizationUniqueAlphanumericName);
+public record NewOrganizationJoinedInput(string? OrganizationId, string? OrganizationCustomDomain);
 
 [Workflow]
 public class NewOrganizationJoined
@@ -13,7 +13,7 @@ public class NewOrganizationJoined
     public async Task ExecuteAsync(NewOrganizationJoinedInput args) =>
         await Workflow.ExecuteActivityAsync(
             (EmailIntegrations activity) =>
-                activity.SendNewOrganizationJoinedEmailAsync(args.OrganizationId, args.OrganizationUniqueAlphanumericName),
+                activity.SendNewOrganizationJoinedEmailAsync(args.OrganizationId, args.OrganizationCustomDomain),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(1),

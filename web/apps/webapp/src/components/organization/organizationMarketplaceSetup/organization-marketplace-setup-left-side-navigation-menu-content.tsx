@@ -25,12 +25,12 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { memo, useContext } from 'react';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   collapsed?: boolean;
   hideIcons?: boolean;
 };
 
-const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationUniqueAlphanumericName, collapsed, hideIcons }: Props) => {
+const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizationCustomDomain, collapsed, hideIcons }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -66,11 +66,11 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   };
 
   const fullPath = `${pathname}?${searchParams.toString()}`;
-  const marketplaceListingLink = getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const billingCycleLink = getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
-  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationUniqueAlphanumericName);
+  const marketplaceListingLink = getOrganizationMarketplaceSetupMarketplaceListingBaseLink(integratedPlatrform, organizationCustomDomain);
+  const billingCycleLink = getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationCustomDomain);
+  const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationCustomDomain);
 
   return (
     <List

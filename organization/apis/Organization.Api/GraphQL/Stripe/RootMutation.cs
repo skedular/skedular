@@ -21,7 +21,7 @@ public class RootMutation(IMapper mapper)
                 await organizationStripeConnectAccountService.AddAsync(
                     input.Id,
                     input.OrganizationId,
-                    input.OrganizationUniqueAlphanumericName,
+                    input.OrganizationCustomDomain,
                     input.Name,
                     input.RedirectUrl,
                     cancellationToken))!

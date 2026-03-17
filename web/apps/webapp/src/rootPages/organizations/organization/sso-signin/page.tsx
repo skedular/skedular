@@ -22,8 +22,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageOrganizationSsoSignin_rootQuery($organizationUniqueAlphanumericName: String!, $redirectUrl: String!) {
-    organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+  query pageOrganizationSsoSignin_rootQuery($organizationCustomDomain: String!, $redirectUrl: String!) {
+    organization(customDomain: $organizationCustomDomain) {
       logoUrl
       name
       ssoLoginUrl(redirectUrl: $redirectUrl)
@@ -64,23 +64,23 @@ const RootPageWithRelay = () => {
   const [, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const redirectUrl = searchParams.get('redirectUrl');
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
-        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName),
+        organizationCustomDomain,
+        redirectUrl: redirectUrl ?? getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain),
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, redirectUrl, integratedPlatrform]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, redirectUrl, integratedPlatrform]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

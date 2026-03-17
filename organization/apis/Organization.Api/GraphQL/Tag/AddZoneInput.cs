@@ -11,8 +11,8 @@ public class AddZoneInput
     [GraphQLName("description")] public string? Description { get; set; }
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string? OrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("color")] public string? Color { get; set; }
 }

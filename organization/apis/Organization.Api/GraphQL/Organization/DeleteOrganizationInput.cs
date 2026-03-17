@@ -8,6 +8,5 @@ public class DeleteOrganizationInput
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
 
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
 }

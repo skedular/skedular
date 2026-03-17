@@ -25,7 +25,7 @@ public class LocationSubscriber(ILogger<LocationSubscriber> logger, IMapper mapp
                     }
                     else
                     {
-                        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                                location.Organization.Id,
                                                null,
                                                cancellationToken) ??

@@ -21,8 +21,8 @@ public class BookingWhereInput
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
     [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
 
-    [GraphQLName("organizationUniqueAlphanumericNames")]
-    public IEnumerable<string>? OrganizationUniqueAlphanumericNames { get; set; }
+    [GraphQLName("organizationCustomDomains")]
+    public IEnumerable<string>? OrganizationCustomDomains { get; set; }
 
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; }
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; }

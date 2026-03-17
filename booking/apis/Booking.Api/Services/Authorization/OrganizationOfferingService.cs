@@ -13,7 +13,7 @@ public class OrganizationOfferingService(ICachedOrganizationService cachedOrgani
 {
     public async ValueTask<bool> IsMoreInteractionAllowedAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         var offering = organization.Offering;

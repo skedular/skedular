@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6395734c918823be6c8a7b33eedf33d4>>
+ * @generated SignedSource<<710c4ba723cc33536330d4ac3de2b554>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,8 +20,8 @@ export type organizationMemberSelector_refetchableFragment$variables = {
   bookingPeopleNameSearchText?: string | null | undefined;
   count?: number | null | undefined;
   cursor?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationMemberSelector_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMemberSelector_query">;
@@ -51,12 +51,12 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationMemberSelectorOrganizationMembersSortingValues"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationMemberSelectorOrganizationMembersSortingValues"
   }
 ],
 v1 = [
@@ -132,8 +132,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -299,16 +299,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f07b423efae17a745223788f67e3081c",
+    "cacheID": "20f804b8ff83db7df08a24027d8698ac",
     "id": null,
     "metadata": {},
     "name": "organizationMemberSelector_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = null\n  $cursor: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n  $organizationUniqueAlphanumericName: String\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(first: $count, after: $cursor, where: {nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationMemberSelector_refetchableFragment(\n  $bookingPeopleNameSearchText: String\n  $count: Int = null\n  $cursor: String\n  $organizationCustomDomain: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...organizationMemberSelector_query_1G22uz\n}\n\nfragment organizationMemberSelector_query_1G22uz on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(first: $count, after: $cursor, where: {nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "7b2512ef6a5d790b64e2617c6da8628e";
+(node as any).hash = "4a41145ef26debc862609c32ca710ffd";
 
 export default node;

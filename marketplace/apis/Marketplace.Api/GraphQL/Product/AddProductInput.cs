@@ -10,8 +10,8 @@ public class AddProductInput
     [GraphQLName("id")] public string? Id { get; set; }
     [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string? OrganizationUniqueAlphanumericName { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("tagIds")] public IEnumerable<string> TagIds { get; set; } = [];

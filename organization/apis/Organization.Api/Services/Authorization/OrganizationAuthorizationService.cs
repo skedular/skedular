@@ -144,7 +144,7 @@ public class OrganizationAuthorizationService(
     public async ValueTask<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return new Permissions

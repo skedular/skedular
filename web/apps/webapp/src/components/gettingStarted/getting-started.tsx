@@ -29,14 +29,14 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   rootDataRelay: gettingStarted_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
-const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlphanumericName }: Props) => {
+const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDomain }: Props) => {
   const rootData = useFragment(
     graphql`
       fragment gettingStarted_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           isMyOnboardingDone
         }
       }
@@ -66,7 +66,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
   const handleAddResourceClicked = (locationId: string) => {
     setIsAddResourceDialogOpen(false);
 
-    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId));
+    router.push(getOrganizationLocationManageResourcesBaseLink(integratedPlatrform, organizationCustomDomain, locationId));
   };
 
   const handleCancelAddResourceClicked = () => {
@@ -80,7 +80,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
   const handleInvitePeopleToJoinOrganizationClicked = () => {
     setIsInvitePeopleToJoinOrganizationDialogOpen(false);
 
-    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationUsersBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const handleInvitePeopleToJoinOrganizationCancelClicked = () => {
@@ -92,7 +92,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
       variables: {
         input: {
           clientMutationId: uuid(),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
         },
       },
       onCompleted: (_, errors) => {
@@ -137,7 +137,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Let's start by setting up the organization's first location." />
-                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationUniqueAlphanumericName)}>
+                <Link component={NextLink} href={getOrganizationLocationAddPrivateLink(integratedPlatrform, organizationCustomDomain)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Location"
@@ -153,7 +153,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
             <Grid>
               <StackColumn sx={{ width: 250 }}>
                 <SmallIconTypography label="Create teams that regularly work or meet together." />
-                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationUniqueAlphanumericName)}>
+                <Link component={NextLink} href={getOrganizationTeamAddLink(integratedPlatrform, organizationCustomDomain)}>
                   <Paper sx={{ height: 100, borderRadius: 2, '&:hover': { border: 1, borderColor: emerald } }}>
                     <LeadIconTypography
                       label="Create Team"
@@ -199,7 +199,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
 
       <AddResourceDialog
         onReloadRequired={onReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         connectionIds={[]}
         isDialogOpen={isAddResourceDialogOpen}
         onAddClicked={handleAddResourceClicked}
@@ -210,7 +210,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationUniqueAlp
         isDialogOpen={isInvitePeopleToJoinOrganizationDialogOpen}
         onInviteClicked={handleInvitePeopleToJoinOrganizationClicked}
         onCancel={handleInvitePeopleToJoinOrganizationCancelClicked}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
       />
     </>
   );

@@ -63,7 +63,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
         }
         myOrganizations {
           id
-          uniqueAlphanumericName
+          customDomain
           logoUrl
           name
           canModify
@@ -81,7 +81,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { signOut } = useAuth();
   const router = useRouter();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
   const [currentTime, setCurrentTime] = useState(localNow());
   const selectedThemeMode = useContext(SelectedPaletteModeContext);
   const paletteMode = useContext(PaletteModeContext);
@@ -92,8 +92,8 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
   const [selectedOrganizationId, setSelectedOrganizationId] = useState<string | undefined>(() => {
-    if (organizationUniqueAlphanumericName && rootData.myOrganizations.some((item) => item.uniqueAlphanumericName === organizationUniqueAlphanumericName)) {
-      return organizationUniqueAlphanumericName;
+    if (organizationCustomDomain && rootData.myOrganizations.some((item) => item.customDomain === organizationCustomDomain)) {
+      return organizationCustomDomain;
     }
 
     return undefined;
@@ -205,7 +205,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
                   );
                 }
 
-                const selectedItem = rootData.myOrganizations.find((item) => item.uniqueAlphanumericName === selectedId);
+                const selectedItem = rootData.myOrganizations.find((item) => item.customDomain === selectedId);
                 if (!selectedItem) {
                   return (
                     <>
@@ -236,7 +236,7 @@ const AppBar = ({ rootDataRelay, hideOrganizationSelector, hideWelcomeMessage, s
               }}
             >
               {rootData.myOrganizations.map((organization) => (
-                <MenuItem key={organization.id} value={organization.uniqueAlphanumericName ?? ''}>
+                <MenuItem key={organization.id} value={organization.customDomain ?? ''}>
                   <StackRow>
                     <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                     <StackColumn spacing={-0.5}>

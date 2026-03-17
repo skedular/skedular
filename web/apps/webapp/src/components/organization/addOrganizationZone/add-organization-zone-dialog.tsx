@@ -15,7 +15,7 @@ import { v7 as uuid } from 'uuid';
 import { object, string } from 'yup';
 
 type Props = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   isDialogOpen: boolean;
   onAddClicked: () => void;
@@ -32,7 +32,7 @@ const zoneSchema = object({
   description: string().nullable(),
 });
 
-const AddOrganizationZoneDialog = ({ organizationUniqueAlphanumericName, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
+const AddOrganizationZoneDialog = ({ organizationCustomDomain, connectionIds, isDialogOpen, onAddClicked, onCancel }: Props) => {
   const [commitAddZone] = useMutation<addOrganizationZoneDialog_addZoneMutation>(graphql`
     mutation addOrganizationZoneDialog_addZoneMutation($connectionIds: [ID!]!, $input: AddZoneInput!) @raw_response_type {
       addZone(input: $input) {
@@ -66,7 +66,7 @@ const AddOrganizationZoneDialog = ({ organizationUniqueAlphanumericName, connect
         input: {
           clientMutationId: uuid(),
           id,
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           name,
           description,
           color: selectedColor,

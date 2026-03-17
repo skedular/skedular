@@ -13,13 +13,10 @@ using Organization.Shared.Models;
 namespace Organization.Api.GraphQL.Organization;
 
 [GraphQLName("OrganizationPublicDetails")]
-public class OrganizationPublicDetails : Node
+public class OrganizationPublicDetails
 {
     [GraphQLName("uniqueId")] public string Id { get; set; } = string.Empty;
-
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
-
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
@@ -58,7 +55,7 @@ public class OrganizationPublicDetails : Node
             last,
             new TagSearchCriteria(
                 organization.Id,
-                organization.UniqueAlphanumericName,
+                organization.CustomDomain,
                 [OrganizationTagTypeConstants.Custom],
                 where?.NameContains),
             orderBy,
@@ -85,7 +82,7 @@ public class OrganizationPublicDetails : Node
             last,
             new TagSearchCriteria(
                 organization.Id,
-                organization.UniqueAlphanumericName,
+                organization.CustomDomain,
                 [OrganizationTagTypeConstants.Zone],
                 where?.NameContains),
             orderBy,

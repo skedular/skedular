@@ -10,7 +10,7 @@ type Props = {
   rootDataRelay: multipleChoicesZones_query$key;
   name: string;
   required?: boolean;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type ZoneDetails = {
@@ -19,11 +19,11 @@ type ZoneDetails = {
   color: string | null | undefined;
 };
 
-const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqueAlphanumericName }: Props) => {
+const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationCustomDomain }: Props) => {
   const rootData = useFragment<multipleChoicesZones_query$key>(
     graphql`
       fragment multipleChoicesZones_query on Query @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null }) {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           zones(first: $count, after: $cursor, orderBy: $multipleChoicesZonesSortingValues) @connection(key: "multipleChoicesZones_zones") {
             __id
             totalCount
@@ -46,7 +46,7 @@ const MultipleChoicesZones = ({ rootDataRelay, name, required, organizationUniqu
   const filter = createFilterOptions<ZoneDetails>();
 
   if (items.length === 0) {
-    return <AddOrganizationZoneButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={connectionIds} size="medium" />;
+    return <AddOrganizationZoneButton organizationCustomDomain={organizationCustomDomain} connectionIds={connectionIds} size="medium" />;
   }
 
   return (

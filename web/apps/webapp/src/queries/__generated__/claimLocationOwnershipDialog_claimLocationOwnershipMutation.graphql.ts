@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ba32c4723d1d8c8f551cd2be84de4bc8>>
+ * @generated SignedSource<<2fcade932aa80011a2611c39acfc2b61>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,8 +12,8 @@ import { ConcreteRequest } from 'relay-runtime';
 export type ClaimLocationOwnershipInput = {
   clientMutationId?: string | null | undefined;
   id?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
   uniqueClaimCode: string;
 };
 export type claimLocationOwnershipDialog_claimLocationOwnershipMutation$variables = {
@@ -34,7 +34,7 @@ export type claimLocationOwnershipDialog_claimLocationOwnershipMutation$data = {
       readonly id: string;
       readonly name: string;
       readonly organization: {
-        readonly uniqueAlphanumericName: string | null | undefined;
+        readonly customDomain: string | null | undefined;
       };
       readonly physicalAddress: {
         readonly formattedAddress: string | null | undefined;
@@ -170,7 +170,7 @@ v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "uniqueAlphanumericName",
+  "name": "customDomain",
   "storageKey": null
 };
 return {
@@ -324,16 +324,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cd4d0066e1f15efff34488b898091bc2",
+    "cacheID": "bcf27578a0f957f51b299ee23ffe4475",
     "id": null,
     "metadata": {},
     "name": "claimLocationOwnershipDialog_claimLocationOwnershipMutation",
     "operationKind": "mutation",
-    "text": "mutation claimLocationOwnershipDialog_claimLocationOwnershipMutation(\n  $input: ClaimLocationOwnershipInput!\n) {\n  claimLocationOwnership(input: $input) {\n    location {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      resources {\n        totalCount\n      }\n      physicalAddress {\n        formattedAddress\n        id\n      }\n      hasFutureBooking\n      canModify\n      canDelete\n      organization {\n        uniqueAlphanumericName\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation claimLocationOwnershipDialog_claimLocationOwnershipMutation(\n  $input: ClaimLocationOwnershipInput!\n) {\n  claimLocationOwnership(input: $input) {\n    location {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      resources {\n        totalCount\n      }\n      physicalAddress {\n        formattedAddress\n        id\n      }\n      hasFutureBooking\n      canModify\n      canDelete\n      organization {\n        customDomain\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2778a55b004924456a371fd59a81142e";
+(node as any).hash = "8028649323f0788ca937e89bc701b199";
 
 export default node;

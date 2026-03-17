@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d5afe693a14a87934dd4345ca2e8743d>>
+ * @generated SignedSource<<9f031eaad1a572ecf23e64da0b4f0752>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,7 +46,7 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     }
   ],
   "kind": "Fragment",
@@ -105,8 +105,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "organizationUniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "organizationCustomDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "concreteType": "OrganizationBookingPermissions",
@@ -149,6 +149,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b13aca52209cbde4f599c5e025e0969";
+(node as any).hash = "de326fd9c6b6da5bf38fa2c9f3c2e145";
 
 export default node;

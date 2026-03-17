@@ -37,7 +37,7 @@ const OrganizationMemberSelector = ({ rootDataRelay, name, required, readOnly, m
       fragment organizationMemberSelector_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMemberSelector_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           members(first: $count, after: $cursor, where: { nameContains: $bookingPeopleNameSearchText }, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues)
             @connection(key: "organizationMemberSelector_members") {
             __id

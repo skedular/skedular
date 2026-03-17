@@ -8,13 +8,9 @@ namespace Customer.Shared.Services.Cache;
 
 public interface ICachedOrganizationService
 {
-    ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
-        string? id,
-        string? uniqueAlphanumericName,
-        CancellationToken cancellationToken);
-
-    ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
-    ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken);
+    ValueTask<Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+    ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+    ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
 
 public class CachedOrganizationService(
@@ -23,10 +19,7 @@ public class CachedOrganizationService(
     HybridCache hybridCache)
     : ICachedOrganizationService
 {
-    public async ValueTask<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
-        string? id,
-        string? uniqueAlphanumericName,
-        CancellationToken cancellationToken)
+    public async ValueTask<Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
         try
         {
@@ -34,20 +27,20 @@ public class CachedOrganizationService(
             {
                 return await hybridCache.GetOrCreateAsync(
                     CreateKeyById(id),
-                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, ct) ??
+                    async ct => await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(id, null, false, false, ct) ??
                                 throw new OrganizationNotFound(),
                     new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                     cancellationToken: cancellationToken);
             }
 
-            if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+            if (!string.IsNullOrWhiteSpace(customDomain))
             {
                 return await hybridCache.GetOrCreateAsync(
-                    CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
+                    CreateKeyByUniqueAlphanumericName(customDomain),
                     async ct =>
-                        await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                        await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                             null,
-                            uniqueAlphanumericName,
+                            customDomain,
                             false,
                             false,
                             ct) ??
@@ -56,7 +49,7 @@ public class CachedOrganizationService(
                     cancellationToken: cancellationToken);
             }
 
-            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+            throw new InvalidOperationException("Either id or customDomain must be provided.");
         }
         catch (OrganizationNotFound)
         {
@@ -64,27 +57,27 @@ public class CachedOrganizationService(
         }
     }
 
-    public async ValueTask UpdateByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
+    public async ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
-        await RemoveByIdOrUniqueAlphanumericNameAsync(id, uniqueAlphanumericName, cancellationToken);
+        await RemoveByIdOrCustomDomainAsync(id, customDomain, cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(id))
         {
             await hybridCache.SetAsync(
                 CreateKeyById(id),
-                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(id, null, false, false, cancellationToken) ??
+                await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(id, null, false, false, cancellationToken) ??
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             await hybridCache.SetAsync(
-                CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName),
-                await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+                CreateKeyByUniqueAlphanumericName(customDomain),
+                await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                     null,
-                    uniqueAlphanumericName,
+                    customDomain,
                     false,
                     false,
                     cancellationToken) ??
@@ -94,21 +87,21 @@ public class CachedOrganizationService(
         }
     }
 
-    public async ValueTask RemoveByIdOrUniqueAlphanumericNameAsync(string? id, string? uniqueAlphanumericName, CancellationToken cancellationToken)
+    public async ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
         {
             await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
-            await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(uniqueAlphanumericName), cancellationToken);
+            await hybridCache.RemoveAsync(CreateKeyByUniqueAlphanumericName(customDomain), cancellationToken);
         }
     }
 
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-id:{id}";
 
-    private string CreateKeyByUniqueAlphanumericName(string uniqueAlphanumericName) =>
-        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-uniqueAlphanumericName:{uniqueAlphanumericName}";
+    private string CreateKeyByUniqueAlphanumericName(string customDomain) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customDomain:{customDomain}";
 }

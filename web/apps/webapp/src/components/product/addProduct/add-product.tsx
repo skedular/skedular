@@ -37,13 +37,13 @@ import { array, boolean, object, string } from 'yup';
 type Props = {
   queryReference: PreloadedQuery<addProduct_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   onAdded: (productId: string) => void;
   onCancel: () => void;
 };
 
 const RootQuery = graphql`
-  query addProduct_rootQuery($organizationUniqueAlphanumericName: String!, $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]) {
+  query addProduct_rootQuery($organizationCustomDomain: String!, $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]) {
     bookingSlotSizeInMinutes
     defaultMaxAllowedResourcesLockTimePaidViaCard
     defaultMaxAllowedResourcesLockTimePaidViaBankTransfer
@@ -265,7 +265,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
       .required('Pricing options are required.'),
   });
 
-const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, onAdded, onCancel }: Props) => {
+const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain, onAdded, onCancel }: Props) => {
   const rootData = usePreloadedQuery<addProduct_rootQuery>(RootQuery, queryReference);
   const [commitAddProduct] = useMutation<addProduct_addProductMutation>(graphql`
     mutation addProduct_addProductMutation($input: AddProductInput!) @raw_response_type {
@@ -381,7 +381,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
           },
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
-          organizationUniqueAlphanumericName,
+          organizationCustomDomain,
           featureImages: finalFeatureImages,
           pricingOptions: pricingOptions.map((pricingOption, index) => ({
             id: pricingOption.id,
@@ -596,7 +596,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationUniqueAlphan
                         rootDataRelay={rootData}
                         name="productTagIds"
                         required={requiredFields.productTagIds}
-                        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+                        organizationCustomDomain={organizationCustomDomain}
                       />
                     </FormFieldLabel>
 
@@ -732,16 +732,16 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
   const [queryReference, loadQuery] = useQueryLoader<addProduct_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         multipleChoicesProductTagsSortingValues: [
           {
             direction: 'ASCENDING',
@@ -753,7 +753,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -772,7 +772,7 @@ const AddProductWithRelay = ({ onReloadRequired, onAdded, onCancel }: RelayProps
       <MemoAddProduct
         queryReference={queryReference}
         onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         onAdded={onAdded}
         onCancel={onCancel}
       />

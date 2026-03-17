@@ -16,7 +16,7 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationLocation_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $locationId: String!
     $resourceNameSearchText: String
     $resourceZoneIds: [String!]
@@ -38,11 +38,11 @@ const RootQuery = graphql`
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationLocation_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   locationId: string;
 };
 
-const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanumericName, locationId }: Props) => {
+const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain, locationId }: Props) => {
   const rootData = usePreloadedQuery<pageOrganizationLocation_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
 
@@ -71,7 +71,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationUniqueAlphanum
         rootDataResourcesRelay={rootData}
         rootDataFloorPlansRelay={rootData}
         onReloadRequired={onReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         locationId={locationId}
       />
     </RootShell>
@@ -84,10 +84,10 @@ const RootPageWithRelay = () => {
   const [queryReference, loadQuery] = useQueryLoader<pageOrganizationLocation_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName, locationId } = useKnownParams();
+  const { organizationCustomDomain, locationId } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   if (!locationId) {
@@ -97,7 +97,7 @@ const RootPageWithRelay = () => {
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         locationId,
         zonesSortingValues: [
           {
@@ -128,7 +128,7 @@ const RootPageWithRelay = () => {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName, locationId]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain, locationId]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -142,12 +142,7 @@ const RootPageWithRelay = () => {
 
   return (
     <ErrorBoundary fallbackRender={({ error }) => <RelayError error={toRootError(error)} />}>
-      <MemoRootPage
-        queryReference={queryReference}
-        onReloadRequired={handleReloadRequired}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
-        locationId={locationId}
-      />
+      <MemoRootPage queryReference={queryReference} onReloadRequired={handleReloadRequired} organizationCustomDomain={organizationCustomDomain} locationId={locationId} />
     </ErrorBoundary>
   );
 };

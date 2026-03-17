@@ -18,8 +18,8 @@ public class ProductDetails : Node
 
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+    [GraphQLName("organizationCustomDomain")]
+    public string OrganizationCustomDomain { get; set; } = string.Empty;
 
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("pricingOptions")] public IEnumerable<ProductPricing> PricingOptions { get; set; } = [];
@@ -32,9 +32,9 @@ public static partial class ProductDetailsType
     static partial void Configure(IObjectTypeDescriptor<ProductDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
-        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.OrganizationCustomDomain);
     }
 
     public static OrganizationDetails GetOrganization([Parent] ProductDetails item) =>
-        new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
+        new(item.OrganizationId, item.OrganizationCustomDomain);
 }

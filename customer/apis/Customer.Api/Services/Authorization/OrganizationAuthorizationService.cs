@@ -24,7 +24,7 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<bool> IsOrganizationMemberAsync(string organizationId, string customerId, CancellationToken cancellationToken)
     {
-        var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(organizationId, null, cancellationToken) ??
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is

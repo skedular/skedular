@@ -36,7 +36,7 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   rootDataRelay: bookingCard_query$key;
   bookingDetailsRelay: bookingCard_BookingDetails$key;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   canJoinBooking: boolean;
 };
@@ -53,7 +53,7 @@ type ZoneDetails = {
   color?: string | null | undefined;
 };
 
-const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlphanumericName, connectionIds, canJoinBooking }: Props) => {
+const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDomain, connectionIds, canJoinBooking }: Props) => {
   const rootData = useFragment<bookingCard_query$key>(
     graphql`
       fragment bookingCard_query on Query {
@@ -65,7 +65,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
           familyName
           photoUrl
         }
-        organizationBookingPermissions(organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {
           canModifyPaymentMethod
         }
         paymentStatuses {
@@ -300,7 +300,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id));
+          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
         }
 
         break;
@@ -681,7 +681,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationUniqueAlp
         <CardHeader
           title={
             <StackRow>
-              <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id)}>
+              <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}>
                 {bookingDetails.involvedLocations.map((item) => (
                   <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
                 ))}

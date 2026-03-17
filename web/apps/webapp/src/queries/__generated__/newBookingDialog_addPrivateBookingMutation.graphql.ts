@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12bce92ee71b2dc4adf9aaa896d01957>>
+ * @generated SignedSource<<481bafc6709f793074baeedecf079ad9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,8 +17,8 @@ export type AddPrivateBookingInput = {
   from: any;
   id?: string | null | undefined;
   notes?: string | null | undefined;
+  organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
-  organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   resourceIds?: ReadonlyArray<string> | null | undefined;
   teamIds?: ReadonlyArray<string> | null | undefined;
   until: any;

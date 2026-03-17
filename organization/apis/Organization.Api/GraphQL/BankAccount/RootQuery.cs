@@ -42,7 +42,7 @@ public class RootQuery(IMapper mapper)
     {
         var (paginatedInfo, edges, totalCount) = await organizationBankAccountService.GetPaginatedAccountsAsync(
             new PaginationInputParam(after, first, before, last),
-            new OrganizationBankAccountSearchCriteria(null, where.OrganizationUniqueAlphanumericName, where.NameContains),
+            new OrganizationBankAccountSearchCriteria(null, where.OrganizationCustomDomain, where.NameContains),
             orderBy.ToSafeCollection().Select(item => new OrganizationBankAccountOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);

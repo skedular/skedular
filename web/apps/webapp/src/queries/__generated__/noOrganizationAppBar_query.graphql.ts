@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f9563fa19698942a10cb2009970c1b83>>
+ * @generated SignedSource<<28370d435b59901448c472c89fa46701>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,10 +23,10 @@ export type noOrganizationAppBar_query$data = {
   readonly myOrganizations: ReadonlyArray<{
     readonly canModify: boolean;
     readonly canViewAnalytics: boolean;
+    readonly customDomain: string | null | undefined;
     readonly id: string;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
-    readonly uniqueAlphanumericName: string | null | undefined;
   }>;
   readonly pendingOrganizationInvitationsCount: number;
   readonly pendingTeamInvitationsCount: number;
@@ -119,7 +119,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueAlphanumericName",
+          "name": "customDomain",
           "storageKey": null
         },
         {
@@ -178,6 +178,6 @@ return {
 };
 })();
 
-(node as any).hash = "208b2397291c2c00233e0b4404c5227b";
+(node as any).hash = "edc111a8719467b6ab085e38ed83b1ba";
 
 export default node;

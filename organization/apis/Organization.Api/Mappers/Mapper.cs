@@ -232,7 +232,7 @@ public class Mapper : IMapper
             CreatedAt = src.CreatedAt,
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
@@ -304,7 +304,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
@@ -327,7 +327,7 @@ public class Mapper : IMapper
         ICollection<Shared.Database.Entities.IndustrySubCategory> industrySubCategories)
     {
         dest.Id = src.Id;
-        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
+        dest.CustomDomain = src.CustomDomain;
         dest.Name = src.Name;
         dest.ListingMetadata = src.ListingMetadata;
         dest.MarketplaceListingMetadata = src.MarketplaceListingMetadata;
@@ -423,7 +423,7 @@ public class Mapper : IMapper
         return new OrganizationDetails
         {
             Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
@@ -474,7 +474,7 @@ public class Mapper : IMapper
             : new OrganizationPublicDetails
             {
                 Id = src.Id,
-                UniqueAlphanumericName = src.UniqueAlphanumericName,
+                CustomDomain = src.CustomDomain,
                 Name = src.Name,
                 ListingMetadata = src.ListingMetadata,
                 MarketplaceListingMetadata = src.MarketplaceListingMetadata,
@@ -521,7 +521,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id.ToSafeString(),
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
@@ -540,7 +540,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id.ToSafeString(),
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name,
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
@@ -559,7 +559,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Name = src.Name,
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
@@ -594,7 +594,7 @@ public class Mapper : IMapper
         var organization = new global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization
         {
             Id = src.Id,
-            UniqueAlphanumericName = src.UniqueAlphanumericName.ToSafeString(),
+            CustomDomain = src.CustomDomain.ToSafeString(),
             Name = src.Name.ToSafeString(),
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
@@ -720,7 +720,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             },
             Type = OrganizationTagType.Custom,
             Color = src.Color
@@ -744,7 +744,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             },
             Type = OrganizationTagType.Zone,
             Color = src.Color
@@ -889,7 +889,7 @@ public class Mapper : IMapper
             AppFederationMetadataUrl = src.AppFederationMetadataUrl,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             }
         };
 
@@ -920,7 +920,7 @@ public class Mapper : IMapper
             Description = src.Description,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             },
             Type = OrganizationTagType.Product,
             Color = src.Color
@@ -994,7 +994,7 @@ public class Mapper : IMapper
             CountryCode = src.CountryCode,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             }
         };
 
@@ -1269,7 +1269,7 @@ public class Mapper : IMapper
             Country = src.Country,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             }
         };
 
@@ -1311,7 +1311,7 @@ public class Mapper : IMapper
             TaxRatePercentage = src.TaxRatePercentage,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             }
         };
 
@@ -1377,7 +1377,7 @@ public class Mapper : IMapper
             CountryCode = src.CountryCode,
             Organization = new Shared.Models.Organization
             {
-                Id = src.OrganizationId.ToSafeString(), UniqueAlphanumericName = src.OrganizationUniqueAlphanumericName.ToSafeString()
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
             }
         };
 

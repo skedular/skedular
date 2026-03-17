@@ -8,10 +8,7 @@ public class UpdateOrganizationInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string? Id { get; set; }
-
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
-
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("billingCycle")] public OrganizationBillingCycle BillingCycle { get; set; }

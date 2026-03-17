@@ -31,7 +31,7 @@ public interface ILocationService
 
     Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
@@ -72,18 +72,18 @@ public class LocationService(
         {
             organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(location.Organization.Id, cancellationToken);
         }
-        else if (!string.IsNullOrWhiteSpace(location.Organization.UniqueAlphanumericName))
+        else if (!string.IsNullOrWhiteSpace(location.Organization.CustomDomain))
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                 location.Organization.Id,
-                location.Organization.UniqueAlphanumericName,
+                location.Organization.CustomDomain,
                 false,
                 false,
                 cancellationToken) ?? throw new OrganizationNotFound();
         }
         else
         {
-            throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+            throw new InvalidOperationException("Either id or customDomain must be provided.");
         }
 
         if (!ignoreAuthorizationCheck)
@@ -139,8 +139,8 @@ public class LocationService(
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
-                                    (query.Organization.Id == locationRef.Organization.Id || query.Organization.UniqueAlphanumericName ==
-                                        locationRef.Organization.UniqueAlphanumericName) &&
+                                    (query.Organization.Id == locationRef.Organization.Id || query.Organization.CustomDomain ==
+                                        locationRef.Organization.CustomDomain) &&
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
@@ -148,7 +148,7 @@ public class LocationService(
 
         var locationEntity = mapper.MapTo(location, organization, organizationTags);
 
-        if (organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName &&
+        if (organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName &&
             string.IsNullOrWhiteSpace(location.UniqueClaimCode))
         {
             locationEntity.UniqueClaimCode = randomHelper.GenerateAlphanumericNumeric(10).ToUpperInvariant();
@@ -176,7 +176,7 @@ public class LocationService(
             new ComputeOrganizationLocationsAndProductsRelationshipsInput(location.Organization.Id),
             repositoryFactory.UnitOfWork);
 
-        if (organization.UniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        if (organization.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
         {
             temporalOutboxService.StartWorkflowNewLocationJoined(new NewLocationJoinedInput(location.Id), repositoryFactory.UnitOfWork);
         }
@@ -333,17 +333,17 @@ public class LocationService(
 
     public async Task<ICollection<Shared.Models.Location>> GetMyLocationsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
         Organization? organization = null;
-        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                false,
                                false,
                                cancellationToken) ??
@@ -388,8 +388,8 @@ public class LocationService(
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     locationRef.OrganizationTags.Select(item => item.Id).Contains(query.Id) &&
-                                    (query.Organization.Id == locationEntityRef.Organization.Id || query.Organization.UniqueAlphanumericName ==
-                                        locationEntityRef.Organization.UniqueAlphanumericName) &&
+                                    (query.Organization.Id == locationEntityRef.Organization.Id || query.Organization.CustomDomain ==
+                                        locationEntityRef.Organization.CustomDomain) &&
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
@@ -463,7 +463,7 @@ public class LocationService(
 
         var mappedLocation = mapper.MapTo(location);
 
-        if (customer is null || location.Organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        if (customer is null || location.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return mappedLocation;
         }

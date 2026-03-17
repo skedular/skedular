@@ -171,7 +171,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       fragment editMarketplaceBooking_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "editMarketplaceBooking_organizationMembers_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $organizationMembersSortingValues)
             @connection(key: "bookingDetailsSelectorQuery_members") {
             __id
@@ -199,8 +199,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
   const [rootDataTeams, refetchTeams] = useRefetchableFragment<editMarketplaceBooking_customerTeams_refetchableFragment, editMarketplaceBooking_customerTeams_query$key>(
     graphql`
       fragment editMarketplaceBooking_customerTeams_query on Query @refetchable(queryName: "editMarketplaceBooking_customerTeams_refetchableFragment") {
-        customerTeams(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, customerId: $customerId }, orderBy: $teamsSortingValues)
-          @include(if: $customerExists) {
+        customerTeams(where: { organizationCustomDomain: $organizationCustomDomain, customerId: $customerId }, orderBy: $teamsSortingValues) @include(if: $customerExists) {
           __id
           totalCount
           edges {

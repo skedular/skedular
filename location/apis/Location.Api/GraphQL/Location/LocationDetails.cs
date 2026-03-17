@@ -20,8 +20,8 @@ public class LocationDetails : Node
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("organizationId")] public string OrganizationId { get; set; } = string.Empty;
 
-    [GraphQLName("organizationUniqueAlphanumericName")]
-    public string OrganizationUniqueAlphanumericName { get; set; } = string.Empty;
+    [GraphQLName("organizationCustomDomain")]
+    public string OrganizationCustomDomain { get; set; } = string.Empty;
 
     [GraphQLName("timezone")] public string? Timezone { get; set; }
     [GraphQLName("type")] public LocationTypeDetails Type { get; set; } = new();
@@ -77,7 +77,7 @@ public class LocationDetails : Node
         [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
-        if (location.OrganizationUniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        if (location.OrganizationCustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return Connection<ResourceEdge>.Empty;
         }
@@ -114,7 +114,7 @@ public class LocationDetails : Node
         [Parent] LocationDetails location,
         [Service] ILocationService locationService,
         CancellationToken cancellationToken) =>
-        location.OrganizationUniqueAlphanumericName != Constants.SkedularPublicLocationsUniqueAlphanumericName &&
+        location.OrganizationCustomDomain != Constants.SkedularPublicLocationsCustomDomainName &&
         await locationService.HasFutureBookingAsync(location.Id, false, cancellationToken);
 }
 
@@ -124,12 +124,12 @@ public static partial class LocationDetailsType
     static partial void Configure(IObjectTypeDescriptor<LocationDetails> descriptor)
     {
         descriptor.Ignore(item => item.OrganizationId);
-        descriptor.Ignore(item => item.OrganizationUniqueAlphanumericName);
+        descriptor.Ignore(item => item.OrganizationCustomDomain);
         descriptor.Ignore(item => item.ProductIds);
     }
 
     public static OrganizationDetails GetOrganization([Parent] LocationDetails item) =>
-        new(item.OrganizationId, item.OrganizationUniqueAlphanumericName);
+        new(item.OrganizationId, item.OrganizationCustomDomain);
 
     public static IEnumerable<ProductDetails> GetProducts([Parent] LocationDetails item) =>
         item.ProductIds.Select(id => new ProductDetails(id));

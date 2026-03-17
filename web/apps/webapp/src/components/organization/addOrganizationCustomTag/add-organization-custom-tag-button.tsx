@@ -6,7 +6,7 @@ import AddOrganizationCustomTagDialog from './add-organization-custom-tag-dialog
 
 type Props = {
   onReloadRequired?: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   fullWidth?: boolean;
   label?: string;
@@ -15,7 +15,7 @@ type Props = {
   size?: 'small' | 'medium' | 'large';
 };
 
-const AddOrganizationCustomTagButton = ({ organizationUniqueAlphanumericName, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
+const AddOrganizationCustomTagButton = ({ organizationCustomDomain, onReloadRequired, connectionIds, fullWidth, label, hideIcon, variant, size }: Props) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleButtonClicked = () => {
@@ -42,7 +42,7 @@ const AddOrganizationCustomTagButton = ({ organizationUniqueAlphanumericName, on
         {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Tag'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
       <AddOrganizationCustomTagDialog
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         connectionIds={connectionIds}
         isDialogOpen={isDialogOpen}
         onAddClicked={handleAddClicked}

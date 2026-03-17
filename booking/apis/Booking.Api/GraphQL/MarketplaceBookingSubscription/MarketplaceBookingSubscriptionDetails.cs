@@ -24,7 +24,10 @@ public class MarketplaceBookingSubscriptionDetails : Node
 
     [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
     [GraphQLName("createdByCustomerId")] public string? CreatedByCustomerId { get; set; }
-    [GraphQLName("lastModifiedByCustomerId")] public string? LastModifiedByCustomerId { get; set; }
+
+    [GraphQLName("lastModifiedByCustomerId")]
+    public string? LastModifiedByCustomerId { get; set; }
+
     [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
 }
 

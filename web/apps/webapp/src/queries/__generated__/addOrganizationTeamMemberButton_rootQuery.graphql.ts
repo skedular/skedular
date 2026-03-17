@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c1e0ab8866562becdf26ed75753f814>>
+ * @generated SignedSource<<2a5fa0b135a57274d6bc3f1298ec4a67>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type OrganizationMemberOrderInput = {
 };
 export type addOrganizationTeamMemberButton_rootQuery$variables = {
   addTeamMemberDialogOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   peopleNameSearchText?: string | null | undefined;
 };
 export type addOrganizationTeamMemberButton_rootQuery$data = {
@@ -38,7 +38,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -105,8 +105,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -272,16 +272,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e6f411ca1d3846bfe8b4ff9244462695",
+    "cacheID": "3f360a7e3af92ee148123ff626eb1db1",
     "id": null,
     "metadata": {},
     "name": "addOrganizationTeamMemberButton_rootQuery",
     "operationKind": "query",
-    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query addOrganizationTeamMemberButton_rootQuery(\n  $organizationCustomDomain: String!\n  $peopleNameSearchText: String\n  $addTeamMemberDialogOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  ...addOrganizationTeamMemberDialog_organizationMembers_query\n}\n\nfragment addOrganizationTeamMemberDialog_organizationMembers_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $peopleNameSearchText}, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "353118099d2f81c328c28ffff841dc4b";
+(node as any).hash = "2125ed8664332a26eb87fc7079dbde15";
 
 export default node;

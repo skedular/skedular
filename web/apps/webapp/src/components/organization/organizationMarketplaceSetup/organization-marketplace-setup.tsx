@@ -70,7 +70,7 @@ type Props = {
   rootDataOrganizationStripeConnectAccountsRelay: organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key;
   rootDataOrganizationBankAccountsRelay: organizationMarketplaceSetup_organizationBankAccounts_query$key;
   onReloadRequired: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 
 type ProductTagRowType = {
@@ -131,12 +131,12 @@ const OrganizationMarketplaceSetup = ({
   rootDataOrganizationStripeConnectAccountsRelay,
   rootDataOrganizationBankAccountsRelay,
   onReloadRequired,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
 }: Props) => {
   const rootData = useFragment<organizationMarketplaceSetup_query$key>(
     graphql`
       fragment organizationMarketplaceSetup_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           id
           name
           marketplaceListingMetadata {
@@ -165,7 +165,7 @@ const OrganizationMarketplaceSetup = ({
       fragment organizationMarketplaceSetup_productTags_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "organizationMarketplaceSetup_productTags_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           productTags(first: $count, after: $cursor, where: { nameContains: $productTagNameSearchText }, orderBy: [{ direction: ASCENDING, field: NAME }])
             @connection(key: "organizationMarketplaceSetup_productTags") {
             __id
@@ -196,7 +196,7 @@ const OrganizationMarketplaceSetup = ({
         organizationStripeConnectAccounts(
           first: $count
           after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationStripeConnectAccountNameSearchText }
+          where: { organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText }
           orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_organizationStripeConnectAccounts") {
           __id
@@ -221,7 +221,7 @@ const OrganizationMarketplaceSetup = ({
               isAuthorized
               isOnboardingCompleted
               organization {
-                uniqueAlphanumericName
+                customDomain
               }
             }
           }
@@ -242,7 +242,7 @@ const OrganizationMarketplaceSetup = ({
         organizationBankAccounts(
           first: $count
           after: $cursor
-          where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText }
+          where: { organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText }
           orderBy: [{ direction: ASCENDING, field: NAME }]
         ) @connection(key: "organizationMarketplaceSetup_organizationBankAccounts") {
           __id
@@ -257,7 +257,7 @@ const OrganizationMarketplaceSetup = ({
               accountNumber
               country
               organization {
-                uniqueAlphanumericName
+                customDomain
               }
             }
           }
@@ -635,7 +635,7 @@ const OrganizationMarketplaceSetup = ({
         router.push(
           getOrganizationStripeConnectAccountBaseLink(
             integratedPlatrform,
-            organizationStripeConnectAccountDetails.organization!.uniqueAlphanumericName!,
+            organizationStripeConnectAccountDetails.organization!.customDomain!,
             organizationStripeConnectAccountDetails.id,
           ),
         );
@@ -802,9 +802,7 @@ const OrganizationMarketplaceSetup = ({
           return;
         }
 
-        router.push(
-          getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization!.uniqueAlphanumericName!, organizationBankAccountDetails.id),
-        );
+        router.push(getOrganizationBankAccountBaseLink(integratedPlatrform, organizationBankAccountDetails.organization!.customDomain!, organizationBankAccountDetails.id));
         break;
 
       case MoreActionsMenuOptionType.SetOrganizationBankAccountAsDefault:
@@ -945,7 +943,7 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const handleCloseClick = () => {
-    router.push(getOrganizationBaseLink(integratedPlatrform, organizationUniqueAlphanumericName));
+    router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
   const productTagRows: ProductTagRowType[] = productTags.map((productTag) => ({
@@ -1394,7 +1392,7 @@ const OrganizationMarketplaceSetup = ({
   return (
     <>
       <Box sx={{ display: 'flex' }}>
-        <OrganizationMarketplaceSetupLeftSideNavigationMenuContent organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} hideIcons />
+        <OrganizationMarketplaceSetupLeftSideNavigationMenuContent organizationCustomDomain={organizationCustomDomain} hideIcons />
         <Box sx={{ marginLeft: secondDrawerExpandedDrawerWidthPx, flexGrow: 1 }}>
           <AppBarWithStackColumn onClose={handleCloseClick} label="Edit Marketplace Information">
             <Form
@@ -1514,7 +1512,7 @@ const OrganizationMarketplaceSetup = ({
                 </Grid>
 
                 <Grid>
-                  <NewStripeConnectAccountButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+                  <NewStripeConnectAccountButton organizationCustomDomain={organizationCustomDomain} />
                   <ExistingStripeConnectAccountButton rootDataRelay={rootData} />
                 </Grid>
               </GridContainer>
@@ -1597,7 +1595,7 @@ const OrganizationMarketplaceSetup = ({
                 </Grid>
 
                 <Grid>
-                  <NewBankAccountButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+                  <NewBankAccountButton organizationCustomDomain={organizationCustomDomain} />
                 </Grid>
               </GridContainer>
               <Divider />
@@ -1679,7 +1677,7 @@ const OrganizationMarketplaceSetup = ({
                 </Grid>
 
                 <Grid>
-                  <AddOrganizationProductTagButton organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} connectionIds={productTagsConnectionIds} />
+                  <AddOrganizationProductTagButton organizationCustomDomain={organizationCustomDomain} connectionIds={productTagsConnectionIds} />
                 </Grid>
               </GridContainer>
               <Divider />

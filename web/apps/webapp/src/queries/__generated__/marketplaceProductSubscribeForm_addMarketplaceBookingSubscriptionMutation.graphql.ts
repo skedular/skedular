@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d4d4ade6c20d88fbb79d08b613819506>>
+ * @generated SignedSource<<2c42467a8ef289fe0a719aa03be306fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,8 +21,8 @@ export type AddMarketplaceBookingSubscriptionInput = {
   customerIds: ReadonlyArray<string>;
   id?: string | null | undefined;
   invoiceEmailList?: ReadonlyArray<string> | null | undefined;
+  organizationCustomDomains?: ReadonlyArray<string> | null | undefined;
   organizationIds?: ReadonlyArray<string> | null | undefined;
-  organizationUniqueAlphanumericNames?: ReadonlyArray<string> | null | undefined;
   paymentMethod: PaymentMethod;
   pricingId: string;
   productVersionId: string;

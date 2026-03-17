@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<054e49092c6bacbcc14a74fcfc7c2543>>
+ * @generated SignedSource<<e66bd0a31a6e41d8d3b32d864880aae4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -41,7 +41,7 @@ export type teamCard_TeamDetails$data = {
   };
   readonly name: string;
   readonly organization: {
-    readonly uniqueAlphanumericName: string | null | undefined;
+    readonly customDomain: string | null | undefined;
   };
   readonly " $fragmentType": "teamCard_TeamDetails";
 };
@@ -85,7 +85,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "uniqueAlphanumericName",
+          "name": "customDomain",
           "storageKey": null
         }
       ],
@@ -253,6 +253,6 @@ return {
 };
 })();
 
-(node as any).hash = "448f2acef6f04c6863d0f07059543c17";
+(node as any).hash = "4b79797a2fa7152d265078a448d4fa43";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9eb3644d94ae8046e09e210dd3b7231>>
+ * @generated SignedSource<<6e50f25fdc6dc212045ac43b88840984>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -149,7 +149,7 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomain"
     }
   ],
   "kind": "Fragment",
@@ -470,8 +470,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "organizationUniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "organizationCustomDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "concreteType": "OrganizationBookingPermissions",
@@ -505,6 +505,6 @@ return {
 };
 })();
 
-(node as any).hash = "34d4dce6a2df809e115f263c79b93d3c";
+(node as any).hash = "0b0ae37db5d3e73a0fa35257d0311032";
 
 export default node;

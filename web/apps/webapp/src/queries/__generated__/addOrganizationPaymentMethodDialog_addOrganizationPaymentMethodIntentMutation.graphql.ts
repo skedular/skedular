@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8922b823ee32d270046251e3dfd92ec6>>
+ * @generated SignedSource<<827057c4320c1aa7b45e04a30a855418>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type AddOrganizationPaymentMethodIntentInput = {
   clientMutationId?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type addOrganizationPaymentMethodDialog_addOrganizationPaymentMethodIntentMutation$variables = {
   input: AddOrganizationPaymentMethodIntentInput;

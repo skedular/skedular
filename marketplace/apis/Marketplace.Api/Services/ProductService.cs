@@ -20,7 +20,7 @@ public interface IProductService
     Task<Product> AddAsync(
         string? id,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         ProductVersion productVersion,
         CancellationToken cancellationToken);
 
@@ -50,7 +50,7 @@ public class ProductService(
     public async Task<Product> AddAsync(
         string? id,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         ProductVersion productVersion,
         CancellationToken cancellationToken)
     {
@@ -69,16 +69,16 @@ public class ProductService(
                         throw new UnauthorizedAccessException();
                     }
                 }
-                else if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+                else if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
                 {
-                    if (existingProduct.Organization.UniqueAlphanumericName != organizationUniqueAlphanumericName)
+                    if (existingProduct.Organization.CustomDomain != organizationCustomDomain)
                     {
                         throw new UnauthorizedAccessException();
                     }
                 }
                 else
                 {
-                    throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
+                    throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
                 }
 
                 return await UpdateInternalAsync(productVersion, existingProduct, customer, cancellationToken);
@@ -89,9 +89,9 @@ public class ProductService(
             id = randomHelper.Generate();
         }
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationId,
-                                       organizationUniqueAlphanumericName,
+                                       organizationCustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyProductAsync(existingOrganization.Id, customer.Id, cancellationToken))
@@ -106,9 +106,9 @@ public class ProductService(
             {
                 Criteria = query => !query.DeletedAt.HasValue &&
                                     tagIds.Contains(query.Id) &&
-                                    (query.Organization.Id == organizationId || (query.Organization.UniqueAlphanumericName != null &&
-                                                                                 query.Organization.UniqueAlphanumericName ==
-                                                                                 organizationUniqueAlphanumericName)) &&
+                                    (query.Organization.Id == organizationId || (query.Organization.CustomDomain != null &&
+                                                                                 query.Organization.CustomDomain ==
+                                                                                 organizationCustomDomain)) &&
                                     !query.Organization.DeletedAt.HasValue
             }).ToListAsync(cancellationToken);
 
@@ -192,7 +192,7 @@ public class ProductService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = products.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -239,7 +239,7 @@ public class ProductService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var products = await repositoryFactory.ProductRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = products.Select(item => item.Organization.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);

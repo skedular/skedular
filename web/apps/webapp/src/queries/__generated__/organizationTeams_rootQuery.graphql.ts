@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fc329f29d6576e69973512d55ab9343c>>
+ * @generated SignedSource<<4565bdbc87decbce6fc55275f29b38fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,7 +23,7 @@ export type LocationOrderInput = {
 };
 export type organizationTeams_rootQuery$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   primaryLocationIds?: ReadonlyArray<string> | null | undefined;
   teamsSortingValues?: ReadonlyArray<TeamOrderInput> | null | undefined;
 };
@@ -47,7 +47,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -80,8 +80,8 @@ v5 = {
 },
 v6 = {
   "kind": "Variable",
-  "name": "organizationUniqueAlphanumericName",
-  "variableName": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v7 = {
   "alias": null,
@@ -256,7 +256,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "uniqueAlphanumericName",
+                        "name": "customDomain",
                         "storageKey": null
                       },
                       (v4/*: any*/)
@@ -484,16 +484,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "09aed7b505680cbbe6ccb79264c31950",
+    "cacheID": "704dea9903b26a32a8db31de87d60aab",
     "id": null,
     "metadata": {},
     "name": "organizationTeams_rootQuery",
     "operationKind": "query",
-    "text": "query organizationTeams_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n  }\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    uniqueAlphanumericName\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
+    "text": "query organizationTeams_rootQuery(\n  $organizationCustomDomain: String!\n  $primaryLocationIds: [String!]\n  $teamsSortingValues: [TeamOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  me {\n    id\n  }\n  ...locationSelector_allLocations_query\n  ...organizationTeams_teams_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationTeams_teams_query on Query {\n  teams(where: {organizationCustomDomain: $organizationCustomDomain, primaryLocationIds: $primaryLocationIds}, orderBy: $teamsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n        organization {\n          customDomain\n          id\n        }\n        members {\n          edges {\n            node {\n              organizationMember {\n                uniqueId\n                customer {\n                  id\n                  givenName\n                  middleName\n                  familyName\n                  name\n                  photoUrl\n                }\n              }\n              id\n            }\n          }\n        }\n        hasFutureBooking\n        canModify\n        canDelete\n        ...teamCard_TeamDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment teamCard_TeamDetails on TeamDetails {\n  id\n  name\n  organization {\n    customDomain\n    id\n  }\n  members {\n    edges {\n      node {\n        organizationMember {\n          uniqueId\n          customer {\n            id\n            givenName\n            middleName\n            familyName\n            name\n            photoUrl\n          }\n        }\n        id\n      }\n    }\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  hasFutureBooking\n  canModify\n  canDelete\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3388413fcd17f76dd87a46a7daabf1f0";
+(node as any).hash = "63b8197c31e6525cc03dd515d6c07049";
 
 export default node;

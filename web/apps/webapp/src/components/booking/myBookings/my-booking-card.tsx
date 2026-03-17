@@ -31,7 +31,7 @@ import { v7 as uuid } from 'uuid';
 
 type Props = {
   bookingDetailsRelay: myBookingCard_BookingDetails$key;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   connectionIds: string[];
   otherTeammates: CustomerDetails[];
 };
@@ -57,7 +57,7 @@ type CustomerDetails = {
   photoUrl?: string | null | undefined;
 };
 
-const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName, otherTeammates, connectionIds }: Props) => {
+const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTeammates, connectionIds }: Props) => {
   const bookingDetails = useFragment(
     graphql`
       fragment myBookingCard_BookingDetails on BookingDetails {
@@ -157,7 +157,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
     switch (id) {
       case MoreActionsMenuOptionType.EditBooking:
         if (bookingDetails) {
-          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id));
+          router.push(getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id));
         }
 
         break;
@@ -267,7 +267,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationUniqueAlphanumericName
       <Card sx={{ width: { xs: '100%', sm: 380 } }}>
         <CardHeader
           title={
-            <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationUniqueAlphanumericName, bookingDetails.id)}>
+            <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}>
               {bookingDetails.involvedLocations.map((item) => (
                 <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               ))}

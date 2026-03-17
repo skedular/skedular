@@ -25,7 +25,7 @@ public interface ITeamService
 
     Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(
@@ -74,16 +74,16 @@ public class TeamService(
                     throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
                 }
             }
-            else if (!string.IsNullOrWhiteSpace(team.Organization.UniqueAlphanumericName))
+            else if (!string.IsNullOrWhiteSpace(team.Organization.CustomDomain))
             {
-                if (primaryLocation.Organization.UniqueAlphanumericName != team.Organization.UniqueAlphanumericName)
+                if (primaryLocation.Organization.CustomDomain != team.Organization.CustomDomain)
                 {
                     throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
                 }
             }
             else
             {
-                throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
+                throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
             }
         }
 
@@ -92,17 +92,17 @@ public class TeamService(
         {
             organization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(team.Organization.Id, cancellationToken);
         }
-        else if (!string.IsNullOrWhiteSpace(team.Organization.UniqueAlphanumericName))
+        else if (!string.IsNullOrWhiteSpace(team.Organization.CustomDomain))
         {
-            organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                 team.Organization.Id,
-                team.Organization.UniqueAlphanumericName,
+                team.Organization.CustomDomain,
                 false,
                 cancellationToken) ?? throw new OrganizationNotFound();
         }
         else
         {
-            throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
+            throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
         }
 
         if (!await organizationAuthorizationService.CanModifyAsync(organization.Id, customer.Id, cancellationToken))
@@ -176,22 +176,22 @@ public class TeamService(
                     throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
                 }
             }
-            else if (!string.IsNullOrWhiteSpace(existingTeam.Organization.UniqueAlphanumericName))
+            else if (!string.IsNullOrWhiteSpace(existingTeam.Organization.CustomDomain))
             {
-                if (primaryLocation.Organization.UniqueAlphanumericName != existingTeam.Organization.UniqueAlphanumericName)
+                if (primaryLocation.Organization.CustomDomain != existingTeam.Organization.CustomDomain)
                 {
                     throw new TeamPrimaryLocationOrganizationDoesNotMatchTeamOrganization();
                 }
             }
             else
             {
-                throw new InvalidOperationException("Either organizationId or organizationUniqueAlphanumericName must be provided.");
+                throw new InvalidOperationException("Either organizationId or organizationCustomDomain must be provided.");
             }
         }
 
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                existingTeam.Organization.Id,
-                               existingTeam.Organization.UniqueAlphanumericName,
+                               existingTeam.Organization.CustomDomain,
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
@@ -253,7 +253,7 @@ public class TeamService(
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var team = await cachedTeamService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (team.Organization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName)
+        if (team.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
         {
             return false;
         }
@@ -281,13 +281,13 @@ public class TeamService(
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
         if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) &&
-            string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName) &&
+            string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain) &&
             string.IsNullOrWhiteSpace(searchCriteria.CustomerId))
         {
             throw new InvalidOperationException();
         }
 
-        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationUniqueAlphanumericName))
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
         {
             // Ensure we do not return another customer team by forcing CustomerId as search criteria
             searchCriteria = searchCriteria with { CustomerId = customer.Id };
@@ -297,9 +297,9 @@ public class TeamService(
             // TODO: 20250117 - Morteza: We currently only support returning teams for others customer when we are part
             // of same organization meaning organization ID is then required. We for now do not support use cases where
             // team is created without organization attached.    
-            var organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+            var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
                                    searchCriteria.OrganizationId,
-                                   searchCriteria.OrganizationUniqueAlphanumericName,
+                                   searchCriteria.OrganizationCustomDomain,
                                    cancellationToken) ??
                                throw new OrganizationNotFound();
 
@@ -341,16 +341,16 @@ public class TeamService(
 
     public async Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
         Organization? organization = null;
-        if (!string.IsNullOrWhiteSpace(organizationUniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
-            organization = await cachedOrganizationService.GetByIdOrUniqueAlphanumericNameAsync(
+            organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
             if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customer.Id, cancellationToken))

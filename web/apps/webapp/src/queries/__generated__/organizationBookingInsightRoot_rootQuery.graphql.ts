@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c71ef1da152bba7b18fe88b69a380511>>
+ * @generated SignedSource<<b4c000d1ce7607a7fc231cf375d40a5b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationBookingInsightRoot_rootQuery$variables = {
   from: any;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   to: any;
 };
 export type organizationBookingInsightRoot_rootQuery$data = {
@@ -32,7 +32,7 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
@@ -74,8 +74,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -143,16 +143,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e75059ba6b10b12d5c35762d7c2e2fe8",
+    "cacheID": "aba9ecd86d8cfa555ff988eeaf14e998",
     "id": null,
     "metadata": {},
     "name": "organizationBookingInsightRoot_rootQuery",
     "operationKind": "query",
-    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    analytics(from: $from, until: $to) {\n      dailyBookingsTotals {\n        date\n        total\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query organizationBookingInsightRoot_rootQuery(\n  $organizationCustomDomain: String!\n  $from: DateTime!\n  $to: DateTime!\n) {\n  ...organizationBookingInsight_organizationAnalytics_query\n}\n\nfragment organizationBookingInsight_organizationAnalytics_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    analytics(from: $from, until: $to) {\n      dailyBookingsTotals {\n        date\n        total\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "ed1dfdc8cc66329d8d17577a03a636e2";
+(node as any).hash = "cbf771c0ba3a79e7d9df04d7027fb9b6";
 
 export default node;

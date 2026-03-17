@@ -195,7 +195,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             DeletedAt = src.DeletedAt,
             EventRaisedAt = src.EventRaisedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Type = src.Type.ToOrganizationType(),
             IsOwnershipVerified = src.IsOwnershipVerified,
             SlackChannelDailyUpdateLastSentAt = src.SlackChannelDailyUpdateLastSentAt

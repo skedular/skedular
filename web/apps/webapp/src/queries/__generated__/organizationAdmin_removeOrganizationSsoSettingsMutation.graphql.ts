@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<30d1cb197bce6578bb64fec5d5f17ec4>>
+ * @generated SignedSource<<480712501402926c9f5ddfa59829dfb6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,8 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type RemoveOrganizationSsoSettingsInput = {
   clientMutationId?: string | null | undefined;
+  organizationCustomDomain?: string | null | undefined;
   organizationId?: string | null | undefined;
-  organizationUniqueAlphanumericName?: string | null | undefined;
 };
 export type organizationAdmin_removeOrganizationSsoSettingsMutation$variables = {
   input: RemoveOrganizationSsoSettingsInput;

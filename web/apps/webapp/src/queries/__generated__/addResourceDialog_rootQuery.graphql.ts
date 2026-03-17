@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f37a531689e966f3891eca10441e8400>>
+ * @generated SignedSource<<01c43f2b6b4e85944d18a39ce4b3135d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,7 +27,7 @@ export type addResourceDialog_rootQuery$variables = {
   multipleChoicesCustomTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesProductTagsSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
   multipleChoicesZonesSortingValues?: ReadonlyArray<OrganizationTagOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type addResourceDialog_rootQuery$data = {
   readonly locations: {
@@ -76,13 +76,13 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v5 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v6 = {
@@ -148,8 +148,8 @@ v11 = {
       "fields": [
         {
           "kind": "Variable",
-          "name": "organizationUniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "organizationCustomDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "kind": "ObjectValue",
@@ -439,16 +439,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3f910f965a96fe28c50f6ef628ac69f0",
+    "cacheID": "132294907b245eb7aabe578ab852a2d2",
     "id": null,
     "metadata": {},
     "name": "addResourceDialog_rootQuery",
     "operationKind": "query",
-    "text": "query addResourceDialog_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    type {\n      type\n    }\n    id\n  }\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n"
+    "text": "query addResourceDialog_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesCustomTagsSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesZonesSortingValues: [OrganizationTagOrderInput!]\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    type {\n      type\n    }\n    id\n  }\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n  ...singleChoiceResourceType_query\n  ...multipleChoicesCustomTags_query\n  ...multipleChoicesZones_query\n  ...multipleChoicesProductTags_query\n}\n\nfragment multipleChoicesCustomTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    customTags(orderBy: $multipleChoicesCustomTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment multipleChoicesZones_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    zones(orderBy: $multipleChoicesZonesSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceResourceType_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    resourceTypes {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "df1b7ddbaef4773c00e8339e0f37a455";
+(node as any).hash = "bc4ac9b259df06dd170006cc904d3dfd";
 
 export default node;

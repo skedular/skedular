@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d367cd116cbd736fb68c9e00a741f5dc>>
+ * @generated SignedSource<<f39f7821a0e126f9f4befe5e92cb305e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -49,11 +49,11 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "organizationMembersSortingValues"
+      "name": "organizationCustomDomain"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationMembersSortingValues"
     },
     {
       "kind": "RootArgument",
@@ -69,8 +69,8 @@ return {
       "args": [
         {
           "kind": "Variable",
-          "name": "uniqueAlphanumericName",
-          "variableName": "organizationUniqueAlphanumericName"
+          "name": "customDomain",
+          "variableName": "organizationCustomDomain"
         }
       ],
       "concreteType": "OrganizationDetails",
@@ -204,6 +204,6 @@ return {
 };
 })();
 
-(node as any).hash = "200b867fdd1948986afc342222de2f25";
+(node as any).hash = "d25ee847d4c795c18f488cb15049956b";
 
 export default node;

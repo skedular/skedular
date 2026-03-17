@@ -20,7 +20,7 @@ public record BookingSearchCriteria(
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
     ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationUniqueAlphanumericNames,
+    ICollection<string> OrganizationCustomDomains,
     ICollection<string> LocationIds,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);

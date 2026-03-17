@@ -4,15 +4,15 @@ import { useKnownParams } from '@/libs/providers';
 import { memo } from 'react';
 
 const RootPage = () => {
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   return (
     <RootShell>
-      <OrganizationProducts organizationUniqueAlphanumericName={organizationUniqueAlphanumericName} />
+      <OrganizationProducts organizationCustomDomain={organizationCustomDomain} />
     </RootShell>
   );
 };

@@ -23,13 +23,13 @@ public class StripeIntegrations(
     public async Task<string> SetOrganizationPaymentMethodAsync(SetOrganizationPaymentMethodInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                args.OrganizationId,
                                null,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         var redirectUrl =
-            Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organization.UniqueAlphanumericName, "admin");
+            Url.Combine(applicationConfiguration.WebAppBaseDomain.ToString(), "organizations", organization.CustomDomain, "admin");
 
         redirectUrl = redirectUrl.SetQueryParam("section", "billing-payment-setup");
 

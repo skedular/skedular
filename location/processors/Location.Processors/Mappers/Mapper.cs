@@ -107,8 +107,7 @@ public class Mapper : IMapper
             Id = organizationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
-            UniqueAlphanumericName =
-                string.IsNullOrWhiteSpace(organizationAfterState.UniqueAlphanumericName) ? null : organizationAfterState.UniqueAlphanumericName,
+            CustomDomain = string.IsNullOrWhiteSpace(organizationAfterState.CustomDomain) ? null : organizationAfterState.CustomDomain,
             Name = organizationAfterState.Name,
             LogoUrl = organizationAfterState.LogoUrl,
             Offering = new Offering
@@ -236,7 +235,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
-        dest.UniqueAlphanumericName = src.UniqueAlphanumericName;
+        dest.CustomDomain = src.CustomDomain;
         dest.Name = src.Name;
         dest.LogoUrl = src.LogoUrl;
         dest.Offering = src.Offering;

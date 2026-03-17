@@ -15,7 +15,7 @@ public interface IOrganizationTaxDetailsService
 
     Task<Shared.Models.Organization> RemoveAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 }
 
@@ -34,9 +34,9 @@ public class OrganizationTaxDetailsService(
         ArgumentNullException.ThrowIfNull(taxDetails.Organization);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                taxDetails.Organization.Id,
-                               taxDetails.Organization.UniqueAlphanumericName,
+                               taxDetails.Organization.CustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))
@@ -71,13 +71,13 @@ public class OrganizationTaxDetailsService(
 
     public async Task<Shared.Models.Organization> RemoveAsync(
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanModifyAsync(organization, customer.Id, cancellationToken))

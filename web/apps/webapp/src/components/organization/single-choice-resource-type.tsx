@@ -21,7 +21,7 @@ const SingleChoiceResourceType = ({ rootDataRelay, name, required }: Props) => {
   const rootData = useFragment<singleChoiceResourceType_query$key>(
     graphql`
       fragment singleChoiceResourceType_query on Query {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           resourceTypes {
             id
             name

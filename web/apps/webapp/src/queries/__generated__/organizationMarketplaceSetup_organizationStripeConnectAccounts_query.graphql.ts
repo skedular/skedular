@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cbf70822762d15577acad412f747216d>>
+ * @generated SignedSource<<72f56f738ceb13ff7f184c2444da101d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,7 @@ export type organizationMarketplaceSetup_organizationStripeConnectAccounts_query
         readonly name: string;
         readonly onboardingUrl: string;
         readonly organization: {
-          readonly uniqueAlphanumericName: string | null | undefined;
+          readonly customDomain: string | null | undefined;
         };
         readonly payoutsEnabled: boolean;
         readonly supportUrl: string | null | undefined;
@@ -66,11 +66,11 @@ return {
     },
     {
       "kind": "RootArgument",
-      "name": "organizationStripeConnectAccountNameSearchText"
+      "name": "organizationCustomDomain"
     },
     {
       "kind": "RootArgument",
-      "name": "organizationUniqueAlphanumericName"
+      "name": "organizationStripeConnectAccountNameSearchText"
     }
   ],
   "kind": "Fragment",
@@ -120,8 +120,8 @@ return {
             },
             {
               "kind": "Variable",
-              "name": "organizationUniqueAlphanumericName",
-              "variableName": "organizationUniqueAlphanumericName"
+              "name": "organizationCustomDomain",
+              "variableName": "organizationCustomDomain"
             }
           ],
           "kind": "ObjectValue",
@@ -287,7 +287,7 @@ return {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "uniqueAlphanumericName",
+                      "name": "customDomain",
                       "storageKey": null
                     }
                   ],
@@ -359,6 +359,6 @@ return {
 };
 })();
 
-(node as any).hash = "5014183289c952b3883fb85d8fe57009";
+(node as any).hash = "7ef9d8682e860f8626284bc2ea126d55";
 
 export default node;

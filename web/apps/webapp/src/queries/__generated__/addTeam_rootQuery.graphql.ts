@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4bb5375aedce870451ad72081061d94>>
+ * @generated SignedSource<<d3ee0e55735f0970b7df7aa48f24d047>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,8 +18,8 @@ export type OrganizationMemberOrderInput = {
 };
 export type addTeam_rootQuery$variables = {
   bookingPeopleNameSearchText?: string | null | undefined;
+  organizationCustomDomain: string;
   organizationMemberSelectorOrganizationMembersSortingValues?: ReadonlyArray<OrganizationMemberOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
 };
 export type addTeam_rootQuery$data = {
   readonly me: {
@@ -45,12 +45,12 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationMemberSelectorOrganizationMembersSortingValues"
+  "name": "organizationCustomDomain"
 },
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationMemberSelectorOrganizationMembersSortingValues"
 },
 v3 = {
   "alias": null,
@@ -74,8 +74,8 @@ v4 = {
 v5 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v6 = {
@@ -165,9 +165,9 @@ return {
   "kind": "Request",
   "operation": {
     "argumentDefinitions": [
-      (v2/*: any*/),
+      (v1/*: any*/),
       (v0/*: any*/),
-      (v1/*: any*/)
+      (v2/*: any*/)
     ],
     "kind": "Operation",
     "name": "addTeam_rootQuery",
@@ -321,8 +321,8 @@ return {
             "fields": [
               {
                 "kind": "Variable",
-                "name": "organizationUniqueAlphanumericName",
-                "variableName": "organizationUniqueAlphanumericName"
+                "name": "organizationCustomDomain",
+                "variableName": "organizationCustomDomain"
               }
             ],
             "kind": "ObjectValue",
@@ -363,16 +363,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "04dbbd0a8a8b43f1a14ff00cf6290611",
+    "cacheID": "ee9e672d34ced9567ae1982709116952",
     "id": null,
     "metadata": {},
     "name": "addTeam_rootQuery",
     "operationKind": "query",
-    "text": "query addTeam_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    id\n    name\n  }\n  ...organizationMemberSelector_query\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    members(where: {nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query addTeam_rootQuery(\n  $organizationCustomDomain: String!\n  $bookingPeopleNameSearchText: String\n  $organizationMemberSelectorOrganizationMembersSortingValues: [OrganizationMemberOrderInput!]\n) {\n  me {\n    id\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n  }\n  ...organizationMemberSelector_query\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationMemberSelector_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    members(where: {nameContains: $bookingPeopleNameSearchText}, orderBy: $organizationMemberSelectorOrganizationMembersSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "994be39215a0c1ee1f1abfab6b91a7ff";
+(node as any).hash = "e0277ec6ff7448206ce0028e2053c9d9";
 
 export default node;

@@ -55,11 +55,11 @@ internal static class ProductExtensions
                     !item.Organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(item.Organization.Id));
             }
 
-            if (searchCriteria.OrganizationUniqueAlphanumericNames.Count > 0)
+            if (searchCriteria.OrganizationCustomDomains.Count > 0)
             {
                 originalQuery = originalQuery.Where(item =>
-                    !item.Organization.DeletedAt.HasValue && item.Organization.UniqueAlphanumericName != null &&
-                    searchCriteria.OrganizationUniqueAlphanumericNames.Contains(item.Organization.UniqueAlphanumericName));
+                    !item.Organization.DeletedAt.HasValue && item.Organization.CustomDomain != null &&
+                    searchCriteria.OrganizationCustomDomains.Contains(item.Organization.CustomDomain));
             }
 
             if (searchCriteria.ProductIds.Count > 0)

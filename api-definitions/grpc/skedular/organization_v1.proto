@@ -94,7 +94,7 @@ message TermsOfUse {
 
 message Admin_AddInput {
   string                   id                         = 1;
-  string                   uniqueAlphanumericName     = 2;
+  string                   customDomain               = 2;
   string                   name                       = 3;
   ListingMetadata          listingMetadata            = 4;
   string                   logoUrl                    = 5;
@@ -129,7 +129,7 @@ message Admin_GetOrganizationStripeConnectAccountsResponse {
 
 message Organization {
   string                        id                         = 1;
-  string                        uniqueAlphanumericName     = 2;
+  string                        customDomain               = 2;
   string                        name                       = 3;
   ListingMetadata               listingMetadata            = 4;
   string                        logoUrl                    = 5;
@@ -177,13 +177,13 @@ message Offering {
 }
 
 message Admin_GetInput {
-  string id                     = 1;
-  string uniqueAlphanumericName = 2;
+  string id           = 1;
+  string customDomain = 2;
 }
 
 message GetInput {
-  string id                     = 1;
-  string uniqueAlphanumericName = 2;
+  string id           = 1;
+  string customDomain = 2;
 }
 
 enum OrganizationMemberRole {

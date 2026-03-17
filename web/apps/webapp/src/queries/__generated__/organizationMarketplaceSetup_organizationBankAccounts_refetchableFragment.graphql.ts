@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6440908f39c4ce48d2ee61470fe8a4e5>>
+ * @generated SignedSource<<42b07eede1843a9eacb96afd72899287>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type organizationMarketplaceSetup_organizationBankAccounts_refetchableFra
   count?: number | null | undefined;
   cursor?: string | null | undefined;
   organizationBankAccountNameSearchText?: string | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"organizationMarketplaceSetup_organizationBankAccounts_query">;
@@ -44,7 +44,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = [
@@ -77,8 +77,8 @@ v1 = [
       },
       {
         "kind": "Variable",
-        "name": "organizationUniqueAlphanumericName",
-        "variableName": "organizationUniqueAlphanumericName"
+        "name": "organizationCustomDomain",
+        "variableName": "organizationCustomDomain"
       }
     ],
     "kind": "ObjectValue",
@@ -211,7 +211,7 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "uniqueAlphanumericName",
+                        "name": "customDomain",
                         "storageKey": null
                       },
                       (v2/*: any*/)
@@ -293,16 +293,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5325683da0cc9b6c8db6835d7d452b4f",
+    "cacheID": "fef851baadd89cc90702994bd74a57ac",
     "id": null,
     "metadata": {},
     "name": "organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment",
     "operationKind": "query",
-    "text": "query organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationBankAccountNameSearchText: String\n  $organizationUniqueAlphanumericName: String!\n) {\n  ...organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz on Query {\n  organizationBankAccounts(first: $count, after: $cursor, where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          uniqueAlphanumericName\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
+    "text": "query organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $organizationBankAccountNameSearchText: String\n  $organizationCustomDomain: String!\n) {\n  ...organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query_1G22uz on Query {\n  organizationBankAccounts(first: $count, after: $cursor, where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c9930fcadd007408c14f3f10e5f67201";
+(node as any).hash = "c4d94bd5cfd32de1e453f3663c4d89c4";
 
 export default node;

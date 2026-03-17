@@ -18,23 +18,23 @@ public interface IOrganizationRepository : IRepository<Organization>
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+    Task<Organization?> GetByIdOrCustomDomainUntrackedAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken);
@@ -72,7 +72,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, true, true, cancellationToken))!;
+        return (await GetByIdOrCustomDomainAsync(id, null, true, true, cancellationToken))!;
     }
 
     public async Task<ICollection<Organization>> GetByCustomerIdAsync(
@@ -88,9 +88,9 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
             .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
             .ToListAsync(cancellationToken);
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
@@ -102,21 +102,21 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameUntrackedAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainUntrackedAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
@@ -128,34 +128,31 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects(false, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
-                .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
-                    cancellationToken);
+                .FirstOrDefaultAsync(query => query.CustomDomain != null && query.CustomDomain == customDomain, cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
-    public async Task<ICollection<Organization>> GetByIdsOrUniqueAlphanumericNamesAsync(
+    public async Task<ICollection<Organization>> GetByIdsOrCustomDomainsAsync(
         ICollection<string>? ids,
-        ICollection<string>? uniqueAlphanumericNames,
+        ICollection<string>? customDomains,
         bool includeDeletedOrganizationMembers,
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
     {
         if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
-            uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+            customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query => ids.Contains(query.Id) && query.UniqueAlphanumericName != null &&
-                                uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .Where(query => ids.Contains(query.Id) && query.CustomDomain != null && customDomains.Contains(query.CustomDomain))
                 .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .ToListAsync(cancellationToken);
         }
@@ -170,17 +167,17 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 .ToListAsync(cancellationToken);
         }
 
-        if (uniqueAlphanumericNames is not null && uniqueAlphanumericNames.RemoveInvalidIds()!.Any())
+        if (customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
         {
-            uniqueAlphanumericNames = uniqueAlphanumericNames.RemoveInvalidIds().ToSafeCollection();
+            customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 
             return await DbContext.Organization
-                .Where(query => query.UniqueAlphanumericName != null && uniqueAlphanumericNames.Contains(query.UniqueAlphanumericName))
+                .Where(query => query.CustomDomain != null && customDomains.Contains(query.CustomDomain))
                 .AddDependentObjects(true, includeDeletedOrganizationMembers, includeDeletedOrganizationTags)
                 .ToListAsync(cancellationToken);
         }
 
-        throw new InvalidOperationException("Either ids or uniqueAlphanumericNames must be provided.");
+        throw new InvalidOperationException("Either ids or customDomains must be provided.");
     }
 
     public Organization Update(Organization organization)

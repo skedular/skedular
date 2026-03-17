@@ -15,7 +15,7 @@ public class RootMutation(StripeConfiguration stripeConfiguration)
         CancellationToken cancellationToken)
     {
         var clientSecret =
-            await paymentService.AddPaymentMethodIntentAsync(input.OrganizationId, input.OrganizationUniqueAlphanumericName, cancellationToken);
+            await paymentService.AddPaymentMethodIntentAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken);
         return new AddOrganizationPaymentMethodIntentPayload
         {
             ClientMutationId = input.ClientMutationId, ClientSecret = clientSecret, PublishedKeys = stripeConfiguration.PublishableKey

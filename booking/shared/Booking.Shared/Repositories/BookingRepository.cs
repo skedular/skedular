@@ -208,12 +208,12 @@ internal static class BookingExtensions
                     !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
             }
 
-            if (searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+            if (searchCriteria.OrganizationCustomDomains.Count != 0)
             {
                 originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
                     !organization.DeletedAt.HasValue &&
-                    organization.UniqueAlphanumericName != null &&
-                    searchCriteria.OrganizationUniqueAlphanumericNames.Contains(organization.UniqueAlphanumericName)));
+                    organization.CustomDomain != null &&
+                    searchCriteria.OrganizationCustomDomains.Contains(organization.CustomDomain)));
             }
 
             if (searchCriteria.LocationIds.Count != 0)

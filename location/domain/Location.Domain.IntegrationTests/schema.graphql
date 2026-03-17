@@ -201,7 +201,7 @@ type OpeningHoursDetails {
 }
 
 type OrganizationDetails {
-  uniqueAlphanumericName: String
+  customDomain: String
   id: ID!
 }
 
@@ -238,7 +238,7 @@ type Query {
   locationById(id: String!): LocationDetails @lookup @internal @cost(weight: "10")
   locations(after: String first: Int before: String last: Int where: LocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
   marketplaceLocations(after: String first: Int before: String last: Int where: MarketplaceLocationWhereInput! orderBy: [LocationOrderInput!]): ConnectionOfLocationEdge! @cost(weight: "10")
-  myLocations(organizationId: String organizationUniqueAlphanumericName: String): [LocationDetails!] @cost(weight: "10")
+  myLocations(organizationId: String organizationCustomDomain: String): [LocationDetails!] @cost(weight: "10")
   resource(id: String!): ResourceDetails @cost(weight: "10")
   resourceById(id: String!): ResourceDetails @lookup @internal @cost(weight: "10")
   locationVersion: Version!
@@ -328,7 +328,7 @@ input AddLocationInput {
   id: String
   name: String!
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   timezone: String
   type: LocationType!
   tagIds: [String!]!
@@ -395,7 +395,7 @@ input ClaimLocationOwnershipInput {
   id: String
   uniqueClaimCode: String!
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
 }
 
 input ContactDetailsInput {
@@ -478,7 +478,7 @@ input LocationPhysicalAddressInput {
 }
 
 input LocationWhereInput {
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   locationIds: [String!]
   nameContains: String
   customTagIds: [String!]
@@ -492,7 +492,7 @@ input LocationWhereInput {
 
 input MarketplaceLocationWhereInput {
   organizationId: String
-  organizationUniqueAlphanumericName: String
+  organizationCustomDomain: String
   locationIds: [String!]
   nameContains: String
   customTagIds: [String!]

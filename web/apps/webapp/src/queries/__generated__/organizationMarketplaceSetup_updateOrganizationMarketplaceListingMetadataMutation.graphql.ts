@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9e6d57b4212e0301ab2dfe52bbb5b042>>
+ * @generated SignedSource<<bce3473649687ba5a24b9ef5f94258a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,9 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type UpdateOrganizationMarketplaceListingMetadataInput = {
   clientMutationId?: string | null | undefined;
+  customDomain?: string | null | undefined;
   id?: string | null | undefined;
   marketplaceListingMetadata: ListingMetadataInput;
-  uniqueAlphanumericName?: string | null | undefined;
 };
 export type ListingMetadataInput = {
   about?: string | null | undefined;

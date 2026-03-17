@@ -16,7 +16,7 @@ public interface ILocationOwnershipService
     Task<Shared.Models.Location> ClaimOwnershipAsync(
         string uniqueClaimCode,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken);
 }
 
@@ -34,7 +34,7 @@ public class LocationOwnershipService(
     public async Task<Shared.Models.Location> ClaimOwnershipAsync(
         string uniqueClaimCode,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
@@ -45,9 +45,9 @@ public class LocationOwnershipService(
             uniqueClaimCode.ToUpperInvariant(),
             cancellationToken) ?? throw new LocationUniqueClaimCodeNotFound();
 
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
-            organizationUniqueAlphanumericName,
+            organizationCustomDomain,
             false,
             false,
             cancellationToken);
@@ -66,7 +66,7 @@ public class LocationOwnershipService(
         }
 
         var ownedBySkedularPublicLocationsOrganization =
-            existingOrganization.UniqueAlphanumericName == Constants.SkedularPublicLocationsUniqueAlphanumericName;
+            existingOrganization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName;
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

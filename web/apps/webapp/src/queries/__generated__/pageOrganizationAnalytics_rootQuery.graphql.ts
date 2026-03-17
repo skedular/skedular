@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b13ea4320d02e3a9b405e4c096be32d0>>
+ * @generated SignedSource<<c1f8bb34488a34e440416faab3b24b1a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type LocationOrderInput = {
 };
 export type pageOrganizationAnalytics_rootQuery$variables = {
   locationsSortingValues?: ReadonlyArray<LocationOrderInput> | null | undefined;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type pageOrganizationAnalytics_rootQuery$data = {
   readonly organization: {
@@ -40,13 +40,13 @@ var v0 = {
 v1 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v2 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v3 = {
@@ -128,8 +128,8 @@ return {
             "fields": [
               {
                 "kind": "Variable",
-                "name": "organizationUniqueAlphanumericName",
-                "variableName": "organizationUniqueAlphanumericName"
+                "name": "organizationCustomDomain",
+                "variableName": "organizationCustomDomain"
               }
             ],
             "kind": "ObjectValue",
@@ -190,16 +190,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "70d4b3792ba578cb3329570bff96e10b",
+    "cacheID": "a8341d06faea18373e74b7000487956a",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationAnalytics_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationAnalytics_rootQuery(\n  $organizationCustomDomain: String!\n  $locationsSortingValues: [LocationOrderInput!]\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationAnalytics_query\n}\n\nfragment locationSelector_allLocations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n\nfragment organizationAnalytics_query on Query {\n  ...locationSelector_allLocations_query\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: $locationsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "447984e4226b2551cd7b8e51a70ffffa";
+(node as any).hash = "79584e8d57f4673e739a83077d6e0500";
 
 export default node;

@@ -100,7 +100,7 @@ public class StripeIntegrations(
         }
         else if (marketplaceBooking.PaidByOrganization is not null)
         {
-            var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                    marketplaceBooking.PaidByOrganization.Id,
                                    null,
                                    false,

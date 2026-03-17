@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5290bc22ec747c3de6963494e546179e>>
+ * @generated SignedSource<<76dfda2816a448e997127015158e4953>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type pageOrganizationSsoSignin_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   redirectUrl: string;
 };
 export type pageOrganizationSsoSignin_rootQuery$data = {
@@ -30,7 +30,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -41,8 +41,8 @@ var v0 = [
 v1 = [
   {
     "kind": "Variable",
-    "name": "uniqueAlphanumericName",
-    "variableName": "organizationUniqueAlphanumericName"
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
   }
 ],
 v2 = {
@@ -127,16 +127,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "82adcc2b96f2bde8cee51cef5e76ef11",
+    "cacheID": "a49d054e63f213ef7bb15fce32553976",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationSsoSignin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $redirectUrl: String!\n) {\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    logoUrl\n    name\n    ssoLoginUrl(redirectUrl: $redirectUrl)\n    id\n  }\n}\n"
+    "text": "query pageOrganizationSsoSignin_rootQuery(\n  $organizationCustomDomain: String!\n  $redirectUrl: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    logoUrl\n    name\n    ssoLoginUrl(redirectUrl: $redirectUrl)\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "9daf75e80ba3f094483573ab29b7280a";
+(node as any).hash = "5044eeca6c6c8d60b380e81e569cf484";
 
 export default node;

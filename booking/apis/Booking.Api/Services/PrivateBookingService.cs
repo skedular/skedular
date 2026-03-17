@@ -54,8 +54,8 @@ public class PrivateBookingService(
                 .Distinct()
                 .ToList(),
             booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                .Select(item => item.UniqueAlphanumericName!)
+                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                .Select(item => item.CustomDomain!)
                 .Distinct()
                 .ToList(),
             customer.Id,
@@ -98,7 +98,7 @@ public class PrivateBookingService(
         var organizationIds = existingBooking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
-            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
                 organizationIds,
                 null,
                 false,
@@ -152,8 +152,8 @@ public class PrivateBookingService(
                 .Distinct()
                 .ToList(),
             booking.InvolvedOrganizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
-                .Select(item => item.UniqueAlphanumericName!)
+                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
+                .Select(item => item.CustomDomain!)
                 .Distinct()
                 .ToList(),
             callingCustomer.Id,

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f0b84ef64a97671cd94a24402576943>>
+ * @generated SignedSource<<2a462b11f2de7637156dec2dde83b173>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type organizationStoreFrontRootShell_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
 };
 export type organizationStoreFrontRootShell_rootQuery$data = {
   readonly bookingCustomerRecordSynced: boolean;
@@ -37,7 +37,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   }
 ],
 v1 = {
@@ -232,8 +232,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationPublicDetails",
@@ -248,16 +248,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8bbd06adaa2390d41d0c912f99b3597c",
+    "cacheID": "b252366a614f69dd3dd0dac68fa06f7f",
     "id": null,
     "metadata": {},
     "name": "organizationStoreFrontRootShell_rootQuery",
     "operationKind": "query",
-    "text": "query organizationStoreFrontRootShell_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n) {\n  me {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  ...organizationStoreFrontAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationStoreFrontAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n  }\n  ...newFeedbackDialog_query\n}\n"
+    "text": "query organizationStoreFrontRootShell_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  me {\n    id\n  }\n  bookingCustomerRecordSynced\n  locationCustomerRecordSynced\n  marketplaceCustomerRecordSynced\n  msTeamsCustomerRecordSynced\n  organizationCustomerRecordSynced\n  slackCustomerRecordSynced\n  teamCustomerRecordSynced\n  coreCustomerRecordSynced\n  ...organizationStoreFrontAppBar_query\n  ...observability_query\n}\n\nfragment logrocket_query on Query {\n  me {\n    id\n    email\n    title\n    givenName\n    middleName\n    familyName\n  }\n}\n\nfragment newFeedbackDialog_query on Query {\n  me {\n    name\n    givenName\n    middleName\n    familyName\n    id\n  }\n}\n\nfragment observability_query on Query {\n  ...logrocket_query\n}\n\nfragment organizationStoreFrontAppBar_query on Query {\n  me {\n    id\n    email\n    emails\n    givenName\n    middleName\n    familyName\n    photoUrl\n  }\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n  }\n  ...newFeedbackDialog_query\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f42bc6769c4a741187f3ff324cb7898e";
+(node as any).hash = "63b8afbd68b2ecdcdf2c2e2883edb67a";
 
 export default node;

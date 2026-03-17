@@ -31,9 +31,9 @@ public class OrganizationPhysicalAddressService(
         ArgumentNullException.ThrowIfNull(organizationPhysicalAddress.Organization);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationPhysicalAddress.Organization.Id,
-                                       organizationPhysicalAddress.Organization.UniqueAlphanumericName,
+                                       organizationPhysicalAddress.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
 
@@ -96,7 +96,7 @@ public class OrganizationPhysicalAddressService(
             cancellationToken) ?? throw new OrganizationPhysicalAddressNotFound();
 
         var existingOrganization =
-            await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+            await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                 existingOrganizationPhysicalAddress.Organization.Id,
                 null,
                 cancellationToken) ??

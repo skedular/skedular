@@ -110,7 +110,7 @@ public class Mapper : IMapper
             ProductTags = MapTo(productVersion.ProductTags),
             Amenities = MapTo(productVersion.Amenities),
             OrganizationId = src.Organization.Id,
-            OrganizationUniqueAlphanumericName = src.Organization.UniqueAlphanumericName.ToSafeString(),
+            OrganizationCustomDomain = src.Organization.CustomDomain.ToSafeString(),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
             PricingOptions = productVersion.PricingOptions
         };
@@ -165,7 +165,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
-            UniqueAlphanumericName = src.UniqueAlphanumericName,
+            CustomDomain = src.CustomDomain,
             Tags = MapTo(src.Tags).ToList()
         };
 

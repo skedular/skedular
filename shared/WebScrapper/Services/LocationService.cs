@@ -45,7 +45,7 @@ public class LocationService(
         var rawLocations = csvLocationFileReaderService.ReadLocations();
 
         var organization = await organizationServiceClient.Admin_GetAsync(
-            new Admin_GetInput { UniqueAlphanumericName = Constants.SkedularPublicLocationsUniqueAlphanumericName },
+            new Admin_GetInput { CustomDomain = Constants.SkedularPublicLocationsCustomDomainName },
             organizationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -79,7 +79,7 @@ public class LocationService(
                 After = string.Empty,
                 Before = string.Empty,
                 Last = ((int?)null).ToNullInt(),
-                Where = new LocationWhereInput { OrganizationUniqueAlphanumericName = organization.UniqueAlphanumericName }
+                Where = new LocationWhereInput { OrganizationCustomDomain = organization.CustomDomain }
             },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken)).Edges.Select(item => item.Node).Where(item => item.ExtraMetadata is not null).ToList();

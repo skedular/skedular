@@ -35,7 +35,7 @@ public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFact
     /// <exception cref="OrganizationNotFound">Thrown when the organization is not found.</exception>
     public async Task<string> GetNextInvoiceNumberIdAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                null,
                                false,

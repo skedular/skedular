@@ -17,7 +17,7 @@ type Props = {
   queryReference?: PreloadedQuery<newBookingButton_rootQuery, Record<string, unknown>> | null;
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -34,7 +34,7 @@ type Props = {
 
 const RootQuery = graphql`
   query newBookingButton_rootQuery(
-    $organizationUniqueAlphanumericName: String!
+    $organizationCustomDomain: String!
     $peopleNameSearchText: String
     $locationId: String!
     $dateFromToGetAvailableResources: DateTime!
@@ -58,7 +58,7 @@ type NewBookingDialogWithQueryProps = {
   isDialogOpen: boolean;
   onAddClicked: () => void;
   onCancel: () => void;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -70,7 +70,7 @@ const NewBookingDialogWithQuery = ({
   isDialogOpen,
   onAddClicked,
   onCancel,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -87,7 +87,7 @@ const NewBookingDialogWithQuery = ({
       isDialogOpen={isDialogOpen}
       onAddClicked={onAddClicked}
       onCancel={onCancel}
-      organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+      organizationCustomDomain={organizationCustomDomain}
       defaultLocationId={defaultLocationId}
       defaultDate={defaultDate}
       defaultResourceIds={defaultResourceIds}
@@ -99,7 +99,7 @@ const NewBookingButton = ({
   queryReference,
   onReloadRequired,
   connectionIds,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -168,7 +168,7 @@ const NewBookingButton = ({
             isDialogOpen={isDialogOpen}
             onAddClicked={handleAddClicked}
             onCancel={handleCancelClicked}
-            organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+            organizationCustomDomain={organizationCustomDomain}
             defaultLocationId={defaultLocationId}
             defaultDate={defaultDate}
             defaultResourceIds={defaultResourceIds}
@@ -184,7 +184,7 @@ const MemoNewBookingButton = memo(NewBookingButton);
 type RelayProps = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   defaultLocationId?: string;
   defaultDate?: Dayjs;
   defaultResourceIds?: string[];
@@ -201,7 +201,7 @@ type RelayProps = {
 const NewBookingButtonWithRelay = ({
   onReloadRequired,
   connectionIds,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   defaultLocationId,
   defaultDate,
   defaultResourceIds,
@@ -223,7 +223,7 @@ const NewBookingButtonWithRelay = ({
 
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
         locationId: defaultLocationId ?? '',
         dateFromToGetAvailableResources: startDate,
         dateUntilToGetAvailableResources: endDate,
@@ -252,7 +252,7 @@ const NewBookingButtonWithRelay = ({
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, organizationUniqueAlphanumericName, defaultLocationId]);
+  }, [loadQuery, organizationCustomDomain, defaultLocationId]);
 
   useEffect(() => {
     if (!isInitiallyOpen) {
@@ -275,7 +275,7 @@ const NewBookingButtonWithRelay = ({
       <MemoNewBookingButton
         queryReference={queryReference}
         connectionIds={connectionIds}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
         defaultLocationId={defaultLocationId}
         onReloadRequired={onReloadRequired}
         defaultDate={defaultDate}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3552bb35c0d7f1615590c080a3a44152>>
+ * @generated SignedSource<<f4725666468c7039aef9e8d2dae7da3e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,13 +15,13 @@ export type UpdateOrganizationInput = {
   clientMutationId?: string | null | undefined;
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
+  customDomain?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
   listingMetadata?: ListingMetadataInput | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
-  uniqueAlphanumericName?: string | null | undefined;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -51,6 +51,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
       };
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
+      readonly customDomain: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -80,7 +81,6 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -94,6 +94,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
       };
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
+      readonly customDomain: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -123,7 +124,6 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
-      readonly uniqueAlphanumericName: string | null | undefined;
       readonly website: string | null | undefined;
     };
   };
@@ -228,7 +228,7 @@ v7 = [
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "uniqueAlphanumericName",
+            "name": "customDomain",
             "storageKey": null
           },
           (v2/*: any*/),
@@ -376,16 +376,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "fed1153af26da073a9fd4c1379f72984",
+    "cacheID": "6669436eca47ee2b52424634fee05532",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      uniqueAlphanumericName\n      name\n      billingCycle {\n        type\n        name\n      }\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e44b74c1230050bd54b42207df79e09e";
+(node as any).hash = "c769214d498a578344434002cbd630b4";
 
 export default node;

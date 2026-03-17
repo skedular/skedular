@@ -28,14 +28,14 @@ type Amenity = {
 type Props = {
   amenities: readonly Amenity[];
   imageUrl: string;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   pricingRows: readonly PricingRow[];
   productId: string;
   subTitle: string;
   title: string;
 };
 
-const MarketplaceProductCard = ({ amenities, imageUrl, organizationUniqueAlphanumericName, pricingRows, productId, subTitle, title }: Props) => {
+const MarketplaceProductCard = ({ amenities, imageUrl, organizationCustomDomain, pricingRows, productId, subTitle, title }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain } = useKnownParams();
   const router = useRouter();
@@ -135,8 +135,8 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationUniqueAlphanu
 
               router.push(
                 isSubscriptionCadence(selectedPricing.cadence)
-                  ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, productId, selectedPricing.id)
-                  : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, productId, selectedPricing.id),
+                  ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id)
+                  : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId, selectedPricing.id),
               );
             }}
             disabled={!selectedPricing}
@@ -147,7 +147,7 @@ const MarketplaceProductCard = ({ amenities, imageUrl, organizationUniqueAlphanu
           <Button
             fullWidth
             variant="outlined"
-            onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, productId))}
+            onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, productId))}
             sx={{ textTransform: 'none' }}
           >
             Details

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<340f02241b7be9af6db1ab43d237ca28>>
+ * @generated SignedSource<<5317e2de60f8ac5f03ab5f92cc828b76>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type guestStoreFrontBookings_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   today: any;
 };
 export type guestStoreFrontBookings_rootQuery$data = {
@@ -87,7 +87,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "organizationUniqueAlphanumericName"
+    "name": "organizationCustomDomain"
   },
   {
     "defaultValue": null,
@@ -107,8 +107,8 @@ v2 = {
   "args": [
     {
       "kind": "Variable",
-      "name": "uniqueAlphanumericName",
-      "variableName": "organizationUniqueAlphanumericName"
+      "name": "customDomain",
+      "variableName": "organizationCustomDomain"
     }
   ],
   "concreteType": "OrganizationPublicDetails",
@@ -164,12 +164,12 @@ v6 = {
   "items": [
     {
       "kind": "Variable",
-      "name": "organizationUniqueAlphanumericNames.0",
-      "variableName": "organizationUniqueAlphanumericName"
+      "name": "organizationCustomDomains.0",
+      "variableName": "organizationCustomDomain"
     }
   ],
   "kind": "ListValue",
-  "name": "organizationUniqueAlphanumericNames"
+  "name": "organizationCustomDomains"
 },
 v7 = [
   (v3/*: any*/),
@@ -463,16 +463,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e8d844d085b25bd7d1fb73404cdc0761",
+    "cacheID": "0e608023201d37e841d9fa81048f48e8",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontBookings_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $today: DateTime!\n) {\n  organizationPublic(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationUniqueAlphanumericNames: [$organizationUniqueAlphanumericName], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $today: DateTime!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "99215a6d9766cc823de6b00f31825aba";
+(node as any).hash = "dc66f488a3f0d78d99109ce5f061db3b";
 
 export default node;

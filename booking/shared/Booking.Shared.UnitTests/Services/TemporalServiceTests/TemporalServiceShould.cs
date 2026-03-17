@@ -7,9 +7,8 @@ using Enterprise.Shared.Temporal.Configurations;
 using FakeItEasy;
 using Shouldly;
 using Temporalio.Api.Enums.V1;
-using Testing.Shared;
 using Temporalio.Client;
-using Temporalio.Client.Interceptors;
+using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.TemporalServiceTests;
 
@@ -31,12 +30,12 @@ public class TemporalServiceShould
 
         A.CallTo(() => temporalHelperService.ToId("generate-location-resources-slots-loc-1")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
-            A<Expression<Func<GenerateLocationResourcesSlots, Task>>>._,
-            A<WorkflowOptions>.That.Matches(options =>
-                options.Id == expectedId &&
-                options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
-                options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
-                options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting)))
+                A<Expression<Func<GenerateLocationResourcesSlots, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
+                    options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
+                    options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting)))
             .Returns(workflowHandle);
 
         await sut.StartWorkflowGenerateLocationResourcesSlotsAsync(args, cancellationToken);
@@ -61,10 +60,10 @@ public class TemporalServiceShould
     {
         A.CallTo(() => temporalHelperService.ToId($"generate-resources-slots-{locationId}")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
-            A<Expression<Func<GenerateResourcesSlots, Task>>>._,
-            A<WorkflowOptions>.That.Matches(options =>
-                options.Id == expectedId &&
-                options.TaskQueue == temporalConfiguration.Worker.TaskQueue)))
+                A<Expression<Func<GenerateResourcesSlots, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue)))
             .Returns(workflowHandle);
 
         await sut.StartWorkflowGenerateResourcesSlotsAsync(locationId, args, cancellationToken);
@@ -90,10 +89,10 @@ public class TemporalServiceShould
 
         A.CallTo(() => temporalHelperService.ToId("sub-1")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
-            A<Expression<Func<BookMarketplaceBookingSubscriptionResources, Task>>>._,
-            A<WorkflowOptions>.That.Matches(options =>
-                options.Id == expectedId &&
-                options.TaskQueue == temporalConfiguration.Worker.TaskQueue)))
+                A<Expression<Func<BookMarketplaceBookingSubscriptionResources, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue)))
             .Returns(workflowHandle);
 
         await sut.StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(args, cancellationToken);
@@ -114,7 +113,7 @@ public class TemporalServiceShould
         string expectedWorkflowId,
         CancellationToken cancellationToken)
     {
-        var workflowHandle = new WorkflowHandle<PayBookingViaCard>(temporalClient, expectedWorkflowId, null, null, null);
+        var workflowHandle = new WorkflowHandle<PayBookingViaCard>(temporalClient, expectedWorkflowId);
 
         A.CallTo(() => temporalHelperService.ToId($"paid_via_card-{bookingId}")).Returns(expectedWorkflowId);
         A.CallTo(() => temporalClient.GetWorkflowHandle<PayBookingViaCard>(expectedWorkflowId)).Returns(workflowHandle);

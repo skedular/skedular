@@ -19,7 +19,7 @@ public class RootMutation(IMapper mapper)
             InvitesCustomersToJoinOrganization = mapper.MapTo(
                     await invitationService.InviteMembersByEmailsAsync(
                         input.OrganizationId,
-                        input.OrganizationUniqueAlphanumericName,
+                        input.OrganizationCustomDomain,
                         input.Emails.ToList(),
                         cancellationToken))
                 .ToList()

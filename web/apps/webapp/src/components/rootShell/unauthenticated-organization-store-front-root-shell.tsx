@@ -18,7 +18,7 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query unauthenticatedOrganizationStoreFrontRootShell_rootQuery($organizationUniqueAlphanumericName: String!) {
+  query unauthenticatedOrganizationStoreFrontRootShell_rootQuery($organizationCustomDomain: String!) {
     ...unauthenticatedOrganizationStoreFrontAppBar_query
   }
 `;
@@ -46,22 +46,22 @@ const UnauthenticatedOrganizationStoreFrontRootShellWithRelay = ({ children }: P
   const [queryReference, loadQuery] = useQueryLoader<unauthenticatedOrganizationStoreFrontRootShell_rootQuery>(RootQuery);
   const [triggerReloadId, setTriggerReloadId] = useState(uuid());
   const [, startTransition] = useTransition();
-  const { organizationUniqueAlphanumericName } = useKnownParams();
+  const { organizationCustomDomain } = useKnownParams();
 
-  if (!organizationUniqueAlphanumericName) {
-    throw new Error('organizationUniqueAlphanumericName is required');
+  if (!organizationCustomDomain) {
+    throw new Error('organizationCustomDomain is required');
   }
 
   useEffect(() => {
     loadQuery(
       {
-        organizationUniqueAlphanumericName,
+        organizationCustomDomain,
       },
       {
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationUniqueAlphanumericName]);
+  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {

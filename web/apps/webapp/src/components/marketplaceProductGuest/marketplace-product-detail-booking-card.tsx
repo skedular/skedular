@@ -112,7 +112,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     [rootData.marketplaceLocations.edges],
   );
   const canBookProduct = marketplaceLocations.length > 0;
-  const { isCustomDomain, organizationUniqueAlphanumericName } = useKnownParams();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
 
   if (!product) {
     return null;
@@ -161,8 +161,8 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
 
                     router.push(
                       isSubscriptionCadence(pricingPlan.cadence)
-                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, pricingPlan.id)
-                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationUniqueAlphanumericName, product.id, pricingPlan.id),
+                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id)
+                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id),
                     );
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}

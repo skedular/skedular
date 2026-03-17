@@ -58,7 +58,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
       fragment addOrganizationTeamMemberDialog_organizationMembers_query on Query
       @argumentDefinitions(cursor: { type: "String" }, count: { type: "Int", defaultValue: null })
       @refetchable(queryName: "addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment") {
-        organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {
+        organization(customDomain: $organizationCustomDomain) {
           members(first: $count, after: $cursor, where: { nameContains: $peopleNameSearchText }, orderBy: $addTeamMemberDialogOrganizationMembersSortingValues)
             @connection(key: "addTeamMemberDialogQuery_members") {
             __id

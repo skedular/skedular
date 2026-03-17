@@ -27,7 +27,7 @@ public interface IOrganizationStripeConnectAccountService
     Task<OrganizationStripeConnectAccount> AddAsync(
         string? id,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string nickname,
         string redirectUrl,
         CancellationToken cancellationToken);
@@ -80,7 +80,7 @@ public class OrganizationStripeConnectAccountService(
     public async Task<OrganizationStripeConnectAccount> AddAsync(
         string? id,
         string? organizationId,
-        string? organizationUniqueAlphanumericName,
+        string? organizationCustomDomain,
         string nickname,
         string redirectUrl,
         CancellationToken cancellationToken)
@@ -89,9 +89,9 @@ public class OrganizationStripeConnectAccountService(
         ArgumentException.ThrowIfNullOrWhiteSpace(redirectUrl);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
-                               organizationUniqueAlphanumericName,
+                               organizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
         if (!await organizationAuthorizationService.CanManageStripeConnectAccountAsync(organization, customer.Id, cancellationToken))
@@ -164,7 +164,7 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        account.Organization.Id,
                                        null,
                                        cancellationToken) ??
@@ -198,7 +198,7 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var accounts = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdsAsync(ids, cancellationToken);
         var organizationIds = accounts.Select(item => item.Id).ToList();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
             organizationIds,
             null,
             cancellationToken);
@@ -231,7 +231,7 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganizations = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                         account.Organization.Id,
                                         null,
                                         cancellationToken) ??
@@ -278,7 +278,7 @@ public class OrganizationStripeConnectAccountService(
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var account = await repositoryFactory.OrganizationStripeConnectAccountRepository.GetByIdAsync(id, cancellationToken) ??
                       throw new OrganizationStripeConnectAccountNotFound();
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        account.Organization.Id,
                                        null,
                                        cancellationToken) ??
@@ -316,9 +316,9 @@ public class OrganizationStripeConnectAccountService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
-                               searchCriteria.OrganizationUniqueAlphanumericName,
+                               searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
@@ -355,7 +355,7 @@ public class OrganizationStripeConnectAccountService(
         }
 
         var organizationId = state;
-        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                null,
                                cancellationToken) ??
@@ -409,7 +409,7 @@ public class OrganizationStripeConnectAccountService(
         return new Uri(Url.Combine(
             applicationConfiguration.WebAppBaseDomain.ToString(),
             "organizations",
-            organization.UniqueAlphanumericName,
+            organization.CustomDomain,
             "setup-marketplace"));
     }
 
@@ -430,7 +430,7 @@ public class OrganizationStripeConnectAccountService(
         Customer customer,
         CancellationToken cancellationToken)
     {
-        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(
+        var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        account.Organization.Id,
                                        null,
                                        cancellationToken) ??

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c814ce2c9aa97b1adfe1607492211ea8>>
+ * @generated SignedSource<<81673076766319202af8790e7a571edb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationTeam_rootQuery$variables = {
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   peopleNameSearchText?: string | null | undefined;
   teamId: string;
 };
@@ -30,7 +30,7 @@ const node: ConcreteRequest = (function(){
 var v0 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v1 = {
   "defaultValue": null,
@@ -406,8 +406,8 @@ return {
             "fields": [
               {
                 "kind": "Variable",
-                "name": "organizationUniqueAlphanumericName",
-                "variableName": "organizationUniqueAlphanumericName"
+                "name": "organizationCustomDomain",
+                "variableName": "organizationCustomDomain"
               }
             ],
             "kind": "ObjectValue",
@@ -448,16 +448,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ef4fc5b115d381dbd93c1974e6c6311e",
+    "cacheID": "554fd4b3c9bf6f47c80381579ae01d79",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationTeam_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationTeam_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $teamId: String!\n  $peopleNameSearchText: String\n) {\n  team(id: $teamId) {\n    name\n    id\n  }\n  ...organizationTeam_query\n  ...organizationTeam_teamMembers_query\n}\n\nfragment organizationTeam_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    primaryLocation {\n      id\n      name\n    }\n  }\n  teamMemberRoles\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationTeam_teamMembers_query on Query {\n  team(id: $teamId) {\n    members(where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status\n          role\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationTeam_rootQuery(\n  $organizationCustomDomain: String!\n  $teamId: String!\n  $peopleNameSearchText: String\n) {\n  team(id: $teamId) {\n    name\n    id\n  }\n  ...organizationTeam_query\n  ...organizationTeam_teamMembers_query\n}\n\nfragment organizationTeam_query on Query {\n  team(id: $teamId) {\n    id\n    name\n    about\n    timezone\n    featureImages {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    primaryLocation {\n      id\n      name\n    }\n  }\n  teamMemberRoles\n  ...singleChoiceLocation_locations_query\n}\n\nfragment organizationTeam_teamMembers_query on Query {\n  team(id: $teamId) {\n    members(where: {nameContains: $peopleNameSearchText}) {\n      totalCount\n      edges {\n        node {\n          id\n          customer {\n            id\n            email\n            name\n            givenName\n            middleName\n            familyName\n            photoUrl\n            phoneNumber\n          }\n          status\n          role\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceLocation_locations_query on Query {\n  locations(where: {organizationCustomDomain: $organizationCustomDomain}) {\n    totalCount\n    edges {\n      node {\n        id\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "adcb1ead76430a52ea21cb335aecef5f";
+(node as any).hash = "3f8783237951f8dff5b61be43283c8e0";
 
 export default node;

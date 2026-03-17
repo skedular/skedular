@@ -55,7 +55,7 @@ public class RootQuery(IMapper mapper)
             new PaginationInputParam(after, first, before, last),
             new ProductSearchCriteria(
                 where.OrganizationIds.ToSafeCollection(),
-                where.OrganizationUniqueAlphanumericNames.ToSafeCollection(),
+                where.OrganizationCustomDomains.ToSafeCollection(),
                 where.ProductIds.ToSafeCollection(),
                 where.IncludeInactive),
             orderBy.ToSafeCollection().Select(item => new ProductOrder(item.Direction, item.Field)).ToList(),

@@ -29,6 +29,6 @@ public class RootMutation(IMapper mapper)
         {
             ClientMutationId = input.ClientMutationId,
             Organization = mapper.MapTo(
-                await organizationSsoService.RemoveAsync(input.OrganizationId, input.OrganizationUniqueAlphanumericName, cancellationToken))!
+                await organizationSsoService.RemoveAsync(input.OrganizationId, input.OrganizationCustomDomain, cancellationToken))!
         };
 }

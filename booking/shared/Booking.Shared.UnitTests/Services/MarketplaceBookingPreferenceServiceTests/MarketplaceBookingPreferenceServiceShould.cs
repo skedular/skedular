@@ -1,5 +1,4 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
@@ -28,9 +27,7 @@ public class MarketplaceBookingPreferenceServiceShould
         var productVersion = new ProductVersion { OrganizationTags = [] };
         var availableResources = new List<Resource>
         {
-            new() { Id = "res-1", Name = "Resource 1" },
-            new() { Id = "res-2", Name = "Resource 2" },
-            new() { Id = "res-3", Name = "Resource 3" }
+            new() { Id = "res-1", Name = "Resource 1" }, new() { Id = "res-2", Name = "Resource 2" }, new() { Id = "res-3", Name = "Resource 3" }
         };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
@@ -65,11 +62,7 @@ public class MarketplaceBookingPreferenceServiceShould
         var otherResource = new Resource { Id = "other-res", Name = "Other Resource" };
         var availableResources = new List<Resource> { otherResource, preferredResource };
 
-        var customer = new Customer
-        {
-            Id = "customer-1",
-            PreferredResources = [preferredResource]
-        };
+        var customer = new Customer { Id = "customer-1", PreferredResources = [preferredResource] };
 
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(null, null, from, until, emptyIds, emptyIds, emptyIds, cancellationToken))
@@ -92,7 +85,7 @@ public class MarketplaceBookingPreferenceServiceShould
         IResourceRepository resourceRepository,
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
-        {
+    {
         // Arrange
         var from = timeProvider.GetUtcNow();
         var until = from.AddHours(1);

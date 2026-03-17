@@ -65,13 +65,13 @@ public class RecurringBookingService(
         }
 
         List<string>? organizationIds = null;
-        List<string>? organizationUniqueAlphanumericNames = null;
+        List<string>? organizationCustomDomains = null;
         List<string>? teamIds = null;
 
         if (searchCriteria.CustomerIds.Count != 0 &&
             customer is not null &&
             searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationIds.Count == 0 && searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0)
+            searchCriteria.OrganizationIds.Count == 0 && searchCriteria.OrganizationCustomDomains.Count == 0)
         {
             throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
         }
@@ -94,10 +94,10 @@ public class RecurringBookingService(
         if (searchCriteria.CustomerIds.Count != 0 &&
             customer is not null &&
             searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
-            searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+            searchCriteria.OrganizationCustomDomains.Count != 0)
         {
             var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-            organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
+            organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
 
             if (searchCriteria.CustomerIds
                 .Any(customerId => !organizationCustomerPairs.Item2.Keys.Any(item => organizationCustomerPairs.Item2[item].Contains(customerId))))
@@ -119,15 +119,15 @@ public class RecurringBookingService(
                 throw new UnauthorizedAccessException();
             }
         }
-        else if (customer is not null && searchCriteria.OrganizationUniqueAlphanumericNames.Count != 0)
+        else if (customer is not null && searchCriteria.OrganizationCustomDomains.Count != 0)
         {
-            if (organizationUniqueAlphanumericNames is null)
+            if (organizationCustomDomains is null)
             {
                 var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
-                organizationUniqueAlphanumericNames = organizationCustomerPairs.Item2.Keys.ToList();
+                organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
             }
 
-            if (searchCriteria.OrganizationUniqueAlphanumericNames.Any(item => !organizationUniqueAlphanumericNames.Contains(item)))
+            if (searchCriteria.OrganizationCustomDomains.Any(item => !organizationCustomDomains.Contains(item)))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -159,7 +159,7 @@ public class RecurringBookingService(
         if (customer is not null &&
             (!searchCriteria.IncludeMineOnly.HasValue || !searchCriteria.IncludeMineOnly.Value) &&
             searchCriteria.OrganizationIds.Count == 0 &&
-            searchCriteria.OrganizationUniqueAlphanumericNames.Count == 0 &&
+            searchCriteria.OrganizationCustomDomains.Count == 0 &&
             searchCriteria.TeamIds.Count == 0)
         {
             if (organizationIds is null)
@@ -196,9 +196,9 @@ public class RecurringBookingService(
         return (organizations.ToDictionary(
                 item => item.Id, item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()),
             organizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.UniqueAlphanumericName))
+                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
                 .ToDictionary(
-                    item => item.UniqueAlphanumericName!,
+                    item => item.CustomDomain!,
                     item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
     }
 
@@ -216,7 +216,7 @@ public class RecurringBookingService(
         var organizationIds = booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
-            var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrUniqueAlphanumericNamesAsync(
+            var organizationEntities = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
                 organizationIds,
                 null,
                 false,

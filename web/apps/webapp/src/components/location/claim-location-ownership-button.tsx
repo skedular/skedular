@@ -9,7 +9,7 @@ import ClaimLocationOwnershipDialog from './claim-location-ownership-dialog';
 type Props = {
   onReloadRequired?: () => void;
   connectionIds?: string[];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   isInitiallyOpen?: boolean;
   fullWidth?: boolean;
   label?: string;
@@ -24,7 +24,7 @@ type Props = {
 const ClaimLocationOwnershipButton = ({
   onReloadRequired,
   connectionIds,
-  organizationUniqueAlphanumericName,
+  organizationCustomDomain,
   isInitiallyOpen = false,
   fullWidth,
   label,
@@ -99,7 +99,7 @@ const ClaimLocationOwnershipButton = ({
         isDialogOpen={isDialogOpen}
         onClaimClicked={handleClaimClicked}
         onCancel={handleCancelClicked}
-        organizationUniqueAlphanumericName={organizationUniqueAlphanumericName}
+        organizationCustomDomain={organizationCustomDomain}
       />
     </>
   );

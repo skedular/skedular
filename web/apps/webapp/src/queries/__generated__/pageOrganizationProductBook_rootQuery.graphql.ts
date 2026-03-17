@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87026b9d0ca51ed7ce59dc10ba8576d7>>
+ * @generated SignedSource<<5690619d6df2f90a7bae0bf3b0ed88fb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type pageOrganizationProductBook_rootQuery$variables = {
   dateFromToGetAvailableResources: any;
   dateUntilToGetAvailableResources: any;
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   productId: string;
 };
 export type pageOrganizationProductBook_rootQuery$data = {
@@ -43,7 +43,7 @@ v1 = {
 v2 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "organizationUniqueAlphanumericName"
+  "name": "organizationCustomDomain"
 },
 v3 = {
   "defaultValue": null,
@@ -336,8 +336,8 @@ return {
         "args": [
           {
             "kind": "Variable",
-            "name": "uniqueAlphanumericName",
-            "variableName": "organizationUniqueAlphanumericName"
+            "name": "customDomain",
+            "variableName": "organizationCustomDomain"
           }
         ],
         "concreteType": "OrganizationDetails",
@@ -433,8 +433,8 @@ return {
               },
               {
                 "kind": "Variable",
-                "name": "organizationUniqueAlphanumericName",
-                "variableName": "organizationUniqueAlphanumericName"
+                "name": "organizationCustomDomain",
+                "variableName": "organizationCustomDomain"
               },
               {
                 "kind": "Variable",
@@ -508,16 +508,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b92c617ffad2108cb84249af9793781e",
+    "cacheID": "2574ffb9d6a889a23bb04bd4ddbb2d05",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationProductBook_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationUniqueAlphanumericName: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(uniqueAlphanumericName: $organizationUniqueAlphanumericName) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    latestProductVersionId\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      billingMode\n      acceptedPaymentMethods\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoicePaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n\nfragment singleChoicePaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationProductBook_rootQuery(\n  $organizationCustomDomain: String!\n  $productId: String!\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n) {\n  product(id: $productId) {\n    listingMetadata {\n      title\n    }\n    id\n  }\n  ...bookProduct_query\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n\nfragment bookProduct_query on Query {\n  me {\n    id\n    emails\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    taxDetails {\n      taxId\n      taxRatePercentage\n      id\n    }\n    id\n  }\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    latestProductVersionId\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      isTaxInclusive\n      supportsSubscriptionAutoRenewal\n      maxAllowedResourcesLockTimePaidViaCard\n      maxAllowedResourcesLockTimePaidViaBankTransfer\n      billingMode\n      acceptedPaymentMethods\n    }\n  }\n  currencies {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  ...singleChoiceMarketplaceBookingCategory_query\n  ...singleChoicePaymentMethodType_query\n  ...multipleChoicesUserEmails_query\n}\n\nfragment multipleChoicesUserEmails_query on Query {\n  me {\n    emails\n    id\n  }\n}\n\nfragment singleChoiceMarketplaceBookingCategory_query on Query {\n  marketplaceBookingCategories {\n    category\n    name\n  }\n}\n\nfragment singleChoicePaymentMethodType_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "53bb9616a380cea6a0bc76a495ab6d03";
+(node as any).hash = "cc832782a78778eb8bb620a1139aabcb";
 
 export default node;

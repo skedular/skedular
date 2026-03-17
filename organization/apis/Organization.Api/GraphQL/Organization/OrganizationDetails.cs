@@ -21,9 +21,7 @@ namespace Organization.Api.GraphQL.Organization;
 [GraphQLName("OrganizationDetails")]
 public class OrganizationDetails : Node
 {
-    [GraphQLName("uniqueAlphanumericName")]
-    public string? UniqueAlphanumericName { get; set; }
-
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
@@ -86,7 +84,7 @@ public class OrganizationDetails : Node
     {
         var (paginatedInfo, edges, totalCount) = await organizationMemberService.GetPaginatedOrganizationMembersAsync(
             new PaginationInputParam(after, first, before, last),
-            new OrganizationMemberSearchCriteria(organization.Id, organization.UniqueAlphanumericName, where?.NameContains, where?.CustomerId),
+            new OrganizationMemberSearchCriteria(organization.Id, organization.CustomDomain, where?.NameContains, where?.CustomerId),
             orderBy.ToSafeCollection().Select(item => new OrganizationMemberOrder(item.Direction, item.Field)).ToList(),
             cancellationToken);
 
@@ -123,7 +121,7 @@ public class OrganizationDetails : Node
             last,
             new TagSearchCriteria(
                 organization.Id,
-                organization.UniqueAlphanumericName,
+                organization.CustomDomain,
                 [OrganizationTagTypeConstants.Custom],
                 where?.NameContains),
             orderBy,
@@ -150,7 +148,7 @@ public class OrganizationDetails : Node
             last,
             new TagSearchCriteria(
                 organization.Id,
-                organization.UniqueAlphanumericName,
+                organization.CustomDomain,
                 [OrganizationTagTypeConstants.Zone],
                 where?.NameContains),
             orderBy,
@@ -177,7 +175,7 @@ public class OrganizationDetails : Node
             last,
             new TagSearchCriteria(
                 organization.Id,
-                organization.UniqueAlphanumericName,
+                organization.CustomDomain,
                 [OrganizationTagTypeConstants.Product],
                 where?.NameContains),
             orderBy,
@@ -196,7 +194,7 @@ public class OrganizationDetails : Node
     {
         var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(
             organization.Id,
-            organization.UniqueAlphanumericName,
+            organization.CustomDomain,
             from,
             until,
             cancellationToken);
@@ -208,7 +206,7 @@ public class OrganizationDetails : Node
         [Parent] OrganizationDetails organization,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.IsSsoTokenValidAsync(organization.Id, organization.UniqueAlphanumericName, cancellationToken);
+        await organizationSsoService.IsSsoTokenValidAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
     [UseResolverScope]
     public async Task<string> SsoLoginUrlAsync(
@@ -216,7 +214,7 @@ public class OrganizationDetails : Node
         [Parent] OrganizationDetails organization,
         [Service] IOrganizationSsoService organizationSsoService,
         CancellationToken cancellationToken) =>
-        await organizationSsoService.SsoLoginAsync(organization.Id, organization.UniqueAlphanumericName, redirectUrl, cancellationToken);
+        await organizationSsoService.SsoLoginAsync(organization.Id, organization.CustomDomain, redirectUrl, cancellationToken);
 
     private async Task<Connection<OrganizationTagEdge>> OrganizationTagsAsync(
         string? after,

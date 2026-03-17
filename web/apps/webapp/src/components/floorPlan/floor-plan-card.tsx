@@ -25,11 +25,11 @@ import { v7 as uuid } from 'uuid';
 type Props = {
   floorPlanDetailsRelay: floorPlanCard_FloorPlanDetails$key;
   connectionIds: string[];
-  organizationUniqueAlphanumericName: string;
+  organizationCustomDomain: string;
   locationId: string;
 };
 
-const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationUniqueAlphanumericName, locationId }: Props) => {
+const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCustomDomain, locationId }: Props) => {
   const floorPlanDetails = useFragment(
     graphql`
       fragment floorPlanCard_FloorPlanDetails on FloorPlanDetails {
@@ -80,7 +80,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationUniqu
     switch (id) {
       case MoreActionsMenuOptionType.EditFloorPlan:
         if (floorPlanDetails) {
-          router.push(getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, floorPlanDetails.id));
+          router.push(getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationCustomDomain, locationId, floorPlanDetails.id));
         }
 
         break;
@@ -135,10 +135,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationUniqu
         <CardHeader
           title={
             <StackRow>
-              <Link
-                component={NextLink}
-                href={getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationUniqueAlphanumericName, locationId, floorPlanDetails.id)}
-              >
+              <Link component={NextLink} href={getOrganizationLocationFloorPlanAdminEditLink(integratedPlatrform, organizationCustomDomain, locationId, floorPlanDetails.id)}>
                 <LeadIconTypography label={floorPlanDetails.name} startElement={<LocationIcon excludeTooltip />} sx={{ flexWrap: undefined }} invertDefaultColor />
               </Link>
             </StackRow>

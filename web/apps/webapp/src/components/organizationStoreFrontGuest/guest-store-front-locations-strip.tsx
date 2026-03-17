@@ -119,7 +119,7 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
   const rootData = useFragment<guestStoreFrontLocationsStrip_query$key>(
     graphql`
       fragment guestStoreFrontLocationsStrip_query on Query {
-        marketplaceLocations(where: { organizationUniqueAlphanumericName: $organizationUniqueAlphanumericName }) {
+        marketplaceLocations(where: { organizationCustomDomain: $organizationCustomDomain }) {
           totalCount
           edges {
             node {

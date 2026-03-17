@@ -10,9 +10,9 @@ public interface IOrganizationRepository : IRepository<Organization>
 {
     Task<Organization> UpsertNakedAsync(string id, CancellationToken cancellationToken);
 
-    Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         CancellationToken cancellationToken);
 
     Task<Organization?> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken);
@@ -41,12 +41,12 @@ public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeP
     {
         await base.UpsertNakedAsync(id, cancellationToken);
 
-        return (await GetByIdOrUniqueAlphanumericNameAsync(id, null, cancellationToken))!;
+        return (await GetByIdOrCustomDomainAsync(id, null, cancellationToken))!;
     }
 
-    public async Task<Organization?> GetByIdOrUniqueAlphanumericNameAsync(
+    public async Task<Organization?> GetByIdOrCustomDomainAsync(
         string? id,
-        string? uniqueAlphanumericName,
+        string? customDomain,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
@@ -56,16 +56,16 @@ public class OrganizationRepository(SlackDbContext dbContext, TimeProvider timeP
                 .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(uniqueAlphanumericName))
+        if (!string.IsNullOrWhiteSpace(customDomain))
         {
             return await DbContext.Organization
                 .AddDependentObjects()
                 .FirstOrDefaultAsync(
-                    query => query.UniqueAlphanumericName != null && query.UniqueAlphanumericName == uniqueAlphanumericName,
+                    query => query.CustomDomain != null && query.CustomDomain == customDomain,
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or uniqueAlphanumericName must be provided.");
+        throw new InvalidOperationException("Either id or customDomain must be provided.");
     }
 
     public async Task<Organization?> GetByWorkspaceIdAsync(string workspaceId, CancellationToken cancellationToken) =>
