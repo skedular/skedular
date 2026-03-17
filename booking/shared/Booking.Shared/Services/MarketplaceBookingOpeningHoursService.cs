@@ -5,10 +5,34 @@ using Enterprise.Shared.Time;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Represents a daily booking plan for marketplace bookings, including the time window and assigned resources.
+/// </summary>
+/// <param name="From">The start time of the booking window.</param>
+/// <param name="Until">The end time of the booking window.</param>
+/// <param name="Resources">The collection of resources assigned to this booking plan.</param>
 public record MarketplaceBookingDailyPlan(DateTimeOffset From, DateTimeOffset Until, ICollection<Resource> Resources);
 
+/// <summary>
+///     Service for managing marketplace booking opening hours and resolving daily booking plans.
+///     Handles the logic for determining available booking windows based on location and resource opening hours.
+/// </summary>
 public interface IMarketplaceBookingOpeningHoursService
 {
+    /// <summary>
+    ///     Attempts to resolve a daily booking plan for marketplace products.
+    ///     For pass-style marketplace products, derives the booking window from location opening hours
+    ///     instead of trusting user-supplied timestamps.
+    /// </summary>
+    /// <param name="customer">The customer making the booking, used for preferences.</param>
+    /// <param name="productVersion">The product version being booked.</param>
+    /// <param name="pricing">The pricing information for the product.</param>
+    /// <param name="bookingDay">The date for which to resolve the booking plan.</param>
+    /// <param name="requiredResourceCount">The number of resources required for the booking.</param>
+    /// <param name="preferredResourceIds">Collection of preferred resource IDs.</param>
+    /// <param name="preferredLocationId">The preferred location ID, if any.</param>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>A daily booking plan if one can be resolved, null otherwise.</returns>
     Task<MarketplaceBookingDailyPlan?> TryResolveDailyPlanAsync(
         Customer? customer,
         ProductVersion productVersion,
@@ -19,15 +43,45 @@ public interface IMarketplaceBookingOpeningHoursService
         string? preferredLocationId,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Resolves the location for an existing marketplace booking.
+    ///     Uses the booking's involved locations, resources, or resource booking slots to determine the location.
+    /// </summary>
+    /// <param name="booking">The booking for which to resolve the location.</param>
+    /// <returns>The resolved location, or null if none can be determined.</returns>
     Location? ResolveLocation(Database.Entities.Booking booking);
+
+    /// <summary>
+    ///     Determines whether location opening hours window should be used for the given pricing cadence.
+    ///     Only day-based pass products should stretch to the full opening-hours window.
+    /// </summary>
+    /// <param name="cadence">The product pricing cadence to evaluate.</param>
+    /// <returns>True if location opening hours window should be used, false otherwise.</returns>
     bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence);
 }
 
+/// <summary>
+///     Implementation of the marketplace booking opening hours service.
+/// </summary>
 public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repositoryFactory) : IMarketplaceBookingOpeningHoursService
 {
     // Pass-style marketplace products are booked day-by-day by the workflow.
     // For those products we derive the actual booking window from the location's
     // opening hours for that date instead of trusting a user-supplied timestamp.
+    /// <summary>
+    ///     Attempts to resolve a daily booking plan for marketplace products.
+    ///     For pass-style marketplace products, derives the booking window from location opening hours
+    ///     instead of trusting user-supplied timestamps.
+    /// </summary>
+    /// <param name="customer">The customer making the booking, used for preferences.</param>
+    /// <param name="productVersion">The product version being booked.</param>
+    /// <param name="pricing">The pricing information for the product.</param>
+    /// <param name="bookingDay">The date for which to resolve the booking plan.</param>
+    /// <param name="requiredResourceCount">The number of resources required for the booking.</param>
+    /// <param name="preferredResourceIds">Collection of preferred resource IDs.</param>
+    /// <param name="preferredLocationId">The preferred location ID, if any.</param>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>A daily booking plan if one can be resolved, null otherwise.</returns>
     public async Task<MarketplaceBookingDailyPlan?> TryResolveDailyPlanAsync(
         Customer? customer,
         ProductVersion productVersion,
@@ -124,6 +178,12 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
 
     // Existing marketplace bookings already know which location/resource they were assigned
     // to, so reconciliation should continue using that location when opening hours change.
+    /// <summary>
+    ///     Resolves the location for an existing marketplace booking.
+    ///     Uses the booking's involved locations, resources, or resource booking slots to determine the location.
+    /// </summary>
+    /// <param name="booking">The booking for which to resolve the location.</param>
+    /// <returns>The resolved location, or null if none can be determined.</returns>
     public Location? ResolveLocation(Database.Entities.Booking booking) =>
         booking.InvolvedLocations.FirstOrDefault() ??
         booking.InvolvedResources.FirstOrDefault(item => item.Location is not null)?.Location ??
@@ -132,6 +192,12 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     // Only day-based pass products should stretch to the full opening-hours window.
     // Half-day and shorter metered products stay out of this path to avoid pricing drift
     // and to keep their explicit time selection model intact.
+    /// <summary>
+    ///     Determines whether location opening hours window should be used for the given pricing cadence.
+    ///     Only day-based pass products should stretch to the full opening-hours window.
+    /// </summary>
+    /// <param name="cadence">The product pricing cadence to evaluate.</param>
+    /// <returns>True if location opening hours window should be used, false otherwise.</returns>
     public bool ShouldUseLocationOpeningHoursWindow(ProductPricingCadence cadence) =>
         cadence is ProductPricingCadence.Daily or
             ProductPricingCadence.Weekly or
@@ -144,6 +210,14 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             ProductPricingCadence.SixMonths or
             ProductPricingCadence.Yearly;
 
+    /// <summary>
+    ///     Resolves the booking window for a location on a specific booking day.
+    ///     Determines the available time window based on the location's opening hours and pricing cadence.
+    /// </summary>
+    /// <param name="location">The location for which to resolve the booking window.</param>
+    /// <param name="bookingDay">The date for the booking.</param>
+    /// <param name="pricing">The pricing information that determines the window behavior.</param>
+    /// <returns>A tuple with From and Until times if the location is open, null otherwise.</returns>
     private (DateTimeOffset From, DateTimeOffset Until)? ResolveBookingWindow(Location location, DateOnly bookingDay, ProductPricing pricing)
     {
         var dayStart = new DateTimeOffset(bookingDay.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
@@ -187,6 +261,14 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             bookingDay.ToDateTimeOffset(openingHoursDetails.Until.Value.ToTimeSpan()));
     }
 
+    /// <summary>
+    ///     Resolves the booking window for a resource on a specific booking day.
+    ///     If the resource has overridden opening hours, uses those; otherwise falls back to location hours.
+    /// </summary>
+    /// <param name="resource">The resource for which to resolve the booking window.</param>
+    /// <param name="bookingDay">The date for the booking.</param>
+    /// <param name="pricing">The pricing information that determines the window behavior.</param>
+    /// <returns>A tuple with From and Until times if the resource is available, null otherwise.</returns>
     private (DateTimeOffset From, DateTimeOffset Until)? ResolveBookingWindow(Resource resource, DateOnly bookingDay, ProductPricing pricing)
     {
         if (resource.IsAvailableHoursOverridden.HasValue && resource.IsAvailableHoursOverridden.Value && resource.AvailableHours is not null)
@@ -202,6 +284,14 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         return ResolveBookingWindow(resource.Location, bookingDay, pricing);
     }
 
+    /// <summary>
+    ///     Orders resources based on customer preferences and other priority criteria.
+    ///     Prioritizes resources based on customer preferences, preferred locations, and tags.
+    /// </summary>
+    /// <param name="resources">The collection of resources to order.</param>
+    /// <param name="customer">The customer whose preferences should be considered.</param>
+    /// <param name="preferredResourceIds">Collection of preferred resource IDs from the booking request.</param>
+    /// <returns>An ordered enumerable of resources.</returns>
     private static IEnumerable<Resource> OrderResources(
         ICollection<Resource> resources,
         Customer? customer,
@@ -237,6 +327,15 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             .ThenBy(resource => resource.Id);
     }
 
+    /// <summary>
+    ///     Gets the priority score for a location based on customer preferences.
+    ///     Lower scores indicate higher priority.
+    /// </summary>
+    /// <param name="locationId">The ID of the location to evaluate.</param>
+    /// <param name="preferredLocationId">The explicitly preferred location ID.</param>
+    /// <param name="preferredResourceLocationIds">Location IDs from preferred resources.</param>
+    /// <param name="preferredLocationIds">All preferred location IDs for the customer.</param>
+    /// <returns>A priority score (0 = highest priority).</returns>
     private static int GetLocationPriority(
         string locationId,
         string? preferredLocationId,
@@ -246,6 +345,13 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         preferredResourceLocationIds.Contains(locationId) ? 1 :
         preferredLocationIds.Contains(locationId) ? 2 : 3;
 
+    /// <summary>
+    ///     Gets the opening hours details for a specific day from the opening hours configuration.
+    ///     Checks for varied opening hours first, then falls back to weekly schedule.
+    /// </summary>
+    /// <param name="openingHours">The opening hours configuration.</param>
+    /// <param name="dayStart">The start of the day to check.</param>
+    /// <returns>The opening hours details for the specified day.</returns>
     private static OpeningHoursDetails GetOpeningHoursDetails(OpeningHours openingHours, DateTimeOffset dayStart) =>
         openingHours.DatesWithVariedOpeningHours.TryGetValue(dayStart, out var variedOpeningHours)
             ? variedOpeningHours
@@ -261,6 +367,14 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 _ => throw new ArgumentOutOfRangeException()
             };
 
+    /// <summary>
+    ///     Resolves the booking window from opening hours configuration for a specific day.
+    ///     Handles closed dates, all-day openings, and specific time ranges.
+    /// </summary>
+    /// <param name="openingHours">The opening hours configuration.</param>
+    /// <param name="bookingDay">The date for the booking.</param>
+    /// <param name="pricing">The pricing information that determines the window behavior.</param>
+    /// <returns>A tuple with From and Until times if available, null otherwise.</returns>
     private (DateTimeOffset From, DateTimeOffset Until)? ResolveBookingWindow(OpeningHours openingHours, DateOnly bookingDay, ProductPricing pricing)
     {
         var dayStart = new DateTimeOffset(bookingDay.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), TimeSpan.Zero);
@@ -294,6 +408,13 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             bookingDay.ToDateTimeOffset(openingHoursDetails.Until.Value.ToTimeSpan()));
     }
 
+    /// <summary>
+    ///     Resolves a fallback end time for bookings that don't use location opening hours.
+    ///     Uses the pricing cadence to determine the duration from the start time.
+    /// </summary>
+    /// <param name="from">The start time of the booking.</param>
+    /// <param name="cadence">The pricing cadence that determines the duration.</param>
+    /// <returns>The calculated end time.</returns>
     private static DateTimeOffset ResolveFallbackUntil(DateTimeOffset from, ProductPricingCadence cadence) =>
         cadence switch
         {

@@ -15,17 +15,37 @@ using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for generating booking invoices.
+/// </summary>
 public interface IBookingInvoiceService
 {
+    /// <summary>
+    ///     Generates an invoice document for the specified booking.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="fullyPaid">Whether the booking is fully paid.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The invoice document, or null if the booking is not found or invalid.</returns>
     Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the booking invoice service.
+/// </summary>
 public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IProductVersionHelperService productVersionHelperService) : IBookingInvoiceService
 {
+    /// <summary>
+    ///     Generates an invoice document for the specified booking.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="fullyPaid">Whether the booking is fully paid.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The invoice document, or null if the booking is not found or invalid.</returns>
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
     {
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);

@@ -7,18 +7,49 @@ using Customer = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for managing Stripe customer creation and retrieval.
+/// </summary>
 public interface IStripeCustomerService
 {
+    /// <summary>
+    ///     Adds or retrieves a Stripe customer for an organization.
+    ///     If a customer already exists, returns the existing one.
+    /// </summary>
+    /// <param name="organization">The organization entity.</param>
+    /// <param name="stripeAccountId">The Stripe account ID.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The Stripe customer entity.</returns>
     Task<StripeCustomer> AddCustomerAsync(Organization organization, string stripeAccountId, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Adds or retrieves a Stripe customer for a customer entity.
+    ///     If a customer already exists, returns the existing one.
+    /// </summary>
+    /// <param name="customerEntity">The customer entity.</param>
+    /// <param name="stripeAccountId">The Stripe account ID.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The Stripe customer entity.</returns>
     Task<StripeCustomer> AddCustomerAsync(Customer customerEntity, string stripeAccountId, CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the Stripe customer service.
+/// </summary>
 public class StripeCustomerService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IRandomHelper randomHelper,
     ICreatable<Stripe.Customer, CustomerCreateOptions> customerCreateService) : IStripeCustomerService
 {
+    /// <summary>
+    ///     Adds or retrieves a Stripe customer for an organization.
+    ///     If a customer already exists, returns the existing one.
+    /// </summary>
+    /// <param name="organization">The organization entity.</param>
+    /// <param name="stripeAccountId">The Stripe account ID.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The Stripe customer entity.</returns>
     public async Task<StripeCustomer> AddCustomerAsync(Organization organization, string stripeAccountId, CancellationToken cancellationToken)
     {
         var existingStripeCustomer =
@@ -40,6 +71,14 @@ public class StripeCustomerService(
         });
     }
 
+    /// <summary>
+    ///     Adds or retrieves a Stripe customer for a customer entity.
+    ///     If a customer already exists, returns the existing one.
+    /// </summary>
+    /// <param name="customer">The customer entity.</param>
+    /// <param name="stripeAccountId">The Stripe account ID.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The Stripe customer entity.</returns>
     public async Task<StripeCustomer> AddCustomerAsync(Customer customer, string stripeAccountId, CancellationToken cancellationToken)
     {
         var existingStripeCustomer =

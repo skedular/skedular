@@ -6,14 +6,36 @@ using Organization.Shared.Repositories;
 
 namespace Organization.Shared.Services;
 
+/// <summary>
+///     Service for managing organization members.
+/// </summary>
 public interface IOrganizationMemberService
 {
+    /// <summary>
+    ///     Adds new members to the specified organization.
+    ///     Only adds members that are not already part of the organization.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="members">The collection of members to add.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <exception cref="OrganizationNotFound">Thrown when the organization is not found.</exception>
     Task AddMembersAsync(string organizationId, IReadOnlyCollection<OrganizationMember> members, CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the organization member service.
+/// </summary>
 public class OrganizationMemberService(IRepositoryFactory repositoryFactory, IMapper mapper, IOrganizationPublisher organizationPublisher)
     : IOrganizationMemberService
 {
+    /// <summary>
+    ///     Adds new members to the specified organization.
+    ///     Only adds members that are not already part of the organization.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="members">The collection of members to add.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <exception cref="OrganizationNotFound">Thrown when the organization is not found.</exception>
     public async Task AddMembersAsync(string organizationId, IReadOnlyCollection<OrganizationMember> members, CancellationToken cancellationToken)
     {
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrUniqueAlphanumericNameAsync(

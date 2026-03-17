@@ -5,8 +5,25 @@ using Booking.Shared.Repositories;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for selecting marketplace booking resources based on customer preferences.
+///     Handles the logic for picking the most appropriate resources for a booking request.
+/// </summary>
 public interface IMarketplaceBookingPreferenceService
 {
+    /// <summary>
+    ///     Picks resources for a marketplace booking based on customer preferences.
+    ///     Prioritizes resources in order: customer preferred resources, preferred locations,
+    ///     preferred zone tags, preferred custom tags, then any available resources.
+    /// </summary>
+    /// <param name="customer">The customer making the booking, used for preferences.</param>
+    /// <param name="from">The start time of the booking window.</param>
+    /// <param name="until">The end time of the booking window.</param>
+    /// <param name="productVersion">The product version being booked.</param>
+    /// <param name="numberOfResourcesToBook">The number of resources required.</param>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>A collection of selected resources.</returns>
+    /// <exception cref="NoResourceAvailable">Thrown when insufficient resources are available.</exception>
     Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
         Customer? customer,
         DateTimeOffset from,
@@ -16,8 +33,24 @@ public interface IMarketplaceBookingPreferenceService
         CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the marketplace booking preference service.
+/// </summary>
 public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFactory) : IMarketplaceBookingPreferenceService
 {
+    /// <summary>
+    ///     Picks resources for a marketplace booking based on customer preferences.
+    ///     Prioritizes resources in order: customer preferred resources, preferred locations,
+    ///     preferred zone tags, preferred custom tags, then any available resources.
+    /// </summary>
+    /// <param name="customer">The customer making the booking, used for preferences.</param>
+    /// <param name="from">The start time of the booking window.</param>
+    /// <param name="until">The end time of the booking window.</param>
+    /// <param name="productVersion">The product version being booked.</param>
+    /// <param name="numberOfResourcesToBook">The number of resources required.</param>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>A collection of selected resources.</returns>
+    /// <exception cref="NoResourceAvailable">Thrown when insufficient resources are available.</exception>
     public async Task<ICollection<Resource>> PickResourceBasedOnCustomerPreferencesAsync(
         Customer? customer,
         DateTimeOffset from,
@@ -92,6 +125,15 @@ public class MarketplaceBookingPreferenceService(IRepositoryFactory repositoryFa
         return resources.Concat(unselectedResources.Take(numberOfResourcesToBook - resources.Count)).ToList();
     }
 
+    /// <summary>
+    ///     Gets available resources for the specified time window and organization tags.
+    ///     Filters resources by product tags and availability.
+    /// </summary>
+    /// <param name="from">The start time of the booking window.</param>
+    /// <param name="until">The end time of the booking window.</param>
+    /// <param name="organizationTags">The organization tags to filter resources by.</param>
+    /// <param name="cancellationToken">Cancellation token for the operation.</param>
+    /// <returns>A collection of available resources.</returns>
     private async Task<ICollection<Resource>> GetAvailableResourcesAsync(
         DateTimeOffset from,
         DateTimeOffset until,

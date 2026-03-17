@@ -6,23 +6,57 @@ using Temporalio.Client;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for managing Temporal workflow operations.
+/// </summary>
 public interface ITemporalService
 {
+    /// <summary>
+    ///     Starts a workflow to generate location resource slots.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task StartWorkflowGenerateLocationResourcesSlotsAsync(GenerateLocationResourcesSlotsInput args, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Starts a workflow to generate resource slots for a specific location.
+    /// </summary>
+    /// <param name="locationId">The ID of the location.</param>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task StartWorkflowGenerateResourcesSlotsAsync(string locationId, GenerateResourcesSlotsInput args, CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Starts a workflow to book marketplace booking subscription resources.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(
         BookMarketplaceBookingSubscriptionResourcesInput args,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Signals a payment status update to the PayBookingViaCard workflow.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="args">The payment status arguments.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task SignalPayBookingViaCardWorkflowAsync(string bookingId, SetPaymentStatusArgs args, CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the Temporal service.
+/// </summary>
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
     ITemporalHelperService temporalHelperService) : ITemporalService
 {
+    /// <summary>
+    ///     Starts a workflow to generate location resource slots.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     public async Task StartWorkflowGenerateLocationResourcesSlotsAsync(
         GenerateLocationResourcesSlotsInput args,
         CancellationToken cancellationToken) =>
@@ -37,6 +71,12 @@ public class TemporalService(
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
+    /// <summary>
+    ///     Starts a workflow to generate resource slots for a specific location.
+    /// </summary>
+    /// <param name="locationId">The ID of the location.</param>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     public async Task StartWorkflowGenerateResourcesSlotsAsync(
         string locationId,
         GenerateResourcesSlotsInput args,
@@ -52,6 +92,11 @@ public class TemporalService(
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
+    /// <summary>
+    ///     Starts a workflow to book marketplace booking subscription resources.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     public async Task StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(
         BookMarketplaceBookingSubscriptionResourcesInput args,
         CancellationToken cancellationToken) =>
@@ -67,6 +112,12 @@ public class TemporalService(
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
 
+    /// <summary>
+    ///     Signals a payment status update to the PayBookingViaCard workflow.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="args">The payment status arguments.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     public async Task SignalPayBookingViaCardWorkflowAsync(string bookingId, SetPaymentStatusArgs args, CancellationToken cancellationToken) =>
         await temporalClient
             .GetWorkflowHandle<PayBookingViaCard>(temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"))

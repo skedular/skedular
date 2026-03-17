@@ -11,24 +11,109 @@ using Temporalio.Exceptions;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for managing Temporal workflow operations through an outbox pattern.
+///     Provides methods to start workflows and send signals asynchronously.
+/// </summary>
 public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSignalOutboxExecutor
 {
+    /// <summary>
+    ///     Starts a workflow to pay for a booking via card.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Starts a workflow to pay for a booking via bank transfer.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartWorkflowPayBookingViaBankTransfer(PayBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Starts a workflow to book private recurring resources.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Starts a workflow to book marketplace recurring resources.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartBookMarketplaceRecurringResources(BookMarketplaceRecurringResourcesInput args, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Starts a workflow to book marketplace booking subscription resources.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartBookMarketplaceBookingSubscriptionResources(BookMarketplaceBookingSubscriptionResourcesInput args, IUnitOfWork unitOfWork);
 
+    /// <summary>
+    ///     Signals the PayBookingViaCard workflow to delete a booking.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to delete.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the PayBookingViaCard workflow to set payment status.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="executionArgs">The payment status arguments.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowPayBookingViaCardSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the PayBookingViaBankTransfer workflow to set payment status.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking.</param>
+    /// <param name="executionArgs">The payment status arguments.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowPayBookingViaBankTransferSetPaymentStatus(string bookingId, SetPaymentStatusArgs executionArgs, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the PayBookingViaBankTransfer workflow to delete a booking.
+    /// </summary>
+    /// <param name="bookingId">The ID of the booking to delete.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the BookPrivateRecurringResources workflow that a recurring booking was updated.
+    /// </summary>
+    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowBookPrivateRecurringResourcesUpdated(string recurringBookingId, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the BookPrivateRecurringResources workflow that a recurring booking was deleted.
+    /// </summary>
+    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the BookMarketplaceRecurringResources workflow that a recurring booking was deleted.
+    /// </summary>
+    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowBookMarketplaceRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the BookMarketplaceBookingSubscriptionResources workflow that a marketplace booking subscription was deleted.
+    /// </summary>
+    /// <param name="marketplaceBookingSubscriptionId">The ID of the marketplace booking subscription.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
     void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(string marketplaceBookingSubscriptionId, IUnitOfWork unitOfWork);
 }
 
+/// <summary>
+///     Implementation of the Temporal outbox service.
+/// </summary>
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
     ITemporalHelperService temporalHelperService,

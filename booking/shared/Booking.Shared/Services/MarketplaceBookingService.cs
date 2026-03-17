@@ -15,8 +15,22 @@ using Constants = Booking.Shared.GraphQL.Constants;
 
 namespace Booking.Shared.Services;
 
+/// <summary>
+///     Service for managing marketplace bookings.
+///     Provides functionality to add, update, delete, and adjust resources for marketplace bookings.
+/// </summary>
 public interface IMarketplaceBookingService
 {
+    /// <summary>
+    ///     Adds a new marketplace booking.
+    /// </summary>
+    /// <param name="booking">The booking model to add.</param>
+    /// <param name="customer">The customer creating the booking.</param>
+    /// <param name="organizations">The organizations involved in the booking.</param>
+    /// <param name="teams">The teams involved in the booking.</param>
+    /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The added booking model.</returns>
     Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
@@ -25,6 +39,18 @@ public interface IMarketplaceBookingService
         RecurringBooking? recurringBooking,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Updates an existing marketplace booking.
+    /// </summary>
+    /// <param name="booking">The updated booking model.</param>
+    /// <param name="existingBooking">The existing booking entity.</param>
+    /// <param name="lastModifiedByCustomer">The customer making the modification.</param>
+    /// <param name="organizations">The organizations involved in the booking.</param>
+    /// <param name="teams">The teams involved in the booking.</param>
+    /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="bookResourceIfNoResourceProvidedOrAvailable">Whether to book a resource if none is provided or available.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The updated booking model.</returns>
     Task<Models.Booking> UpdateAsync(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
@@ -35,11 +61,26 @@ public interface IMarketplaceBookingService
         bool bookResourceIfNoResourceProvidedOrAvailable,
         CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Deletes a marketplace booking.
+    /// </summary>
+    /// <param name="existingBooking">The existing booking entity to delete.</param>
+    /// <param name="deletedByCustomer">The customer performing the deletion.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The deleted booking model.</returns>
     Task<Models.Booking> DeleteAsync(Database.Entities.Booking existingBooking, Customer? deletedByCustomer, CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Adjusts the required resources for a booking.
+    /// </summary>
+    /// <param name="booking">The booking entity.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task AdjustRequiredResourcesAsync(Database.Entities.Booking booking, CancellationToken cancellationToken);
 }
 
+/// <summary>
+///     Implementation of the marketplace booking service.
+/// </summary>
 public class MarketplaceBookingService(
     IDbTransactionBuilder transactionBuilder,
     IRepositoryFactory repositoryFactory,
@@ -55,6 +96,24 @@ public class MarketplaceBookingService(
     IRandomHelper randomHelper,
     IProductVersionHelperService productVersionHelperService) : IMarketplaceBookingService
 {
+    /// <summary>
+    ///     Adds a new marketplace booking.
+    ///     Validates the booking window, customer entities, product version, pricing, and resources.
+    ///     Creates the booking entity, starts payment workflows if needed, and publishes events.
+    /// </summary>
+    /// <param name="booking">The booking model to add.</param>
+    /// <param name="customer">The customer creating the booking.</param>
+    /// <param name="organizations">The organizations involved in the booking.</param>
+    /// <param name="teams">The teams involved in the booking.</param>
+    /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The added booking model.</returns>
+    /// <exception cref="CustomerNotFound">Thrown when customer entities cannot be found.</exception>
+    /// <exception cref="ProductVersionNotFound">Thrown when the product version is not found.</exception>
+    /// <exception cref="ProductMissingProductTag">Thrown when the product version is missing a product tag.</exception>
+    /// <exception cref="ProductPricingNotFound">Thrown when matching pricing cannot be found.</exception>
+    /// <exception cref="MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking">Thrown when too many resources are selected.</exception>
+    /// <exception cref="BookingPaymentMethodNotAccepted">Thrown when the payment method is not accepted.</exception>
     public async Task<Models.Booking> AddAsync(
         Models.Booking booking,
         Customer customer,
@@ -211,6 +270,24 @@ public class MarketplaceBookingService(
         return booking;
     }
 
+    /// <summary>
+    ///     Updates an existing marketplace booking.
+    ///     Validates the booking is marketplace type, removes existing resources, validates new resources,
+    ///     and updates the booking entity while preserving checkout session information.
+    /// </summary>
+    /// <param name="booking">The updated booking model.</param>
+    /// <param name="existingBooking">The existing booking entity.</param>
+    /// <param name="lastModifiedByCustomer">The customer making the modification.</param>
+    /// <param name="organizations">The organizations involved in the booking.</param>
+    /// <param name="teams">The teams involved in the booking.</param>
+    /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <param name="bookResourceIfNoResourceProvidedOrAvailable">Whether to book a resource if none is provided or available.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The updated booking model.</returns>
+    /// <exception cref="BookingIsNotMarketplace">Thrown when the booking is not a marketplace booking.</exception>
+    /// <exception cref="CustomerNotFound">Thrown when customer entities cannot be found.</exception>
+    /// <exception cref="ProductVersionNotFound">Thrown when the product version is not found.</exception>
+    /// <exception cref="ProductMissingProductTag">Thrown when the product version is missing a product tag.</exception>
     public async Task<Models.Booking> UpdateAsync(
         Models.Booking booking,
         Database.Entities.Booking existingBooking,
@@ -356,6 +433,16 @@ public class MarketplaceBookingService(
         return booking;
     }
 
+    /// <summary>
+    ///     Deletes a marketplace booking.
+    ///     Validates the booking is marketplace type, removes all resource slots, marks as deleted,
+    ///     and signals payment workflows to cancel if payment is required.
+    /// </summary>
+    /// <param name="existingBooking">The existing booking entity to delete.</param>
+    /// <param name="deletedByCustomer">The customer performing the deletion.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The deleted booking model.</returns>
+    /// <exception cref="BookingIsNotMarketplace">Thrown when the booking is not a marketplace booking.</exception>
     public async Task<Models.Booking> DeleteAsync(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
@@ -404,6 +491,16 @@ public class MarketplaceBookingService(
         return deletedBooking;
     }
 
+    /// <summary>
+    ///     Adjusts the required resources for a booking.
+    ///     Removes existing resources, validates customer entities, and assigns new resources
+    ///     based on availability or customer preferences.
+    /// </summary>
+    /// <param name="booking">The booking entity.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <exception cref="CustomerNotFound">Thrown when customer entities cannot be found.</exception>
+    /// <exception cref="ProductVersionNotFound">Thrown when the product version is not found.</exception>
+    /// <exception cref="ProductMissingProductTag">Thrown when the product version is missing a product tag.</exception>
     public async Task AdjustRequiredResourcesAsync(Database.Entities.Booking booking, CancellationToken cancellationToken)
     {
         var customerIds = booking.InvolvedCustomers.Select(item => item.Id).Distinct().ToList();
@@ -477,6 +574,11 @@ public class MarketplaceBookingService(
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
     }
 
+    /// <summary>
+    ///     Determines if the product pricing cadence represents a single instance booking.
+    /// </summary>
+    /// <param name="cadence">The product pricing cadence to check.</param>
+    /// <returns>True if the cadence is for single instance bookings, false otherwise.</returns>
     private static bool IsSingleInstanceMarketplaceCadence(ProductPricingCadence cadence) =>
         cadence is ProductPricingCadence.OneTime or
             ProductPricingCadence.PerMinute or
@@ -486,6 +588,12 @@ public class MarketplaceBookingService(
             ProductPricingCadence.HalfDay or
             ProductPricingCadence.Daily;
 
+    /// <summary>
+    ///     Validates that the marketplace cadence is compatible with the booking flow (single or recurring).
+    /// </summary>
+    /// <param name="cadence">The product pricing cadence.</param>
+    /// <param name="recurringBooking">The recurring booking if applicable.</param>
+    /// <exception cref="MarketplaceBookingCadenceRequiresRecurringFlow">Thrown when cadence validation fails.</exception>
     private static void ValidateMarketplaceCadenceForBookingFlow(ProductPricingCadence cadence, RecurringBooking? recurringBooking)
     {
         if (recurringBooking is null)
@@ -504,6 +612,11 @@ public class MarketplaceBookingService(
         }
     }
 
+    /// <summary>
+    ///     Validates that the booking window starts and ends within the same day.
+    /// </summary>
+    /// <param name="booking">The booking model to validate.</param>
+    /// <exception cref="BookingMustStartAndEndWithinSameDay">Thrown when the booking spans multiple days.</exception>
     private static void ValidateBookingWindowWithinSingleDay(Models.Booking booking)
     {
         var from = booking.From.UtcDateTime;
@@ -515,6 +628,11 @@ public class MarketplaceBookingService(
         }
     }
 
+    /// <summary>
+    ///     Converts a collection of resources to their unique locations.
+    /// </summary>
+    /// <param name="resources">The resources to convert.</param>
+    /// <returns>A list of unique locations from the resources.</returns>
     private static List<Location> ResourcesToLocations(ICollection<Resource> resources) =>
         resources
             .Where(item => item.Location is not null)
@@ -523,6 +641,13 @@ public class MarketplaceBookingService(
             .Select(item => item.First())
             .ToList()!;
 
+    /// <summary>
+    ///     Merges the provided organizations with the product owner's organization.
+    ///     Ensures the product owner organization is always included.
+    /// </summary>
+    /// <param name="organizations">The organizations to merge.</param>
+    /// <param name="productVersion">The product version containing the product owner.</param>
+    /// <returns>A list of unique organizations including the product owner.</returns>
     private static List<Organization> MergeOrganizationsWithProductOwner(
         ICollection<Organization> organizations,
         ProductVersion productVersion)
@@ -537,6 +662,13 @@ public class MarketplaceBookingService(
             .ToList();
     }
 
+    /// <summary>
+    ///     Gets the booking payment expiry time in minutes based on pricing and payment method.
+    /// </summary>
+    /// <param name="pricing">The product pricing containing expiry settings.</param>
+    /// <param name="paymentMethod">The payment method used.</param>
+    /// <returns>The payment expiry time in minutes.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when the payment method is not supported.</exception>
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
         paymentMethod switch
         {
@@ -545,6 +677,13 @@ public class MarketplaceBookingService(
             _ => throw new ArgumentOutOfRangeException()
         };
 
+    /// <summary>
+    ///     Normalizes and validates the checkout return URL.
+    ///     Ensures the URL is valid and uses HTTP/HTTPS scheme.
+    /// </summary>
+    /// <param name="checkoutReturnUrl">The checkout return URL to normalize.</param>
+    /// <returns>The normalized URL string, or null if empty.</returns>
+    /// <exception cref="MarketplaceBookingCheckoutReturnUrlInvalid">Thrown when the URL is invalid.</exception>
     private static string? NormalizeCheckoutReturnUrl(string? checkoutReturnUrl)
     {
         if (string.IsNullOrWhiteSpace(checkoutReturnUrl))
