@@ -85,6 +85,11 @@ public class MarketplaceRecurringBookingIntegrations(
         var preferredLocationId = existingBookingsToRefresh
             .Select(marketplaceBookingOpeningHoursService.ResolveLocation)
             .FirstOrDefault(item => item is not null)?.Id;
+        var preferredResourceIds = existingBookingsToRefresh
+            .OrderByDescending(item => item.From)
+            .SelectMany(item => item.InvolvedResources.Select(resource => resource.Id))
+            .Distinct()
+            .ToList();
         var requiredResourceCount = marketplaceBookingEntity.Quantity * marketplaceBookingEntity.ProductPricing.NumberOfResourcesToBook;
 
         foreach (var missingBookingDay in reconciliationPlan.MissingBookingDays)
@@ -103,6 +108,7 @@ public class MarketplaceRecurringBookingIntegrations(
                     marketplaceBookingEntity.ProductPricing,
                     missingBookingDay,
                     requiredResourceCount,
+                    preferredResourceIds,
                     preferredLocationId,
                     cancellationToken);
                 if (dailyPlan is null)

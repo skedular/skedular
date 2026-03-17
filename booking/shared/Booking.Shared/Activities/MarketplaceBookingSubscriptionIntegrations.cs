@@ -148,6 +148,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
         var preferredLocationId = existingBookingsToRefresh
             .Select(marketplaceBookingOpeningHoursService.ResolveLocation)
             .FirstOrDefault(item => item is not null)?.Id;
+        var preferredResourceIds = await ResolvePreferredResourceIdsAsync(
+            subscription,
+            recurringBooking,
+            existingBookingsToRefresh,
+            cancellationToken);
 
         ArgumentNullException.ThrowIfNull(recurringBooking.MarketplaceBooking);
 
@@ -180,6 +185,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                     recurringBooking.MarketplaceBooking.ProductPricing,
                     missingBookingDay,
                     requiredResourceCount,
+                    preferredResourceIds,
                     preferredLocationId,
                     cancellationToken);
                 if (dailyPlan is null)
@@ -220,6 +226,53 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         return !reconciliationPlan.HasMoreRequiredBookingDays;
+    }
+
+    private async Task<ICollection<string>> ResolvePreferredResourceIdsAsync(
+        MarketplaceBookingSubscription subscription,
+        RecurringBooking recurringBooking,
+        ICollection<Database.Entities.Booking> existingBookingsToRefresh,
+        CancellationToken cancellationToken)
+    {
+        // Prefer the latest resources already assigned in the current cycle first.
+        var currentCyclePreferredResourceIds = existingBookingsToRefresh
+            .OrderByDescending(item => item.From)
+            .SelectMany(item => item.InvolvedResources.Select(resource => resource.Id))
+            .Distinct()
+            .ToList();
+        if (currentCyclePreferredResourceIds.Count > 0)
+        {
+            return currentCyclePreferredResourceIds;
+        }
+
+        // Auto-renew creates a new recurring booking cycle with no instances yet. In that case
+        // carry forward the latest assigned resources from the most recent previous cycle so the
+        // opening-hours service can keep the cadence sticky when those resources are still valid.
+        var previousRecurringBookings = subscription.RecurringBookings
+            .Where(item => !item.IsDeleted())
+            .Where(item => item.Id != recurringBooking.Id)
+            .OrderByDescending(item => item.StartDate)
+            .ToList();
+
+        foreach (var previousRecurringBooking in previousRecurringBookings)
+        {
+            var previousBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
+                previousRecurringBooking.Id,
+                previousRecurringBooking.StartDate,
+                null,
+                cancellationToken);
+            var previousPreferredResourceIds = previousBookings
+                .OrderByDescending(item => item.From)
+                .SelectMany(item => item.InvolvedResources.Select(resource => resource.Id))
+                .Distinct()
+                .ToList();
+            if (previousPreferredResourceIds.Count > 0)
+            {
+                return previousPreferredResourceIds;
+            }
+        }
+
+        return [];
     }
 
     private async Task<RecurringBooking> EnsureCurrentCycleRecurringBookingAsync(

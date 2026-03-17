@@ -15,6 +15,7 @@ public interface IMarketplaceBookingOpeningHoursService
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
+        ICollection<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken);
 
@@ -33,6 +34,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
+        ICollection<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken)
     {
@@ -75,7 +77,8 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                         .Where(resource => !resource.Inactive)
                         .Where(resource => resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id)))
                         .ToList(),
-                    customer)
+                    customer,
+                    preferredResourceIds)
                 .ToList();
             var resourceWindows = orderedResources
                 .Select(resource => new { Resource = resource, Window = ResolveBookingWindow(resource, bookingDay, pricing) })
@@ -112,7 +115,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 return new MarketplaceBookingDailyPlan(
                     resourceWindowGroup.Key.From,
                     resourceWindowGroup.Key.Until,
-                    OrderResources(availableResources, customer).Take(requiredResourceCount).ToList());
+                    OrderResources(availableResources, customer, preferredResourceIds).Take(requiredResourceCount).ToList());
             }
         }
 
@@ -199,14 +202,20 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         return ResolveBookingWindow(resource.Location, bookingDay, pricing);
     }
 
-    private static IEnumerable<Resource> OrderResources(ICollection<Resource> resources, Customer? customer)
+    private static IEnumerable<Resource> OrderResources(
+        ICollection<Resource> resources,
+        Customer? customer,
+        ICollection<string> preferredResourceIds)
     {
+        var preferredGeneratedResourceIds = preferredResourceIds.ToHashSet();
         if (customer is null)
         {
-            return resources.OrderBy(item => item.Id);
+            return resources
+                .OrderBy(resource => preferredGeneratedResourceIds.Contains(resource.Id) ? 0 : 1)
+                .ThenBy(item => item.Id);
         }
 
-        var preferredResourceIds = customer.PreferredResources.Select(item => item.Id).ToHashSet();
+        var preferredCustomerResourceIds = customer.PreferredResources.Select(item => item.Id).ToHashSet();
         var preferredLocationIds = customer.PreferredLocations.Select(item => item.Id).ToHashSet();
         var preferredZoneTagIds = customer.PreferredOrganizationTags
             .Where(item => !string.IsNullOrWhiteSpace(item.Type) && item.Type.ToOrganizationTagType() == OrganizationTagType.Zone)
@@ -218,7 +227,10 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
             .ToHashSet();
 
         return resources
-            .OrderBy(resource => preferredResourceIds.Contains(resource.Id) ? 0 : 1)
+            // Keep cadence-generated marketplace bookings sticky when the same resource is
+            // still available for the next generated instance in the same series.
+            .OrderBy(resource => preferredGeneratedResourceIds.Contains(resource.Id) ? 0 : 1)
+            .ThenBy(resource => preferredCustomerResourceIds.Contains(resource.Id) ? 0 : 1)
             .ThenBy(resource => resource.Location is not null && preferredLocationIds.Contains(resource.Location.Id) ? 0 : 1)
             .ThenBy(resource => resource.OrganizationTags.Any(tag => preferredZoneTagIds.Contains(tag.Id)) ? 0 : 1)
             .ThenBy(resource => resource.OrganizationTags.Any(tag => preferredCustomTagIds.Contains(tag.Id)) ? 0 : 1)

@@ -65,6 +65,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             pricing,
             bookingDay,
             1,
+            [],
             null,
             cancellationToken);
 
@@ -124,6 +125,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             pricing,
             bookingDay,
             1,
+            [],
             null,
             cancellationToken);
 
@@ -165,6 +167,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             CreatePricing(ProductPricingCadence.Daily),
             bookingDay,
             1,
+            [],
             null,
             cancellationToken);
 
@@ -247,6 +250,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             pricing,
             bookingDay,
             2,
+            [],
             null,
             cancellationToken);
 
@@ -282,6 +286,58 @@ public class MarketplaceBookingOpeningHoursServiceShould
         sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.Monthly).ShouldBeTrue();
         sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.HalfDay).ShouldBeFalse();
         sut.ShouldUseLocationOpeningHoursWindow(ProductPricingCadence.PerHour).ShouldBeFalse();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Prefer_Previously_Assigned_Resources_When_They_Are_Still_Available(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        MarketplaceBookingOpeningHoursService sut,
+        ILocationRepository locationRepository,
+        IResourceRepository resourceRepository,
+        CancellationToken cancellationToken)
+    {
+        var bookingDay = new DateOnly(2026, 3, 16);
+        var pricing = CreatePricing(ProductPricingCadence.Daily);
+        var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
+        var location = new Location
+        {
+            Id = "loc-1",
+            OpeningHours = new OpeningHours(
+                WeekOpeningHours.Default with { Monday = new OpeningHoursDetails(false, false, new TimeOnly(8, 0), new TimeOnly(17, 0)) },
+                [],
+                [])
+        };
+        var preferredResource = new Resource { Id = "res-2", Location = location, OrganizationTags = [productTag] };
+        var otherResource = new Resource { Id = "res-1", Location = location, OrganizationTags = [productTag] };
+        location.Resources = [otherResource, preferredResource];
+
+        A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
+        A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken)).Returns([location]);
+        A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
+                null,
+                location.Id,
+                bookingDay.ToDateTimeOffset(new TimeSpan(8, 0, 0)),
+                bookingDay.ToDateTimeOffset(new TimeSpan(17, 0, 0)),
+                A<ICollection<string>>._,
+                A<ICollection<string>>._,
+                A<ICollection<string>>._,
+                cancellationToken))
+            .Returns([otherResource, preferredResource]);
+
+        var result = await sut.TryResolveDailyPlanAsync(
+            null,
+            new ProductVersion { OrganizationTags = [productTag] },
+            pricing,
+            bookingDay,
+            1,
+            ["res-2"],
+            null,
+            cancellationToken);
+
+        result.ShouldNotBeNull();
+        result.Resources.Select(item => item.Id).ShouldBe(["res-2"]);
     }
 
     private static ProductPricing CreatePricing(ProductPricingCadence purchaseCadence, int numberOfResourcesToBook = 1) =>
