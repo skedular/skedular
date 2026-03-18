@@ -1,10 +1,11 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { ArrowLeftIcon } from '@/components/icons';
-import { getMarketplaceProductLink } from '@/components/links';
+import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
+import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName } from '@/libs/utils';
+import { convertCalendarDayToStartOfDay, getCustomerFullName } from '@/libs/utils';
+import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
 import type { marketplaceProductSubscriptionDetails_rootQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -17,9 +18,9 @@ import Link from '@mui/material/Link';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, ReactNode, useEffect, useMemo } from 'react';
+import { memo, ReactNode, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
+import { graphql, PreloadedQuery, useLazyLoadQuery, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 
@@ -79,6 +80,49 @@ const RootQuery = graphql`
           paymentStatus {
             type
             name
+          }
+        }
+      }
+    }
+  }
+`;
+
+const RelatedBookingsQuery = graphql`
+  query marketplaceProductSubscriptionDetails_relatedBookingsQuery(
+    $organizationCustomDomain: String!
+    $recurringBookingIds: [String!]
+    $relatedBookingsFirst: Int!
+    $today: DateTime!
+  ) {
+    bookings(
+      first: $relatedBookingsFirst
+      where: { includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today }
+      orderBy: [{ field: FROM, direction: ASCENDING }]
+    ) {
+      totalCount
+      edges {
+        node {
+          id
+          recurringBooking {
+            id
+          }
+          from
+          until
+          involvedLocations {
+            name
+          }
+          bookingResources {
+            resource {
+              id
+              name
+            }
+          }
+          marketplaceBooking {
+            quantity
+            paymentStatus {
+              type
+              name
+            }
           }
         }
       }
@@ -158,7 +202,9 @@ const MarketplaceProductSubscriptionDetails = ({
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
+  const [relatedBookingsFirst, setRelatedBookingsFirst] = useState(8);
   const subscription = rootData.marketplaceBookingSubscription;
+  const today = useMemo(() => convertCalendarDayToStartOfDay(dayjs()).toISOString(), []);
 
   useSubscription({
     variables: { subscriptionId: subscription?.id ?? '' },
@@ -168,6 +214,23 @@ const MarketplaceProductSubscriptionDetails = ({
   const currentCycle = useMemo(
     () => [...(subscription?.recurringBookings ?? [])].sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())[0] ?? null,
     [subscription?.recurringBookings],
+  );
+  const recurringBookingIds = useMemo(() => subscription?.recurringBookings.map((item) => item.id) ?? [], [subscription?.recurringBookings]);
+  const relatedBookingsData = useLazyLoadQuery<marketplaceProductSubscriptionDetails_relatedBookingsQuery>(
+    RelatedBookingsQuery,
+    {
+      organizationCustomDomain,
+      recurringBookingIds,
+      relatedBookingsFirst,
+      today,
+    },
+    {
+      fetchPolicy: 'store-and-network',
+    },
+  );
+  const relatedBookings = useMemo(
+    () => relatedBookingsData.bookings?.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item) ?? [],
+    [relatedBookingsData.bookings?.edges],
   );
   const currentMarketplaceBooking = currentCycle?.marketplaceBooking ?? null;
   const productVersion = currentMarketplaceBooking?.productVersion ?? null;
@@ -316,6 +379,142 @@ const MarketplaceProductSubscriptionDetails = ({
                     />
                   ) : null}
                 </StackColumn>
+
+                <Box sx={{ mt: 4 }}>
+                  <CaptionIconTypography label="Included periods" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
+                  <LeadIconTypography label="Recurring periods in this subscription" sx={{ mt: 0.75 }} />
+                  <Box
+                    sx={{
+                      mt: 2,
+                      display: 'grid',
+                      gap: 1.25,
+                      gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+                    }}
+                  >
+                    {[...subscription.recurringBookings]
+                      .sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())
+                      .map((recurringBooking) => {
+                        const isCurrentCycle = recurringBooking.id === currentCycle.id;
+
+                        return (
+                          <Card key={recurringBooking.id} sx={{ borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
+                            <CardContent sx={{ p: 2 }}>
+                              <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                                <Box>
+                                  <SmallIconTypography
+                                    label={isCurrentCycle ? 'Current period' : 'Subscription period'}
+                                    sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }}
+                                  />
+                                  <SubtitleIconTypography label={`${toStoredDate(recurringBooking.startDate)} - ${toStoredDate(recurringBooking.endDate)}`} sx={{ mt: 0.35 }} />
+                                </Box>
+                                <Chip
+                                  size="small"
+                                  icon={<PaymentStatusIcon />}
+                                  label={isCurrentCycle ? currentMarketplaceBooking.paymentStatus.name : (recurringBooking.marketplaceBooking?.paymentStatus.name ?? 'Preparing')}
+                                  color={isCurrentCycle && currentMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'}
+                                  variant={isCurrentCycle && currentMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
+                                />
+                              </StackRow>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                  </Box>
+                </Box>
+
+                <Box sx={{ mt: 4 }}>
+                  <CaptionIconTypography label="Related bookings" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
+                  <LeadIconTypography label="Booking instances created from this subscription" sx={{ mt: 0.75 }} />
+                  {relatedBookings.length > 0 ? (
+                    <>
+                      <Box
+                        sx={{
+                          mt: 2,
+                          display: 'grid',
+                          gap: 1.25,
+                          gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+                        }}
+                      >
+                        {relatedBookings.map((booking) => {
+                          const bookingLink = getMarketplaceBookingDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, booking.id);
+                          const locationLabel = booking.involvedLocations[0]?.name ?? 'Location to be confirmed';
+                          const resourcesLabel = booking.bookingResources.map((item) => item.resource.name).join(', ') || 'Assigned later';
+                          const isConfirmed = booking.marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
+                          const isTodayBooking = dayjs.utc(booking.from).isSame(dayjs.utc(today), 'day');
+
+                          return (
+                            <Link
+                              key={booking.id}
+                              component={NextLink}
+                              href={bookingLink}
+                              underline="none"
+                              color="inherit"
+                              sx={{
+                                display: 'block',
+                                borderRadius: 3,
+                                border: 1,
+                                borderColor: (theme) => (isTodayBooking ? theme.palette.primary.main : theme.palette.divider),
+                                bgcolor: (theme) => (isTodayBooking ? theme.palette.action.selected : theme.palette.background.paper),
+                                transition: 'transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease',
+                                '&:hover': {
+                                  transform: 'translateY(-2px)',
+                                  boxShadow: (theme) => theme.shadows[3],
+                                  borderColor: (theme) => theme.palette.primary.main,
+                                },
+                              }}
+                            >
+                              <Box sx={{ p: 2 }}>
+                                <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
+                                  <Box>
+                                    <SmallIconTypography label={toStoredDate(booking.from)} sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                                    <SubtitleIconTypography label={toStoredTimeRange(booking.from, booking.until)} sx={{ mt: 0.35 }} />
+                                  </Box>
+                                  <StackColumn spacing={0.75} sx={{ alignItems: 'flex-end' }}>
+                                    {isTodayBooking ? <Chip size="small" label="Today" color="primary" /> : null}
+                                    <Chip
+                                      size="small"
+                                      icon={<PaymentStatusIcon />}
+                                      label={booking.marketplaceBooking?.paymentStatus.name ?? currentMarketplaceBooking.paymentStatus.name}
+                                      color={isConfirmed ? 'success' : 'default'}
+                                      variant={isConfirmed ? 'filled' : 'outlined'}
+                                    />
+                                  </StackColumn>
+                                </StackRow>
+
+                                <StackColumn spacing={1} sx={{ mt: 2 }}>
+                                  <StackRow sx={{ flexWrap: 'nowrap' }}>
+                                    <LocationIcon fontSize="small" />
+                                    <BodyIconTypography label={locationLabel} sx={{ opacity: 0.88 }} />
+                                  </StackRow>
+                                  <StackRow sx={{ flexWrap: 'nowrap' }}>
+                                    <QuantityIcon fontSize="small" />
+                                    <BodyIconTypography label={`Quantity ${booking.marketplaceBooking?.quantity ?? currentMarketplaceBooking.quantity}`} sx={{ opacity: 0.88 }} />
+                                  </StackRow>
+                                  <StackRow sx={{ flexWrap: 'nowrap' }}>
+                                    <ResourceIcon fontSize="small" />
+                                    <BodyIconTypography label={resourcesLabel} sx={{ opacity: 0.88 }} />
+                                  </StackRow>
+                                </StackColumn>
+                              </Box>
+                            </Link>
+                          );
+                        })}
+                      </Box>
+
+                      {relatedBookingsData.bookings.totalCount > relatedBookings.length ? (
+                        <Button variant="text" onClick={() => setRelatedBookingsFirst((current) => current + 8)} sx={{ mt: 1.5, textTransform: 'none', px: 0 }}>
+                          Show more bookings
+                        </Button>
+                      ) : null}
+                    </>
+                  ) : (
+                    <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
+                      <CardContent sx={{ p: 2.5 }}>
+                        <BodyIconTypography label="No booking instances have been created for this subscription yet." sx={{ opacity: 0.8 }} />
+                      </CardContent>
+                    </Card>
+                  )}
+                </Box>
               </CardContent>
             </Card>
 
@@ -346,6 +545,8 @@ const DetailsRow = ({ label, value }: { label: string; value: ReactNode }) => (
 );
 
 const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
+const toStoredTime = (date?: string | null) => (date ? dayjs.utc(date).format('hh:mm a') : '');
+const toStoredTimeRange = (from?: string | null, until?: string | null) => `${toStoredTime(from)} - ${toStoredTime(until)}`;
 
 const MemoMarketplaceProductSubscriptionDetails = memo(MarketplaceProductSubscriptionDetails);
 

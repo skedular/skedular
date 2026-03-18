@@ -75,7 +75,8 @@ public class BookingGrpcService(
                 [],
                 request.Where.LocationIds,
                 request.Where.TeamIds,
-                request.Where.CustomerIds),
+                request.Where.CustomerIds,
+                []),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending
@@ -138,7 +139,8 @@ public class BookingGrpcService(
                 [],
                 request.Where.LocationIds,
                 request.Where.TeamIds,
-                request.Where.CustomerIds),
+                request.Where.CustomerIds,
+                []),
             request.OrderBy.Select(item =>
             {
                 var direction = item.Direction == global::Api.Shared.Services.Grpc.Skedular.Booking.V1.OrderDirection.Ascending

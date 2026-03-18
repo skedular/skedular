@@ -234,6 +234,7 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
+            RecurringBooking = src.RecurringBooking is null ? null : MapToRecurringBookingWithoutSubscription(src.RecurringBooking),
             MarketplaceBooking = MapTo(ResolveBookingMarketplaceBooking(src)),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };

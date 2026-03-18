@@ -169,6 +169,12 @@ internal static class BookingExtensions
                     !customer.DeletedAt.HasValue && searchCriteria.CustomerIds.Contains(customer.Id)));
             }
 
+            if (searchCriteria.RecurringBookingIds.Count != 0)
+            {
+                originalQuery = originalQuery.Where(item =>
+                    item.RecurringBooking != null && searchCriteria.RecurringBookingIds.Contains(item.RecurringBooking.Id));
+            }
+
             if (searchCriteria.Category is not null)
             {
                 originalQuery = originalQuery.Where(item => item.Category == searchCriteria.Category.Value.ToBookingCategory());

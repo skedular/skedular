@@ -52,6 +52,7 @@ type BookingDetails {
   lastModifiedByCustomer: CustomerDetails
   marketplaceBooking: MarketplaceBookingDetails
   notes: String
+  recurringBooking: RecurringBookingDetails
   until: DateTime!
 }
 
@@ -1822,6 +1823,7 @@ input BookingWhereInput {
   organizationCustomDomains: [String!]
   organizationIds: [String!]
   paymentStatuses: [PaymentStatus!]
+  recurringBookingIds: [String!]
   teamIds: [String!]
   toGt: DateTime
   toGte: DateTime

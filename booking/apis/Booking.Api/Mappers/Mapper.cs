@@ -27,7 +27,7 @@ namespace Booking.Api.Mappers;
 public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
-    RecurringBookingDetails MapTo(RecurringBooking src);
+    RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
@@ -70,36 +70,39 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
+            RecurringBooking = MapTo(src.RecurringBooking),
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };
 
-    public RecurringBookingDetails MapTo(RecurringBooking src) =>
-        new()
-        {
-            Id = src.Id,
-            From = src.From,
-            Until = src.Until,
-            Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
-            Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
-            Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
-            Interval = src.Interval,
-            ByMonthDay = src.ByMonthDay,
-            BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails { DayOfWeek = item, Name = item.ToDayOfWeekName() }),
-            EndType = new BookingRecurrenceEndTypeDetails { EndType = src.EndType, Name = src.EndType.ToRecurringBookingEndTypeName() },
-            StartDate = src.StartDate,
-            EndDate = src.EndDate,
-            OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates,
-            InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
-            InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
-            InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
-            CreatedByCustomerId = src.CreatedByCustomer?.Id,
-            LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
-            DeletedByCustomerId = src.DeletedByCustomer?.Id,
-            MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking)
-        };
+    public RecurringBookingDetails? MapTo(RecurringBooking? src) =>
+        src is null
+            ? null
+            : new RecurringBookingDetails
+            {
+                Id = src.Id,
+                From = src.From,
+                Until = src.Until,
+                Category = new BookingCategoryDetails { Category = src.Category, Name = src.Category.ToBookingCategoryName() },
+                Channel = new BookingChannelDetails { Channel = src.Channel, Name = src.Channel.ToBookingChannelName() },
+                Frequency = new BookingFrequencyDetails { Frequency = src.Frequency, Name = src.Frequency.ToBookingFrequencyName() },
+                Interval = src.Interval,
+                ByMonthDay = src.ByMonthDay,
+                BySetPosition = src.BySetPosition,
+                ByWeekDays = src.ByWeekDays.Select(item => new DayOfWeekDetails { DayOfWeek = item, Name = item.ToDayOfWeekName() }),
+                EndType = new BookingRecurrenceEndTypeDetails { EndType = src.EndType, Name = src.EndType.ToRecurringBookingEndTypeName() },
+                StartDate = src.StartDate,
+                EndDate = src.EndDate,
+                OccurrenceCount = src.OccurrenceCount,
+                SkippedDates = src.SkippedDates,
+                InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
+                InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
+                InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
+                CreatedByCustomerId = src.CreatedByCustomer?.Id,
+                LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
+                DeletedByCustomerId = src.DeletedByCustomer?.Id,
+                MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking)
+            };
 
     public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src) =>
         new()
@@ -121,7 +124,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
             DeletedByCustomerId = src.DeletedByCustomer?.Id,
-            RecurringBookings = src.RecurringBookings.Select(MapTo).ToList()
+            RecurringBookings = MapTo(src.RecurringBookings).ToList()
         };
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
@@ -423,7 +426,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         new(sharedMapper.MapTo(src.Node), src.Cursor);
 
     public BookingEdge MapTo(Edge<Shared.Models.Booking> src) => new(MapTo(src.Node), src.Cursor);
-    public RecurringBookingEdge MapTo(Edge<RecurringBooking> src) => new(MapTo(src.Node), src.Cursor);
+    public RecurringBookingEdge MapTo(Edge<RecurringBooking> src) => new(MapTo(src.Node)!, src.Cursor);
     public MarketplaceBookingSubscriptionEdge MapTo(Edge<MarketplaceBookingSubscription> src) => new(MapTo(src.Node), src.Cursor);
 
     public global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingEdge MapToGrpcResponse(Edge<Shared.Models.Booking> src) =>
@@ -603,4 +606,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             global::Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingCategory.NonWorkingDay => BookingCategory.NonWorkingDay,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    private IEnumerable<RecurringBookingDetails> MapTo(IEnumerable<RecurringBooking> src) => src.Select(MapTo)!;
 }

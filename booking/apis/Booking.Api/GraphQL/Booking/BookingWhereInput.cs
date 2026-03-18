@@ -27,6 +27,7 @@ public class BookingWhereInput
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; }
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string>? CustomerIds { get; set; }
+    [GraphQLName("recurringBookingIds")] public IEnumerable<string>? RecurringBookingIds { get; set; }
     [GraphQLName("includeMineOnly")] public bool? IncludeMineOnly { get; set; }
 
     [GraphQLName("includeFutureBookingsOnly")]

@@ -1,3 +1,4 @@
+using Booking.Api.GraphQL.RecurringBooking;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -26,6 +27,7 @@ public class BookingDetails : Node
     public string? LastModifiedByCustomerId { get; set; }
 
     [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
+    [GraphQLName("recurringBooking")] public RecurringBookingDetails? RecurringBooking { get; set; }
     [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
 
     [GraphQLName("hasRecurringInstanceOverrides")]

@@ -15,6 +15,12 @@ export const getMarketplaceBookingsLink = (integratedPlatrform: string | undefin
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
+export const getMarketplaceSubscriptionsLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string) => {
+  const baseLink = isCustomDomain ? 'subscriptions' : `organizations/${organizationCustomDomain}/subscriptions`;
+
+  return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+};
+
 export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string, productId: string) => {
   const baseLink = isCustomDomain ? `products/${productId}` : `organizations/${organizationCustomDomain}/products/${productId}`;
 

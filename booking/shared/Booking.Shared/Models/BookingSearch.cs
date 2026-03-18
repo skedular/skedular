@@ -23,7 +23,8 @@ public record BookingSearchCriteria(
     ICollection<string> OrganizationCustomDomains,
     ICollection<string> LocationIds,
     ICollection<string> TeamIds,
-    ICollection<string> CustomerIds);
+    ICollection<string> CustomerIds,
+    ICollection<string> RecurringBookingIds);
 
 public record BookingOrder(OrderDirection Direction, BookingOrderField Field);
 

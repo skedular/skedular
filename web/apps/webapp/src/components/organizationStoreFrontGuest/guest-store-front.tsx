@@ -15,6 +15,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useRefetchableFragment } from 'react-relay';
 import GuestStoreFrontFooter from './guest-store-front-footer';
+import GuestStoreFrontActiveSubscriptionsStrip from './guest-store-front-active-subscriptions-strip';
 import GuestStoreFrontLocationsStrip from './guest-store-front-locations-strip';
 import GuestStoreFrontProductCard from './guest-store-front-product-card';
 import GuestStoreFrontUpcomingBookingsStrip from './guest-store-front-upcoming-bookings-strip';
@@ -30,6 +31,7 @@ const RootQuery = graphql`
     $bookingsSearchCriteriaFrom: DateTime!
     $bookingsSearchCriteriaTo: DateTime!
     $includeUpcomingBookings: Boolean!
+    $includeActiveSubscriptions: Boolean!
   ) {
     organizationPublic(customDomain: $organizationCustomDomain) {
       name
@@ -63,6 +65,7 @@ const RootQuery = graphql`
         includeUpcomingBookings: $includeUpcomingBookings
         organizationCustomDomain: $organizationCustomDomain
       )
+    ...guestStoreFrontActiveSubscriptionsStrip_query @arguments(includeActiveSubscriptions: $includeActiveSubscriptions, organizationCustomDomain: $organizationCustomDomain)
   }
 `;
 
@@ -139,6 +142,7 @@ const GuestStoreFront = ({ queryReference, organizationCustomDomain }: Props) =>
     <Box sx={{ bgcolor: (theme) => theme.palette.background.default, minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ mt: { xs: 3, md: 4 } }}>
         <GuestStoreFrontUpcomingBookingsStrip rootDataRelay={rootData} />
+        <GuestStoreFrontActiveSubscriptionsStrip rootDataRelay={rootData} />
       </Container>
 
       <Container maxWidth="xl" sx={{ mt: { xs: 2, md: 3 } }}>
@@ -244,6 +248,7 @@ const GuestStoreFrontWithRelay = () => {
         bookingsSearchCriteriaFrom: today.toISOString(),
         bookingsSearchCriteriaTo: endOfWeek(today).add(-1, 'milliseconds').toISOString(),
         includeUpcomingBookings: !!user,
+        includeActiveSubscriptions: !!user,
       },
       {
         fetchPolicy: 'store-and-network',

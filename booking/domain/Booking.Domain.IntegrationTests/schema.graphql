@@ -33,6 +33,7 @@ type BookingDetails {
   channel: BookingChannelDetails!
   bookingResources: [BookingResourceDetails!]!
   involvedLocations: [Booking_LocationDetails!]!
+  recurringBooking: RecurringBookingDetails
   marketplaceBooking: MarketplaceBookingDetails
   hasRecurringInstanceOverrides: Boolean
   id: ID!
@@ -470,6 +471,7 @@ input BookingWhereInput {
   locationIds: [String!]
   teamIds: [String!]
   customerIds: [String!]
+  recurringBookingIds: [String!]
   includeMineOnly: Boolean
   includeFutureBookingsOnly: Boolean
 }

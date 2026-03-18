@@ -75,6 +75,7 @@ public class RootQuery(IMapper mapper)
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
+        where.RecurringBookingIds = where.RecurringBookingIds.RemoveInvalidIds();
 
         var (paginatedInfo, edges, totalCount) = await bookingService.GetPaginatedBookingsAsync(
             new PaginationInputParam(after, first, before, last),
@@ -98,7 +99,8 @@ public class RootQuery(IMapper mapper)
                 where.OrganizationCustomDomains.ToSafeCollection(),
                 where.LocationIds.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
-                where.CustomerIds.ToSafeCollection()),
+                where.CustomerIds.ToSafeCollection(),
+                where.RecurringBookingIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new BookingOrder(item.Direction, item.Field)).ToList(),
             false,
             cancellationToken);
