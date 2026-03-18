@@ -355,7 +355,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
                   {!collapsed && (
                     <BodyIconTypography
                       label="Subscriptions"
-                      startElement={!hideIcons && <SubscriptionsIcon excludeTooltip color="inherit" />}
+                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
                       spacing={3}
                       invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
                     />
@@ -425,12 +425,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
           <Box sx={{ backgroundColor: paletteMode === 'dark' ? emerald : coal, position: 'absolute', bottom: 0, width: '100%' }}>
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
-                <Button
-                  href={organizationSubscriptionsBaseLink}
-                  variant="contained"
-                  color="secondary"
-                  sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}
-                >
+                <Button href={organizationSubscriptionsBaseLink} variant="contained" color="secondary" sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}>
                   <BodyIconTypography label="Upgrade Plan" endElement={<UpgradeIcon fontSize="medium" />} color="inherit" />
                 </Button>
               )}

@@ -111,8 +111,7 @@ export const getOrganizationBookingsBaseLink = (integratedPlatrform: string | un
 
   return params ? `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings?${params}` : `${getOrganizationBaseLink(integratedPlatrform, id)}/bookings`;
 };
-export const getOrganizationSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions`;
+export const getOrganizationSubscriptionsBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/subscriptions`;
 export const getOrganizationUsersBaseLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/users`;
 export const getOrganizationUserProfileBaseLink = (integratedPlatrform: string | undefined, id: string, customerId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/users/${customerId}?section=profile`;

@@ -1,15 +1,15 @@
 import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
-import { getOrganizationBaseLink } from '@/components/links';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { joinErrors } from '@/libs/utils';
-import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
+import type { pageOrganizationSubscriptions_rootQuery } from '@/queries/__generated__/pageOrganizationSubscriptions_rootQuery.graphql';
 import { Breadcrumbs } from '@mui/material';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -140,24 +140,22 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       }
     }
   `);
-  const [commitMakeRecurringBookingPaymentNotRequired] =
-    useMutation<pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation>(graphql`
-      mutation pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation($input: MakeRecurringBookingPaymentNotRequiredInput!)
-      @raw_response_type {
-        makeRecurringBookingPaymentNotRequired(input: $input) {
-          recurringBooking {
+  const [commitMakeRecurringBookingPaymentNotRequired] = useMutation<pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation>(graphql`
+    mutation pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation($input: MakeRecurringBookingPaymentNotRequiredInput!) @raw_response_type {
+      makeRecurringBookingPaymentNotRequired(input: $input) {
+        recurringBooking {
+          id
+          marketplaceBooking {
             id
-            marketplaceBooking {
-              id
-              paymentStatus {
-                type
-                name
-              }
+            paymentStatus {
+              type
+              name
             }
           }
         }
       }
-    `);
+    }
+  `);
 
   const subscriptions = useMemo(
     () => rootData.marketplaceBookingSubscriptions.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
@@ -310,9 +308,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           <Grid container spacing={2} sx={{ mt: 1 }}>
             {subscriptions.length > 0 ? (
               subscriptions.map((subscription) => {
-                const sortedRecurringBookings = [...subscription.recurringBookings].sort(
-                  (left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime(),
-                );
+                const sortedRecurringBookings = [...subscription.recurringBookings].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
 
                 return (
                   <Grid key={subscription.id} size={{ xs: 12 }}>
@@ -322,11 +318,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                           <StackColumn spacing={0.4}>
                             <SubtitleIconTypography label={subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription'} />
                             <SmallIconTypography
-                              label={
-                                subscription.involvedCustomers.length > 0
-                                  ? `Customer: ${getCustomerDisplayName(subscription.involvedCustomers[0])}`
-                                  : 'Customer unavailable'
-                              }
+                              label={subscription.involvedCustomers.length > 0 ? `Customer: ${getCustomerDisplayName(subscription.involvedCustomers[0])}` : 'Customer unavailable'}
                               sx={{ opacity: 0.82 }}
                             />
                             <SmallIconTypography

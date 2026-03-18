@@ -942,7 +942,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     });
   }, [startTransition, refetchOrganization]);
 
-
   const handleOrganizationDetailUpdateClick = ({
     customDomain,
     name,

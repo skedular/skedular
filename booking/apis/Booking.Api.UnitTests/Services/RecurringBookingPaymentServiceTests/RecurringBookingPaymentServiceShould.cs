@@ -2,8 +2,8 @@ using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
-using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
@@ -16,10 +16,6 @@ using Shouldly;
 using Testing.Shared;
 using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
-using Customer = Booking.Shared.Database.Entities.Customer;
-using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
-using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
-using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.UnitTests.Services.RecurringBookingPaymentServiceTests;
 
@@ -60,7 +56,7 @@ public class RecurringBookingPaymentServiceShould
             PaymentMethod.BankTransfer,
             PaymentStatus.Confirmed,
             (service, recurringBookingId, token) => service.ConfirmPaymentAsync(recurringBookingId, token),
-            false);
+            shouldSignalCardWorkflow: false);
 
     [Theory]
     [AutoFakeItEasyData]
@@ -97,7 +93,7 @@ public class RecurringBookingPaymentServiceShould
             PaymentMethod.Card,
             PaymentStatus.Rejected,
             (service, recurringBookingId, token) => service.RejectPaymentAsync(recurringBookingId, token),
-            true);
+            shouldSignalCardWorkflow: true);
 
     [Theory]
     [AutoFakeItEasyData]
@@ -134,7 +130,7 @@ public class RecurringBookingPaymentServiceShould
             PaymentMethod.BankTransfer,
             PaymentStatus.NoPaymentRequired,
             (service, recurringBookingId, token) => service.MakePaymentNotRequiredAsync(recurringBookingId, token),
-            false);
+            shouldSignalCardWorkflow: false);
 
     private static async Task AssertUpdatePaymentStatusAsync(
         IDbTransactionBuilder transactionBuilder,
@@ -153,13 +149,13 @@ public class RecurringBookingPaymentServiceShould
         CancellationToken cancellationToken,
         PaymentMethod paymentMethod,
         PaymentStatus expectedPaymentStatus,
-        Func<RecurringBookingPaymentService, string, CancellationToken, Task<RecurringBooking>> act,
+        Func<RecurringBookingPaymentService, string, CancellationToken, Task<Shared.Models.RecurringBooking>> act,
         bool shouldSignalCardWorkflow)
     {
         var customer = new Customer { Id = "customer-1" };
         var subscription = new MarketplaceBookingSubscription { Id = "subscription-1" };
         var organization = new Organization { Id = "organization-1" };
-        var recurringBooking = new Shared.Database.Entities.RecurringBooking
+        var recurringBooking = new RecurringBooking
         {
             Id = "recurring-1",
             Channel = BookingChannel.Marketplace.ToBookingChannel(),
@@ -174,7 +170,7 @@ public class RecurringBookingPaymentServiceShould
             InvolvedOrganizations = [organization]
         };
         ICollection<BookingEntity> relatedBookings = new List<BookingEntity> { new() { Id = "booking-1" }, new() { Id = "booking-2" } };
-        var mappedRecurringBooking = new RecurringBooking { Id = recurringBooking.Id };
+        var mappedRecurringBooking = new Shared.Models.RecurringBooking { Id = recurringBooking.Id };
 
         A.CallTo(() => cachedCustomerService.GetAsync(cancellationToken)).Returns(customer);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
@@ -209,11 +205,9 @@ public class RecurringBookingPaymentServiceShould
                     A<IUnitOfWork>._))
                 .MustNotHaveHappened();
         }
-
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName, subscription.Id,
-                cancellationToken))
+        A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName, subscription.Id, cancellationToken))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, "booking-1", cancellationToken))
             .MustHaveHappenedOnceExactly();
