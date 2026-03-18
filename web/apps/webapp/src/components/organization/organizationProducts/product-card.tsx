@@ -4,7 +4,6 @@ import { EllipseMenuIcon, ProductIcon } from '@/components/icons';
 import { getOrganizationProductBaseLink } from '@/components/links';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
-import BookProductButton from '@/components/product/bookProduct/book-product-button';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, emerald, flame, sandstone } from '@/libs/theme';
 import { joinErrors } from '@/libs/utils';
@@ -329,17 +328,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
                   </StackRow>
                 </IconButton>
               )}
-
-              <BookProductButton
-                organizationCustomDomain={organizationCustomDomain}
-                productId={productDetails.id}
-                label="Book Now"
-                hideIcon
-                variant="contained"
-                size="small"
-                sx={{ textTransform: 'none' }}
-                invertDefaultColor={paletteMode === 'dark'}
-              />
             </StackRow>
           }
           action={

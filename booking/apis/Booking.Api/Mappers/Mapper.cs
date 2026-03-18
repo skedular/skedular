@@ -32,7 +32,6 @@ public interface IMapper
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
     RecurringBooking MapTo(AddPrivateRecurringBookingInput src);
     RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src);
-    RecurringBooking MapTo(AddMarketplaceRecurringBookingInput src);
     MarketplaceBookingSubscription MapTo(AddMarketplaceBookingSubscriptionInput src);
     Shared.Models.Booking MapTo(UpdatePrivateBookingInput src);
     Shared.Models.Booking MapTo(AddMarketplaceBookingInput src);
@@ -202,43 +201,6 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     new Organization { CustomDomain = item }))
                 .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
-        };
-    }
-
-    public RecurringBooking MapTo(AddMarketplaceRecurringBookingInput src)
-    {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
-
-        return new RecurringBooking
-        {
-            Id = src.Id.ToSafeString(),
-            From = src.From,
-            Until = src.Until,
-            Category = src.Category ?? BookingCategory.WorkingFromCoworkingSpace,
-            Frequency = src.Frequency,
-            Interval = src.Interval,
-            ByMonthDay = src.ByMonthDay,
-            BySetPosition = src.BySetPosition,
-            ByWeekDays = src.ByWeekDays.ToSafeCollection(),
-            EndType = src.EndType,
-            StartDate = src.StartDate,
-            EndDate = src.EndDate,
-            OccurrenceCount = src.OccurrenceCount,
-            SkippedDates = src.SkippedDates.ToSafeCollection(),
-            InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
-                    new Organization { CustomDomain = item }))
-                .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            MarketplaceBooking = new MarketplaceBooking
-            {
-                Quantity = src.Quantity,
-                ProductVersion = new ProductVersion { Id = src.ProductVersionId },
-                PaymentMethod = src.PaymentMethod,
-                InvoiceEmailList = src.InvoiceEmailList.ToSafeCollection(),
-                ProductPricing = ProductPricing.Empty(src.PricingId)
-            }
         };
     }
 

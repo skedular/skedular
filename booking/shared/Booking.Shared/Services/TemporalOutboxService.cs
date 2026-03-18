@@ -39,13 +39,6 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork);
 
     /// <summary>
-    ///     Starts a workflow to book marketplace recurring resources.
-    /// </summary>
-    /// <param name="args">The input arguments for the workflow.</param>
-    /// <param name="unitOfWork">The unit of work for the operation.</param>
-    void StartBookMarketplaceRecurringResources(BookMarketplaceRecurringResourcesInput args, IUnitOfWork unitOfWork);
-
-    /// <summary>
     ///     Starts a workflow to book marketplace booking subscription resources.
     /// </summary>
     /// <param name="args">The input arguments for the workflow.</param>
@@ -97,13 +90,6 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
 
     /// <summary>
-    ///     Signals the BookMarketplaceRecurringResources workflow that a recurring booking was deleted.
-    /// </summary>
-    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
-    /// <param name="unitOfWork">The unit of work for the operation.</param>
-    void SignalWorkflowBookMarketplaceRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork);
-
-    /// <summary>
     ///     Signals the BookMarketplaceBookingSubscriptionResources workflow that a marketplace booking subscription was deleted.
     /// </summary>
     /// <param name="marketplaceBookingSubscriptionId">The ID of the marketplace booking subscription.</param>
@@ -125,8 +111,6 @@ public class TemporalOutboxService(
     private static readonly string s_payBookingViaBankTransfer = typeof(PayBookingViaBankTransfer).ToWorkflowType();
     private static readonly string s_bookPrivateRecurringResources = typeof(BookPrivateRecurringResources).ToWorkflowType();
 
-    private static readonly string s_bookMarketplaceRecurringResources = typeof(BookMarketplaceRecurringResources).ToWorkflowType();
-
     private static readonly string s_bookMarketplaceBookingSubscriptionResources =
         typeof(BookMarketplaceBookingSubscriptionResources).ToWorkflowType();
 
@@ -147,10 +131,6 @@ public class TemporalOutboxService(
 
     private static readonly string s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync =
         typeof(BookPrivateRecurringResources).GetMethod(nameof(BookPrivateRecurringResources.RecurringBookingDeletedAsync))!.ToWorkflowSignalType();
-
-    private static readonly string s_bookMarketplaceRecurringResourcesRecurringBookingDeletedAsync =
-        typeof(BookMarketplaceRecurringResources).GetMethod(nameof(BookMarketplaceRecurringResources.RecurringBookingDeletedAsync))!
-            .ToWorkflowSignalType();
 
     private static readonly string s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync =
         typeof(BookMarketplaceBookingSubscriptionResources)
@@ -183,19 +163,6 @@ public class TemporalOutboxService(
 
     public void StartBookPrivateRecurringResources(BookPrivateRecurringResourcesInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<BookPrivateRecurringResources, BookPrivateRecurringResourcesInput>(
-            args,
-            new WorkflowOptions
-            {
-                Id = temporalHelperService.ToId(args.RecurringBookingId),
-                TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                RetryPolicy = null,
-                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
-            },
-            unitOfWork);
-
-    public void StartBookMarketplaceRecurringResources(BookMarketplaceRecurringResourcesInput args, IUnitOfWork unitOfWork) =>
-        temporalOutboxWorkflowExecutor.Execute<BookMarketplaceRecurringResources, BookMarketplaceRecurringResourcesInput>(
             args,
             new WorkflowOptions
             {
@@ -274,14 +241,6 @@ public class TemporalOutboxService(
             new WorkflowSignalOptions(),
             unitOfWork);
 
-    public void SignalWorkflowBookMarketplaceRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork) =>
-        temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(recurringBookingId),
-            s_bookMarketplaceRecurringResourcesRecurringBookingDeletedAsync,
-            new MarketplaceRecurringBookingDeletedArgs(recurringBookingId),
-            new WorkflowSignalOptions(),
-            unitOfWork);
-
     public void SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
         string marketplaceBookingSubscriptionId,
         IUnitOfWork unitOfWork) =>
@@ -338,22 +297,6 @@ public class TemporalOutboxService(
 
                 _ = await temporalClient.StartWorkflowAsync(
                     (BookPrivateRecurringResources workflow) => workflow.ExecuteAsync(input),
-                    workflowOptions);
-            }
-            catch (WorkflowAlreadyStartedException)
-            {
-            }
-        }
-        else if (workflowType == s_bookMarketplaceRecurringResources)
-        {
-            try
-            {
-                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-                var input = JsonSerializer.Deserialize<BookMarketplaceRecurringResourcesInput>(executionArgs);
-                ArgumentNullException.ThrowIfNull(input);
-
-                _ = await temporalClient.StartWorkflowAsync(
-                    (BookMarketplaceRecurringResources workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)
@@ -483,33 +426,6 @@ public class TemporalOutboxService(
                 _ = await temporalClient.StartWorkflowAsync(
                     (BookPrivateRecurringResources workflow) =>
                         workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
-                    new WorkflowOptions
-                    {
-                        Id = temporalHelperService.ToId(input.RecurringBookingId),
-                        TaskQueue = temporalConfiguration.Worker.TaskQueue,
-                        RetryPolicy = null,
-                        IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-                        IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
-                    });
-            }
-        }
-        else if (signalType == s_bookMarketplaceRecurringResourcesRecurringBookingDeletedAsync)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
-            var input = JsonSerializer.Deserialize<MarketplaceRecurringBookingDeletedArgs>(executionArgs);
-            ArgumentNullException.ThrowIfNull(input);
-
-            if (await temporalHelperService.IsRunningAsync<BookMarketplaceRecurringResources>(workflowId, cancellationToken))
-            {
-                await temporalClient
-                    .GetWorkflowHandle<BookMarketplaceRecurringResources>(workflowId)
-                    .SignalAsync(workflow => workflow.RecurringBookingDeletedAsync(input), workflowSignalOptions);
-            }
-            else
-            {
-                _ = await temporalClient.StartWorkflowAsync(
-                    (BookMarketplaceRecurringResources workflow) =>
-                        workflow.ExecuteAsync(new BookMarketplaceRecurringResourcesInput(input.RecurringBookingId)),
                     new WorkflowOptions
                     {
                         Id = temporalHelperService.ToId(input.RecurringBookingId),

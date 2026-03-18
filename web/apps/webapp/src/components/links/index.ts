@@ -207,8 +207,6 @@ export const getOrganizationProductsBaseLink = (integratedPlatrform: string | un
 export const getOrganizationProductBaseLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}`;
 export const getOrganizationProductAddLink = (integratedPlatrform: string | undefined, id: string) => `${getOrganizationBaseLink(integratedPlatrform, id)}/products/add`;
-export const getOrganizationBookingProductLink = (integratedPlatrform: string | undefined, id: string, productId: string) =>
-  `${getOrganizationBaseLink(integratedPlatrform, id)}/products/${productId}/book`;
 
 export const getOrganizationSsoSignInBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/sso-signin?redirectUrl=${window.location.href}`;

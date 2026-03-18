@@ -50,14 +50,12 @@ public class Program
             .AddWorkflow<PayBookingViaCard>()
             .AddWorkflow<PayBookingViaBankTransfer>()
             .AddWorkflow<BookPrivateRecurringResources>()
-            .AddWorkflow<BookMarketplaceRecurringResources>()
             .AddWorkflow<BookMarketplaceBookingSubscriptionResources>()
             .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>()
             .AddScopedActivities<InvoiceIntegrations>()
             .AddScopedActivities<PrivateRecurringBookingIntegrations>()
-            .AddScopedActivities<MarketplaceRecurringBookingIntegrations>()
             .AddScopedActivities<MarketplaceBookingSubscriptionIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();
