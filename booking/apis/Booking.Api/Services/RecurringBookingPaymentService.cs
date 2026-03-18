@@ -65,6 +65,13 @@ public class RecurringBookingPaymentService(
                 new SetPaymentStatusArgs(recurringBooking.MarketplaceBooking.PaymentStatus),
                 repositoryFactory.UnitOfWork);
         }
+        else if (recurringBooking.MarketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer)
+        {
+            temporalOutboxService.SignalWorkflowPayRecurringBookingViaBankTransferSetPaymentStatus(
+                recurringBooking.Id,
+                new SetPaymentStatusArgs(recurringBooking.MarketplaceBooking.PaymentStatus),
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);

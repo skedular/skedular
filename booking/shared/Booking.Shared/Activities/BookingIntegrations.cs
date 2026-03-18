@@ -19,6 +19,8 @@ public record ReleaseBookingResourcesInput(string BookingId);
 
 public record CalculateBookingDifferentAmountsInput(string BookingId);
 
+public record CalculateRecurringBookingDifferentAmountsInput(string RecurringBookingId);
+
 public class BookingIntegrations(
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
@@ -113,6 +115,76 @@ public class BookingIntegrations(
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
         await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, booking.Id, cancellationToken);
+    }
+
+    [Activity]
+    public async Task CalculateRecurringBookingDifferentAmountsAsync(CalculateRecurringBookingDifferentAmountsInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
+        if (recurringBooking is null || recurringBooking.IsDeleted() || recurringBooking.MarketplaceBooking is null)
+        {
+            return;
+        }
+
+        var marketplaceBooking =
+            await repositoryFactory.MarketplaceBookingRepository.GetByIdAsync(recurringBooking.MarketplaceBooking.Id, cancellationToken);
+        if (marketplaceBooking is null)
+        {
+            return;
+        }
+
+        var organization = await organizationServiceClient.Admin_GetAsync(
+            new Admin_GetInput { Id = marketplaceBooking.ProductVersion.Product.Organization.Id },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+        ArgumentNullException.ThrowIfNull(organization);
+
+        await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
+
+        var totalPrice = (marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity).RoundedDecimal();
+        marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
+
+        if (organization.TaxDetails is null)
+        {
+            marketplaceBooking.TotalAmountExcludeTax = totalPrice;
+            marketplaceBooking.TaxAmount = 0.00m;
+            marketplaceBooking.TaxRatePercentage = 0.00m;
+            marketplaceBooking.TotalAmount = totalPrice;
+        }
+        else
+        {
+            var isPriceTaxInclusive = marketplaceBooking.ProductPricing.IsTaxInclusive;
+            var taxRatePercentage = Convert.ToDecimal(organization.TaxDetails.TaxRatePercentage);
+            marketplaceBooking.TaxRatePercentage = taxRatePercentage.RoundedDecimal();
+
+            if (isPriceTaxInclusive)
+            {
+                marketplaceBooking.TotalAmount = totalPrice;
+                marketplaceBooking.TotalAmountExcludeTax = (marketplaceBooking.TotalAmount.Value * 100 / (100 + taxRatePercentage)).RoundedDecimal();
+                marketplaceBooking.TaxAmount =
+                    (marketplaceBooking.TotalAmount.Value - marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal();
+            }
+            else
+            {
+                marketplaceBooking.TotalAmountExcludeTax = totalPrice;
+                marketplaceBooking.TaxAmount = (marketplaceBooking.TotalAmountExcludeTax.Value * taxRatePercentage / 100).RoundedDecimal();
+                marketplaceBooking.TotalAmount =
+                    (marketplaceBooking.TotalAmountExcludeTax.Value + marketplaceBooking.TaxAmount.Value).RoundedDecimal();
+            }
+        }
+
+        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
+
+        if (recurringBooking.MarketplaceBookingSubscription is not null)
+        {
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+                Constants.MarketplaceBookingSubscriptionTopicName,
+                recurringBooking.MarketplaceBookingSubscription.Id,
+                cancellationToken);
+        }
     }
 
     [Activity]

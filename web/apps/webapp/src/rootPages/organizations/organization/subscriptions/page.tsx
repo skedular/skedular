@@ -361,6 +361,18 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                                       />
                                     </StackColumn>
                                     <PushToRight />
+                                    {cycleMarketplaceBooking?.invoiceUrl ? (
+                                      <Button
+                                        variant="text"
+                                        size="small"
+                                        href={cycleMarketplaceBooking.invoiceUrl}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        sx={{ textTransform: 'none' }}
+                                      >
+                                        Download invoice
+                                      </Button>
+                                    ) : null}
                                     {cycleMarketplaceBooking?.paymentStatus.type === 'PENDING' && (
                                       <StackRow sx={{ flexWrap: 'wrap', gap: 1 }}>
                                         <Button

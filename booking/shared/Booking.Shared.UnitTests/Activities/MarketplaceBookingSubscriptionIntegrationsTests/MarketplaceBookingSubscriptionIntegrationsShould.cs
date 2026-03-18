@@ -206,7 +206,8 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
                 A<PayRecurringBookingViaCardInput>.That.Matches(item =>
                     item.RecurringBookingId == recurringBooking.Id &&
-                    item.ExpiryDate == recurringBooking.MarketplaceBooking.PaymentExpiry),
+                    item.ExpiryDate == recurringBooking.MarketplaceBooking.PaymentExpiry &&
+                    item.InvoiceEmailList.Count == 0),
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
@@ -300,7 +301,95 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
         A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
                 A<PayRecurringBookingViaCardInput>.That.Matches(item =>
                     item.RecurringBookingId == recurringBooking.Id &&
-                    item.ExpiryDate == recurringBooking.MarketplaceBooking!.PaymentExpiry),
+                    item.ExpiryDate == recurringBooking.MarketplaceBooking!.PaymentExpiry &&
+                    item.InvoiceEmailList.Count == 0),
+                environment.CancellationTokenSource.Token))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Start_Recurring_Cycle_Bank_Transfer_Workflow_When_Current_Cycle_Already_Exists_Without_Invoice(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IRecurringBookingScheduleService recurringBookingScheduleService,
+        [Frozen] ITemporalService temporalService,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceBookingSubscriptionIntegrations sut,
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        IRecurringBookingRepository recurringBookingRepository,
+        ICustomerRepository customerRepository,
+        IBookingRepository bookingRepository)
+    {
+        var environment = new ActivityEnvironment();
+        var customer = new Customer { Id = "customer-1" };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "rb-1",
+            StartDate = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 3, 31, 0, 0, 0, TimeSpan.Zero),
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Quantity = 1,
+                IsPaymentRequired = true,
+                PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod(),
+                PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
+                PaymentExpiry = new DateTimeOffset(2026, 3, 18, 10, 0, 0, TimeSpan.Zero),
+                InvoiceUrl = null,
+                ProductPricing =
+                    ProductPricing.Empty("pricing-1") with
+                    {
+                        PurchaseCadence = ProductPricingCadence.Monthly,
+                        BookingCadence = ProductPricingCadence.Daily,
+                        NumberOfResourcesToBook = 1,
+                        BillingMode = ProductPricingBillingMode.Upfront
+                    },
+                ProductVersion = new ProductVersion { Id = "pv-1" }
+            },
+            InvolvedCustomers = [customer],
+            InvolvedOrganizations = [],
+            InvolvedTeams = []
+        };
+        var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
+        subscription.StartedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero);
+        subscription.RecurringBookings = [recurringBooking];
+        subscription.InvolvedCustomers = [customer];
+        subscription.MarketplaceBooking.Quantity = 1;
+        subscription.MarketplaceBooking.PaymentMethod = PaymentMethod.BankTransfer.ToPaymentMethod();
+        subscription.MarketplaceBooking.ProductPricing = subscription.MarketplaceBooking.ProductPricing with
+        {
+            PurchaseCadence = ProductPricingCadence.Monthly,
+            BookingCadence = ProductPricingCadence.Daily,
+            BillingMode = ProductPricingBillingMode.Upfront
+        };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+            .Returns(subscription);
+        A.CallTo(() => recurringBookingRepository.GetByIdAsync("rb-1", environment.CancellationTokenSource.Token))
+            .Returns(recurringBooking);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync("rb-1", A<DateTimeOffset>._, null, environment.CancellationTokenSource.Token))
+            .Returns([]);
+        A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
+                recurringBooking,
+                A<DateTimeOffset>._,
+                A<DateTimeOffset>._,
+                A<ICollection<Database.Entities.Booking>>._))
+            .Returns(new RecurringBookingReconciliationPlan([], [], [], false));
+
+        _ = await environment.RunAsync(() =>
+            sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
+                new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1")));
+
+        A.CallTo(() => temporalService.StartWorkflowPayRecurringBookingViaBankTransferAsync(
+                A<PayRecurringBookingViaBankTransferInput>.That.Matches(item =>
+                    item.RecurringBookingId == recurringBooking.Id &&
+                    item.ExpiryDate == recurringBooking.MarketplaceBooking.PaymentExpiry &&
+                    item.InvoiceEmailList.Count == 0),
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }

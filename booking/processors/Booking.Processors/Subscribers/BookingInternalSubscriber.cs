@@ -70,14 +70,18 @@ public class BookingInternalSubscriber(
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
-        marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
-        marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
-            ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
-            : null;
-        marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
-            ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
-            : null;
+        if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is null)
+        {
+            marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
+            marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+            marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
+                ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
+                : null;
+            marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
+                ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
+                : null;
+        }
+
         marketplaceBooking.Currency = session.Currency;
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
@@ -120,14 +124,17 @@ public class BookingInternalSubscriber(
 
         var marketplaceBooking = stripeCheckoutSession.MarketplaceBooking;
         marketplaceBooking.PaymentStatus = PaymentStatusConstants.Expired;
-        marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
-        marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
-        marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
-            ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
-            : null;
-        marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
-            ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
-            : null;
+        if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is null)
+        {
+            marketplaceBooking.TotalAmountExcludeTax = session.AmountSubtotal is null ? null : (decimal)session.AmountSubtotal / 100;
+            marketplaceBooking.TotalAmount = session.AmountTotal is null ? null : (decimal)session.AmountTotal / 100;
+            marketplaceBooking.TaxAmount = marketplaceBooking.TotalAmountExcludeTax is not null && marketplaceBooking.TotalAmount is not null
+                ? marketplaceBooking.TotalAmount - marketplaceBooking.TotalAmountExcludeTax
+                : null;
+            marketplaceBooking.TaxRatePercentage = marketplaceBooking.TaxAmount is not null && marketplaceBooking.TotalAmountExcludeTax is not null
+                ? (marketplaceBooking.TaxAmount.Value * 100 / marketplaceBooking.TotalAmountExcludeTax.Value).RoundedDecimal()
+                : null;
+        }
 
         marketplaceBooking.Currency = session.Currency;
         _ = repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);

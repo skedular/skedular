@@ -43,12 +43,28 @@ public interface ITemporalService
     Task StartWorkflowPayRecurringBookingViaCardAsync(PayRecurringBookingViaCardInput args, CancellationToken cancellationToken);
 
     /// <summary>
+    ///     Starts a workflow to pay for a recurring booking cycle via bank transfer.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    Task StartWorkflowPayRecurringBookingViaBankTransferAsync(PayRecurringBookingViaBankTransferInput args, CancellationToken cancellationToken);
+
+    /// <summary>
     ///     Signals a payment status update to the recurring-booking card-payment workflow.
     /// </summary>
     /// <param name="recurringBookingId">The ID of the recurring booking.</param>
     /// <param name="args">The payment status arguments.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     Task SignalPayRecurringBookingViaCardWorkflowAsync(string recurringBookingId, SetPaymentStatusArgs args, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Signals a payment status update to the recurring-booking bank-transfer workflow.
+    /// </summary>
+    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
+    /// <param name="args">The payment status arguments.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    Task SignalPayRecurringBookingViaBankTransferWorkflowAsync(string recurringBookingId, SetPaymentStatusArgs args,
+        CancellationToken cancellationToken);
 
     /// <summary>
     ///     Signals a payment status update to the PayBookingViaCard workflow.
@@ -132,12 +148,31 @@ public class TemporalService(
     /// </summary>
     /// <param name="args">The input arguments for the workflow.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
-    public async Task StartWorkflowPayRecurringBookingViaCardAsync(PayRecurringBookingViaCardInput args, CancellationToken cancellationToken) => 
+    public async Task StartWorkflowPayRecurringBookingViaCardAsync(PayRecurringBookingViaCardInput args, CancellationToken cancellationToken) =>
         await temporalClient.StartWorkflowAsync(
             (PayRecurringBookingViaCard workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaCardPrefix}-{args.RecurringBookingId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    /// <summary>
+    ///     Starts a workflow to pay for a recurring booking cycle via bank transfer.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task StartWorkflowPayRecurringBookingViaBankTransferAsync(
+        PayRecurringBookingViaBankTransferInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (PayRecurringBookingViaBankTransfer workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{args.RecurringBookingId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -157,6 +192,24 @@ public class TemporalService(
         await temporalClient
             .GetWorkflowHandle<PayRecurringBookingViaCard>(
                 temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaCardPrefix}-{recurringBookingId}"))
+            .SignalAsync(
+                workflow => workflow.SetPaymentStatusAsync(args),
+                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+            );
+
+    /// <summary>
+    ///     Signals a payment status update to the recurring-booking bank-transfer workflow.
+    /// </summary>
+    /// <param name="recurringBookingId">The ID of the recurring booking.</param>
+    /// <param name="args">The payment status arguments.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    public async Task SignalPayRecurringBookingViaBankTransferWorkflowAsync(
+        string recurringBookingId,
+        SetPaymentStatusArgs args,
+        CancellationToken cancellationToken) =>
+        await temporalClient
+            .GetWorkflowHandle<PayRecurringBookingViaBankTransfer>(
+                temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{recurringBookingId}"))
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }

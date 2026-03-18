@@ -52,6 +52,7 @@ public class Program
             .AddWorkflow<BookPrivateRecurringResources>()
             .AddWorkflow<BookMarketplaceBookingSubscriptionResources>()
             .AddWorkflow<PayRecurringBookingViaCard>()
+            .AddWorkflow<PayRecurringBookingViaBankTransfer>()
             .AddScopedActivities<LocationResourceSlot>()
             .AddScopedActivities<StripeIntegrations>()
             .AddScopedActivities<BookingIntegrations>()

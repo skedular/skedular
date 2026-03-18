@@ -6,19 +6,19 @@ using Temporalio.Workflows;
 
 namespace Booking.Shared.Workflows;
 
-public record PayRecurringBookingViaCardInput(string RecurringBookingId, DateTimeOffset ExpiryDate, ICollection<string> InvoiceEmailList);
+public record PayRecurringBookingViaBankTransferInput(string RecurringBookingId, DateTimeOffset ExpiryDate, ICollection<string> InvoiceEmailList);
 
-public record PayRecurringBookingViaCardState(string? PaymentStatus);
+public record PayRecurringBookingViaBankTransferState(string? PaymentStatus);
 
 [Workflow]
-public class PayRecurringBookingViaCard
+public class PayRecurringBookingViaBankTransfer
 {
-    private PayRecurringBookingViaCardState? _state;
+    private PayRecurringBookingViaBankTransferState? _state;
 
     [WorkflowRun]
-    public async Task ExecuteAsync(PayRecurringBookingViaCardInput args)
+    public async Task ExecuteAsync(PayRecurringBookingViaBankTransferInput args)
     {
-        _state = new PayRecurringBookingViaCardState(null);
+        _state = new PayRecurringBookingViaBankTransferState(null);
 
         try
         {
@@ -42,54 +42,6 @@ public class PayRecurringBookingViaCard
                     TaskQueue = Workflow.Info.TaskQueue,
                     RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
                 });
-
-            var upsertProductAndPricingResponse = await Workflow.ExecuteActivityAsync(
-                (StripeIntegrations activity) => activity.UpsertRecurringBookingProductAndPricingAsync(
-                    new UpsertRecurringBookingProductAndPricingInput(args.RecurringBookingId)),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                });
-            if (upsertProductAndPricingResponse is null)
-            {
-                return;
-            }
-
-            var upsertBookingRelatedStripeCustomerResponse = await Workflow.ExecuteActivityAsync(
-                (StripeIntegrations activity) => activity.UpsertRecurringBookingRelatedStripeCustomerAsync(
-                    new UpsertRecurringBookingRelatedStripeCustomerInput(args.RecurringBookingId,
-                        upsertProductAndPricingResponse.StripeConnectAccountId)),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                });
-            if (upsertBookingRelatedStripeCustomerResponse is null)
-            {
-                return;
-            }
-
-            var createCheckoutSessionAsyncResponse = await Workflow.ExecuteActivityAsync(
-                (StripeIntegrations activity) => activity.CreateRecurringBookingCheckoutSessionAsync(
-                    new CreateRecurringBookingCheckoutSessionAsyncInput(
-                        args.RecurringBookingId,
-                        upsertProductAndPricingResponse.StripeConnectAccountId,
-                        upsertBookingRelatedStripeCustomerResponse.StripeCustomerId)),
-                new ActivityOptions
-                {
-                    StartToCloseTimeout = TimeSpan.FromSeconds(30),
-                    TaskQueue = Workflow.Info.TaskQueue,
-                    RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                });
-            if (createCheckoutSessionAsyncResponse is null ||
-                createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
-                    or PaymentStatus.NoPaymentRequired)
-            {
-                goto GenerateFullyPaidInvoice;
-            }
 
             if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null, GetDelayDuration(args)))
             {
@@ -122,7 +74,6 @@ public class PayRecurringBookingViaCard
             return;
         }
 
-        GenerateFullyPaidInvoice:
         await Workflow.ExecuteActivityAsync(
             (InvoiceIntegrations activity) =>
                 activity.GenerateAndSendRecurringInvoiceAsync(
@@ -145,12 +96,12 @@ public class PayRecurringBookingViaCard
         return Task.CompletedTask;
     }
 
-    private static TimeSpan GetDelayDuration(PayRecurringBookingViaCardInput args)
+    private static TimeSpan GetDelayDuration(PayRecurringBookingViaBankTransferInput args)
     {
         var delayDuration = args.ExpiryDate - Workflow.UtcNow;
         if (delayDuration <= TimeSpan.Zero)
         {
-            throw new ApplicationFailureException($"Failed to complete recurring booking {args.RecurringBookingId} paid via card");
+            throw new ApplicationFailureException($"Failed to complete recurring booking {args.RecurringBookingId} paid via bank transfer");
         }
 
         return delayDuration;

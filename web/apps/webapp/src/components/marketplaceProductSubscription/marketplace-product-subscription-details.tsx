@@ -415,6 +415,17 @@ const MarketplaceProductSubscriptionDetails = ({
                                   variant={isCurrentCycle && currentMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
                                 />
                               </StackRow>
+                              {recurringBooking.marketplaceBooking?.invoiceUrl ? (
+                                <Link
+                                  href={recurringBooking.marketplaceBooking.invoiceUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  underline="hover"
+                                  sx={{ mt: 1.25, display: 'inline-flex' }}
+                                >
+                                  Download invoice
+                                </Link>
+                              ) : null}
                             </CardContent>
                           </Card>
                         );

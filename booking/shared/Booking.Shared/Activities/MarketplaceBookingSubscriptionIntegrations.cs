@@ -372,7 +372,19 @@ public class MarketplaceBookingSubscriptionIntegrations(
         if (ShouldStartRecurringBookingCardPaymentWorkflow(recurringMarketplaceBooking))
         {
             await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
-                new PayRecurringBookingViaCardInput(recurringBooking.Id, recurringMarketplaceBooking.PaymentExpiry),
+                new PayRecurringBookingViaCardInput(
+                    recurringBooking.Id,
+                    recurringMarketplaceBooking.PaymentExpiry,
+                    recurringMarketplaceBooking.InvoiceEmailList.ToList()),
+                cancellationToken);
+        }
+        else if (ShouldStartRecurringBookingBankTransferPaymentWorkflow(recurringMarketplaceBooking))
+        {
+            await temporalService.StartWorkflowPayRecurringBookingViaBankTransferAsync(
+                new PayRecurringBookingViaBankTransferInput(
+                    recurringBooking.Id,
+                    recurringMarketplaceBooking.PaymentExpiry,
+                    recurringMarketplaceBooking.InvoiceEmailList.ToList()),
                 cancellationToken);
         }
 
@@ -393,15 +405,40 @@ public class MarketplaceBookingSubscriptionIntegrations(
         var marketplaceBooking = recurringBooking.MarketplaceBooking;
 
         if (marketplaceBooking is null ||
-            marketplaceBooking.StripeCheckoutSession is not null ||
-            !ShouldStartRecurringBookingCardPaymentWorkflow(marketplaceBooking))
+            (!ShouldStartRecurringBookingCardPaymentWorkflow(marketplaceBooking) &&
+             !ShouldStartRecurringBookingBankTransferPaymentWorkflow(marketplaceBooking)))
         {
             return;
         }
 
-        await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
-            new PayRecurringBookingViaCardInput(recurringBooking.Id, marketplaceBooking.PaymentExpiry),
-            cancellationToken);
+        if (ShouldStartRecurringBookingCardPaymentWorkflow(marketplaceBooking))
+        {
+            if (marketplaceBooking.StripeCheckoutSession is not null)
+            {
+                return;
+            }
+
+            await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
+                new PayRecurringBookingViaCardInput(
+                    recurringBooking.Id,
+                    marketplaceBooking.PaymentExpiry,
+                    marketplaceBooking.InvoiceEmailList.ToList()),
+                cancellationToken);
+        }
+        else if (ShouldStartRecurringBookingBankTransferPaymentWorkflow(marketplaceBooking))
+        {
+            if (!string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceUrl))
+            {
+                return;
+            }
+
+            await temporalService.StartWorkflowPayRecurringBookingViaBankTransferAsync(
+                new PayRecurringBookingViaBankTransferInput(
+                    recurringBooking.Id,
+                    marketplaceBooking.PaymentExpiry,
+                    marketplaceBooking.InvoiceEmailList.ToList()),
+                cancellationToken);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -532,8 +569,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 TaxRatePercentage = marketplaceBooking.TaxRatePercentage,
                 TotalAmount = marketplaceBooking.TotalAmount,
                 Currency = marketplaceBooking.Currency,
-                InvoiceUrl = marketplaceBooking.InvoiceUrl,
-                InvoiceNumber = marketplaceBooking.InvoiceNumber,
+                InvoiceUrl = null,
+                InvoiceNumber = null,
                 CheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl,
                 InvoiceEmailList = marketplaceBooking.InvoiceEmailList,
                 BillingMode = marketplaceBooking.BillingMode,
@@ -548,6 +585,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
         marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
+
+    private static bool ShouldStartRecurringBookingBankTransferPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
+        marketplaceBooking.IsPaymentRequired &&
+        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer;
 
     private static bool ShouldSkipResourceMaterializationForTerminalPaymentStatus(MarketplaceBooking? marketplaceBooking) =>
         marketplaceBooking is not null &&
