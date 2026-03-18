@@ -770,6 +770,8 @@ public class Mapper : IMapper
                 DeletedAt = src.DeletedAt,
                 ModifiedAt = src.ModifiedAt,
                 EventRaisedAt = src.EventRaisedAt,
+                Name = src.Name.ToSafeString(),
+                Type = src.Type.ToLocationType(),
                 OrganizationTags = MapTo(src.OrganizationTags).ToList()
             };
 

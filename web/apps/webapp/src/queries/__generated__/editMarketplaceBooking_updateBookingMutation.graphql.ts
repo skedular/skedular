@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<de9771a7c8aa079eca0a64b963c6ffc6>>
+ * @generated SignedSource<<874b5d1387a65e8b3d011a78a3787dd4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -58,7 +58,6 @@ export type editMarketplaceBooking_updateBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
@@ -109,7 +108,6 @@ export type editMarketplaceBooking_updateBookingMutation$rawResponse = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
@@ -287,11 +285,13 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationDetails",
+            "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
             "name": "involvedLocations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": [
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -374,16 +374,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "ea8503cd99218d05794f5c183599598b",
+    "cacheID": "5c669824c7a0d28401e7dc4f1cd8eeae",
     "id": null,
     "metadata": {},
     "name": "editMarketplaceBooking_updateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editMarketplaceBooking_updateBookingMutation(\n  $input: UpdateMarketplaceBookingInput!\n) {\n  updateMarketplaceBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editMarketplaceBooking_updateBookingMutation(\n  $input: UpdateMarketplaceBookingInput!\n) {\n  updateMarketplaceBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "237ba9c0a45ef696524549d7f50802f4";
+(node as any).hash = "ee59bdd058d6b34cd85fd5c00af56edd";
 
 export default node;

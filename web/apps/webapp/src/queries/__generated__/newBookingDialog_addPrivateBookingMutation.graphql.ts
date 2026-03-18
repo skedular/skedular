@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<481bafc6709f793074baeedecf079ad9>>
+ * @generated SignedSource<<0e3e350e8f441bddc22e16b1b67dc5a3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -62,8 +62,8 @@ export type newBookingDialog_addPrivateBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
         readonly id: string;
@@ -113,8 +113,8 @@ export type newBookingDialog_addPrivateBookingMutation$rawResponse = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
         readonly id: string;
@@ -288,11 +288,20 @@ v7 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationDetails",
+      "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
       "name": "involvedLocations",
       "plural": true,
-      "selections": (v4/*: any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        },
+        (v3/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -418,16 +427,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ea0b18ed2a89c89d813f643c71bf7d60",
+    "cacheID": "5b673b3139b418885dc7c362d20e64d7",
     "id": null,
     "metadata": {},
     "name": "newBookingDialog_addPrivateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation newBookingDialog_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation newBookingDialog_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c2d66a3931dec21d4d5ed9daaef2a074";
+(node as any).hash = "3d9f3c7fffe7e1d65af72b71ed0cb264";
 
 export default node;

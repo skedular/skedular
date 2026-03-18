@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<11c60d5128df7bf35f21193c11534cf7>>
+ * @generated SignedSource<<d0d0902b391438a951d565b0f81975fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,8 +13,8 @@ import { FragmentRefs } from "relay-runtime";
 export type bookProduct_availableResources_query$data = {
   readonly availableResources: ReadonlyArray<{
     readonly location: {
-      readonly id: string;
       readonly name: string;
+      readonly uniqueId: string;
     } | null | undefined;
     readonly resource: {
       readonly customTags: ReadonlyArray<{
@@ -45,19 +45,19 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v2 = [
-  (v0/*: any*/),
   (v1/*: any*/),
+  (v0/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -133,13 +133,19 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDetails",
+          "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
-            (v1/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            },
+            (v0/*: any*/)
           ],
           "storageKey": null
         },
@@ -151,8 +157,8 @@ return {
           "name": "resource",
           "plural": false,
           "selections": [
-            (v0/*: any*/),
             (v1/*: any*/),
+            (v0/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -185,6 +191,6 @@ return {
 };
 })();
 
-(node as any).hash = "5fb44886e62495755d66c43ab7694106";
+(node as any).hash = "47b346ffeda02c00fd399c5f975f275b";
 
 export default node;

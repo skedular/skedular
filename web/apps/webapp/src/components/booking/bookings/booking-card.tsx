@@ -104,7 +104,8 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           id
         }
         involvedLocations {
-          id
+          uniqueId
+
           name
         }
         involvedTeams {
@@ -185,7 +186,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             photoUrl
           }
           involvedLocations {
-            id
+            uniqueId
             name
           }
           involvedTeams {
@@ -683,7 +684,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
             <StackRow>
               <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}>
                 {bookingDetails.involvedLocations.map((item) => (
-                  <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                  <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
                 ))}
               </Link>
 

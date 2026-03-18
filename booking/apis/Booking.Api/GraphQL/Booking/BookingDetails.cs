@@ -18,7 +18,7 @@ public class BookingDetails : Node
     [GraphQLName("involvedOrganizationIds")]
     public IEnumerable<(string Id, string CustomDomain)> InvolvedOrganizationIds { get; set; } = [];
 
-    [GraphQLName("involvedLocationIds")] public IEnumerable<string> InvolvedLocationIds { get; set; } = [];
+    [GraphQLName("involvedLocations")] public IEnumerable<LocationDetails> InvolvedLocations { get; set; } = [];
     [GraphQLName("involvedTeamIds")] public IEnumerable<string> InvolvedTeamIds { get; set; } = [];
     [GraphQLName("createdByCustomerId")] public string? CreatedByCustomerId { get; set; }
 
@@ -42,7 +42,6 @@ public static partial class BookingDetailsType
         descriptor.Ignore(item => item.LastModifiedByCustomerId);
         descriptor.Ignore(item => item.DeletedByCustomerId);
         descriptor.Ignore(item => item.InvolvedOrganizationIds);
-        descriptor.Ignore(item => item.InvolvedLocationIds);
         descriptor.Ignore(item => item.InvolvedTeamIds);
     }
 
@@ -60,9 +59,6 @@ public static partial class BookingDetailsType
 
     public static IEnumerable<OrganizationDetails> GetInvolvedOrganizations([Parent] BookingDetails item) =>
         item.InvolvedOrganizationIds.Select(tuple => new OrganizationDetails(tuple.Id, tuple.CustomDomain));
-
-    public static IEnumerable<LocationDetails> GetInvolvedLocations([Parent] BookingDetails item) =>
-        item.InvolvedLocationIds.Select(id => new LocationDetails(id));
 
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] BookingDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));

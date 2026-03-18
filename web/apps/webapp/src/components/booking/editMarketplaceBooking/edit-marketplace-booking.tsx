@@ -125,7 +125,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             name
           }
           involvedLocations {
-            id
             name
           }
           involvedTeams {
@@ -239,7 +238,6 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
             name
           }
           involvedLocations {
-            id
             name
           }
           involvedTeams {

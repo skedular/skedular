@@ -258,7 +258,7 @@ const NewBookingDialog = ({
             name
           }
           involvedLocations {
-            id
+            uniqueId
             name
           }
           involvedTeams {
@@ -526,7 +526,7 @@ const NewBookingDialog = ({
               },
             ],
             involvedOrganizations: [],
-            involvedLocations: locationId ? [{ id: locationId, name: '' }] : [],
+            involvedLocations: locationId ? [{ uniqueId: locationId, name: '' }] : [],
             involvedTeams: [],
             bookingResources: [],
           },

@@ -23,6 +23,7 @@ using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.P
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
+using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 
@@ -244,6 +245,13 @@ public class Mapper : IMapper
             Id = locationAfterState.Id,
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
+            Name = locationAfterState.Name.ToSafeString(),
+            Type = locationAfterState.Type switch
+            {
+                LocationType.Private => Api.Shared.Services.Models.LocationType.Private,
+                LocationType.Marketplace => Api.Shared.Services.Models.LocationType.Marketplace,
+                _ => throw new ArgumentOutOfRangeException()
+            },
             OpeningHours = MapTo(locationAfterState.OpeningHours),
             Organization = new Organization { Id = locationAfterState.OrganizationId }
         };
@@ -385,6 +393,8 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
+        dest.Name = src.Name;
+        dest.Type = src.Type.ToLocationType();
         dest.OpeningHours = src.OpeningHours;
         dest.Organization = organization;
         dest.OrganizationTags = organizationTags;

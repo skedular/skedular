@@ -202,7 +202,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
           where: { organizationCustomDomain: $organizationCustomDomain, from: $fromTodayDate, until: $untilTodayDate, zoneIds: $zoneIds, customTagIds: $customTagIds }
         ) {
           location {
-            id
+            uniqueId
           }
         }
       }
@@ -486,7 +486,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
   const rows: RowType[] = locations.map((location) => {
     const resourcesCount = location.resources.totalCount;
     const availableResourcesCount = rootDataRefetchable.availableResources
-      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.id === location.id).length
+      ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
       : 0;
     const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
     const zones = location.zones.map(({ id, name, color }) => ({ id, name, color }));
@@ -707,7 +707,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
               {locations.map((location) => {
                 const resourcesCount = location.resources.totalCount;
                 const availableResourcesCount = rootDataRefetchable.availableResources
-                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.id === location.id).length
+                  ? rootDataRefetchable.availableResources.filter((resources) => resources.location?.uniqueId === location.id).length
                   : 0;
                 const availablePercentage = (availableResourcesCount / resourcesCount) * 100;
 

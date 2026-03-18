@@ -1,7 +1,10 @@
-using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.Booking;
 
-[GraphQLName("LocationDetails")]
-public class LocationDetails(string id) : Node(id);
+[GraphQLName("Booking_LocationDetails")]
+public class LocationDetails
+{
+    [GraphQLName("uniqueId")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+}

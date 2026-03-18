@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<492ebbd1d5adf10aa256e2aa45ca96fe>>
+ * @generated SignedSource<<6e0a6d4e72a2625a1228c5dd7c6cb9a7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -61,8 +61,8 @@ export type editPrivateBooking_updatePrivateBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
         readonly id: string;
@@ -112,8 +112,8 @@ export type editPrivateBooking_updatePrivateBookingMutation$rawResponse = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedOrganizations: ReadonlyArray<{
         readonly id: string;
@@ -290,11 +290,20 @@ v6 = [
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationDetails",
+            "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
             "name": "involvedLocations",
             "plural": true,
-            "selections": (v3/*: any*/),
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -377,16 +386,16 @@ return {
     "selections": (v6/*: any*/)
   },
   "params": {
-    "cacheID": "b204467b2fb6ea5cf76ff79d2fb8b2eb",
+    "cacheID": "be39aef029007debe3403bd365e8af58",
     "id": null,
     "metadata": {},
     "name": "editPrivateBooking_updatePrivateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation editPrivateBooking_updatePrivateBookingMutation(\n  $input: UpdatePrivateBookingInput!\n) {\n  updatePrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation editPrivateBooking_updatePrivateBookingMutation(\n  $input: UpdatePrivateBookingInput!\n) {\n  updatePrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedOrganizations {\n        id\n        name\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b364db3bf070c64b3756d907daf27e10";
+(node as any).hash = "7d2b2a339f487b13d36874e0454d6988";
 
 export default node;

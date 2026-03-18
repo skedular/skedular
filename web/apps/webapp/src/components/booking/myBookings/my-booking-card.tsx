@@ -77,7 +77,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           photoUrl
         }
         involvedLocations {
-          id
+          uniqueId
           name
         }
         involvedTeams {
@@ -269,7 +269,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           title={
             <Link component={NextLink} href={getOrganizationBookingBaseLink(integratedPlatrform, organizationCustomDomain, bookingDetails.id)}>
               {bookingDetails.involvedLocations.map((item) => (
-                <LeadIconTypography key={item.id} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
+                <LeadIconTypography key={item.uniqueId} startElement={<LocationIcon />} label={item?.name} sx={{ flexWrap: undefined }} invertDefaultColor />
               ))}
             </Link>
           }

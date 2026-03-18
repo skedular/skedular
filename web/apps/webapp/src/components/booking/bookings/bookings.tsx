@@ -154,7 +154,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
                 id
               }
               involvedLocations {
-                id
                 name
               }
               involvedTeams {
@@ -228,7 +227,6 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
             photoUrl
           }
           involvedLocations {
-            id
             name
           }
           involvedTeams {

@@ -35,6 +35,7 @@ export { default as CheckIcon } from '@mui/icons-material/Check';
 export { default as SelectedTickIcon } from '@mui/icons-material/CheckCircle';
 export { default as CloseIcon } from '@mui/icons-material/Close';
 export { default as CollapseIcon } from '@mui/icons-material/CloseFullscreen';
+export { default as QuantityIcon } from '@mui/icons-material/ConfirmationNumberOutlined';
 export { default as ContactPeopleIcon } from '@mui/icons-material/ConnectWithoutContact';
 export { default as ClaimOwnership } from '@mui/icons-material/Copyright';
 export { default as AreaIcon } from '@mui/icons-material/Crop';

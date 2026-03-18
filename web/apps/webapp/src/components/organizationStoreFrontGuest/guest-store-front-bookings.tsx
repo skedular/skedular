@@ -1,5 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { ArrowLeftIcon, CalendarIcon, LocationIcon, PaymentStatusIcon } from '@/components/icons';
+import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
 import { getMarketplaceBookingDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -7,7 +7,6 @@ import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { convertCalendarDayToStartOfDay } from '@/libs/utils';
 import type { guestStoreFrontBookings_rootQuery } from '@/queries/__generated__/guestStoreFrontBookings_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ScheduleIcon from '@mui/icons-material/Schedule';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -48,7 +47,6 @@ const RootQuery = graphql`
           from
           until
           involvedLocations {
-            id
             name
           }
           bookingResources {
@@ -79,7 +77,6 @@ const RootQuery = graphql`
           from
           until
           involvedLocations {
-            id
             name
           }
           bookingResources {
@@ -259,11 +256,11 @@ const BookingsSection = ({
                     <BodyIconTypography label={locationLabel} sx={{ opacity: 0.88 }} />
                   </StackRow>
                   <StackRow sx={{ flexWrap: 'nowrap' }}>
-                    <CalendarIcon fontSize="small" />
+                    <QuantityIcon fontSize="small" />
                     <BodyIconTypography label={`Quantity ${booking.marketplaceBooking?.quantity ?? 1}`} sx={{ opacity: 0.88 }} />
                   </StackRow>
                   <StackRow sx={{ flexWrap: 'nowrap' }}>
-                    <ScheduleIcon fontSize="small" />
+                    <ResourceIcon fontSize="small" />
                     <BodyIconTypography label={resourcesLabel} sx={{ opacity: 0.88 }} />
                   </StackRow>
                 </StackColumn>

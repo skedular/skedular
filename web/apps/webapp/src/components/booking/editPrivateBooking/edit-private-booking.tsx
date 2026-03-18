@@ -151,7 +151,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             name
           }
           involvedLocations {
-            id
+            uniqueId
             name
           }
           involvedTeams {
@@ -288,7 +288,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
             name
           }
           involvedLocations {
-            id
+            uniqueId
             name
           }
           involvedTeams {
@@ -338,7 +338,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
     rootData.booking?.involvedTeams && rootData.booking?.involvedTeams.length > 0 ? rootData.booking?.involvedTeams[0].id : undefined,
   );
   const [locationId, setLocationId] = useState<string | undefined>(
-    rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].id : undefined,
+    rootData.booking?.involvedLocations && rootData.booking?.involvedLocations.length > 0 ? rootData.booking?.involvedLocations[0].uniqueId : undefined,
   );
   const filterTeam = createFilterOptions<TeamDetails>();
   const filterLocation = createFilterOptions<LocationDetails>();

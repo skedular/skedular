@@ -46,7 +46,7 @@ type BookingDetails {
   hasRecurringInstanceOverrides: Boolean
   id: ID!
   involvedCustomers: [CustomerDetails!]!
-  involvedLocations: [LocationDetails!]!
+  involvedLocations: [Booking_LocationDetails!]!
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
   lastModifiedByCustomer: CustomerDetails
@@ -77,8 +77,13 @@ type BookingRecurrenceEndTypeDetails {
 
 type BookingResourceDetails {
   customers: [CustomerDetails!]!
-  location: LocationDetails
+  location: Booking_LocationDetails
   resource: ResourceDetails!
+}
+
+type Booking_LocationDetails {
+  name: String!
+  uniqueId: String!
 }
 
 type CancelOrganizationOfferingPayload {

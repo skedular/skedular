@@ -25,7 +25,6 @@ type BookingDetails {
   lastModifiedByCustomer: CustomerDetails
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
-  involvedLocations: [LocationDetails!]!
   involvedTeams: [TeamDetails!]!
   from: DateTime!
   until: DateTime!
@@ -33,6 +32,7 @@ type BookingDetails {
   category: BookingCategoryDetails!
   channel: BookingChannelDetails!
   bookingResources: [BookingResourceDetails!]!
+  involvedLocations: [Booking_LocationDetails!]!
   marketplaceBooking: MarketplaceBookingDetails
   hasRecurringInstanceOverrides: Boolean
   id: ID!
@@ -59,9 +59,14 @@ type BookingRecurrenceEndTypeDetails {
 }
 
 type BookingResourceDetails {
-  location: LocationDetails
   customers: [CustomerDetails!]!
   resource: ResourceDetails!
+  location: Booking_LocationDetails
+}
+
+type Booking_LocationDetails {
+  uniqueId: String!
+  name: String!
 }
 
 type ConnectionOfBookingEdge {
@@ -96,10 +101,6 @@ type ListingMetadata {
   title: String
   subTitle: String
   includedFeatures: [String!]
-}
-
-type LocationDetails {
-  id: ID!
 }
 
 type MarketplaceBookingDetails {

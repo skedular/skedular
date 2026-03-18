@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75ecf94923e76c0d73a4329260babd77>>
+ * @generated SignedSource<<a5c89f98ccecbe148289d44cbae7d7fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type organizationLocations_locations_availableOrganizationResources_query$data = {
   readonly availableResources: ReadonlyArray<{
     readonly location: {
-      readonly id: string;
+      readonly uniqueId: string;
     } | null | undefined;
   }>;
   readonly locations: {
@@ -465,12 +465,18 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDetails",
+          "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
           "name": "location",
           "plural": false,
           "selections": [
-            (v5/*: any*/)
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -483,6 +489,6 @@ return {
 };
 })();
 
-(node as any).hash = "40e91bd4a72c7d8b503264b3b9e82838";
+(node as any).hash = "1cffee856f08ff60b4aebd2e3e10e0ec";
 
 export default node;

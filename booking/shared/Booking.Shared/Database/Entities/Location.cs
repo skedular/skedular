@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ namespace Booking.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class Location : ReplicatedEntityBaseWithDeleted
 {
+    public string? Name { get; set; }
+    public string Type { get; set; }
     public OpeningHours? OpeningHours { get; set; }
 
     public virtual Organization? Organization { get; set; }
@@ -25,6 +28,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
     {
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxLocationNameLength);
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxLocationTypeLength).HasDefaultValue(LocationTypeConstants.Private);
         builder.Property(item => item.OpeningHours).HasColumnType("jsonb");
 
         builder.HasOne(item => item.Organization).WithMany(item => item.Locations);

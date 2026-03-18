@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5317e2de60f8ac5f03ab5f92cc828b76>>
+ * @generated SignedSource<<cd2df4f5b1ec732510da260210d0a710>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,6 @@ export type guestStoreFrontBookings_rootQuery$data = {
         readonly from: any;
         readonly id: string;
         readonly involvedLocations: ReadonlyArray<{
-          readonly id: string;
           readonly name: string;
         }>;
         readonly marketplaceBooking: {
@@ -61,7 +60,6 @@ export type guestStoreFrontBookings_rootQuery$data = {
         readonly from: any;
         readonly id: string;
         readonly involvedLocations: ReadonlyArray<{
-          readonly id: string;
           readonly name: string;
         }>;
         readonly marketplaceBooking: {
@@ -226,21 +224,19 @@ v11 = {
   "name": "until",
   "storageKey": null
 },
-v12 = [
-  (v9/*: any*/),
-  (v1/*: any*/)
-],
-v13 = {
+v12 = {
   "alias": null,
   "args": null,
-  "concreteType": "LocationDetails",
+  "concreteType": "Booking_LocationDetails",
   "kind": "LinkedField",
   "name": "involvedLocations",
   "plural": true,
-  "selections": (v12/*: any*/),
+  "selections": [
+    (v1/*: any*/)
+  ],
   "storageKey": null
 },
-v14 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingResourceDetails",
@@ -255,20 +251,23 @@ v14 = {
       "kind": "LinkedField",
       "name": "resource",
       "plural": false,
-      "selections": (v12/*: any*/),
+      "selections": [
+        (v9/*: any*/),
+        (v1/*: any*/)
+      ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v15 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "quantity",
   "storageKey": null
 },
-v16 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
@@ -287,7 +286,7 @@ v16 = {
   ],
   "storageKey": null
 },
-v17 = [
+v16 = [
   (v8/*: any*/),
   {
     "alias": null,
@@ -308,8 +307,8 @@ v17 = [
           (v9/*: any*/),
           (v10/*: any*/),
           (v11/*: any*/),
+          (v12/*: any*/),
           (v13/*: any*/),
-          (v14/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -318,8 +317,8 @@ v17 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v15/*: any*/),
-              (v16/*: any*/)
+              (v14/*: any*/),
+              (v15/*: any*/)
             ],
             "storageKey": null
           }
@@ -330,7 +329,7 @@ v17 = [
     "storageKey": null
   }
 ],
-v18 = [
+v17 = [
   (v3/*: any*/),
   {
     "kind": "Literal",
@@ -357,7 +356,7 @@ v18 = [
     "name": "where"
   }
 ],
-v19 = [
+v18 = [
   (v8/*: any*/),
   {
     "alias": null,
@@ -378,8 +377,8 @@ v19 = [
           (v9/*: any*/),
           (v10/*: any*/),
           (v11/*: any*/),
+          (v12/*: any*/),
           (v13/*: any*/),
-          (v14/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -388,8 +387,8 @@ v19 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
+              (v14/*: any*/),
               (v15/*: any*/),
-              (v16/*: any*/),
               (v9/*: any*/)
             ],
             "storageKey": null
@@ -416,17 +415,17 @@ return {
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v17/*: any*/),
+        "selections": (v16/*: any*/),
         "storageKey": null
       },
       {
         "alias": "recentBookings",
-        "args": (v18/*: any*/),
+        "args": (v17/*: any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v17/*: any*/),
+        "selections": (v16/*: any*/),
         "storageKey": null
       }
     ],
@@ -447,32 +446,32 @@ return {
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v19/*: any*/),
+        "selections": (v18/*: any*/),
         "storageKey": null
       },
       {
         "alias": "recentBookings",
-        "args": (v18/*: any*/),
+        "args": (v17/*: any*/),
         "concreteType": "ConnectionOfBookingEdge",
         "kind": "LinkedField",
         "name": "bookings",
         "plural": false,
-        "selections": (v19/*: any*/),
+        "selections": (v18/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "0e608023201d37e841d9fa81048f48e8",
+    "cacheID": "d4d58a83da636d9db63ad75e374f965a",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontBookings_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $today: DateTime!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          id\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $today: DateTime!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dc66f488a3f0d78d99109ce5f061db3b";
+(node as any).hash = "f1ace61f23e9aa4db7cb9cabcfb9b1f5";
 
 export default node;

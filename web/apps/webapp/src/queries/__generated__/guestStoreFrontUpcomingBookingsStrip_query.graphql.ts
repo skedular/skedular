@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbb599006cae1331a9def508fb184168>>
+ * @generated SignedSource<<bd5b6ccdf37ba2add1d90b4568ff03a8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,7 +24,6 @@ export type guestStoreFrontUpcomingBookingsStrip_query$data = {
         readonly from: any;
         readonly id: string;
         readonly involvedLocations: ReadonlyArray<{
-          readonly id: string;
           readonly name: string;
         }>;
         readonly marketplaceBooking: {
@@ -60,11 +59,7 @@ v1 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
-];
+};
 return {
   "argumentDefinitions": [
     {
@@ -199,11 +194,13 @@ return {
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "LocationDetails",
+                      "concreteType": "Booking_LocationDetails",
                       "kind": "LinkedField",
                       "name": "involvedLocations",
                       "plural": true,
-                      "selections": (v2/*: any*/),
+                      "selections": [
+                        (v1/*: any*/)
+                      ],
                       "storageKey": null
                     },
                     {
@@ -221,7 +218,10 @@ return {
                           "kind": "LinkedField",
                           "name": "resource",
                           "plural": false,
-                          "selections": (v2/*: any*/),
+                          "selections": [
+                            (v0/*: any*/),
+                            (v1/*: any*/)
+                          ],
                           "storageKey": null
                         }
                       ],
@@ -281,6 +281,6 @@ return {
 };
 })();
 
-(node as any).hash = "082ff53df2e8a6dc009b15b0bb8593fe";
+(node as any).hash = "cb9807cd04d72364baf7192bb57cdd8f";
 
 export default node;

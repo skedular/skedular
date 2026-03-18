@@ -37,7 +37,7 @@ const RootQuery = graphql`
         familyName
       }
       involvedLocations {
-        id
+        uniqueId
         name
       }
       bookingResources {
@@ -180,9 +180,9 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                         <StackRow sx={{ rowGap: 1 }}>
                           {booking.involvedLocations.map((location) => (
                             <Link
-                              key={location.id}
+                              key={location.uniqueId}
                               component={NextLink}
-                              href={getMarketplaceLocationLink(integratedPlatrform, location.id)}
+                              href={getMarketplaceLocationLink(integratedPlatrform, location.uniqueId)}
                               underline="none"
                               color="inherit"
                               sx={{

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3672f009fca15c2d54125eec6272aeb6>>
+ * @generated SignedSource<<e7f23ebf95ffb476fee85fcbe108c37f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,8 +44,8 @@ export type editPrivateBooking_query$data = {
       readonly photoUrl: string | null | undefined;
     }>;
     readonly involvedLocations: ReadonlyArray<{
-      readonly id: string;
       readonly name: string;
+      readonly uniqueId: string;
     }>;
     readonly involvedOrganizations: ReadonlyArray<{
       readonly id: string;
@@ -303,11 +303,20 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDetails",
+          "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            },
+            (v1/*: any*/)
+          ],
           "storageKey": null
         },
         {
@@ -386,6 +395,6 @@ return {
 };
 })();
 
-(node as any).hash = "6db478aa323bb0d35138f9fff9366b78";
+(node as any).hash = "3a25a9e0ab90b172d86079bc5de4b53d";
 
 export default node;

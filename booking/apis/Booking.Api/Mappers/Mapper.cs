@@ -66,7 +66,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             BookingResources = MapTo(src.Resources, src.InvolvedResources),
             InvolvedCustomerIds = src.InvolvedCustomers.Select(item => item.Id),
             InvolvedOrganizationIds = src.InvolvedOrganizations.Select(item => (item.Id, item.CustomDomain.ToSafeString())),
-            InvolvedLocationIds = src.InvolvedLocations.Select(item => item.Id),
+            InvolvedLocations = MapTo(src.InvolvedLocations),
             InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
@@ -491,9 +491,13 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
         };
 
     private static BookingResourceDetails MapTo(Resource src, IEnumerable<Customer> customers) =>
-        new() { Resource = MapToResourceDetails(src), LocationId = src.Location?.Id, CustomerIds = customers.Select(item => item.Id) };
+        new() { Resource = MapToResourceDetails(src), Location = MapTo(src.Location), CustomerIds = customers.Select(item => item.Id) };
 
-    private static BookingResourceDetails MapTo(Resource src) => new() { Resource = MapToResourceDetails(src), LocationId = src.Location?.Id };
+    private static BookingResourceDetails MapTo(Resource src) => new() { Resource = MapToResourceDetails(src), Location = MapTo(src.Location) };
+
+    private static IEnumerable<LocationDetails> MapTo(IEnumerable<Shared.Models.Location> src) => src.Select(MapTo)!;
+
+    private static LocationDetails? MapTo(Shared.Models.Location? src) => src is null ? null : new LocationDetails { Id = src.Id, Name = src.Name };
 
     private static ResourceDetails MapToResourceDetails(Resource src) =>
         new()

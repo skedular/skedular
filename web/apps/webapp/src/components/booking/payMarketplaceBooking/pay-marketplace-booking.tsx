@@ -60,7 +60,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
             name
           }
           involvedLocations {
-            id
+            uniqueId
             name
           }
           involvedTeams {
@@ -527,7 +527,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
               <FormFieldLabel label="Locations" stackLabelOnTop>
                 <StackRow>
                   {booking.involvedLocations.map((location) => (
-                    <BodyIconTypography key={location.id} label={location.name} startElement={<LocationAvatar name={location} size="small" />} />
+                    <BodyIconTypography key={location.uniqueId} label={location.name} startElement={<LocationAvatar name={location} size="small" />} />
                   ))}
                 </StackRow>
               </FormFieldLabel>

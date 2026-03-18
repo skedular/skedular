@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2c4b8fddbf38ba66fb6f594b7ff619c>>
+ * @generated SignedSource<<316df527d58f546c772e848e09240427>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,7 +45,6 @@ export type editMarketplaceBooking_booking_query$data = {
       readonly photoUrl: string | null | undefined;
     }>;
     readonly involvedLocations: ReadonlyArray<{
-      readonly id: string;
       readonly name: string;
     }>;
     readonly involvedOrganizations: ReadonlyArray<{
@@ -232,11 +231,13 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDetails",
+          "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": [
+            (v1/*: any*/)
+          ],
           "storageKey": null
         },
         {
@@ -347,6 +348,6 @@ return {
 };
 })();
 
-(node as any).hash = "733dde15600862754f7dc9aa1fff7b31";
+(node as any).hash = "aa80b1779d707e880694ea92eddb1a6c";
 
 export default node;

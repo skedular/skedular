@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd0d7e9eecf0f6013e669f770511da0b>>
+ * @generated SignedSource<<b1eea1dbb139a869136cb13b078b2db1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -44,8 +44,8 @@ export type myBookingCard_BookingDetails$data = {
     readonly photoUrl: string | null | undefined;
   }>;
   readonly involvedLocations: ReadonlyArray<{
-    readonly id: string;
     readonly name: string;
+    readonly uniqueId: string;
   }>;
   readonly involvedTeams: ReadonlyArray<{
     readonly id: string;
@@ -83,21 +83,17 @@ v1 = {
   "name": "name",
   "storageKey": null
 },
-v2 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
-],
-v3 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v4 = [
+v3 = [
   (v0/*: any*/),
   (v1/*: any*/),
-  (v3/*: any*/)
+  (v2/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -189,11 +185,20 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationDetails",
+      "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
       "name": "involvedLocations",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        },
+        (v1/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -203,7 +208,10 @@ return {
       "kind": "LinkedField",
       "name": "involvedTeams",
       "plural": true,
-      "selections": (v2/*: any*/),
+      "selections": [
+        (v0/*: any*/),
+        (v1/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -224,7 +232,7 @@ return {
           "selections": [
             (v0/*: any*/),
             (v1/*: any*/),
-            (v3/*: any*/),
+            (v2/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -232,7 +240,7 @@ return {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v4/*: any*/),
+              "selections": (v3/*: any*/),
               "storageKey": null
             },
             {
@@ -242,7 +250,7 @@ return {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v4/*: any*/),
+              "selections": (v3/*: any*/),
               "storageKey": null
             }
           ],
@@ -301,6 +309,6 @@ return {
 };
 })();
 
-(node as any).hash = "858bb4a9602ff6d2f18a03f75e90410d";
+(node as any).hash = "12d1db9ad081e1c66ed771198893e785";
 
 export default node;

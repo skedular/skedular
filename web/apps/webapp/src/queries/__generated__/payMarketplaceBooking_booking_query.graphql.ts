@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6e50f25fdc6dc212045ac43b88840984>>
+ * @generated SignedSource<<259994a929719ca58c63f4fca7fab7bf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -46,8 +46,8 @@ export type payMarketplaceBooking_booking_query$data = {
       readonly photoUrl: string | null | undefined;
     }>;
     readonly involvedLocations: ReadonlyArray<{
-      readonly id: string;
       readonly name: string;
+      readonly uniqueId: string;
     }>;
     readonly involvedOrganizations: ReadonlyArray<{
       readonly id: string;
@@ -264,11 +264,20 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "LocationDetails",
+          "concreteType": "Booking_LocationDetails",
           "kind": "LinkedField",
           "name": "involvedLocations",
           "plural": true,
-          "selections": (v2/*: any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "uniqueId",
+              "storageKey": null
+            },
+            (v1/*: any*/)
+          ],
           "storageKey": null
         },
         {
@@ -505,6 +514,6 @@ return {
 };
 })();
 
-(node as any).hash = "0b0ae37db5d3e73a0fa35257d0311032";
+(node as any).hash = "4443872cc38b7bbb925b7da8cafe59e2";
 
 export default node;

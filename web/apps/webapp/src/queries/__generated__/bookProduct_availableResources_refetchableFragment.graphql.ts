@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<db087e4d55daf344d1182a175a8082f0>>
+ * @generated SignedSource<<90c349496aec34142672832f8cdb41dd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -51,19 +51,19 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
 },
 v3 = [
-  (v1/*: any*/),
   (v2/*: any*/),
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -132,13 +132,19 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LocationDetails",
+            "concreteType": "Booking_LocationDetails",
             "kind": "LinkedField",
             "name": "location",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
-              (v2/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "uniqueId",
+                "storageKey": null
+              },
+              (v1/*: any*/)
             ],
             "storageKey": null
           },
@@ -150,8 +156,8 @@ return {
             "name": "resource",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
               (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -181,16 +187,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a0a3acd5d5560eddc348bbdecaa1f075",
+    "cacheID": "231b1d388828037bf4880e0405470ac1",
     "id": null,
     "metadata": {},
     "name": "bookProduct_availableResources_refetchableFragment",
     "operationKind": "query",
-    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationCustomDomain: String\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      id\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
+    "text": "query bookProduct_availableResources_refetchableFragment(\n  $dateFromToGetAvailableResources: DateTime!\n  $dateUntilToGetAvailableResources: DateTime!\n  $organizationCustomDomain: String\n  $productId: String\n) {\n  ...bookProduct_availableResources_query\n}\n\nfragment bookProduct_availableResources_query on Query {\n  availableResources(where: {organizationCustomDomain: $organizationCustomDomain, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources}) {\n    location {\n      uniqueId\n      name\n    }\n    resource {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "5fb44886e62495755d66c43ab7694106";
+(node as any).hash = "47b346ffeda02c00fd399c5f975f275b";
 
 export default node;

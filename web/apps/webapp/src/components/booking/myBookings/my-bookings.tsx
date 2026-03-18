@@ -137,7 +137,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
                 photoUrl
               }
               involvedLocations {
-                id
+                uniqueId
                 name
               }
               involvedTeams {
@@ -375,7 +375,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
         ?.filter(
           (booking) =>
             booking.involvedCustomers.some((item) => item.id !== rootData.me?.id) &&
-            booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.id === item2.id)),
+            booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
         )
         .flatMap((booking) => booking.involvedCustomers) ?? [];
 
@@ -497,7 +497,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
                   ?.filter(
                     (booking) =>
                       booking.involvedCustomers.some((item) => item.id !== rootData.me?.id) &&
-                      booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.id === item2.id)),
+                      booking.involvedLocations.some((item) => myBooking.involvedLocations.some((item2) => item.uniqueId === item2.uniqueId)),
                   )
                   .flatMap((booking) => booking.involvedCustomers) ?? [];
 

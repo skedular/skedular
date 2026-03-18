@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c216ad08a2b80ee441c88de6d7aafa8a>>
+ * @generated SignedSource<<e1e50c6eb1b324f632d94b97876aa953>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -66,8 +66,8 @@ export type bookingCard_addPrivateBookingMutation$data = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedTeams: ReadonlyArray<{
         readonly id: string;
@@ -116,8 +116,8 @@ export type bookingCard_addPrivateBookingMutation$rawResponse = {
         readonly photoUrl: string | null | undefined;
       }>;
       readonly involvedLocations: ReadonlyArray<{
-        readonly id: string;
         readonly name: string;
+        readonly uniqueId: string;
       }>;
       readonly involvedTeams: ReadonlyArray<{
         readonly id: string;
@@ -168,23 +168,19 @@ v3 = {
   "name": "name",
   "storageKey": null
 },
-v4 = [
-  (v2/*: any*/),
-  (v3/*: any*/)
-],
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "color",
   "storageKey": null
 },
-v6 = [
+v5 = [
   (v2/*: any*/),
   (v3/*: any*/),
-  (v5/*: any*/)
+  (v4/*: any*/)
 ],
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingDetails",
@@ -295,11 +291,20 @@ v7 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "LocationDetails",
+      "concreteType": "Booking_LocationDetails",
       "kind": "LinkedField",
       "name": "involvedLocations",
       "plural": true,
-      "selections": (v4/*: any*/),
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        },
+        (v3/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -309,7 +314,10 @@ v7 = {
       "kind": "LinkedField",
       "name": "involvedTeams",
       "plural": true,
-      "selections": (v4/*: any*/),
+      "selections": [
+        (v2/*: any*/),
+        (v3/*: any*/)
+      ],
       "storageKey": null
     },
     {
@@ -330,7 +338,7 @@ v7 = {
           "selections": [
             (v2/*: any*/),
             (v3/*: any*/),
-            (v5/*: any*/),
+            (v4/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -338,7 +346,7 @@ v7 = {
               "kind": "LinkedField",
               "name": "customTags",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             },
             {
@@ -348,7 +356,7 @@ v7 = {
               "kind": "LinkedField",
               "name": "zones",
               "plural": true,
-              "selections": (v6/*: any*/),
+              "selections": (v5/*: any*/),
               "storageKey": null
             }
           ],
@@ -375,7 +383,7 @@ return {
         "name": "addPrivateBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -397,7 +405,7 @@ return {
         "name": "addPrivateBooking",
         "plural": false,
         "selections": [
-          (v7/*: any*/),
+          (v6/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -425,16 +433,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "39c6c347db1da6ca730935dab8bfbd41",
+    "cacheID": "465abe3e7fa24e2e8668dd5191a778e6",
     "id": null,
     "metadata": {},
     "name": "bookingCard_addPrivateBookingMutation",
     "operationKind": "mutation",
-    "text": "mutation bookingCard_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      channel {\n        channel\n      }\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        id\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation bookingCard_addPrivateBookingMutation(\n  $input: AddPrivateBookingInput!\n) {\n  addPrivateBooking(input: $input) {\n    booking {\n      id\n      from\n      until\n      notes\n      channel {\n        channel\n      }\n      category {\n        category\n        name\n      }\n      involvedCustomers {\n        id\n        name\n        givenName\n        middleName\n        familyName\n        photoUrl\n      }\n      involvedLocations {\n        uniqueId\n        name\n      }\n      involvedTeams {\n        id\n        name\n      }\n      bookingResources {\n        resource {\n          id\n          name\n          color\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "aceb762053d571487a18361c5dde7714";
+(node as any).hash = "f61086c1179b5d206762c225fc1bf116";
 
 export default node;

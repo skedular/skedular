@@ -265,7 +265,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
           where: { organizationCustomDomain: $organizationCustomDomain, productId: $productId, from: $dateFromToGetAvailableResources, until: $dateUntilToGetAvailableResources }
         ) {
           location {
-            id
+            uniqueId
             name
           }
           resource {
@@ -499,7 +499,7 @@ const BookProduct = ({ rootDataRelay, rootDataAvailableResourcesRelay, connectio
         ? rootDataAvailableResources.availableResources.map(({ resource: { id, name, customTags, zones }, location }) => ({
             id,
             name,
-            location: location ? { id: location.id, name: location.name } : null,
+            location: location ? { id: location.uniqueId, name: location.name } : null,
             customTags: customTags.map(({ id, name, color }) => ({ id, name, color })),
             zones: zones.map(({ id, name, color }) => ({ id, name, color })),
           }))
