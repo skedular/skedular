@@ -325,6 +325,7 @@ const MarketplaceProductSubscriptionDetails = ({
               entityLabel="subscription"
               invoiceUrl={currentMarketplaceBooking.invoiceUrl ?? null}
               isPaymentRequired={currentMarketplaceBooking.isPaymentRequired}
+              pendingStatusMessage="Payment status: Pending. Your invoice will be sent on the next invoicing cycle and will be available to download from here once it has been issued."
               paymentExpiry={currentMarketplaceBooking.paymentExpiry}
               paymentMethodType={currentMarketplaceBooking.paymentMethod.type}
               paymentStatusLabel={currentMarketplaceBooking.paymentStatus.name}

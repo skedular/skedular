@@ -518,7 +518,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
             new MarketplaceBooking
             {
                 Id = randomHelper.Generate(),
-                PaymentStatus = isUpfront ? PaymentStatus.Pending.ToPaymentStatus() : PaymentStatus.NotSet.ToPaymentStatus(),
+                // Both upfront and in-arrears subscription cycles begin unpaid. Upfront
+                // cycles later create hosted checkout immediately, while in-arrears cycles
+                // stay pending until the organization bills and confirms payment.
+                PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
                 IsPaymentRequired = isUpfront,
                 Quantity = marketplaceBooking.Quantity,
                 ProductPricing = marketplaceBooking.ProductPricing with { BookingCadence = bookingCadence },

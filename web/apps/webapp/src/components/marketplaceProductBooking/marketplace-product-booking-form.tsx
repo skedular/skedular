@@ -186,6 +186,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     () => bookingPricingOptions.find((item) => item.id === effectiveSelectedPricingId) ?? bookingPricingOptions[0] ?? null,
     [bookingPricingOptions, effectiveSelectedPricingId],
   );
+  const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
 
   useEffect(() => {
     if (!selectedPricingOption) {
@@ -283,7 +284,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   }, [currencyLabel, dateRangeValidation, quantity, selectedPricingOption]);
 
   const durationLabel = dateRangeValidation.valid ? `${dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes')} minutes` : 'Invalid time';
-  const paymentLabel = availablePaymentMethods.find((item) => item.type === effectivePaymentMethod)?.name ?? 'Select payment method';
+  const paymentLabel = isInArrearsBilling
+    ? 'Invoice sent on billing cycle'
+    : (availablePaymentMethods.find((item) => item.type === effectivePaymentMethod)?.name ?? 'Select payment method');
   const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id) : '';
   const handleSignInClick = () => {
     const returnTo = `${window.location.pathname}${window.location.search}`;
@@ -307,7 +310,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       return;
     }
 
-    if (!effectivePaymentMethod) {
+    const submittedPaymentMethod = isInArrearsBilling ? (availablePaymentMethods[0]?.type ?? '') : effectivePaymentMethod;
+
+    if (!submittedPaymentMethod) {
       toast.error(<NotificationContent content="Select a payment method to continue." />);
       return;
     }
@@ -329,7 +334,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           teamIds: [],
           resourceIds: [],
           category: bookingCategory,
-          paymentMethod: effectivePaymentMethod as PaymentMethod,
+          paymentMethod: submittedPaymentMethod as PaymentMethod,
           invoiceEmailList,
           quantity,
           productVersionId: product.latestProductVersionId,
@@ -460,13 +465,19 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
             {dateRangeValidation.errorMessage ? <Alert severity="warning">{dateRangeValidation.errorMessage}</Alert> : null}
 
-            <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
-              {availablePaymentMethods.map((method) => (
-                <MenuItem key={method.type} value={method.type}>
-                  {method.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            {!isInArrearsBilling ? (
+              <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
+                {availablePaymentMethods.map((method) => (
+                  <MenuItem key={method.type} value={method.type}>
+                    {method.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            ) : (
+              <Alert severity="info" sx={{ borderRadius: 3 }}>
+                This pricing option is invoiced in arrears. You will receive an invoice in line with the organization&apos;s billing cycle, so there is nothing to choose here yet.
+              </Alert>
+            )}
 
             <TextField
               label="Invoice emails"

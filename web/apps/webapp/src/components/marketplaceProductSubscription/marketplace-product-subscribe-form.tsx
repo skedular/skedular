@@ -207,6 +207,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     () => subscriptionPricingOptions.find((item) => item.id === effectiveSelectedPricingId) ?? subscriptionPricingOptions[0] ?? null,
     [effectiveSelectedPricingId, subscriptionPricingOptions],
   );
+  const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
 
   const acceptedPaymentMethods = useMemo(() => selectedPricingOption?.acceptedPaymentMethods ?? [], [selectedPricingOption]);
   const availablePaymentMethods = useMemo(
@@ -244,7 +245,9 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
       return;
     }
 
-    if (!effectivePaymentMethod) {
+    const submittedPaymentMethod = isInArrearsBilling ? (availablePaymentMethods[0]?.type ?? '') : effectivePaymentMethod;
+
+    if (!submittedPaymentMethod) {
       toast.error(<NotificationContent content="Select a payment method to continue." />);
       return;
     }
@@ -265,7 +268,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           startedAt: startedAt.utc().startOf('day').toISOString(),
           autoRenew: selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
           cancelAtPeriodEnd: false,
-          paymentMethod: effectivePaymentMethod as PaymentMethod,
+          paymentMethod: submittedPaymentMethod as PaymentMethod,
           invoiceEmailList,
           quantity,
           productVersionId: rootData.product.latestProductVersionId,
@@ -331,7 +334,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           <CaptionIconTypography label="Complete your plan" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
           <LeadIconTypography label="Reserve your access window" sx={{ mt: 1 }} />
           <BodyIconTypography
-            label="Choose the plan, start date, billing preference, and contact emails. Resource allocation is handled in the background after purchase."
+            label="Choose the plan, start date, and contact emails. Resource allocation is handled in the background after purchase."
             sx={{ mt: 1, opacity: 0.82 }}
           />
 
@@ -365,13 +368,19 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
               sx={{ width: { xs: '100%', sm: 160 } }}
             />
 
-            <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
-              {availablePaymentMethods.map((method) => (
-                <MenuItem key={method.type} value={method.type}>
-                  {method.name}
-                </MenuItem>
-              ))}
-            </TextField>
+            {!isInArrearsBilling ? (
+              <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
+                {availablePaymentMethods.map((method) => (
+                  <MenuItem key={method.type} value={method.type}>
+                    {method.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            ) : (
+              <Alert severity="info" sx={{ borderRadius: 3 }}>
+                This plan is invoiced in arrears. You will receive an invoice in line with the organization&apos;s billing cycle, so there is nothing to choose here yet.
+              </Alert>
+            )}
 
             <Autocomplete
               multiple

@@ -13,6 +13,7 @@ type Props = {
   entityLabel?: string;
   invoiceUrl: string | null;
   isPaymentRequired: boolean;
+  pendingStatusMessage?: string;
   paymentExpiry: string | null;
   paymentMethodType?: string | null;
   paymentStatusLabel: string;
@@ -25,6 +26,7 @@ const MarketplaceProductBookingPaymentPanel = ({
   entityLabel = 'Booking',
   invoiceUrl,
   isPaymentRequired,
+  pendingStatusMessage,
   paymentExpiry,
   paymentMethodType,
   paymentStatusLabel,
@@ -35,6 +37,7 @@ const MarketplaceProductBookingPaymentPanel = ({
   const isWaitingForManualConfirmation = isPaymentRequired && paymentStatusType === 'PENDING' && !supportsHostedCheckout;
   const isSettled = paymentStatusType === 'CONFIRMED' || paymentStatusType === 'NO_PAYMENT_REQUIRED';
   const canPayNow = isPaymentRequired && paymentStatusType === 'PENDING' && supportsHostedCheckout && !!checkoutUrl;
+  const showsPendingStatusMessage = paymentStatusType === 'PENDING' && !isWaitingForCheckout && !isWaitingForManualConfirmation && !canPayNow && !!pendingStatusMessage;
   const [, setCountdownTick] = useState(0);
   const timeLeftToPay = getTimeLeftToPay(paymentExpiry);
 
@@ -65,7 +68,9 @@ const MarketplaceProductBookingPaymentPanel = ({
               ? 'We are preparing your payment link. This screen updates automatically when checkout is ready.'
               : isWaitingForManualConfirmation
                 ? 'We are waiting for your payment to be confirmed. Come back to this page later or refresh it to see the latest status.'
-                : `Payment status: ${paymentStatusLabel}`
+                : showsPendingStatusMessage
+                  ? pendingStatusMessage
+                  : `Payment status: ${paymentStatusLabel}`
           }
           sx={{ mt: 1, opacity: 0.82 }}
         />
