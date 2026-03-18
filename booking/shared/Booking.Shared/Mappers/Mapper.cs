@@ -234,7 +234,7 @@ public class Mapper : IMapper
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
-            MarketplaceBooking = MapTo(src.MarketplaceBooking),
+            MarketplaceBooking = MapTo(ResolveBookingMarketplaceBooking(src)),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
         };
 
@@ -271,8 +271,19 @@ public class Mapper : IMapper
                 : MapToSubscriptionShallow(src.MarketplaceBookingSubscription)
         };
 
-    public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src) =>
-        new()
+    public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src)
+    {
+        var marketplaceBooking = MapTo(src.MarketplaceBooking)!;
+        var latestRecurringMarketplaceBooking = ResolveLatestRecurringMarketplaceBooking(src.RecurringBookings);
+        if (latestRecurringMarketplaceBooking is not null)
+        {
+            // The subscription-level marketplace booking keeps the plan template details
+            // such as purchase cadence, while its payment-facing fields mirror the latest
+            // recurring cycle for this same subscription lineage.
+            marketplaceBooking = MapTo(marketplaceBooking, latestRecurringMarketplaceBooking);
+        }
+
+        return new MarketplaceBookingSubscription
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
@@ -284,7 +295,7 @@ public class Mapper : IMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
+            MarketplaceBooking = marketplaceBooking,
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
@@ -293,6 +304,7 @@ public class Mapper : IMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList()
         };
+    }
 
     public Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date)
     {
@@ -605,6 +617,35 @@ public class Mapper : IMapper
             MarketplaceBookingSubscription = null
         };
 
+    private static MarketplaceBooking? ResolveLatestRecurringMarketplaceBooking(ICollection<Database.Entities.RecurringBooking> recurringBookings) =>
+        recurringBookings
+            .Where(item => !item.DeletedAt.HasValue && item.MarketplaceBooking is not null)
+            .OrderByDescending(item => item.StartDate)
+            .Select(item => item.MarketplaceBooking)
+            .FirstOrDefault();
+
+    private static Models.MarketplaceBooking MapTo(Models.MarketplaceBooking src, MarketplaceBooking marketplaceBooking)
+    {
+        src.PaymentStatus = marketplaceBooking.PaymentStatus.ToPaymentStatus();
+        src.IsPaymentRequired = marketplaceBooking.IsPaymentRequired;
+        src.PaymentMethod = marketplaceBooking.PaymentMethod.ToPaymentMethod();
+        src.PaymentExpiry = marketplaceBooking.PaymentExpiry;
+        src.TotalAmountExcludeTax = marketplaceBooking.TotalAmountExcludeTax;
+        src.TaxAmount = marketplaceBooking.TaxAmount;
+        src.TaxRatePercentage = marketplaceBooking.TaxRatePercentage;
+        src.TotalAmount = marketplaceBooking.TotalAmount;
+        src.Currency = marketplaceBooking.Currency;
+        src.InvoiceUrl = marketplaceBooking.InvoiceUrl;
+        src.InvoiceNumber = marketplaceBooking.InvoiceNumber;
+        src.CheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl;
+        src.InvoiceEmailList = marketplaceBooking.InvoiceEmailList.ToSafeCollection();
+        src.BillingMode = marketplaceBooking.BillingMode.ToProductPricingBillingMode();
+        src.PaidByCustomer = MapTo(marketplaceBooking.PaidByCustomer);
+        src.PaidByOrganization = MapTo(marketplaceBooking.PaidByOrganization);
+        src.StripeCheckoutSession = MapTo(marketplaceBooking.StripeCheckoutSession);
+        return src;
+    }
+
     private static MarketplaceBooking MergeTo(
         Models.MarketplaceBooking src,
         MarketplaceBooking dest,
@@ -813,4 +854,7 @@ public class Mapper : IMapper
 
     private static BookingSchedule MapTo(Api.Shared.Services.Models.BookingSchedule src) =>
         new() { From = src.From.ToTimestamp(), Until = src.Until.ToTimestamp() };
+
+    private static MarketplaceBooking? ResolveBookingMarketplaceBooking(Database.Entities.Booking booking) =>
+        booking.RecurringBooking?.MarketplaceBooking ?? booking.MarketplaceBooking;
 }

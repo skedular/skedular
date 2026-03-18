@@ -7,7 +7,6 @@ using Enterprise.Shared.Time;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
 
 namespace Booking.Shared.Repositories;
@@ -114,21 +113,6 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.ProductVersion)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
-
-        internal IIncludableQueryable<Database.Entities.Booking, ProductVersion> AddPaginatedBookingsMinimumDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
-            .Include(query => query.InvolvedCustomers)
-            .Include(query => query.InvolvedOrganizations)
-            .Include(query => query.InvolvedLocations)
-            .ThenInclude(query => query.Organization)
-            .Include(query => query.InvolvedTeams)
-            .Include(query => query.InvolvedResources)
-            .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
-            .Include(query => query.CreatedByCustomer)
-            .Include(query => query.LastModifiedByCustomer)
-            .Include(query => query.DeletedByCustomer)
-            .Include(query => query.MarketplaceBooking)
-            .ThenInclude(query => query!.ProductVersion);
 
         internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria, TimeProvider timeProvider)
         {
@@ -311,7 +295,7 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         CancellationToken cancellationToken) =>
         await DbContext.Booking
             .AddSearchCriteria(searchCriteria, TimeProvider)
-            .AddPaginatedBookingsMinimumDependentObjects(false)
+            .AddSingleBookingMinimumDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
     private static List<KeysetPaginationField<Database.Entities.Booking>> GetPaginationFields(ICollection<BookingOrder> orderByFields)
