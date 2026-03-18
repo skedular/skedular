@@ -444,27 +444,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
     private static DateTimeOffset ResolvePlanningWindowEndExclusive(
         RecurringBooking recurringBooking,
-        MarketplaceBookingSubscription subscription)
-    {
-        if (recurringBooking.EndDate.HasValue)
-        {
-            return new DateTimeOffset(recurringBooking.EndDate.Value.UtcDateTime.Date.AddDays(1), TimeSpan.Zero);
-        }
-
-        return subscription.MarketplaceBooking.ProductPricing.PurchaseCadence switch
-        {
-            ProductPricingCadence.Weekly => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddDays(7), TimeSpan.Zero),
-            ProductPricingCadence.Fortnightly => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddDays(14), TimeSpan.Zero),
-            ProductPricingCadence.Monthly => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(1), TimeSpan.Zero),
-            ProductPricingCadence.TwoMonths => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(2), TimeSpan.Zero),
-            ProductPricingCadence.Quarterly => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(3), TimeSpan.Zero),
-            ProductPricingCadence.FourMonths => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(4), TimeSpan.Zero),
-            ProductPricingCadence.FiveMonths => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(5), TimeSpan.Zero),
-            ProductPricingCadence.SixMonths => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddMonths(6), TimeSpan.Zero),
-            ProductPricingCadence.Yearly => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddYears(1), TimeSpan.Zero),
-            _ => new DateTimeOffset(subscription.StartedAt.UtcDateTime.Date.AddDays(1), TimeSpan.Zero)
-        };
-    }
+        MarketplaceBookingSubscription subscription) =>
+        // The subscription owns the billing period horizon. Reconciliation should therefore
+        // always plan against the current subscription cycle, even if an existing recurring
+        // booking record was created earlier with stale end-date data.
+        subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
 
     private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEndExclusive, ProductPricingCadence cadence) =>
         cadence switch
