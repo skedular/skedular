@@ -47,6 +47,25 @@ public class RootQuery(IVersionService versionService)
         new() { Type = PaymentMethod.BankTransfer, Name = PaymentMethod.BankTransfer.ToPaymentMethodName() }
     ];
 
+    public ICollection<ProductPricingCancellationTypeDetails> ProductPricingCancellationTypes =>
+    [
+        new()
+        {
+            Type = ProductPricingCancellationPolicyType.NoCancellation,
+            Name = ProductPricingCancellationPolicyType.NoCancellation.ToProductPricingCancellationPolicyTypeName()
+        },
+        new()
+        {
+            Type = ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            Name = ProductPricingCancellationPolicyType.FullRefundBeforeCutoff.ToProductPricingCancellationPolicyTypeName()
+        },
+        new()
+        {
+            Type = ProductPricingCancellationPolicyType.TieredRefund,
+            Name = ProductPricingCancellationPolicyType.TieredRefund.ToProductPricingCancellationPolicyTypeName()
+        }
+    ];
+
     [UseResolverScope]
     public Version MarketplaceVersion()
     {

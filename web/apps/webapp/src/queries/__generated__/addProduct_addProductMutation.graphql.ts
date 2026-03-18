@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aa4e6084fbb03e34a88b7a875f05b0b5>>
+ * @generated SignedSource<<0e9af4e11b1183013c55355d8c1dbf9d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 export type AddProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
@@ -43,6 +44,8 @@ export type ProductPricingInput = {
   acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
   billingMode: ProductPricingBillingMode;
   bookingCadence: ProductPricingCadence;
+  cancellationPolicyType: ProductPricingCancellationPolicyType;
+  cancellationRefundRules: ReadonlyArray<ProductPricingCancellationRefundRuleInput>;
   id: string;
   index: number;
   isTaxInclusive: boolean;
@@ -55,6 +58,11 @@ export type ProductPricingInput = {
   price: any;
   purchaseCadence: ProductPricingCadence;
   supportsSubscriptionAutoRenewal: boolean;
+  termsAndConditionsUrl: string;
+};
+export type ProductPricingCancellationRefundRuleInput = {
+  minutesBefore: number;
+  refundPercentage: number;
 };
 export type addProduct_addProductMutation$variables = {
   input: AddProductInput;
@@ -94,6 +102,11 @@ export type addProduct_addProductMutation$data = {
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly billingMode: ProductPricingBillingMode;
         readonly bookingCadence: ProductPricingCadence;
+        readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
+        readonly cancellationRefundRules: ReadonlyArray<{
+          readonly minutesBefore: number;
+          readonly refundPercentage: number;
+        }>;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -108,6 +121,7 @@ export type addProduct_addProductMutation$data = {
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
+        readonly termsAndConditionsUrl: string;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -152,6 +166,11 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
         readonly billingMode: ProductPricingBillingMode;
         readonly bookingCadence: ProductPricingCadence;
+        readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
+        readonly cancellationRefundRules: ReadonlyArray<{
+          readonly minutesBefore: number;
+          readonly refundPercentage: number;
+        }>;
         readonly index: number;
         readonly isTaxInclusive: boolean;
         readonly listingMetadata: {
@@ -166,6 +185,7 @@ export type addProduct_addProductMutation$rawResponse = {
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
+        readonly termsAndConditionsUrl: string;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -453,6 +473,45 @@ v7 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "cancellationPolicyType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "ProductPricingCancellationRefundRule",
+                "kind": "LinkedField",
+                "name": "cancellationRefundRules",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "minutesBefore",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "refundPercentage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "termsAndConditionsUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "isTaxInclusive",
                 "storageKey": null
               },
@@ -512,16 +571,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "1a5cc45cff6da959db86a3b57e0ae8ac",
+    "cacheID": "066a5c192abfac09732e478b686d10d3",
     "id": null,
     "metadata": {},
     "name": "addProduct_addProductMutation",
     "operationKind": "mutation",
-    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation addProduct_addProductMutation(\n  $input: AddProductInput!\n) {\n  addProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        termsAndConditionsUrl\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        billingMode\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "fc7825e07a7c47b06357c61f16538bc2";
+(node as any).hash = "0352fa5de9d11b638add28508339b2f7";
 
 export default node;

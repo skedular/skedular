@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bdccb327b1a97056dc75d12ce9422d36>>
+ * @generated SignedSource<<058c7d6bf0d30a72fe38dcdfc56199fc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductSubscribeForm_query$data = {
   readonly currencies: ReadonlyArray<{
@@ -40,6 +41,11 @@ export type marketplaceProductSubscribeForm_query$data = {
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
+      readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
+      readonly cancellationRefundRules: ReadonlyArray<{
+        readonly minutesBefore: number;
+        readonly refundPercentage: number;
+      }>;
       readonly id: string;
       readonly index: number;
       readonly isTaxInclusive: boolean;
@@ -51,6 +57,7 @@ export type marketplaceProductSubscribeForm_query$data = {
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
+      readonly termsAndConditionsUrl: string;
     }>;
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
@@ -283,6 +290,45 @@ return {
               "kind": "ScalarField",
               "name": "numberOfResourcesToBook",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cancellationPolicyType",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ProductPricingCancellationRefundRule",
+              "kind": "LinkedField",
+              "name": "cancellationRefundRules",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "minutesBefore",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "refundPercentage",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "termsAndConditionsUrl",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -296,6 +342,6 @@ return {
 };
 })();
 
-(node as any).hash = "b74c6e84a1b7e2b35550e4c93ff256b6";
+(node as any).hash = "eba576869f04fb813eba4c4f96adad01";
 
 export default node;

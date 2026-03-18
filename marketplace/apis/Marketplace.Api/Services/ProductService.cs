@@ -363,6 +363,15 @@ public class ProductService(
             throw new ProductPricingBillingModeRequired();
         }
 
+        ValidateCancellationPolicy(pricing);
+
+        if (!string.IsNullOrWhiteSpace(pricing.TermsAndConditionsUrl) &&
+            (!Uri.TryCreate(pricing.TermsAndConditionsUrl, UriKind.Absolute, out var termsUri) ||
+             (termsUri.Scheme != Uri.UriSchemeHttps && termsUri.Scheme != Uri.UriSchemeHttp)))
+        {
+            throw new ProductPricingTermsAndConditionsUrlInvalid();
+        }
+
         var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.BookingCadence);
 
         if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)
@@ -417,6 +426,65 @@ public class ProductService(
             {
                 throw new ArgumentException($"MaxDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MaxDurationMinutes));
             }
+        }
+    }
+
+    /// <summary>
+    ///     Validates that a pricing option cancellation policy is internally consistent.
+    ///     We store the richer policy structure directly on the pricing option so future refund
+    ///     workflows can rely on the same source of truth instead of reinterpreting ad-hoc fields.
+    /// </summary>
+    private static void ValidateCancellationPolicy(ProductPricing pricing)
+    {
+        switch (pricing.CancellationPolicyType)
+        {
+            case ProductPricingCancellationPolicyType.NoCancellation:
+                if (pricing.CancellationRefundRules.Count != 0)
+                {
+                    throw new ProductPricingCancellationPolicyInvalid();
+                }
+
+                return;
+
+            case ProductPricingCancellationPolicyType.FullRefundBeforeCutoff:
+                {
+                    if (pricing.CancellationRefundRules.Count != 1)
+                    {
+                        throw new ProductPricingCancellationPolicyInvalid();
+                    }
+
+                    var rule = pricing.CancellationRefundRules.Single();
+                    if (rule.MinutesBefore < 0 || rule.RefundPercentage != 100)
+                    {
+                        throw new ProductPricingCancellationPolicyInvalid();
+                    }
+
+                    return;
+                }
+
+            case ProductPricingCancellationPolicyType.TieredRefund:
+                {
+                    if (pricing.CancellationRefundRules.Count == 0)
+                    {
+                        throw new ProductPricingCancellationPolicyInvalid();
+                    }
+
+                    var orderedRules = pricing.CancellationRefundRules.OrderByDescending(item => item.MinutesBefore).ToList();
+                    if (orderedRules.Any(item => item.MinutesBefore < 0 || item.RefundPercentage is < 0 or > 100))
+                    {
+                        throw new ProductPricingCancellationPolicyInvalid();
+                    }
+
+                    if (orderedRules.Select(item => item.MinutesBefore).Distinct().Count() != orderedRules.Count)
+                    {
+                        throw new ProductPricingCancellationPolicyInvalid();
+                    }
+
+                    return;
+                }
+
+            default:
+                throw new ProductPricingCancellationPolicyInvalid();
         }
     }
 }

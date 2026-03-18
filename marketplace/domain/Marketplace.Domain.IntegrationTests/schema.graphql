@@ -103,6 +103,9 @@ type ProductPricing {
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
+  cancellationPolicyType: ProductPricingCancellationPolicyType!
+  cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
+  termsAndConditionsUrl: String!
 }
 
 type ProductPricingBillingModeDetails {
@@ -112,6 +115,16 @@ type ProductPricingBillingModeDetails {
 
 type ProductPricingCadenceDetails {
   type: ProductPricingCadence!
+  name: String!
+}
+
+type ProductPricingCancellationRefundRule {
+  minutesBefore: Int!
+  refundPercentage: Int!
+}
+
+type ProductPricingCancellationTypeDetails {
+  type: ProductPricingCancellationPolicyType!
   name: String!
 }
 
@@ -144,6 +157,7 @@ type Query {
   productPricingCadences: [ProductPricingCadenceDetails!]!
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
+  productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
 }
 
 type Version {
@@ -203,6 +217,11 @@ input ProductOrderInput {
   field: ProductOrderField!
 }
 
+input ProductPricingCancellationRefundRuleInput {
+  minutesBefore: Int!
+  refundPercentage: Int!
+}
+
 input ProductPricingInput {
   id: String!
   index: Int!
@@ -219,6 +238,9 @@ input ProductPricingInput {
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
+  cancellationPolicyType: ProductPricingCancellationPolicyType!
+  cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]!
+  termsAndConditionsUrl: String!
 }
 
 input ProductWhereInput {
@@ -453,6 +475,13 @@ enum ProductPricingCadence {
   SIX_MONTHS
   YEARLY
   FORTNIGHTLY
+}
+
+enum ProductPricingCancellationPolicyType {
+  NOT_SET
+  NO_CANCELLATION
+  FULL_REFUND_BEFORE_CUTOFF
+  TIERED_REFUND
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

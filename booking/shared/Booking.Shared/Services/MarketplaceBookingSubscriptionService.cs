@@ -34,7 +34,8 @@ public class MarketplaceBookingSubscriptionService(
     IMapper mapper,
     IProductVersionHelperService productVersionHelperService,
     ITemporalOutboxService temporalOutboxService,
-    IRandomHelper randomHelper) : IMarketplaceBookingSubscriptionService
+    IRandomHelper randomHelper,
+    TimeProvider timeProvider) : IMarketplaceBookingSubscriptionService
 {
     public async Task<MarketplaceBookingSubscription> AddAsync(
         MarketplaceBookingSubscription subscription,
@@ -125,6 +126,11 @@ public class MarketplaceBookingSubscriptionService(
         Customer? deletedByCustomer,
         CancellationToken cancellationToken)
     {
+        if (deletedByCustomer is not null)
+        {
+            EnsureSubscriptionCanStillBeCancelled(existingSubscription);
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingSubscription.DeletedByCustomer = deletedByCustomer;
@@ -169,5 +175,34 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         return returnUri.ToString();
+    }
+
+    private void EnsureSubscriptionCanStillBeCancelled(Database.Entities.MarketplaceBookingSubscription existingSubscription)
+    {
+        var marketplaceBooking = existingSubscription.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        var referenceTime = existingSubscription.NextRenewalAt ?? existingSubscription.StartedAt;
+        if (!CanBeCancelled(marketplaceBooking.ProductPricing, referenceTime, timeProvider.GetUtcNow()))
+        {
+            throw new MarketplaceBookingSubscriptionCancellationNotAllowed();
+        }
+    }
+
+    private static bool CanBeCancelled(
+        ProductPricing pricing,
+        DateTimeOffset referenceTime,
+        DateTimeOffset cancelledAt)
+    {
+        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.NoCancellation)
+        {
+            return false;
+        }
+
+        var applicableRule = pricing.CancellationRefundRules
+            .OrderByDescending(item => item.MinutesBefore)
+            .FirstOrDefault(item => cancelledAt <= referenceTime.AddMinutes(-item.MinutesBefore));
+
+        return applicableRule is not null;
     }
 }

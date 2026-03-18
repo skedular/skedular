@@ -16,4 +16,5 @@ export { default as SingleChoiceOrganizationType } from './single-choice-organiz
 export { default as SingleChoicePaymentMethodType } from './single-choice-payment-method-type';
 export { default as SingleChoiceProductPricingBillingMode } from './single-choice-product-pricing-billing-mode';
 export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';
+export { default as SingleChoiceProductPricingCancellationType } from './single-choice-product-pricing-cancellation-type';
 export { default as SingleChoiceResourceType } from './single-choice-resource-type';

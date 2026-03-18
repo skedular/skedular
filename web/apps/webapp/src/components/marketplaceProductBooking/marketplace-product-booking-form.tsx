@@ -38,6 +38,28 @@ type Props = {
 
 const bookingCategory = 'WORKING_FROM_COWORKING_SPACE' as BookingCategory;
 
+const getBookingCancellationPolicyLabel = (
+  cancellationPolicyType: string | null | undefined,
+  cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined,
+) => {
+  const rules = [...(cancellationRefundRules ?? [])].sort((left, right) => right.minutesBefore - left.minutesBefore);
+
+  switch (cancellationPolicyType) {
+    case 'NO_CANCELLATION':
+      return 'This booking cannot be cancelled online after purchase.';
+    case 'FULL_REFUND_BEFORE_CUTOFF': {
+      const rule = rules[0];
+      return rule ? `Free cancellation is available until ${rule.minutesBefore} minutes before the booking starts.` : 'Cancellation details will be shown before checkout.';
+    }
+    case 'TIERED_REFUND':
+      return rules.length > 0
+        ? rules.map((rule) => `${rule.refundPercentage}% refund until ${rule.minutesBefore} minutes before start`).join(' · ')
+        : 'Cancellation details will be shown before checkout.';
+    default:
+      return 'Cancellation details will be shown before checkout.';
+  }
+};
+
 const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDataRelay, selectedDate, timeRange }: Props) => {
   const rootData = useFragment(
     graphql`
@@ -82,9 +104,15 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             numberOfResourcesToBook
             minDurationMinutes
             maxDurationMinutes
+            cancellationPolicyType
+            cancellationRefundRules {
+              minutesBefore
+              refundPercentage
+            }
             isTaxInclusive
             billingMode
             acceptedPaymentMethods
+            termsAndConditionsUrl
           }
         }
       }
@@ -474,11 +502,13 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
       <MarketplaceProductBookingSummary
         amountLabel={totalLabel}
+        cancellationPolicyLabel={getBookingCancellationPolicyLabel(selectedPricingOption?.cancellationPolicyType, selectedPricingOption?.cancellationRefundRules)}
         dateLabel={toShortDate(selectedDate.toISOString())}
         durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
         paymentLabel={paymentLabel}
         quantity={quantity}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
+        termsAndConditionsUrl={selectedPricingOption?.termsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
       />
     </Box>

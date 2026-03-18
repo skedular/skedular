@@ -69,13 +69,23 @@ public class Mapper : IMapper
             MaxAllowedResourcesLockTimePaidViaCard = src.MaxAllowedResourcesLockTimePaidViaCard,
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
+            CancellationPolicyType = MapTo(src.CancellationPolicyType),
+            TermsAndConditionsUrl = src.TermsAndConditionsUrl.ToSafeString(),
             BillingMode = MapTo(src.BillingMode)
         };
 
         productPricing.AcceptedBookingPaymentMethods.AddRange(MapTo(src.AcceptedPaymentMethods));
+        productPricing.CancellationRefundRules.AddRange(MapTo(src.CancellationRefundRules));
 
         return productPricing;
     }
+
+    private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(
+        IEnumerable<Api.Shared.Services.Models.ProductPricingCancellationRefundRule> src) =>
+        src.Select(MapTo);
+
+    private static ProductPricingCancellationRefundRule MapTo(Api.Shared.Services.Models.ProductPricingCancellationRefundRule src) =>
+        new() { MinutesBefore = src.MinutesBefore, RefundPercentage = src.RefundPercentage };
 
     private static IEnumerable<PaymentMethod> MapTo(IEnumerable<Api.Shared.Services.Models.PaymentMethod> src) =>
         src.Select(MapTo);
@@ -117,6 +127,17 @@ public class Mapper : IMapper
             Api.Shared.Services.Models.ProductPricingBillingMode.NotSet => ProductPricingBillingMode.NotSet,
             Api.Shared.Services.Models.ProductPricingBillingMode.Upfront => ProductPricingBillingMode.Upfront,
             Api.Shared.Services.Models.ProductPricingBillingMode.InArrears => ProductPricingBillingMode.InArrears,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
+
+    private static ProductPricingCancellationPolicyType MapTo(Api.Shared.Services.Models.ProductPricingCancellationPolicyType src) =>
+        src switch
+        {
+            Api.Shared.Services.Models.ProductPricingCancellationPolicyType.NotSet => ProductPricingCancellationPolicyType.NotSet,
+            Api.Shared.Services.Models.ProductPricingCancellationPolicyType.NoCancellation => ProductPricingCancellationPolicyType.NoCancellation,
+            Api.Shared.Services.Models.ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType
+                .FullRefundBeforeCutoff,
+            Api.Shared.Services.Models.ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 

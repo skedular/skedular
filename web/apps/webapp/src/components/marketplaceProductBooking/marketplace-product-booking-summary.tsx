@@ -3,15 +3,18 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import { memo } from 'react';
 
 type Props = {
   amountLabel: string;
+  cancellationPolicyLabel: string;
   dateLabel: string;
   durationLabel: string;
   paymentLabel: string;
   quantity: number;
   taxLabel: string;
+  termsAndConditionsUrl: string | null | undefined;
   title: string;
 };
 
@@ -22,7 +25,17 @@ const SummaryRow = ({ label, value }: { label: string; value: string }) => (
   </Box>
 );
 
-const MarketplaceProductBookingSummary = ({ amountLabel, dateLabel, durationLabel, paymentLabel, quantity, taxLabel, title }: Props) => (
+const MarketplaceProductBookingSummary = ({
+  amountLabel,
+  cancellationPolicyLabel,
+  dateLabel,
+  durationLabel,
+  paymentLabel,
+  quantity,
+  taxLabel,
+  termsAndConditionsUrl,
+  title,
+}: Props) => (
   <Card sx={{ borderRadius: 4, border: 1, borderColor: (theme) => theme.palette.divider, position: { md: 'sticky' }, top: { md: 96 } }}>
     <CardContent sx={{ p: 3 }}>
       <CaptionIconTypography label="Booking summary" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
@@ -40,10 +53,18 @@ const MarketplaceProductBookingSummary = ({ amountLabel, dateLabel, durationLabe
       </StackColumn>
 
       <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>
-        <BodyIconTypography
-          label="Resource allocation is handled after checkout for now. A dedicated floor-plan resource picker can be added later without changing this purchase flow."
-          sx={{ opacity: 0.86 }}
-        />
+        <StackColumn spacing={1}>
+          <BodyIconTypography
+            label="Resource allocation is handled after checkout for now. A dedicated floor-plan resource picker can be added later without changing this purchase flow."
+            sx={{ opacity: 0.86 }}
+          />
+          <BodyIconTypography label={cancellationPolicyLabel} sx={{ opacity: 0.86 }} />
+          {termsAndConditionsUrl ? (
+            <Link href={termsAndConditionsUrl} target="_blank" rel="noreferrer" underline="hover" sx={{ width: 'fit-content' }}>
+              Review pricing terms and conditions
+            </Link>
+          ) : null}
+        </StackColumn>
       </Box>
     </CardContent>
   </Card>

@@ -2,9 +2,12 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Enterprise.Shared.Database;
 using FakeItEasy;
+using Microsoft.EntityFrameworkCore.Storage;
 using Shouldly;
 using Testing.Shared;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
@@ -102,4 +105,112 @@ public class MarketplaceBookingServiceShould
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
             sut.DeleteAsync(existingBooking, deletedByCustomer, cancellationToken));
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Has_No_Cancellation_Policy(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceBookingService sut,
+        CancellationToken cancellationToken)
+    {
+        // Arrange
+        var deletedByCustomer = new Customer();
+        var now = new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero);
+        var existingBooking = CreateMarketplaceBooking(
+            now.AddHours(4),
+            false,
+            ProductPricingCancellationPolicyType.NoCancellation,
+            []);
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+
+        // Act & Assert
+        await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
+            sut.DeleteAsync(existingBooking, deletedByCustomer, cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Throws_MarketplaceBookingCancellationNotAllowed_When_User_Delete_Is_After_Cancellation_Deadline(
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceBookingService sut,
+        CancellationToken cancellationToken)
+    {
+        // Arrange
+        var deletedByCustomer = new Customer();
+        var now = new DateTimeOffset(2026, 3, 18, 8, 30, 0, TimeSpan.Zero);
+        var existingBooking = CreateMarketplaceBooking(
+            now.AddMinutes(30),
+            false,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            [new ProductPricingCancellationRefundRule(45, 100)]);
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+
+        // Act & Assert
+        await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
+            sut.DeleteAsync(existingBooking, deletedByCustomer, cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Allows_User_Delete_When_Inside_Cancellation_Window(
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
+        [Frozen] IMapper mapper,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        CancellationToken cancellationToken)
+    {
+        // Arrange
+        var deletedByCustomer = new Customer();
+        var now = new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero);
+        var existingBooking = CreateMarketplaceBooking(
+            now.AddHours(4),
+            false,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            [new ProductPricingCancellationRefundRule(180, 100)]);
+        var deletedBooking = new Models.Booking { Id = existingBooking.Id };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+
+        // Act
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, cancellationToken);
+
+        // Assert
+        result.ShouldBe(deletedBooking);
+        existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+    }
+
+    private static Database.Entities.Booking CreateMarketplaceBooking(
+        DateTimeOffset from,
+        bool isPaymentRequired,
+        ProductPricingCancellationPolicyType cancellationPolicyType,
+        ICollection<ProductPricingCancellationRefundRule> cancellationRefundRules) =>
+        new()
+        {
+            Id = "booking-1",
+            Channel = BookingChannelConstants.Marketplace,
+            From = from,
+            Until = from.AddHours(1),
+            InvolvedResources = [],
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking
+            {
+                IsPaymentRequired = isPaymentRequired,
+                PaymentMethod = PaymentMethodConstants.Card,
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    CancellationPolicyType = cancellationPolicyType, CancellationRefundRules = cancellationRefundRules
+                }
+            }
+        };
 }

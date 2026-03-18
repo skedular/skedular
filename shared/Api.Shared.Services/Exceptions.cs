@@ -138,3 +138,12 @@ public class MarketplaceBookingSubscriptionNotFound() : Exception("Marketplace b
 public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("Marketplace booking subscription cannot be updated");
 
 public class ProductOrganizationDidNotMatch() : Exception("Product organization did not match");
+
+public class ProductPricingTermsAndConditionsUrlInvalid() : Exception("Product pricing terms and conditions url is invalid");
+
+public class ProductPricingCancellationPolicyInvalid() : Exception("Product pricing cancellation policy is invalid");
+
+public class MarketplaceBookingCancellationNotAllowed() : Exception("This marketplace booking can no longer be cancelled");
+
+public class MarketplaceBookingSubscriptionCancellationNotAllowed()
+    : Exception("This marketplace booking subscription can no longer be cancelled");

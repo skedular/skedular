@@ -10,6 +10,7 @@ import {
   SingleChoiceCurrency,
   SingleChoiceProductPricingBillingMode,
   SingleChoiceProductPricingCadence,
+  SingleChoiceProductPricingCancellationType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -60,6 +61,7 @@ const RootQuery = graphql`
     ...singleChoiceCurrency_query
     ...multipleChoicesPaymentMethodTypes_query
     ...singleChoiceProductPricingCadence_query
+    ...singleChoiceProductPricingCancellationType_query
     ...multipleChoicesAmenities_query
   }
 `;
@@ -83,6 +85,9 @@ type PricingOptionForm = {
   numberOfResourcesToBook: string;
   minDurationMinutes: string;
   maxDurationMinutes: string;
+  cancellationPolicyType: string;
+  cancellationRefundRules: CancellationRefundRuleForm[];
+  termsAndConditionsUrl: string;
   isTaxInclusive: boolean;
   supportsSubscriptionAutoRenewal: boolean;
   maxAllowedResourcesLockTimePaidViaCard: string;
@@ -90,6 +95,16 @@ type PricingOptionForm = {
   billingMode: string;
   acceptedPaymentMethods: string[];
 };
+
+type CancellationRefundRuleForm = {
+  minutesBefore: string;
+  refundPercentage: string;
+};
+
+const createCancellationRefundRule = (refundPercentage = '100'): CancellationRefundRuleForm => ({
+  minutesBefore: '',
+  refundPercentage,
+});
 
 const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
   id: uuid(),
@@ -100,6 +115,9 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   numberOfResourcesToBook: '1',
   minDurationMinutes: '',
   maxDurationMinutes: '',
+  cancellationPolicyType: 'NO_CANCELLATION',
+  cancellationRefundRules: [],
+  termsAndConditionsUrl: '',
   isTaxInclusive: true,
   supportsSubscriptionAutoRenewal: false,
   maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
@@ -224,6 +242,48 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
 
               return maxDurationMinutes >= minDurationMinutes;
             }),
+          cancellationPolicyType: string()
+            .required('Cancellation policy is required.')
+            .test('is-not-not-set', 'Cancellation policy is required.', (value) => value !== 'NOT_SET'),
+          cancellationRefundRules: array()
+            .of(
+              object({
+                minutesBefore: string()
+                  .required('Minutes before is required.')
+                  .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+                  .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
+                refundPercentage: string()
+                  .required('Refund percentage is required.')
+                  .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+                  .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
+              }),
+            )
+            .required()
+            .test('matches-cancellation-policy', 'Cancellation refund rules do not match the selected cancellation policy.', function (value) {
+              const { cancellationPolicyType } = this.parent as PricingOptionForm;
+              const rules = value ?? [];
+
+              if (cancellationPolicyType === 'NO_CANCELLATION') {
+                return rules.length === 0;
+              }
+
+              if (cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF') {
+                return rules.length === 1 && Number(rules[0]?.refundPercentage) === 100;
+              }
+
+              if (cancellationPolicyType === 'TIERED_REFUND') {
+                return rules.length > 0 && new Set(rules.map((item) => item.minutesBefore)).size === rules.length;
+              }
+
+              return false;
+            }),
+          termsAndConditionsUrl: string()
+            .nullable()
+            .test(
+              'is-empty-or-url',
+              'Terms and conditions URL must be a valid URL.',
+              (value) => value === undefined || value === null || value.trim() === '' || /^https?:\/\/\S+$/i.test(value),
+            ),
           isTaxInclusive: boolean().required(),
           supportsSubscriptionAutoRenewal: boolean().required(),
           maxAllowedResourcesLockTimePaidViaCard: string()
@@ -317,6 +377,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
             numberOfResourcesToBook
             minDurationMinutes
             maxDurationMinutes
+            cancellationPolicyType
+            cancellationRefundRules {
+              minutesBefore
+              refundPercentage
+            }
+            termsAndConditionsUrl
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
             maxAllowedResourcesLockTimePaidViaBankTransfer
@@ -399,6 +465,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
             numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+            cancellationPolicyType: pricingOption.cancellationPolicyType as never,
+            cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
+              minutesBefore: Number(item.minutesBefore),
+              refundPercentage: Number(item.refundPercentage),
+            })),
+            termsAndConditionsUrl: pricingOption.termsAndConditionsUrl || null,
             isTaxInclusive: pricingOption.isTaxInclusive,
             maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
             maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
@@ -466,6 +538,12 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
+              cancellationPolicyType: pricingOption.cancellationPolicyType as never,
+              cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
+                minutesBefore: Number(item.minutesBefore),
+                refundPercentage: Number(item.refundPercentage),
+              })),
+              termsAndConditionsUrl: pricingOption.termsAndConditionsUrl || null,
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
               maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
@@ -523,6 +601,9 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
+              const changeNestedField = (path: string, value: unknown) => {
+                (form as unknown as { change: (name: string, nextValue: unknown) => void }).change(path, value);
+              };
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -663,6 +744,87 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
 
                             <FormFieldLabel label="Maximum Duration (minutes)">
                               <TextField name={`pricingOptions[${index}].maxDurationMinutes`} required />
+                            </FormFieldLabel>
+
+                            <FormFieldLabel label="Cancellation Policy">
+                              <SingleChoiceProductPricingCancellationType
+                                rootDataRelay={rootData}
+                                name={`pricingOptions[${index}].cancellationPolicyType`}
+                                required
+                                fieldProps={{
+                                  onChange: (event: { target: { value: string } }) => {
+                                    const nextPolicy = event.target.value;
+                                    changeNestedField(`pricingOptions[${index}].cancellationPolicyType`, nextPolicy);
+
+                                    if (nextPolicy === 'NO_CANCELLATION') {
+                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, []);
+                                    } else if (nextPolicy === 'FULL_REFUND_BEFORE_CUTOFF') {
+                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
+                                    } else if (nextPolicy === 'TIERED_REFUND' && (pricingOption.cancellationRefundRules?.length ?? 0) === 0) {
+                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
+                                    }
+                                  },
+                                }}
+                              />
+                            </FormFieldLabel>
+
+                            {pricingOption.cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF' ? (
+                              <FormFieldLabel label="Full Refund Cutoff (minutes before booking or renewal)">
+                                <TextField name={`pricingOptions[${index}].cancellationRefundRules[0].minutesBefore`} />
+                              </FormFieldLabel>
+                            ) : null}
+
+                            {pricingOption.cancellationPolicyType === 'TIERED_REFUND' ? (
+                              <StackColumn spacing={1.5}>
+                                {(pricingOption.cancellationRefundRules ?? []).map((rule, ruleIndex) => (
+                                  <Box key={`${pricingOption.id}-${ruleIndex}`} sx={{ border: 1, borderColor: 'divider', borderRadius: 2, p: 2 }}>
+                                    <StackColumn spacing={1.25}>
+                                      <StackRow sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <BodyIconTypography label={`Refund Rule ${ruleIndex + 1}`} />
+                                        {(pricingOption.cancellationRefundRules?.length ?? 0) > 1 ? (
+                                          <Button
+                                            color="error"
+                                            onClick={() => {
+                                              changeNestedField(
+                                                `pricingOptions[${index}].cancellationRefundRules`,
+                                                pricingOption.cancellationRefundRules.filter((_, itemIndex) => itemIndex !== ruleIndex),
+                                              );
+                                            }}
+                                          >
+                                            Remove
+                                          </Button>
+                                        ) : null}
+                                      </StackRow>
+
+                                      <FormFieldLabel label="Minutes Before">
+                                        <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].minutesBefore`} />
+                                      </FormFieldLabel>
+
+                                      <FormFieldLabel label="Refund Percentage">
+                                        <TextField name={`pricingOptions[${index}].cancellationRefundRules[${ruleIndex}].refundPercentage`} />
+                                      </FormFieldLabel>
+                                    </StackColumn>
+                                  </Box>
+                                ))}
+
+                                <StackRow>
+                                  <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [
+                                        ...(pricingOption.cancellationRefundRules ?? []),
+                                        createCancellationRefundRule('0'),
+                                      ])
+                                    }
+                                  >
+                                    Add Refund Rule
+                                  </Button>
+                                </StackRow>
+                              </StackColumn>
+                            ) : null}
+
+                            <FormFieldLabel label="Terms and Conditions URL">
+                              <TextField name={`pricingOptions[${index}].termsAndConditionsUrl`} />
                             </FormFieldLabel>
 
                             <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">

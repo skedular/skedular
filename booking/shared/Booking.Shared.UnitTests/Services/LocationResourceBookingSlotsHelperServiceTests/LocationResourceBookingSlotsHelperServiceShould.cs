@@ -1,6 +1,8 @@
+using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
 using Enterprise.Shared.Time;
+using FakeItEasy;
 using Shouldly;
 using Testing.Shared;
 
@@ -10,10 +12,13 @@ public class LocationResourceBookingSlotsHelperServiceShould
 {
     [Theory]
     [AutoFakeItEasyData]
-    public void GetStartPeriod_Returns_14_Days_Ago_From_Current_Day(LocationResourceBookingSlotsHelperService sut, TimeProvider timeProvider)
+    public void GetStartPeriod_Returns_14_Days_Ago_From_Current_Day(
+        [Frozen] TimeProvider timeProvider,
+        LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
-        var currentTime = timeProvider.GetUtcNow();
+        var currentTime = DateTimeOffset.UtcNow;
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(currentTime);
 
         // Act
         var result = sut.GetStartPeriod();
@@ -24,9 +29,12 @@ public class LocationResourceBookingSlotsHelperServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void CreateAllAvailableSlots_Generates_Slots_For_Resource(LocationResourceBookingSlotsHelperService sut)
+    public void CreateAllAvailableSlots_Generates_Slots_For_Resource(
+        [Frozen] TimeProvider timeProvider,
+        LocationResourceBookingSlotsHelperService sut)
     {
         // Arrange
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(DateTimeOffset.UtcNow);
         var resource = new Resource { Id = "resource-1", Name = "Test Resource" };
 
         // Act

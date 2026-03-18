@@ -15,7 +15,10 @@ public record ProductPricing(
     int? MaxDurationMinutes,
     int MaxAllowedResourcesLockTimePaidViaCard,
     int MaxAllowedResourcesLockTimePaidViaBankTransfer,
-    int NumberOfResourcesToBook)
+    int NumberOfResourcesToBook,
+    ProductPricingCancellationPolicyType CancellationPolicyType,
+    ICollection<ProductPricingCancellationRefundRule> CancellationRefundRules,
+    string TermsAndConditionsUrl)
 {
     public static ProductPricing Empty(string id) =>
         new(
@@ -33,5 +36,8 @@ public record ProductPricing(
             null,
             int.MinValue,
             int.MinValue,
-            int.MinValue);
+            int.MinValue,
+            ProductPricingCancellationPolicyType.NotSet,
+            [],
+            string.Empty);
 }

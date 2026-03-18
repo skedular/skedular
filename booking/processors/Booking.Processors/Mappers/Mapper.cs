@@ -612,7 +612,40 @@ public class Mapper : IMapper
             src.MaxDurationMinutes.FromNullInt(),
             src.MaxAllowedResourcesLockTimePaidViaCard,
             src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
-            src.NumberOfResourcesToBook);
+            src.NumberOfResourcesToBook,
+            MapTo(src.CancellationPolicyType),
+            MapTo(src.CancellationRefundRules).ToList(),
+            src.TermsAndConditionsUrl.ToSafeString());
+
+    private static ProductPricingCancellationPolicyType MapTo(
+        Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType src) =>
+        src switch
+        {
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet =>
+                ProductPricingCancellationPolicyType.NotSet,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NoCancellation =>
+                ProductPricingCancellationPolicyType.NoCancellation,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.FullRefundBeforeCutoff =>
+                ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.TieredRefund =>
+                ProductPricingCancellationPolicyType.TieredRefund,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+    private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(
+        IEnumerable<Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule> src) => src.Select(MapTo);
+
+    private static ProductPricingCancellationRefundRule MapTo(
+        Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule src) =>
+        new(src.MinutesBefore, src.RefundPercentage);
+
+    private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(IEnumerable<ProductPricingCancellationRefundRule> src) =>
+        src.Select(MapTo);
+
+    private static ProductPricingCancellationRefundRule MapTo(ProductPricingCancellationRefundRule src) =>
+        new(
+            src.MinutesBefore,
+            src.RefundPercentage);
 
     private static Api.Shared.Services.Models.ProductPricingCadence MapTo(ProductPricingCadence src) =>
         src switch
@@ -643,6 +676,16 @@ public class Mapper : IMapper
             ProductPricingBillingMode.NotSet => Api.Shared.Services.Models.ProductPricingBillingMode.NotSet,
             ProductPricingBillingMode.Upfront => Api.Shared.Services.Models.ProductPricingBillingMode.Upfront,
             ProductPricingBillingMode.InArrears => Api.Shared.Services.Models.ProductPricingBillingMode.InArrears,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
+
+    private static ProductPricingCancellationPolicyType MapTo(ProductPricingCancellationPolicyType src) =>
+        src switch
+        {
+            ProductPricingCancellationPolicyType.NotSet => ProductPricingCancellationPolicyType.NotSet,
+            ProductPricingCancellationPolicyType.NoCancellation => ProductPricingCancellationPolicyType.NoCancellation,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 

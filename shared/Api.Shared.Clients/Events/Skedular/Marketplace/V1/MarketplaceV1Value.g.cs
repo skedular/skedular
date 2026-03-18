@@ -45,7 +45,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "ZUZpbGUSJgoIb3JpZ2luYWwYASABKAsyFC5tYXJrZXRwbGFjZS5DZG5GaWxl",
             "EicKCXRodW1ibmFpbBgCIAEoCzIULm1hcmtldHBsYWNlLkNkbkZpbGUiNQoH",
             "Q2RuRmlsZRILCgN1cmwYASABKAkSDgoGaGVpZ2h0GAIgASgFEg0KBXdpZHRo",
-            "GAMgASgFIpUFCg5Qcm9kdWN0UHJpY2luZxIKCgJpZBgBIAEoCRINCgVpbmRl",
+            "GAMgASgFItsGCg5Qcm9kdWN0UHJpY2luZxIKCgJpZBgBIAEoCRINCgVpbmRl",
             "eBgCIAEoBRI1Cg9saXN0aW5nTWV0YWRhdGEYAyABKAsyHC5tYXJrZXRwbGFj",
             "ZS5MaXN0aW5nTWV0YWRhdGESOwoPcHVyY2hhc2VDYWRlbmNlGAQgASgOMiIu",
             "bWFya2V0cGxhY2UuUHJvZHVjdFByaWNpbmdDYWRlbmNlEjoKDmJvb2tpbmdD",
@@ -59,36 +59,48 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             "c291cmNlc0xvY2tUaW1lUGFpZFZpYUJhbmtUcmFuc2ZlchgNIAEoBRIfChdu",
             "dW1iZXJPZlJlc291cmNlc1RvQm9vaxgOIAEoBRI7CgtiaWxsaW5nTW9kZRgP",
             "IAEoDjImLm1hcmtldHBsYWNlLlByb2R1Y3RQcmljaW5nQmlsbGluZ01vZGUS",
-            "Jwofc3VwcG9ydHNTdWJzY3JpcHRpb25BdXRvUmVuZXdhbBgQIAEoCCJbCg9M",
-            "aXN0aW5nTWV0YWRhdGESDQoFYWJvdXQYASABKAkSDQoFdGl0bGUYAiABKAkS",
-            "EAoIc3ViVGl0bGUYAyABKAkSGAoQaW5jbHVkZWRGZWF0dXJlcxgEIAMoCSo5",
-            "CgRUeXBlEhgKFFR5cGVfUHJvZHVjdFVwc2VydGVkEAASFwoTVHlwZV9Qcm9k",
-            "dWN0RGVsZXRlZBABKoEFChVQcm9kdWN0UHJpY2luZ0NhZGVuY2USIAocUHJv",
-            "ZHVjdFByaWNpbmdDYWRlbmNlX05vdFNldBAAEiEKHVByb2R1Y3RQcmljaW5n",
-            "Q2FkZW5jZV9PbmVUaW1lEAESIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX1Bl",
-            "ck1pbnV0ZRACEiEKHVByb2R1Y3RQcmljaW5nQ2FkZW5jZV9QZXJIb3VyEAMS",
-            "IQodUHJvZHVjdFByaWNpbmdDYWRlbmNlX0hhbGZEYXkQBBIfChtQcm9kdWN0",
-            "UHJpY2luZ0NhZGVuY2VfRGFpbHkQBRIgChxQcm9kdWN0UHJpY2luZ0NhZGVu",
-            "Y2VfV2Vla2x5EAYSIQodUHJvZHVjdFByaWNpbmdDYWRlbmNlX01vbnRobHkQ",
-            "BxImCiJQcm9kdWN0UHJpY2luZ0NhZGVuY2VfUGVyMTVNaW51dGVzEAgSJgoi",
-            "UHJvZHVjdFByaWNpbmdDYWRlbmNlX1BlcjMwTWludXRlcxAJEiMKH1Byb2R1",
-            "Y3RQcmljaW5nQ2FkZW5jZV9Ud29Nb250aHMQChIjCh9Qcm9kdWN0UHJpY2lu",
-            "Z0NhZGVuY2VfUXVhcnRlcmx5EAsSJAogUHJvZHVjdFByaWNpbmdDYWRlbmNl",
-            "X0ZvdXJNb250aHMQDBIkCiBQcm9kdWN0UHJpY2luZ0NhZGVuY2VfRml2ZU1v",
-            "bnRocxANEiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9TaXhNb250aHMQDhIg",
-            "ChxQcm9kdWN0UHJpY2luZ0NhZGVuY2VfWWVhcmx5EA8SJQohUHJvZHVjdFBy",
-            "aWNpbmdDYWRlbmNlX0ZvcnRuaWdodGx5EBAqkQEKGVByb2R1Y3RQcmljaW5n",
-            "QmlsbGluZ01vZGUSJAogUHJvZHVjdFByaWNpbmdCaWxsaW5nTW9kZV9Ob3RT",
-            "ZXQQABIlCiFQcm9kdWN0UHJpY2luZ0JpbGxpbmdNb2RlX1VwZnJvbnQQARIn",
-            "CiNQcm9kdWN0UHJpY2luZ0JpbGxpbmdNb2RlX0luQXJyZWFycxACKkcKDVBh",
-            "eW1lbnRNZXRob2QSFgoSUGF5bWVudE1ldGhvZF9DYXJkEAASHgoaUGF5bWVu",
-            "dE1ldGhvZF9CYW5rVHJhbnNmZXIQASouCghDdXJyZW5jeRIQCgxDdXJyZW5j",
-            "eV9OemQQABIQCgxDdXJyZW5jeV9Vc2QQAUI6qgI3QXBpLlNoYXJlZC5DbGll",
-            "bnRzLkV2ZW50cy5Ta2VkdWxhci5NYXJrZXRwbGFjZS5WMS5WYWx1ZWIGcHJv",
-            "dG8z"));
+            "Jwofc3VwcG9ydHNTdWJzY3JpcHRpb25BdXRvUmVuZXdhbBgQIAEoCBJRChZj",
+            "YW5jZWxsYXRpb25Qb2xpY3lUeXBlGBEgASgOMjEubWFya2V0cGxhY2UuUHJv",
+            "ZHVjdFByaWNpbmdDYW5jZWxsYXRpb25Qb2xpY3lUeXBlElIKF2NhbmNlbGxh",
+            "dGlvblJlZnVuZFJ1bGVzGBIgAygLMjEubWFya2V0cGxhY2UuUHJvZHVjdFBy",
+            "aWNpbmdDYW5jZWxsYXRpb25SZWZ1bmRSdWxlEh0KFXRlcm1zQW5kQ29uZGl0",
+            "aW9uc1VybBgTIAEoCSJXCiRQcm9kdWN0UHJpY2luZ0NhbmNlbGxhdGlvblJl",
+            "ZnVuZFJ1bGUSFQoNbWludXRlc0JlZm9yZRgBIAEoBRIYChByZWZ1bmRQZXJj",
+            "ZW50YWdlGAIgASgFIlsKD0xpc3RpbmdNZXRhZGF0YRINCgVhYm91dBgBIAEo",
+            "CRINCgV0aXRsZRgCIAEoCRIQCghzdWJUaXRsZRgDIAEoCRIYChBpbmNsdWRl",
+            "ZEZlYXR1cmVzGAQgAygJKjkKBFR5cGUSGAoUVHlwZV9Qcm9kdWN0VXBzZXJ0",
+            "ZWQQABIXChNUeXBlX1Byb2R1Y3REZWxldGVkEAEqgQUKFVByb2R1Y3RQcmlj",
+            "aW5nQ2FkZW5jZRIgChxQcm9kdWN0UHJpY2luZ0NhZGVuY2VfTm90U2V0EAAS",
+            "IQodUHJvZHVjdFByaWNpbmdDYWRlbmNlX09uZVRpbWUQARIjCh9Qcm9kdWN0",
+            "UHJpY2luZ0NhZGVuY2VfUGVyTWludXRlEAISIQodUHJvZHVjdFByaWNpbmdD",
+            "YWRlbmNlX1BlckhvdXIQAxIhCh1Qcm9kdWN0UHJpY2luZ0NhZGVuY2VfSGFs",
+            "ZkRheRAEEh8KG1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9EYWlseRAFEiAKHFBy",
+            "b2R1Y3RQcmljaW5nQ2FkZW5jZV9XZWVrbHkQBhIhCh1Qcm9kdWN0UHJpY2lu",
+            "Z0NhZGVuY2VfTW9udGhseRAHEiYKIlByb2R1Y3RQcmljaW5nQ2FkZW5jZV9Q",
+            "ZXIxNU1pbnV0ZXMQCBImCiJQcm9kdWN0UHJpY2luZ0NhZGVuY2VfUGVyMzBN",
+            "aW51dGVzEAkSIwofUHJvZHVjdFByaWNpbmdDYWRlbmNlX1R3b01vbnRocxAK",
+            "EiMKH1Byb2R1Y3RQcmljaW5nQ2FkZW5jZV9RdWFydGVybHkQCxIkCiBQcm9k",
+            "dWN0UHJpY2luZ0NhZGVuY2VfRm91ck1vbnRocxAMEiQKIFByb2R1Y3RQcmlj",
+            "aW5nQ2FkZW5jZV9GaXZlTW9udGhzEA0SIwofUHJvZHVjdFByaWNpbmdDYWRl",
+            "bmNlX1NpeE1vbnRocxAOEiAKHFByb2R1Y3RQcmljaW5nQ2FkZW5jZV9ZZWFy",
+            "bHkQDxIlCiFQcm9kdWN0UHJpY2luZ0NhZGVuY2VfRm9ydG5pZ2h0bHkQECqR",
+            "AQoZUHJvZHVjdFByaWNpbmdCaWxsaW5nTW9kZRIkCiBQcm9kdWN0UHJpY2lu",
+            "Z0JpbGxpbmdNb2RlX05vdFNldBAAEiUKIVByb2R1Y3RQcmljaW5nQmlsbGlu",
+            "Z01vZGVfVXBmcm9udBABEicKI1Byb2R1Y3RQcmljaW5nQmlsbGluZ01vZGVf",
+            "SW5BcnJlYXJzEAIqiAIKJFByb2R1Y3RQcmljaW5nQ2FuY2VsbGF0aW9uUG9s",
+            "aWN5VHlwZRIvCitQcm9kdWN0UHJpY2luZ0NhbmNlbGxhdGlvblBvbGljeVR5",
+            "cGVfTm90U2V0EAASNwozUHJvZHVjdFByaWNpbmdDYW5jZWxsYXRpb25Qb2xp",
+            "Y3lUeXBlX05vQ2FuY2VsbGF0aW9uEAESPwo7UHJvZHVjdFByaWNpbmdDYW5j",
+            "ZWxsYXRpb25Qb2xpY3lUeXBlX0Z1bGxSZWZ1bmRCZWZvcmVDdXRvZmYQAhI1",
+            "CjFQcm9kdWN0UHJpY2luZ0NhbmNlbGxhdGlvblBvbGljeVR5cGVfVGllcmVk",
+            "UmVmdW5kEAMqRwoNUGF5bWVudE1ldGhvZBIWChJQYXltZW50TWV0aG9kX0Nh",
+            "cmQQABIeChpQYXltZW50TWV0aG9kX0JhbmtUcmFuc2ZlchABKi4KCEN1cnJl",
+            "bmN5EhAKDEN1cnJlbmN5X056ZBAAEhAKDEN1cnJlbmN5X1VzZBABQjqqAjdB",
+            "cGkuU2hhcmVkLkNsaWVudHMuRXZlbnRzLlNrZWR1bGFyLk1hcmtldHBsYWNl",
+            "LlYxLlZhbHVlYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCadence), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod), typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Data.Parser, new[]{ "Product" }, new[]{ "Payload" }, null, null, null),
@@ -96,7 +108,8 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion.Parser, new[]{ "Id", "ListingMetadata", "Currency", "TagIds", "FeatureImages", "PricingOptions" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnImageFile.Parser, new[]{ "Original", "Thumbnail" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile.Parser, new[]{ "Url", "Height", "Width" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "ListingMetadata", "PurchaseCadence", "BookingCadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook", "BillingMode", "SupportsSubscriptionAutoRenewal" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing.Parser, new[]{ "Id", "Index", "ListingMetadata", "PurchaseCadence", "BookingCadence", "Price", "IsTaxInclusive", "Currency", "AcceptedBookingPaymentMethods", "MinDurationMinutes", "MaxDurationMinutes", "MaxAllowedResourcesLockTimePaidViaCard", "MaxAllowedResourcesLockTimePaidViaBankTransfer", "NumberOfResourcesToBook", "BillingMode", "SupportsSubscriptionAutoRenewal", "CancellationPolicyType", "CancellationRefundRules", "TermsAndConditionsUrl" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule.Parser, new[]{ "MinutesBefore", "RefundPercentage" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata), global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata.Parser, new[]{ "About", "Title", "SubTitle", "IncludedFeatures" }, null, null, null, null)
           }));
     }
@@ -133,6 +146,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     [pbr::OriginalName("ProductPricingBillingMode_NotSet")] NotSet = 0,
     [pbr::OriginalName("ProductPricingBillingMode_Upfront")] Upfront = 1,
     [pbr::OriginalName("ProductPricingBillingMode_InArrears")] InArrears = 2,
+  }
+
+  public enum ProductPricingCancellationPolicyType {
+    [pbr::OriginalName("ProductPricingCancellationPolicyType_NotSet")] NotSet = 0,
+    [pbr::OriginalName("ProductPricingCancellationPolicyType_NoCancellation")] NoCancellation = 1,
+    [pbr::OriginalName("ProductPricingCancellationPolicyType_FullRefundBeforeCutoff")] FullRefundBeforeCutoff = 2,
+    [pbr::OriginalName("ProductPricingCancellationPolicyType_TieredRefund")] TieredRefund = 3,
   }
 
   public enum PaymentMethod {
@@ -2333,6 +2353,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       numberOfResourcesToBook_ = other.numberOfResourcesToBook_;
       billingMode_ = other.billingMode_;
       supportsSubscriptionAutoRenewal_ = other.supportsSubscriptionAutoRenewal_;
+      cancellationPolicyType_ = other.cancellationPolicyType_;
+      cancellationRefundRules_ = other.cancellationRefundRules_.Clone();
+      termsAndConditionsUrl_ = other.termsAndConditionsUrl_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2533,6 +2556,41 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "cancellationPolicyType" field.</summary>
+    public const int CancellationPolicyTypeFieldNumber = 17;
+    private global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType cancellationPolicyType_ = global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType CancellationPolicyType {
+      get { return cancellationPolicyType_; }
+      set {
+        cancellationPolicyType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cancellationRefundRules" field.</summary>
+    public const int CancellationRefundRulesFieldNumber = 18;
+    private static readonly pb::FieldCodec<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule> _repeated_cancellationRefundRules_codec
+        = pb::FieldCodec.ForMessage(146, global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule.Parser);
+    private readonly pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule> cancellationRefundRules_ = new pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule> CancellationRefundRules {
+      get { return cancellationRefundRules_; }
+    }
+
+    /// <summary>Field number for the "termsAndConditionsUrl" field.</summary>
+    public const int TermsAndConditionsUrlFieldNumber = 19;
+    private string termsAndConditionsUrl_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string TermsAndConditionsUrl {
+      get { return termsAndConditionsUrl_; }
+      set {
+        termsAndConditionsUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2564,6 +2622,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != other.NumberOfResourcesToBook) return false;
       if (BillingMode != other.BillingMode) return false;
       if (SupportsSubscriptionAutoRenewal != other.SupportsSubscriptionAutoRenewal) return false;
+      if (CancellationPolicyType != other.CancellationPolicyType) return false;
+      if(!cancellationRefundRules_.Equals(other.cancellationRefundRules_)) return false;
+      if (TermsAndConditionsUrl != other.TermsAndConditionsUrl) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2587,6 +2648,9 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       if (NumberOfResourcesToBook != 0) hash ^= NumberOfResourcesToBook.GetHashCode();
       if (BillingMode != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode.NotSet) hash ^= BillingMode.GetHashCode();
       if (SupportsSubscriptionAutoRenewal != false) hash ^= SupportsSubscriptionAutoRenewal.GetHashCode();
+      if (CancellationPolicyType != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet) hash ^= CancellationPolicyType.GetHashCode();
+      hash ^= cancellationRefundRules_.GetHashCode();
+      if (TermsAndConditionsUrl.Length != 0) hash ^= TermsAndConditionsUrl.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2666,6 +2730,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(128, 1);
         output.WriteBool(SupportsSubscriptionAutoRenewal);
       }
+      if (CancellationPolicyType != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet) {
+        output.WriteRawTag(136, 1);
+        output.WriteEnum((int) CancellationPolicyType);
+      }
+      cancellationRefundRules_.WriteTo(output, _repeated_cancellationRefundRules_codec);
+      if (TermsAndConditionsUrl.Length != 0) {
+        output.WriteRawTag(154, 1);
+        output.WriteString(TermsAndConditionsUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2737,6 +2810,15 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
         output.WriteRawTag(128, 1);
         output.WriteBool(SupportsSubscriptionAutoRenewal);
       }
+      if (CancellationPolicyType != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet) {
+        output.WriteRawTag(136, 1);
+        output.WriteEnum((int) CancellationPolicyType);
+      }
+      cancellationRefundRules_.WriteTo(ref output, _repeated_cancellationRefundRules_codec);
+      if (TermsAndConditionsUrl.Length != 0) {
+        output.WriteRawTag(154, 1);
+        output.WriteString(TermsAndConditionsUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2792,6 +2874,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (SupportsSubscriptionAutoRenewal != false) {
         size += 2 + 1;
+      }
+      if (CancellationPolicyType != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet) {
+        size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) CancellationPolicyType);
+      }
+      size += cancellationRefundRules_.CalculateSize(_repeated_cancellationRefundRules_codec);
+      if (TermsAndConditionsUrl.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(TermsAndConditionsUrl);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2853,6 +2942,13 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
       }
       if (other.SupportsSubscriptionAutoRenewal != false) {
         SupportsSubscriptionAutoRenewal = other.SupportsSubscriptionAutoRenewal;
+      }
+      if (other.CancellationPolicyType != global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType.NotSet) {
+        CancellationPolicyType = other.CancellationPolicyType;
+      }
+      cancellationRefundRules_.Add(other.cancellationRefundRules_);
+      if (other.TermsAndConditionsUrl.Length != 0) {
+        TermsAndConditionsUrl = other.TermsAndConditionsUrl;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2939,6 +3035,18 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
           }
           case 128: {
             SupportsSubscriptionAutoRenewal = input.ReadBool();
+            break;
+          }
+          case 136: {
+            CancellationPolicyType = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType) input.ReadEnum();
+            break;
+          }
+          case 146: {
+            cancellationRefundRules_.AddEntriesFrom(input, _repeated_cancellationRefundRules_codec);
+            break;
+          }
+          case 154: {
+            TermsAndConditionsUrl = input.ReadString();
             break;
           }
         }
@@ -3028,6 +3136,253 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
             SupportsSubscriptionAutoRenewal = input.ReadBool();
             break;
           }
+          case 136: {
+            CancellationPolicyType = (global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType) input.ReadEnum();
+            break;
+          }
+          case 146: {
+            cancellationRefundRules_.AddEntriesFrom(ref input, _repeated_cancellationRefundRules_codec);
+            break;
+          }
+          case 154: {
+            TermsAndConditionsUrl = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class ProductPricingCancellationRefundRule : pb::IMessage<ProductPricingCancellationRefundRule>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<ProductPricingCancellationRefundRule> _parser = new pb::MessageParser<ProductPricingCancellationRefundRule>(() => new ProductPricingCancellationRefundRule());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<ProductPricingCancellationRefundRule> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.MarketplaceV1ValueReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ProductPricingCancellationRefundRule() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ProductPricingCancellationRefundRule(ProductPricingCancellationRefundRule other) : this() {
+      minutesBefore_ = other.minutesBefore_;
+      refundPercentage_ = other.refundPercentage_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ProductPricingCancellationRefundRule Clone() {
+      return new ProductPricingCancellationRefundRule(this);
+    }
+
+    /// <summary>Field number for the "minutesBefore" field.</summary>
+    public const int MinutesBeforeFieldNumber = 1;
+    private int minutesBefore_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int MinutesBefore {
+      get { return minutesBefore_; }
+      set {
+        minutesBefore_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "refundPercentage" field.</summary>
+    public const int RefundPercentageFieldNumber = 2;
+    private int refundPercentage_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int RefundPercentage {
+      get { return refundPercentage_; }
+      set {
+        refundPercentage_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as ProductPricingCancellationRefundRule);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(ProductPricingCancellationRefundRule other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (MinutesBefore != other.MinutesBefore) return false;
+      if (RefundPercentage != other.RefundPercentage) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (MinutesBefore != 0) hash ^= MinutesBefore.GetHashCode();
+      if (RefundPercentage != 0) hash ^= RefundPercentage.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (MinutesBefore != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(MinutesBefore);
+      }
+      if (RefundPercentage != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(RefundPercentage);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (MinutesBefore != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(MinutesBefore);
+      }
+      if (RefundPercentage != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(RefundPercentage);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (MinutesBefore != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MinutesBefore);
+      }
+      if (RefundPercentage != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(RefundPercentage);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(ProductPricingCancellationRefundRule other) {
+      if (other == null) {
+        return;
+      }
+      if (other.MinutesBefore != 0) {
+        MinutesBefore = other.MinutesBefore;
+      }
+      if (other.RefundPercentage != 0) {
+        RefundPercentage = other.RefundPercentage;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            MinutesBefore = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            RefundPercentage = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            MinutesBefore = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            RefundPercentage = input.ReadInt32();
+            break;
+          }
         }
       }
     }
@@ -3050,7 +3405,7 @@ namespace Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.MarketplaceV1ValueReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.MarketplaceV1ValueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

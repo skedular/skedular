@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4a554761f322ba38362cbd0d02800ccd>>
+ * @generated SignedSource<<bf32bdaa23701d15d1c34dd6a45c7cd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -58,6 +59,11 @@ export type editProduct_query$data = {
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
       readonly bookingCadence: ProductPricingCadence;
+      readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
+      readonly cancellationRefundRules: ReadonlyArray<{
+        readonly minutesBefore: number;
+        readonly refundPercentage: number;
+      }>;
       readonly index: number;
       readonly isTaxInclusive: boolean;
       readonly listingMetadata: {
@@ -72,6 +78,7 @@ export type editProduct_query$data = {
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
+      readonly termsAndConditionsUrl: string;
     }>;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -83,7 +90,7 @@ export type editProduct_query$data = {
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -371,6 +378,45 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
+              "name": "cancellationPolicyType",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "ProductPricingCancellationRefundRule",
+              "kind": "LinkedField",
+              "name": "cancellationRefundRules",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "minutesBefore",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "refundPercentage",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "termsAndConditionsUrl",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
               "name": "isTaxInclusive",
               "storageKey": null
             },
@@ -477,6 +523,11 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "singleChoiceProductPricingCancellationType_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "multipleChoicesAmenities_query"
     }
   ],
@@ -485,6 +536,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6afbaab822d6503a51a19486057f2e2";
+(node as any).hash = "584c3100aead8e329cac6ca2f777fe71";
 
 export default node;

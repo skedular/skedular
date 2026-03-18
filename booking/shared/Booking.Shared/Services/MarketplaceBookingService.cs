@@ -453,6 +453,11 @@ public class MarketplaceBookingService(
             throw new BookingIsNotMarketplace();
         }
 
+        if (deletedByCustomer is not null)
+        {
+            EnsureBookingCanStillBeCancelled(existingBooking);
+        }
+
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(existingBooking);
@@ -676,6 +681,39 @@ public class MarketplaceBookingService(
             PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             _ => throw new ArgumentOutOfRangeException()
         };
+
+    /// <summary>
+    ///     Enforces the pricing-option cancellation policy for user-initiated deletes.
+    ///     The policy is evaluated against the booking start time so the storefront can evolve
+    ///     from simple full-refund cutoffs to tiered cancellation rules without changing the API.
+    /// </summary>
+    private void EnsureBookingCanStillBeCancelled(Database.Entities.Booking existingBooking)
+    {
+        var marketplaceBooking = existingBooking.MarketplaceBooking;
+        ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        if (!CanBeCancelled(marketplaceBooking.ProductPricing, existingBooking.From, timeProvider.GetUtcNow()))
+        {
+            throw new MarketplaceBookingCancellationNotAllowed();
+        }
+    }
+
+    private static bool CanBeCancelled(
+        ProductPricing pricing,
+        DateTimeOffset referenceTime,
+        DateTimeOffset cancelledAt)
+    {
+        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.NoCancellation)
+        {
+            return false;
+        }
+
+        var applicableRule = pricing.CancellationRefundRules
+            .OrderByDescending(item => item.MinutesBefore)
+            .FirstOrDefault(item => cancelledAt <= referenceTime.AddMinutes(-item.MinutesBefore));
+
+        return applicableRule is not null;
+    }
 
     /// <summary>
     ///     Normalizes and validates the checkout return URL.

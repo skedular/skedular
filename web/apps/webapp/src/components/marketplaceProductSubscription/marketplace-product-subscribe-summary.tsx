@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Divider from '@mui/material/Divider';
+import Link from '@mui/material/Link';
 import { memo } from 'react';
 
 type Props = {
@@ -10,9 +11,11 @@ type Props = {
   autoRenew: boolean;
   billingModeLabel: string;
   cadenceLabel: string;
+  cancellationPolicyLabel: string;
   quantity: number;
   startsOnLabel: string;
   taxLabel: string;
+  termsAndConditionsUrl: string | null | undefined;
   title: string;
 };
 
@@ -23,7 +26,18 @@ const SummaryRow = ({ label, value }: { label: string; value: string }) => (
   </Box>
 );
 
-const MarketplaceProductSubscribeSummary = ({ amountLabel, autoRenew, billingModeLabel, cadenceLabel, quantity, startsOnLabel, taxLabel, title }: Props) => {
+const MarketplaceProductSubscribeSummary = ({
+  amountLabel,
+  autoRenew,
+  billingModeLabel,
+  cadenceLabel,
+  cancellationPolicyLabel,
+  quantity,
+  startsOnLabel,
+  taxLabel,
+  termsAndConditionsUrl,
+  title,
+}: Props) => {
   return (
     <Card sx={{ borderRadius: 4, border: 1, borderColor: (theme) => theme.palette.divider, position: { md: 'sticky' }, top: { md: 96 } }}>
       <CardContent sx={{ p: 3 }}>
@@ -43,14 +57,22 @@ const MarketplaceProductSubscribeSummary = ({ amountLabel, autoRenew, billingMod
         </StackColumn>
 
         <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>
-          <BodyIconTypography
-            label={
-              autoRenew
-                ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
-                : 'This purchase covers the current cadence window only. No additional renewal will be created.'
-            }
-            sx={{ opacity: 0.86 }}
-          />
+          <StackColumn spacing={1}>
+            <BodyIconTypography
+              label={
+                autoRenew
+                  ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
+                  : 'This purchase covers the current cadence window only. No additional renewal will be created.'
+              }
+              sx={{ opacity: 0.86 }}
+            />
+            <BodyIconTypography label={cancellationPolicyLabel} sx={{ opacity: 0.86 }} />
+            {termsAndConditionsUrl ? (
+              <Link href={termsAndConditionsUrl} target="_blank" rel="noreferrer" underline="hover" sx={{ width: 'fit-content' }}>
+                Review pricing terms and conditions
+              </Link>
+            ) : null}
+          </StackColumn>
         </Box>
       </CardContent>
     </Card>

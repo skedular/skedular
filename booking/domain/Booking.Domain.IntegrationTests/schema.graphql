@@ -241,6 +241,14 @@ type ProductPricing {
   maxAllowedResourcesLockTimePaidViaCard: Int!
   maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
   numberOfResourcesToBook: Int!
+  cancellationPolicyType: ProductPricingCancellationPolicyType!
+  cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
+  termsAndConditionsUrl: String!
+}
+
+type ProductPricingCancellationRefundRule {
+  minutesBefore: Int!
+  refundPercentage: Int!
 }
 
 type ProductVersionDetails {
@@ -913,6 +921,13 @@ enum ProductPricingCadence {
   SIX_MONTHS
   YEARLY
   FORTNIGHTLY
+}
+
+enum ProductPricingCancellationPolicyType {
+  NOT_SET
+  NO_CANCELLATION
+  FULL_REFUND_BEFORE_CUTOFF
+  TIERED_REFUND
 }
 
 enum RecurringBookingEndType {

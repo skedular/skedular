@@ -25,6 +25,7 @@ public class AutoFakeItEasyDataAttribute(Type[]? fixtureCustomizers = null, bool
     fixture.Customizations.Add(new CancellationTokenGenerator());
     fixture.Customizations.Add(new CoordinateGenerator());
     fixture.Customizations.Add(new DateTimeOffsetGenerator());
+    fixture.Customizations.Add(new TimeProviderGenerator());
 
     if (!skipGlobalCustomizers)
     {
