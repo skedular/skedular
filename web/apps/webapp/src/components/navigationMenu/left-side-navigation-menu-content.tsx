@@ -9,18 +9,19 @@ import {
   ProductIcon,
   SettingsIcon,
   SetupMarketplaceIcon,
+  SubscriptionsIcon,
   TeamIcon,
   UpgradeIcon,
 } from '@/components/icons';
 import {
   getOrganizationAdminSetupBaseLink,
-  getOrganizationAdminSubscriptionsBaseLink,
   getOrganizationAnalyticsBaseLink,
   getOrganizationBaseLink,
   getOrganizationBookingsBaseLink,
   getOrganizationLocationsBaseLink,
   getOrganizationMarketplaceSetupBaseLink,
   getOrganizationProductsBaseLink,
+  getOrganizationSubscriptionsBaseLink,
   getOrganizationTeamsBaseLink,
   getOrganizationUsersBaseLink,
 } from '@/components/links';
@@ -141,6 +142,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
   const organizationAnalyticsSetupBaseLink = getOrganizationAnalyticsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationMarketplaceSetupBaseLink = getOrganizationMarketplaceSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationProductsBaseLink = getOrganizationProductsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
+  const organizationSubscriptionsBaseLink = getOrganizationSubscriptionsBaseLink(integratedPlatrform, rootData.organization.customDomain!);
   const organizationAdminSetupBaseLink = getOrganizationAdminSetupBaseLink(integratedPlatrform, rootData.organization.customDomain!);
 
   return (
@@ -337,6 +339,32 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             </ListItem>
           )}
 
+          {rootData.organization.canModify && rootData.organization.type.type === 'MARKETPLACE' && (
+            <ListItem disablePadding>
+              <Link component={NextLink} href={organizationSubscriptionsBaseLink}>
+                <ListItemButton
+                  selected={pathName.startsWith(organizationSubscriptionsBaseLink)}
+                  sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(pathName.startsWith(organizationSubscriptionsBaseLink)) }}
+                >
+                  {collapsed && (
+                    <BodyIconTypography
+                      startElement={!hideIcons && <SubscriptionsIcon color="inherit" />}
+                      invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                  {!collapsed && (
+                    <BodyIconTypography
+                      label="Subscriptions"
+                      startElement={!hideIcons && <SubscriptionsIcon excludeTooltip color="inherit" />}
+                      spacing={3}
+                      invertDefaultColor={pathName.startsWith(organizationSubscriptionsBaseLink) && paletteMode === 'dark'}
+                    />
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          )}
+
           {rootData.organization.canModify && (
             <ListItem disablePadding>
               <Link component={NextLink} href={organizationAdminSetupBaseLink}>
@@ -398,7 +426,7 @@ const LeftSideNavigationMenuContent = ({ rootDataRelay, collapsed, enableCollaps
             <StackColumn sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: defaultPadding }}>
               {rootData.organization.activeOffering && rootData.organization.activeOffering.free && !rootData.organization.activeOffering.earlyBird && (
                 <Button
-                  href={getOrganizationAdminSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain)}
+                  href={organizationSubscriptionsBaseLink}
                   variant="contained"
                   color="secondary"
                   sx={{ textTransform: 'none', paddingTop: 1, paddingBottom: 1, width: 210 }}

@@ -569,6 +569,7 @@ type Mutation {
   completeOnboarding(input: CompleteOrganizationOnboardingInput!): CustomerPayload! @cost(weight: "10")
   completeOrganizationMemberOnboarding(input: CompleteOrganizationMemberOnboardingInput!): OrganizationMemberPayload! @cost(weight: "10")
   confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+  confirmRecurringBookingPayment(input: ConfirmRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
   deactivateResources(input: DeactivateResourcesInput!): ResourcesPayload! @cost(weight: "10")
   deleteCustomTag(input: DeleteCustomTagInput!): OrganizationTagPayload! @cost(weight: "10")
@@ -595,9 +596,11 @@ type Mutation {
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
+  makeRecurringBookingPaymentNotRequired(input: MakeRecurringBookingPaymentNotRequiredInput!): RecurringBookingPayload! @cost(weight: "10")
   rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
   rejectInvitationToJoinOrganization(input: RejectInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
   rejectInvitationToJoinTeam(input: RejectInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
+  rejectRecurringBookingPayment(input: RejectRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
   removeCustomerFavouriteLocation(input: RemoveCustomerFavouriteLocationInput!): CustomerPayload! @cost(weight: "10")
   removeCustomerPaymentMethod(input: RemoveCustomerPaymentMethodInput!): RemoveCustomerPaymentMethodPayload! @cost(weight: "10")
   removeCustomerPreferredLocation(input: RemoveCustomerPreferredLocationInput!): CustomerPayload! @cost(weight: "10")
@@ -1909,6 +1912,11 @@ input ConfirmBookingPaymentInput {
   id: String!
 }
 
+input ConfirmRecurringBookingPaymentInput {
+  clientMutationId: String
+  id: String!
+}
+
 input ContactDetailsInput {
   contactEmails: [String!]
   contactPeople: [String!]
@@ -2142,6 +2150,11 @@ input MakeBookingPaymentNotRequiredInput {
   id: String!
 }
 
+input MakeRecurringBookingPaymentNotRequiredInput {
+  clientMutationId: String
+  id: String!
+}
+
 input MarketplaceBookingSubscriptionOrderInput {
   direction: OrderDirection!
   field: MarketplaceBookingSubscriptionOrderField!
@@ -2345,6 +2358,11 @@ input RejectInvitationToJoinOrganizationInput {
 }
 
 input RejectInvitationToJoinTeamInput {
+  clientMutationId: String
+  id: String!
+}
+
+input RejectRecurringBookingPaymentInput {
   clientMutationId: String
   id: String!
 }

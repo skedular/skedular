@@ -1,4 +1,5 @@
 using Booking.Api.GraphQL.Booking;
+using Booking.Api.GraphQL.RecurringBooking;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using HotChocolate;
@@ -40,5 +41,38 @@ public class RootMutation(IMapper mapper)
         var booking = await bookingPaymentService.MakePaymentNotRequiredAsync(input.Id, cancellationToken);
 
         return new BookingPayload { ClientMutationId = input.ClientMutationId, Booking = mapper.MapTo(booking) };
+    }
+
+    [UseResolverScope]
+    public async Task<RecurringBookingPayload> ConfirmRecurringBookingPaymentAsync(
+        ConfirmRecurringBookingPaymentInput input,
+        [Service] IRecurringBookingPaymentService recurringBookingPaymentService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await recurringBookingPaymentService.ConfirmPaymentAsync(input.Id, cancellationToken);
+
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+    }
+
+    [UseResolverScope]
+    public async Task<RecurringBookingPayload> RejectRecurringBookingPaymentAsync(
+        RejectRecurringBookingPaymentInput input,
+        [Service] IRecurringBookingPaymentService recurringBookingPaymentService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await recurringBookingPaymentService.RejectPaymentAsync(input.Id, cancellationToken);
+
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
+    }
+
+    [UseResolverScope]
+    public async Task<RecurringBookingPayload> MakeRecurringBookingPaymentNotRequiredAsync(
+        MakeRecurringBookingPaymentNotRequiredInput input,
+        [Service] IRecurringBookingPaymentService recurringBookingPaymentService,
+        CancellationToken cancellationToken)
+    {
+        var recurringBooking = await recurringBookingPaymentService.MakePaymentNotRequiredAsync(input.Id, cancellationToken);
+
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
     }
 }

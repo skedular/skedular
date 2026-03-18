@@ -3,7 +3,7 @@ import { MyBookings } from '@/components/booking/myBookings';
 import { GridContainer, PushToRight, StackColumn } from '@/components/commons';
 import { WeekRangePicker } from '@/components/datePickers';
 import { GettingStarted } from '@/components/gettingStarted';
-import { getOrganizationLocationsBaseLink } from '@/components/links';
+import { getOrganizationLocationsBaseLink, getOrganizationSubscriptionsBaseLink } from '@/components/links';
 import { ListGridToggle } from '@/components/listGridToggle';
 import { Loading } from '@/components/loading';
 import { ClaimLocationOwnershipButton } from '@/components/location';
@@ -14,6 +14,7 @@ import { useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, maxScreenWidth } from '@/libs/theme';
 import { endOfWeek, startOfDay, startOfWeek } from '@/libs/utils';
 import type { organization_rootQuery } from '@/queries/__generated__/organization_rootQuery.graphql';
+import Button from '@mui/material/Button';
 import Box from '@mui/system/Box';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -80,6 +81,10 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
     router.push(getOrganizationLocationsBaseLink(integratedPlatrform, organizationCustomDomain));
   };
 
+  const handleSubscriptionsClicked = () => {
+    router.push(getOrganizationSubscriptionsBaseLink(integratedPlatrform, organizationCustomDomain));
+  };
+
   if (!organizationCustomDomain) {
     return null;
   }
@@ -95,6 +100,11 @@ const Organization = ({ queryReference, onReloadRequired, organizationCustomDoma
         <NewBookingButton onReloadRequired={onReloadRequired} defaultDate={today} organizationCustomDomain={organizationCustomDomain} />
         {rootData.organization?.canModify && (
           <ClaimLocationOwnershipButton organizationCustomDomain={organizationCustomDomain} onClaimClicked={handleClaimLocationOwnershipClicked} />
+        )}
+        {rootData.organization?.canModify && (
+          <Button variant="outlined" onClick={handleSubscriptionsClicked} sx={{ textTransform: 'none' }}>
+            Subscriptions
+          </Button>
         )}
       </GridContainer>
       <Box sx={{ display: { xs: 'none', sm: 'block' } }}>

@@ -20,6 +20,7 @@ public static class Extensions
                 .AddScoped<IOrganizationOfferingService, OrganizationOfferingService>()
                 .AddScoped<ITeamAuthorizationService, TeamAuthorizationService>()
                 .AddScoped<IBookingPaymentService, BookingPaymentService>()
+                .AddScoped<IRecurringBookingPaymentService, RecurringBookingPaymentService>()
                 .AddScoped<IBookingService, BookingService>()
                 .AddScoped<IRecurringBookingService, RecurringBookingService>()
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()

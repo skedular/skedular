@@ -778,7 +778,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       : [],
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
-
   const validatePhysicalAddress = makeValidate(physicalAddressSchema);
   const requiredPhysicalAddressFields = makeRequired(physicalAddressSchema);
   const [physicalAddressOsmType, setPhysicalAddressOsmType] = useState(rootDataOrganization.organization?.physicalAddress?.osmType);
@@ -942,6 +941,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
       );
     });
   }, [startTransition, refetchOrganization]);
+
 
   const handleOrganizationDetailUpdateClick = ({
     customDomain,
