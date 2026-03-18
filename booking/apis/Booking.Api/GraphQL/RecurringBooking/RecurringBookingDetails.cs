@@ -35,6 +35,7 @@ public class RecurringBookingDetails : Node
     public string? LastModifiedByCustomerId { get; set; }
 
     [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
+    [GraphQLName("marketplaceBooking")] public MarketplaceBookingDetails? MarketplaceBooking { get; set; }
 }
 
 [ObjectType<RecurringBookingDetails>]

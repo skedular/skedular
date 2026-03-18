@@ -97,7 +97,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedTeamIds = src.InvolvedTeams.Select(item => item.Id),
             CreatedByCustomerId = src.CreatedByCustomer?.Id,
             LastModifiedByCustomerId = src.LastModifiedByCustomer?.Id,
-            DeletedByCustomerId = src.DeletedByCustomer?.Id
+            DeletedByCustomerId = src.DeletedByCustomer?.Id,
+            MarketplaceBooking = src.MarketplaceBooking is null ? null : MapTo(src.MarketplaceBooking)
         };
 
     public MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src) =>

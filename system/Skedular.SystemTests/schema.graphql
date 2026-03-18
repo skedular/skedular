@@ -1243,6 +1243,7 @@ type RecurringBookingDetails {
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
   lastModifiedByCustomer: CustomerDetails
+  marketplaceBooking: MarketplaceBookingDetails
   occurrenceCount: Int
   skippedDates: [DateTime!]!
   startDate: DateTime!
@@ -1316,6 +1317,7 @@ type SubmitCustomerFeedbackPayload {
 
 type Subscription {
   booking(id: String!): BookingDetails!
+  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
 }
 
 type TeamBookingPermissions {

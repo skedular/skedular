@@ -38,6 +38,18 @@ internal static class MarketplaceBookingSubscriptionExtensions
             .Include(query =>
                 query.RecurringBookings.Where(recurringBooking =>
                     !recurringBooking.DeletedAt.HasValue && recurringBooking.MarketplaceBooking != null))
+            .ThenInclude(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.StripeCheckoutSession)
+            .Include(query =>
+                query.RecurringBookings.Where(recurringBooking =>
+                    !recurringBooking.DeletedAt.HasValue && recurringBooking.MarketplaceBooking != null))
+            .ThenInclude(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.ProductVersion)
+            .Include(query =>
+                query.RecurringBookings.Where(recurringBooking =>
+                    !recurringBooking.DeletedAt.HasValue && recurringBooking.MarketplaceBooking != null))
+            .ThenInclude(query => query.MarketplaceBooking)
+            .ThenInclude(query => query!.StripeCheckoutSession)
             .Include(query => query.ProductVersion)
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
             .Include(query => query.InvolvedCustomers)

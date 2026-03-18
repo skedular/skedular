@@ -14,8 +14,8 @@ public class RepublishCustomerAsyncShould
     [AutoFakeItEasyData]
     public async Task Call_GetByIdAsync(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         string customerId,
         CancellationToken cancellationToken)
     {
@@ -30,10 +30,10 @@ public class RepublishCustomerAsyncShould
     [AutoFakeItEasyData]
     public async Task Not_Publish_Customer_If_Customer_Not_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         [Frozen] ICustomerPublisher customerPublisher,
         [Frozen] IMapper mapper,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         string customerId,
         CancellationToken cancellationToken)
     {
@@ -51,9 +51,9 @@ public class RepublishCustomerAsyncShould
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entity_To_Model(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         [Frozen] IMapper mapper,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         string customerId,
         Shared.Database.Entities.Customer customerEntity,
         Shared.Models.Customer customer,
@@ -72,10 +72,10 @@ public class RepublishCustomerAsyncShould
     [AutoFakeItEasyData]
     public async Task Publish_Customer_If_Customer_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         [Frozen] ICustomerPublisher customerPublisher,
         [Frozen] IMapper mapper,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         string customerId,
         Shared.Database.Entities.Customer customerEntity,
         Shared.Models.Customer customer,

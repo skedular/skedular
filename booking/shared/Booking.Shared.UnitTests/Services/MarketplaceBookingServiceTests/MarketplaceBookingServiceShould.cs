@@ -21,8 +21,8 @@ public class MarketplaceBookingServiceShould
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_CustomerNotFound_When_Customers_Cannot_Be_Found(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         MarketplaceBookingService sut,
+        ICustomerRepository customerRepository,
         CancellationToken cancellationToken)
     {
         // Arrange
@@ -47,9 +47,9 @@ public class MarketplaceBookingServiceShould
     [AutoFakeItEasyData]
     public async Task AddAsync_Throws_ProductVersionNotFound_When_ProductVersion_Does_Not_Exist(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
-        [Frozen] IProductVersionRepository productVersionRepository,
         MarketplaceBookingService sut,
+        ICustomerRepository customerRepository,
+        IProductVersionRepository productVersionRepository,
         CancellationToken cancellationToken)
     {
         // Arrange

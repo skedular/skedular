@@ -83,15 +83,27 @@ public class BookingInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        // TODO: 20260222 - Morteza: Need to revisit this part once implementing booking recurrence
-        ArgumentNullException.ThrowIfNull(marketplaceBooking.Booking);
+        if (marketplaceBooking.Booking is not null)
+        {
+            await temporalService.SignalPayBookingViaCardWorkflowAsync(
+                marketplaceBooking.Booking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
 
-        await temporalService.SignalPayBookingViaCardWorkflowAsync(
-            marketplaceBooking.Booking.Id,
-            new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
-            cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
+        }
+        else if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is not null)
+        {
+            await temporalService.SignalPayRecurringBookingViaCardWorkflowAsync(
+                marketplaceBooking.RecurringBooking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
 
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+                Constants.MarketplaceBookingSubscriptionTopicName,
+                marketplaceBooking.RecurringBooking.MarketplaceBookingSubscription.Id,
+                cancellationToken);
+        }
     }
 
     private async Task HandleCheckoutSessionExpiredAsync(Stripe.Event stripeEvent, CancellationToken cancellationToken)
@@ -122,14 +134,26 @@ public class BookingInternalSubscriber(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
-        // TODO: 20260222 - Morteza: Need to revisit this part once implementing booking recurrence
-        ArgumentNullException.ThrowIfNull(marketplaceBooking.Booking);
+        if (marketplaceBooking.Booking is not null)
+        {
+            await temporalService.SignalPayBookingViaCardWorkflowAsync(
+                marketplaceBooking.Booking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
 
-        await temporalService.SignalPayBookingViaCardWorkflowAsync(
-            marketplaceBooking.Booking.Id,
-            new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
-            cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
+        }
+        else if (marketplaceBooking.RecurringBooking?.MarketplaceBookingSubscription is not null)
+        {
+            await temporalService.SignalPayRecurringBookingViaCardWorkflowAsync(
+                marketplaceBooking.RecurringBooking.Id,
+                new SetPaymentStatusArgs(marketplaceBooking.PaymentStatus),
+                cancellationToken);
 
-        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, marketplaceBooking.Booking.Id, cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+                Constants.MarketplaceBookingSubscriptionTopicName,
+                marketplaceBooking.RecurringBooking.MarketplaceBookingSubscription.Id,
+                cancellationToken);
+        }
     }
 }

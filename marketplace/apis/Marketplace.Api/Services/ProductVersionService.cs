@@ -16,6 +16,6 @@ public class ProductVersionService(IMapper mapper, ICachedProductVersionService 
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         var existingProduct = await cachedProductVersionService.GetByIdAsync(id, cancellationToken);
-        return existingProduct is null ? null : mapper.MapTo(existingProduct);
+        return existingProduct is null ? null : mapper.MapTo(existingProduct, existingProduct.Product);
     }
 }

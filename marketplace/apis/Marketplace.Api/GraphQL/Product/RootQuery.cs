@@ -27,7 +27,9 @@ public class RootQuery(IMapper mapper)
         await ProductAsync(id, productService, cancellationToken);
 
     [UseResolverScope]
-    public async Task<ProductVersionDetails?> ProductVersionAsync(string id, [Service] IProductVersionService productVersionService,
+    public async Task<ProductVersionDetails?> ProductVersionAsync(
+        string id, 
+        [Service] IProductVersionService productVersionService,
         CancellationToken cancellationToken) =>
         mapper.MapTo(await productVersionService.GetByIdAsync(id, cancellationToken));
 

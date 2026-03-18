@@ -5,13 +5,21 @@ using HotChocolate.Subscriptions;
 
 namespace Booking.Api.Services;
 
-public class GraphQlTopicEventSender(ITopicEventSender topicEventSender, ICachedBookingService cachedBookingService) : IGraphQlTopicEventSender
+public class GraphQlTopicEventSender(
+    ITopicEventSender topicEventSender,
+    ICachedBookingService cachedBookingService,
+    ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService)
+    : IGraphQlTopicEventSender
 {
     public async Task RaiseGraphqlChangeAsync(string topicName, string id, CancellationToken cancellationToken)
     {
         if (topicName == Constants.BookingTopicName)
         {
             await cachedBookingService.RemoveByIdAsync(id, cancellationToken);
+        }
+        else if (topicName == Constants.MarketplaceBookingSubscriptionTopicName)
+        {
+            await cachedMarketplaceBookingSubscriptionService.RemoveByIdAsync(id, cancellationToken);
         }
 
         await topicEventSender.SendAsync(topicName, id, cancellationToken);

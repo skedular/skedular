@@ -13,8 +13,19 @@ const getKnownParamValue = (value: string | string[] | undefined): string => {
 };
 
 const useKnownParams = () => {
-  const { organizationCustomDomain, locationId, bookingId, productId, resourceId, organizationBankAccountId, customerId, floorPlanId, teamId, organizationStripeConnectAccountId } =
-    useParams();
+  const {
+    organizationCustomDomain,
+    locationId,
+    bookingId,
+    subscriptionId,
+    productId,
+    resourceId,
+    organizationBankAccountId,
+    customerId,
+    floorPlanId,
+    teamId,
+    organizationStripeConnectAccountId,
+  } = useParams();
   const host = typeof window !== 'undefined' ? window.location.hostname : '';
   const isCustomDomain = host !== 'localhost' && host !== '127.0.0.1' && host !== 'skedular.app' && host !== 'staging.skedular.app' && host !== 'www.skedular.app';
 
@@ -23,6 +34,7 @@ const useKnownParams = () => {
     organizationCustomDomain: isCustomDomain ? host.split('.')[0] : getKnownParamValue(organizationCustomDomain),
     locationId: getKnownParamValue(locationId),
     bookingId: getKnownParamValue(bookingId),
+    subscriptionId: getKnownParamValue(subscriptionId),
     productId: getKnownParamValue(productId),
     resourceId: getKnownParamValue(resourceId),
     organizationBankAccountId: getKnownParamValue(organizationBankAccountId),

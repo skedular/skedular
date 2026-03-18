@@ -14,9 +14,9 @@ public class BookingResourceSlotsHelperServiceShould
     [AutoFakeItEasyData]
     public void RemoveAllSlotsFromBooking_Clears_Customers_From_All_Slots_And_Removes_Slots_From_Booking(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceBookingSlotRepository resourceBookingSlotRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        BookingResourceSlotsHelperService sut)
+        BookingResourceSlotsHelperService sut,
+        IResourceBookingSlotRepository resourceBookingSlotRepository,
+        IBookingRepository bookingRepository)
     {
         // Arrange
         ICollection<ResourceBookingSlot>? updatedSlots = null;
@@ -49,9 +49,9 @@ public class BookingResourceSlotsHelperServiceShould
     [AutoFakeItEasyData]
     public void RemoveAllSlotsFromBooking_Handles_Empty_Slots_Collection(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IResourceBookingSlotRepository resourceBookingSlotRepository,
-        [Frozen] IBookingRepository bookingRepository,
-        BookingResourceSlotsHelperService sut)
+        BookingResourceSlotsHelperService sut,
+        IResourceBookingSlotRepository resourceBookingSlotRepository,
+        IBookingRepository bookingRepository)
     {
         // Arrange
         var booking = new Database.Entities.Booking { Id = "booking-1", ResourceBookingSlots = [] };

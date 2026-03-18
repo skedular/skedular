@@ -1,5 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { getMarketplaceProductLink } from '@/components/links';
+import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from '@/components/links';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
@@ -24,21 +24,10 @@ import { memo, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation } from 'react-relay';
 import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
-import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 import MarketplaceProductSubscribeSummary from './marketplace-product-subscribe-summary';
 
 type Props = {
   rootDataRelay: marketplaceProductSubscribeForm_query$key;
-};
-
-type CreatedSubscriptionPaymentState = {
-  checkoutUrl: string | null;
-  invoiceUrl: string | null;
-  isPaymentRequired: boolean;
-  paymentExpiry: string | null;
-  paymentMethodType: string | null;
-  paymentStatusLabel: string;
-  paymentStatusType: string | null;
 };
 
 const getSubscriptionCancellationPolicyLabel = (
@@ -134,6 +123,27 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
             type
             name
           }
+          recurringBookings {
+            startDate
+            marketplaceBooking {
+              id
+              isPaymentRequired
+              paymentExpiry
+              bookingCheckoutSession {
+                checkoutUrl
+              }
+              paymentStatus {
+                type
+                name
+              }
+              quantity
+              invoiceUrl
+              paymentMethod {
+                type
+                name
+              }
+            }
+          }
           marketplaceBooking {
             id
             isPaymentRequired
@@ -180,16 +190,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [autoRenew, setAutoRenew] = useState(true);
-  const [createdSubscriptionId, setCreatedSubscriptionId] = useState('');
-  const [createdPaymentState, setCreatedPaymentState] = useState<CreatedSubscriptionPaymentState>({
-    checkoutUrl: null,
-    invoiceUrl: null,
-    isPaymentRequired: false,
-    paymentExpiry: null,
-    paymentMethodType: null,
-    paymentStatusLabel: '',
-    paymentStatusType: null,
-  });
 
   const effectiveSelectedPricingId = useMemo(() => {
     if (subscriptionPricingOptions.some((item) => item.id === selectedPricingId)) {
@@ -251,6 +251,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
 
     const toastId = toast(<NotificationContent content={`Starting your ${cadenceLabel.toLowerCase()} plan...`} />, infoNotificationOptions);
     const id = uuid();
+    const subscriptionDetailsLink = getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, id);
 
     commitAddSubscription({
       variables: {
@@ -269,7 +270,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           quantity,
           productVersionId: rootData.product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
-          checkoutReturnUrl: new URL(`${window.location.pathname}${window.location.search}`, window.location.origin).toString(),
+          checkoutReturnUrl: new URL(subscriptionDetailsLink, window.location.origin).toString(),
         },
       },
       onCompleted: (response, errors) => {
@@ -282,21 +283,16 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         }
 
         const subscription = response.addMarketplaceBookingSubscription?.marketplaceBookingSubscription;
-        setCreatedSubscriptionId(subscription?.id ?? '');
-        setCreatedPaymentState({
-          checkoutUrl: subscription?.marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null,
-          invoiceUrl: subscription?.marketplaceBooking.invoiceUrl ?? null,
-          isPaymentRequired: subscription?.marketplaceBooking.isPaymentRequired ?? false,
-          paymentExpiry: subscription?.marketplaceBooking.paymentExpiry ?? null,
-          paymentMethodType: subscription?.marketplaceBooking.paymentMethod?.type ?? null,
-          paymentStatusLabel: subscription?.marketplaceBooking.paymentStatus?.name ?? '',
-          paymentStatusType: subscription?.marketplaceBooking.paymentStatus?.type ?? null,
-        });
+        const subscriptionId = subscription?.id ?? '';
 
         toast.update(toastId, {
           ...successNotificationOptions,
           render: <NotificationContent content={`Your plan begins ${toShortDate(startedAt.toISOString())}.`} />,
         });
+
+        if (subscriptionId) {
+          router.push(getMarketplaceSubscriptionDetailsLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, subscriptionId));
+        }
       },
       onError: (error) => {
         toast.update(toastId, {
@@ -320,36 +316,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   }
 
   const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id);
-
-  if (createdSubscriptionId) {
-    return (
-      <Card sx={{ borderRadius: 4, border: 1, borderColor: (theme) => theme.palette.divider }}>
-        <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-          <CaptionIconTypography label="Complete payment" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
-          <LeadIconTypography label="Finish your plan purchase" sx={{ mt: 1 }} />
-          <BodyIconTypography label="Your plan has been created. Continue to payment when the checkout link is ready." sx={{ mt: 1, opacity: 0.82 }} />
-
-          <MarketplaceProductBookingPaymentPanel
-            checkoutUrl={createdPaymentState.checkoutUrl}
-            ctaLabel="Pay for plan"
-            entityLabel="Plan"
-            invoiceUrl={createdPaymentState.invoiceUrl}
-            isPaymentRequired={createdPaymentState.isPaymentRequired}
-            paymentExpiry={createdPaymentState.paymentExpiry}
-            paymentMethodType={createdPaymentState.paymentMethodType}
-            paymentStatusLabel={createdPaymentState.paymentStatusLabel}
-            paymentStatusType={createdPaymentState.paymentStatusType}
-          />
-
-          <StackRow spacing={1.25} sx={{ mt: 2.5 }}>
-            <Button variant="text" onClick={() => router.push(productLink)} sx={{ textTransform: 'none' }}>
-              Back to product
-            </Button>
-          </StackRow>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Box

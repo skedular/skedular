@@ -3,9 +3,13 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
+using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
+using Enterprise.Shared.Time;
 using Temporalio.Activities;
+using Constants = Booking.Shared.GraphQL.Constants;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
@@ -18,6 +22,8 @@ public record AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncRespo
 
 public record ReleaseMarketplaceBookingSubscriptionResourcesInput(string MarketplaceBookingSubscriptionId);
 
+public record ReleaseRecurringBookingResourcesInput(string RecurringBookingId);
+
 public class MarketplaceBookingSubscriptionIntegrations(
     IRepositoryFactory repositoryFactory,
     TimeProvider timeProvider,
@@ -25,6 +31,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
     IMarketplaceBookingService marketplaceBookingService,
     IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     IProductVersionHelperService productVersionHelperService,
+    ITemporalService temporalService,
+    IGraphQlTopicEventSender graphQlTopicEventSender,
     IMapper mapper,
     IRandomHelper randomHelper)
 {
@@ -107,13 +115,38 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
     }
 
+    [Activity]
+    public async Task ReleaseRecurringBookingResourcesAsync(ReleaseRecurringBookingResourcesInput args)
+    {
+        var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
+        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
+        if (recurringBooking is null)
+        {
+            return;
+        }
+
+        var from = recurringBooking.StartDate;
+        var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
+            recurringBooking.Id,
+            from,
+            null,
+            cancellationToken);
+
+        foreach (var existingBooking in existingBookings)
+        {
+            await marketplaceBookingService.DeleteAsync(existingBooking, null, cancellationToken);
+        }
+    }
+
     private async Task<bool> AdjustRecurringBookingAsync(
         RecurringBooking recurringBooking,
         MarketplaceBookingSubscription subscription,
         DateTimeOffset from,
         CancellationToken cancellationToken)
     {
-        var until = ResolvePlanningWindowEndExclusive(recurringBooking, subscription);
+        recurringBooking = await EnsureRecurringBookingMarketplaceBookingLoadedAsync(recurringBooking, cancellationToken);
+
+        var until = ResolvePlanningWindowEndExclusive(subscription);
         var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
             recurringBooking.Id,
             from,
@@ -173,6 +206,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         foreach (var missingBookingDay in reconciliationPlan.MissingBookingDays)
         {
+            if (ShouldSkipResourceMaterializationForTerminalPaymentStatus(recurringBooking.MarketplaceBooking))
+            {
+                return true;
+            }
+
             var booking = mapper.MapTo(recurringBooking, missingBookingDay);
             booking.Id = randomHelper.Generate();
             if (useOpeningHoursWindow)
@@ -294,6 +332,8 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 item.EndDate.Value.UtcDateTime.Date == cycleEnd.UtcDateTime.Date);
         if (existingRecurringBooking is not null)
         {
+            await EnsureCurrentCyclePaymentWorkflowStartedAsync(existingRecurringBooking, cancellationToken);
+
             return existingRecurringBooking;
         }
 
@@ -329,7 +369,57 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
+        if (ShouldStartRecurringBookingCardPaymentWorkflow(recurringMarketplaceBooking))
+        {
+            await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
+                new PayRecurringBookingViaCardInput(recurringBooking.Id, recurringMarketplaceBooking.PaymentExpiry),
+                cancellationToken);
+        }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+            Constants.MarketplaceBookingSubscriptionTopicName,
+            subscription.Id,
+            cancellationToken);
+
         return recurringBooking;
+    }
+
+    private async Task EnsureCurrentCyclePaymentWorkflowStartedAsync(
+        RecurringBooking recurringBooking,
+        CancellationToken cancellationToken)
+    {
+        recurringBooking = await EnsureRecurringBookingMarketplaceBookingLoadedAsync(recurringBooking, cancellationToken);
+        var marketplaceBooking = recurringBooking.MarketplaceBooking;
+
+        if (marketplaceBooking is null ||
+            marketplaceBooking.StripeCheckoutSession is not null ||
+            !ShouldStartRecurringBookingCardPaymentWorkflow(marketplaceBooking))
+        {
+            return;
+        }
+
+        await temporalService.StartWorkflowPayRecurringBookingViaCardAsync(
+            new PayRecurringBookingViaCardInput(recurringBooking.Id, marketplaceBooking.PaymentExpiry),
+            cancellationToken);
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task<RecurringBooking> EnsureRecurringBookingMarketplaceBookingLoadedAsync(
+        RecurringBooking recurringBooking,
+        CancellationToken cancellationToken)
+    {
+        if (recurringBooking.MarketplaceBooking is not null)
+        {
+            return recurringBooking;
+        }
+
+        // Some subscription aggregate query shapes include the recurring booking identity
+        // but not its cycle marketplace booking. Reload the recurring booking directly so
+        // all downstream payment and reconciliation logic runs against the persisted template.
+        return await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken) ??
+               recurringBooking;
     }
 
     private async Task<MarketplaceBookingSubscription> UpdateMarketplaceBookingSubscriptionStateAsync(
@@ -417,17 +507,23 @@ public class MarketplaceBookingSubscriptionIntegrations(
     {
         var marketplaceBooking = subscription.MarketplaceBooking;
         var bookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence);
+        var isUpfront = marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront;
+        var paymentExpiry = isUpfront
+            ? timeProvider.GetUtcNow()
+                .TrimAllAfterSeconds()
+                .AddMinutes(GetBookingPaymentExpiryInMinutes(marketplaceBooking.ProductPricing, marketplaceBooking.PaymentMethod.ToPaymentMethod()))
+            : default;
 
         return repositoryFactory.MarketplaceBookingRepository.Add(
             new MarketplaceBooking
             {
                 Id = randomHelper.Generate(),
-                PaymentStatus = PaymentStatus.NotSet.ToPaymentStatus(),
-                IsPaymentRequired = true,
+                PaymentStatus = isUpfront ? PaymentStatus.Pending.ToPaymentStatus() : PaymentStatus.NotSet.ToPaymentStatus(),
+                IsPaymentRequired = isUpfront,
                 Quantity = marketplaceBooking.Quantity,
                 ProductPricing = marketplaceBooking.ProductPricing with { BookingCadence = bookingCadence },
                 PaymentMethod = marketplaceBooking.PaymentMethod,
-                PaymentExpiry = marketplaceBooking.PaymentExpiry,
+                PaymentExpiry = paymentExpiry,
                 TotalAmountExcludeTax = marketplaceBooking.TotalAmountExcludeTax,
                 TaxAmount = marketplaceBooking.TaxAmount,
                 TaxRatePercentage = marketplaceBooking.TaxRatePercentage,
@@ -435,6 +531,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                 Currency = marketplaceBooking.Currency,
                 InvoiceUrl = marketplaceBooking.InvoiceUrl,
                 InvoiceNumber = marketplaceBooking.InvoiceNumber,
+                CheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl,
                 InvoiceEmailList = marketplaceBooking.InvoiceEmailList,
                 BillingMode = marketplaceBooking.BillingMode,
                 ProductVersion = subscription.MarketplaceBooking.ProductVersion,
@@ -444,9 +541,25 @@ public class MarketplaceBookingSubscriptionIntegrations(
             });
     }
 
-    private static DateTimeOffset ResolvePlanningWindowEndExclusive(
-        RecurringBooking recurringBooking,
-        MarketplaceBookingSubscription subscription) =>
+    private static bool ShouldStartRecurringBookingCardPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
+        marketplaceBooking.IsPaymentRequired &&
+        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
+
+    private static bool ShouldSkipResourceMaterializationForTerminalPaymentStatus(MarketplaceBooking? marketplaceBooking) =>
+        marketplaceBooking is not null &&
+        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking.PaymentStatus.ToPaymentStatus() is PaymentStatus.Expired or PaymentStatus.Rejected or PaymentStatus.RecordNeverCreated;
+
+    private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
+        paymentMethod switch
+        {
+            PaymentMethod.Card => pricing.MaxAllowedResourcesLockTimePaidViaCard,
+            PaymentMethod.BankTransfer => pricing.MaxAllowedResourcesLockTimePaidViaBankTransfer,
+            _ => throw new ArgumentOutOfRangeException(nameof(paymentMethod), paymentMethod, null)
+        };
+
+    private static DateTimeOffset ResolvePlanningWindowEndExclusive(MarketplaceBookingSubscription subscription) =>
         // The subscription owns the billing period horizon. Reconciliation should therefore
         // always plan against the current subscription cycle, even if an existing recurring
         // booking record was created earlier with stale end-date data.

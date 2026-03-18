@@ -67,6 +67,17 @@ export const getMarketplaceProductSubscribeLink = (
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
+export const getMarketplaceSubscriptionDetailsLink = (
+  integratedPlatrform: string | undefined,
+  isCustomDomain: boolean,
+  organizationCustomDomain: string,
+  subscriptionId: string,
+) => {
+  const baseLink = isCustomDomain ? `subscriptions/${subscriptionId}` : `organizations/${organizationCustomDomain}/subscriptions/${subscriptionId}`;
+
+  return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+};
+
 export const getInstallMsTeamsLink = () => '/msteams/install-msteams';
 
 export const getOrganizationsBaseLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `${integratedPlatrform}/organizations` : '/organizations');

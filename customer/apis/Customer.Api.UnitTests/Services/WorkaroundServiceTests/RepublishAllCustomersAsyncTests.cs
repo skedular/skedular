@@ -15,8 +15,8 @@ public class RepublishAllCustomersAsyncTests
     [AutoFakeItEasyData]
     public async Task Call_GetAllUntrackedAsync(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         CancellationToken cancellationToken)
     {
         A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
@@ -31,9 +31,9 @@ public class RepublishAllCustomersAsyncTests
     [AutoFakeItEasyData]
     public async Task Map_Customer_Entities_To_Models(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         [Frozen] IMapper mapper,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         ICollection<Shared.Database.Entities.Customer> customerEntities,
         CancellationToken cancellationToken)
     {
@@ -50,10 +50,10 @@ public class RepublishAllCustomersAsyncTests
     [AutoFakeItEasyData]
     public async Task Publish_Customers(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] ICustomerRepository customerRepository,
         [Frozen] ICustomerPublisher customerPublisher,
         [Frozen] IMapper mapper,
         WorkaroundService sut,
+        ICustomerRepository customerRepository,
         ICollection<Shared.Database.Entities.Customer> customerEntities,
         ICollection<Shared.Models.Customer> customers,
         CancellationToken cancellationToken)

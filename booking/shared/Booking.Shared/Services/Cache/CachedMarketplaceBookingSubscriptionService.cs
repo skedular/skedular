@@ -42,7 +42,7 @@ public class CachedMarketplaceBookingSubscriptionService(
 
         await hybridCache.SetAsync(
             CreateKeyById(id),
-            await repositoryFactory.RecurringBookingRepository.GetByIdUntrackedAsync(id, cancellationToken) ??
+            await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(id, cancellationToken) ??
             throw new MarketplaceBookingSubscriptionNotFound(),
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);

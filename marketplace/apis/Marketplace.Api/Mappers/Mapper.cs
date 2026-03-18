@@ -14,7 +14,7 @@ public interface IMapper
 {
     Customer? MapTo(Shared.Database.Entities.Customer? src);
     Product MapTo(Shared.Database.Entities.Product src);
-    ProductVersion MapTo(Shared.Database.Entities.ProductVersion src);
+    ProductVersion MapTo(Shared.Database.Entities.ProductVersion src, Shared.Database.Entities.Product product);
     ProductVersion MapTo(AddProductInput src);
     ProductVersion MapTo(UpdateProductInput src);
     ProductDetails? MapTo(Product? src);
@@ -46,8 +46,9 @@ public class Mapper : IMapper
                 Type = src.Type.ToNullableCustomerType()
             };
 
-    public Product MapTo(Shared.Database.Entities.Product src) =>
-        new()
+    public Product MapTo(Shared.Database.Entities.Product src)
+    {
+        var product = new Product
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
@@ -55,10 +56,14 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
             Organization = MapTo(src.Organization),
-            ProductVersions = MapTo(src.ProductVersions).ToList()
         };
 
-    public ProductVersion MapTo(Shared.Database.Entities.ProductVersion src) =>
+        product.ProductVersions = MapTo(src.ProductVersions, src).ToList();
+
+        return product;
+    }
+
+    public ProductVersion MapTo(Shared.Database.Entities.ProductVersion src, Shared.Database.Entities.Product product) =>
         new()
         {
             Id = src.Id,
@@ -68,7 +73,13 @@ public class Mapper : IMapper
             Currency = src.Currency.ToCurrency(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
-            PricingOptions = src.PricingOptions
+            PricingOptions = src.PricingOptions,
+            Product = new Product
+            {
+                Id = product.Id,
+                Inactive = product.Inactive,
+                Organization = MapTo(product.Organization)
+            }
         };
 
     public ProductVersion MapTo(AddProductInput src) =>
@@ -156,7 +167,7 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
             Organization = organization,
-            ProductVersions = MapTo(src.ProductVersions).ToList()
+            ProductVersions = MapTo(src.ProductVersions, src).ToList()
         };
 
     public Shared.Models.Organization MapTo(Organization src) =>
@@ -191,7 +202,8 @@ public class Mapper : IMapper
             Color = src.Color
         };
 
-    private IEnumerable<ProductVersion> MapTo(IEnumerable<Shared.Database.Entities.ProductVersion> src) => src.Select(MapTo);
+    private IEnumerable<ProductVersion> MapTo(IEnumerable<Shared.Database.Entities.ProductVersion> src, Shared.Database.Entities.Product product) =>
+        src.Select(item => MapTo(item, product));
 
     private static Shared.Database.Entities.Product MergeTo(Product src, Shared.Database.Entities.Product dest, Organization organization)
     {
