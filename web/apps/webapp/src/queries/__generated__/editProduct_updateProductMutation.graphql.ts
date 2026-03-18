@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c32afff47f412acdef49e01ebfc5bde8>>
+ * @generated SignedSource<<8115f1d76910fba3267ba2b72ff5eba6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -56,7 +56,6 @@ export type ProductPricingInput = {
   price: any;
   purchaseCadence: ProductPricingCadence;
   supportsSubscriptionAutoRenewal: boolean;
-  termsAndConditionsUrl: string;
 };
 export type ProductPricingCancellationRefundRuleInput = {
   minutesBefore: number;
@@ -118,7 +117,6 @@ export type editProduct_updateProductMutation$data = {
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
-        readonly termsAndConditionsUrl: string;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -181,7 +179,6 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly price: any;
         readonly purchaseCadence: ProductPricingCadence;
         readonly supportsSubscriptionAutoRenewal: boolean;
-        readonly termsAndConditionsUrl: string;
       }>;
       readonly productTags: ReadonlyArray<{
         readonly color: string | null | undefined;
@@ -501,13 +498,6 @@ v7 = [
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "termsAndConditionsUrl",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "isTaxInclusive",
                 "storageKey": null
               },
@@ -560,16 +550,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "385bd64d3ce2d9b22639808ff16bd07b",
+    "cacheID": "a5c337cf3629a8ae58b4b80f565a9ed6",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        termsAndConditionsUrl\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4a4b6785aa32a14cf030d4478eb1163d";
+(node as any).hash = "47caa30212a67e6f6fc8b66a78be06ec";
 
 export default node;

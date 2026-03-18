@@ -8,6 +8,7 @@ import {
   FormFieldLabel,
   FormStackColumn,
   GridContainer,
+  HelperText,
   LeadIconTypography,
   PushToRight,
   SectionIconTypography,
@@ -103,6 +104,7 @@ type OrganizationDetails = {
   title: string | null;
   subTitle: string | null;
   website: string | null;
+  customerFacingTermsAndConditionsUrl: string | null;
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
@@ -113,6 +115,7 @@ const organizationSchema = object({
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
   website: string().url('Website must be a valid Url').nullable(),
+  customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   industrySubCategoryIds: array().nullable(),
   contactEmail: string()
     .email(({ value }) => `${value} is not a valid email`)
@@ -264,6 +267,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             includedFeatures
           }
           website
+          customerFacingTermsAndConditionsUrl
           canModify
           industrySubCategories {
             id
@@ -436,6 +440,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             includedFeatures
           }
           website
+          customerFacingTermsAndConditionsUrl
           industrySubCategories {
             id
             name
@@ -738,6 +743,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
   const [organizationWebsite, setOrganizationWebsite] = useState(rootDataOrganization.organization?.website);
   const debounceSetOrganizationWebsite = useDebounceCallback(setOrganizationWebsite, keyboardTextFieldDebounceTimeout);
+  const [organizationCustomerFacingTermsAndConditionsUrl, setOrganizationCustomerFacingTermsAndConditionsUrl] = useState(
+    rootDataOrganization.organization?.customerFacingTermsAndConditionsUrl,
+  );
+  const debounceSetOrganizationCustomerFacingTermsAndConditionsUrl = useDebounceCallback(setOrganizationCustomerFacingTermsAndConditionsUrl, keyboardTextFieldDebounceTimeout);
   const [organizationIndustrySubCategoryIds, setOrganizationIndustrySubCategoryIds] = useState<string[]>(
     rootDataOrganization.organization?.industrySubCategories.map(({ id }) => id) ?? [],
   );
@@ -941,6 +950,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     title,
     subTitle,
     website,
+    customerFacingTermsAndConditionsUrl,
     industrySubCategoryIds,
     contactEmail,
     contactPhone,
@@ -971,6 +981,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           },
           marketplaceListingMetadata: organization.marketplaceListingMetadata,
           website,
+          customerFacingTermsAndConditionsUrl,
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
           contactPhone,
@@ -1012,6 +1023,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             },
             marketplaceListingMetadata: organization.marketplaceListingMetadata,
             website,
+            customerFacingTermsAndConditionsUrl,
             industrySubCategories: rootData.organizationIndustryMainCategoriesReferences
               .flatMap((mainCategory) => mainCategory.subCategories)
               .filter(({ id }) => selectedIndustrySubCategoryIds.find((selectedIndustrySubCategoryId) => selectedIndustrySubCategoryId === id))
@@ -2369,6 +2381,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 title: organizationTitle,
                 subTitle: organizationSubTitle,
                 website: organizationWebsite,
+                customerFacingTermsAndConditionsUrl: organizationCustomerFacingTermsAndConditionsUrl,
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
                 contactPhone: organizationContactPhone,
@@ -2378,6 +2391,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 debounceSetOrganizationEditableCustomDomain(values!.customDomain);
                 debounceSetOrganizationName(values!.name);
                 debounceSetOrganizationWebsite(values!.website);
+                debounceSetOrganizationCustomerFacingTermsAndConditionsUrl(values!.customerFacingTermsAndConditionsUrl);
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
                 debounceSetOrganizationContactPhone(values!.contactPhone);
@@ -2467,6 +2481,14 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
                       <FormFieldLabel label="Website">
                         <TextField name="website" required={requiredOrganizationDetailsFields.about} helperText="https://" />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Terms and Conditions">
+                        <TextField
+                          name="customerFacingTermsAndConditionsUrl"
+                          required={requiredOrganizationDetailsFields.customerFacingTermsAndConditionsUrl}
+                          helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
+                        />
                       </FormFieldLabel>
 
                       <FormFieldLabel label="Industry">

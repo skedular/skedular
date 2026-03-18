@@ -237,6 +237,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
@@ -309,6 +310,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
@@ -332,6 +334,7 @@ public class Mapper : IMapper
         dest.ListingMetadata = src.ListingMetadata;
         dest.MarketplaceListingMetadata = src.MarketplaceListingMetadata;
         dest.Website = src.Website;
+        dest.CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl;
         dest.AgreedToTermsOfUse = src.AgreedToTermsOfUse;
         dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
@@ -428,6 +431,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
@@ -479,6 +483,7 @@ public class Mapper : IMapper
                 ListingMetadata = src.ListingMetadata,
                 MarketplaceListingMetadata = src.MarketplaceListingMetadata,
                 Website = src.Website,
+                CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
                 LogoUrl = src.LogoUrl,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
@@ -526,6 +531,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             Type = src.Type,
             BillingCycle = src.BillingCycle,
             ContactEmail = src.ContactEmail,
@@ -545,6 +551,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             BillingCycle = src.BillingCycle,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
@@ -564,6 +571,7 @@ public class Mapper : IMapper
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl.ToSafeString(),
             Type = src.Type switch
             {
                 OrganizationType.Private => global::Api.Shared.Services.Models.OrganizationType.Private,
@@ -599,6 +607,7 @@ public class Mapper : IMapper
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl.ToSafeString(),
             Type = src.Type switch
             {
                 global::Api.Shared.Services.Models.OrganizationType.Private => OrganizationType.Private,

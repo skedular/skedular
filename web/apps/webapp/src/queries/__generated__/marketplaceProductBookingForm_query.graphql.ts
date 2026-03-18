@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7aee14f785fe20ff621fa5e74ae86147>>
+ * @generated SignedSource<<079b5a727138279821e3000345de4a6a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -39,6 +39,9 @@ export type marketplaceProductBookingForm_query$data = {
     readonly listingMetadata: {
       readonly title: string | null | undefined;
     };
+    readonly organization: {
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
+    };
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
@@ -60,7 +63,6 @@ export type marketplaceProductBookingForm_query$data = {
       readonly numberOfResourcesToBook: number;
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
-      readonly termsAndConditionsUrl: string;
     }>;
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
@@ -193,6 +195,24 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "latestProductVersionId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "customerFacingTermsAndConditionsUrl",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -346,13 +366,6 @@ return {
               "kind": "ScalarField",
               "name": "acceptedPaymentMethods",
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "termsAndConditionsUrl",
-              "storageKey": null
             }
           ],
           "storageKey": null
@@ -366,6 +379,6 @@ return {
 };
 })();
 
-(node as any).hash = "cabb758934b288de8a648f3906097054";
+(node as any).hash = "ccec977c271e0640be097c5ee5db1754";
 
 export default node;

@@ -241,7 +241,6 @@ type ProductPricing {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
-  termsAndConditionsUrl: String!
 }
 
 type ProductPricingCancellationRefundRule {

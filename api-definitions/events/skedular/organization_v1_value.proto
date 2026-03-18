@@ -33,28 +33,29 @@ message Data {
 }
 
 message Organization {
-  string                      id                         = 1;
-  google.protobuf.Timestamp   deletedAt                  = 2;
-  string                      customDomain               = 3;
-  string                      name                       = 4;
-  ListingMetadata             listingMetadata            = 5;
-  string                      logoUrl                    = 6;
-  string                      website                    = 7;
-  repeated OrganizationMember members                    = 8;
-  Offering                    Offering                   = 9;
-  repeated string             azureTenantIds             = 10;
-  repeated Tag                tags                       = 11;
-  OrganizationSsoSettings     ssoSettings                = 12;
-  OrganizationTaxDetails      taxDetails                 = 13;
-  OrganizationType            type                       = 14;
-  string                      contactEmail               = 15;
-  string                      contactPhone               = 16;
-  PhysicalAddress             physicalAddress            = 17;
-  bool                        isOwnershipVerified        = 18;
-  bool                        hasAttachedPaymentMethod   = 19;
-  repeated CdnImageFile       featureImages              = 20;
-  ListingMetadata             marketplaceListingMetadata = 21;
-  OrganizationBillingCycle    billingCycle               = 22;
+  string                      id                                  = 1;
+  google.protobuf.Timestamp   deletedAt                           = 2;
+  string                      customDomain                        = 3;
+  string                      name                                = 4;
+  ListingMetadata             listingMetadata                     = 5;
+  string                      logoUrl                             = 6;
+  string                      website                             = 7;
+  repeated OrganizationMember members                             = 8;
+  Offering                    Offering                            = 9;
+  repeated string             azureTenantIds                      = 10;
+  repeated Tag                tags                                = 11;
+  OrganizationSsoSettings     ssoSettings                         = 12;
+  OrganizationTaxDetails      taxDetails                          = 13;
+  OrganizationType            type                                = 14;
+  string                      contactEmail                        = 15;
+  string                      contactPhone                        = 16;
+  PhysicalAddress             physicalAddress                     = 17;
+  bool                        isOwnershipVerified                 = 18;
+  bool                        hasAttachedPaymentMethod            = 19;
+  repeated CdnImageFile       featureImages                       = 20;
+  ListingMetadata             marketplaceListingMetadata          = 21;
+  OrganizationBillingCycle    billingCycle                        = 22;
+  string                      customerFacingTermsAndConditionsUrl = 23;
 }
 
 enum OrganizationType {

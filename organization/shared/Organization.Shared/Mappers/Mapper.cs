@@ -68,6 +68,7 @@ public class Mapper : IMapper
             ListingMetadata = MapTo(src.ListingMetadata),
             MarketplaceListingMetadata = MapTo(src.MarketplaceListingMetadata),
             Website = src.Website.ToSafeString(),
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl.ToSafeString(),
             LogoUrl = src.LogoUrl.ToSafeString(),
             Type = src.Type switch
             {
@@ -170,6 +171,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),

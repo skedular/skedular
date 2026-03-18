@@ -87,7 +87,6 @@ type PricingOptionForm = {
   maxDurationMinutes: string;
   cancellationPolicyType: string;
   cancellationRefundRules: CancellationRefundRuleForm[];
-  termsAndConditionsUrl: string;
   isTaxInclusive: boolean;
   supportsSubscriptionAutoRenewal: boolean;
   maxAllowedResourcesLockTimePaidViaCard: string;
@@ -117,7 +116,6 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   maxDurationMinutes: '',
   cancellationPolicyType: 'NO_CANCELLATION',
   cancellationRefundRules: [],
-  termsAndConditionsUrl: '',
   isTaxInclusive: true,
   supportsSubscriptionAutoRenewal: false,
   maxAllowedResourcesLockTimePaidViaCard: defaultMaxAllowedResourcesLockTimePaidViaCard.toString(),
@@ -277,13 +275,6 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
 
               return false;
             }),
-          termsAndConditionsUrl: string()
-            .nullable()
-            .test(
-              'is-empty-or-url',
-              'Terms and conditions URL must be a valid URL.',
-              (value) => value === undefined || value === null || value.trim() === '' || /^https?:\/\/\S+$/i.test(value),
-            ),
           isTaxInclusive: boolean().required(),
           supportsSubscriptionAutoRenewal: boolean().required(),
           maxAllowedResourcesLockTimePaidViaCard: string()
@@ -382,7 +373,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               minutesBefore
               refundPercentage
             }
-            termsAndConditionsUrl
             isTaxInclusive
             maxAllowedResourcesLockTimePaidViaCard
             maxAllowedResourcesLockTimePaidViaBankTransfer
@@ -470,7 +460,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               minutesBefore: Number(item.minutesBefore),
               refundPercentage: Number(item.refundPercentage),
             })),
-            termsAndConditionsUrl: pricingOption.termsAndConditionsUrl || null,
             isTaxInclusive: pricingOption.isTaxInclusive,
             maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
             maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
@@ -543,7 +532,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
                 minutesBefore: Number(item.minutesBefore),
                 refundPercentage: Number(item.refundPercentage),
               })),
-              termsAndConditionsUrl: pricingOption.termsAndConditionsUrl || null,
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
               maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
@@ -822,10 +810,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
                                 </StackRow>
                               </StackColumn>
                             ) : null}
-
-                            <FormFieldLabel label="Terms and Conditions URL">
-                              <TextField name={`pricingOptions[${index}].termsAndConditionsUrl`} />
-                            </FormFieldLabel>
 
                             <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">
                               <TextField name={`pricingOptions[${index}].maxAllowedResourcesLockTimePaidViaCard`} required />

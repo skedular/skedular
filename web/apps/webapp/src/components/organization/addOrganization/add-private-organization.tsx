@@ -41,6 +41,7 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
+  customerFacingTermsAndConditionsUrl: string | null;
   agreedToTermsOfUse: boolean;
 };
 
@@ -48,7 +49,8 @@ const organizationSchema = object({
   customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
-  website: string().nullable(),
+  website: string().url('Website must be a valid Url').nullable(),
+  customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -83,6 +85,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             includedFeatures
           }
           website
+          customerFacingTermsAndConditionsUrl
           featureImages {
             original {
               url
@@ -108,7 +111,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
-  const handleOrganizationAddClick = ({ customDomain, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -130,6 +133,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             includedFeatures: [],
           },
           website,
+          customerFacingTermsAndConditionsUrl,
           type: 'PRIVATE',
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
@@ -175,6 +179,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
               includedFeatures: [],
             },
             website,
+            customerFacingTermsAndConditionsUrl,
             featureImages: finalFeatureImages,
           },
         },
@@ -244,6 +249,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
             name: '',
             about: null,
             website: null,
+            customerFacingTermsAndConditionsUrl: null,
           }}
           validate={validateOrganizationDetails}
           render={({ handleSubmit }) => (
@@ -327,6 +333,14 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
                   name="website"
                   required={requiredFields.website}
                   helperText={<HelperText text="Provide your company's official website so members can learn more or verify your organization." />}
+                />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Terms and Conditions URL" required={requiredFields.customerFacingTermsAndConditionsUrl}>
+                <TextField
+                  name="customerFacingTermsAndConditionsUrl"
+                  required={requiredFields.customerFacingTermsAndConditionsUrl}
+                  helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
                 />
               </FormFieldLabel>
 

@@ -116,7 +116,7 @@ const locationSchema = object({
   areaRangeToInSqm: string().nullable(),
   peopleCapacityFrom: string().nullable(),
   peopleCapacityTo: string().nullable(),
-  website: string().nullable(),
+  website: string().url('Website must be a valid Url').nullable(),
   relatedImageLinks: string().nullable(),
   relatedVideoLinks: string().nullable(),
   otherLinks: string().nullable(),

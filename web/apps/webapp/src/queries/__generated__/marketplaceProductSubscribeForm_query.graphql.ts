@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<058c7d6bf0d30a72fe38dcdfc56199fc>>
+ * @generated SignedSource<<c5b4b8010b8582249e3d9e748e1230a6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -38,6 +38,9 @@ export type marketplaceProductSubscribeForm_query$data = {
     readonly listingMetadata: {
       readonly title: string | null | undefined;
     };
+    readonly organization: {
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
+    };
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
       readonly billingMode: ProductPricingBillingMode;
@@ -57,7 +60,6 @@ export type marketplaceProductSubscribeForm_query$data = {
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
-      readonly termsAndConditionsUrl: string;
     }>;
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
@@ -183,6 +185,24 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "latestProductVersionId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "customerFacingTermsAndConditionsUrl",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         },
         {
@@ -322,13 +342,6 @@ return {
                 }
               ],
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "termsAndConditionsUrl",
-              "storageKey": null
             }
           ],
           "storageKey": null
@@ -342,6 +355,6 @@ return {
 };
 })();
 
-(node as any).hash = "eba576869f04fb813eba4c4f96adad01";
+(node as any).hash = "fd7a655b4d7db2b488c1c34d81fca381";
 
 export default node;

@@ -105,7 +105,6 @@ type ProductPricing {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
-  termsAndConditionsUrl: String!
 }
 
 type ProductPricingBillingModeDetails {
@@ -240,7 +239,6 @@ input ProductPricingInput {
   numberOfResourcesToBook: Int!
   cancellationPolicyType: ProductPricingCancellationPolicyType!
   cancellationRefundRules: [ProductPricingCancellationRefundRuleInput!]!
-  termsAndConditionsUrl: String!
 }
 
 input ProductWhereInput {

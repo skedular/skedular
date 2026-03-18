@@ -13,6 +13,7 @@ public class Organization : EntityBaseWithDeleted
     public string? CustomDomain { get; set; }
     public string Name { get; set; }
     public string? Website { get; set; }
+    public string? CustomerFacingTermsAndConditionsUrl { get; set; }
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public string Type { get; set; }
@@ -65,6 +66,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
         builder.Property(item => item.ListingMetadata).HasColumnType("jsonb");
         builder.Property(item => item.MarketplaceListingMetadata).HasColumnType("jsonb");
+        builder.Property(item => item.CustomerFacingTermsAndConditionsUrl).HasMaxLength(Constants.MaxUrlLength);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);

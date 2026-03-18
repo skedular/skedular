@@ -70,7 +70,6 @@ public class Mapper : IMapper
             MaxAllowedResourcesLockTimePaidViaBankTransfer = src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             NumberOfResourcesToBook = src.NumberOfResourcesToBook,
             CancellationPolicyType = MapTo(src.CancellationPolicyType),
-            TermsAndConditionsUrl = src.TermsAndConditionsUrl.ToSafeString(),
             BillingMode = MapTo(src.BillingMode)
         };
 

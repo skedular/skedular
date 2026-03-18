@@ -84,6 +84,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         product(id: $productId) {
           id
           latestProductVersionId
+          organization {
+            customerFacingTermsAndConditionsUrl
+          }
           listingMetadata {
             title
           }
@@ -112,7 +115,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             isTaxInclusive
             billingMode
             acceptedPaymentMethods
-            termsAndConditionsUrl
           }
         }
       }
@@ -508,7 +510,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         paymentLabel={paymentLabel}
         quantity={quantity}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
-        termsAndConditionsUrl={selectedPricingOption?.termsAndConditionsUrl}
+        termsAndConditionsUrl={rootData.product?.organization.customerFacingTermsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
       />
     </Box>

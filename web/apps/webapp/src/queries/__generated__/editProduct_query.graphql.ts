@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf32bdaa23701d15d1c34dd6a45c7cd2>>
+ * @generated SignedSource<<84f73cec7dde9446745f60ffc4a89825>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -78,7 +78,6 @@ export type editProduct_query$data = {
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
-      readonly termsAndConditionsUrl: string;
     }>;
     readonly productTags: ReadonlyArray<{
       readonly color: string | null | undefined;
@@ -410,13 +409,6 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "termsAndConditionsUrl",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
               "name": "isTaxInclusive",
               "storageKey": null
             },
@@ -536,6 +528,6 @@ return {
 };
 })();
 
-(node as any).hash = "584c3100aead8e329cac6ca2f777fe71";
+(node as any).hash = "38c81506996714f14f920bd0fced759a";
 
 export default node;

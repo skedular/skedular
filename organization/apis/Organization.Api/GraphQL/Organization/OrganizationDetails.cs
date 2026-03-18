@@ -24,6 +24,7 @@ public class OrganizationDetails : Node
     [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
+    [GraphQLName("customerFacingTermsAndConditionsUrl")] public string? CustomerFacingTermsAndConditionsUrl { get; set; }
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
     [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();

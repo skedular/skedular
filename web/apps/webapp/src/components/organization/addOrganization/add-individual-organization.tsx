@@ -36,6 +36,7 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
+  customerFacingTermsAndConditionsUrl: string | null;
   agreedToTermsOfUse: boolean;
 };
 
@@ -43,7 +44,8 @@ const organizationSchema = object({
   customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
-  website: string().nullable(),
+  website: string().url('Website must be a valid Url').nullable(),
+  customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -78,6 +80,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             includedFeatures
           }
           website
+          customerFacingTermsAndConditionsUrl
         }
       }
     }
@@ -88,7 +91,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
   const validateOrganizationDetails = makeValidate(organizationSchema);
   const requiredFields = makeRequired(organizationSchema);
 
-  const handleOrganizationAddClick = ({ customDomain, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
 
@@ -106,6 +109,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             includedFeatures: [],
           },
           website,
+          customerFacingTermsAndConditionsUrl,
           type: 'INDIVIDUAL',
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
@@ -150,6 +154,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
               includedFeatures: [],
             },
             website,
+            customerFacingTermsAndConditionsUrl,
           },
         },
       },
@@ -200,6 +205,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
             name: '',
             about: null,
             website: null,
+            customerFacingTermsAndConditionsUrl: null,
           }}
           validate={validateOrganizationDetails}
           render={({ handleSubmit }) => (
@@ -239,6 +245,14 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
                   helperText={
                     <HelperText text="Link to a personal site or social profile that represents you as a host. You’ll add location-specific links for each listing separately." />
                   }
+                />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
+                <TextField
+                  name="customerFacingTermsAndConditionsUrl"
+                  required={requiredFields.customerFacingTermsAndConditionsUrl}
+                  helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
                 />
               </FormFieldLabel>
 

@@ -33,7 +33,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "BSABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wEhUKDWNvcnJlbGF0",
             "aW9uSWQYBiABKAkicQoERGF0YRIyCgxvcmdhbml6YXRpb24YASABKAsyGi5v",
             "cmdhbml6YXRpb24uT3JnYW5pemF0aW9uSAASKgoIb2ZmZXJpbmcYAiABKAsy",
-            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkItgGCgxPcmdh",
+            "Fi5vcmdhbml6YXRpb24uT2ZmZXJpbmdIAEIJCgdwYXlsb2FkIoUHCgxPcmdh",
             "bml6YXRpb24SCgoCaWQYASABKAkSLQoJZGVsZXRlZEF0GAIgASgLMhouZ29v",
             "Z2xlLnByb3RvYnVmLlRpbWVzdGFtcBIUCgxjdXN0b21Eb21haW4YAyABKAkS",
             "DAoEbmFtZRgEIAEoCRI2Cg9saXN0aW5nTWV0YWRhdGEYBSABKAsyHS5vcmdh",
@@ -52,7 +52,8 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "ZWF0dXJlSW1hZ2VzGBQgAygLMhoub3JnYW5pemF0aW9uLkNkbkltYWdlRmls",
             "ZRJBChptYXJrZXRwbGFjZUxpc3RpbmdNZXRhZGF0YRgVIAEoCzIdLm9yZ2Fu",
             "aXphdGlvbi5MaXN0aW5nTWV0YWRhdGESPAoMYmlsbGluZ0N5Y2xlGBYgASgO",
-            "MiYub3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkJpbGxpbmdDeWNsZSKgAQoS",
+            "MiYub3JnYW5pemF0aW9uLk9yZ2FuaXphdGlvbkJpbGxpbmdDeWNsZRIrCiNj",
+            "dXN0b21lckZhY2luZ1Rlcm1zQW5kQ29uZGl0aW9uc1VybBgXIAEoCSKgAQoS",
             "T3JnYW5pemF0aW9uTWVtYmVyEgoKAmlkGAEgASgJEhIKCmN1c3RvbWVySWQY",
             "AiABKAkSMgoEcm9sZRgDIAEoDjIkLm9yZ2FuaXphdGlvbi5Pcmdhbml6YXRp",
             "b25NZW1iZXJSb2xlEjYKBnN0YXR1cxgEIAEoDjImLm9yZ2FuaXphdGlvbi5P",
@@ -103,7 +104,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event.Parser, new[]{ "Metadata", "Data" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Metadata.Parser, new[]{ "Id", "DomainSource", "AppSource", "Type", "Time", "CorrelationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Data.Parser, new[]{ "Organization", "Offering" }, new[]{ "Payload" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "CustomDomain", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata", "BillingCycle" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "CustomDomain", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata", "BillingCycle", "CustomerFacingTermsAndConditionsUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
@@ -1149,6 +1150,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       featureImages_ = other.featureImages_.Clone();
       marketplaceListingMetadata_ = other.marketplaceListingMetadata_ != null ? other.marketplaceListingMetadata_.Clone() : null;
       billingCycle_ = other.billingCycle_;
+      customerFacingTermsAndConditionsUrl_ = other.customerFacingTermsAndConditionsUrl_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1418,6 +1420,18 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
     }
 
+    /// <summary>Field number for the "customerFacingTermsAndConditionsUrl" field.</summary>
+    public const int CustomerFacingTermsAndConditionsUrlFieldNumber = 23;
+    private string customerFacingTermsAndConditionsUrl_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string CustomerFacingTermsAndConditionsUrl {
+      get { return customerFacingTermsAndConditionsUrl_; }
+      set {
+        customerFacingTermsAndConditionsUrl_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1455,6 +1469,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       if(!featureImages_.Equals(other.featureImages_)) return false;
       if (!object.Equals(MarketplaceListingMetadata, other.MarketplaceListingMetadata)) return false;
       if (BillingCycle != other.BillingCycle) return false;
+      if (CustomerFacingTermsAndConditionsUrl != other.CustomerFacingTermsAndConditionsUrl) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1484,6 +1499,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       hash ^= featureImages_.GetHashCode();
       if (marketplaceListingMetadata_ != null) hash ^= MarketplaceListingMetadata.GetHashCode();
       if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) hash ^= BillingCycle.GetHashCode();
+      if (CustomerFacingTermsAndConditionsUrl.Length != 0) hash ^= CustomerFacingTermsAndConditionsUrl.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1578,6 +1594,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(176, 1);
         output.WriteEnum((int) BillingCycle);
       }
+      if (CustomerFacingTermsAndConditionsUrl.Length != 0) {
+        output.WriteRawTag(186, 1);
+        output.WriteString(CustomerFacingTermsAndConditionsUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1664,6 +1684,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
         output.WriteRawTag(176, 1);
         output.WriteEnum((int) BillingCycle);
       }
+      if (CustomerFacingTermsAndConditionsUrl.Length != 0) {
+        output.WriteRawTag(186, 1);
+        output.WriteString(CustomerFacingTermsAndConditionsUrl);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1731,6 +1755,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
         size += 2 + pb::CodedOutputStream.ComputeEnumSize((int) BillingCycle);
+      }
+      if (CustomerFacingTermsAndConditionsUrl.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(CustomerFacingTermsAndConditionsUrl);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1822,6 +1849,9 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
       }
       if (other.BillingCycle != global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle.Weekly) {
         BillingCycle = other.BillingCycle;
+      }
+      if (other.CustomerFacingTermsAndConditionsUrl.Length != 0) {
+        CustomerFacingTermsAndConditionsUrl = other.CustomerFacingTermsAndConditionsUrl;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1951,6 +1981,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             BillingCycle = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle) input.ReadEnum();
             break;
           }
+          case 186: {
+            CustomerFacingTermsAndConditionsUrl = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -2077,6 +2111,10 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
           }
           case 176: {
             BillingCycle = (global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle) input.ReadEnum();
+            break;
+          }
+          case 186: {
+            CustomerFacingTermsAndConditionsUrl = input.ReadString();
             break;
           }
         }

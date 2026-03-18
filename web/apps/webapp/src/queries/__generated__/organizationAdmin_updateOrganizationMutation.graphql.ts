@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4725666468c7039aef9e8d2dae7da3e>>
+ * @generated SignedSource<<db9a981a5e3f37dcd59dc2a315374144>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,6 +16,7 @@ export type UpdateOrganizationInput = {
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
+  customerFacingTermsAndConditionsUrl?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
@@ -52,6 +53,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly customDomain: string | null | undefined;
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -95,6 +97,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
       readonly contactEmail: string | null | undefined;
       readonly contactPhone: string | null | undefined;
       readonly customDomain: string | null | undefined;
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
       readonly featureImages: ReadonlyArray<{
         readonly original: {
           readonly height: number | null | undefined;
@@ -296,6 +299,13 @@ v7 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "customerFacingTermsAndConditionsUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "OrganizationIndustrySubCategoryReferenceDetails",
             "kind": "LinkedField",
             "name": "industrySubCategories",
@@ -376,16 +386,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "6669436eca47ee2b52424634fee05532",
+    "cacheID": "503ba67c7abaf6c08d1d938d695b3ed9",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c769214d498a578344434002cbd630b4";
+(node as any).hash = "14d026f2746446ecb9dcb255e6147145";
 
 export default node;

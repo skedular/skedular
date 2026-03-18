@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<63955fa6eed9b247e1e6a6936da8298f>>
+ * @generated SignedSource<<956e782b4183e283b39c439d4e7caf27>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,7 @@ export type AddOrganizationInput = {
   contactEmail?: string | null | undefined;
   contactPhone?: string | null | undefined;
   customDomain?: string | null | undefined;
+  customerFacingTermsAndConditionsUrl?: string | null | undefined;
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
@@ -50,6 +51,7 @@ export type addIndividualOrganization_addOrganizationMutation$data = {
   readonly addOrganization: {
     readonly organization: {
       readonly customDomain: string | null | undefined;
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
@@ -66,6 +68,7 @@ export type addIndividualOrganization_addOrganizationMutation$rawResponse = {
   readonly addOrganization: {
     readonly organization: {
       readonly customDomain: string | null | undefined;
+      readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
       readonly id: string;
       readonly listingMetadata: {
         readonly about: string | null | undefined;
@@ -181,6 +184,13 @@ v1 = [
             "kind": "ScalarField",
             "name": "website",
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "customerFacingTermsAndConditionsUrl",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -207,16 +217,16 @@ return {
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "b57663620c7ab4deb2e35c59d2718f55",
+    "cacheID": "fe4533061b1232004e8f507d9feaeb00",
     "id": null,
     "metadata": {},
     "name": "addIndividualOrganization_addOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation addIndividualOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n    }\n  }\n}\n"
+    "text": "mutation addIndividualOrganization_addOrganizationMutation(\n  $input: AddOrganizationInput!\n) {\n  addOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      listingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b14d8b7493a73598803b400346188866";
+(node as any).hash = "3bca70abc2996888390723280e34f625";
 
 export default node;

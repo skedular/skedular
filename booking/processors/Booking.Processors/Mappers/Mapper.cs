@@ -614,8 +614,7 @@ public class Mapper : IMapper
             src.MaxAllowedResourcesLockTimePaidViaBankTransfer,
             src.NumberOfResourcesToBook,
             MapTo(src.CancellationPolicyType),
-            MapTo(src.CancellationRefundRules).ToList(),
-            src.TermsAndConditionsUrl.ToSafeString());
+            MapTo(src.CancellationRefundRules).ToList());
 
     private static ProductPricingCancellationPolicyType MapTo(
         Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType src) =>

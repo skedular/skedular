@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99775078be5a3f066429ac069f4a1c4c>>
+ * @generated SignedSource<<17de800c73211454a71ff52241e02acb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -60,6 +60,7 @@ export type organizationAdmin_organization_query$data = {
     readonly contactEmail: string | null | undefined;
     readonly contactPhone: string | null | undefined;
     readonly customDomain: string | null | undefined;
+    readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
     readonly featureImages: ReadonlyArray<{
       readonly original: {
         readonly height: number | null | undefined;
@@ -436,6 +437,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "customerFacingTermsAndConditionsUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "canModify",
           "storageKey": null
         },
@@ -740,6 +748,6 @@ return {
 };
 })();
 
-(node as any).hash = "8152763743759de1ffb75d5b799905c0";
+(node as any).hash = "91a1d99582856303de49fa0b24b58eb7";
 
 export default node;

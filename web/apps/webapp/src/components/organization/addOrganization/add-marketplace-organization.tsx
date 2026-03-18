@@ -44,6 +44,7 @@ type OrganizationDetails = {
   name: string;
   about: string | null;
   website: string | null;
+  customerFacingTermsAndConditionsUrl: string | null;
   agreedToTermsOfUse: boolean;
 };
 
@@ -51,7 +52,8 @@ const organizationSchema = object({
   customDomain: string().nullable(),
   name: string().min(3, 'Organization name must be at least three characters long.').required('Organization name is required'),
   ...listingMetadataSchemaShape,
-  website: string().nullable(),
+  website: string().url('Website must be a valid Url').nullable(),
+  customerFacingTermsAndConditionsUrl: string().url('Terms and Conditions must be a valid Url').nullable(),
   agreedToTermsOfUse: boolean().oneOf([true], 'Please accept the terms').required('Please accept the terms'),
 });
 
@@ -86,6 +88,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             includedFeatures
           }
           website
+          customerFacingTermsAndConditionsUrl
           featureImages {
             original {
               url
@@ -111,7 +114,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>([]);
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(null);
 
-  const handleOrganizationAddClick = ({ customDomain, name, about, website }: OrganizationDetails) => {
+  const handleOrganizationAddClick = ({ customDomain, name, about, website, customerFacingTermsAndConditionsUrl }: OrganizationDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding organization '${name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -133,6 +136,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             includedFeatures: [],
           },
           website,
+          customerFacingTermsAndConditionsUrl,
           type: 'MARKETPLACE',
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
@@ -178,6 +182,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
               includedFeatures: [],
             },
             website,
+            customerFacingTermsAndConditionsUrl,
             featureImages: finalFeatureImages,
           },
         },
@@ -252,6 +257,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
             name: '',
             about: null,
             website: null,
+            customerFacingTermsAndConditionsUrl: null,
           }}
           validate={validateOrganizationDetails}
           render={({ handleSubmit }) => (
@@ -329,6 +335,14 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
 
               <FormFieldLabel label="Website" required={requiredFields.website}>
                 <TextField name="website" required={requiredFields.website} helperText={<HelperText text="Provide your co-working space's website to share with members." />} />
+              </FormFieldLabel>
+
+              <FormFieldLabel label="Terms and Conditions" required={requiredFields.customerFacingTermsAndConditionsUrl}>
+                <TextField
+                  name="customerFacingTermsAndConditionsUrl"
+                  required={requiredFields.customerFacingTermsAndConditionsUrl}
+                  helperText={<HelperText text="Provide the URL to your customer-facing terms and conditions." />}
+                />
               </FormFieldLabel>
 
               <FormFieldLabel label="" required={requiredFields.agreedToTermsOfUse}>

@@ -766,6 +766,7 @@ type OrganizationDetails {
   contactEmail: String
   contactPhone: String
   customDomain: String
+  customerFacingTermsAndConditionsUrl: String
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   featureImages: [CdnImageFile!]!
   hasAttachedPaymentMethod: Boolean!
@@ -910,6 +911,7 @@ type OrganizationPublicDetails {
   contactEmail: String
   contactPhone: String
   customDomain: String
+  customerFacingTermsAndConditionsUrl: String
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   featureImages: [CdnImageFile!]!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -1084,7 +1086,6 @@ type ProductPricing {
   price: Decimal!
   purchaseCadence: ProductPricingCadence!
   supportsSubscriptionAutoRenewal: Boolean!
-  termsAndConditionsUrl: String!
 }
 
 type ProductPricingBillingModeDetails {
@@ -1617,6 +1618,7 @@ input AddOrganizationInput {
   contactEmail: String
   contactPhone: String
   customDomain: String
+  customerFacingTermsAndConditionsUrl: String
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
@@ -2289,7 +2291,6 @@ input ProductPricingInput {
   price: Decimal!
   purchaseCadence: ProductPricingCadence!
   supportsSubscriptionAutoRenewal: Boolean!
-  termsAndConditionsUrl: String!
 }
 
 input ProductTagOrganizationTagWhereInput {
@@ -2647,6 +2648,7 @@ input UpdateOrganizationInput {
   contactEmail: String
   contactPhone: String
   customDomain: String
+  customerFacingTermsAndConditionsUrl: String
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!

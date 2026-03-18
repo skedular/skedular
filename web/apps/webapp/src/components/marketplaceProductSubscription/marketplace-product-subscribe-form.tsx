@@ -86,6 +86,9 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         product(id: $productId) {
           id
           latestProductVersionId
+          organization {
+            customerFacingTermsAndConditionsUrl
+          }
           listingMetadata {
             title
           }
@@ -112,7 +115,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
               minutesBefore
               refundPercentage
             }
-            termsAndConditionsUrl
           }
         }
       }
@@ -465,7 +467,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         quantity={quantity}
         startsOnLabel={toShortDate(startedAt.toISOString())}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
-        termsAndConditionsUrl={selectedPricingOption?.termsAndConditionsUrl}
+        termsAndConditionsUrl={rootData.product?.organization.customerFacingTermsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}
       />
     </Box>

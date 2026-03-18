@@ -120,7 +120,6 @@ message ProductPricing {
   bool                                          supportsSubscriptionAutoRenewal                = 16;
   ProductPricingCancellationPolicyType          cancellationPolicyType                         = 17;
   repeated ProductPricingCancellationRefundRule cancellationRefundRules                        = 18;
-  string                                        termsAndConditionsUrl                          = 19;
 }
 
 message ProductPricingCancellationRefundRule {

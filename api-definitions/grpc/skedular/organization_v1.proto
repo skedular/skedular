@@ -93,22 +93,23 @@ message TermsOfUse {
 }
 
 message Admin_AddInput {
-  string                   id                         = 1;
-  string                   customDomain               = 2;
-  string                   name                       = 3;
-  ListingMetadata          listingMetadata            = 4;
-  string                   logoUrl                    = 5;
-  string                   website                    = 6;
-  bool                     agreedToTermsOfUse         = 7;
-  string                   termsOfUseId               = 8;
-  repeated string          industrySubCategoryIds     = 9;
-  string                   offeringCode               = 10;
-  OrganizationType         type                       = 11;
-  string                   contactEmail               = 12;
-  string                   contactPhone               = 13;
-  repeated CdnImageFile    featureImages              = 14;
-  ListingMetadata          marketplaceListingMetadata = 15;
-  OrganizationBillingCycle billingCycle               = 16;
+  string                   id                                  = 1;
+  string                   customDomain                        = 2;
+  string                   name                                = 3;
+  ListingMetadata          listingMetadata                     = 4;
+  string                   logoUrl                             = 5;
+  string                   website                             = 6;
+  bool                     agreedToTermsOfUse                  = 7;
+  string                   termsOfUseId                        = 8;
+  repeated string          industrySubCategoryIds              = 9;
+  string                   offeringCode                        = 10;
+  OrganizationType         type                                = 11;
+  string                   contactEmail                        = 12;
+  string                   contactPhone                        = 13;
+  repeated CdnImageFile    featureImages                       = 14;
+  ListingMetadata          marketplaceListingMetadata          = 15;
+  OrganizationBillingCycle billingCycle                        = 16;
+  string                   customerFacingTermsAndConditionsUrl = 17;
 }
 
 enum OrganizationType {
@@ -128,35 +129,36 @@ message Admin_GetOrganizationStripeConnectAccountsResponse {
 }
 
 message Organization {
-  string                        id                         = 1;
-  string                        customDomain               = 2;
-  string                        name                       = 3;
-  ListingMetadata               listingMetadata            = 4;
-  string                        logoUrl                    = 5;
-  string                        website                    = 6;
-  bool                          agreedToTermsOfUse         = 7;
-  string                        termsOfUseId               = 8;
-  repeated IndustrySubCategory  industrySubCategories      = 9;
-  repeated OrganizationMember   members                    = 10;
-  Offering                      Offering                   = 11;
-  bool                          hasAttachedPaymentMethod   = 12;
-  bool                          hasFutureBooking           = 13;
-  repeated Tag                  tags                       = 14;
-  repeated ResourceType         resourceTypes              = 15;
-  OrganizationType              type                       = 16;
-  string                        contactEmail               = 17;
-  string                        contactPhone               = 18;
-  bool                          isListable                 = 19;
-  BillingDetails                billingDetails             = 20;
-  StripeCustomer                stripeCustomer             = 21;
-  repeated StripePaymentMethod  stripePaymentMethods       = 22;
-  repeated StripeConnectAccount stripeConnectAccounts      = 23;
-  TaxDetails                    taxDetails                 = 24;
-  PhysicalAddress               physicalAddress            = 25;
-  bool                          isOwnershipVerified        = 26;
-  repeated CdnImageFile         featureImages              = 27;
-  ListingMetadata               marketplaceListingMetadata = 28;
-  OrganizationBillingCycle      billingCycle               = 29;
+  string                        id                                  = 1;
+  string                        customDomain                        = 2;
+  string                        name                                = 3;
+  ListingMetadata               listingMetadata                     = 4;
+  string                        logoUrl                             = 5;
+  string                        website                             = 6;
+  bool                          agreedToTermsOfUse                  = 7;
+  string                        termsOfUseId                        = 8;
+  repeated IndustrySubCategory  industrySubCategories               = 9;
+  repeated OrganizationMember   members                             = 10;
+  Offering                      Offering                            = 11;
+  bool                          hasAttachedPaymentMethod            = 12;
+  bool                          hasFutureBooking                    = 13;
+  repeated Tag                  tags                                = 14;
+  repeated ResourceType         resourceTypes                       = 15;
+  OrganizationType              type                                = 16;
+  string                        contactEmail                        = 17;
+  string                        contactPhone                        = 18;
+  bool                          isListable                          = 19;
+  BillingDetails                billingDetails                      = 20;
+  StripeCustomer                stripeCustomer                      = 21;
+  repeated StripePaymentMethod  stripePaymentMethods                = 22;
+  repeated StripeConnectAccount stripeConnectAccounts               = 23;
+  TaxDetails                    taxDetails                          = 24;
+  PhysicalAddress               physicalAddress                     = 25;
+  bool                          isOwnershipVerified                 = 26;
+  repeated CdnImageFile         featureImages                       = 27;
+  ListingMetadata               marketplaceListingMetadata          = 28;
+  OrganizationBillingCycle      billingCycle                        = 29;
+  string                        customerFacingTermsAndConditionsUrl = 30;
 }
 
 message IndustrySubCategory {

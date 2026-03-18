@@ -228,6 +228,7 @@ public class Mapper : IMapper
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             MarketplaceListingMetadata = src.MarketplaceListingMetadata ?? ListingMetadata.Empty,
             Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),

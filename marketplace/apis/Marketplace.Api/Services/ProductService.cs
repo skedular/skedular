@@ -365,13 +365,6 @@ public class ProductService(
 
         ValidateCancellationPolicy(pricing);
 
-        if (!string.IsNullOrWhiteSpace(pricing.TermsAndConditionsUrl) &&
-            (!Uri.TryCreate(pricing.TermsAndConditionsUrl, UriKind.Absolute, out var termsUri) ||
-             (termsUri.Scheme != Uri.UriSchemeHttps && termsUri.Scheme != Uri.UriSchemeHttp)))
-        {
-            throw new ProductPricingTermsAndConditionsUrlInvalid();
-        }
-
         var (durationStepMinutes, durationStepLabel) = GetDurationStepDetails(pricing.BookingCadence);
 
         if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is not null)

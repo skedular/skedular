@@ -229,6 +229,7 @@ type OrganizationDetails {
   customDomain: String
   name: String!
   website: String
+  customerFacingTermsAndConditionsUrl: String
   logoUrl: String
   type: OrganizationTypeDetails!
   billingCycle: OrganizationBillingCycleDetails!
@@ -379,6 +380,7 @@ type OrganizationPublicDetails {
   customDomain: String
   name: String!
   website: String
+  customerFacingTermsAndConditionsUrl: String
   logoUrl: String
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   contactEmail: String
@@ -605,6 +607,7 @@ input AddOrganizationInput {
   customDomain: String
   name: String!
   website: String
+  customerFacingTermsAndConditionsUrl: String
   type: OrganizationType!
   billingCycle: OrganizationBillingCycle!
   contactEmail: String
@@ -938,6 +941,7 @@ input UpdateOrganizationInput {
   customDomain: String
   name: String!
   website: String
+  customerFacingTermsAndConditionsUrl: String
   billingCycle: OrganizationBillingCycle!
   contactEmail: String
   contactPhone: String
