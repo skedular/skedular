@@ -59,13 +59,17 @@ const MarketplaceProductBookingSummary = ({
             sx={{ opacity: 0.86 }}
           />
           <BodyIconTypography label={cancellationPolicyLabel} sx={{ opacity: 0.86 }} />
-          {termsAndConditionsUrl ? (
+        </StackColumn>
+      </Box>
+      {termsAndConditionsUrl && (
+        <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>
+          <StackColumn spacing={1}>
             <Link href={termsAndConditionsUrl} target="_blank" rel="noreferrer" underline="hover" sx={{ width: 'fit-content' }}>
               Review pricing terms and conditions
             </Link>
-          ) : null}
-        </StackColumn>
-      </Box>
+          </StackColumn>
+        </Box>
+      )}
     </CardContent>
   </Card>
 );

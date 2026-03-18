@@ -1114,6 +1114,7 @@ type ProductVersionDetails {
   id: ID!
   inactive: Boolean!
   listingMetadata: ListingMetadata!
+  organization: OrganizationDetails!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
 }

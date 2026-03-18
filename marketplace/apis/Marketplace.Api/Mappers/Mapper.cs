@@ -130,7 +130,9 @@ public class Mapper : IMapper
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
             ProductTags = MapTo(src.ProductTags),
-            PricingOptions = src.PricingOptions
+            PricingOptions = src.PricingOptions,
+            OrganizationId = src.Product.Organization.Id,
+            OrganizationCustomDomain = src.Product.Organization.CustomDomain.ToSafeString()
         };
     }
 
