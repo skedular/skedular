@@ -72,7 +72,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
             hasAnyMoreRequiredBookingDays |= !recurringBookingEnded;
         }
 
-        return new AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(false, !hasAnyMoreRequiredBookingDays);
+        return new AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse(
+            false,
+            ShouldEndCurrentCycleProcessing(subscription, from, hasAnyMoreRequiredBookingDays));
     }
 
     [Activity]
@@ -449,6 +451,32 @@ public class MarketplaceBookingSubscriptionIntegrations(
         // always plan against the current subscription cycle, even if an existing recurring
         // booking record was created earlier with stale end-date data.
         subscription.NextRenewalAt ?? ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+
+    private static bool ShouldEndCurrentCycleProcessing(
+        MarketplaceBookingSubscription subscription,
+        DateTimeOffset from,
+        bool hasAnyMoreRequiredBookingDays)
+    {
+        // Even when the full cycle has already been materialized, the workflow still needs
+        // to wake up daily to repair resources or react to opening-hours changes. The only
+        // time this cycle can stop naturally is the final day of a non-renewing subscription
+        // once there are no further booking days left to create in the current cycle.
+        if (hasAnyMoreRequiredBookingDays)
+        {
+            return false;
+        }
+
+        if (subscription.AutoRenew && subscription.MarketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal)
+        {
+            return false;
+        }
+
+        var cycleEndExclusive = subscription.NextRenewalAt ??
+                                ResolveNextRenewalAt(subscription.StartedAt, subscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+        var lastCycleDay = cycleEndExclusive.AddDays(-1).UtcDateTime.Date;
+
+        return from.UtcDateTime.Date >= lastCycleDay;
+    }
 
     private static DateTimeOffset ResolveCycleStart(DateTimeOffset cycleEndExclusive, ProductPricingCadence cadence) =>
         cadence switch
