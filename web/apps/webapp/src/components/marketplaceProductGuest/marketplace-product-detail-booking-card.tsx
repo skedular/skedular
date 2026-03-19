@@ -1,5 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
@@ -81,6 +82,11 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
           minDurationMinutes
           maxDurationMinutes
           numberOfResourcesToBook
+          cancellationPolicyType
+          cancellationRefundRules {
+            minutesBefore
+            refundPercentage
+          }
         }
       }
     `,
@@ -105,6 +111,8 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
         amountLabel: `${currencyLabel}${pricingOption.price}`,
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+        cancellationPolicyType: pricingOption.cancellationPolicyType,
+        cancellationRefundRules: pricingOption.cancellationRefundRules,
       }));
   }, [product, rootData.currencies, rootData.productPricingCadences]);
   const marketplaceLocations = useMemo(
@@ -169,6 +177,14 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
                 >
                   {canBookProduct ? (isSubscriptionCadence(pricingPlan.cadence) ? 'Choose plan' : 'Book now') : 'Unavailable'}
                 </Button>
+                <Box sx={{ mt: 1.2 }}>
+                  <MarketplaceCancellationPolicyDetails
+                    cancellationPolicyType={pricingPlan.cancellationPolicyType}
+                    cancellationRefundRules={pricingPlan.cancellationRefundRules}
+                    compact
+                    eventLabel={isSubscriptionCadence(pricingPlan.cadence) ? 'the next renewal' : 'the booking starts'}
+                  />
+                </Box>
               </Box>
             ))}
           </Box>

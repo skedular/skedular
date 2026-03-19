@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5612f30d481c2bfccec1dddfd7dfc537>>
+ * @generated SignedSource<<7e73fae89a900b469b7807ed0abf4b9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductDetailBookingCard_product$data = {
   readonly amenities: ReadonlyArray<{
@@ -32,6 +33,11 @@ export type marketplaceProductDetailBookingCard_product$data = {
   };
   readonly pricingOptions: ReadonlyArray<{
     readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
+    readonly cancellationPolicyType: ProductPricingCancellationPolicyType;
+    readonly cancellationRefundRules: ReadonlyArray<{
+      readonly minutesBefore: number;
+      readonly refundPercentage: number;
+    }>;
     readonly id: string;
     readonly index: number;
     readonly isTaxInclusive: boolean;
@@ -239,6 +245,38 @@ return {
           "kind": "ScalarField",
           "name": "numberOfResourcesToBook",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "cancellationPolicyType",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ProductPricingCancellationRefundRule",
+          "kind": "LinkedField",
+          "name": "cancellationRefundRules",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "minutesBefore",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "refundPercentage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -249,6 +287,6 @@ return {
 };
 })();
 
-(node as any).hash = "c393bc342f42ee03d00ce74af3e37ae6";
+(node as any).hash = "e84724d521a26ead47b00cc60fdee8ed";
 
 export default node;

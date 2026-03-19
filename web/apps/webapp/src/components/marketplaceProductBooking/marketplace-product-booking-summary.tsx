@@ -1,4 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, SubtitleIconTypography } from '@/components/commons';
+import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -8,7 +9,8 @@ import { memo } from 'react';
 
 type Props = {
   amountLabel: string;
-  cancellationPolicyLabel: string;
+  cancellationPolicyType: string | null | undefined;
+  cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
   dateLabel: string;
   durationLabel: string;
   paymentLabel: string;
@@ -27,7 +29,8 @@ const SummaryRow = ({ label, value }: { label: string; value: string }) => (
 
 const MarketplaceProductBookingSummary = ({
   amountLabel,
-  cancellationPolicyLabel,
+  cancellationPolicyType,
+  cancellationRefundRules,
   dateLabel,
   durationLabel,
   paymentLabel,
@@ -58,8 +61,10 @@ const MarketplaceProductBookingSummary = ({
             label="Resource allocation is handled after checkout for now. A dedicated floor-plan resource picker can be added later without changing this purchase flow."
             sx={{ opacity: 0.86 }}
           />
-          <BodyIconTypography label={cancellationPolicyLabel} sx={{ opacity: 0.86 }} />
         </StackColumn>
+      </Box>
+      <Box sx={{ mt: 2.5 }}>
+        <MarketplaceCancellationPolicyDetails cancellationPolicyType={cancellationPolicyType} cancellationRefundRules={cancellationRefundRules} eventLabel="the booking starts" />
       </Box>
       {termsAndConditionsUrl && (
         <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>

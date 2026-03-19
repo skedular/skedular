@@ -30,28 +30,6 @@ type Props = {
   rootDataRelay: marketplaceProductSubscribeForm_query$key;
 };
 
-const getSubscriptionCancellationPolicyLabel = (
-  cancellationPolicyType: string | null | undefined,
-  cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined,
-) => {
-  const rules = [...(cancellationRefundRules ?? [])].sort((left, right) => right.minutesBefore - left.minutesBefore);
-
-  switch (cancellationPolicyType) {
-    case 'NO_CANCELLATION':
-      return 'This plan cannot be cancelled online after purchase.';
-    case 'FULL_REFUND_BEFORE_CUTOFF': {
-      const rule = rules[0];
-      return rule ? `Free cancellation is available until ${rule.minutesBefore} minutes before the next renewal.` : 'Cancellation details will be shown before checkout.';
-    }
-    case 'TIERED_REFUND':
-      return rules.length > 0
-        ? rules.map((rule) => `${rule.refundPercentage}% refund until ${rule.minutesBefore} minutes before renewal`).join(' · ')
-        : 'Cancellation details will be shown before checkout.';
-    default:
-      return 'Cancellation details will be shown before checkout.';
-  }
-};
-
 const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const rootData = useFragment(
     graphql`
@@ -438,7 +416,8 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         autoRenew={selectedPricingOption?.supportsSubscriptionAutoRenewal ? autoRenew : false}
         billingModeLabel={billingModeLabel}
         cadenceLabel={cadenceLabel}
-        cancellationPolicyLabel={getSubscriptionCancellationPolicyLabel(selectedPricingOption?.cancellationPolicyType, selectedPricingOption?.cancellationRefundRules)}
+        cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
+        cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
         quantity={quantity}
         startsOnLabel={toShortDate(startedAt.toISOString())}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}

@@ -1,4 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, SubtitleIconTypography } from '@/components/commons';
+import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -11,7 +12,8 @@ type Props = {
   autoRenew: boolean;
   billingModeLabel: string;
   cadenceLabel: string;
-  cancellationPolicyLabel: string;
+  cancellationPolicyType: string | null | undefined;
+  cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
   quantity: number;
   startsOnLabel: string;
   taxLabel: string;
@@ -31,7 +33,8 @@ const MarketplaceProductSubscribeSummary = ({
   autoRenew,
   billingModeLabel,
   cadenceLabel,
-  cancellationPolicyLabel,
+  cancellationPolicyType,
+  cancellationRefundRules,
   quantity,
   startsOnLabel,
   taxLabel,
@@ -66,8 +69,10 @@ const MarketplaceProductSubscribeSummary = ({
               }
               sx={{ opacity: 0.86 }}
             />
-            <BodyIconTypography label={cancellationPolicyLabel} sx={{ opacity: 0.86 }} />
           </StackColumn>
+        </Box>
+        <Box sx={{ mt: 2.5 }}>
+          <MarketplaceCancellationPolicyDetails cancellationPolicyType={cancellationPolicyType} cancellationRefundRules={cancellationRefundRules} eventLabel="the next renewal" />
         </Box>
 
         {termsAndConditionsUrl && (
