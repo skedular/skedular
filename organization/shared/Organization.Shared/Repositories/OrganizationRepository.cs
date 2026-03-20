@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
-using IndustryMainCategory = Organization.Shared.Database.Entities.IndustryMainCategory;
+using OrganizationStripePaymentMethod = Organization.Shared.Database.Entities.OrganizationStripePaymentMethod;
 
 namespace Organization.Shared.Repositories;
 
@@ -39,7 +39,7 @@ internal static class OrganizationExtensions
 {
     extension(IQueryable<Database.Entities.Organization> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Organization, IndustryMainCategory> AddDependentObjects(bool isTracked,
+        internal IIncludableQueryable<Database.Entities.Organization, OrganizationStripePaymentMethod> AddDependentObjects(bool isTracked,
             bool includeAllOfferings)
         {
             var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
@@ -62,7 +62,9 @@ internal static class OrganizationExtensions
                     query.OrganizationStripeConnectAccounts.Where(organizationStripeConnectAccount =>
                         !organizationStripeConnectAccount.DeletedAt.HasValue))
                 .ThenInclude(query => query.OrganizationStripeConnectAccountAuthorization)
-                .Include(query => query.OrganizationBankAccounts.Where(organizationBankAccount => !organizationBankAccount.DeletedAt.HasValue));
+                .Include(query => query.OrganizationBankAccounts.Where(organizationBankAccount => !organizationBankAccount.DeletedAt.HasValue))
+                .Include(query => query.IndustrySubCategories)
+                .ThenInclude(query => query.IndustryMainCategory);
 
             return includeAllOfferings
                 ? updatedQuery
@@ -73,8 +75,6 @@ internal static class OrganizationExtensions
                     .Include(query => query.OrganizationOfferings.OrderByDescending(organizationOffering => organizationOffering.End))
                     .ThenInclude(query => query.OrganizationStripePaymentIntent)
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod)
-                    .Include(query => query.IndustrySubCategories)
-                    .ThenInclude(query => query.IndustryMainCategory)
                 : updatedQuery
                     .Include(query => query.OrganizationOfferings
                         .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
@@ -86,9 +86,7 @@ internal static class OrganizationExtensions
                         .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
                         .OrderByDescending(organizationOffering => organizationOffering.End).Take(1))
                     .ThenInclude(query => query.OrganizationStripePaymentIntent)
-                    .ThenInclude(query => query!.OrganizationStripePaymentMethod)
-                    .Include(query => query.IndustrySubCategories)
-                    .ThenInclude(query => query.IndustryMainCategory);
+                    .ThenInclude(query => query!.OrganizationStripePaymentMethod);
         }
 
         internal IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
@@ -233,8 +231,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
             .AddDependentObjects(false, false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
-    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(
-        ICollection<OrganizationOrder> orderByFields)
+    private static List<KeysetPaginationField<Database.Entities.Organization>> GetPaginationFields(ICollection<OrganizationOrder> orderByFields)
     {
         if (orderByFields.Count == 0)
         {
