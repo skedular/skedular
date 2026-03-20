@@ -10,7 +10,6 @@ using AzureTenant = Organization.Shared.Database.Entities.AzureTenant;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerType;
 using Identity = Organization.Shared.Models.Identity;
-using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering;
 using OrganizationMember = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember;
 using OrganizationSsoSettings = Organization.Shared.Models.OrganizationSsoSettings;
@@ -40,12 +39,7 @@ public interface IMapper
     Database.Entities.AzureTenantMember MergeToEntity(AzureTenantMember src, Database.Entities.AzureTenantMember dest, AzureTenant azureTenant);
     Admin_AddIdentityInput MapTo(Database.Entities.AzureTenantMember src, string customerId);
     Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId);
-
-    Admin_AddInput MapTo(
-        Database.Entities.AzureTenantMember src,
-        string customerId,
-        Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> preferredLocations);
+    Admin_AddInput MapTo(Database.Entities.AzureTenantMember src, string customerId, Database.Entities.Organization defaultOrganization);
 
     Database.Entities.OrganizationMember MapToEntity(
         Models.OrganizationMember src,
@@ -186,7 +180,6 @@ public class Mapper : IMapper
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -240,11 +233,7 @@ public class Mapper : IMapper
     public Admin_UpdateIdentityInput MapToUpdateIdentityInput(Database.Entities.AzureTenantMember src, string customerId) =>
         new() { Id = src.Id, Email = src.Email.ToSafeString(), EmailVerified = true, CustomerId = customerId };
 
-    public Admin_AddInput MapTo(
-        Database.Entities.AzureTenantMember src,
-        string customerId,
-        Database.Entities.Organization defaultOrganization,
-        ICollection<Database.Entities.Location> preferredLocations)
+    public Admin_AddInput MapTo(Database.Entities.AzureTenantMember src, string customerId, Database.Entities.Organization defaultOrganization)
     {
         var input = new Admin_AddInput
         {
@@ -259,12 +248,6 @@ public class Mapper : IMapper
         };
 
         input.Identities.Add(new Api.Shared.Services.Grpc.Skedular.Customer.V1.Identity { Id = src.Id, Email = src.Email, EmailVerified = true });
-
-        input.PreferredLocations.AddRange(preferredLocations.Select(item =>
-            new Api.Shared.Services.Grpc.Skedular.Customer.V1.Location
-            {
-                Id = item.Id, Organization = new Api.Shared.Services.Grpc.Skedular.Customer.V1.Organization { Id = defaultOrganization.Id }
-            }));
 
         return input;
     }
@@ -450,20 +433,6 @@ public class Mapper : IMapper
             Organization = organization,
             Date = src.Date,
             Count = src.Count
-        };
-
-    private static IEnumerable<Location> MapTo(IEnumerable<Database.Entities.Location> src, Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Location MapTo(Database.Entities.Location src, Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
         };
 
     private static IEnumerable<JoinInvitation> MapTo(IEnumerable<Database.Entities.JoinInvitation> src, Models.Organization organization) =>

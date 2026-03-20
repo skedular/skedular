@@ -99,8 +99,6 @@ message Offering {
   string                    organizationId    = 8;
 }
 
-message Location { string id = 1; }
-
 message Tag {
   string id          = 1;
   string name        = 2;

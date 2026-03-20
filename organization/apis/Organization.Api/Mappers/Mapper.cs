@@ -35,7 +35,6 @@ using IndustryMainCategory = Organization.Shared.Models.IndustryMainCategory;
 using IndustrySubCategory = Organization.Shared.Models.IndustrySubCategory;
 using JoinInvitation = Organization.Shared.Models.JoinInvitation;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
-using Location = Organization.Shared.Models.Location;
 using Offering = Api.Shared.Services.Offering.Offering;
 using OrganizationDailyBookingsTotal = Organization.Shared.Models.OrganizationDailyBookingsTotal;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
@@ -255,7 +254,6 @@ public class Mapper : IMapper
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
@@ -452,7 +450,6 @@ public class Mapper : IMapper
             CanDelete = src.CanDelete,
             CanInvitePeople = src.CanInvitePeople,
             CanViewAnalytics = src.CanViewAnalytics,
-            HasLocation = src.HasLocation,
             HasFutureBooking = src.HasFutureBooking,
             IsMyOnboardingDone = src.IsMyOnboardingDone,
             ResourceTypes = src.Tags
@@ -1659,20 +1656,6 @@ public class Mapper : IMapper
             Organization = organization,
             Date = src.Date,
             Count = src.Count
-        };
-
-    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
         };
 
     private IEnumerable<JoinInvitation> MapTo(IEnumerable<Shared.Database.Entities.JoinInvitation> src, Shared.Models.Organization organization) =>

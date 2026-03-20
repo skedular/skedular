@@ -62,42 +62,42 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             "dG9idWYuVGltZXN0YW1wEicKA2VuZBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1",
             "Zi5UaW1lc3RhbXASEQoJYXV0b1JlbmV3GAUgASgIEhEKCXVuaXRQcmljZRgG",
             "IAEoBRIZChFhY3RpdmVDdXN0b21lcklkcxgHIAMoCRIWCg5vcmdhbml6YXRp",
-            "b25JZBgIIAEoCSIWCghMb2NhdGlvbhIKCgJpZBgBIAEoCSJRCgNUYWcSCgoC",
-            "aWQYASABKAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCRIM",
-            "CgR0eXBlGAQgASgJEg0KBWNvbG9yGAUgASgJIn0KF09yZ2FuaXphdGlvblNz",
-            "b1NldHRpbmdzEgoKAmlkGAEgASgJEhAKCGVudGl0eUlkGAIgASgJEhAKCGxv",
-            "Z2luVXJsGAMgASgJEiAKGGFwcEZlZGVyYXRpb25NZXRhZGF0YVVybBgEIAEo",
-            "CRIQCghpc0FjdGl2ZRgFIAEoCCJOChZPcmdhbml6YXRpb25UYXhEZXRhaWxz",
-            "EgoKAmlkGAEgASgJEg0KBXRheElkGAIgASgJEhkKEXRheFJhdGVQZXJjZW50",
-            "YWdlGAMgASgBIqsCCg9QaHlzaWNhbEFkZHJlc3MSCgoCaWQYASABKAkSFAoM",
-            "YWRkcmVzc0xpbmUxGAIgASgJEhQKDGFkZHJlc3NMaW5lMhgDIAEoCRIOCgZz",
-            "dWJ1cmIYBCABKAkSDAoEY2l0eRgFIAEoCRIQCghwcm92aW5jZRgGIAEoCRIP",
-            "Cgd6aXBjb2RlGAcgASgJEg8KB2NvdW50cnkYCCABKAkSEwoLY291bnRyeUNv",
-            "ZGUYCSABKAkSGAoQZm9ybWF0dGVkQWRkcmVzcxgKIAEoCRIPCgdvc21UeXBl",
-            "GAsgASgJEg0KBW9zbUlkGAwgASgJEg8KB3BsYWNlSWQYDSABKAkSLgoLY29v",
-            "cmRpbmF0ZXMYDiABKAsyGS5vcmdhbml6YXRpb24uQ29vcmRpbmF0ZXMiMgoL",
-            "Q29vcmRpbmF0ZXMSEQoJbG9uZ2l0dWRlGAEgASgBEhAKCGxhdGl0dWRlGAIg",
-            "ASgBImEKDENkbkltYWdlRmlsZRInCghvcmlnaW5hbBgBIAEoCzIVLm9yZ2Fu",
-            "aXphdGlvbi5DZG5GaWxlEigKCXRodW1ibmFpbBgCIAEoCzIVLm9yZ2FuaXph",
-            "dGlvbi5DZG5GaWxlIjUKB0NkbkZpbGUSCwoDdXJsGAEgASgJEg4KBmhlaWdo",
-            "dBgCIAEoBRINCgV3aWR0aBgDIAEoBSJbCg9MaXN0aW5nTWV0YWRhdGESDQoF",
-            "YWJvdXQYASABKAkSDQoFdGl0bGUYAiABKAkSEAoIc3ViVGl0bGUYAyABKAkS",
-            "GAoQaW5jbHVkZWRGZWF0dXJlcxgEIAMoCSppCgRUeXBlEh0KGVR5cGVfT3Jn",
-            "YW5pemF0aW9uVXBzZXJ0ZWQQABIcChhUeXBlX09yZ2FuaXphdGlvbkRlbGV0",
-            "ZWQQARIkCiBUeXBlX09yZ2FuaXphdGlvbk9mZmVyaW5nVXBkYXRlZBACKnMK",
-            "EE9yZ2FuaXphdGlvblR5cGUSHAoYT3JnYW5pemF0aW9uVHlwZV9Qcml2YXRl",
-            "EAASIAocT3JnYW5pemF0aW9uVHlwZV9NYXJrZXRwbGFjZRABEh8KG09yZ2Fu",
-            "aXphdGlvblR5cGVfSW5kaXZpZHVhbBACKo8BChhPcmdhbml6YXRpb25CaWxs",
-            "aW5nQ3ljbGUSIwofT3JnYW5pemF0aW9uQmlsbGluZ0N5Y2xlX1dlZWtseRAA",
-            "EigKJE9yZ2FuaXphdGlvbkJpbGxpbmdDeWNsZV9Gb3J0bmlnaHRseRABEiQK",
-            "IE9yZ2FuaXphdGlvbkJpbGxpbmdDeWNsZV9Nb250aGx5EAIqhwEKFk9yZ2Fu",
-            "aXphdGlvbk1lbWJlclJvbGUSIAocT3JnYW5pemF0aW9uTWVtYmVyUm9sZV9P",
-            "d25lchAAEigKJE9yZ2FuaXphdGlvbk1lbWJlclJvbGVfQWRtaW5pc3RyYXRv",
-            "chABEiEKHU9yZ2FuaXphdGlvbk1lbWJlclJvbGVfTWVtYmVyEAIqZgoYT3Jn",
-            "YW5pemF0aW9uTWVtYmVyU3RhdHVzEiMKH09yZ2FuaXphdGlvbk1lbWJlclN0",
-            "YXR1c19BY3RpdmUQABIlCiFPcmdhbml6YXRpb25NZW1iZXJTdGF0dXNfSW5h",
-            "Y3RpdmUQAUI7qgI4QXBpLlNoYXJlZC5DbGllbnRzLkV2ZW50cy5Ta2VkdWxh",
-            "ci5Pcmdhbml6YXRpb24uVjEuVmFsdWViBnByb3RvMw=="));
+            "b25JZBgIIAEoCSJRCgNUYWcSCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIT",
+            "CgtkZXNjcmlwdGlvbhgDIAEoCRIMCgR0eXBlGAQgASgJEg0KBWNvbG9yGAUg",
+            "ASgJIn0KF09yZ2FuaXphdGlvblNzb1NldHRpbmdzEgoKAmlkGAEgASgJEhAK",
+            "CGVudGl0eUlkGAIgASgJEhAKCGxvZ2luVXJsGAMgASgJEiAKGGFwcEZlZGVy",
+            "YXRpb25NZXRhZGF0YVVybBgEIAEoCRIQCghpc0FjdGl2ZRgFIAEoCCJOChZP",
+            "cmdhbml6YXRpb25UYXhEZXRhaWxzEgoKAmlkGAEgASgJEg0KBXRheElkGAIg",
+            "ASgJEhkKEXRheFJhdGVQZXJjZW50YWdlGAMgASgBIqsCCg9QaHlzaWNhbEFk",
+            "ZHJlc3MSCgoCaWQYASABKAkSFAoMYWRkcmVzc0xpbmUxGAIgASgJEhQKDGFk",
+            "ZHJlc3NMaW5lMhgDIAEoCRIOCgZzdWJ1cmIYBCABKAkSDAoEY2l0eRgFIAEo",
+            "CRIQCghwcm92aW5jZRgGIAEoCRIPCgd6aXBjb2RlGAcgASgJEg8KB2NvdW50",
+            "cnkYCCABKAkSEwoLY291bnRyeUNvZGUYCSABKAkSGAoQZm9ybWF0dGVkQWRk",
+            "cmVzcxgKIAEoCRIPCgdvc21UeXBlGAsgASgJEg0KBW9zbUlkGAwgASgJEg8K",
+            "B3BsYWNlSWQYDSABKAkSLgoLY29vcmRpbmF0ZXMYDiABKAsyGS5vcmdhbml6",
+            "YXRpb24uQ29vcmRpbmF0ZXMiMgoLQ29vcmRpbmF0ZXMSEQoJbG9uZ2l0dWRl",
+            "GAEgASgBEhAKCGxhdGl0dWRlGAIgASgBImEKDENkbkltYWdlRmlsZRInCghv",
+            "cmlnaW5hbBgBIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlEigKCXRodW1i",
+            "bmFpbBgCIAEoCzIVLm9yZ2FuaXphdGlvbi5DZG5GaWxlIjUKB0NkbkZpbGUS",
+            "CwoDdXJsGAEgASgJEg4KBmhlaWdodBgCIAEoBRINCgV3aWR0aBgDIAEoBSJb",
+            "Cg9MaXN0aW5nTWV0YWRhdGESDQoFYWJvdXQYASABKAkSDQoFdGl0bGUYAiAB",
+            "KAkSEAoIc3ViVGl0bGUYAyABKAkSGAoQaW5jbHVkZWRGZWF0dXJlcxgEIAMo",
+            "CSppCgRUeXBlEh0KGVR5cGVfT3JnYW5pemF0aW9uVXBzZXJ0ZWQQABIcChhU",
+            "eXBlX09yZ2FuaXphdGlvbkRlbGV0ZWQQARIkCiBUeXBlX09yZ2FuaXphdGlv",
+            "bk9mZmVyaW5nVXBkYXRlZBACKnMKEE9yZ2FuaXphdGlvblR5cGUSHAoYT3Jn",
+            "YW5pemF0aW9uVHlwZV9Qcml2YXRlEAASIAocT3JnYW5pemF0aW9uVHlwZV9N",
+            "YXJrZXRwbGFjZRABEh8KG09yZ2FuaXphdGlvblR5cGVfSW5kaXZpZHVhbBAC",
+            "Ko8BChhPcmdhbml6YXRpb25CaWxsaW5nQ3ljbGUSIwofT3JnYW5pemF0aW9u",
+            "QmlsbGluZ0N5Y2xlX1dlZWtseRAAEigKJE9yZ2FuaXphdGlvbkJpbGxpbmdD",
+            "eWNsZV9Gb3J0bmlnaHRseRABEiQKIE9yZ2FuaXphdGlvbkJpbGxpbmdDeWNs",
+            "ZV9Nb250aGx5EAIqhwEKFk9yZ2FuaXphdGlvbk1lbWJlclJvbGUSIAocT3Jn",
+            "YW5pemF0aW9uTWVtYmVyUm9sZV9Pd25lchAAEigKJE9yZ2FuaXphdGlvbk1l",
+            "bWJlclJvbGVfQWRtaW5pc3RyYXRvchABEiEKHU9yZ2FuaXphdGlvbk1lbWJl",
+            "clJvbGVfTWVtYmVyEAIqZgoYT3JnYW5pemF0aW9uTWVtYmVyU3RhdHVzEiMK",
+            "H09yZ2FuaXphdGlvbk1lbWJlclN0YXR1c19BY3RpdmUQABIlCiFPcmdhbml6",
+            "YXRpb25NZW1iZXJTdGF0dXNfSW5hY3RpdmUQAUI7qgI4QXBpLlNoYXJlZC5D",
+            "bGllbnRzLkV2ZW50cy5Ta2VkdWxhci5Pcmdhbml6YXRpb24uVjEuVmFsdWVi",
+            "BnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Type), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole), typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -107,7 +107,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Organization.Parser, new[]{ "Id", "DeletedAt", "CustomDomain", "Name", "ListingMetadata", "LogoUrl", "Website", "Members", "Offering", "AzureTenantIds", "Tags", "SsoSettings", "TaxDetails", "Type", "ContactEmail", "ContactPhone", "PhysicalAddress", "IsOwnershipVerified", "HasAttachedPaymentMethod", "FeatureImages", "MarketplaceListingMetadata", "BillingCycle", "CustomerFacingTermsAndConditionsUrl" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMember.Parser, new[]{ "Id", "CustomerId", "Role", "Status" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Offering.Parser, new[]{ "Id", "Code", "Start", "End", "AutoRenew", "UnitPrice", "ActiveCustomerIds", "OrganizationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Location.Parser, new[]{ "Id" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag.Parser, new[]{ "Id", "Name", "Description", "Type", "Color" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationSsoSettings.Parser, new[]{ "Id", "EntityId", "LoginUrl", "AppFederationMetadataUrl", "IsActive" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails), global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails.Parser, new[]{ "Id", "TaxId", "TaxRatePercentage" }, null, null, null, null),
@@ -2898,204 +2897,6 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class Location : pb::IMessage<Location>
-  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      , pb::IBufferMessage
-  #endif
-  {
-    private static readonly pb::MessageParser<Location> _parser = new pb::MessageParser<Location>(() => new Location());
-    private pb::UnknownFieldSet _unknownFields;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<Location> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[6]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Location() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Location(Location other) : this() {
-      id_ = other.id_;
-      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public Location Clone() {
-      return new Location(this);
-    }
-
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 1;
-    private string id_ = "";
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public string Id {
-      get { return id_; }
-      set {
-        id_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override bool Equals(object other) {
-      return Equals(other as Location);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(Location other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (Id != other.Id) return false;
-      return Equals(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override int GetHashCode() {
-      int hash = 1;
-      if (Id.Length != 0) hash ^= Id.GetHashCode();
-      if (_unknownFields != null) {
-        hash ^= _unknownFields.GetHashCode();
-      }
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void WriteTo(pb::CodedOutputStream output) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      output.WriteRawMessage(this);
-    #else
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(output);
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      if (Id.Length != 0) {
-        output.WriteRawTag(10);
-        output.WriteString(Id);
-      }
-      if (_unknownFields != null) {
-        _unknownFields.WriteTo(ref output);
-      }
-    }
-    #endif
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public int CalculateSize() {
-      int size = 0;
-      if (Id.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Id);
-      }
-      if (_unknownFields != null) {
-        size += _unknownFields.CalculateSize();
-      }
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(Location other) {
-      if (other == null) {
-        return;
-      }
-      if (other.Id.Length != 0) {
-        Id = other.Id;
-      }
-      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(pb::CodedInputStream input) {
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-      input.ReadRawMessage(this);
-    #else
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-        }
-      }
-    #endif
-    }
-
-    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
-          default:
-            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
-            break;
-          case 10: {
-            Id = input.ReadString();
-            break;
-          }
-        }
-      }
-    }
-    #endif
-
-  }
-
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Tag : pb::IMessage<Tag>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -3110,7 +2911,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3456,7 +3257,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3802,7 +3603,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[9]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4074,7 +3875,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4762,7 +4563,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[11]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4997,7 +4798,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[12]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5250,7 +5051,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5522,7 +5323,7 @@ namespace Api.Shared.Clients.Events.Skedular.Organization.V1.Value {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[14]; }
+      get { return global::Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationV1ValueReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

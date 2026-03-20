@@ -11,7 +11,6 @@ using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Temporalio.Activities;
 using Customer = Organization.Shared.Models.Customer;
-using Location = Organization.Shared.Database.Entities.Location;
 using OrganizationMember = Organization.Shared.Models.OrganizationMember;
 using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
@@ -176,11 +175,7 @@ public class AzureTenantIntegrations(
             var customerId = randomHelper.Generate();
             customerIdsTenantMembersPair.Add((customerId, tenantMember));
             await customerServiceClient.Admin_AddAsync(
-                mapper.MapTo(
-                    tenantMember,
-                    customerId,
-                    new Database.Entities.Organization { Id = azureTenant.Organization.Id },
-                    getLocationsResponse.TotalCount == 1 ? [new Location { Id = getLocationsResponse.Edges.First().Node.Id }] : []),
+                mapper.MapTo(tenantMember, customerId, new Database.Entities.Organization { Id = azureTenant.Organization.Id }),
                 customerConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
         }

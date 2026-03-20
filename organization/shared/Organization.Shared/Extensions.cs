@@ -60,7 +60,6 @@ public static class Extensions
                 .AddScoped<IIdentityRepository, IdentityRepository>()
                 .AddScoped<IIndustryMainCategoryRepository, IndustryMainCategoryRepository>()
                 .AddScoped<IIndustrySubCategoryRepository, IndustrySubCategoryRepository>()
-                .AddScoped<ILocationRepository, LocationRepository>()
                 .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
                 .AddScoped<IOrganizationOfferingActiveMemberRepository, OrganizationOfferingActiveMemberRepository>()
                 .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()

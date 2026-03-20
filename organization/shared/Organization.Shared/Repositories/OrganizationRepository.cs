@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
-using Location = Organization.Shared.Database.Entities.Location;
+using IndustryMainCategory = Organization.Shared.Database.Entities.IndustryMainCategory;
 
 namespace Organization.Shared.Repositories;
 
@@ -39,7 +39,7 @@ internal static class OrganizationExtensions
 {
     extension(IQueryable<Database.Entities.Organization> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Organization, ICollection<Location>> AddDependentObjects(bool isTracked,
+        internal IIncludableQueryable<Database.Entities.Organization, IndustryMainCategory> AddDependentObjects(bool isTracked,
             bool includeAllOfferings)
         {
             var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
@@ -75,7 +75,6 @@ internal static class OrganizationExtensions
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod)
                     .Include(query => query.IndustrySubCategories)
                     .ThenInclude(query => query.IndustryMainCategory)
-                    .Include(query => query.Locations)
                 : updatedQuery
                     .Include(query => query.OrganizationOfferings
                         .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
@@ -89,8 +88,7 @@ internal static class OrganizationExtensions
                     .ThenInclude(query => query.OrganizationStripePaymentIntent)
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod)
                     .Include(query => query.IndustrySubCategories)
-                    .ThenInclude(query => query.IndustryMainCategory)
-                    .Include(query => query.Locations);
+                    .ThenInclude(query => query.IndustryMainCategory);
         }
 
         internal IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)

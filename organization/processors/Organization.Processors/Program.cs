@@ -40,10 +40,6 @@ public class Program
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
-                LocationSubscriber,
-                Key,
-                Event>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()

@@ -22,7 +22,6 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<IndustryMainCategory> IndustryMainCategory { get; set; }
     public DbSet<IndustrySubCategory> IndustrySubCategory { get; set; }
     public DbSet<JoinInvitation> JoinInvitation { get; set; }
-    public DbSet<Location> Location { get; set; }
     public DbSet<Entities.Organization> Organization { get; set; }
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }

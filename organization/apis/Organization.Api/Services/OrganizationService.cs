@@ -505,7 +505,6 @@ public class OrganizationService(
                 organization.OrganizationOfferings = [];
                 organization.DailyMemberCountRecordings = [];
                 organization.IndustrySubCategories = [];
-                organization.Locations = [];
                 organization.JoinInvitations = [];
                 organization.AzureTenants = [];
                 organization.OrganizationSsoSettings = null;
@@ -529,17 +528,21 @@ public class OrganizationService(
             organization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
 
-        mappedOrganization.CanModify = ignoreAuthorizationCheck ||
-                                       await organizationAuthorizationService.CanModifyAsync(organization, customer!.Id, cancellationToken);
-        mappedOrganization.CanDelete = ignoreAuthorizationCheck ||
-                                       await organizationAuthorizationService.CanDeleteAsync(organization, customer!.Id, cancellationToken);
-        mappedOrganization.CanInvitePeople = ignoreAuthorizationCheck ||
-                                             await organizationAuthorizationService.CanInvitePeopleAsync(organization, customer!.Id,
-                                                 cancellationToken);
-        mappedOrganization.CanViewAnalytics = ignoreAuthorizationCheck ||
-                                              await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customer!.Id,
-                                                  cancellationToken);
-        mappedOrganization.HasLocation = organization.Locations.Count != 0;
+        mappedOrganization.CanModify = ignoreAuthorizationCheck || await organizationAuthorizationService.CanModifyAsync(
+            organization,
+            customer!.Id,
+            cancellationToken);
+        mappedOrganization.CanDelete = ignoreAuthorizationCheck || await organizationAuthorizationService.CanDeleteAsync(
+            organization,
+            customer!.Id,
+            cancellationToken);
+        mappedOrganization.CanInvitePeople = ignoreAuthorizationCheck || await organizationAuthorizationService.CanInvitePeopleAsync(
+            organization,
+            customer!.Id,
+            cancellationToken);
+        mappedOrganization.CanViewAnalytics = ignoreAuthorizationCheck || await organizationAuthorizationService.CanViewAnalyticsAsync(
+            organization, customer!.Id,
+            cancellationToken);
 
         var now = timeProvider.GetUtcNow();
         mappedOrganization.HasFutureBooking = await repositoryFactory.BookingRepository

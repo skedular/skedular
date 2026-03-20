@@ -10,7 +10,6 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Workflows;
-using Location = Organization.Shared.Database.Entities.Location;
 using LocationConfiguration = Api.Shared.Clients.Configurations.Grpc.LocationConfiguration;
 
 namespace Organization.Api.Services;
@@ -39,7 +38,6 @@ public class AzureTenantOnboardingService(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var location = new Location { Id = randomHelper.Generate() };
         var start = timeProvider.GetUtcNow();
         var organizationOffering = new OrganizationOffering
         {
@@ -59,7 +57,6 @@ public class AzureTenantOnboardingService(
             Type = OrganizationTypeConstants.Private,
             IsOwnershipVerified = false,
             TermsOfUse = await organizationTermsOfUseService.GetActiveTermsOfUseEntityAsync(cancellationToken),
-            Locations = [location],
             OrganizationOfferings = [organizationOffering]
         };
         var azureTenant = new AzureTenant
@@ -71,7 +68,7 @@ public class AzureTenantOnboardingService(
         var tenant = repositoryFactory.AzureTenantRepository.Add(azureTenant);
 
         await locationServiceClient.Admin_AddAsync(
-            new Admin_AddInput { Id = location.Id, Name = "Office", OrganizationId = organization.Id },
+            new Admin_AddInput { Id = randomHelper.Generate(), Name = "Office", OrganizationId = organization.Id },
             locationConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 

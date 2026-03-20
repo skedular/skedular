@@ -4,7 +4,6 @@ using Organization.Shared.Models;
 using Stripe;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
-using Location = Organization.Shared.Models.Location;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
@@ -17,7 +16,6 @@ namespace Organization.Processors.Mappers;
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MergeToEntity(
@@ -31,11 +29,6 @@ public interface IMapper
         Identity src,
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
-
-    Shared.Database.Entities.Location MergeToEntity(
-        Location src,
-        Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
@@ -80,22 +73,6 @@ public class Mapper : IMapper
             Identities = customer.Identities
                 .Select(item => new Identity { Id = item.Id, Email = item.Email.ToSafeString(), EmailVerified = item.EmailVerified })
                 .ToList()
-        };
-    }
-
-
-    public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
-    {
-        var location = src.Data.Location;
-        var deletedAt = location.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Location
-        {
-            Id = location.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Organization = new Shared.Models.Organization { Id = location.OrganizationId }
         };
     }
 
@@ -158,17 +135,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Location MergeToEntity(
-        Location src,
-        Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Organization = organization;
-        return dest;
-    }
-
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
@@ -210,7 +176,6 @@ public class Mapper : IMapper
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
-        organization.Locations = MapTo(src.Locations, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -385,20 +350,6 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Name = src.Name
-        };
-
-    private static IEnumerable<Location> MapTo(IEnumerable<Shared.Database.Entities.Location> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
         };
 
     private static IEnumerable<JoinInvitation> MapTo(

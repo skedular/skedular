@@ -19,7 +19,6 @@ public interface IRepositoryFactory
     IIdentityRepository IdentityRepository { get; }
     IIndustryMainCategoryRepository IndustryMainCategoryRepository { get; }
     IIndustrySubCategoryRepository IndustrySubCategoryRepository { get; }
-    ILocationRepository LocationRepository { get; }
     IOrganizationMemberRepository OrganizationMemberRepository { get; }
     IOrganizationOfferingActiveMemberRepository OrganizationOfferingActiveMemberRepository { get; }
     IOrganizationOfferingRepository OrganizationOfferingRepository { get; }
@@ -55,7 +54,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         IndustryMainCategoryRepository = new IndustryMainCategoryRepository(_dbContext, timeProvider);
         IndustrySubCategoryRepository = new IndustrySubCategoryRepository(_dbContext, timeProvider);
-        LocationRepository = new LocationRepository(_dbContext, timeProvider);
         OrganizationMemberRepository = new OrganizationMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingActiveMemberRepository = new OrganizationOfferingActiveMemberRepository(_dbContext, timeProvider);
         OrganizationOfferingRepository = new OrganizationOfferingRepository(_dbContext, timeProvider);
@@ -86,7 +84,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IIdentityRepository IdentityRepository { get; }
     public IIndustryMainCategoryRepository IndustryMainCategoryRepository { get; }
     public IIndustrySubCategoryRepository IndustrySubCategoryRepository { get; }
-    public ILocationRepository LocationRepository { get; }
     public IOrganizationMemberRepository OrganizationMemberRepository { get; }
     public IOrganizationOfferingActiveMemberRepository OrganizationOfferingActiveMemberRepository { get; }
     public IOrganizationOfferingRepository OrganizationOfferingRepository { get; }

@@ -775,7 +775,6 @@ type OrganizationDetails {
   featureImages: [CdnImageFile!]!
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
-  hasLocation: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isMyOnboardingDone: Boolean!
