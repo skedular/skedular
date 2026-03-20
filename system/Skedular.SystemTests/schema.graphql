@@ -652,6 +652,21 @@ type Mutation {
   updateZone(input: UpdateZoneInput!): OrganizationTagPayload! @cost(weight: "10")
 }
 
+type MyOrganizationDetails {
+  contactEmail: String
+  contactPhone: String
+  customDomain: String
+  customerFacingTermsAndConditionsUrl: String
+  featureImages: [CdnImageFile!]!
+  isMyOnboardingDone: Boolean!
+  listingMetadata: ListingMetadata!
+  logoUrl: String
+  name: String!
+  type: OrganizationTypeDetails!
+  uniqueId: String!
+  website: String
+}
+
 type OpeningHours {
   closedDates: [DateTime!]!
   datesWithVariedOpeningHours: [VariedDateOpeningHours!]!
@@ -1176,7 +1191,7 @@ type Query {
   myInvitationsToJoinOrganizations(after: String before: String first: Int last: Int orderBy: [JoinOrganizationInvitationOrderInput!] where: MyInvitationsToJoinOrganizationsWhereInput!): ConnectionOfOrganizationJoinInvitationEdge! @cost(weight: "10")
   myInvitationsToJoinTeams(after: String before: String first: Int last: Int orderBy: [JoinTeamInvitationOrderInput!] where: MyInvitationsToJoinTeamsWhereInput): ConnectionOfTeamJoinInvitationEdge! @cost(weight: "10")
   myLocations(organizationCustomDomain: String organizationId: String): [LocationDetails!] @cost(weight: "10")
-  myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
+  myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
   myTeams(organizationCustomDomain: String organizationId: String): [TeamDetails!]! @cost(weight: "10")
   organization(customDomain: String id: String): OrganizationDetails @cost(weight: "10")
   organizationBankAccount(id: String!): OrganizationBankAccountDetails @cost(weight: "10")

@@ -315,17 +315,8 @@ public class OrganizationService(
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organizationIds = await repositoryFactory.OrganizationRepository.GetOrganizationIdsByCustomerIdUntrackedAsync(customer.Id, cancellationToken);
 
-        var result = new List<Shared.Models.Organization>();
-        foreach (var organizationId in organizationIds)
-        {
-            var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
-                               throw new OrganizationNotFound();
-            result.Add(await EnrichOrganizationAsync(customer, organization, false, cancellationToken));
-        }
-
-        return result;
+        return mapper.MapTo(await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customer.Id, cancellationToken)).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(

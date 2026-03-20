@@ -62,12 +62,10 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
           photoUrl
         }
         myOrganizations {
-          id
+          uniqueId
           customDomain
           logoUrl
           name
-          canModify
-          canViewAnalytics
         }
         pendingOrganizationInvitationsCount
         pendingTeamInvitationsCount
@@ -223,7 +221,7 @@ const NoOrganizationAppBar = ({ rootDataRelay, hideOrganizationSelector, hideWel
               }}
             >
               {rootData.myOrganizations.map((organization) => (
-                <MenuItem key={organization.id} value={organization.customDomain ?? ''}>
+                <MenuItem key={organization.uniqueId} value={organization.customDomain ?? ''}>
                   <StackRow>
                     <OrganizationAvatar name={{ name: organization.name }} photo={{ url: organization.logoUrl }} />
                     <StackColumn spacing={-0.5}>

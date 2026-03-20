@@ -24,27 +24,20 @@ public class OrganizationDetails : Node
     [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
-    [GraphQLName("customerFacingTermsAndConditionsUrl")] public string? CustomerFacingTermsAndConditionsUrl { get; set; }
+
+    [GraphQLName("customerFacingTermsAndConditionsUrl")]
+    public string? CustomerFacingTermsAndConditionsUrl { get; set; }
+
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
     [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
-
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
-
-    [GraphQLName("industrySubCategories")]
-    public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
-
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
     [GraphQLName("isOwnershipVerified")] public bool IsOwnershipVerified { get; set; }
-
-    [GraphQLName("stripeAuthorizeExistingConnectAccountUrl")]
-    public string StripeAuthorizeExistingConnectAccountUrl { get; set; } = string.Empty;
-
     [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }
-
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
@@ -57,14 +50,19 @@ public class OrganizationDetails : Node
     [GraphQLName("locationSpaceTypes")] public IEnumerable<OrganizationTagDetails> LocationSpaceTypes { get; set; } = [];
     [GraphQLName("amenities")] public IEnumerable<OrganizationTagDetails> Amenities { get; set; } = [];
     [GraphQLName("paymentMethods")] public IEnumerable<OrganizationPaymentMethod> PaymentMethods { get; set; } = [];
-
-    [GraphQLName("hasAttachedPaymentMethod")]
-    public bool HasAttachedPaymentMethod { get; set; }
-
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
+
+    [GraphQLName("industrySubCategories")]
+    public IEnumerable<OrganizationIndustrySubCategoryReferenceDetails> IndustrySubCategories { get; set; } = [];
+
+    [GraphQLName("stripeAuthorizeExistingConnectAccountUrl")]
+    public string StripeAuthorizeExistingConnectAccountUrl { get; set; } = string.Empty;
+
+    [GraphQLName("hasAttachedPaymentMethod")]
+    public bool HasAttachedPaymentMethod { get; set; }
 
     [GraphQLName("marketplaceListingMetadata")]
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;

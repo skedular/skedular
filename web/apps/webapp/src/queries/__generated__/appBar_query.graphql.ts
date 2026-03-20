@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3047c0aeaca82d659632fce29256acbc>>
+ * @generated SignedSource<<26f17a0775ac17ed9da18ccb2fb80989>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,12 +21,10 @@ export type appBar_query$data = {
     readonly photoUrl: string | null | undefined;
   };
   readonly myOrganizations: ReadonlyArray<{
-    readonly canModify: boolean;
-    readonly canViewAnalytics: boolean;
     readonly customDomain: string | null | undefined;
-    readonly id: string;
     readonly logoUrl: string | null | undefined;
     readonly name: string;
+    readonly uniqueId: string;
   }>;
   readonly pendingOrganizationInvitationsCount: number;
   readonly pendingTeamInvitationsCount: number;
@@ -38,15 +36,7 @@ export type appBar_query$key = {
   readonly " $fragmentSpreads": FragmentRefs<"appBar_query">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -60,7 +50,13 @@ return {
       "name": "me",
       "plural": false,
       "selections": [
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -109,12 +105,18 @@ return {
     {
       "alias": null,
       "args": null,
-      "concreteType": "OrganizationDetails",
+      "concreteType": "MyOrganizationDetails",
       "kind": "LinkedField",
       "name": "myOrganizations",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "uniqueId",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -134,20 +136,6 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "name",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canModify",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "canViewAnalytics",
           "storageKey": null
         }
       ],
@@ -181,8 +169,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "d365b2fff780082baf562b3cbbe139b6";
+(node as any).hash = "a7fdf3aaf680a3cc99bb347b52c278a7";
 
 export default node;

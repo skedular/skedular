@@ -106,7 +106,7 @@ public class RootQuery(IMapper mapper)
     }
 
     [UseResolverScope]
-    public async Task<IEnumerable<OrganizationDetails>> MyOrganizationsAsync(
+    public async Task<IEnumerable<MyOrganizationDetails>> MyOrganizationsAsync(
         [Service] ICachedCustomerService cachedCustomerService,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>

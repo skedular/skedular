@@ -66,6 +66,7 @@ namespace Organization.Api.Mappers;
 
 public interface IMapper
 {
+    IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Shared.Database.Entities.Organization> src);
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl);
     OrganizationMember MapTo(Shared.Database.Entities.OrganizationMember src, Shared.Models.Organization organization);
     JoinInvitation MapTo(Shared.Database.Entities.JoinInvitation src);
@@ -85,7 +86,7 @@ public interface IMapper
     IEnumerable<IndustryMainCategory> MapTo(IEnumerable<Shared.Database.Entities.IndustryMainCategory> src);
     OrganizationTermsOfUse? MapTo(Shared.Models.TermsOfUse? src);
     IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src);
-    IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src);
+    IEnumerable<MyOrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src);
     OrganizationMemberDetails MapTo(OrganizationMember src);
     OrganizationDetails? MapTo(Shared.Models.Organization? src);
     OrganizationPublicDetails? MapToPublic(Shared.Models.Organization? src);
@@ -222,6 +223,9 @@ public interface IMapper
 
 public class Mapper : IMapper
 {
+    public IEnumerable<Shared.Models.Organization> MapTo(IEnumerable<Shared.Database.Entities.Organization> src) =>
+        src.Select(item => MapTo(item, Constants.EmptyUri));
+
     public Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src, Uri stripeAuthorizeExistingConnectAccountUrl)
     {
         var organization = new Shared.Models.Organization
@@ -389,7 +393,7 @@ public class Mapper : IMapper
 
     public IEnumerable<OrganizationIndustryMainCategoryReferenceDetails> MapTo(IEnumerable<IndustryMainCategory> src) => src.Select(MapTo);
 
-    public IEnumerable<OrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapTo)!;
+    public IEnumerable<MyOrganizationDetails> MapTo(IEnumerable<Shared.Models.Organization> src) => src.Select(MapToMyOrganizationDetails);
 
     public OrganizationDetails? MapTo(Shared.Models.Organization? src)
     {
@@ -2089,4 +2093,21 @@ public class Mapper : IMapper
 
         return listingMetadata;
     }
+
+    private static MyOrganizationDetails MapToMyOrganizationDetails(Shared.Models.Organization src) =>
+        new()
+        {
+            Id = src.Id,
+            CustomDomain = src.CustomDomain,
+            Name = src.Name,
+            ListingMetadata = src.ListingMetadata,
+            Website = src.Website,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
+            LogoUrl = src.LogoUrl,
+            Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            FeatureImages = src.FeatureImages,
+            IsMyOnboardingDone = src.IsMyOnboardingDone
+        };
 }

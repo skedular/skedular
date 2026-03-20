@@ -141,6 +141,21 @@ type Mutation {
   removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
 }
 
+type MyOrganizationDetails {
+  uniqueId: String!
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+  type: OrganizationTypeDetails!
+  contactEmail: String
+  contactPhone: String
+  isMyOnboardingDone: Boolean!
+  featureImages: [CdnImageFile!]!
+  listingMetadata: ListingMetadata!
+}
+
 type OrganizationActiveOfferingDetails {
   code: String!
   isEnterprise: Boolean!
@@ -235,11 +250,9 @@ type OrganizationDetails {
   billingCycle: OrganizationBillingCycleDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
-  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   contactEmail: String
   contactPhone: String
   isOwnershipVerified: Boolean!
-  stripeAuthorizeExistingConnectAccountUrl: String!
   physicalAddress: OrganizationPhysicalAddressDetails
   billingDetails: OrganizationBillingDetails
   availableOfferings: [OrganizationOfferingDetails!]!
@@ -254,11 +267,13 @@ type OrganizationDetails {
   locationSpaceTypes: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
   paymentMethods: [OrganizationPaymentMethod!]!
-  hasAttachedPaymentMethod: Boolean!
   ssoSettings: OrganizationSsoSettingsDetails
   taxDetails: OrganizationTaxDetails
   featureImages: [CdnImageFile!]!
   listingMetadata: ListingMetadata!
+  industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  stripeAuthorizeExistingConnectAccountUrl: String!
+  hasAttachedPaymentMethod: Boolean!
   marketplaceListingMetadata: ListingMetadata!
   id: ID!
 }
@@ -511,7 +526,7 @@ type Query {
   organizationPublic(id: String customDomain: String): OrganizationPublicDetails @cost(weight: "10")
   organizationById(id: String!): OrganizationDetails @lookup @internal @cost(weight: "10")
   organizations(after: String first: Int before: String last: Int where: OrganizationWhereInput! orderBy: [OrganizationOrderInput!]): ConnectionOfOrganizationEdge! @cost(weight: "10")
-  myOrganizations: [OrganizationDetails!]! @cost(weight: "10")
+  myOrganizations: [MyOrganizationDetails!]! @cost(weight: "10")
   organizationVersion: Version!
   bookingSlotSizeInMinutes: Int!
   resourceTypes: [OrganizationTagTypeDetails!]!

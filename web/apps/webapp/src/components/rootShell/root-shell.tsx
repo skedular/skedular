@@ -39,9 +39,6 @@ const RootQuery = graphql`
       id
       isOnboardingDone
     }
-    myOrganizations {
-      id
-    }
     bookingCustomerRecordSynced
     locationCustomerRecordSynced
     marketplaceCustomerRecordSynced
