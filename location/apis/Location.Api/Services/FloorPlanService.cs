@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
@@ -267,11 +268,15 @@ public class FloorPlanService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(searchCriteria.LocationId);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
         var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+
+        if (existingLocation.Type != LocationTypeConstants.Marketplace)
         {
-            throw new UnauthorizedAccessException();
+            var customer = await cachedCustomerService.GetAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.FloorPlanRepository.GetPaginatedFloorPlansAsync(

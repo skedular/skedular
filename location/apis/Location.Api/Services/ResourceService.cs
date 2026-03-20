@@ -406,11 +406,15 @@ public class ResourceService(
         ICollection<ResourceOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var location = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken))
+        var existingLocation = await cachedLocationService.GetByIdAsync(searchCriteria.LocationId, cancellationToken) ?? throw new LocationNotFound();
+
+        if (existingLocation.Type != LocationTypeConstants.Marketplace)
         {
-            throw new UnauthorizedAccessException();
+            var customer = await cachedCustomerService.GetAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.ResourceRepository.GetPaginatedResourcesAsync(
@@ -419,7 +423,7 @@ public class ResourceService(
             orderByFields,
             cancellationToken);
 
-        return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(location)).ToList(), totalCount);
+        return (paginatedInfo, mapper.MapTo(edges, mapper.MapTo(existingLocation)).ToList(), totalCount);
     }
 
     private async Task<Resource> UpdateInternalAsync(
