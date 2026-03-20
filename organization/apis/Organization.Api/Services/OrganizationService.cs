@@ -506,7 +506,6 @@ public class OrganizationService(
                 organization.DailyMemberCountRecordings = [];
                 organization.IndustrySubCategories = [];
                 organization.Locations = [];
-                organization.Teams = [];
                 organization.JoinInvitations = [];
                 organization.AzureTenants = [];
                 organization.OrganizationSsoSettings = null;
@@ -541,7 +540,6 @@ public class OrganizationService(
                                               await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customer!.Id,
                                                   cancellationToken);
         mappedOrganization.HasLocation = organization.Locations.Count != 0;
-        mappedOrganization.HasTeam = organization.Teams.Count != 0;
 
         var now = timeProvider.GetUtcNow();
         mappedOrganization.HasFutureBooking = await repositoryFactory.BookingRepository

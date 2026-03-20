@@ -43,7 +43,6 @@ using OrganizationMemberAttendancePercentage = Organization.Shared.Models.Organi
 using OrganizationMemberStatus = Api.Shared.Services.Models.OrganizationMemberStatus;
 using OrganizationOffering = Organization.Shared.Models.OrganizationOffering;
 using Tag = Organization.Shared.Models.Tag;
-using Team = Organization.Shared.Models.Team;
 using TermsOfUse = Organization.Shared.Database.Entities.TermsOfUse;
 using UpdateCustomTagInput = Organization.Api.GraphQL.Tag.UpdateCustomTagInput;
 using UpdateZoneInput = Api.Shared.Services.Grpc.Skedular.Organization.V1.UpdateZoneInput;
@@ -257,7 +256,6 @@ public class Mapper : IMapper
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
         organization.Locations = MapTo(src.Locations, organization).ToList();
-        organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.AzureTenants = MapTo(src.AzureTenants, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
@@ -455,7 +453,6 @@ public class Mapper : IMapper
             CanInvitePeople = src.CanInvitePeople,
             CanViewAnalytics = src.CanViewAnalytics,
             HasLocation = src.HasLocation,
-            HasTeam = src.HasTeam,
             HasFutureBooking = src.HasFutureBooking,
             IsMyOnboardingDone = src.IsMyOnboardingDone,
             ResourceTypes = src.Tags
@@ -1668,20 +1665,6 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, organization));
 
     private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
-        };
-
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Team MapTo(Shared.Database.Entities.Team src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,

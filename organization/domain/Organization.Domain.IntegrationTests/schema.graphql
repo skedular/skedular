@@ -246,7 +246,6 @@ type OrganizationDetails {
   activeOffering: OrganizationActiveOfferingDetails!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
-  hasTeam: Boolean!
   canModify: Boolean!
   canDelete: Boolean!
   canInvitePeople: Boolean!

@@ -24,7 +24,6 @@ using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
 using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
 using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
-using Team = Organization.Shared.Models.Team;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
@@ -188,7 +187,6 @@ public class Mapper : IMapper
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
         organization.Locations = MapTo(src.Locations, organization).ToList();
-        organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -458,20 +456,6 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, organization));
 
     private static Location MapTo(Database.Entities.Location src, Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
-        };
-
-    private static IEnumerable<Team> MapTo(IEnumerable<Database.Entities.Team> src, Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Team MapTo(Database.Entities.Team src, Models.Organization organization) =>
         new()
         {
             Id = src.Id,

@@ -65,7 +65,6 @@ public static class Extensions
                 .AddScoped<IOrganizationOfferingActiveMemberRepository, OrganizationOfferingActiveMemberRepository>()
                 .AddScoped<IOrganizationOfferingRepository, OrganizationOfferingRepository>()
                 .AddScoped<IOrganizationRepository, OrganizationRepository>()
-                .AddScoped<ITeamRepository, TeamRepository>()
                 .AddScoped<ITermsOfUseRepository, TermsOfUseRepository>()
                 .AddScoped<ITagRepository, TagRepository>()
                 .AddScoped<IOrganizationStripeCustomerRepository, OrganizationOrganizationStripeCustomerRepository>()

@@ -30,7 +30,6 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
     public ICollection<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
     public ICollection<Location> Locations { get; set; } = [];
-    public ICollection<Team> Teams { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public ICollection<Tag> Tags { get; set; } = [];
@@ -46,7 +45,6 @@ public class Organization : ModelBaseWithDeleted
 
     public bool HasFutureBooking { get; set; }
     public bool HasLocation { get; set; }
-    public bool HasTeam { get; set; }
     public bool CanModify { get; set; }
     public bool CanDelete { get; set; }
     public bool CanInvitePeople { get; set; }

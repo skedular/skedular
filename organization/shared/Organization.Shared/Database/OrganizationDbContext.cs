@@ -27,7 +27,6 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<OrganizationMember> OrganizationMember { get; set; }
     public DbSet<OrganizationOffering> OrganizationOffering { get; set; }
     public DbSet<OrganizationOfferingActiveMember> OrganizationOfferingActiveMember { get; set; }
-    public DbSet<Team> Team { get; set; }
     public DbSet<TermsOfUse> TermsOfUse { get; set; }
     public DbSet<Tag> Tag { get; set; }
     public DbSet<OrganizationStripeCustomer> OrganizationStripeCustomer { get; set; }

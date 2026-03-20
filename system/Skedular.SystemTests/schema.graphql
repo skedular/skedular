@@ -776,7 +776,6 @@ type OrganizationDetails {
   hasAttachedPaymentMethod: Boolean!
   hasFutureBooking: Boolean!
   hasLocation: Boolean!
-  hasTeam: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isMyOnboardingDone: Boolean!

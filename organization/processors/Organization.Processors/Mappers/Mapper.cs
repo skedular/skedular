@@ -5,7 +5,6 @@ using Stripe;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
 using Location = Organization.Shared.Models.Location;
-using Team = Organization.Shared.Models.Team;
 using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
@@ -19,7 +18,6 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
-    Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src);
     Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MergeToEntity(
@@ -37,11 +35,6 @@ public interface IMapper
     Shared.Database.Entities.Location MergeToEntity(
         Location src,
         Shared.Database.Entities.Location dest,
-        Shared.Database.Entities.Organization organization);
-
-    Shared.Database.Entities.Team MergeToEntity(
-        Team src,
-        Shared.Database.Entities.Team dest,
         Shared.Database.Entities.Organization organization);
 
     Shared.Database.Entities.Booking MergeToEntity(
@@ -103,21 +96,6 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             Organization = new Shared.Models.Organization { Id = location.OrganizationId }
-        };
-    }
-
-    public Team MapTo(Api.Shared.Clients.Events.Skedular.Team.V1.Value.Event src)
-    {
-        var team = src.Data.Team;
-        var deletedAt = team.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Team
-        {
-            Id = team.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            Organization = new Shared.Models.Organization { Id = team.OrganizationId }
         };
     }
 
@@ -191,17 +169,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    public Shared.Database.Entities.Team MergeToEntity(
-        Team src,
-        Shared.Database.Entities.Team dest,
-        Shared.Database.Entities.Organization organization)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.Organization = organization;
-        return dest;
-    }
-
     public Shared.Database.Entities.Booking MergeToEntity(
         Booking src,
         Shared.Database.Entities.Booking dest,
@@ -244,7 +211,6 @@ public class Mapper : IMapper
         organization.OrganizationOfferings = MapTo(src.OrganizationOfferings, organization).ToList();
         organization.DailyMemberCountRecordings = MapTo(src.DailyMemberCountRecordings, organization).ToList();
         organization.Locations = MapTo(src.Locations, organization).ToList();
-        organization.Teams = MapTo(src.Teams, organization).ToList();
         organization.JoinInvitations = MapTo(src.JoinInvitations, organization).ToList();
         organization.Tags = MapTo(src.Tags, organization).ToList();
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
@@ -425,20 +391,6 @@ public class Mapper : IMapper
         src.Select(item => MapTo(item, organization));
 
     private static Location MapTo(Shared.Database.Entities.Location src, Shared.Models.Organization organization) =>
-        new()
-        {
-            Id = src.Id,
-            CreatedAt = src.CreatedAt,
-            DeletedAt = src.DeletedAt,
-            ModifiedAt = src.ModifiedAt,
-            EventRaisedAt = src.EventRaisedAt,
-            Organization = organization
-        };
-
-    private static IEnumerable<Team> MapTo(IEnumerable<Shared.Database.Entities.Team> src, Shared.Models.Organization organization) =>
-        src.Select(item => MapTo(item, organization));
-
-    private static Team MapTo(Shared.Database.Entities.Team src, Shared.Models.Organization organization) =>
         new()
         {
             Id = src.Id,

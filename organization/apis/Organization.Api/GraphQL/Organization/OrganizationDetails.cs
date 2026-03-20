@@ -49,7 +49,6 @@ public class OrganizationDetails : Node
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();
     [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("hasLocation")] public bool HasLocation { get; set; }
-    [GraphQLName("hasTeam")] public bool HasTeam { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }

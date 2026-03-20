@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Organization.Shared.Database;
 using Organization.Shared.Models;
-using Team = Organization.Shared.Database.Entities.Team;
+using Location = Organization.Shared.Database.Entities.Location;
 
 namespace Organization.Shared.Repositories;
 
@@ -39,7 +39,8 @@ internal static class OrganizationExtensions
 {
     extension(IQueryable<Database.Entities.Organization> originalQuery)
     {
-        internal IIncludableQueryable<Database.Entities.Organization, ICollection<Team>> AddDependentObjects(bool isTracked, bool includeAllOfferings)
+        internal IIncludableQueryable<Database.Entities.Organization, ICollection<Location>> AddDependentObjects(bool isTracked,
+            bool includeAllOfferings)
         {
             var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
                 .Include(query => query.OrganizationSsoSettings)
@@ -75,7 +76,6 @@ internal static class OrganizationExtensions
                     .Include(query => query.IndustrySubCategories)
                     .ThenInclude(query => query.IndustryMainCategory)
                     .Include(query => query.Locations)
-                    .Include(query => query.Teams)
                 : updatedQuery
                     .Include(query => query.OrganizationOfferings
                         .Where(organizationOffering => !organizationOffering.DeletedAt.HasValue)
@@ -90,8 +90,7 @@ internal static class OrganizationExtensions
                     .ThenInclude(query => query!.OrganizationStripePaymentMethod)
                     .Include(query => query.IndustrySubCategories)
                     .ThenInclude(query => query.IndustryMainCategory)
-                    .Include(query => query.Locations)
-                    .Include(query => query.Teams);
+                    .Include(query => query.Locations);
         }
 
         internal IQueryable<Database.Entities.Organization> AddSearchCriteria(OrganizationSearchCriteria searchCriteria)
