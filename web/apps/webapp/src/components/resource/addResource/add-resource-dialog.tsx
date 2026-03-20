@@ -328,6 +328,10 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain
   const [, startTransition] = useTransition();
 
   useEffect(() => {
+    if (!isDialogOpen) {
+      return;
+    }
+
     loadQuery(
       {
         organizationCustomDomain,
@@ -360,7 +364,7 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain
         fetchPolicy: 'store-and-network',
       },
     );
-  }, [loadQuery, triggerReloadId, organizationCustomDomain]);
+  }, [isDialogOpen, loadQuery, triggerReloadId, organizationCustomDomain]);
 
   const handleReloadRequired = () => {
     startTransition(() => {
@@ -371,6 +375,10 @@ const AddResourceDialogWithRelay = ({ onReloadRequired, organizationCustomDomain
       }
     });
   };
+
+  if (!isDialogOpen) {
+    return null;
+  }
 
   if (!queryReference) {
     return <Loading />;

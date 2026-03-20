@@ -197,14 +197,16 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
         </Box>
       </Box>
 
-      <AddResourceDialog
-        onReloadRequired={onReloadRequired}
-        organizationCustomDomain={organizationCustomDomain}
-        connectionIds={[]}
-        isDialogOpen={isAddResourceDialogOpen}
-        onAddClicked={handleAddResourceClicked}
-        onCancel={handleCancelAddResourceClicked}
-      />
+      {isAddResourceDialogOpen && (
+        <AddResourceDialog
+          onReloadRequired={onReloadRequired}
+          organizationCustomDomain={organizationCustomDomain}
+          connectionIds={[]}
+          isDialogOpen={isAddResourceDialogOpen}
+          onAddClicked={handleAddResourceClicked}
+          onCancel={handleCancelAddResourceClicked}
+        />
+      )}
 
       <InvitePeopleToJoinOrganizationDialog
         isDialogOpen={isInvitePeopleToJoinOrganizationDialogOpen}

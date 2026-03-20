@@ -42,15 +42,17 @@ const AddResourceButton = ({ onReloadRequired, locationId, organizationCustomDom
         {size === 'medium' && <BodyIconTypography label={label ?? 'Add Resource'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'medium'} />} />}
         {(size === 'large' || !size) && <LeadIconTypography label={label ?? 'Add Resource'} endElement={hideIcon ? null : <NewIcon fontSize={size ?? 'large'} />} />}
       </Button>
-      <AddResourceDialog
-        onReloadRequired={onReloadRequired}
-        organizationCustomDomain={organizationCustomDomain}
-        locationId={locationId}
-        connectionIds={connectionIds}
-        isDialogOpen={isDialogOpen}
-        onAddClicked={handleAddClicked}
-        onCancel={handleCancelClicked}
-      />
+      {isDialogOpen && (
+        <AddResourceDialog
+          onReloadRequired={onReloadRequired}
+          organizationCustomDomain={organizationCustomDomain}
+          locationId={locationId}
+          connectionIds={connectionIds}
+          isDialogOpen={isDialogOpen}
+          onAddClicked={handleAddClicked}
+          onCancel={handleCancelClicked}
+        />
+      )}
     </>
   );
 };
