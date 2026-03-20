@@ -16,8 +16,8 @@ type Props = {
 };
 
 const RootQuery = graphql`
-  query pageMarketplaceLocation_rootQuery($locationId: String!) {
-    ...marketplaceLocation_query
+  query pageMarketplaceLocation_rootQuery($locationId: String!, $selectedFloorPlanId: String, $floorPlanSelected: Boolean!) {
+    ...marketplaceLocation_query @arguments(locationId: $locationId, selectedFloorPlanId: $selectedFloorPlanId, floorPlanSelected: $floorPlanSelected)
   }
 `;
 
@@ -77,6 +77,8 @@ const RootPageWithRelay = () => {
     loadQuery(
       {
         locationId,
+        selectedFloorPlanId: null,
+        floorPlanSelected: false,
       },
       {
         fetchPolicy: 'store-and-network',

@@ -1,10 +1,14 @@
-import { AreaIcon, ArrowLeftIcon, CheckIcon, ContactEmailIcon, ContactPhoneIcon, LocationIcon, OpeningHoursIcon, PersonIcon } from '@/components/icons';
+import { AreaIcon, ArrowLeftIcon, CheckIcon, ContactEmailIcon, ContactPhoneIcon, DeskIcon, LocationIcon, OpeningHoursIcon, ParkingIcon, PersonIcon, RoomIcon } from '@/components/icons';
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
-import { useKnownParams } from '@/libs/providers';
+import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
+import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import '@/styles/leaflet/leaflet.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -15,7 +19,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import type { LatLngTuple } from 'leaflet';
 import { useRouter } from 'next/navigation';
 import { memo, type ReactNode, useEffect, useMemo, useState } from 'react';
-import { graphql, useFragment } from 'react-relay';
+import { graphql, useRefetchableFragment } from 'react-relay';
 
 let L: typeof import('leaflet');
 let MapContainer: typeof import('react-leaflet').MapContainer;
@@ -32,6 +36,14 @@ type PricingRow = {
   cadenceLabel: string;
   id: string;
   taxLabel: string;
+  title: string;
+};
+
+type FloorPlanProduct = {
+  id: string;
+  pricingRows: (PricingRow & { bookingLabel: string })[];
+  productTagIds: string[];
+  subTitle: string;
   title: string;
 };
 
@@ -82,6 +94,22 @@ const formatOpeningHours = ({ closed, from, openAllDay, until }: OpeningHoursDay
 
 const getFirstPopulatedValue = (values: readonly string[] | null | undefined) => values?.find((value) => value.trim().length > 0) ?? null;
 
+const getResourceTypeIcon = (resourceTypeTagType: string | null | undefined, deskResourceType: string, roomResourceType: string, parkingResourceType: string) => {
+  if (resourceTypeTagType === deskResourceType) {
+    return DeskIcon;
+  }
+
+  if (resourceTypeTagType === roomResourceType) {
+    return RoomIcon;
+  }
+
+  if (resourceTypeTagType === parkingResourceType) {
+    return ParkingIcon;
+  }
+
+  return DeskIcon;
+};
+
 const InfoRow = ({ icon, label, children }: { icon: ReactNode; label: string; children: ReactNode }) => (
   <Box sx={{ display: 'flex', gap: 1.75, alignItems: 'flex-start' }}>
     <Box sx={{ mt: 0.25, color: 'text.secondary', display: 'flex' }}>{icon}</Box>
@@ -93,12 +121,40 @@ const InfoRow = ({ icon, label, children }: { icon: ReactNode; label: string; ch
 );
 
 const MarketplaceLocation = ({ rootDataRelay }: Props) => {
-  const rootData = useFragment<marketplaceLocation_query$key>(
+  const [rootData, refetch] = useRefetchableFragment<marketplaceLocation_refetchableFragment, marketplaceLocation_query$key>(
     graphql`
-      fragment marketplaceLocation_query on Query {
+      fragment marketplaceLocation_query on Query
+      @argumentDefinitions(locationId: { type: "String!" }, selectedFloorPlanId: { type: "String" }, floorPlanSelected: { type: "Boolean", defaultValue: false })
+      @refetchable(queryName: "marketplaceLocation_refetchableFragment") {
         productPricingCadences {
           type
           name
+        }
+        deskResourceType
+        roomResourceType
+        parkingResourceType
+        floorPlans(where: { locationId: $locationId }, orderBy: [{ direction: ASCENDING, field: NAME }]) {
+          edges {
+            node {
+              id
+              name
+              resourceCount
+              image {
+                original {
+                  url
+                  height
+                  width
+                }
+              }
+              resourcePositions {
+                x
+                y
+                resource {
+                  id
+                }
+              }
+            }
+          }
         }
         currencies {
           type
@@ -202,6 +258,9 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               title
               subTitle
             }
+            productTags {
+              id
+            }
             featureImages {
               original {
                 url
@@ -226,6 +285,27 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
               name
             }
           }
+          resources(where: { floorPlanId: $selectedFloorPlanId }, orderBy: [{ direction: ASCENDING, field: NAME }]) @include(if: $floorPlanSelected) {
+            edges {
+              node {
+                id
+                name
+                inactive
+                color
+                productTags {
+                  id
+                  name
+                  color
+                }
+                resourceType {
+                  id
+                  name
+                  color
+                  tagType
+                }
+              }
+            }
+          }
         }
       }
     `,
@@ -235,9 +315,12 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
   const router = useRouter();
   const theme = useTheme();
   const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const { organizationCustomDomain } = useKnownParams();
+  const { integratedPlatrform } = useIntegratedPlatrform();
+  const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const [dynamicLoadReady, setDynamicLoadReady] = useState(false);
   const [selectedHeroImageUrl, setSelectedHeroImageUrl] = useState<string>('');
+  const [selectedFloorPlanId, setSelectedFloorPlanId] = useState<string>('');
+  const [selectedResourceId, setSelectedResourceId] = useState<string>('');
   const locationDetails = rootData.location;
 
   const capacity = useMemo(() => {
@@ -341,6 +424,65 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       };
     });
   }, [heroImage, locationDetails, rootData.currencies, rootData.productPricingCadences]);
+  const floorPlans = useMemo(
+    () => rootData.floorPlans.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
+    [rootData.floorPlans.edges],
+  );
+  const effectiveSelectedFloorPlanId = useMemo(() => {
+    if (floorPlans.some((item) => item.id === selectedFloorPlanId)) {
+      return selectedFloorPlanId;
+    }
+
+    return floorPlans[0]?.id ?? '';
+  }, [floorPlans, selectedFloorPlanId]);
+  const selectedFloorPlan = useMemo(() => floorPlans.find((item) => item.id === effectiveSelectedFloorPlanId) ?? null, [effectiveSelectedFloorPlanId, floorPlans]);
+  const floorPlanResources = useMemo(
+    () => (locationDetails?.resources?.edges ?? []).map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item && !item.inactive),
+    [locationDetails?.resources?.edges],
+  );
+  const effectiveSelectedResourceId = useMemo(() => {
+    if (floorPlanResources.some((item) => item.id === selectedResourceId)) {
+      return selectedResourceId;
+    }
+
+    const firstPlacedResourceId = selectedFloorPlan?.resourcePositions.find((position) => floorPlanResources.some((resource) => resource.id === position.resource.id))?.resource.id;
+    return firstPlacedResourceId ?? floorPlanResources[0]?.id ?? '';
+  }, [floorPlanResources, selectedFloorPlan?.resourcePositions, selectedResourceId]);
+  const selectedResource = useMemo(() => floorPlanResources.find((item) => item.id === effectiveSelectedResourceId) ?? null, [effectiveSelectedResourceId, floorPlanResources]);
+  const floorPlanProducts = useMemo<FloorPlanProduct[]>(() => {
+    if (!locationDetails) {
+      return [];
+    }
+
+    return locationDetails.products.map((product) => {
+      const currencyLabel = product.currency?.type ? (rootData.currencies.find((item) => item.type === product.currency?.type)?.name ?? product.currency.type) : null;
+      return {
+        id: product.id,
+        productTagIds: product.productTags.map((item) => item.id),
+        title: product.listingMetadata.title ?? 'Untitled product',
+        subTitle: product.listingMetadata.subTitle ?? '',
+        pricingRows: [...product.pricingOptions]
+          .sort((left, right) => left.index - right.index)
+          .map((option) => ({
+            id: option.id,
+            title: option.listingMetadata.title ?? '',
+            cadence: option.purchaseCadence,
+            cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
+            amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
+            taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
+            bookingLabel: isSubscriptionCadence(option.purchaseCadence) ? 'Choose plan' : 'Book this option',
+          })),
+      };
+    });
+  }, [locationDetails, rootData.currencies, rootData.productPricingCadences]);
+  const matchedProductsForSelectedResource = useMemo(() => {
+    if (!selectedResource) {
+      return [];
+    }
+
+    const resourceProductTagIds = new Set(selectedResource.productTags.map((item) => item.id));
+    return floorPlanProducts.filter((product) => product.productTagIds.length === 0 || product.productTagIds.some((tagId) => resourceProductTagIds.has(tagId)));
+  }, [floorPlanProducts, selectedResource]);
 
   const locationDays = openingHours
     ? [
@@ -365,11 +507,38 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
     }
   }, [heroImages, selectedHeroImageUrl]);
 
+  useEffect(() => {
+    if (!locationDetails?.id || floorPlans.length === 0) {
+      return;
+    }
+
+    if (!selectedFloorPlanId) {
+      setSelectedFloorPlanId(floorPlans[0].id);
+      return;
+    }
+
+    refetch(
+      {
+        locationId: locationDetails.id,
+        selectedFloorPlanId,
+        floorPlanSelected: true,
+      },
+      {
+        fetchPolicy: 'store-and-network',
+      },
+    );
+  }, [floorPlans, locationDetails?.id, refetch, selectedFloorPlanId]);
+
   if (!dynamicLoadReady || !locationDetails || !openingHours) {
     return null;
   }
 
   const effectiveOrganizationCustomDomain = organizationCustomDomain || locationDetails.organization?.customDomain || '';
+  const selectedFloorPlanImage = selectedFloorPlan?.image?.original;
+  const selectedFloorPlanName = selectedFloorPlan?.name ?? '';
+  const selectedFloorPlanResourcePositions = selectedFloorPlan?.resourcePositions ?? [];
+  const selectedFloorPlanImageWidth = selectedFloorPlanImage?.width ?? 1;
+  const selectedFloorPlanImageHeight = selectedFloorPlanImage?.height ?? 1;
 
   return (
     <Box sx={{ bgcolor: 'background.default', minHeight: '100vh', pb: 8 }}>
@@ -602,6 +771,229 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             </MapContainer>
           </Box>
         </Paper>
+
+        {floorPlans.length > 0 && (
+          <Paper sx={{ ...sectionCardSx, p: { xs: 3, md: 5 }, mb: 4 }}>
+            <Typography sx={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '-0.03em', color: 'text.primary', mb: 1 }}>Explore by floor plan</Typography>
+            <Typography sx={{ fontSize: '1rem', color: 'text.secondary', mb: 3 }}>
+              Open a floor, click a resource, and jump straight into the products and pricing options that fit that spot.
+            </Typography>
+
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
+              {floorPlans.map((floorPlan) => (
+                <Button
+                  key={floorPlan.id}
+                  variant={floorPlan.id === effectiveSelectedFloorPlanId ? 'contained' : 'outlined'}
+                  onClick={() => {
+                    setSelectedFloorPlanId(floorPlan.id);
+                    setSelectedResourceId('');
+                  }}
+                  sx={{ textTransform: 'none', borderRadius: 999 }}
+                >
+                  {floorPlan.name} ({floorPlan.resourceCount})
+                </Button>
+              ))}
+            </Box>
+
+            {selectedFloorPlanImage?.url && selectedFloorPlanImage.width && selectedFloorPlanImage.height ? (
+              <Grid container spacing={3}>
+                <Grid size={{ xs: 12, lg: 7 }}>
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      width: '100%',
+                      aspectRatio: `${selectedFloorPlanImageWidth} / ${selectedFloorPlanImageHeight}`,
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      border: 1,
+                      borderColor: 'divider',
+                      bgcolor: 'background.paper',
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={selectedFloorPlanImage.url}
+                      alt={selectedFloorPlanName}
+                      sx={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+                    />
+                    {selectedFloorPlanResourcePositions
+                      .filter((position) => floorPlanResources.some((resource) => resource.id === position.resource.id))
+                      .map((position) => {
+                        const resource = floorPlanResources.find((item) => item.id === position.resource.id);
+                        if (!resource) {
+                          return null;
+                        }
+
+                        const ResourceIcon = getResourceTypeIcon(
+                          resource.resourceType.tagType,
+                          rootData.deskResourceType,
+                          rootData.roomResourceType,
+                          rootData.parkingResourceType,
+                        );
+                        const isSelected = resource.id === effectiveSelectedResourceId;
+
+                        return (
+                          <Box
+                            key={resource.id}
+                            component="button"
+                            type="button"
+                            onClick={() => setSelectedResourceId(resource.id)}
+                            title={resource.name}
+                            sx={{
+                              position: 'absolute',
+                              left: `${(position.x / selectedFloorPlanImageWidth) * 100}%`,
+                              top: `${(position.y / selectedFloorPlanImageHeight) * 100}%`,
+                              transform: 'translate(-50%, -50%)',
+                              width: 42,
+                              height: 42,
+                              borderRadius: '50%',
+                              border: 0,
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: isSelected ? 'common.white' : 'text.primary',
+                              bgcolor: isSelected ? 'primary.main' : 'background.paper',
+                              boxShadow: isSelected ? 5 : 2,
+                              outline: 'none',
+                              transition: 'transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease',
+                              '&:hover': {
+                                transform: 'translate(-50%, -50%) scale(1.05)',
+                              },
+                            }}
+                          >
+                            <ResourceIcon fontSize="small" />
+                          </Box>
+                        );
+                      })}
+                  </Box>
+                </Grid>
+
+                <Grid size={{ xs: 12, lg: 5 }}>
+                  <Box
+                    sx={{
+                      borderRadius: 4,
+                      border: 1,
+                      borderColor: 'divider',
+                      bgcolor: 'background.paper',
+                      p: { xs: 2.5, md: 3 },
+                      minHeight: '100%',
+                    }}
+                  >
+                    {selectedResource ? (
+                      <>
+                        <Typography sx={{ fontSize: '0.8rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'text.secondary', mb: 1 }}>
+                          Selected resource
+                        </Typography>
+                        <Typography sx={{ fontSize: '1.6rem', fontWeight: 700, color: 'text.primary', mb: 0.75 }}>{selectedResource.name}</Typography>
+                        <Typography sx={{ color: 'text.secondary', mb: 2 }}>{selectedResource.resourceType.name}</Typography>
+
+                        {selectedResource.productTags.length > 0 && (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2.5 }}>
+                            {selectedResource.productTags.map((tag) => (
+                              <Chip key={tag.id} label={tag.name} size="small" sx={{ bgcolor: 'action.hover' }} />
+                            ))}
+                          </Box>
+                        )}
+
+                        {matchedProductsForSelectedResource.length > 0 ? (
+                          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            {matchedProductsForSelectedResource.map((product) => (
+                              <Box key={product.id} sx={{ border: 1, borderColor: 'divider', borderRadius: 3, p: 2 }}>
+                                <Typography sx={{ fontWeight: 700, color: 'text.primary' }}>{product.title}</Typography>
+                                {product.subTitle ? <Typography sx={{ color: 'text.secondary', mt: 0.5 }}>{product.subTitle}</Typography> : null}
+
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1.75 }}>
+                                  {product.pricingRows.map((pricingRow) => (
+                                    <Box
+                                      key={pricingRow.id}
+                                      sx={{
+                                        display: 'flex',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'space-between',
+                                        gap: 1,
+                                        border: 1,
+                                        borderColor: 'divider',
+                                        borderRadius: 2.5,
+                                        p: 1.25,
+                                      }}
+                                    >
+                                      <Box sx={{ minWidth: 0 }}>
+                                        <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>{pricingRow.cadenceLabel}</Typography>
+                                        {pricingRow.title ? <Typography sx={{ color: 'text.secondary', fontSize: '0.92rem' }}>{pricingRow.title}</Typography> : null}
+                                      </Box>
+                                      <Box sx={{ textAlign: 'right', ml: 'auto' }}>
+                                        <Typography sx={{ fontWeight: 700, color: 'text.primary' }}>{pricingRow.amountLabel}</Typography>
+                                        <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>{pricingRow.taxLabel}</Typography>
+                                      </Box>
+                                      <Box sx={{ display: 'flex', width: '100%', gap: 1, mt: 0.5 }}>
+                                        <Button
+                                          variant="contained"
+                                          onClick={() =>
+                                            router.push(
+                                              isSubscriptionCadence(pricingRow.cadence)
+                                                ? getMarketplaceProductSubscribeLink(
+                                                    integratedPlatrform,
+                                                    isCustomDomain,
+                                                    effectiveOrganizationCustomDomain,
+                                                    product.id,
+                                                    pricingRow.id,
+                                                  )
+                                                : getMarketplaceProductBookingLink(
+                                                    integratedPlatrform,
+                                                    isCustomDomain,
+                                                    effectiveOrganizationCustomDomain,
+                                                    product.id,
+                                                    pricingRow.id,
+                                                  ),
+                                            )
+                                          }
+                                          sx={{ textTransform: 'none' }}
+                                        >
+                                          {pricingRow.bookingLabel}
+                                        </Button>
+                                        <Button
+                                          variant="outlined"
+                                          onClick={() =>
+                                            router.push(
+                                              getMarketplaceProductLink(
+                                                integratedPlatrform,
+                                                isCustomDomain,
+                                                effectiveOrganizationCustomDomain,
+                                                product.id,
+                                              ),
+                                            )
+                                          }
+                                          sx={{ textTransform: 'none' }}
+                                        >
+                                          Details
+                                        </Button>
+                                      </Box>
+                                    </Box>
+                                  ))}
+                                </Box>
+                              </Box>
+                            ))}
+                          </Box>
+                        ) : (
+                          <Typography sx={{ color: 'text.secondary' }}>
+                            No marketplace products are currently mapped to this resource.
+                          </Typography>
+                        )}
+                      </>
+                    ) : (
+                      <Typography sx={{ color: 'text.secondary' }}>
+                        Choose a resource on the floor plan to see the products and pricing options available from that spot.
+                      </Typography>
+                    )}
+                  </Box>
+                </Grid>
+              </Grid>
+            ) : (
+              <Typography sx={{ color: 'text.secondary' }}>This floor plan does not have an image yet.</Typography>
+            )}
+          </Paper>
+        )}
 
         <Paper sx={{ ...sectionCardSx, p: { xs: 3, md: 5 } }}>
           <Typography sx={{ fontSize: '1.75rem', fontWeight: 700, letterSpacing: '-0.03em', color: 'text.primary', mb: 1 }}>Available Workspaces</Typography>
