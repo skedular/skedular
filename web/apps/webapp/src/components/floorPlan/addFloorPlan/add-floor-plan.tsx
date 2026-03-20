@@ -22,7 +22,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
-import Image from 'next/image';
 import { memo, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Form } from 'react-final-form';
@@ -344,7 +343,8 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
                               height: image.original.height,
                             }}
                           >
-                            <Image src={image.original.url} height={image.original.height} width={image.original.width} alt="" />
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={image.original?.url ?? image.thumbnail?.url ?? ''} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
 
                             {[...resourcePositions.entries()].map(([id, position]) => {
                               const resource = resources.find((item) => item.id === id);

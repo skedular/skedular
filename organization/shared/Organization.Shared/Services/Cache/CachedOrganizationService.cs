@@ -9,7 +9,6 @@ public interface ICachedOrganizationService
 {
     ValueTask<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Database.Entities.Organization> organizations, CancellationToken cancellationToken);
     ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
 
@@ -80,29 +79,6 @@ public class CachedOrganizationService(
                 throw new OrganizationNotFound(),
                 new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
                 cancellationToken: cancellationToken);
-        }
-    }
-
-    public async ValueTask UpdateAsync(ICollection<Database.Entities.Organization> organizations, CancellationToken cancellationToken)
-    {
-        foreach (var item in organizations)
-        {
-            await RemoveByIdOrCustomDomainAsync(item.Id, item.CustomDomain, cancellationToken);
-
-            await hybridCache.SetAsync(
-                CreateKeyById(item.Id),
-                item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
-
-            if (!string.IsNullOrWhiteSpace(item.CustomDomain))
-            {
-                await hybridCache.SetAsync(
-                    CreateKeyByUniqueAlphanumericName(item.CustomDomain),
-                    item,
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                    cancellationToken: cancellationToken);
-            }
         }
     }
 
