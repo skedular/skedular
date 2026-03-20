@@ -135,6 +135,7 @@ public class Mapper : IMapper
             EventRaisedAt = eventRaisedAt,
             Name = item.Name,
             Type = item.Type.ToNullableOrganizationTagType(),
+            Color = item.Color.ToSafeString(),
             Organization = organization
         }).ToList();
 
