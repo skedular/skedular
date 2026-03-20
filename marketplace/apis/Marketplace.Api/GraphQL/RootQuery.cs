@@ -66,6 +66,12 @@ public class RootQuery(IVersionService versionService)
         }
     ];
 
+    public ICollection<ProductTypeDetails> ProductTypes =>
+    [
+        new() { Type = ProductType.Resource, Name = ProductType.Resource.ToProductTypeName() },
+        new() { Type = ProductType.Event, Name = ProductType.Event.ToProductTypeName() }
+    ];
+
     [UseResolverScope]
     public Version MarketplaceVersion()
     {

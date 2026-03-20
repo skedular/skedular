@@ -10,6 +10,7 @@ import {
   SingleChoiceProductPricingBillingMode,
   SingleChoiceProductPricingCadence,
   SingleChoiceProductPricingCancellationType,
+  SingleChoiceProductType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
@@ -17,7 +18,13 @@ import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
-import type { Currency, editProduct_updateProductMutation, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
+import type {
+  Currency,
+  editProduct_updateProductMutation,
+  PaymentMethod,
+  ProductPricingCadence,
+  ProductType,
+} from '@/queries/__generated__/editProduct_updateProductMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
@@ -43,6 +50,7 @@ type ProductDetails = {
   title: string | null;
   subTitle: string | null;
   includedFeatures: string | null;
+  type: string;
   currency: string;
   productTagIds: string[];
   amenityIds: string[];
@@ -128,6 +136,7 @@ const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: numbe
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     ...listingMetadataSchemaShape,
+    type: string().required('Product type is required.'),
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
@@ -301,6 +310,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             subTitle
             includedFeatures
           }
+          type {
+            type
+            name
+          }
           currency {
             type
             name
@@ -373,6 +386,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         ...singleChoiceProductPricingCadence_query
         ...singleChoiceProductPricingCancellationType_query
         ...multipleChoicesAmenities_query
+        ...singleChoiceProductType_query
       }
     `,
     rootDataRelay,
@@ -388,6 +402,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             title
             subTitle
             includedFeatures
+          }
+          type {
+            type
+            name
           }
           currency {
             type
@@ -456,6 +474,8 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   const [includedFeatures, setIncludedFeatures] = useState<string | null>(rootData.product?.listingMetadata.includedFeatures?.join('\n') ?? null);
   const debounceSetIncludedFeatures = useDebounceCallback(setIncludedFeatures, keyboardTextFieldDebounceTimeout);
 
+  const [type, setType] = useState(rootData.product ? rootData.product.type.type : '');
+  const debounceSetType = useDebounceCallback(setType, keyboardTextFieldDebounceTimeout);
   const [currency, setCurrency] = useState(rootData.product ? rootData.product.currency.type : '');
   const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
 
@@ -488,7 +508,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
   );
   const [primaryFeatureImage, setPrimaryFeatureImage] = useState<FileUploadResponse | null>(featureImages[0] ?? null);
 
-  const handleProductDetailUpdateClick = ({ title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductDetailUpdateClick = ({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const product = rootData.product;
     if (!product) {
       return;
@@ -514,6 +534,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               .map((feature) => feature.trim())
               .filter((feature) => feature !== ''),
           },
+          type: type as ProductType,
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
           featureImages: finalFeatureImages,
@@ -581,6 +602,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                 .split('\n')
                 .map((feature) => feature.trim())
                 .filter((feature) => feature !== ''),
+            },
+            type: {
+              type: type as ProductType,
+              name: '',
             },
             currency: {
               type: currency as Currency,
@@ -661,6 +686,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               title,
               subTitle,
               includedFeatures,
+              type,
               currency,
               productTagIds,
               amenityIds,
@@ -694,6 +720,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               debounceSetTitle(values!.title);
               debounceSetSubTitle(values!.subTitle);
               debounceSetIncludedFeatures(values!.includedFeatures);
+              debounceSetType(values!.type);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
@@ -764,6 +791,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                       }}
                       requiredFields={requiredFields}
                     />
+
+                    <FormFieldLabel label="Type">
+                      <SingleChoiceProductType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    </FormFieldLabel>
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />

@@ -1,3 +1,5 @@
+using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -8,6 +10,8 @@ namespace Location.Shared.Database.Entities;
 // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class ProductVersion : EntityBase
 {
+    public string Type { get; set; }
+
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string ProductId { get; set; }
     public virtual Product Product { get; set; }
@@ -22,7 +26,11 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
     {
         builder.ConfigureEntityBase();
 
+        builder.Property(item => item.Type).HasMaxLength(Constants.MaxProductTypeLength).HasDefaultValue(ProductTypeConstants.Resource);
+
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.ProductVersionOrganizationTags);
+        
+        builder.HasIndex(item => item.Type);
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84f73cec7dde9446745f60ffc4a89825>>
+ * @generated SignedSource<<e6273306afc91984321627e2107faba4>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type editProduct_query$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -84,12 +85,16 @@ export type editProduct_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
+    readonly type: {
+      readonly name: string;
+      readonly type: ProductType;
+    };
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
     readonly type: ProductPricingCadence;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query" | "singleChoiceProductType_query">;
   readonly " $fragmentType": "editProduct_query";
 };
 export type editProduct_query$key = {
@@ -221,6 +226,16 @@ return {
               "storageKey": null
             }
           ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ProductTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -521,6 +536,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "multipleChoicesAmenities_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceProductType_query"
     }
   ],
   "type": "Query",
@@ -528,6 +548,6 @@ return {
 };
 })();
 
-(node as any).hash = "38c81506996714f14f920bd0fced759a";
+(node as any).hash = "9727cf8201b5e07d68750828031e5ca1";
 
 export default node;

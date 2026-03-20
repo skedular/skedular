@@ -13,6 +13,7 @@ public class AddProductInput
     [GraphQLName("organizationCustomDomain")]
     public string? OrganizationCustomDomain { get; set; }
 
+    [GraphQLName("type")] public ProductType Type { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("tagIds")] public IEnumerable<string> TagIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];

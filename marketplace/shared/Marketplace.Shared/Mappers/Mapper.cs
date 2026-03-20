@@ -1,4 +1,3 @@
-using Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value;
 using Enterprise.Shared;
 using Google.Protobuf.WellKnownTypes;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.CdnFile;
@@ -8,7 +7,12 @@ using ProductVersion = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.P
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using ProductPricingBillingMode = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingBillingMode;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
+using ListingMetadata = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata;
+using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
 using ProductPricingCadence = Api.Shared.Services.Models.ProductPricingCadence;
+using ProductPricingCancellationPolicyType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationPolicyType;
+using ProductPricingCancellationRefundRule = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule;
 
 namespace Marketplace.Shared.Mappers;
 
@@ -31,7 +35,10 @@ public class Mapper : IMapper
 
     private static ProductVersion MapTo(Models.ProductVersion src)
     {
-        var productVersion = new ProductVersion { Id = src.Id, ListingMetadata = MapTo(src.ListingMetadata), Currency = MapTo(src.Currency) };
+        var productVersion = new ProductVersion
+        {
+            Id = src.Id, ListingMetadata = MapTo(src.ListingMetadata), Type = MapTo(src.Type), Currency = MapTo(src.Currency)
+        };
 
         productVersion.TagIds.AddRange(src.OrganizationTags.Select(item => item.Id));
         productVersion.FeatureImages.AddRange(MapTo(src.FeatureImages));
@@ -159,4 +166,12 @@ public class Mapper : IMapper
 
         return listingMetadata;
     }
+
+    private static ProductType MapTo(Api.Shared.Services.Models.ProductType src) =>
+        src switch
+        {
+            Api.Shared.Services.Models.ProductType.Resource => ProductType.Resource,
+            Api.Shared.Services.Models.ProductType.Event => ProductType.Event,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
 }

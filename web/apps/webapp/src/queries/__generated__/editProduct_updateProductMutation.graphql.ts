@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8115f1d76910fba3267ba2b72ff5eba6>>
+ * @generated SignedSource<<5c0c59776a97afddf63ded8a6c853000>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 export type UpdateProductInput = {
   clientMutationId?: string | null | undefined;
   currency: Currency;
@@ -22,6 +23,7 @@ export type UpdateProductInput = {
   listingMetadata?: ListingMetadataInput | null | undefined;
   pricingOptions: ReadonlyArray<ProductPricingInput>;
   tagIds: ReadonlyArray<string>;
+  type: ProductType;
 };
 export type CdnImageFileInput = {
   original?: CdnFileInput | null | undefined;
@@ -123,6 +125,10 @@ export type editProduct_updateProductMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: ProductType;
+      };
     };
   };
 };
@@ -185,6 +191,10 @@ export type editProduct_updateProductMutation$rawResponse = {
         readonly id: string;
         readonly name: string;
       }>;
+      readonly type: {
+        readonly name: string;
+        readonly type: ProductType;
+      };
     };
   };
 };
@@ -231,6 +241,16 @@ v4 = {
   "storageKey": null
 },
 v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v4/*: any*/)
+],
+v6 = [
   (v1/*: any*/),
   (v4/*: any*/),
   {
@@ -241,7 +261,7 @@ v5 = [
     "storageKey": null
   }
 ],
-v6 = [
+v7 = [
   {
     "alias": null,
     "args": null,
@@ -264,7 +284,7 @@ v6 = [
     "storageKey": null
   }
 ],
-v7 = [
+v8 = [
   {
     "alias": null,
     "args": [
@@ -318,20 +338,21 @@ v7 = [
           {
             "alias": null,
             "args": null,
+            "concreteType": "ProductTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": (v5/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "CurrencyDetails",
             "kind": "LinkedField",
             "name": "currency",
             "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
-              (v4/*: any*/)
-            ],
+            "selections": (v5/*: any*/),
             "storageKey": null
           },
           {
@@ -341,7 +362,7 @@ v7 = [
             "kind": "LinkedField",
             "name": "productTags",
             "plural": true,
-            "selections": (v5/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -351,7 +372,7 @@ v7 = [
             "kind": "LinkedField",
             "name": "amenities",
             "plural": true,
-            "selections": (v5/*: any*/),
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -369,7 +390,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "original",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v7/*: any*/),
                 "storageKey": null
               },
               {
@@ -379,7 +400,7 @@ v7 = [
                 "kind": "LinkedField",
                 "name": "thumbnail",
                 "plural": false,
-                "selections": (v6/*: any*/),
+                "selections": (v7/*: any*/),
                 "storageKey": null
               }
             ],
@@ -538,7 +559,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "editProduct_updateProductMutation",
-    "selections": (v7/*: any*/),
+    "selections": (v8/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -547,19 +568,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "editProduct_updateProductMutation",
-    "selections": (v7/*: any*/)
+    "selections": (v8/*: any*/)
   },
   "params": {
-    "cacheID": "a5c337cf3629a8ae58b4b80f565a9ed6",
+    "cacheID": "9e25ae291ba680c33eab430749d36223",
     "id": null,
     "metadata": {},
     "name": "editProduct_updateProductMutation",
     "operationKind": "mutation",
-    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
+    "text": "mutation editProduct_updateProductMutation(\n  $input: UpdateProductInput!\n) {\n  updateProduct(input: $input) {\n    product {\n      id\n      inactive\n      listingMetadata {\n        title\n        subTitle\n        includedFeatures\n      }\n      type {\n        type\n        name\n      }\n      currency {\n        type\n        name\n      }\n      productTags {\n        id\n        name\n        color\n      }\n      amenities {\n        id\n        name\n        color\n      }\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n      pricingOptions {\n        index\n        listingMetadata {\n          title\n          subTitle\n        }\n        supportsSubscriptionAutoRenewal\n        purchaseCadence\n        bookingCadence\n        price\n        numberOfResourcesToBook\n        minDurationMinutes\n        maxDurationMinutes\n        cancellationPolicyType\n        cancellationRefundRules {\n          minutesBefore\n          refundPercentage\n        }\n        isTaxInclusive\n        maxAllowedResourcesLockTimePaidViaCard\n        maxAllowedResourcesLockTimePaidViaBankTransfer\n        acceptedPaymentMethods\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "47caa30212a67e6f6fc8b66a78be06ec";
+(node as any).hash = "91ae484a79924fc4cbb8c785dbb00ac9";
 
 export default node;

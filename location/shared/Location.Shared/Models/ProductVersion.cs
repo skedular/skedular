@@ -3,8 +3,9 @@ using Enterprise.Shared.Models;
 
 namespace Location.Shared.Models;
 
-public class ProductVersion : ReplicatedModelBase
+public class ProductVersion : ModelBase
 {
+    public ProductType Type { get; set; }
     public Product Product { get; set; } = new();
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<OrganizationTag> ProductTags => OrganizationTags.Where(item => item.Type == OrganizationTagType.Product).ToList();

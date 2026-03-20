@@ -3,8 +3,9 @@ using Enterprise.Shared.Models;
 
 namespace Booking.Shared.Models;
 
-public class ProductVersion : ReplicatedModelBase
+public class ProductVersion : ModelBase
 {
+    public ProductType Type { get; set; }
     public Currency Currency { get; set; }
     public ICollection<ProductPricing> PricingOptions { get; set; } = [];
     public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;

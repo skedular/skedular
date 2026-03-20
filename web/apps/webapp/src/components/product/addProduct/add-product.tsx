@@ -11,6 +11,7 @@ import {
   SingleChoiceProductPricingBillingMode,
   SingleChoiceProductPricingCadence,
   SingleChoiceProductPricingCancellationType,
+  SingleChoiceProductType,
 } from '@/components/organization';
 import MultipleChoicesAmenities from '@/components/organization/multiple-choices-amenities';
 import { RelayError, toRootError } from '@/components/relayError';
@@ -18,7 +19,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useKnownParams } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
-import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
+import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -63,6 +64,7 @@ const RootQuery = graphql`
     ...singleChoiceProductPricingCadence_query
     ...singleChoiceProductPricingCancellationType_query
     ...multipleChoicesAmenities_query
+    ...singleChoiceProductType_query
   }
 `;
 
@@ -70,6 +72,7 @@ type ProductDetails = {
   title: string | null;
   subTitle: string | null;
   includedFeatures: string | null;
+  type: string;
   currency: string;
   productTagIds: string[];
   amenityIds: string[];
@@ -155,6 +158,7 @@ const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: numbe
 const productSchema = (bookingSlotSizeInMinutes: number) =>
   object({
     ...listingMetadataSchemaShape,
+    type: string().required('Product type is required.'),
     currency: string().required('Currency is required.'),
     mustBookAllLocationResources: boolean(),
     productTagIds: array().min(1, 'At least one product tag must be selected.').required('Product tags are required.'),
@@ -329,6 +333,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
             subTitle
             includedFeatures
           }
+          type {
+            type
+            name
+          }
           currency {
             type
             name
@@ -396,6 +404,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
   const [includedFeatures, setIncludedFeatures] = useState<string | null>(null);
   const debounceSetIncludedFeatures = useDebounceCallback(setIncludedFeatures, keyboardTextFieldDebounceTimeout);
 
+  const [type, setType] = useState('');
+  const debounceSetType = useDebounceCallback(setType, keyboardTextFieldDebounceTimeout);
   const [currency, setCurrency] = useState('');
   const debounceSetCurrency = useDebounceCallback(setCurrency, keyboardTextFieldDebounceTimeout);
 
@@ -413,7 +423,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
     onReloadRequired();
   };
 
-  const handleProductAddClick = ({ title, subTitle, includedFeatures, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
+  const handleProductAddClick = ({ title, subTitle, includedFeatures, type, currency, productTagIds, amenityIds, pricingOptions }: ProductDetails) => {
     const id = uuid();
     const toastId = themedToast(<NotificationContent content={`Adding product '${title}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
@@ -435,6 +445,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               .map((feature) => feature.trim())
               .filter((feature) => feature !== ''),
           },
+          type: type as ProductType,
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
           organizationCustomDomain,
@@ -504,6 +515,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
                 .split('\n')
                 .map((feature) => feature.trim())
                 .filter((feature) => feature !== ''),
+            },
+            type: {
+              type: type as ProductType,
+              name: '',
             },
             currency: {
               type: currency as Currency,
@@ -576,6 +591,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               title,
               subTitle,
               includedFeatures,
+              type,
               currency,
               productTagIds,
               amenityIds,
@@ -586,6 +602,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               debounceSetTitle(values!.title);
               debounceSetSubTitle(values!.subTitle);
               debounceSetIncludedFeatures(values!.includedFeatures);
+              debounceSetType(values!.type);
               debounceSetCurrency(values!.currency);
               debounceSetProductTagIds(values!.productTagIds);
               debounceSetAmenityIds(values!.amenityIds);
@@ -655,6 +672,10 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
                       }}
                       requiredFields={requiredFields}
                     />
+
+                    <FormFieldLabel label="Type">
+                      <SingleChoiceProductType rootDataRelay={rootData} name="type" required={requiredFields.type} />
+                    </FormFieldLabel>
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />

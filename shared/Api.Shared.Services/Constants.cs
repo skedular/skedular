@@ -129,6 +129,8 @@ public static class Constants
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
     public const int MaxCustomerTypeLength = 20;
 
+    public const int MaxProductTypeLength = 20;
+
     public const string SkedularPublicLocationsCustomDomainName = "skedularpubliclocations";
 
     public const int MaxRecurringBookingFrequencyLength = 10;

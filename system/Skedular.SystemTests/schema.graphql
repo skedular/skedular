@@ -1073,6 +1073,7 @@ type ProductDetails {
   organization: OrganizationDetails!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
+  type: ProductTypeDetails!
 }
 
 type ProductEdge {
@@ -1125,6 +1126,11 @@ type ProductPricingCancellationTypeDetails {
   type: ProductPricingCancellationPolicyType!
 }
 
+type ProductTypeDetails {
+  name: String!
+  type: ProductType!
+}
+
 type ProductVersionDetails {
   currency: CurrencyDetails!
   featureImages: [CdnImageFile!]!
@@ -1134,6 +1140,7 @@ type ProductVersionDetails {
   organization: OrganizationDetails!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
+  type: ProductTypeDetails!
 }
 
 type ProductsPayload {
@@ -1224,6 +1231,7 @@ type Query {
   productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
   products(after: String before: String first: Int last: Int orderBy: [ProductOrderInput!] where: ProductWhereInput!): ConnectionOfProductEdge! @cost(weight: "10")
   productTag(id: String!): OrganizationTagDetails @cost(weight: "10")
+  productTypes: [ProductTypeDetails!]!
   productVersion(id: String!): ProductVersionDetails @cost(weight: "10")
   recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
   recurringBookings(after: String before: String first: Int last: Int orderBy: [RecurringBookingOrderInput!] where: RecurringBookingWhereInput!): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
@@ -1732,6 +1740,7 @@ input AddProductInput {
   organizationId: String
   pricingOptions: [ProductPricingInput!]!
   tagIds: [String!]!
+  type: ProductType!
 }
 
 input AddProductTagInput {
@@ -2795,6 +2804,7 @@ input UpdateProductInput {
   listingMetadata: ListingMetadataInput
   pricingOptions: [ProductPricingInput!]!
   tagIds: [String!]!
+  type: ProductType!
 }
 
 input UpdateProductTagInput {
@@ -3279,6 +3289,11 @@ enum ProductPricingCancellationPolicyType {
   NO_CANCELLATION
   NOT_SET
   TIERED_REFUND
+}
+
+enum ProductType {
+  EVENT
+  RESOURCE
 }
 
 enum RecurringBookingEndType {

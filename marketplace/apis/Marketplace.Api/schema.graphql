@@ -67,6 +67,7 @@ type PaymentMethodTypeDetails {
 type ProductDetails {
   organization: OrganizationDetails!
   inactive: Boolean!
+  type: ProductTypeDetails!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
@@ -127,10 +128,16 @@ type ProductPricingCancellationTypeDetails {
   name: String!
 }
 
+type ProductTypeDetails {
+  type: ProductType!
+  name: String!
+}
+
 type ProductVersionDetails {
   organization: OrganizationDetails!
   inactive: Boolean!
   listingMetadata: ListingMetadata!
+  type: ProductTypeDetails!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
@@ -158,6 +165,7 @@ type Query {
   productPricingBillingModes: [ProductPricingBillingModeDetails!]!
   paymentMethods: [PaymentMethodTypeDetails!]!
   productPricingCancellationTypes: [ProductPricingCancellationTypeDetails!]!
+  productTypes: [ProductTypeDetails!]!
 }
 
 type Version {
@@ -177,6 +185,7 @@ input AddProductInput {
   id: String
   organizationId: String
   organizationCustomDomain: String
+  type: ProductType!
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
@@ -252,6 +261,7 @@ input ProductWhereInput {
 input UpdateProductInput {
   clientMutationId: String
   id: String!
+  type: ProductType!
   currency: Currency!
   tagIds: [String!]!
   featureImages: [CdnImageFileInput!]
@@ -481,6 +491,11 @@ enum ProductPricingCancellationPolicyType {
   NO_CANCELLATION
   FULL_REFUND_BEFORE_CUTOFF
   TIERED_REFUND
+}
+
+enum ProductType {
+  RESOURCE
+  EVENT
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

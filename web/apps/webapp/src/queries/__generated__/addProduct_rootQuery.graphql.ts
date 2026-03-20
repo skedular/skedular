@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<631c2ab089196636c1a67ca5653356e7>>
+ * @generated SignedSource<<7efc766264311302e73a28c448a9873f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -34,7 +34,7 @@ export type addProduct_rootQuery$data = {
     readonly name: string;
     readonly type: PaymentMethod;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"multipleChoicesAmenities_query" | "multipleChoicesPaymentMethodTypes_query" | "multipleChoicesProductTags_query" | "singleChoiceCurrency_query" | "singleChoiceProductPricingBillingMode_query" | "singleChoiceProductPricingCadence_query" | "singleChoiceProductPricingCancellationType_query" | "singleChoiceProductType_query">;
 };
 export type addProduct_rootQuery = {
   response: addProduct_rootQuery$data;
@@ -180,6 +180,11 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "multipleChoicesAmenities_query"
+      },
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "singleChoiceProductType_query"
       }
     ],
     "type": "Query",
@@ -375,20 +380,30 @@ return {
         "plural": true,
         "selections": (v6/*: any*/),
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ProductTypeDetails",
+        "kind": "LinkedField",
+        "name": "productTypes",
+        "plural": true,
+        "selections": (v6/*: any*/),
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "1d43290ff4712091caeb8819f5d4bee0",
+    "cacheID": "12b2e2543215c38d22fb17ac9e84d43d",
     "id": null,
     "metadata": {},
     "name": "addProduct_rootQuery",
     "operationKind": "query",
-    "text": "query addProduct_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...singleChoiceProductPricingCancellationType_query\n  ...multipleChoicesAmenities_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCancellationType_query on Query {\n  productPricingCancellationTypes {\n    type\n    name\n  }\n}\n"
+    "text": "query addProduct_rootQuery(\n  $organizationCustomDomain: String!\n  $multipleChoicesProductTagsSortingValues: [OrganizationTagOrderInput!]\n) {\n  bookingSlotSizeInMinutes\n  defaultMaxAllowedResourcesLockTimePaidViaCard\n  defaultMaxAllowedResourcesLockTimePaidViaBankTransfer\n  currencies {\n    type\n    name\n  }\n  paymentMethods {\n    type\n    name\n  }\n  ...singleChoiceProductPricingBillingMode_query\n  ...multipleChoicesProductTags_query\n  ...singleChoiceCurrency_query\n  ...multipleChoicesPaymentMethodTypes_query\n  ...singleChoiceProductPricingCadence_query\n  ...singleChoiceProductPricingCancellationType_query\n  ...multipleChoicesAmenities_query\n  ...singleChoiceProductType_query\n}\n\nfragment multipleChoicesAmenities_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    amenities {\n      id\n      name\n      color\n    }\n    id\n  }\n}\n\nfragment multipleChoicesPaymentMethodTypes_query on Query {\n  paymentMethodTypes {\n    type\n    name\n  }\n}\n\nfragment multipleChoicesProductTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(orderBy: $multipleChoicesProductTagsSortingValues) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment singleChoiceCurrency_query on Query {\n  currencies {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingBillingMode_query on Query {\n  productPricingBillingModes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCadence_query on Query {\n  productPricingCadences {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductPricingCancellationType_query on Query {\n  productPricingCancellationTypes {\n    type\n    name\n  }\n}\n\nfragment singleChoiceProductType_query on Query {\n  productTypes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f85e53a9cfdc486b207bb5c9eb0f70e9";
+(node as any).hash = "8400bd95c5f41d7f85d123eb478a5ad1";
 
 export default node;

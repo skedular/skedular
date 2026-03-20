@@ -55,7 +55,7 @@ public class Mapper : IMapper
             DeletedAt = src.DeletedAt,
             ModifiedAt = src.ModifiedAt,
             Inactive = src.Inactive,
-            Organization = MapTo(src.Organization),
+            Organization = MapTo(src.Organization)
         };
 
         product.ProductVersions = MapTo(src.ProductVersions, src).ToList();
@@ -69,17 +69,13 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
-            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
+            Type = src.Type.ToProductType(),
             Currency = src.Currency.ToCurrency(),
+            ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = MapTo(src.OrganizationTags).ToList(),
             PricingOptions = src.PricingOptions,
-            Product = new Product
-            {
-                Id = product.Id,
-                Inactive = product.Inactive,
-                Organization = MapTo(product.Organization)
-            }
+            Product = new Product { Id = product.Id, Inactive = product.Inactive, Organization = MapTo(product.Organization) }
         };
 
     public ProductVersion MapTo(AddProductInput src) =>
@@ -87,6 +83,7 @@ public class Mapper : IMapper
         {
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Currency = src.Currency,
+            Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
@@ -97,6 +94,7 @@ public class Mapper : IMapper
         {
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             Currency = src.Currency,
+            Type = src.Type,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             PricingOptions = src.PricingOptions.ToList()
@@ -116,6 +114,7 @@ public class Mapper : IMapper
             Id = src.Id,
             Inactive = src.Inactive,
             ListingMetadata = productVersion.ListingMetadata,
+            Type = new ProductTypeDetails { Type = productVersion.Type, Name = productVersion.Type.ToProductTypeName() },
             Currency = new CurrencyDetails { Type = productVersion.Currency, Name = productVersion.Currency.ToCurrencyName() },
             FeatureImages = productVersion.FeatureImages,
             ProductTags = MapTo(productVersion.ProductTags),
@@ -138,6 +137,7 @@ public class Mapper : IMapper
         {
             Id = src.Id,
             ListingMetadata = src.ListingMetadata,
+            Type = new ProductTypeDetails { Type = src.Type, Name = src.Type.ToProductTypeName() },
             Currency = new CurrencyDetails { Type = src.Currency, Name = src.Currency.ToCurrencyName() },
             FeatureImages = src.FeatureImages,
             ProductTags = MapTo(src.ProductTags),
@@ -221,6 +221,7 @@ public class Mapper : IMapper
     {
         dest.Id = src.Id;
         dest.ListingMetadata = src.ListingMetadata;
+        dest.Type = src.Type.ToProductType();
         dest.Currency = src.Currency.ToCurrency();
         dest.FeatureImages = src.FeatureImages;
         dest.OrganizationTags = organizationTags;

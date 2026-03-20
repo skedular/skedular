@@ -1,3 +1,4 @@
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
@@ -339,6 +340,7 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
+        dest.Type = src.Type.ToProductType();
         dest.Product = product;
         dest.OrganizationTags = organizationTags;
         return dest;
@@ -347,6 +349,18 @@ public class Mapper : IMapper
     private static Shared.Models.ProductVersion MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductVersion src, Product product) =>
         new()
         {
-            Id = src.Id, OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(), Product = product
+            Id = src.Id,
+            Type = MapTo(src.Type),
+            OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
+            Product = product
         };
+    
+    private static Api.Shared.Services.Models.ProductType MapTo(ProductType src) =>
+        src switch
+        {
+            ProductType.Resource => Api.Shared.Services.Models.ProductType.Resource,
+            ProductType.Event => Api.Shared.Services.Models.ProductType.Event,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
+
 }

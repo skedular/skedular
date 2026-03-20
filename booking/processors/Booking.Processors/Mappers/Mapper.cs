@@ -22,6 +22,7 @@ using TeamMember = Booking.Shared.Database.Entities.TeamMember;
 using ProductPricing = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricing;
 using PaymentMethod = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.PaymentMethod;
 using Currency = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.Currency;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
 using LocationType = Api.Shared.Clients.Events.Skedular.Location.V1.Value.LocationType;
 using OrganizationBillingCycle = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationBillingCycle;
@@ -377,6 +378,7 @@ public class Mapper : IMapper
         ICollection<OrganizationTag> organizationTags)
     {
         dest.Id = src.Id;
+        dest.Type = src.Type.ToProductType();
         dest.Currency = src.Currency.ToCurrency();
         dest.ListingMetadata = src.ListingMetadata;
         dest.Product = product;
@@ -586,6 +588,7 @@ public class Mapper : IMapper
         new()
         {
             Id = src.Id,
+            Type = MapTo(src.Type),
             Currency = MapTo(src.Currency),
             ListingMetadata = MapTo(src.ListingMetadata),
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
@@ -638,14 +641,6 @@ public class Mapper : IMapper
         Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductPricingCancellationRefundRule src) =>
         new(src.MinutesBefore, src.RefundPercentage);
 
-    private static IEnumerable<ProductPricingCancellationRefundRule> MapTo(IEnumerable<ProductPricingCancellationRefundRule> src) =>
-        src.Select(MapTo);
-
-    private static ProductPricingCancellationRefundRule MapTo(ProductPricingCancellationRefundRule src) =>
-        new(
-            src.MinutesBefore,
-            src.RefundPercentage);
-
     private static Api.Shared.Services.Models.ProductPricingCadence MapTo(ProductPricingCadence src) =>
         src switch
         {
@@ -678,16 +673,6 @@ public class Mapper : IMapper
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
 
-    private static ProductPricingCancellationPolicyType MapTo(ProductPricingCancellationPolicyType src) =>
-        src switch
-        {
-            ProductPricingCancellationPolicyType.NotSet => ProductPricingCancellationPolicyType.NotSet,
-            ProductPricingCancellationPolicyType.NoCancellation => ProductPricingCancellationPolicyType.NoCancellation,
-            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff => ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
-            ProductPricingCancellationPolicyType.TieredRefund => ProductPricingCancellationPolicyType.TieredRefund,
-            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
-        };
-
     private static IEnumerable<Api.Shared.Services.Models.PaymentMethod> MapTo(IEnumerable<PaymentMethod> src) =>
         src.Select(MapTo);
 
@@ -709,4 +694,12 @@ public class Mapper : IMapper
 
     private static ListingMetadata MapTo(Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ListingMetadata src) =>
         new(src.About.ToSafeString(), src.Title.ToSafeString(), src.SubTitle.ToSafeString(), src.IncludedFeatures);
+
+    private static Api.Shared.Services.Models.ProductType MapTo(ProductType src) =>
+        src switch
+        {
+            ProductType.Resource => Api.Shared.Services.Models.ProductType.Resource,
+            ProductType.Event => Api.Shared.Services.Models.ProductType.Event,
+            _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
+        };
 }

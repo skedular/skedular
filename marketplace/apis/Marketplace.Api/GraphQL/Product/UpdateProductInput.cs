@@ -8,6 +8,7 @@ public class UpdateProductInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public string Id { get; set; } = string.Empty;
+    [GraphQLName("type")] public ProductType Type { get; set; }
     [GraphQLName("currency")] public Currency Currency { get; set; }
     [GraphQLName("tagIds")] public IEnumerable<string> TagIds { get; set; } = [];
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile>? FeatureImages { get; set; } = [];

@@ -566,6 +566,7 @@ public class Mapper : IMapper
             Id = src.Id,
             CreatedAt = src.CreatedAt,
             ModifiedAt = src.ModifiedAt,
+            Type = src.Type.ToSafeString().ToProductType(),
             Currency = src.Currency.ToSafeString().ToCurrency(),
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
             PricingOptions = src.PricingOptions.ToSafeCollection()
