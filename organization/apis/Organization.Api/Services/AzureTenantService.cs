@@ -77,7 +77,7 @@ public class AzureTenantService(
 
                 return await repositoryFactory.AzureTenantRepository.Query(
                         new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })
-                    .AsNoTracking()
+                    .AsNoTrackingWithIdentityResolution()
                     .AnyAsync(cancellationToken);
             });
     }
@@ -122,7 +122,7 @@ public class AzureTenantService(
         ArgumentNullException.ThrowIfNull(installStateUserIdLookup);
 
         ArgumentException.ThrowIfNullOrWhiteSpace(tenantId);
-        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(tenantId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdUntrackedAsync(tenantId, cancellationToken);
 
         if (organization is null)
         {

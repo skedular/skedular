@@ -28,13 +28,13 @@ public class OrganizationTermsOfUseService(
 
                 var termsOfUse = await repositoryFactory.TermsOfUseRepository
                     .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
-                    .AsNoTracking().FirstAsync(cancellationToken);
+                    .AsNoTrackingWithIdentityResolution()
+                    .FirstAsync(cancellationToken);
 
                 return mapper.MapTo(termsOfUse)!;
             }))!;
 
-    public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(
-        CancellationToken cancellationToken) =>
+    public async Task<Shared.Database.Entities.TermsOfUse> GetActiveTermsOfUseEntityAsync(CancellationToken cancellationToken) =>
         await repositoryFactory.TermsOfUseRepository
             .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
             .FirstAsync(cancellationToken);

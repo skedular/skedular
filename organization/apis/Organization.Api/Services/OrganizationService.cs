@@ -34,11 +34,7 @@ public interface IOrganizationService
         CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization> UpdateAsync(Shared.Models.Organization organization, CancellationToken cancellationToken);
-
-    Task<Shared.Models.Organization> DeleteAsync(
-        string? id,
-        string? customDomain,
-        CancellationToken cancellationToken);
+    Task<Shared.Models.Organization> DeleteAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 
     Task<Shared.Models.Organization?> GetByIdOrCustomDomainAsync(
         string? id,
@@ -46,11 +42,7 @@ public interface IOrganizationService
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization?> GetByIdOrCustomDomainPublicAsync(
-        string? id,
-        string? customDomain,
-        CancellationToken cancellationToken);
-
+    Task<Shared.Models.Organization?> GetByIdOrCustomDomainPublicAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
@@ -227,10 +219,7 @@ public class OrganizationService(
         return await UpdateInternalAsync(organization, existingOrganization, customer, cancellationToken);
     }
 
-    public async Task<Shared.Models.Organization> DeleteAsync(
-        string? id,
-        string? customDomain,
-        CancellationToken cancellationToken)
+    public async Task<Shared.Models.Organization> DeleteAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -259,10 +248,7 @@ public class OrganizationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(
-            organization.Id,
-            organization.CustomDomain,
-            cancellationToken);
+        await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return deletedOrganization;
     }
@@ -316,7 +302,7 @@ public class OrganizationService(
         }
 
         var azureTenantId = tenantId.ToString();
-        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdAsync(azureTenantId, cancellationToken);
+        var organization = await repositoryFactory.OrganizationRepository.GetByAzureTenantIdUntrackedAsync(azureTenantId, cancellationToken);
         if (organization is null)
         {
             return null;
@@ -329,15 +315,13 @@ public class OrganizationService(
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdUntrackedAsync(customer.Id, cancellationToken);
 
         var result = new List<Shared.Models.Organization>();
         foreach (var organization in organizations)
         {
             result.Add(await EnrichOrganizationAsync(customer, organization, false, cancellationToken));
         }
-
-        await cachedOrganizationService.UpdateAsync(organizations, cancellationToken);
 
         return result;
     }
@@ -352,13 +336,11 @@ public class OrganizationService(
         // Ensure we do not return another customer organization by forcing CustomerId as search criteria
         searchCriteria = searchCriteria with { CustomerId = customer.Id };
 
-        var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsAsync(
+        var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsUntrackedAsync(
             paginationInputParam,
             searchCriteria,
             orderByFields,
             cancellationToken);
-
-        await cachedOrganizationService.UpdateAsync(edges.Select(item => item.Node).ToList(), cancellationToken);
 
         var mappedOrganizations = new List<Edge<Shared.Models.Organization>>();
         foreach (var edge in edges)
@@ -437,10 +419,7 @@ public class OrganizationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(
-            organization.Id,
-            organization.CustomDomain,
-            cancellationToken);
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return organization;
     }
@@ -463,9 +442,9 @@ public class OrganizationService(
             ? []
             : await repositoryFactory.IndustrySubCategoryRepository
                 .Query(new Specification<IndustrySubCategory>
-                {
-                    Criteria = query => !query.DeletedAt.HasValue && industrySubCategoryIds.Contains(query.Id)
-                }
+                    {
+                        Criteria = query => !query.DeletedAt.HasValue && industrySubCategoryIds.Contains(query.Id)
+                    }
                     .AddInclude(query => query.IndustryMainCategory))
                 .ToListAsync(cancellationToken);
 
@@ -494,10 +473,7 @@ public class OrganizationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
-        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(
-            organization.Id,
-            organization.CustomDomain,
-            cancellationToken);
+        await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
 
         return organization;
     }

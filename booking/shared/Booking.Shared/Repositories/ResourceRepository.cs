@@ -172,7 +172,7 @@ public class ResourceRepository(BookingDbContext dbContext, TimeProvider timePro
                                 !tag.DeletedAt.HasValue && !string.IsNullOrWhiteSpace(tag.Type) && tagTypes.Contains(tag.Type))))
             .Include(query => query.Bookings)
             .Include(query => query.Resource)
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         return slots

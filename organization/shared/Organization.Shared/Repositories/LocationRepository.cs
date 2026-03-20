@@ -9,7 +9,6 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Database.Entities.Organization organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    Location Add(Location location);
     Location Update(Location location);
     Location Remove(Location location);
 }
@@ -31,13 +30,6 @@ public class LocationRepository(OrganizationDbContext dbContext, TimeProvider ti
         await DbContext.Location
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
-
-    public Location Add(Location location)
-    {
-        var now = TimeProvider.GetUtcNow();
-        location.CreatedAt = now;
-        return DbContext.Location.Add(location).Entity;
-    }
 
     public Location Remove(Location location)
     {

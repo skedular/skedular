@@ -43,7 +43,7 @@ public class WorkaroundService(
 
     public async Task RepublishAllOrganizationsAsync(CancellationToken cancellationToken)
     {
-        var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetAllUntrackedAsync(cancellationToken);
         await organizationPublisher.PublishOrganizationsAsync(
             organizations.Select(item =>
                 mapper.MapTo(item, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(item.Id))).ToList(),
@@ -73,7 +73,7 @@ public class WorkaroundService(
 
     public async Task RegenerateAllDailyAnalyticsAsync(CancellationToken cancellationToken)
     {
-        var organizations = await repositoryFactory.OrganizationRepository.GetAllAsync(cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetAllUntrackedAsync(cancellationToken);
 
         foreach (var organization in organizations)
         {

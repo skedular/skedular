@@ -113,7 +113,7 @@ public class LocationAnalyticsService(
                     }
                     .AddInclude(query => query.Resources)
                     .AddInclude(query => query.InvolvedLocations))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository
@@ -124,7 +124,7 @@ public class LocationAnalyticsService(
                 }
                 .ApplyOrderBy(query => query.Date)
                 .AddInclude(query => query.Location))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyRoomCounts = await repositoryFactory.DailyRoomCountRecordingRepository
@@ -135,7 +135,7 @@ public class LocationAnalyticsService(
                 }
                 .ApplyOrderBy(query => query.Date)
                 .AddInclude(query => query.Location))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         return locationIds.Select(locationId =>
