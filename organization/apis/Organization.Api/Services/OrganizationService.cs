@@ -315,11 +315,13 @@ public class OrganizationService(
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdUntrackedAsync(customer.Id, cancellationToken);
+        var organizationIds = await repositoryFactory.OrganizationRepository.GetOrganizationIdsByCustomerIdUntrackedAsync(customer.Id, cancellationToken);
 
         var result = new List<Shared.Models.Organization>();
-        foreach (var organization in organizations)
+        foreach (var organizationId in organizationIds)
         {
+            var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
+                               throw new OrganizationNotFound();
             result.Add(await EnrichOrganizationAsync(customer, organization, false, cancellationToken));
         }
 

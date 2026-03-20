@@ -20,7 +20,7 @@ public interface IOrganizationRepository : IRepository<Database.Entities.Organiz
         ICollection<string>? customDomains,
         CancellationToken cancellationToken);
 
-    Task<ICollection<Database.Entities.Organization>> GetByCustomerIdUntrackedAsync(string customerId, CancellationToken cancellationToken);
+    Task<ICollection<string>> GetOrganizationIdsByCustomerIdUntrackedAsync(string customerId, CancellationToken cancellationToken);
     Task<Database.Entities.Organization?> GetByAzureTenantIdUntrackedAsync(string azureTenantId, CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllAsync(CancellationToken cancellationToken);
     Task<ICollection<Database.Entities.Organization>> GetAllUntrackedAsync(CancellationToken cancellationToken);
@@ -191,11 +191,10 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         throw new InvalidOperationException("Either ids or customDomains must be provided.");
     }
 
-    public async Task<ICollection<Database.Entities.Organization>> GetByCustomerIdUntrackedAsync(string customerId,
-        CancellationToken cancellationToken) =>
+    public async Task<ICollection<string>> GetOrganizationIdsByCustomerIdUntrackedAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue && query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
-            .AddDependentObjects(false, false)
+            .Select(query => query.Id)
             .ToListAsync(cancellationToken);
 
     public async Task<Database.Entities.Organization?> GetByAzureTenantIdUntrackedAsync(string azureTenantId, CancellationToken cancellationToken) =>
