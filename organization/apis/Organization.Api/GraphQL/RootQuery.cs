@@ -23,12 +23,12 @@ public class RootQuery(IVersionService versionService)
     [UseResolverScope]
     public IEnumerable<OrganizationTagTypeDetails> ResourceTypes() =>
         OrganizationTagTypeConstants.ResourceTypes.Select(item =>
-            new OrganizationTagTypeDetails { TagType = item, Name = item.ToOrganizationTagTypeName() });
+            new OrganizationTagTypeDetails { Type = item, Name = item.ToOrganizationTagTypeName() });
 
     [UseResolverScope]
     public IEnumerable<OrganizationTagTypeDetails> LocationSpaceTypes() =>
         OrganizationTagTypeConstants.LocationSpaceTypes.Select(item =>
-            new OrganizationTagTypeDetails { TagType = item, Name = item.ToOrganizationTagTypeName() });
+            new OrganizationTagTypeDetails { Type = item, Name = item.ToOrganizationTagTypeName() });
 
     [UseResolverScope]
     public IEnumerable<string> EmailsToShowLatestCapabilities() => ["morteza.alizadeh@gmail.com", "leila.alavi78@gmail.com"];

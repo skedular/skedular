@@ -233,6 +233,6 @@ public class Mapper : IMapper
 
     private static OrganizationTagDetails MapTo(Shared.Models.OrganizationTag src) => new()
     {
-        Id = src.Id, Name = src.Name.ToSafeString(), Color = src.Color.ToSafeString()
+        Id = src.Id, Name = src.Name.ToSafeString(), Type = src.Type, Color = src.Color.ToSafeString()
     };
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08280f47d864c9b572efa854747c1928>>
+ * @generated SignedSource<<2948ccf7ce794484185dfbe59ac210fe>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -31,7 +31,7 @@ export type resourceCard_ResourceDetails$data = {
     readonly color: string | null | undefined;
     readonly id: string;
     readonly name: string;
-    readonly tagType: OrganizationTagType | null | undefined;
+    readonly type: OrganizationTagType | null | undefined;
   };
   readonly zones: ReadonlyArray<{
     readonly color: string | null | undefined;
@@ -140,7 +140,7 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "tagType",
+          "name": "type",
           "storageKey": null
         }
       ],
@@ -152,6 +152,6 @@ return {
 };
 })();
 
-(node as any).hash = "4f69d93a39b385547c17f6fff90a7634";
+(node as any).hash = "07eea60bff65727844dde2b2d305e14a";
 
 export default node;

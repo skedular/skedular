@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2ffb08e84e6837ca5f78d475baab6c38>>
+ * @generated SignedSource<<0181749d507625a0bb5e1af912ca0b1b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -182,7 +182,7 @@ export type marketplaceLocation_query$data = {
             readonly color: string | null | undefined;
             readonly id: string;
             readonly name: string;
-            readonly tagType: OrganizationTagType | null | undefined;
+            readonly type: OrganizationTagType | null | undefined;
           };
         };
       }>;
@@ -1023,13 +1023,7 @@ return {
                             (v4/*: any*/),
                             (v1/*: any*/),
                             (v13/*: any*/),
-                            {
-                              "alias": null,
-                              "args": null,
-                              "kind": "ScalarField",
-                              "name": "tagType",
-                              "storageKey": null
-                            }
+                            (v0/*: any*/)
                           ],
                           "storageKey": null
                         }
@@ -1053,6 +1047,6 @@ return {
 };
 })();
 
-(node as any).hash = "6bd26b6aa2313b20342e247cf7252d42";
+(node as any).hash = "732cafcca436ebec05625072f67c37e6";
 
 export default node;

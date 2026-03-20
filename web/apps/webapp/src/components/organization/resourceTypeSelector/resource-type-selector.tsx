@@ -20,7 +20,7 @@ const ResourceTypeSelector = ({ rootDataRelay, onChange }: Props) => {
     graphql`
       fragment resourceTypeSelector_allResourceTypes_query on Query {
         resourceTypes {
-          tagType
+          type
           name
         }
       }
@@ -44,7 +44,7 @@ const ResourceTypeSelector = ({ rootDataRelay, onChange }: Props) => {
       onChange={handleChanged}
       size="small"
       renderValue={(selectedId) => {
-        const selectedItem = allItems.find((item) => item.tagType === selectedId);
+        const selectedItem = allItems.find((item) => item.type === selectedId);
         if (selectedItem) {
           return (
             <StackRow sx={{ alignItems: 'center' }}>
@@ -71,7 +71,7 @@ const ResourceTypeSelector = ({ rootDataRelay, onChange }: Props) => {
       </MenuItem>
 
       {allItems.map((item) => (
-        <MenuItem key={item.tagType} value={item.tagType}>
+        <MenuItem key={item.type} value={item.type}>
           <BodyIconTypography label={item.name} />
         </MenuItem>
       ))}

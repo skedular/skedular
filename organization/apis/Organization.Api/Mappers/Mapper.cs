@@ -775,7 +775,7 @@ public class Mapper : IMapper
                 Id = src.Id,
                 Name = src.Name,
                 Description = src.Description,
-                TagType = src.Type,
+                Type = src.Type,
                 Color = src.Color
             };
 

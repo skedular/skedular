@@ -8,6 +8,6 @@ namespace Location.Api.GraphQL.Location;
 public class OrganizationTagDetails : Node
 {
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
-    [GraphQLName("tagType")] public OrganizationTagType? TagType { get; set; }
+    [GraphQLName("type")] public OrganizationTagType? Type { get; set; }
     [GraphQLName("color")] public string? Color { get; set; }
 }

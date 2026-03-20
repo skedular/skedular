@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3dfba943c5909cd8c04e1de66fe8dcb1>>
+ * @generated SignedSource<<0f939a0051f50accab26ec0223b7deaf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ import { FragmentRefs } from "relay-runtime";
 export type resourceTypeSelector_allResourceTypes_query$data = {
   readonly resourceTypes: ReadonlyArray<{
     readonly name: string;
-    readonly tagType: OrganizationTagType;
+    readonly type: OrganizationTagType;
   }>;
   readonly " $fragmentType": "resourceTypeSelector_allResourceTypes_query";
 };
@@ -41,7 +41,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "tagType",
+          "name": "type",
           "storageKey": null
         },
         {
@@ -59,6 +59,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "308e7ed2a368453828eac50e91a97295";
+(node as any).hash = "5ed851ee135236040aa1cd094df33b8e";
 
 export default node;

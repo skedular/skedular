@@ -996,7 +996,7 @@ type OrganizationTagDetails {
   description: String
   id: ID!
   name: String!
-  tagType: OrganizationTagType
+  type: OrganizationTagType
 }
 
 type OrganizationTagEdge {
@@ -1011,7 +1011,7 @@ type OrganizationTagPayload {
 
 type OrganizationTagTypeDetails {
   name: String!
-  tagType: OrganizationTagType!
+  type: OrganizationTagType!
 }
 
 type OrganizationTagsPayload {

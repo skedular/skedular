@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83ee25992e56a3efa193e111f6851d68>>
+ * @generated SignedSource<<d03d8ef5c60b18e662410891ffcef636>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -35,7 +35,7 @@ export type addFloorPlan_resources_query$data = {
             readonly color: string | null | undefined;
             readonly id: string;
             readonly name: string;
-            readonly tagType: OrganizationTagType | null | undefined;
+            readonly type: OrganizationTagType | null | undefined;
           };
           readonly zones: ReadonlyArray<{
             readonly color: string | null | undefined;
@@ -253,7 +253,7 @@ return {
                           "alias": null,
                           "args": null,
                           "kind": "ScalarField",
-                          "name": "tagType",
+                          "name": "type",
                           "storageKey": null
                         }
                       ],
@@ -316,6 +316,6 @@ return {
 };
 })();
 
-(node as any).hash = "2a5d7f5540acd80534fa766f797e76db";
+(node as any).hash = "291a7e7e8f0702f9a457ec513def9fed";
 
 export default node;

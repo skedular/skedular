@@ -65,7 +65,7 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
           id
           name
           color
-          tagType
+          type
         }
       }
     `,
@@ -83,11 +83,11 @@ const ResourceCard = ({ rootDataRelay, resourceDetailsRelay, onReloadRequired, o
             <Link component={NextLink} href={getOrganizationLocationResourceBaseLink(integratedPlatrform, organizationCustomDomain, locationId, resourceDetails.id)}>
               <LeadIconTypography
                 startElement={
-                  resourceDetails.resourceType.tagType === rootData.deskResourceType ? (
+                  resourceDetails.resourceType.type === rootData.deskResourceType ? (
                     <DeskIcon />
-                  ) : resourceDetails.resourceType.tagType === rootData.roomResourceType ? (
+                  ) : resourceDetails.resourceType.type === rootData.roomResourceType ? (
                     <RoomIcon />
-                  ) : resourceDetails.resourceType.tagType === rootData.parkingResourceType ? (
+                  ) : resourceDetails.resourceType.type === rootData.parkingResourceType ? (
                     <ParkingIcon />
                   ) : (
                     <OtherResourceIcon />

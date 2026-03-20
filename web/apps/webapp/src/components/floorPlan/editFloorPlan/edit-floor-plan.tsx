@@ -111,7 +111,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                   id
                   name
                   color
-                  tagType
+                  type
                 }
               }
             }
@@ -366,11 +366,11 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                             >
                               <ListItemButton>
                                 <ListItemAvatar>
-                                  {item.resourceType.tagType === rootData.deskResourceType ? (
+                                  {item.resourceType.type === rootData.deskResourceType ? (
                                     <DeskIcon sx={{ color: item.color }} />
-                                  ) : item.resourceType.tagType === rootData.roomResourceType ? (
+                                  ) : item.resourceType.type === rootData.roomResourceType ? (
                                     <RoomIcon sx={{ color: item.color }} />
-                                  ) : item.resourceType.tagType === rootData.parkingResourceType ? (
+                                  ) : item.resourceType.type === rootData.parkingResourceType ? (
                                     <ParkingIcon sx={{ color: item.color }} />
                                   ) : (
                                     <OtherResourceIcon sx={{ color: item.color }} />
@@ -424,11 +424,11 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
                                     onMouseDown={(event) => handleMouseDown(event, resource.id)}
                                     title={resource.name}
                                   >
-                                    {resource.resourceType.tagType === rootData.deskResourceType ? (
+                                    {resource.resourceType.type === rootData.deskResourceType ? (
                                       <DeskIcon sx={{ color: resource.color }} />
-                                    ) : resource.resourceType.tagType === rootData.roomResourceType ? (
+                                    ) : resource.resourceType.type === rootData.roomResourceType ? (
                                       <RoomIcon sx={{ color: resource.color }} />
-                                    ) : resource.resourceType.tagType === rootData.parkingResourceType ? (
+                                    ) : resource.resourceType.type === rootData.parkingResourceType ? (
                                       <ParkingIcon sx={{ color: resource.color }} />
                                     ) : (
                                       <OtherResourceIcon sx={{ color: resource.color }} />

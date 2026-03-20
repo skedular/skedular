@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9eb6042d5f98b481f401c104b6a785c1>>
+ * @generated SignedSource<<5992de0312c30047ada2ea091a550074>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -37,7 +37,7 @@ export type floorPlans_floorPlan_query$data = {
           readonly id: string;
           readonly name: string;
           readonly resourceType: {
-            readonly tagType: OrganizationTagType | null | undefined;
+            readonly type: OrganizationTagType | null | undefined;
           };
           readonly " $fragmentSpreads": FragmentRefs<"resourceCard_ResourceDetails">;
         };
@@ -277,7 +277,7 @@ return {
                               "alias": null,
                               "args": null,
                               "kind": "ScalarField",
-                              "name": "tagType",
+                              "name": "type",
                               "storageKey": null
                             }
                           ],
@@ -308,6 +308,6 @@ return {
 };
 })();
 
-(node as any).hash = "c8927006bab5fda038897545d5447b65";
+(node as any).hash = "fbdadaea9e92b1d65602f3acf537b183";
 
 export default node;

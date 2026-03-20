@@ -133,7 +133,7 @@ type OrganizationDetails {
 
 type OrganizationTagDetails {
   name: String!
-  tagType: OrganizationTagType
+  type: OrganizationTagType
   color: String
   id: ID!
 }

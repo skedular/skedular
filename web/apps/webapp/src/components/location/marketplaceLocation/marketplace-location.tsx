@@ -11,12 +11,12 @@ import {
   PersonIcon,
   RoomIcon,
 } from '@/components/icons';
-import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
+import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
+import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import '@/styles/leaflet/leaflet.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -106,16 +106,16 @@ const formatOpeningHours = ({ closed, from, openAllDay, until }: OpeningHoursDay
 
 const getFirstPopulatedValue = (values: readonly string[] | null | undefined) => values?.find((value) => value.trim().length > 0) ?? null;
 
-const getResourceTypeIcon = (resourceTypeTagType: string | null | undefined, deskResourceType: string, roomResourceType: string, parkingResourceType: string) => {
-  if (resourceTypeTagType === deskResourceType) {
+const getResourceTypeIcon = (resourceType: string | null | undefined, deskResourceType: string, roomResourceType: string, parkingResourceType: string) => {
+  if (resourceType === deskResourceType) {
     return DeskIcon;
   }
 
-  if (resourceTypeTagType === roomResourceType) {
+  if (resourceType === roomResourceType) {
     return RoomIcon;
   }
 
-  if (resourceTypeTagType === parkingResourceType) {
+  if (resourceType === parkingResourceType) {
     return ParkingIcon;
   }
 
@@ -313,7 +313,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                   id
                   name
                   color
-                  tagType
+                  type
                 }
               }
             }
@@ -833,7 +833,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                           return null;
                         }
 
-                        const ResourceIcon = getResourceTypeIcon(resource.resourceType.tagType, rootData.deskResourceType, rootData.roomResourceType, rootData.parkingResourceType);
+                        const ResourceIcon = getResourceTypeIcon(resource.resourceType.type, rootData.deskResourceType, rootData.roomResourceType, rootData.parkingResourceType);
                         const isSelected = resource.id === effectiveSelectedResourceId;
 
                         return (

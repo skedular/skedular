@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<51f79d0613fc470a0cfe33c37e9395cb>>
+ * @generated SignedSource<<c039090dad87f4dad2e3f6f65c576a6d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -372,7 +372,7 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "tagType",
+                            "name": "type",
                             "storageKey": null
                           }
                         ],
@@ -445,12 +445,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d651b620c599fde95e3028739f06f6af",
+    "cacheID": "e2ab8faa55ffdd4395d02b02cb14014f",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationLocationFloorPlanAdmin_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationLocationFloorPlanAdmin_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  floorPlan(id: $floorPlanId) {\n    name\n    id\n  }\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            tagType\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query pageOrganizationLocationFloorPlanAdmin_rootQuery(\n  $locationId: String!\n  $floorPlanId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  floorPlan(id: $floorPlanId) {\n    name\n    id\n  }\n  ...editFloorPlan_query\n  ...editFloorPlan_resources_query\n}\n\nfragment editFloorPlan_query on Query {\n  floorPlan(id: $floorPlanId) {\n    id\n    name\n    image {\n      original {\n        url\n        height\n        width\n      }\n      thumbnail {\n        url\n        height\n        width\n      }\n    }\n    resourcePositions {\n      x\n      y\n      resource {\n        id\n      }\n      id\n    }\n  }\n  deskResourceType\n  roomResourceType\n  parkingResourceType\n}\n\nfragment editFloorPlan_resources_query on Query {\n  location(id: $locationId) {\n    resources(where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();

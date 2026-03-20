@@ -78,7 +78,7 @@ const FloorPlans = ({ rootDataRelay, rootDataFloorPlanRelay, rootDataBookingsRel
                 id
                 name
                 resourceType {
-                  tagType
+                  type
                 }
                 ...resourceCard_ResourceDetails
               }

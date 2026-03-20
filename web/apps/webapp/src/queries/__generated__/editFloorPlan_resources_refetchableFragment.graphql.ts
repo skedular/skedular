@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7c947b523b742dfa489dc8f1522c2cc>>
+ * @generated SignedSource<<e1223a90e11ed074e7c381efc72803cc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -246,7 +246,7 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "tagType",
+                            "name": "type",
                             "storageKey": null
                           }
                         ],
@@ -319,16 +319,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ca5426f353e44c0769607541abe6ddb8",
+    "cacheID": "a0e49f58742b072aeb735e3257124cf7",
     "id": null,
     "metadata": {},
     "name": "editFloorPlan_resources_refetchableFragment",
     "operationKind": "query",
-    "text": "query editFloorPlan_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $floorPlanId: String\n  $locationId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...editFloorPlan_resources_query_1G22uz\n}\n\nfragment editFloorPlan_resources_query_1G22uz on Query {\n  location(id: $locationId) {\n    resources(first: $count, after: $cursor, where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            tagType\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
+    "text": "query editFloorPlan_resources_refetchableFragment(\n  $count: Int = null\n  $cursor: String\n  $floorPlanId: String\n  $locationId: String!\n  $resourcesSortingValues: [ResourceOrderInput!]\n) {\n  ...editFloorPlan_resources_query_1G22uz\n}\n\nfragment editFloorPlan_resources_query_1G22uz on Query {\n  location(id: $locationId) {\n    resources(first: $count, after: $cursor, where: {floorPlanId: $floorPlanId}, orderBy: $resourcesSortingValues) {\n      edges {\n        node {\n          id\n          name\n          inactive\n          color\n          capacity\n          customTags {\n            id\n            name\n            color\n          }\n          zones {\n            id\n            name\n            color\n          }\n          productTags {\n            id\n            name\n            color\n          }\n          resourceType {\n            id\n            name\n            color\n            type\n          }\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "067d98d59f3378ffe8d507ce40bb8ddd";
+(node as any).hash = "af4c90fca1290b0de840a381f1f5c00f";
 
 export default node;
