@@ -1,4 +1,16 @@
-import { AreaIcon, ArrowLeftIcon, CheckIcon, ContactEmailIcon, ContactPhoneIcon, DeskIcon, LocationIcon, OpeningHoursIcon, ParkingIcon, PersonIcon, RoomIcon } from '@/components/icons';
+import {
+  AreaIcon,
+  ArrowLeftIcon,
+  CheckIcon,
+  ContactEmailIcon,
+  ContactPhoneIcon,
+  DeskIcon,
+  LocationIcon,
+  OpeningHoursIcon,
+  ParkingIcon,
+  PersonIcon,
+  RoomIcon,
+} from '@/components/icons';
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { getMarketplaceProductBookingLink, getMarketplaceProductLink, getMarketplaceProductSubscribeLink } from '@/components/links';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
@@ -424,10 +436,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
       };
     });
   }, [heroImage, locationDetails, rootData.currencies, rootData.productPricingCadences]);
-  const floorPlans = useMemo(
-    () => rootData.floorPlans.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
-    [rootData.floorPlans.edges],
-  );
+  const floorPlans = useMemo(() => rootData.floorPlans.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item), [rootData.floorPlans.edges]);
   const effectiveSelectedFloorPlanId = useMemo(() => {
     if (floorPlans.some((item) => item.id === selectedFloorPlanId)) {
       return selectedFloorPlanId;
@@ -824,12 +833,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                           return null;
                         }
 
-                        const ResourceIcon = getResourceTypeIcon(
-                          resource.resourceType.tagType,
-                          rootData.deskResourceType,
-                          rootData.roomResourceType,
-                          rootData.parkingResourceType,
-                        );
+                        const ResourceIcon = getResourceTypeIcon(resource.resourceType.tagType, rootData.deskResourceType, rootData.roomResourceType, rootData.parkingResourceType);
                         const isSelected = resource.id === effectiveSelectedResourceId;
 
                         return (
@@ -954,16 +958,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                         </Button>
                                         <Button
                                           variant="outlined"
-                                          onClick={() =>
-                                            router.push(
-                                              getMarketplaceProductLink(
-                                                integratedPlatrform,
-                                                isCustomDomain,
-                                                effectiveOrganizationCustomDomain,
-                                                product.id,
-                                              ),
-                                            )
-                                          }
+                                          onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, effectiveOrganizationCustomDomain, product.id))}
                                           sx={{ textTransform: 'none' }}
                                         >
                                           Details
@@ -976,9 +971,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                             ))}
                           </Box>
                         ) : (
-                          <Typography sx={{ color: 'text.secondary' }}>
-                            No marketplace products are currently mapped to this resource.
-                          </Typography>
+                          <Typography sx={{ color: 'text.secondary' }}>No marketplace products are currently mapped to this resource.</Typography>
                         )}
                       </>
                     ) : (
