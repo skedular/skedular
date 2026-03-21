@@ -5,13 +5,12 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Random;
 using FakeItEasy;
-using Shouldly;
 using Stripe;
-using Testing.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Shared.UnitTests.Services.StripeCustomerServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class StripeCustomerServiceShould
 {
     [Theory]

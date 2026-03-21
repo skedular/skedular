@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace MsTeams.Domain.IntegrationTests.Api.Rest.MsTeamsControllerTests;
 

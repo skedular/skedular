@@ -8,12 +8,11 @@ using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
-using Shouldly;
-using Testing.Shared;
 using ProductVersion = Booking.Shared.Models.ProductVersion;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingSubscriptionServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingSubscriptionServiceShould
 {
     [Theory]

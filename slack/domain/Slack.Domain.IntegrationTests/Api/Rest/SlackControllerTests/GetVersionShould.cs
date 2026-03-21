@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Slack.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Slack.Domain.IntegrationTests.Api.Rest.SlackControllerTests;
 

@@ -3,11 +3,10 @@ using Customer.Api.Controllers;
 using Customer.Api.Services;
 using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
-using Shouldly;
-using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RepublishShould
 {
     [Theory]

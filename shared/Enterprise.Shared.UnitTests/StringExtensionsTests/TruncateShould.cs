@@ -1,7 +1,6 @@
-﻿using Shouldly;
+﻿namespace Enterprise.Shared.UnitTests.StringExtensionsTests;
 
-namespace Enterprise.Shared.UnitTests.StringExtensionsTests;
-
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class TruncateShould
 {
     [Fact]

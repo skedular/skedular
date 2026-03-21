@@ -49,15 +49,14 @@ public class OrganizationMemberService(
         ICollection<OrganizationMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
                                searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAsync(organization, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -313,7 +312,7 @@ public class OrganizationMemberService(
         string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                organizationCustomDomain,
@@ -321,7 +320,7 @@ public class OrganizationMemberService(
                            throw new OrganizationNotFound();
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var matchingOrganizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customer.Id);
+        var matchingOrganizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.Customer.Id == customerId);
         if (matchingOrganizationMember is null)
         {
             throw new UnauthorizedAccessException();

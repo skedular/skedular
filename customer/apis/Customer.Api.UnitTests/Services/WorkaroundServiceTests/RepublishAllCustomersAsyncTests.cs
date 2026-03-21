@@ -5,10 +5,10 @@ using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
 using Enterprise.Shared;
 using FakeItEasy;
-using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Services.WorkaroundServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RepublishAllCustomersAsyncTests
 {
     [Theory]

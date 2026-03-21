@@ -1,6 +1,4 @@
 using MsTeams.Domain.IntegrationTests.Skedular.GraphQL.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace MsTeams.Domain.IntegrationTests.Api.GraphQL;
 

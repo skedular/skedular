@@ -1,6 +1,4 @@
 using Booking.Domain.IntegrationTests.Skedular.GraphQL.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Domain.IntegrationTests.Api.GraphQL;
 

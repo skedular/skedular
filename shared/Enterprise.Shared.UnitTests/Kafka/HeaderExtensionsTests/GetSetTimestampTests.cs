@@ -1,10 +1,9 @@
 ﻿using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetSetTimestampTests
 {
     [Theory]

@@ -1,6 +1,4 @@
 using Marketplace.Domain.IntegrationTests.Skedular.GraphQL.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Marketplace.Domain.IntegrationTests.Api.GraphQL;
 

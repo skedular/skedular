@@ -2,10 +2,10 @@
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using OpenTelemetry.Context.Propagation;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivityPropagatorTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class PropagateActivityShould
 {
     [Theory]

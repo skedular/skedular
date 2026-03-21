@@ -4,11 +4,10 @@ using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivityPropagatorTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class StartActivityShould
 {
     [Theory]

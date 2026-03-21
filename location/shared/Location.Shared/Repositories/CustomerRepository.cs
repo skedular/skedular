@@ -12,6 +12,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
 }
@@ -52,6 +53,13 @@ public class CustomerRepository(LocationDbContext dbContext, TimeProvider timePr
         await DbContext.Customer
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AsNoTracking()
+            .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 

@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Booking.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Domain.IntegrationTests.Api.Rest.BookingControllerTests;
 

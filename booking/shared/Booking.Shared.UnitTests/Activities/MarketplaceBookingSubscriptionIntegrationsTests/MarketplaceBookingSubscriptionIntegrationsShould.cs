@@ -10,12 +10,11 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using FakeItEasy;
-using Shouldly;
 using Temporalio.Testing;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingSubscriptionIntegrationsTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingSubscriptionIntegrationsShould
 {
     [Theory]

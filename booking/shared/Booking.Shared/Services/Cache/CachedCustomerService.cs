@@ -11,14 +11,7 @@ public interface ICachedCustomerService
 {
     ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
-    ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask UpdateAsync(ICollection<Customer> customers, CancellationToken cancellationToken);
-    ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     ValueTask RemoveAsync(ICollection<Customer> customers, CancellationToken cancellationToken);
 }
 
@@ -34,24 +27,26 @@ public class CachedCustomerService(
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
-        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
+        try
+        {
+            return await hybridCache.GetOrCreateAsync(
+                CreateKeyByAnyVerifiableToken(verifiableToken),
+                async ct => await repositoryFactory.CustomerRepository.AnyByVerifiableTokenUntrackedAsync(verifiableToken, ct)
+                    ? true
+                    : throw new CustomerNotFound(),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                cancellationToken: cancellationToken);
+        }
+        catch (CustomerNotFound)
+        {
+            return false;
+        }
     }
 
     public async ValueTask<Customer> GetAsync(CancellationToken cancellationToken)
     {
         var verifiableToken = context.GetVerifiableToken();
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
-
-        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
-    }
-
-    public async ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken)
-    {
-        var verifiableToken = context.GetVerifiableToken();
-        if (string.IsNullOrWhiteSpace(verifiableToken))
-        {
-            return null;
-        }
 
         return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
     }
@@ -70,6 +65,30 @@ public class CachedCustomerService(
         {
             return null;
         }
+    }
+
+    public async ValueTask RemoveAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
+    {
+        foreach (var item in customers)
+        {
+            await RemoveByIdAsync(item.Id, cancellationToken);
+
+            foreach (var identity in item.Identities)
+            {
+                await RemoveByVerifiableTokenAsync(identity.Id, cancellationToken);
+            }
+        }
+    }
+
+    public async ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        if (string.IsNullOrWhiteSpace(verifiableToken))
+        {
+            return null;
+        }
+
+        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) ?? throw new CustomerNotFound();
     }
 
     public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
@@ -143,21 +162,11 @@ public class CachedCustomerService(
     public async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);
 
-    public async ValueTask RemoveAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
-    {
-        foreach (var item in customers)
-        {
-            await RemoveByIdAsync(item.Id, cancellationToken);
-
-            foreach (var identity in item.Identities)
-            {
-                await RemoveByVerifiableTokenAsync(identity.Id, cancellationToken);
-            }
-        }
-    }
-
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id:{id}";
 
     private string CreateKeyByVerifiableToken(string verifiableToken) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-verifiabletoken:{verifiableToken}";
+
+    private string CreateKeyByAnyVerifiableToken(string verifiableToken) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-exists-verifiabletoken:{verifiableToken}";
 }

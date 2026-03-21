@@ -5,13 +5,12 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using FakeItEasy;
-using Shouldly;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.TemporalServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class TemporalServiceShould
 {
     [Theory]

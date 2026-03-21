@@ -3,11 +3,10 @@ using AutoFixture.Xunit3;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
 using OpenTelemetry.Context.Propagation;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagationContextGetterTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetPropagationContextShould
 {
     [Theory]

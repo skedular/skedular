@@ -4,10 +4,10 @@ using Booking.Shared.GraphQL;
 using Booking.Shared.Services.Cache;
 using FakeItEasy;
 using HotChocolate.Subscriptions;
-using Testing.Shared;
 
 namespace Booking.Api.UnitTests.Services.GraphQlTopicEventSenderTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RaiseGraphqlChangeAsyncShould
 {
     [Theory]

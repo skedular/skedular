@@ -11,8 +11,7 @@ public static class CategoryNames
 {
     public const string Key = "Category";
 
+    public const string Unit = nameof(Unit);
     public const string Integration = nameof(Integration);
-    public const string PactProvider = nameof(PactProvider);
-    public const string PactConsumer = nameof(PactConsumer);
-    public const string SystemIntegration = nameof(SystemIntegration);
+    public const string System = nameof(System);
 }

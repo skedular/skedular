@@ -9,16 +9,11 @@ namespace Customer.Shared.Services.Cache;
 
 public interface ICachedCustomerService : ICustomerHelper
 {
-    ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer> GetAsync(CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken);
-    ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken);
     ValueTask<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
-    ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
-    ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken);
 }
 
@@ -29,19 +24,24 @@ public class CachedCustomerService(
     HybridCache hybridCache)
     : ICachedCustomerService
 {
-    public async ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken)
-    {
-        var verifiableToken = context.GetVerifiableToken();
-        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
-
-        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
-    }
-
     public async ValueTask<bool> DoesCustomerExistAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
 
-        return await GetByVerifiableTokenAsync(verifiableToken, cancellationToken) is not null;
+        try
+        {
+            return await hybridCache.GetOrCreateAsync(
+                CreateKeyByAnyVerifiableToken(verifiableToken),
+                async ct => await repositoryFactory.CustomerRepository.AnyByVerifiableTokenUntrackedAsync(verifiableToken, ct)
+                    ? true
+                    : throw new CustomerNotFound(),
+                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+                cancellationToken: cancellationToken);
+        }
+        catch (CustomerNotFound)
+        {
+            return false;
+        }
     }
 
     public async ValueTask<Database.Entities.Customer> GetAsync(CancellationToken cancellationToken)
@@ -76,20 +76,6 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
-    {
-        await RemoveByIdAsync(id, cancellationToken);
-
-        await hybridCache.SetAsync(
-            CreateKeyById(id),
-            await repositoryFactory.CustomerRepository.GetByIdUntrackedAsync(id, cancellationToken) ?? throw new CustomerNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
-    }
-
-    public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
-        await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
-
     public async ValueTask<Database.Entities.Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
     {
         try
@@ -105,18 +91,6 @@ public class CachedCustomerService(
         {
             return null;
         }
-    }
-
-    public async ValueTask UpdateByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
-    {
-        await RemoveByVerifiableTokenAsync(verifiableToken, cancellationToken);
-
-        await hybridCache.SetAsync(
-            CreateKeyByVerifiableToken(verifiableToken),
-            await repositoryFactory.CustomerRepository.GetByVerifiableTokenUntrackedAsync(verifiableToken, cancellationToken) ??
-            throw new CustomerNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
     }
 
     public async ValueTask UpdateAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
@@ -144,9 +118,6 @@ public class CachedCustomerService(
         }
     }
 
-    public async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
-        await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);
-
     public async ValueTask RemoveAsync(ICollection<Database.Entities.Customer> customers, CancellationToken cancellationToken)
     {
         foreach (var item in customers)
@@ -160,8 +131,17 @@ public class CachedCustomerService(
         }
     }
 
+    private async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
+        await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
+
+    private async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);
+
     private string CreateKeyById(string id) => $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-id:{id}";
 
     private string CreateKeyByVerifiableToken(string verifiableToken) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-verifiabletoken:{verifiableToken}";
+
+    private string CreateKeyByAnyVerifiableToken(string verifiableToken) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-exists-verifiabletoken:{verifiableToken}";
 }

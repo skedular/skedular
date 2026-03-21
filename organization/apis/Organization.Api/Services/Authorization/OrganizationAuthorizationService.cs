@@ -143,18 +143,18 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<Permissions> GetPermissionsAsync(string organizationId, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
         return new Permissions
         {
-            CanView = await CanViewAsync(organization, customer.Id, cancellationToken),
-            CanModify = await CanModifyAsync(organization, customer.Id, cancellationToken),
-            CanDelete = await CanDeleteAsync(organization, customer.Id, cancellationToken),
-            CanInvitePeople = await CanInvitePeopleAsync(organization, customer.Id, cancellationToken),
-            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(organization, customer.Id, cancellationToken),
-            CanViewAnalytics = await CanViewAnalyticsAsync(organization, customer.Id, cancellationToken)
+            CanView = await CanViewAsync(organization, customerId, cancellationToken),
+            CanModify = await CanModifyAsync(organization, customerId, cancellationToken),
+            CanDelete = await CanDeleteAsync(organization, customerId, cancellationToken),
+            CanInvitePeople = await CanInvitePeopleAsync(organization, customerId, cancellationToken),
+            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(organization, customerId, cancellationToken),
+            CanViewAnalytics = await CanViewAnalyticsAsync(organization, customerId, cancellationToken)
         };
     }
 }

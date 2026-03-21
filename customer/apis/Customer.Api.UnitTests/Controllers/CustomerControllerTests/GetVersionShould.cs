@@ -2,11 +2,10 @@ using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Enterprise.Shared.Version;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetVersionShould
 {
     [Theory]

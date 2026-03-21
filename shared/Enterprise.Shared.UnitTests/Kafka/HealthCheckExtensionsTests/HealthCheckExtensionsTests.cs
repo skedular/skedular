@@ -3,10 +3,10 @@ using Enterprise.Shared.Kafka.Configurations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
-using Shouldly;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HealthCheckExtensionsTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class HealthCheckExtensionsTests
 {
     [Fact]

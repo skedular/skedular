@@ -33,10 +33,10 @@ public class OrganizationAnalyticsService(
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(id, customDomain, cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(organization, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

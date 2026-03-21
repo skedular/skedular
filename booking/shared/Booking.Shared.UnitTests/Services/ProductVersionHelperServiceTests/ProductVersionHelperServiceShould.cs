@@ -1,11 +1,10 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.ProductVersionHelperServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ProductVersionHelperServiceShould
 {
     [Theory]

@@ -187,7 +187,7 @@ public class OrganizationBankAccountService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingOrganizationBankAccount =
             await repositoryFactory.OrganizationBankAccountRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
@@ -195,7 +195,7 @@ public class OrganizationBankAccountService(
                                        existingOrganizationBankAccount.Organization.CustomDomain,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -218,8 +218,8 @@ public class OrganizationBankAccountService(
 
         if (!ignoreAuthorizationCheck)
         {
-            var customer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(organization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

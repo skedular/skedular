@@ -1,10 +1,10 @@
 ﻿using System.Text;
 using Confluent.Kafka;
 using Enterprise.Shared.Kafka;
-using Shouldly;
 
 namespace Enterprise.Shared.UnitTests.Kafka.HeaderExtensionsTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class SetShould
 {
     [Fact]

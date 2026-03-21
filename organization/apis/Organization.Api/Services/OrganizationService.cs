@@ -265,13 +265,13 @@ public class OrganizationService(
             return null;
         }
 
-        Shared.Database.Entities.Customer? customer = null;
+        string? customerId = null;
         if (!ignoreAuthorizationCheck)
         {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
+            customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         }
 
-        return await EnrichOrganizationAsync(customer, organization, ignoreAuthorizationCheck, cancellationToken);
+        return await EnrichOrganizationAsync(customerId, organization, ignoreAuthorizationCheck, cancellationToken);
     }
 
     public async Task<Shared.Models.Organization?> GetByIdOrCustomDomainPublicAsync(
@@ -287,7 +287,7 @@ public class OrganizationService(
 
         if (organization.Type.ToOrganizationType() == OrganizationType.Private)
         {
-            return await EnrichOrganizationAsync(await cachedCustomerService.GetAsync(cancellationToken), organization, false, cancellationToken);
+            return await EnrichOrganizationAsync(await cachedCustomerService.GetIdAsync(cancellationToken), organization, false, cancellationToken);
         }
 
         return EnrichOrganizationPublic(organization);
@@ -308,15 +308,22 @@ public class OrganizationService(
             return null;
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-        return await EnrichOrganizationAsync(customer, organization, false, cancellationToken);
+        var customerId = await cachedCustomerService.GetNullableIdAsync(cancellationToken);
+        return await EnrichOrganizationAsync(customerId, organization, false, cancellationToken);
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)
     {
+        var verifiableToken = context.GetVerifiableToken();
+        if (string.IsNullOrWhiteSpace(verifiableToken))
+        {
+            return [];
+        }
+
         var customer = await cachedCustomerService.GetAsync(cancellationToken);
 
-        return mapper.MapTo(await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customer.Id, cancellationToken)).ToList();
+        return mapper.MapTo(
+            await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customer.Id, cancellationToken)).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
@@ -325,9 +332,9 @@ public class OrganizationService(
         ICollection<OrganizationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         // Ensure we do not return another customer organization by forcing CustomerId as search criteria
-        searchCriteria = searchCriteria with { CustomerId = customer.Id };
+        searchCriteria = searchCriteria with { CustomerId = customerId };
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.OrganizationRepository.GetPaginatedOrganizationsUntrackedAsync(
             paginationInputParam,
@@ -339,7 +346,7 @@ public class OrganizationService(
         foreach (var edge in edges)
         {
             mappedOrganizations.Add(
-                new Edge<Shared.Models.Organization>(await EnrichOrganizationAsync(customer, edge.Node, false, cancellationToken), edge.Cursor));
+                new Edge<Shared.Models.Organization>(await EnrichOrganizationAsync(customerId, edge.Node, false, cancellationToken), edge.Cursor));
         }
 
         return (paginatedInfo, mappedOrganizations, totalCount);
@@ -472,18 +479,18 @@ public class OrganizationService(
     }
 
     private async Task<Shared.Models.Organization> EnrichOrganizationAsync(
-        Shared.Database.Entities.Customer? customer,
+        string? customerId,
         Shared.Database.Entities.Organization organization,
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
         if (!ignoreAuthorizationCheck)
         {
-            ArgumentNullException.ThrowIfNull(customer);
+            ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
 
-            if (!await organizationAuthorizationService.CanViewAsync(organization, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAsync(organization, customerId, cancellationToken))
             {
-                if (!await organizationAuthorizationService.CanViewMinimumAsync(organization, customer.Id, cancellationToken))
+                if (!await organizationAuthorizationService.CanViewMinimumAsync(organization, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -523,18 +530,19 @@ public class OrganizationService(
 
         mappedOrganization.CanModify = ignoreAuthorizationCheck || await organizationAuthorizationService.CanModifyAsync(
             organization,
-            customer!.Id,
+            customerId!,
             cancellationToken);
         mappedOrganization.CanDelete = ignoreAuthorizationCheck || await organizationAuthorizationService.CanDeleteAsync(
             organization,
-            customer!.Id,
+            customerId!,
             cancellationToken);
         mappedOrganization.CanInvitePeople = ignoreAuthorizationCheck || await organizationAuthorizationService.CanInvitePeopleAsync(
             organization,
-            customer!.Id,
+            customerId!,
             cancellationToken);
         mappedOrganization.CanViewAnalytics = ignoreAuthorizationCheck || await organizationAuthorizationService.CanViewAnalyticsAsync(
-            organization, customer!.Id,
+            organization,
+            customerId!,
             cancellationToken);
 
         var now = timeProvider.GetUtcNow();
@@ -548,7 +556,7 @@ public class OrganizationService(
 
         if (!ignoreAuthorizationCheck)
         {
-            var organizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.CustomerId == customer!.Id);
+            var organizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.CustomerId == customerId);
             if (organizationMember is not null)
             {
                 mappedOrganization.IsMyOnboardingDone = organizationMember.IsOrganizationOnboardingDone ?? false;

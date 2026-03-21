@@ -5,11 +5,10 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.OrganizationInvoiceCounterServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class OrganizationInvoiceCounterServiceShould
 {
     [Theory]

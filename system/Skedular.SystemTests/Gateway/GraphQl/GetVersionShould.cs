@@ -1,10 +1,8 @@
-using Shouldly;
 using Skedular.SystemTests.Skedular.GraphQL.V1;
-using Testing.Shared;
 
 namespace Skedular.SystemTests.Gateway.GraphQl;
 
-[Trait(CategoryNames.Key, CategoryNames.Integration)]
+[Trait(CategoryNames.Key, CategoryNames.System)]
 [Collection("Gateway")]
 public class GetVersionShould(IGetVersionQuery getVersionQuery)
 {

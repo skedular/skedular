@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Organization.Domain.IntegrationTests.Api.Rest.OrganizationControllerTests;
 

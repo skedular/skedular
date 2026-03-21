@@ -47,11 +47,6 @@ public class TagService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(tagId);
 
-        Shared.Database.Entities.Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
-        }
 
         var tag = await cachedTagService.GetByIdAsync(tagId, cancellationToken) ?? throw new OrganizationTagNotFound();
         var existingOrganization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
@@ -59,9 +54,13 @@ public class TagService(
                                        null,
                                        cancellationToken) ??
                                    throw new OrganizationNotFound();
-        if (!ignoreAuthorizationCheck && !await organizationAuthorizationService.CanViewAsync(existingOrganization, customer!.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(existingOrganization, customerId, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         return mapper.MapTo(tag);
@@ -244,21 +243,19 @@ public class TagService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        Shared.Database.Entities.Customer? customer = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
-        }
-
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                searchCriteria.OrganizationId,
                                searchCriteria.OrganizationCustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!ignoreAuthorizationCheck && !await organizationAuthorizationService.CanViewAsync(organization, customer!.Id, cancellationToken))
+        if (!ignoreAuthorizationCheck)
         {
-            throw new UnauthorizedAccessException();
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(organization, customerId, cancellationToken))
+            {
+                throw new UnauthorizedAccessException();
+            }
         }
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.TagRepository.GetPaginatedTagsAsync(

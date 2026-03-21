@@ -14,6 +14,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdUntrackedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
@@ -74,9 +75,15 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
         CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AddDependentObjects(false, includeActiveItemsOnly)
-            .FirstOrDefaultAsync(query =>
-                    !query.DeletedAt.HasValue &&
-                    query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AsNoTracking()
+            .AnyAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
     public async Task<ICollection<Customer>> GetByIdsAsync(

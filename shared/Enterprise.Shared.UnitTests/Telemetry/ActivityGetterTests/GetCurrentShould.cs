@@ -1,10 +1,9 @@
 ﻿using System.Diagnostics;
 using Enterprise.Shared.Telemetry;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.ActivityGetterTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetCurrentShould
 {
     [Theory]

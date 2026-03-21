@@ -3,11 +3,10 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
 using Enterprise.Shared.Time;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.LocationResourceBookingSlotsHelperServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class LocationResourceBookingSlotsHelperServiceShould
 {
     [Theory]

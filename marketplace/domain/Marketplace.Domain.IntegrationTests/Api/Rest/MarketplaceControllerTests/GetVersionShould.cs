@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Marketplace.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Marketplace.Domain.IntegrationTests.Api.Rest.MarketplaceControllerTests;
 

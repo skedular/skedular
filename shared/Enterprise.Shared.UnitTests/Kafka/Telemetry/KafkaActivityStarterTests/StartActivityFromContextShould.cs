@@ -3,14 +3,13 @@ using AutoFixture.Xunit3;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 // using FluentAssertions;
 // using FluentAssertions.Execution;
 
 namespace Enterprise.Shared.UnitTests.Kafka.Telemetry.KafkaActivityStarterTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class StartActivityFromContextShould
 {
     [Theory]

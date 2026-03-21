@@ -5,11 +5,10 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceEventResourceServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceEventResourceServiceShould
 {
     [Theory]

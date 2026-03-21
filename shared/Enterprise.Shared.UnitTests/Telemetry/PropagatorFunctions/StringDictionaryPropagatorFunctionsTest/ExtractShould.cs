@@ -1,9 +1,8 @@
 ﻿using Enterprise.Shared.Telemetry.PropagatorFunctions;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagatorFunctions.StringDictionaryPropagatorFunctionsTest;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ExtractShould
 {
     [Theory]

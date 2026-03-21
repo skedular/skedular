@@ -1,6 +1,4 @@
 using Core.Domain.IntegrationTests.Skedular.GraphQL.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Core.Domain.IntegrationTests.Api.GraphQL;
 

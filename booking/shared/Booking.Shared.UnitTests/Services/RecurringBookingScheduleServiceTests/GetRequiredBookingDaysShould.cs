@@ -1,12 +1,11 @@
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
-using Shouldly;
-using Testing.Shared;
 using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.UnitTests.Services.RecurringBookingScheduleServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetRequiredBookingDaysShould
 {
     [Theory]

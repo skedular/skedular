@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Core.Domain.IntegrationTests.Api.Rest.CoreControllerTests;
 

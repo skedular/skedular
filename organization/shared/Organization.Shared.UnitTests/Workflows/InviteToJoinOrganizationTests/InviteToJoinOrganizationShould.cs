@@ -5,10 +5,10 @@ using Organization.Shared.Workflows;
 using Temporalio.Client;
 using Temporalio.Testing;
 using Temporalio.Worker;
-using Testing.Shared;
 
 namespace Organization.Shared.UnitTests.Workflows.InviteToJoinOrganizationTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class InviteToJoinOrganizationShould
 {
     [Theory]

@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 using Enterprise.Shared.Kafka;
-using Shouldly;
-using Testing.Shared;
 
 namespace Enterprise.Shared.UnitTests.Kafka.Consume.KafkaNamingTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class GetClientIdShould
 {
     [Theory]

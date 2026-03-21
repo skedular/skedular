@@ -1,6 +1,4 @@
 using Api.Shared.Clients.OpenApi.Skedular.Location.V1;
-using Shouldly;
-using Testing.Shared;
 
 namespace Location.Domain.IntegrationTests.Api.Rest.LocationControllerTests;
 

@@ -8,11 +8,7 @@ namespace Team.Shared.Services.Cache;
 
 public interface ICachedOrganizationService
 {
-    ValueTask<Organization?> GetByIdOrCustomDomainAsync(
-        string? id,
-        string? customDomain,
-        CancellationToken cancellationToken);
-
+    ValueTask<Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
@@ -23,10 +19,7 @@ public class CachedOrganizationService(
     HybridCache hybridCache)
     : ICachedOrganizationService
 {
-    public async ValueTask<Organization?> GetByIdOrCustomDomainAsync(
-        string? id,
-        string? customDomain,
-        CancellationToken cancellationToken)
+    public async ValueTask<Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
         try
         {

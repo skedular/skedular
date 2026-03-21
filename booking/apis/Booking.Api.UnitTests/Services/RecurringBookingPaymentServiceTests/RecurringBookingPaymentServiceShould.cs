@@ -12,8 +12,6 @@ using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
-using Shouldly;
-using Testing.Shared;
 using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using Customer = Booking.Shared.Database.Entities.Customer;
@@ -23,6 +21,7 @@ using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.UnitTests.Services.RecurringBookingPaymentServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class RecurringBookingPaymentServiceShould
 {
     [Theory]

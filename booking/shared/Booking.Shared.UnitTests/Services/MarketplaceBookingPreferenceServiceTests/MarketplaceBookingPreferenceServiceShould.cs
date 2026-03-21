@@ -4,11 +4,10 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingPreferenceServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingPreferenceServiceShould
 {
     [Theory]

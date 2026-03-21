@@ -324,8 +324,8 @@ public class OrganizationStripeConnectAccountService(
 
         if (!ignoreAuthorizationCheck)
         {
-            var customer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (!await organizationAuthorizationService.CanViewStripeConnectAccountAsync(organization, customer.Id, cancellationToken))
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewStripeConnectAccountAsync(organization, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

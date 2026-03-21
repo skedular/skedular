@@ -13,6 +13,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<Customer?> GetByEmailAsync(string email, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Customer Update(Customer customer);
@@ -66,6 +67,13 @@ public class CustomerRepository(TeamDbContext dbContext, TimeProvider timeProvid
         await DbContext.Customer
             .AddDependentObjects(false)
             .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AsNoTracking()
+            .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 

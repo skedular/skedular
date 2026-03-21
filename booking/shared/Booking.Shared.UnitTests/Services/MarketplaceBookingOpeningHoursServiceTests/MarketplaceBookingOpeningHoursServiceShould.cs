@@ -5,11 +5,10 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Time;
 using FakeItEasy;
-using Shouldly;
-using Testing.Shared;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingOpeningHoursServiceTests;
 
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class MarketplaceBookingOpeningHoursServiceShould
 {
     [Theory]
