@@ -131,15 +131,11 @@ public class RecurringBookingIsNotPrivate() : Exception("Recurring booking is no
 
 public class RecurringBookingIsNotMarketplace() : Exception("Recurring booking is not marketplace");
 
-public class MarketplaceRecurringBookingCannotBeUpdated() : Exception("Marketplace recurring booking cannot be updated");
-
 public class MarketplaceBookingSubscriptionNotFound() : Exception("Marketplace booking subscription not found");
 
 public class MarketplaceBookingSubscriptionCannotBeUpdated() : Exception("Marketplace booking subscription cannot be updated");
 
 public class ProductOrganizationDidNotMatch() : Exception("Product organization did not match");
-
-public class ProductPricingTermsAndConditionsUrlInvalid() : Exception("Product pricing terms and conditions url is invalid");
 
 public class ProductPricingCancellationPolicyInvalid() : Exception("Product pricing cancellation policy is invalid");
 
@@ -147,3 +143,33 @@ public class MarketplaceBookingCancellationNotAllowed() : Exception("This market
 
 public class MarketplaceBookingSubscriptionCancellationNotAllowed()
     : Exception("This marketplace booking subscription can no longer be cancelled");
+
+public class MarketplaceEventResourceSelectionRequiresEventProduct()
+    : Exception("Event resource selection can only be used for event products.");
+
+public class MarketplaceEventProductRecurringBookingNotSupported()
+    : Exception("Event products do not support recurring or subscription booking materialization.");
+
+public class ProductPricingEventRequiresExplicitTimeBooking()
+    : Exception("Event products only support explicit-time booking pricing options.");
+
+public class ProductPricingEventAutoRenewalNotSupported()
+    : Exception("Event products cannot enable subscription auto renewal.");
+
+public class ProductPricingAcceptedPaymentMethodsRequired()
+    : Exception("At least one accepted booking payment method must be selected");
+
+public class ProductPricingMinDurationMustBePositive()
+    : Exception("MinDurationMinutes must be greater than 0");
+
+public class ProductPricingMaxDurationMustBePositive()
+    : Exception("MaxDurationMinutes must be greater than 0");
+
+public class ProductPricingMinDurationIncrementInvalid(string durationStepLabel)
+    : Exception($"MinDurationMinutes must be in {durationStepLabel} increments");
+
+public class ProductPricingMaxDurationIncrementInvalid(string durationStepLabel)
+    : Exception($"MaxDurationMinutes must be in {durationStepLabel} increments");
+
+public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
+    : Exception("MaxDurationMinutes must be greater or equal than productVersion.MinDurationMinutes");

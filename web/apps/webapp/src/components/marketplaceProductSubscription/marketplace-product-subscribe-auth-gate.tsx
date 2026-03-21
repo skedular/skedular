@@ -41,6 +41,10 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
         }
         product(id: $productId) {
           id
+          type {
+            type
+            name
+          }
           listingMetadata {
             title
             subTitle
@@ -103,24 +107,51 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
 
     return availablePricingOptions[0] ?? null;
   }, [availablePricingOptions, pricingOptionId]);
-
   const cadenceLabel = useMemo(
     () => rootData.productPricingCadences.find((item) => item.type === selectedPricingOption?.purchaseCadence)?.name ?? selectedPricingOption?.purchaseCadence ?? '',
     [rootData.productPricingCadences, selectedPricingOption?.purchaseCadence],
   );
-
-  const currencyLabel = rootData.currencies.find((item) => item.type === rootData.product?.currency.type)?.name ?? rootData.product?.currency.name ?? '';
-
   const returnTo = useMemo(() => {
     const query = searchParams.toString();
     return query ? `${pathname}?${query}` : pathname;
   }, [pathname, searchParams]);
 
-  if (!rootData.product || !selectedPricingOption) {
+  if (!rootData.product) {
+    return null;
+  }
+  const product = rootData.product;
+
+  if (product.type.type === 'EVENT' && mode === 'subscription') {
+    return (
+      <Container maxWidth="sm" sx={{ py: { xs: 4, md: 6 } }}>
+        <Card sx={{ borderRadius: 4 }}>
+          <CardContent sx={{ p: 4, textAlign: 'center' }}>
+            <CaptionIconTypography label="Timed booking only" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
+            <LeadIconTypography label="This event product does not support recurring plans" sx={{ mt: 1 }} />
+            <BodyIconTypography
+              label="Event products must be booked with an explicit date and time. Use the booking flow for this product instead of starting a subscription."
+              sx={{ mt: 1.5, opacity: 0.82 }}
+            />
+            <Button
+              variant="contained"
+              sx={{ mt: 3, textTransform: 'none' }}
+              onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id))}
+            >
+              Back to product
+            </Button>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
+  const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name ?? '';
+
+  if (!selectedPricingOption) {
     return null;
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id);
+  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id);
   const priceLabel = `${currencyLabel} ${selectedPricingOption.price}`;
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
 

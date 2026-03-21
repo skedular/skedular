@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<749fd296dada90300630755f62611594>>
+ * @generated SignedSource<<7f5fe9885d87083bf7fe315ed84854d8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type Currency = "NZD" | "USD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductSubscribeAuthGate_query$data = {
   readonly currencies: ReadonlyArray<{
@@ -50,6 +51,10 @@ export type marketplaceProductSubscribeAuthGate_query$data = {
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
+    readonly type: {
+      readonly name: string;
+      readonly type: ProductType;
+    };
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
@@ -148,6 +153,16 @@ return {
       "plural": false,
       "selections": [
         (v2/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ProductTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -289,6 +304,6 @@ return {
 };
 })();
 
-(node as any).hash = "d1f7309475b75fa0bf9342444f644c1a";
+(node as any).hash = "c18f98a98b76124c568de60caa6ab20f";
 
 export default node;

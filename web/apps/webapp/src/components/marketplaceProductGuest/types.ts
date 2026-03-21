@@ -10,6 +10,12 @@ export type MarketplaceProductPricingPlan = {
   cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
 };
 
+export type MarketplaceProductTypeSummary = {
+  type: string;
+  name: string;
+  description: string;
+};
+
 export type MarketplaceProductResource = {
   id: string;
   name: string;

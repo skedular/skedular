@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5b4b8010b8582249e3d9e748e1230a6>>
+ * @generated SignedSource<<dc7a3350515904332b1f0adcb9ed2cba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductSubscribeForm_query$data = {
   readonly currencies: ReadonlyArray<{
@@ -61,6 +62,10 @@ export type marketplaceProductSubscribeForm_query$data = {
       readonly purchaseCadence: ProductPricingCadence;
       readonly supportsSubscriptionAutoRenewal: boolean;
     }>;
+    readonly type: {
+      readonly name: string;
+      readonly type: ProductType;
+    };
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
@@ -185,6 +190,16 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "latestProductVersionId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ProductTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -355,6 +370,6 @@ return {
 };
 })();
 
-(node as any).hash = "fd7a655b4d7db2b488c1c34d81fca381";
+(node as any).hash = "3dc521d013a885be35b9367c790389b0";
 
 export default node;

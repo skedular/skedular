@@ -14,6 +14,7 @@ type Props = {
   cadenceLabel: string;
   cancellationPolicyType: string | null | undefined;
   cancellationRefundRules: ReadonlyArray<{ minutesBefore: number; refundPercentage: number }> | null | undefined;
+  productType: string | null | undefined;
   quantity: number;
   startsOnLabel: string;
   taxLabel: string;
@@ -35,6 +36,7 @@ const MarketplaceProductSubscribeSummary = ({
   cadenceLabel,
   cancellationPolicyType,
   cancellationRefundRules,
+  productType,
   quantity,
   startsOnLabel,
   taxLabel,
@@ -63,9 +65,13 @@ const MarketplaceProductSubscribeSummary = ({
           <StackColumn spacing={1}>
             <BodyIconTypography
               label={
-                autoRenew
-                  ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
-                  : 'This purchase covers the current cadence window only. No additional renewal will be created.'
+                productType === 'EVENT'
+                  ? autoRenew
+                    ? 'Each cycle will reserve the full matching event resource set again, including across multiple locations. If one required resource is unavailable for a future cycle, that cycle cannot be materialized.'
+                    : 'This purchase reserves the full matching event resource set for the current cadence window only.'
+                  : autoRenew
+                    ? 'Your next cycle will use the latest matching pricing option for the same cadence.'
+                    : 'This purchase covers the current cadence window only. No additional renewal will be created.'
               }
               sx={{ opacity: 0.86 }}
             />

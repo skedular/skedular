@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bff2cb030941e0749ef03423fef03521>>
+ * @generated SignedSource<<87ce51efdfc0b6b2162eaa83f49d35da>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 export type marketplaceProductBookingDetails_rootQuery$variables = {
   bookingId: string;
 };
@@ -62,6 +63,10 @@ export type marketplaceProductBookingDetails_rootQuery$data = {
           readonly includedFeatures: ReadonlyArray<string> | null | undefined;
           readonly subTitle: string | null | undefined;
           readonly title: string | null | undefined;
+        };
+        readonly type: {
+          readonly name: string;
+          readonly type: ProductType;
         };
       };
       readonly quantity: number;
@@ -222,7 +227,27 @@ v12 = {
   "name": "paymentExpiry",
   "storageKey": null
 },
-v13 = {
+v13 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v5/*: any*/)
+],
+v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ProductTypeDetails",
+  "kind": "LinkedField",
+  "name": "type",
+  "plural": false,
+  "selections": (v13/*: any*/),
+  "storageKey": null
+},
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -261,7 +286,7 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "CdnImageFile",
@@ -290,7 +315,7 @@ v14 = {
   ],
   "storageKey": null
 },
-v15 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "BookingCheckoutSessionDetails",
@@ -308,34 +333,24 @@ v15 = {
   ],
   "storageKey": null
 },
-v16 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v5/*: any*/)
-],
-v17 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v16/*: any*/),
+  "selections": (v13/*: any*/),
   "storageKey": null
 },
-v18 = {
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v16/*: any*/),
+  "selections": (v13/*: any*/),
   "storageKey": null
 };
 return {
@@ -380,14 +395,15 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v13/*: any*/),
-                  (v14/*: any*/)
+                  (v14/*: any*/),
+                  (v15/*: any*/),
+                  (v16/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v15/*: any*/),
               (v17/*: any*/),
-              (v18/*: any*/)
+              (v18/*: any*/),
+              (v19/*: any*/)
             ],
             "storageKey": null
           }
@@ -439,15 +455,16 @@ return {
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v13/*: any*/),
                   (v14/*: any*/),
+                  (v15/*: any*/),
+                  (v16/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v15/*: any*/),
               (v17/*: any*/),
-              (v18/*: any*/)
+              (v18/*: any*/),
+              (v19/*: any*/)
             ],
             "storageKey": null
           }
@@ -457,16 +474,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "84227bf58e5d5560a74466e24e9581fb",
+    "cacheID": "7f9c90113e54a6f0dd3dafb89763659c",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "query marketplaceProductBookingDetails_rootQuery(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    id\n    from\n    until\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    involvedLocations {\n      uniqueId\n      name\n    }\n    bookingResources {\n      resource {\n        id\n        name\n      }\n    }\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        type {\n          type\n          name\n        }\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        id\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4cee61d834fff544af96d7cb7c9fca3a";
+(node as any).hash = "b310caefc1528dcd2e4ab1fe7de98db3";
 
 export default node;

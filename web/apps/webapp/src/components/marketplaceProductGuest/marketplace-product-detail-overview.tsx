@@ -1,5 +1,6 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { SelectedTickIcon } from '@/components/icons';
+import Chip from '@mui/material/Chip';
 import type { marketplaceProductDetailOverview_product$key } from '@/queries/__generated__/marketplaceProductDetailOverview_product.graphql';
 import type { marketplaceProductDetailOverview_query$key } from '@/queries/__generated__/marketplaceProductDetailOverview_query.graphql';
 import Card from '@mui/material/Card';
@@ -28,6 +29,10 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
   const product = useFragment<marketplaceProductDetailOverview_product$key>(
     graphql`
       fragment marketplaceProductDetailOverview_product on ProductDetails {
+        type {
+          type
+          name
+        }
         listingMetadata {
           title
           subTitle
@@ -58,6 +63,11 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
   if (!product) {
     return null;
   }
+
+  const productTypeDescription =
+    product.type.type === 'EVENT'
+      ? 'This booking reserves all matching resources for the selected time, including across multiple locations when the product tags match.'
+      : 'This booking reserves the matching resources required for the selected time.';
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -115,7 +125,11 @@ const MarketplaceProductDetailOverview = ({ rootDataRelay }: Props) => {
       <Card variant="outlined" sx={{ borderRadius: 3 }}>
         <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, '&:last-child': { pb: { xs: 2.5, md: 3.5 } } }}>
           <LeadIconTypography label="About this product" sx={{ mb: 1.5 }} />
+          <Box sx={{ mb: 1.5 }}>
+            <Chip label={product.type.name} color={product.type.type === 'EVENT' ? 'warning' : 'primary'} variant="outlined" />
+          </Box>
           <BodyIconTypography label={product.listingMetadata.subTitle ?? ''} sx={{ opacity: 0.85 }} />
+          <BodyIconTypography label={productTypeDescription} sx={{ mt: 1.25, opacity: 0.85 }} />
 
           {includedFeatures.length > 0 && (
             <>

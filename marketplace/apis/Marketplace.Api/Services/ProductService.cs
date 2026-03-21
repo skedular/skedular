@@ -54,7 +54,7 @@ public class ProductService(
         ProductVersion productVersion,
         CancellationToken cancellationToken)
     {
-        Validate(productVersion.PricingOptions);
+        Validate(productVersion.Type, productVersion.PricingOptions);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         if (!string.IsNullOrWhiteSpace(id))
@@ -136,7 +136,7 @@ public class ProductService(
     public async Task<Product> UpdateAsync(string id, ProductVersion productVersion, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
-        Validate(productVersion.PricingOptions);
+        Validate(productVersion.Type, productVersion.PricingOptions);
 
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingProduct = await repositoryFactory.ProductRepository.GetByIdAsync(id, cancellationToken) ?? throw new ProductNotFound();
@@ -334,11 +334,11 @@ public class ProductService(
         return product;
     }
 
-    private static void Validate(ICollection<ProductPricing> options)
+    private static void Validate(ProductType productType, ICollection<ProductPricing> options)
     {
         foreach (var option in options)
         {
-            Validate(option);
+            Validate(productType, option);
         }
     }
 
@@ -351,11 +351,21 @@ public class ProductService(
             _ => (OpeningHoursDetails.BookingSlotSizeInMinutes, $"{OpeningHoursDetails.BookingSlotSizeInMinutes}-minute")
         };
 
-    private static void Validate(ProductPricing pricing)
+    private static void Validate(ProductType productType, ProductPricing pricing)
     {
+        if (productType == ProductType.Event && IsSubscriptionCadence(pricing.PurchaseCadence))
+        {
+            throw new ProductPricingEventRequiresExplicitTimeBooking();
+        }
+
+        if (productType == ProductType.Event && pricing.SupportsSubscriptionAutoRenewal)
+        {
+            throw new ProductPricingEventAutoRenewalNotSupported();
+        }
+
         if (pricing.AcceptedPaymentMethods.Count <= 0)
         {
-            throw new ArgumentException("At least one accepted booking payment method must be selected", nameof(pricing.AcceptedPaymentMethods));
+            throw new ProductPricingAcceptedPaymentMethodsRequired();
         }
 
         if (pricing.BillingMode == ProductPricingBillingMode.NotSet)
@@ -371,56 +381,66 @@ public class ProductService(
         {
             if (pricing.MinDurationMinutes <= 0)
             {
-                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
+                throw new ProductPricingMinDurationMustBePositive();
             }
 
             if (pricing.MinDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException($"MinDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MinDurationMinutes));
+                throw new ProductPricingMinDurationIncrementInvalid(durationStepLabel);
             }
 
             if (pricing.MaxDurationMinutes <= 0)
             {
-                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
+                throw new ProductPricingMaxDurationMustBePositive();
             }
 
             if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException($"MaxDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MaxDurationMinutes));
+                throw new ProductPricingMaxDurationIncrementInvalid(durationStepLabel);
             }
 
             if (pricing.MaxDurationMinutes < pricing.MinDurationMinutes)
             {
-                throw new ArgumentException(
-                    "MaxDurationMinutes must be greater or equal than productVersion.MinDurationMinutes",
-                    nameof(pricing.MaxDurationMinutes));
+                throw new ProductPricingMaxDurationMustNotBeLessThanMinDuration();
             }
         }
         else if (pricing.MinDurationMinutes is not null && pricing.MaxDurationMinutes is null)
         {
             if (pricing.MinDurationMinutes <= 0)
             {
-                throw new ArgumentException("MinDurationMinutes must be greater than 0", nameof(pricing.MinDurationMinutes));
+                throw new ProductPricingMinDurationMustBePositive();
             }
 
             if (pricing.MinDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException($"MinDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MinDurationMinutes));
+                throw new ProductPricingMinDurationIncrementInvalid(durationStepLabel);
             }
         }
         else if (pricing.MinDurationMinutes is null && pricing.MaxDurationMinutes is not null)
         {
             if (pricing.MaxDurationMinutes <= 0)
             {
-                throw new ArgumentException("MaxDurationMinutes must be greater than 0", nameof(pricing.MaxDurationMinutes));
+                throw new ProductPricingMaxDurationMustBePositive();
             }
 
             if (pricing.MaxDurationMinutes % durationStepMinutes != 0)
             {
-                throw new ArgumentException($"MaxDurationMinutes must be in {durationStepLabel} increments", nameof(pricing.MaxDurationMinutes));
+                throw new ProductPricingMaxDurationIncrementInvalid(durationStepLabel);
             }
         }
     }
+
+    private static bool IsSubscriptionCadence(ProductPricingCadence cadence) =>
+        cadence is ProductPricingCadence.Daily or
+            ProductPricingCadence.Weekly or
+            ProductPricingCadence.Fortnightly or
+            ProductPricingCadence.Monthly or
+            ProductPricingCadence.TwoMonths or
+            ProductPricingCadence.Quarterly or
+            ProductPricingCadence.FourMonths or
+            ProductPricingCadence.FiveMonths or
+            ProductPricingCadence.SixMonths or
+            ProductPricingCadence.Yearly;
 
     /// <summary>
     ///     Validates that a pricing option cancellation policy is internally consistent.

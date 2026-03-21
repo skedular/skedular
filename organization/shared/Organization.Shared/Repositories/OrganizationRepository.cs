@@ -45,7 +45,7 @@ internal static class OrganizationExtensions
         internal IIncludableQueryable<Database.Entities.Organization, OrganizationStripePaymentMethod> AddDependentObjects(bool isTracked,
             bool includeAllOfferings)
         {
-            var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
                 .Include(query => query.OrganizationSsoSettings)
                 .Include(query => query.OrganizationTaxDetails)
                 .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))

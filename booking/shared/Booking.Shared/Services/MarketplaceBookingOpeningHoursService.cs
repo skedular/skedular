@@ -111,7 +111,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         // Opening hours can be overridden at the resource level. That means we cannot pick
         // a single location window up front anymore: we first narrow to candidate locations,
         // then evaluate the effective booking window of each resource in that location.
-        var allLocations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken);
+        var allLocations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, false, [], cancellationToken);
         var candidateLocations = allLocations
             .Where(location => !location.DeletedAt.HasValue)
             .Where(location =>

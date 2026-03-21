@@ -28,7 +28,7 @@ public class OrganizationTermsOfUseService(
 
                 var termsOfUse = await repositoryFactory.TermsOfUseRepository
                     .Query(new Specification<Shared.Database.Entities.TermsOfUse> { Criteria = query => !query.DeletedAt.HasValue && query.Active })
-                    .AsNoTrackingWithIdentityResolution()
+                    .AsNoTracking()
                     .FirstAsync(cancellationToken);
 
                 return mapper.MapTo(termsOfUse)!;

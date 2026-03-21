@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<079b5a727138279821e3000345de4a6a>>
+ * @generated SignedSource<<79e00eaae18f97e6ab8e69a1420ce8dc>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingBillingMode = "IN_ARREARS" | "NOT_SET" | "UPFRONT" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductBookingForm_query$data = {
   readonly bookingSlotSizeInMinutes: number;
@@ -64,6 +65,10 @@ export type marketplaceProductBookingForm_query$data = {
       readonly price: any;
       readonly purchaseCadence: ProductPricingCadence;
     }>;
+    readonly type: {
+      readonly name: string;
+      readonly type: ProductType;
+    };
   } | null | undefined;
   readonly productPricingCadences: ReadonlyArray<{
     readonly name: string;
@@ -195,6 +200,16 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "latestProductVersionId",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ProductTypeDetails",
+          "kind": "LinkedField",
+          "name": "type",
+          "plural": false,
+          "selections": (v1/*: any*/),
           "storageKey": null
         },
         {
@@ -379,6 +394,6 @@ return {
 };
 })();
 
-(node as any).hash = "ccec977c271e0640be097c5ee5db1754";
+(node as any).hash = "b18813d1c16b373c6b290f55f7d5d7cf";
 
 export default node;

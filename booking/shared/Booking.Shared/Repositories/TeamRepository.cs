@@ -24,7 +24,7 @@ internal static class TeamExtensions
         internal IIncludableQueryable<Team, Customer> AddDependentObjects(
             bool isTracked,
             bool includeDeletedTeamMembers) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.TeamMembers.Where(teamMember => includeDeletedTeamMembers || !teamMember.DeletedAt.HasValue))
             .ThenInclude(query => query.Customer)
             .ThenInclude(query => query.Identities)

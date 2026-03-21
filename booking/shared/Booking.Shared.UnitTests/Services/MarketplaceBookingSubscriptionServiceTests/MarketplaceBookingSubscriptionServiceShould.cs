@@ -10,11 +10,52 @@ using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
 using Shouldly;
 using Testing.Shared;
+using ProductVersion = Booking.Shared.Models.ProductVersion;
 
 namespace Booking.Shared.UnitTests.Services.MarketplaceBookingSubscriptionServiceTests;
 
 public class MarketplaceBookingSubscriptionServiceShould
 {
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task AddAsync_Throws_MarketplaceEventProductRecurringBookingNotSupported_When_Product_Is_Event(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        MarketplaceBookingSubscriptionService sut,
+        ICustomerRepository customerRepository,
+        IProductVersionRepository productVersionRepository,
+        CancellationToken cancellationToken)
+    {
+        var customer = new Customer { Id = "customer-1" };
+        var subscription = new Models.MarketplaceBookingSubscription
+        {
+            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
+            MarketplaceBooking = new Models.MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion { Id = "product-version-1" },
+                ProductPricing = ProductPricing.Empty("pricing-1"),
+                PaymentMethod = PaymentMethod.Card
+            }
+        };
+        var productVersion = new Database.Entities.ProductVersion
+        {
+            Id = "product-version-1",
+            Type = ProductTypeConstants.Event,
+            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
+            PricingOptions = [ProductPricing.Empty("pricing-1")],
+            Product = new Product { Organization = new Organization { Id = "org-1" } }
+        };
+
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+            .Returns([customer]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken))
+            .Returns(productVersion);
+
+        await Should.ThrowAsync<MarketplaceEventProductRecurringBookingNotSupported>(() =>
+            sut.AddAsync(subscription, customer, [], [], cancellationToken));
+    }
+
     [Theory]
     [AutoFakeItEasyData]
     public async Task DeleteAsync_Throws_MarketplaceBookingSubscriptionCancellationNotAllowed_When_User_Delete_Has_No_Cancellation_Policy(

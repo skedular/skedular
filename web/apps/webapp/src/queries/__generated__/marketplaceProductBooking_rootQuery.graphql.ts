@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84e363d9c9cde100bc09d1cf7bba4403>>
+ * @generated SignedSource<<fd1e572cdf73b91009286ebb4916eb87>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -204,6 +204,16 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "latestProductVersionId",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ProductTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": (v6/*: any*/),
             "storageKey": null
           },
           {
@@ -424,12 +434,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8dbfc40aa9bb84eb07790b236f9bb336",
+    "cacheID": "725e65512d136d1fa7c50316d9bc3259",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBooking_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n) {\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  productPricingCadences {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    organization {\n      customerFacingTermsAndConditionsUrl\n      id\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
+    "text": "query marketplaceProductBooking_rootQuery(\n  $productId: String!\n) {\n  product(id: $productId) {\n    ...marketplaceProductBookingHero_product\n    id\n  }\n  ...marketplaceProductBookingForm_query_2SWcqy\n}\n\nfragment marketplaceProductBookingForm_query_2SWcqy on Query {\n  me {\n    id\n    emails\n  }\n  currencies {\n    type\n    name\n  }\n  paymentMethodTypes {\n    type\n    name\n  }\n  bookingSlotSizeInMinutes\n  productPricingCadences {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    latestProductVersionId\n    type {\n      type\n      name\n    }\n    organization {\n      customerFacingTermsAndConditionsUrl\n      id\n    }\n    listingMetadata {\n      title\n    }\n    currency {\n      type\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      bookingCadence\n      price\n      numberOfResourcesToBook\n      minDurationMinutes\n      maxDurationMinutes\n      cancellationPolicyType\n      cancellationRefundRules {\n        minutesBefore\n        refundPercentage\n      }\n      isTaxInclusive\n      billingMode\n      acceptedPaymentMethods\n    }\n  }\n}\n\nfragment marketplaceProductBookingHero_product on ProductDetails {\n  listingMetadata {\n    title\n    subTitle\n    about\n    includedFeatures\n  }\n  featureImages {\n    original {\n      url\n    }\n  }\n  amenities {\n    id\n    name\n  }\n}\n"
   }
 };
 })();

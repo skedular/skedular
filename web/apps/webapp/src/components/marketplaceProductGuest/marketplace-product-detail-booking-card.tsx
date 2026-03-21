@@ -8,13 +8,14 @@ import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
-import type { MarketplaceProductPricingPlan } from './types';
+import type { MarketplaceProductPricingPlan, MarketplaceProductTypeSummary } from './types';
 
 type Props = {
   rootDataRelay: marketplaceProductDetailBookingCard_query$key;
@@ -52,6 +53,10 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     graphql`
       fragment marketplaceProductDetailBookingCard_product on ProductDetails {
         id
+        type {
+          type
+          name
+        }
         listingMetadata {
           about
           title
@@ -94,6 +99,16 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
   );
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
+  const productType: MarketplaceProductTypeSummary | null = product?.type
+    ? {
+        type: product.type.type,
+        name: product.type.name,
+        description:
+          product.type.type === 'EVENT'
+            ? 'Books all matching resources for the selected time, including across multiple locations. If one is unavailable, the booking cannot go ahead.'
+            : 'Books the matching resources required for the selected time.',
+      }
+    : null;
   const pricingPlans = useMemo<MarketplaceProductPricingPlan[]>(() => {
     if (!product) {
       return [];
@@ -102,6 +117,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     const currencyLabel = rootData.currencies.find((item) => item.type === product.currency.type)?.name ?? product.currency.name;
 
     return [...product.pricingOptions]
+      .filter((pricingOption) => product.type.type !== 'EVENT' || !isSubscriptionCadence(pricingOption.purchaseCadence))
       .sort((left, right) => left.index - right.index)
       .map((pricingOption) => ({
         id: pricingOption.id,
@@ -132,7 +148,13 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         <CardContent sx={{ p: { xs: 2.5, md: 3 }, '&:last-child': { pb: { xs: 2.5, md: 3 } } }}>
           <CaptionIconTypography label="Product" sx={{ letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.7 }} />
           <LeadIconTypography label={product.listingMetadata.title} sx={{ mt: 0.4, mb: 0.6 }} />
+          {productType && (
+            <Box sx={{ mb: 1.2 }}>
+              <Chip label={productType.name} color={productType.type === 'EVENT' ? 'warning' : 'primary'} variant="outlined" />
+            </Box>
+          )}
           <BodyIconTypography label={product.listingMetadata.about ?? ''} sx={{ opacity: 0.85, mb: 2.2 }} />
+          {productType && <CaptionIconTypography label={productType.description} sx={{ mb: 2, opacity: 0.78 }} />}
 
           <LeadIconTypography label="Select a pricing option" sx={{ mb: 1.2 }} />
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -188,6 +210,13 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
               </Box>
             ))}
           </Box>
+
+          {product.type.type === 'EVENT' && pricingPlans.length === 0 ? (
+            <BodyIconTypography
+              label="Event products support timed bookings only. No explicit-time pricing option is currently available for this product."
+              sx={{ opacity: 0.78 }}
+            />
+          ) : null}
 
           <Box sx={{ mt: 2 }}>
             <CaptionIconTypography label={marketplaceLocations.length > 0 ? 'Available locations' : 'Availability'} sx={{ opacity: 0.72, mb: 0.8 }} />

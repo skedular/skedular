@@ -14,6 +14,7 @@ type Props = {
   dateLabel: string;
   durationLabel: string;
   paymentLabel: string;
+  productType: string | null | undefined;
   quantity: number;
   taxLabel: string;
   termsAndConditionsUrl: string | null | undefined;
@@ -34,6 +35,7 @@ const MarketplaceProductBookingSummary = ({
   dateLabel,
   durationLabel,
   paymentLabel,
+  productType,
   quantity,
   taxLabel,
   termsAndConditionsUrl,
@@ -51,14 +53,18 @@ const MarketplaceProductBookingSummary = ({
       <StackColumn spacing={1.2}>
         <SummaryRow label="Date" value={dateLabel} />
         <SummaryRow label="Duration" value={durationLabel} />
-        <SummaryRow label="Quantity" value={`${quantity}`} />
+        {productType !== 'EVENT' ? <SummaryRow label="Quantity" value={`${quantity}`} /> : null}
         <SummaryRow label="Payment" value={paymentLabel} />
       </StackColumn>
 
       <Box sx={{ mt: 2.5, p: 2, borderRadius: 3, bgcolor: (theme) => theme.palette.action.hover }}>
         <StackColumn spacing={1}>
           <BodyIconTypography
-            label="Resource allocation is handled after checkout for now. A dedicated floor-plan resource picker can be added later without changing this purchase flow."
+            label={
+              productType === 'EVENT'
+                ? 'This event booking reserves every matching resource for the selected time, including across multiple locations. If one required resource is not available, the booking cannot be confirmed.'
+                : 'Resource allocation is handled after checkout for now. A dedicated floor-plan resource picker can be added later without changing this purchase flow.'
+            }
             sx={{ opacity: 0.86 }}
           />
         </StackColumn>

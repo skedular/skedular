@@ -53,6 +53,10 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         product(id: $productId) {
           id
           latestProductVersionId
+          type {
+            type
+            name
+          }
           organization {
             customerFacingTermsAndConditionsUrl
           }
@@ -288,6 +292,14 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     return null;
   }
 
+  if (rootData.product.type.type === 'EVENT') {
+    return (
+      <Alert severity="info" sx={{ borderRadius: 3 }}>
+        Event products support timed bookings only. Use the booking flow instead of starting a recurring plan.
+      </Alert>
+    );
+  }
+
   if (subscriptionPricingOptions.length === 0) {
     return (
       <Alert severity="info" sx={{ borderRadius: 3 }}>
@@ -418,6 +430,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         cadenceLabel={cadenceLabel}
         cancellationPolicyType={selectedPricingOption?.cancellationPolicyType}
         cancellationRefundRules={selectedPricingOption?.cancellationRefundRules}
+        productType={rootData.product.type.type}
         quantity={quantity}
         startsOnLabel={toShortDate(startedAt.toISOString())}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}

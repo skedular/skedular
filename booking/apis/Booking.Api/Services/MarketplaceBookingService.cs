@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Repositories;
 using Enterprise.Shared;
@@ -31,11 +32,6 @@ public class MarketplaceBookingService(
         if (booking.InvolvedCustomers.Count == 0)
         {
             throw new ArgumentException(nameof(booking.InvolvedCustomers));
-        }
-
-        if (marketplaceBooking.Quantity <= 0)
-        {
-            throw new ArgumentException(nameof(marketplaceBooking.Quantity));
         }
 
         if (string.IsNullOrWhiteSpace(marketplaceBooking.ProductVersion.Id))
@@ -83,6 +79,15 @@ public class MarketplaceBookingService(
 
         var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(marketplaceBooking.ProductVersion.Id, cancellationToken) ??
                              throw new ProductVersionNotFound();
+        if (productVersion.Type == ProductTypeConstants.Event)
+        {
+            marketplaceBooking.Quantity = 1;
+        }
+        else if (marketplaceBooking.Quantity <= 0)
+        {
+            throw new ArgumentException(nameof(marketplaceBooking.Quantity));
+        }
+
         marketplaceBooking.ProductPricing =
             productVersion.PricingOptions.ToSafeCollection().First(item => item.Id == marketplaceBooking.ProductPricing.Id);
 

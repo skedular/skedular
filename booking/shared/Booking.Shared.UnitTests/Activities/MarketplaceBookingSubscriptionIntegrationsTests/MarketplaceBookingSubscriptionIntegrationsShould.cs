@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
@@ -392,6 +393,65 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                     item.InvoiceEmailList.Count == 0),
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Throw_When_Event_Product_Reaches_Subscription_Recurring_Materialization(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IRecurringBookingScheduleService recurringBookingScheduleService,
+        [Frozen] TimeProvider timeProvider,
+        MarketplaceBookingSubscriptionIntegrations sut,
+        IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        ICustomerRepository customerRepository,
+        IBookingRepository bookingRepository)
+    {
+        var environment = new ActivityEnvironment();
+        var customer = new Customer { Id = "customer-1" };
+        var recurringBooking = new RecurringBooking
+        {
+            Id = "rb-1",
+            StartDate = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero),
+            EndDate = new DateTimeOffset(2026, 3, 31, 0, 0, 0, TimeSpan.Zero),
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Quantity = 1,
+                ProductPricing =
+                    ProductPricing.Empty("pricing-1") with
+                    {
+                        PurchaseCadence = ProductPricingCadence.Monthly, BookingCadence = ProductPricingCadence.Daily, NumberOfResourcesToBook = 1
+                    },
+                ProductVersion = new ProductVersion { Id = "pv-1", Type = ProductTypeConstants.Event }
+            },
+            InvolvedCustomers = [customer],
+            InvolvedOrganizations = [],
+            InvolvedTeams = []
+        };
+        var subscription = CreateSubscription(MarketplaceBookingSubscriptionStatus.Active, new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero));
+        subscription.StartedAt = new DateTimeOffset(2026, 3, 1, 0, 0, 0, TimeSpan.Zero);
+        subscription.RecurringBookings = [recurringBooking];
+        subscription.InvolvedCustomers = [customer];
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero));
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository).Returns(marketplaceBookingSubscriptionRepository);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => marketplaceBookingSubscriptionRepository.GetByIdAsync("sub-1", environment.CancellationTokenSource.Token))
+            .Returns(subscription);
+        A.CallTo(() => customerRepository.GetByIdAsync(customer.Id, true, environment.CancellationTokenSource.Token)).Returns(customer);
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync("rb-1", A<DateTimeOffset>._, null, environment.CancellationTokenSource.Token))
+            .Returns([]);
+        A.CallTo(() => recurringBookingScheduleService.GetReconciliationPlan(
+                recurringBooking,
+                A<DateTimeOffset>._,
+                A<DateTimeOffset>._,
+                A<ICollection<Database.Entities.Booking>>._))
+            .Returns(new RecurringBookingReconciliationPlan([], [new DateOnly(2026, 3, 20)], [], false));
+
+        await Should.ThrowAsync<MarketplaceEventProductRecurringBookingNotSupported>(async () =>
+            await environment.RunAsync(() =>
+                sut.AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
+                    new AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput("sub-1"))));
     }
 
     [Theory]

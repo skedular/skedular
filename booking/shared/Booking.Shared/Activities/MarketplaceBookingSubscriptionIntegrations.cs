@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
@@ -191,8 +192,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         ArgumentNullException.ThrowIfNull(recurringBooking.MarketplaceBooking);
 
-        var requiredResourceCount = recurringBooking.MarketplaceBooking.Quantity *
-                                    recurringBooking.MarketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+        if (recurringBooking.MarketplaceBooking.ProductVersion.Type == ProductTypeConstants.Event)
+        {
+            throw new MarketplaceEventProductRecurringBookingNotSupported();
+        }
+
+        var requiredResourceCount =
+            recurringBooking.MarketplaceBooking.Quantity * recurringBooking.MarketplaceBooking.ProductPricing.NumberOfResourcesToBook;
         var useOpeningHoursWindow = marketplaceBookingOpeningHoursService.ShouldUseLocationOpeningHoursWindow(
             recurringBooking.MarketplaceBooking.ProductPricing.PurchaseCadence);
 

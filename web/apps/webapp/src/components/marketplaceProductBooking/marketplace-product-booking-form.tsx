@@ -62,6 +62,10 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         product(id: $productId) {
           id
           latestProductVersionId
+          type {
+            type
+            name
+          }
           organization {
             customerFacingTermsAndConditionsUrl
           }
@@ -164,6 +168,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     () => bookingPricingOptions.find((item) => item.id === effectiveSelectedPricingId) ?? bookingPricingOptions[0] ?? null,
     [bookingPricingOptions, effectiveSelectedPricingId],
   );
+  const isEventProduct = rootData.product?.type.type === 'EVENT';
   const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
 
   useEffect(() => {
@@ -241,6 +246,8 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     return { errorMessage: '', from, until, valid: true };
   }, [selectedDate, selectedPricingOption, timeRange]);
 
+  const effectiveQuantity = isEventProduct ? 1 : quantity;
+
   const totalLabel = useMemo(() => {
     if (!selectedPricingOption || !dateRangeValidation.valid) {
       return 'N/A';
@@ -248,18 +255,18 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
     const minutes = dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes');
     const price = Number(selectedPricingOption.price);
-    let total = price * quantity;
+    let total = price * effectiveQuantity;
 
     if (selectedPricingOption.bookingCadence === 'PER_MINUTE') {
-      total = price * quantity * minutes;
+      total = price * effectiveQuantity * minutes;
     }
 
     if (selectedPricingOption.bookingCadence === 'PER_HOUR') {
-      total = (price / 60) * quantity * minutes;
+      total = (price / 60) * effectiveQuantity * minutes;
     }
 
     return `${currencyLabel} ${total.toFixed(2)}`;
-  }, [currencyLabel, dateRangeValidation, quantity, selectedPricingOption]);
+  }, [currencyLabel, dateRangeValidation, effectiveQuantity, selectedPricingOption]);
 
   const durationLabel = dateRangeValidation.valid ? `${dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes')} minutes` : 'Invalid time';
   const paymentLabel = isInArrearsBilling
@@ -314,7 +321,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           category: bookingCategory,
           paymentMethod: submittedPaymentMethod as PaymentMethod,
           invoiceEmailList,
-          quantity,
+          quantity: effectiveQuantity,
           productVersionId: product.latestProductVersionId,
           pricingId: selectedPricingOption.id,
           checkoutReturnUrl: new URL(
@@ -383,7 +390,11 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           <CaptionIconTypography label="Book a workspace" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
           <LeadIconTypography label="Choose a time for your booking" sx={{ mt: 1 }} />
           <BodyIconTypography
-            label="Use this marketplace booking flow to choose the date, time, payment method, and checkout details for this product."
+            label={
+              rootData.product.type.type === 'EVENT'
+                ? 'Use this marketplace booking flow to reserve every matching event resource for the chosen time, including across multiple locations. If one required resource is unavailable, the booking cannot go ahead.'
+                : 'Use this marketplace booking flow to choose the date, time, payment method, and checkout details for this product.'
+            }
             sx={{ mt: 1, opacity: 0.82 }}
           />
 
@@ -430,16 +441,18 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
               }}
             />
 
-            <TextField
-              label="Quantity"
-              type="number"
-              value={quantity}
-              onChange={(event) => {
-                setQuantity(Math.max(1, Number(event.target.value || '1')));
-              }}
-              slotProps={{ htmlInput: { min: 1 } }}
-              sx={{ width: { xs: '100%', sm: 160 } }}
-            />
+            {!isEventProduct && (
+              <TextField
+                label="Quantity"
+                type="number"
+                value={quantity}
+                onChange={(event) => {
+                  setQuantity(Math.max(1, Number(event.target.value || '1')));
+                }}
+                slotProps={{ htmlInput: { min: 1 } }}
+                sx={{ width: { xs: '100%', sm: 160 } }}
+              />
+            )}
 
             {dateRangeValidation.errorMessage ? <Alert severity="warning">{dateRangeValidation.errorMessage}</Alert> : null}
 
@@ -498,7 +511,8 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         dateLabel={toShortDate(selectedDate.toISOString())}
         durationLabel={selectedPricingOption?.purchaseCadence === 'HALF_DAY' ? 'Half-day access' : durationLabel}
         paymentLabel={paymentLabel}
-        quantity={quantity}
+        productType={rootData.product.type.type}
+        quantity={effectiveQuantity}
         taxLabel={selectedPricingOption?.isTaxInclusive ? 'Tax included' : 'Tax added at invoice'}
         termsAndConditionsUrl={rootData.product?.organization.customerFacingTermsAndConditionsUrl}
         title={selectedPricingOption?.listingMetadata.title ?? rootData.product.listingMetadata.title ?? ''}

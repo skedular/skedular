@@ -21,6 +21,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         IResourceRepository resourceRepository,
         CancellationToken cancellationToken)
     {
+        var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
         var pricing = CreatePricing(ProductPricingCadence.Daily);
         var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
@@ -47,7 +48,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken)).Returns([location]);
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, false, emptyIds, cancellationToken)).Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
                 null,
                 location.Id,
@@ -84,6 +85,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         IResourceRepository resourceRepository,
         CancellationToken cancellationToken)
     {
+        var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
         var pricing = CreatePricing(ProductPricingCadence.Daily);
         var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
@@ -107,7 +109,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken)).Returns([location]);
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, false, emptyIds, cancellationToken)).Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
                 null,
                 location.Id,
@@ -142,6 +144,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         ILocationRepository locationRepository,
         CancellationToken cancellationToken)
     {
+        var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
         var dayStart = bookingDay.ToDateTimeOffset(TimeSpan.Zero);
         var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
@@ -159,7 +162,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         ];
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
-        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken)).Returns([location]);
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, false, emptyIds, cancellationToken)).Returns([location]);
 
         var result = await sut.TryResolveDailyPlanAsync(
             null,
@@ -183,6 +186,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         IResourceRepository resourceRepository,
         CancellationToken cancellationToken)
     {
+        var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
         var pricing = CreatePricing(ProductPricingCadence.Daily, 2);
         var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
@@ -231,7 +235,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken))
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, false, emptyIds, cancellationToken))
             .Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
                 null,
@@ -297,6 +301,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
         IResourceRepository resourceRepository,
         CancellationToken cancellationToken)
     {
+        var emptyIds = Array.Empty<string>();
         var bookingDay = new DateOnly(2026, 3, 16);
         var pricing = CreatePricing(ProductPricingCadence.Daily);
         var productTag = new OrganizationTag { Id = "tag-1", Type = OrganizationTagTypeConstants.Product };
@@ -314,7 +319,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
 
         A.CallTo(() => repositoryFactory.LocationRepository).Returns(locationRepository);
         A.CallTo(() => repositoryFactory.ResourceRepository).Returns(resourceRepository);
-        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken)).Returns([location]);
+        A.CallTo(() => locationRepository.GetAllWithActiveOrganizationAsync(false, false, emptyIds, cancellationToken)).Returns([location]);
         A.CallTo(() => resourceRepository.GetAvailableResourcesAsync(
                 null,
                 location.Id,

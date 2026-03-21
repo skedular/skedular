@@ -53,6 +53,10 @@ const RootQuery = graphql`
         isPaymentRequired
         paymentExpiry
         productVersion {
+          type {
+            type
+            name
+          }
           listingMetadata {
             title
             subTitle
@@ -171,7 +175,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Booking date" value={toStoredBookingDate(booking.from)} />
                   <DetailsRow label="Booking time" value={`${toStoredBookingTime(booking.from)} - ${toStoredBookingTime(booking.until)}`} />
-                  <DetailsRow label="Quantity" value={`${marketplaceBooking.quantity}`} />
+                  {marketplaceBooking.productVersion?.type.type !== 'EVENT' ? <DetailsRow label="Quantity" value={`${marketplaceBooking.quantity}`} /> : null}
                   <DetailsRow label="Booked for" value={booking.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow
                     label="Location"

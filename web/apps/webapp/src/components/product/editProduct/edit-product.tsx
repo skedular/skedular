@@ -105,6 +105,11 @@ const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: numb
   acceptedPaymentMethods: [],
 });
 
+const isSubscriptionCadence = (cadence?: string | null) =>
+  !!cadence && new Set(['DAILY', 'WEEKLY', 'FORTNIGHTLY', 'MONTHLY', 'TWO_MONTHS', 'QUARTERLY', 'FOUR_MONTHS', 'FIVE_MONTHS', 'SIX_MONTHS', 'YEARLY']).has(cadence);
+
+const isEventType = (type?: string | null) => type === 'EVENT';
+
 const getDurationStepDetails = (cadence: string, bookingSlotSizeInMinutes: number) => {
   switch (cadence) {
     case 'PER15_MINUTE':
@@ -295,6 +300,15 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
           return true;
         },
       )
+      .test('event-products-must-use-explicit-time-bookings', 'Event products only support explicit-time booking pricing options.', function (value) {
+        const { type } = this.parent as ProductDetails;
+        const pricingOptions = value as PricingOptionForm[] | undefined;
+        if (!isEventType(type) || !pricingOptions) {
+          return true;
+        }
+
+        return pricingOptions.every((pricingOption) => !isSubscriptionCadence(pricingOption.cadence) && !pricingOption.supportsSubscriptionAutoRenewal);
+      })
       .required('Pricing options are required.'),
   });
 
@@ -550,8 +564,8 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             purchaseCadence: pricingOption.cadence as ProductPricingCadence,
             bookingCadence: pricingOption.cadence as ProductPricingCadence,
             price: Number(pricingOption.price),
-            supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
-            numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
+            supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+            numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
             minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
             maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
             cancellationPolicyType: pricingOption.cancellationPolicyType as never,
@@ -625,8 +639,8 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
               price: Number(pricingOption.price),
-              supportsSubscriptionAutoRenewal: pricingOption.supportsSubscriptionAutoRenewal,
-              numberOfResourcesToBook: Number(pricingOption.numberOfResourcesToBook),
+              supportsSubscriptionAutoRenewal: isEventType(type) ? false : pricingOption.supportsSubscriptionAutoRenewal,
+              numberOfResourcesToBook: isEventType(type) ? 1 : Number(pricingOption.numberOfResourcesToBook),
               minDurationMinutes: pricingOption.minDurationMinutes ? Number(pricingOption.minDurationMinutes) : null,
               maxDurationMinutes: pricingOption.maxDurationMinutes ? Number(pricingOption.maxDurationMinutes) : null,
               cancellationPolicyType: pricingOption.cancellationPolicyType as never,
@@ -727,6 +741,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               const changeNestedField = (path: string, value: unknown) => {
                 (form as unknown as { change: (name: string, nextValue: unknown) => void }).change(path, value);
               };
+              const isEventProduct = isEventType(values?.type);
 
               return (
                 <FormStackColumn onSubmit={handleSubmit}>
@@ -795,6 +810,12 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                     <FormFieldLabel label="Type">
                       <SingleChoiceProductType rootDataRelay={rootData} name="type" required={requiredFields.type} />
                     </FormFieldLabel>
+                    {isEventProduct ? (
+                      <BodyIconTypography
+                        label="Event products support explicit-time bookings only. Recurring plan cadences are not allowed, and the full matching tagged resource set will be reserved."
+                        sx={{ opacity: 0.78 }}
+                      />
+                    ) : null}
 
                     <FormFieldLabel label="Currency">
                       <SingleChoiceCurrency rootDataRelay={rootData} name="currency" required={requiredFields.currency} />
@@ -852,19 +873,26 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                             </FormFieldLabel>
 
                             <FormFieldLabel label="Number of Resources to Book">
-                              <TextField name={`pricingOptions[${index}].numberOfResourcesToBook`} required />
+                              <TextField
+                                name={`pricingOptions[${index}].numberOfResourcesToBook`}
+                                required
+                                disabled={isEventProduct}
+                                helperText={isEventProduct ? 'Ignored for event products. The full matching resource set will be booked.' : undefined}
+                              />
                             </FormFieldLabel>
 
                             <FormFieldLabel>
                               <Switches name={`pricingOptions[${index}].isTaxInclusive`} data={{ label: 'Is price tax inclusive?', value: 'isTaxInclusive' }} />
                             </FormFieldLabel>
 
-                            <FormFieldLabel>
-                              <Switches
-                                name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
-                                data={{ label: 'Supports subscription auto renewal?', value: 'supportsSubscriptionAutoRenewal' }}
-                              />
-                            </FormFieldLabel>
+                            {!isEventProduct ? (
+                              <FormFieldLabel>
+                                <Switches
+                                  name={`pricingOptions[${index}].supportsSubscriptionAutoRenewal`}
+                                  data={{ label: 'Supports subscription auto renewal?', value: 'supportsSubscriptionAutoRenewal' }}
+                                />
+                              </FormFieldLabel>
+                            ) : null}
 
                             <FormFieldLabel label="Minimum Duration (minutes)">
                               <TextField name={`pricingOptions[${index}].minDurationMinutes`} required />

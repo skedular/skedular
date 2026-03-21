@@ -33,7 +33,7 @@ internal static class CustomerExtensions
     extension(IQueryable<Database.Entities.Customer> originalQuery)
     {
         internal IIncludableQueryable<Database.Entities.Customer, Organization?> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.Identities)
             .Include(query => query.BillingDetails)
             .Include(query => query.StripeCustomer)

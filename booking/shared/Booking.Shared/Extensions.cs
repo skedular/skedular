@@ -53,6 +53,7 @@ public static class Extensions
                 .AddScoped<IBookingInvoiceService, BookingInvoiceService>()
                 .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>()
                 .AddScoped<IResourceService, ResourceService>()
+                .AddScoped<IMarketplaceEventResourceService, MarketplaceEventResourceService>()
                 .AddScoped<IPrivateBookingPreferenceService, PrivateBookingPreferenceService>()
                 .AddScoped<IMarketplaceBookingPreferenceService, MarketplaceBookingPreferenceService>()
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()

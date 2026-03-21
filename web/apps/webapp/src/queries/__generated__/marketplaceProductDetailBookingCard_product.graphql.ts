@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e73fae89a900b469b7807ed0abf4b9e>>
+ * @generated SignedSource<<170d2d0c00ec61984273341998930b51>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type ProductPricingCadence = "DAILY" | "FIVE_MONTHS" | "FORTNIGHTLY" | "FOUR_MONTHS" | "HALF_DAY" | "MONTHLY" | "NOT_SET" | "ONE_TIME" | "PER15_MINUTES" | "PER30_MINUTES" | "PER_HOUR" | "PER_MINUTE" | "QUARTERLY" | "SIX_MONTHS" | "TWO_MONTHS" | "WEEKLY" | "YEARLY" | "%future added value";
 export type ProductPricingCancellationPolicyType = "FULL_REFUND_BEFORE_CUTOFF" | "NOT_SET" | "NO_CANCELLATION" | "TIERED_REFUND" | "%future added value";
+export type ProductType = "EVENT" | "RESOURCE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type marketplaceProductDetailBookingCard_product$data = {
   readonly amenities: ReadonlyArray<{
@@ -52,6 +53,10 @@ export type marketplaceProductDetailBookingCard_product$data = {
     readonly purchaseCadence: ProductPricingCadence;
     readonly supportsSubscriptionAutoRenewal: boolean;
   }>;
+  readonly type: {
+    readonly name: string;
+    readonly type: ProductType;
+  };
   readonly " $fragmentType": "marketplaceProductDetailBookingCard_product";
 };
 export type marketplaceProductDetailBookingCard_product$key = {
@@ -71,21 +76,31 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "name",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "subTitle",
-  "storageKey": null
-},
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+],
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "title",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "subTitle",
   "storageKey": null
 };
 return {
@@ -95,6 +110,16 @@ return {
   "name": "marketplaceProductDetailBookingCard_product",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ProductTypeDetails",
+      "kind": "LinkedField",
+      "name": "type",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -110,8 +135,8 @@ return {
           "name": "about",
           "storageKey": null
         },
-        (v1/*: any*/),
-        (v2/*: any*/),
+        (v3/*: any*/),
+        (v4/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -131,7 +156,7 @@ return {
       "plural": true,
       "selections": [
         (v0/*: any*/),
-        (v3/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -149,16 +174,7 @@ return {
       "kind": "LinkedField",
       "name": "currency",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "type",
-          "storageKey": null
-        },
-        (v3/*: any*/)
-      ],
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -185,8 +201,8 @@ return {
           "name": "listingMetadata",
           "plural": false,
           "selections": [
-            (v1/*: any*/),
-            (v2/*: any*/)
+            (v3/*: any*/),
+            (v4/*: any*/)
           ],
           "storageKey": null
         },
@@ -287,6 +303,6 @@ return {
 };
 })();
 
-(node as any).hash = "e84724d521a26ead47b00cc60fdee8ed";
+(node as any).hash = "2359e002b6f9c8899cbb505a21354eb3";
 
 export default node;

@@ -35,7 +35,7 @@ internal static class OrganizationExtensions
         internal IIncludableQueryable<Organization, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked,
             bool includeDeletedOrganizationMembers,
             bool includeDeletedOrganizationTags) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.OrganizationSsoSettings)
             .Include(query => query.OrganizationMembers.Where(organizationMember =>
                 includeDeletedOrganizationMembers || !organizationMember.DeletedAt.HasValue))

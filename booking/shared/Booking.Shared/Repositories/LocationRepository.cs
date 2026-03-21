@@ -10,7 +10,13 @@ public interface ILocationRepository : IRepository<Location>
 {
     Task<Location> UpsertNakedAsync(string id, Organization? organization, CancellationToken cancellationToken);
     Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken);
-    Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(bool includeDeletedResources, CancellationToken cancellationToken);
+
+    Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
+        bool includeDeletedResources,
+        bool includeInactiveResources,
+        ICollection<string> productTagIds,
+        CancellationToken cancellationToken);
+
     Location Update(Location location);
     Location Remove(Location location);
     Task<ICollection<Location>> GetByCustomerIdAsync(string customerId, bool includeDeletedResources, CancellationToken cancellationToken);
@@ -23,13 +29,18 @@ internal static class LocationExtensions
     {
         internal IIncludableQueryable<Location, IEnumerable<OrganizationTag>> AddDependentObjects(
             bool includeDeletedResource,
-            bool includeInactiveResource) =>
+            bool includeInactiveResource,
+            ICollection<string> productTagIds) =>
             originalQuery
                 .Include(query => query.Resources.Where(resource =>
-                    includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
+                    (includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))) &&
+                    (productTagIds.Count == 0 ||
+                     resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id)))))
                 .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))
                 .Include(query => query.Resources.Where(resource =>
-                    includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))))
+                    (includeDeletedResource || (!resource.DeletedAt.HasValue && (includeInactiveResource || !resource.Inactive))) &&
+                    (productTagIds.Count == 0 ||
+                     resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id)))))
                 .Include(query => query.Organization)
                 .ThenInclude(query => query!.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
                 .ThenInclude(query => query.Customer)
@@ -50,13 +61,22 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
 
     public async Task<Location?> GetByIdAsync(string id, bool includeDeletedResources, CancellationToken cancellationToken) =>
         await DbContext.Location
-            .AddDependentObjects(includeDeletedResources, true)
+            .AddDependentObjects(includeDeletedResources, true, [])
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(bool includeDeletedResources, CancellationToken cancellationToken) =>
+    public async Task<ICollection<Location>> GetAllWithActiveOrganizationAsync(
+        bool includeDeletedResources,
+        bool includeInactiveResources,
+        ICollection<string> productTagIds,
+        CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue && (query.Organization == null || !query.Organization.DeletedAt.HasValue))
-            .AddDependentObjects(includeDeletedResources, true)
+            .Where(query =>
+                productTagIds.Count == 0 ||
+                query.Resources.Any(resource =>
+                    (includeDeletedResources || (!resource.DeletedAt.HasValue && (includeInactiveResources || !resource.Inactive))) &&
+                    resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id))))
+            .AddDependentObjects(includeDeletedResources, includeInactiveResources, productTagIds)
             .ToListAsync(cancellationToken);
 
     public Location Remove(Location location)
@@ -82,7 +102,7 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
                             query.Organization != null && !query.Organization.DeletedAt.HasValue &&
                             query.Organization.OrganizationMembers.Any(organizationMember =>
                                 !organizationMember.DeletedAt.HasValue && organizationMember.Customer.Id == customerId))
-            .AddDependentObjects(includeDeletedResources, false)
+            .AddDependentObjects(includeDeletedResources, false, [])
             .ToListAsync(cancellationToken);
 
     public async Task<ICollection<Location>> GetByOrganizationIdAsync(
@@ -91,6 +111,6 @@ public class LocationRepository(BookingDbContext dbContext, TimeProvider timePro
         CancellationToken cancellationToken) =>
         await DbContext.Location
             .Where(query => !query.DeletedAt.HasValue && query.Organization != null && query.Organization.Id == organizationId)
-            .AddDependentObjects(includeDeletedResources, false)
+            .AddDependentObjects(includeDeletedResources, false, [])
             .ToListAsync(cancellationToken);
 }

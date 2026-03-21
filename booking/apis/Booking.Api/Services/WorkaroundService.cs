@@ -59,7 +59,7 @@ public class WorkaroundService(
 
     public async Task GenerateAllLocationsResourcesSlotsAsync(CancellationToken cancellationToken)
     {
-        var locations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetAllWithActiveOrganizationAsync(false, false, [], cancellationToken);
 
         foreach (var location in locations
                      .Where(item => item.Organization == null || item.Organization.IsReplicatedNotDeleted())

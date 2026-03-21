@@ -31,7 +31,7 @@ public class BookingRepository(TeamDbContext dbContext, TimeProvider timeProvide
 
     public async Task<bool> AnyBookingExistsUntrackedAsync(string teamId, DateTimeOffset from, CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AsNoTrackingWithIdentityResolution()
+            .AsNoTracking()
             .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.InvolvedTeams.Select(item => item.Id).Contains(teamId) && query.From >= from,
                 cancellationToken);

@@ -37,7 +37,7 @@ internal static class TeamExtensions
     extension(IQueryable<Database.Entities.Team> originalQuery)
     {
         internal IIncludableQueryable<Database.Entities.Team, Customer> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.PrimaryLocation)
             .Include(query => query.Organization)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))

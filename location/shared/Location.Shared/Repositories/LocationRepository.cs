@@ -43,7 +43,7 @@ internal static class LocationExtensions
     extension(IQueryable<Database.Entities.Location> originalQuery)
     {
         internal IIncludableQueryable<Database.Entities.Location, Product> AddDependentObjects(bool isTracked, bool includeDeletedResources) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.Organization)
             .Include(query => query.PhysicalAddress)
             .Include(query => query.Resources.Where(resource => includeDeletedResources || !resource.DeletedAt.HasValue))

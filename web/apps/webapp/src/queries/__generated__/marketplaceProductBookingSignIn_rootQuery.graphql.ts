@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f35b708539d01e686ec888c9721a1d51>>
+ * @generated SignedSource<<afc2341986e1795e3c40612399ec0e3c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -130,6 +130,16 @@ return {
         "plural": false,
         "selections": [
           (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ProductTypeDetails",
+            "kind": "LinkedField",
+            "name": "type",
+            "plural": false,
+            "selections": (v2/*: any*/),
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -268,12 +278,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8733651d9eb63d65dca4399687e71b1b",
+    "cacheID": "50a94a8a06dd7d70764c6a128921c0ef",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingSignIn_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductBookingSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
+    "text": "query marketplaceProductBookingSignIn_rootQuery(\n  $productId: String!\n) {\n  ...marketplaceProductSubscribeAuthGate_query_2SWcqy\n}\n\nfragment marketplaceProductSubscribeAuthGate_query_2SWcqy on Query {\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n  product(id: $productId) {\n    id\n    type {\n      type\n      name\n    }\n    listingMetadata {\n      title\n      subTitle\n      about\n    }\n    currency {\n      type\n      name\n    }\n    featureImages {\n      original {\n        url\n      }\n    }\n    amenities {\n      id\n      name\n    }\n    pricingOptions {\n      id\n      index\n      listingMetadata {\n        title\n        subTitle\n      }\n      purchaseCadence\n      price\n      supportsSubscriptionAutoRenewal\n      billingMode\n    }\n  }\n}\n"
   }
 };
 })();

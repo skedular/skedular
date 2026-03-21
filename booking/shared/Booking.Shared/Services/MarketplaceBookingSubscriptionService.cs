@@ -61,6 +61,11 @@ public class MarketplaceBookingSubscriptionService(
             throw new ProductMissingProductTag();
         }
 
+        if (productVersion.Type == ProductTypeConstants.Event)
+        {
+            throw new MarketplaceEventProductRecurringBookingNotSupported();
+        }
+
         ArgumentNullException.ThrowIfNull(productVersion.PricingOptions);
 
         marketplaceBooking.ProductPricing =

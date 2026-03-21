@@ -191,6 +191,100 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task UpdateAsync_Does_Not_Recompute_Event_Resources_When_Booking_Window_Has_Not_Changed(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IMarketplaceEventResourceService marketplaceEventResourceService,
+        [Frozen] IMapper mapper,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        ICustomerRepository customerRepository,
+        IProductVersionRepository productVersionRepository,
+        IBookingRepository bookingRepository,
+        CancellationToken cancellationToken)
+    {
+        var from = new DateTimeOffset(2026, 3, 21, 9, 0, 0, TimeSpan.Zero);
+        var until = from.AddHours(2);
+        var existingResource = new Resource { Id = "resource-1", ResourceBookingSlots = [] };
+        var existingBooking = new Database.Entities.Booking
+        {
+            Id = "booking-1",
+            Channel = BookingChannelConstants.Marketplace,
+            From = from,
+            Until = until,
+            InvolvedCustomers = [new Customer { Id = "customer-1" }],
+            InvolvedResources = [existingResource],
+            InvolvedOrganizations = [],
+            InvolvedLocations = [],
+            InvolvedTeams = [],
+            MarketplaceBooking = new Database.Entities.MarketplaceBooking
+            {
+                ProductVersion = new Database.Entities.ProductVersion { Id = "product-version-1" },
+                ProductPricing = ProductPricing.Empty("pricing-1") with { BookingCadence = ProductPricingCadence.OneTime },
+                PaymentMethod = PaymentMethodConstants.Card
+            }
+        };
+        var booking = new Models.Booking
+        {
+            Id = existingBooking.Id,
+            From = from,
+            Until = until,
+            InvolvedCustomers = [new Models.Customer { Id = "customer-1" }],
+            Resources = [],
+            InvolvedOrganizations = [],
+            InvolvedLocations = [],
+            InvolvedTeams = [],
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion { Id = "product-version-1" },
+                ProductPricing = ProductPricing.Empty("pricing-1") with { BookingCadence = ProductPricingCadence.OneTime },
+                PaymentMethod = PaymentMethod.Card
+            }
+        };
+        var lastModifiedByCustomer = new Customer { Id = "customer-1" };
+        var productVersion = new Database.Entities.ProductVersion
+        {
+            Id = "product-version-1",
+            Type = ProductTypeConstants.Event,
+            OrganizationTags = [new OrganizationTag { Type = OrganizationTagTypeConstants.Product }],
+            Product = new Product { Organization = new Organization { Id = "org-1" } }
+        };
+
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.ProductVersionRepository).Returns(productVersionRepository);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => customerRepository.GetByIdsAsync(A<ICollection<string>>.That.Contains("customer-1"), true, cancellationToken))
+            .Returns([lastModifiedByCustomer]);
+        A.CallTo(() => productVersionRepository.GetByIdAsync("product-version-1", cancellationToken)).Returns(productVersion);
+        A.CallTo(() => mapper.MergeTo(
+                booking,
+                existingBooking,
+                A<ICollection<Customer>>._,
+                A<ICollection<Organization>>._,
+                A<ICollection<Location>>.That.Matches(locations => locations.Count == 0),
+                A<ICollection<Team>>._,
+                A<ICollection<Resource>>.That.Matches(resources => resources.Count == 1 && resources.First().Id == "resource-1"),
+                existingBooking.CreatedByCustomer,
+                lastModifiedByCustomer,
+                null,
+                existingBooking.MarketplaceBooking,
+                null))
+            .Returns(existingBooking);
+        A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(booking);
+
+        _ = await sut.UpdateAsync(booking, existingBooking, lastModifiedByCustomer, [], [], null, false, cancellationToken);
+
+        A.CallTo(() => marketplaceEventResourceService.PickEventResourcesAsync(A<DateTimeOffset>._, A<DateTimeOffset>._,
+                A<Database.Entities.ProductVersion>._, cancellationToken))
+            .MustNotHaveHappened();
+    }
+
     private static Database.Entities.Booking CreateMarketplaceBooking(
         DateTimeOffset from,
         bool isPaymentRequired,

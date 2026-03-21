@@ -91,6 +91,7 @@ public class MarketplaceBookingService(
     ICachedBookingService cachedBookingService,
     IResourceService resourceService,
     IMarketplaceBookingPreferenceService marketplaceBookingPreferenceService,
+    IMarketplaceEventResourceService marketplaceEventResourceService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
@@ -161,16 +162,22 @@ public class MarketplaceBookingService(
 
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
-        var maxAllowedResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
-        var resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-            booking.From,
-            booking.Until,
-            booking.Resources.Select(item => item.Resource.Id).ToList(),
-            productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
-            cancellationToken);
-        if (resources.Count > maxAllowedResourcesToBook)
+        var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
+        NormalizeEventQuantity(isEventProduct, marketplaceBooking);
+        var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
+        ICollection<Resource> resources = [];
+        if (!isEventProduct)
         {
-            throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
+            resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                booking.From,
+                booking.Until,
+                booking.Resources.Select(item => item.Resource.Id).ToList(),
+                productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
+                cancellationToken);
+            if (resources.Count > requestedResourceCount)
+            {
+                throw new MoreResourcesHaveBeenSelectedThanAreAllowedForThisBooking();
+            }
         }
 
         marketplaceBooking.Id = randomHelper.Generate();
@@ -186,13 +193,19 @@ public class MarketplaceBookingService(
 
         if (resources.Count == 0)
         {
-            resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
-                booking.From,
-                booking.Until,
-                productVersion,
-                marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook,
-                cancellationToken);
+            resources = isEventProduct
+                ? await marketplaceEventResourceService.PickEventResourcesAsync(
+                    booking.From,
+                    booking.Until,
+                    productVersion,
+                    cancellationToken)
+                : await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    booking.InvolvedCustomers.Count == 1 ? customerEntities.First() : null,
+                    booking.From,
+                    booking.Until,
+                    productVersion,
+                    requestedResourceCount,
+                    cancellationToken);
         }
 
         var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
@@ -342,6 +355,10 @@ public class MarketplaceBookingService(
         var resourceIds = booking.Resources.Count == 0
             ? existingBooking.InvolvedResources.Select(item => item.Id).ToList()
             : booking.Resources.Select(item => item.Resource.Id).ToList();
+        var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
+        NormalizeEventQuantity(isEventProduct, booking.MarketplaceBooking);
+        NormalizeEventQuantity(isEventProduct, marketplaceBooking);
+        var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
 
         ICollection<Resource> resources;
 
@@ -361,28 +378,47 @@ public class MarketplaceBookingService(
                 cancellationToken);
 
             // If no requested resource is available, try to auto-pick one by customer preference.
-            var numberOfResourcesToBook = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
-            if (resources.Count < numberOfResourcesToBook && booking.InvolvedCustomers.Count == 1)
+            var requiredAvailableResources = isEventProduct ? existingBooking.InvolvedResources.Count : requestedResourceCount;
+            if (resources.Count < requiredAvailableResources && (isEventProduct || booking.InvolvedCustomers.Count == 1))
             {
-                resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                    customerEntities.First(),
-                    existingBooking.From,
-                    existingBooking.Until,
-                    productVersion,
-                    numberOfResourcesToBook,
-                    cancellationToken);
+                resources = isEventProduct
+                    ? await marketplaceEventResourceService.PickEventResourcesAsync(
+                        existingBooking.From,
+                        existingBooking.Until,
+                        productVersion,
+                        cancellationToken)
+                    : await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                        customerEntities.First(),
+                        existingBooking.From,
+                        existingBooking.Until,
+                        productVersion,
+                        requestedResourceCount,
+                        cancellationToken);
             }
         }
         else
         {
             // Non-recurring or customized instances keep strict behavior:
             // caller-provided resources must all be available in the original persisted window.
-            resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
-                existingBooking.From,
-                existingBooking.Until,
-                resourceIds,
-                productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
-                cancellationToken);
+            if (isEventProduct)
+            {
+                resources = HasBookingWindowChanged(booking, existingBooking)
+                    ? await marketplaceEventResourceService.PickEventResourcesAsync(
+                        existingBooking.From,
+                        existingBooking.Until,
+                        productVersion,
+                        cancellationToken)
+                    : existingBooking.InvolvedResources.ToList();
+            }
+            else
+            {
+                resources = await resourceService.GetResourceEntitiesAndValidateAvailabilityAsync(
+                    existingBooking.From,
+                    existingBooking.Until,
+                    resourceIds,
+                    productVersion.OrganizationTags.Where(item => item.Type == OrganizationTagTypeConstants.Product).Select(item => item.Id).ToList(),
+                    cancellationToken);
+            }
         }
 
         var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
@@ -534,6 +570,9 @@ public class MarketplaceBookingService(
         }
 
         var resourceIds = booking.InvolvedResources.Select(item => item.Id).ToList();
+        var isEventProduct = productVersion.Type == ProductTypeConstants.Event;
+        NormalizeEventQuantity(isEventProduct, marketplaceBooking);
+        var requestedResourceCount = ResolveRequestedResourceCount(isEventProduct, marketplaceBooking);
         var resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
             null,
             null,
@@ -545,15 +584,24 @@ public class MarketplaceBookingService(
             cancellationToken);
 
         // If no requested resource is available, try to auto-pick one by customer preference.
-        if (resources.Count == 0 && booking.InvolvedCustomers.Count == 1)
+        var requiredAvailableResources = isEventProduct
+            ? booking.InvolvedResources.Count
+            : requestedResourceCount;
+        if (resources.Count < requiredAvailableResources && (isEventProduct || booking.InvolvedCustomers.Count == 1))
         {
-            resources = await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
-                customerEntities.First(),
-                booking.From,
-                booking.Until,
-                productVersion,
-                marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook,
-                cancellationToken);
+            resources = isEventProduct
+                ? await marketplaceEventResourceService.PickEventResourcesAsync(
+                    booking.From,
+                    booking.Until,
+                    productVersion,
+                    cancellationToken)
+                : await marketplaceBookingPreferenceService.PickResourceBasedOnCustomerPreferencesAsync(
+                    customerEntities.First(),
+                    booking.From,
+                    booking.Until,
+                    productVersion,
+                    requestedResourceCount,
+                    cancellationToken);
         }
 
         var slots = resources.SelectMany(item => item.ResourceBookingSlots).ToList();
@@ -592,6 +640,31 @@ public class MarketplaceBookingService(
             ProductPricingCadence.PerHour or
             ProductPricingCadence.HalfDay or
             ProductPricingCadence.Daily;
+
+    private static int ResolveRequestedResourceCount(ProductVersion productVersion, MarketplaceBooking marketplaceBooking) =>
+        ResolveRequestedResourceCount(productVersion.Type == ProductTypeConstants.Event, marketplaceBooking);
+
+    private static int ResolveRequestedResourceCount(bool isEventProduct, Models.MarketplaceBooking marketplaceBooking) =>
+        isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+
+    private static int ResolveRequestedResourceCount(bool isEventProduct, MarketplaceBooking marketplaceBooking) =>
+        isEventProduct ? 0 : marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+
+    private static void NormalizeEventQuantity(bool isEventProduct, Models.MarketplaceBooking? marketplaceBooking)
+    {
+        if (isEventProduct && marketplaceBooking is not null)
+        {
+            marketplaceBooking.Quantity = 1;
+        }
+    }
+
+    private static void NormalizeEventQuantity(bool isEventProduct, MarketplaceBooking marketplaceBooking)
+    {
+        if (isEventProduct)
+        {
+            marketplaceBooking.Quantity = 1;
+        }
+    }
 
     /// <summary>
     ///     Validates that the marketplace cadence is compatible with the booking flow (single or recurring).
@@ -632,6 +705,9 @@ public class MarketplaceBookingService(
             throw new BookingMustStartAndEndWithinSameDay();
         }
     }
+
+    private static bool HasBookingWindowChanged(Models.Booking booking, Database.Entities.Booking existingBooking) =>
+        booking.From != existingBooking.From || booking.Until != existingBooking.Until;
 
     /// <summary>
     ///     Converts a collection of resources to their unique locations.

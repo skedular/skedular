@@ -39,7 +39,7 @@ internal static class BookingExtensions
     extension(IQueryable<Database.Entities.Booking> originalQuery)
     {
         internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingMinimumDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.InvolvedCustomers)
             .Include(query => query.InvolvedOrganizations)
             .Include(query => query.InvolvedLocations)
@@ -72,7 +72,7 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.StripeCheckoutSession);
 
         internal IIncludableQueryable<Database.Entities.Booking, StripeCheckoutSession?> AddSingleBookingDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
             .ThenInclude(query => query.Customers)
             .Include(query => query.ResourceBookingSlots.Where(resourceBookingSlot => !resourceBookingSlot.Resource.DeletedAt.HasValue))
