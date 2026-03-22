@@ -41,6 +41,7 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
         if (!string.IsNullOrWhiteSpace(organizationId))
         {
             return await DbContext.OrganizationSsoSettings
+                .AsSingleQuery()
                 .Include(query => query.Organization)
                 .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
         }
@@ -48,6 +49,7 @@ public class OrganizationSsoSettingsRepository(OrganizationDbContext dbContext, 
         if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
         {
             return await DbContext.OrganizationSsoSettings
+                .AsSingleQuery()
                 .Include(query => query.Organization)
                 .FirstOrDefaultAsync(
                     query => query.Organization.CustomDomain != null &&

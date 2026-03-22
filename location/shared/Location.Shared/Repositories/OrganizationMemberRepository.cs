@@ -46,6 +46,7 @@ public class OrganizationMemberRepository(LocationDbContext dbContext, TimeProvi
         CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => query.Organization.Id == organizationId)
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 }

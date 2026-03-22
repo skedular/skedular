@@ -19,6 +19,7 @@ internal static class ProductVersionExtensions
     {
         internal IIncludableQueryable<ProductVersion, StripePrice?> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Product)
                 .ThenInclude(query => query.Organization)
                 .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))

@@ -41,6 +41,7 @@ public class TeamMemberRepository(BookingDbContext dbContext, TimeProvider timeP
     public async Task<ICollection<TeamMember>> GetByTeamIdAsync(string teamId, CancellationToken cancellationToken) =>
         await DbContext.TeamMember
             .Where(query => query.Team.Id == teamId)
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 }

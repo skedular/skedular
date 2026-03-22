@@ -20,6 +20,7 @@ internal static class StripePaymentMethodExtensions
     {
         internal IIncludableQueryable<StripePaymentMethod, ICollection<Identity>> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Customer)
                 .ThenInclude(query => query.Identities);
     }

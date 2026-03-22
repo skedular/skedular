@@ -17,6 +17,7 @@ public class OrganizationOrganizationBillingDetailsRepository(OrganizationDbCont
 {
     public async Task<OrganizationBillingDetails?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationBillingDetails
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

@@ -36,11 +36,13 @@ public class OrganizationSsoSettingRepository(CustomerDbContext dbContext, TimeP
 
     public async Task<OrganizationSsoSetting?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationSsoSetting
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<OrganizationSsoSetting?> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationSsoSetting
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Organization.Id == organizationId, cancellationToken);
 }

@@ -26,6 +26,7 @@ public class BookingRepository(TeamDbContext dbContext, TimeProvider timeProvide
 
     public async Task<Booking?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
+            .AsSingleQuery()
             .Include(query => query.InvolvedTeams)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

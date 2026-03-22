@@ -23,6 +23,7 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
             .Where(query => !query.DeletedAt.HasValue &&
                             query.Customer.Id == customerId &&
                             !query.Organization.DeletedAt.HasValue)
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
@@ -30,6 +31,7 @@ public class OrganizationMemberRepository(BookingDbContext dbContext, TimeProvid
     public async Task<ICollection<OrganizationMember>> GetByOrganizationIdAsync(string organizationId, CancellationToken cancellationToken) =>
         await DbContext.OrganizationMember
             .Where(query => query.Organization.Id == organizationId)
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ToListAsync(cancellationToken);
 

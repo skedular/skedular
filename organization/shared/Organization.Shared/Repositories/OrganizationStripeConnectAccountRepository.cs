@@ -33,6 +33,7 @@ internal static class OrganizationStripeConnectAccountExtensions
     {
         internal IIncludableQueryable<OrganizationStripeConnectAccount, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.OrganizationStripeConnectAccountAuthorization)
                 .Include(query => query.Organization);
 

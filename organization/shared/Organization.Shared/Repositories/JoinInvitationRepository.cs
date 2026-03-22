@@ -42,6 +42,7 @@ internal static class JoinInvitationExtensions
     {
         internal IIncludableQueryable<JoinInvitation, Customer?> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .Include(query => query.CreatedBy)
             .Include(query => query.Invitee);

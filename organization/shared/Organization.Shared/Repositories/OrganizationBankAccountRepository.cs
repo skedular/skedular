@@ -32,6 +32,7 @@ internal static class OrganizationBankAccountExtensions
     {
         internal IIncludableQueryable<OrganizationBankAccount, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Organization);
 
         internal IQueryable<OrganizationBankAccount> AddSearchCriteria(OrganizationBankAccountSearchCriteria searchCriteria)

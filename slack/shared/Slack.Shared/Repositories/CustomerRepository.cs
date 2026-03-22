@@ -23,6 +23,7 @@ internal static class CustomerExtensions
     {
         internal IIncludableQueryable<Customer, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
             (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
+            .AsSingleQuery()
             .Include(query => query.Identities);
     }
 }

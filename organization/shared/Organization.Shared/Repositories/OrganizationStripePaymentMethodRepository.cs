@@ -19,6 +19,7 @@ internal static class StripePaymentMethodExtensions
     {
         internal IIncludableQueryable<OrganizationStripePaymentMethod, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Organization);
     }
 }

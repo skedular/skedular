@@ -20,6 +20,7 @@ internal static class LocationPhysicalAddressExtensions
     {
         internal IIncludableQueryable<LocationPhysicalAddress, Database.Entities.Location> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Location);
     }
 }

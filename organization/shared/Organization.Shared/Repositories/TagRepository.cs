@@ -31,7 +31,9 @@ internal static class TagExtensions
     extension(IQueryable<Tag> originalQuery)
     {
         internal IIncludableQueryable<Tag, Database.Entities.Organization> AddDependentObjects() =>
-            originalQuery.Include(query => query.Organization);
+            originalQuery
+                .AsSingleQuery()
+                .Include(query => query.Organization);
 
         internal IQueryable<Tag> AddSearchCriteria(TagSearchCriteria searchCriteria)
         {

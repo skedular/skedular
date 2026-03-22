@@ -18,6 +18,7 @@ public class OrganizationStripeConnectAccountRefreshCodeRepository(OrganizationD
 {
     public async Task<OrganizationStripeConnectAccountRefreshCode?> GetByCodeAsync(string code, CancellationToken cancellationToken) =>
         await DbContext.OrganizationStripeConnectAccountRefreshCode
+            .AsSingleQuery()
             .Include(query => query.OrganizationStripeConnectAccount)
             .FirstOrDefaultAsync(query => query.Code == code, cancellationToken);
 

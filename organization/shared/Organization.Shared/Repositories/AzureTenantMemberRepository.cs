@@ -46,6 +46,7 @@ public class AzureTenantMemberRepository(OrganizationDbContext dbContext, TimePr
         CancellationToken cancellationToken) =>
         await DbContext.AzureTenantMember
             .Where(query => query.AzureTenant.Id == tenantId)
+            .AsSingleQuery()
             .Include(query => query.AzureTenant)
             .ToListAsync(cancellationToken);
 }

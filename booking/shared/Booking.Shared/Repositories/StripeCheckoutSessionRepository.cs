@@ -19,6 +19,7 @@ public class StripeCheckoutSessionRepository(BookingDbContext dbContext, TimePro
         string stripeCheckoutSessionId,
         CancellationToken cancellationToken) =>
         await DbContext.StripeCheckoutSession
+            .AsSingleQuery()
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query.Booking)
             .Include(query => query.MarketplaceBooking)

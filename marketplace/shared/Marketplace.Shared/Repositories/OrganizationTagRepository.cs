@@ -27,6 +27,7 @@ public class OrganizationTagRepository(MarketplaceDbContext dbContext, TimeProvi
 
     public async Task<OrganizationTag?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.OrganizationTag
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 

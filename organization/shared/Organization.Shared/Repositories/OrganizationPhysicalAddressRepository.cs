@@ -21,6 +21,7 @@ internal static class OrganizationPhysicalAddressExtensions
     {
         internal IIncludableQueryable<OrganizationPhysicalAddress, Database.Entities.Organization> AddDependentObjects() =>
             originalQuery
+                .AsSingleQuery()
                 .Include(query => query.Organization);
     }
 }

@@ -18,12 +18,14 @@ public class CustomerBillingDetailsRepository(CustomerDbContext dbContext, TimeP
 {
     public async Task<CustomerBillingDetails?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.CustomerBillingDetails
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
     public async Task<CustomerBillingDetails?> GetByCustomerIdAsync(string customerId, CancellationToken cancellationToken) =>
         await DbContext.CustomerBillingDetails
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .FirstOrDefaultAsync(query => query.Customer.Id == customerId, cancellationToken);

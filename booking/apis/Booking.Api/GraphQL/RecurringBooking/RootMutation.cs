@@ -15,7 +15,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var recurringBooking = await privateRecurringBookingService.AddAsync(mapper.MapTo(input), cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -25,7 +25,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var recurringBooking = await privateRecurringBookingService.UpdateAsync(mapper.MapTo(input), cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
     }
 
     [UseResolverScope]
@@ -35,6 +35,6 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var recurringBooking = await privateRecurringBookingService.DeleteAsync(input.Id, cancellationToken);
-        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking) };
+        return new RecurringBookingPayload { ClientMutationId = input.ClientMutationId, RecurringBooking = mapper.MapTo(recurringBooking)! };
     }
 }

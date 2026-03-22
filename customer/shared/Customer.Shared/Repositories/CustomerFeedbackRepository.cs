@@ -16,6 +16,7 @@ public class CustomerFeedbackRepository(CustomerDbContext dbContext, TimeProvide
 {
     public async Task<CustomerFeedback?> GetByIdAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.CustomerFeedback
+            .AsSingleQuery()
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);

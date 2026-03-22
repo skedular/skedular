@@ -44,6 +44,7 @@ public class ResourceBookingSlotRepository(BookingDbContext dbContext, TimeProvi
         CancellationToken cancellationToken) =>
         await DbContext.ResourceBookingSlot
             .Where(query => query.Resource.Id == resourceId && query.Start >= from)
+            .AsSingleQuery()
             .Include(query => query.Resource)
             .ThenInclude(query => query.Location)
             .ToListAsync(cancellationToken);

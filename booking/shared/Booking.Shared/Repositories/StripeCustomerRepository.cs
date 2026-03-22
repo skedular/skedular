@@ -18,11 +18,13 @@ public class StripeCustomerRepository(BookingDbContext dbContext, TimeProvider t
 {
     public async Task<StripeCustomer?> GetByStripeCustomerIdAsync(string stripeCustomerId, CancellationToken cancellationToken) =>
         await DbContext.StripeCustomer
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(query => query.StripeCustomerId == stripeCustomerId, cancellationToken);
 
     public async Task<StripeCustomer?> GetByOrganizationIdAsync(string stripeAccountId, string organizationId, CancellationToken cancellationToken) =>
         await DbContext.StripeCustomer
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(
                 query => !query.DeletedAt.HasValue && query.Organization != null && query.Organization.Id == organizationId &&
@@ -31,6 +33,7 @@ public class StripeCustomerRepository(BookingDbContext dbContext, TimeProvider t
 
     public async Task<StripeCustomer?> GetByCustomerIdAsync(string stripeAccountId, string customerId, CancellationToken cancellationToken) =>
         await DbContext.StripeCustomer
+            .AsSingleQuery()
             .Include(query => query.Organization)
             .FirstOrDefaultAsync(
                 query => !query.DeletedAt.HasValue && query.Customer != null && query.Customer.Id == customerId &&
