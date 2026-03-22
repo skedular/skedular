@@ -1,5 +1,5 @@
 import { BodyIconTypography, CaptionIconTypography, MediumHeadingIconTypography, StackRow, SubtitleIconTypography } from '@/components/commons';
-import { getMarketplaceLocationLink } from '@/components/links';
+import { getMarketplaceLocationFloorPlansLink, getMarketplaceLocationLink } from '@/components/links';
 import { useIntegratedPlatrform } from '@/libs/providers';
 import type { guestStoreFrontLocationsStrip_query$data, guestStoreFrontLocationsStrip_query$key } from '@/queries/__generated__/guestStoreFrontLocationsStrip_query.graphql';
 import Button from '@mui/material/Button';
@@ -236,17 +236,50 @@ const GuestStoreFrontLocationsStrip = ({ rootDataRelay, onLocationChange }: Prop
               <Box sx={{ mt: 1, pt: 1, borderTop: 1, borderColor: (theme) => theme.palette.divider }}>
                 <CaptionIconTypography label={`Opening Hours: ${openState.label}`} sx={{ opacity: 0.9 }} />
               </Box>
-              <Button
-                variant="text"
-                size="small"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  router.push(getMarketplaceLocationLink(integratedPlatrform, location.id));
-                }}
-                sx={{ mt: 1.25, px: 0, textTransform: 'none', justifyContent: 'flex-start' }}
-              >
-                View location
-              </Button>
+              <Box sx={{ mt: 1.5, display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 1 }}>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    router.push(getMarketplaceLocationFloorPlansLink(integratedPlatrform, location.id));
+                  }}
+                  sx={{
+                    textTransform: 'none',
+                    borderRadius: 2,
+                    backgroundColor: 'success.main',
+                    '&:hover': {
+                      backgroundColor: 'success.dark',
+                    },
+                  }}
+                >
+                  View floor plan
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    router.push(getMarketplaceLocationLink(integratedPlatrform, location.id));
+                  }}
+                  sx={{
+                    textTransform: 'none',
+                    fontWeight: 700,
+                    borderRadius: 2,
+                    borderWidth: 1.5,
+                    color: 'text.primary',
+                    borderColor: 'text.primary',
+                    backgroundColor: 'background.paper',
+                    '&:hover': {
+                      borderWidth: 1.5,
+                      borderColor: 'text.primary',
+                      backgroundColor: 'action.hover',
+                    },
+                  }}
+                >
+                  View location
+                </Button>
+              </Box>
             </Box>
           );
         })}

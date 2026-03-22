@@ -8,6 +8,8 @@ export const getBillingAndPaymentLink = (integratedPlatrform: string | undefined
 export const getSettingsLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}/settings` : '/settings');
 export const getMarketplaceLocationLink = (integratedPlatrform: string | undefined, locationId: string) =>
   integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}` : `/marketplace/locations/${locationId}`;
+export const getMarketplaceLocationFloorPlansLink = (integratedPlatrform: string | undefined, locationId: string) =>
+  integratedPlatrform ? `/${integratedPlatrform}/marketplace/locations/${locationId}/floorPlans` : `/marketplace/locations/${locationId}/floorPlans`;
 
 export const getMarketplaceBookingsLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string) => {
   const baseLink = isCustomDomain ? 'bookings' : `organizations/${organizationCustomDomain}/bookings`;
