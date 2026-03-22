@@ -9,6 +9,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Location = Booking.Shared.Database.Entities.Location;
+using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
@@ -29,7 +30,6 @@ public class BookingService(
     IRepositoryFactory repositoryFactory,
     ICachedCustomerService cachedCustomerService,
     IOrganizationAuthorizationService organizationAuthorizationService,
-    ITeamAuthorizationService teamAuthorizationService,
     IMapper mapper,
     Shared.Mappers.IMapper sharedMapper,
     ICachedBookingService cachedBookingService) : IBookingService
@@ -59,80 +59,43 @@ public class BookingService(
             customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         }
 
-        if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly.HasValue)
+        if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly == true)
         {
             searchCriteria = searchCriteria with { CustomerIds = [customerId] };
         }
 
         BookingAccessScope? accessScope = null;
         List<string>? organizationIds = null;
-        List<string>? organizationCustomDomains = null;
         List<string>? locationIds = null;
         List<string>? teamIds = null;
 
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            !string.IsNullOrWhiteSpace(customerId) &&
-            searchCriteria.CustomerIds.Any(item => item != customerId) &&
-            string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
+        var requestedOwnBookingsOnly = IsRequestedOwnBookingsOnly(searchCriteria, customerId);
+        var requestedOtherCustomersBookings = IsRequestedOtherCustomersBookings(searchCriteria, customerId);
+        var scopedOrganization = await GetScopedOrganizationAsync(searchCriteria, cancellationToken);
+
+        if (requestedOtherCustomersBookings && scopedOrganization is null)
         {
             throw new InvalidOperationException("You can only look for others' bookings if organization is included in your search");
         }
 
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            !string.IsNullOrWhiteSpace(customerId) &&
-            searchCriteria.CustomerIds.Any(item => item != customerId) &&
-            !string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            scopedOrganization is not null &&
+            (requestedOtherCustomersBookings || !requestedOwnBookingsOnly))
         {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-            organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-
-            if (!organizationCustomerPairs.Item1.TryGetValue(searchCriteria.OrganizationId!, out var organizationCustomerIds) ||
-                searchCriteria.CustomerIds.Any(item => !organizationCustomerIds.Contains(item)))
+            if (!await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(scopedOrganization.Id, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
-        if (searchCriteria.CustomerIds.Count != 0 &&
-            !string.IsNullOrWhiteSpace(customerId) &&
-            searchCriteria.CustomerIds.Any(item => item != customerId) &&
-            !string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
+        if (scopedOrganization is not null)
         {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-            organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
+            accessScope = new BookingAccessScope(
+                [scopedOrganization.Id],
+                scopedOrganization.Locations.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList(),
+                scopedOrganization.Teams.Where(item => !item.DeletedAt.HasValue).Select(item => item.Id).ToList());
 
-            if (!organizationCustomerPairs.Item2.TryGetValue(searchCriteria.OrganizationCustomDomain!, out var domainCustomerIds) ||
-                searchCriteria.CustomerIds.Any(item => !domainCustomerIds.Contains(item)))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(customerId) && !string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
-        {
-            if (organizationIds is null)
-            {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
-            }
-
-            if (!organizationIds.Contains(searchCriteria.OrganizationId))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-        else if (!string.IsNullOrWhiteSpace(customerId) && !string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
-        {
-            if (organizationCustomDomains is null)
-            {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
-            }
-
-            if (!organizationCustomDomains.Contains(searchCriteria.OrganizationCustomDomain))
-            {
-                throw new UnauthorizedAccessException();
-            }
+            searchCriteria = searchCriteria with { OrganizationId = null, OrganizationCustomDomain = null };
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.LocationIds.Count != 0)
@@ -147,8 +110,7 @@ public class BookingService(
             {
                 if (organizationIds is null)
                 {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
+                    organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 }
 
                 if (location.Organization is null || !organizationIds.Contains(location.Organization.Id))
@@ -156,6 +118,8 @@ public class BookingService(
                     throw new UnauthorizedAccessException();
                 }
             }
+
+            locationIds = searchCriteria.LocationIds.Distinct().ToList();
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
@@ -170,8 +134,7 @@ public class BookingService(
             {
                 if (organizationIds is null)
                 {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                    organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
+                    organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 }
 
                 if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
@@ -179,6 +142,18 @@ public class BookingService(
                     throw new UnauthorizedAccessException();
                 }
             }
+
+            teamIds = searchCriteria.TeamIds.Distinct().ToList();
+        }
+
+        if (accessScope is null &&
+            !string.IsNullOrWhiteSpace(customerId) &&
+            (organizationIds?.Count > 0 || locationIds?.Count > 0 || teamIds?.Count > 0))
+        {
+            accessScope = new BookingAccessScope(
+                organizationIds ?? [],
+                locationIds ?? [],
+                teamIds ?? []);
         }
 
         if (!string.IsNullOrWhiteSpace(customerId) &&
@@ -190,8 +165,7 @@ public class BookingService(
         {
             if (organizationIds is null)
             {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
+                organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
             }
 
             locationIds ??= await GetCustomerLocationIdsAsync(customerId, cancellationToken);
@@ -215,19 +189,21 @@ public class BookingService(
         return (paginatedInfo, edges.Select(mapper.MapTo).ToList(), totalCount);
     }
 
-    private async Task<(IDictionary<string, List<string>>, IDictionary<string, List<string>>)> GetCustomerOrganizationIdsAsync(
+    private async Task<List<string>> GetCustomerOrganizationIdsAsync(
         string customerId,
         CancellationToken cancellationToken)
     {
         var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customerId, false, false, cancellationToken);
+        var result = new List<string>();
+        foreach (var organization in organizations)
+        {
+            if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
+            {
+                result.Add(organization.Id);
+            }
+        }
 
-        return (organizations.ToDictionary(
-                item => item.Id, item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()),
-            organizations
-                .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
-                .ToDictionary(
-                    item => item.CustomDomain!,
-                    item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
+        return result;
     }
 
     private async Task<List<string>> GetCustomerLocationIdsAsync(string customerId, CancellationToken cancellationToken)
@@ -247,6 +223,11 @@ public class BookingService(
         string customerId,
         CancellationToken cancellationToken)
     {
+        if (booking.InvolvedCustomers.Any(item => item.Id == customerId))
+        {
+            return;
+        }
+
         var organizationIds = booking.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
         if (organizationIds.Count != 0)
         {
@@ -258,9 +239,9 @@ public class BookingService(
                 cancellationToken);
             foreach (var organization in organizationEntities)
             {
-                if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customerId, cancellationToken))
+                if (await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(organization.Id, customerId, cancellationToken))
                 {
-                    throw new UnauthorizedAccessException();
+                    return;
                 }
             }
         }
@@ -271,11 +252,40 @@ public class BookingService(
             var teamEntities = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
             foreach (var team in teamEntities)
             {
-                if (!await teamAuthorizationService.CanViewBookingsAsync(team, customerId, cancellationToken))
+                if (team.Organization is not null &&
+                    await organizationAuthorizationService.CanViewOtherCustomersBookingsAsync(team.Organization.Id, customerId, cancellationToken))
                 {
-                    throw new UnauthorizedAccessException();
+                    return;
                 }
             }
         }
+
+        throw new UnauthorizedAccessException();
     }
+
+    private async Task<OrganizationEntity?> GetScopedOrganizationAsync(BookingSearchCriteria searchCriteria, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(searchCriteria.OrganizationId) && string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
+        {
+            return null;
+        }
+
+        return await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                   searchCriteria.OrganizationId,
+                   searchCriteria.OrganizationCustomDomain,
+                   false,
+                   false,
+                   cancellationToken) ??
+               throw new OrganizationNotFound();
+    }
+
+    private static bool IsRequestedOwnBookingsOnly(BookingSearchCriteria searchCriteria, string? customerId) =>
+        !string.IsNullOrWhiteSpace(customerId) &&
+        searchCriteria.CustomerIds.Count != 0 &&
+        searchCriteria.CustomerIds.All(item => item == customerId);
+
+    private static bool IsRequestedOtherCustomersBookings(BookingSearchCriteria searchCriteria, string? customerId) =>
+        !string.IsNullOrWhiteSpace(customerId) &&
+        searchCriteria.CustomerIds.Count != 0 &&
+        searchCriteria.CustomerIds.Any(item => item != customerId);
 }

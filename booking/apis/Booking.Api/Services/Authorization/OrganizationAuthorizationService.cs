@@ -11,6 +11,7 @@ public interface IOrganizationAuthorizationService
 {
     ValueTask<bool> CanViewOrganizationDetailsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanViewBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
+    ValueTask<bool> CanViewOtherCustomersBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanAddBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanUpdateBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
     ValueTask<bool> CanDeleteBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken);
@@ -64,6 +65,28 @@ public class OrganizationAuthorizationService(
             Status: OrganizationMemberStatusConstants.Active,
             Role: OrganizationMemberRoleConstants.Owner or OrganizationMemberRoleConstants.Administrator or OrganizationMemberRoleConstants.Member
         } && await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+    }
+
+    public async ValueTask<bool> CanViewOtherCustomersBookingsAsync(string organizationId, string customerId, CancellationToken cancellationToken)
+    {
+        var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        var member = organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId);
+        if (member is null || member.Status != OrganizationMemberStatusConstants.Active)
+        {
+            return false;
+        }
+
+        return organization.Type switch
+        {
+            OrganizationTypeConstants.Private => member.Role is OrganizationMemberRoleConstants.Owner or
+                OrganizationMemberRoleConstants.Administrator or
+                OrganizationMemberRoleConstants.Member,
+            OrganizationTypeConstants.Marketplace or OrganizationTypeConstants.Individual => member.Role is OrganizationMemberRoleConstants.Owner or
+                OrganizationMemberRoleConstants.Administrator,
+            _ => false
+        };
     }
 
     public async ValueTask<bool> CanAddBookingAsync(string organizationId, string customerId, CancellationToken cancellationToken)

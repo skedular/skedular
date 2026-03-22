@@ -245,15 +245,12 @@ internal static class BookingExtensions
                 (accessScope.OrganizationIds.Count != 0 || accessScope.LocationIds.Count != 0 || accessScope.TeamIds.Count != 0))
             {
                 originalQuery = originalQuery.Where(item =>
-                    (accessScope.OrganizationIds.Count != 0 &&
-                     item.InvolvedOrganizations.Any(organization =>
-                         !organization.DeletedAt.HasValue && accessScope.OrganizationIds.Contains(organization.Id))) ||
-                    (accessScope.LocationIds.Count != 0 &&
-                     item.InvolvedLocations.Any(location =>
-                         !location.DeletedAt.HasValue && accessScope.LocationIds.Contains(location.Id))) ||
+                    (accessScope.OrganizationIds.Count != 0 && item.InvolvedOrganizations.Any(organization =>
+                        !organization.DeletedAt.HasValue && accessScope.OrganizationIds.Contains(organization.Id))) ||
+                    (accessScope.LocationIds.Count != 0 && item.InvolvedLocations.Any(location =>
+                        !location.DeletedAt.HasValue && accessScope.LocationIds.Contains(location.Id))) ||
                     (accessScope.TeamIds.Count != 0 &&
-                     item.InvolvedTeams.Any(team =>
-                         !team.DeletedAt.HasValue && accessScope.TeamIds.Contains(team.Id))));
+                     item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && accessScope.TeamIds.Contains(team.Id))));
             }
 
             return originalQuery;
