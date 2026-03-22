@@ -119,8 +119,7 @@ public class Mapper : IMapper
             FeatureImages = productVersion.FeatureImages,
             ProductTags = MapTo(productVersion.ProductTags),
             Amenities = MapTo(productVersion.Amenities),
-            OrganizationId = src.Organization.Id,
-            OrganizationCustomDomain = src.Organization.CustomDomain.ToSafeString(),
+            Organization = MapTo(src.Organization),
             LatestProductVersionId = src.ProductVersions.OrderByDescending(item => item.CreatedAt).First().Id,
             PricingOptions = productVersion.PricingOptions
         };
@@ -142,8 +141,7 @@ public class Mapper : IMapper
             FeatureImages = src.FeatureImages,
             ProductTags = MapTo(src.ProductTags),
             PricingOptions = src.PricingOptions,
-            OrganizationId = src.Product.Organization.Id,
-            OrganizationCustomDomain = src.Product.Organization.CustomDomain.ToSafeString()
+            Organization = MapTo(src.Product.Organization)
         };
     }
 
@@ -179,6 +177,10 @@ public class Mapper : IMapper
             ModifiedAt = src.ModifiedAt,
             EventRaisedAt = src.EventRaisedAt,
             CustomDomain = src.CustomDomain,
+            Name = src.Name,
+            Website = src.Website,
+            LogoUrl = src.LogoUrl,
+            CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             Tags = MapTo(src.Tags).ToList()
         };
 
@@ -187,6 +189,16 @@ public class Mapper : IMapper
         Shared.Database.Entities.Product product,
         ICollection<OrganizationTag> productTags) =>
         MergeTo(src, new Shared.Database.Entities.ProductVersion(), product, productTags);
+
+    private static OrganizationDetails MapTo(Shared.Models.Organization src) => new()
+    {
+        Id = src.Id,
+        CustomDomain = src.CustomDomain,
+        Name = src.Name.ToSafeString(),
+        Website = src.Website,
+        LogoUrl = src.LogoUrl,
+        CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl
+    };
 
     private static IEnumerable<Shared.Models.OrganizationTag> MapTo(IEnumerable<OrganizationTag> src) => src.Select(MapTo);
 

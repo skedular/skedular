@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
+using Enterprise.Shared;
 using Marketplace.Shared.Database.Entities;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Customer = Marketplace.Shared.Models.Customer;
@@ -116,6 +117,10 @@ public class Mapper : IMapper
             DeletedAt = deletedAt,
             EventRaisedAt = eventRaisedAt,
             CustomDomain = string.IsNullOrWhiteSpace(organizationAfterState.CustomDomain) ? null : organizationAfterState.CustomDomain,
+            Name = organizationAfterState.Name.ToSafeString(),
+            Website = organizationAfterState.Website.ToSafeString(),
+            LogoUrl = organizationAfterState.LogoUrl.ToSafeString(),
+            CustomerFacingTermsAndConditionsUrl = organizationAfterState.CustomerFacingTermsAndConditionsUrl.ToSafeString(),
             Offering = new Offering
             {
                 Id = organizationAfterState.Offering.Id,
@@ -186,6 +191,10 @@ public class Mapper : IMapper
         dest.Id = src.Id;
         dest.EventRaisedAt = src.EventRaisedAt;
         dest.CustomDomain = src.CustomDomain;
+        dest.Name = src.Name;
+        dest.Website = src.Website;
+        dest.LogoUrl = src.LogoUrl;
+        dest.CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl;
         dest.Offering = src.Offering;
         dest.Type = src.Type.ToOrganizationType();
         dest.IsOwnershipVerified = src.IsOwnershipVerified;

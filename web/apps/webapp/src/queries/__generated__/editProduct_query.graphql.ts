@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e6273306afc91984321627e2107faba4>>
+ * @generated SignedSource<<b1ff3c157af9106664c88c8511440d09>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -52,9 +52,6 @@ export type editProduct_query$data = {
       readonly includedFeatures: ReadonlyArray<string> | null | undefined;
       readonly subTitle: string | null | undefined;
       readonly title: string | null | undefined;
-    };
-    readonly organization: {
-      readonly id: string;
     };
     readonly pricingOptions: ReadonlyArray<{
       readonly acceptedPaymentMethods: ReadonlyArray<PaymentMethod>;
@@ -266,18 +263,6 @@ return {
           "name": "amenities",
           "plural": true,
           "selections": (v5/*: any*/),
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "OrganizationDetails",
-          "kind": "LinkedField",
-          "name": "organization",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/)
-          ],
           "storageKey": null
         },
         {
@@ -548,6 +533,6 @@ return {
 };
 })();
 
-(node as any).hash = "9727cf8201b5e07d68750828031e5ca1";
+(node as any).hash = "96aa468c42e002939ed9067cd4eb5d7d";
 
 export default node;

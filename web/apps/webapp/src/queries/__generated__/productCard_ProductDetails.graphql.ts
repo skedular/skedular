@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<659ec9d0c0fa98263cbb20356010d16f>>
+ * @generated SignedSource<<5c41936de96643ddff6f9dc38bca7b66>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -29,9 +29,6 @@ export type productCard_ProductDetails$data = {
     readonly subTitle: string | null | undefined;
     readonly title: string | null | undefined;
   };
-  readonly organization: {
-    readonly id: string;
-  };
   readonly pricingOptions: ReadonlyArray<{
     readonly index: number;
     readonly isTaxInclusive: boolean;
@@ -52,13 +49,6 @@ export type productCard_ProductDetails$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -89,7 +79,13 @@ return {
   "metadata": null,
   "name": "productCard_ProductDetails",
   "selections": [
-    (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -97,19 +93,7 @@ return {
       "name": "inactive",
       "storageKey": null
     },
-    (v1/*: any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "OrganizationDetails",
-      "kind": "LinkedField",
-      "name": "organization",
-      "plural": false,
-      "selections": [
-        (v0/*: any*/)
-      ],
-      "storageKey": null
-    },
+    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -186,7 +170,7 @@ return {
           "name": "index",
           "storageKey": null
         },
-        (v1/*: any*/),
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -224,6 +208,6 @@ return {
 };
 })();
 
-(node as any).hash = "27f5fd2d5b6f71ae48bb8f755561864c";
+(node as any).hash = "91843735e512709e38830aecbd9b2ce1";
 
 export default node;

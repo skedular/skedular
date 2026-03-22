@@ -63,9 +63,6 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
           title
           subTitle
         }
-        organization {
-          id
-        }
         featureImages {
           thumbnail {
             url

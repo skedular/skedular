@@ -526,6 +526,15 @@ type MarketplaceBookingSubscriptionStatusDetails {
   type: MarketplaceBookingSubscriptionStatus!
 }
 
+type Marketplace_OrganizationDetails {
+  customDomain: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+  name: String!
+  uniqueId: String!
+  website: String
+}
+
 type Mutation {
   acceptInvitationToJoinOrganization(input: AcceptInvitationToJoinOrganizationInput!): InvitationToJoinOrganizationPayload! @cost(weight: "10")
   acceptInvitationToJoinTeam(input: AcceptInvitationToJoinTeamInput!): InvitationToJoinTeamPayload! @cost(weight: "10")
@@ -1070,7 +1079,7 @@ type ProductDetails {
   inactive: Boolean!
   latestProductVersionId: String!
   listingMetadata: ListingMetadata!
-  organization: OrganizationDetails!
+  organization: Marketplace_OrganizationDetails!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
   type: ProductTypeDetails!
@@ -1137,7 +1146,7 @@ type ProductVersionDetails {
   id: ID!
   inactive: Boolean!
   listingMetadata: ListingMetadata!
-  organization: OrganizationDetails!
+  organization: Marketplace_OrganizationDetails!
   pricingOptions: [ProductPricing!]!
   productTags: [OrganizationTagDetails!]!
   type: ProductTypeDetails!

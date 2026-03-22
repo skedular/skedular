@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8608c06dee45a397f457fe5f4650f040>>
+ * @generated SignedSource<<4b394bcbb6fbebd5361ea780fdd5d65c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,9 +28,6 @@ export type organizationProducts_rootQuery$data = {
         readonly id: string;
         readonly listingMetadata: {
           readonly title: string | null | undefined;
-        };
-        readonly organization: {
-          readonly id: string;
         };
         readonly " $fragmentSpreads": FragmentRefs<"productCard_ProductDetails">;
       };
@@ -108,18 +105,6 @@ v4 = {
   "storageKey": null
 },
 v5 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "OrganizationDetails",
-  "kind": "LinkedField",
-  "name": "organization",
-  "plural": false,
-  "selections": [
-    (v3/*: any*/)
-  ],
-  "storageKey": null
-},
-v6 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -131,7 +116,7 @@ v6 = {
     }
   ]
 },
-v7 = {
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -150,15 +135,15 @@ v7 = {
   ],
   "storageKey": null
 },
-v8 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "type",
   "storageKey": null
 },
-v9 = [
-  (v8/*: any*/),
+v8 = [
+  (v7/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -212,7 +197,6 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
                   {
                     "args": null,
                     "kind": "FragmentSpread",
@@ -224,7 +208,7 @@ return {
             ],
             "storageKey": null
           },
-          (v6/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -269,8 +253,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v7/*: any*/),
-                  (v5/*: any*/),
+                  (v6/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -329,7 +312,7 @@ return {
                     "name": "currency",
                     "plural": false,
                     "selections": [
-                      (v8/*: any*/)
+                      (v7/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -348,7 +331,7 @@ return {
                         "name": "index",
                         "storageKey": null
                       },
-                      (v7/*: any*/),
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -386,7 +369,7 @@ return {
             ],
             "storageKey": null
           },
-          (v6/*: any*/)
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -422,7 +405,7 @@ return {
         "kind": "LinkedField",
         "name": "productPricingCadences",
         "plural": true,
-        "selections": (v9/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       },
       {
@@ -432,22 +415,22 @@ return {
         "kind": "LinkedField",
         "name": "currencies",
         "plural": true,
-        "selections": (v9/*: any*/),
+        "selections": (v8/*: any*/),
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "e1f301a3a1e7c135bfed79c4df9fd145",
+    "cacheID": "cd9954d7a44e33f933c6facbb6d1f97e",
     "id": null,
     "metadata": {},
     "name": "organizationProducts_rootQuery",
     "operationKind": "query",
-    "text": "query organizationProducts_rootQuery(\n  $organizationCustomDomain: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        organization {\n          id\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  organization {\n    id\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
+    "text": "query organizationProducts_rootQuery(\n  $organizationCustomDomain: String!\n  $productsSortingValues: [ProductOrderInput!]\n) {\n  products(where: {organizationCustomDomains: [$organizationCustomDomain], includeInactive: true}, orderBy: $productsSortingValues) {\n    totalCount\n    edges {\n      node {\n        id\n        listingMetadata {\n          title\n        }\n        ...productCard_ProductDetails\n      }\n    }\n  }\n  ...productCard_query\n}\n\nfragment productCard_ProductDetails on ProductDetails {\n  id\n  inactive\n  listingMetadata {\n    title\n    subTitle\n  }\n  featureImages {\n    thumbnail {\n      url\n      height\n      width\n    }\n  }\n  currency {\n    type\n  }\n  pricingOptions {\n    index\n    listingMetadata {\n      title\n      subTitle\n    }\n    purchaseCadence\n    price\n    isTaxInclusive\n    supportsSubscriptionAutoRenewal\n  }\n}\n\nfragment productCard_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    canModify\n    id\n  }\n  productPricingCadences {\n    type\n    name\n  }\n  currencies {\n    type\n    name\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c3d46369fee5db01e815cf23387832e0";
+(node as any).hash = "90652110b733971d8155b2ed2ec67515";
 
 export default node;

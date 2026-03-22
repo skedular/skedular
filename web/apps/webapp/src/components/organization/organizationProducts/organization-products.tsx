@@ -30,9 +30,6 @@ const RootQuery = graphql`
           listingMetadata {
             title
           }
-          organization {
-            id
-          }
           ...productCard_ProductDetails
         }
       }

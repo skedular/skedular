@@ -11,6 +11,10 @@ namespace Marketplace.Shared.Database.Entities;
 public class Organization : ReplicatedEntityBaseWithDeleted
 {
     public string? CustomDomain { get; set; }
+    public string? Name { get; set; }
+    public string? Website { get; set; }
+    public string? LogoUrl { get; set; }
+    public string? CustomerFacingTermsAndConditionsUrl { get; set; }
     public Offering? Offering { get; set; }
     public string Type { get; set; }
     public bool? IsOwnershipVerified { get; set; }
@@ -29,10 +33,16 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.ConfigureReplicatedEntityBaseWithDeleted();
 
         builder.Property(item => item.CustomDomain).HasMaxLength(Constants.MaxOrganizationCustomDomainLength);
+        builder.Property(item => item.Name).HasMaxLength(Constants.MaxOrganizationNameLength);
+        builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.CustomerFacingTermsAndConditionsUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Offering).HasColumnType("jsonb");
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
 
         builder.HasIndex(item => item.CustomDomain).IsUnique();
+        builder.HasIndex(item => item.Name);
+        builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
         builder.HasIndex(item => item.IsOwnershipVerified);
     }

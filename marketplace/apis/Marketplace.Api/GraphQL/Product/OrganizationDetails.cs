@@ -1,10 +1,17 @@
-using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 
 namespace Marketplace.Api.GraphQL.Product;
 
-[GraphQLName("OrganizationDetails")]
-public class OrganizationDetails(string id, string customDomain) : Node(id)
+[GraphQLName("Marketplace_OrganizationDetails")]
+public class OrganizationDetails
 {
-    [GraphQLName("customDomain")] public string? CustomDomain { get; set; } = customDomain;
+    [GraphQLName("uniqueId")] public string Id { get; set; }
+    [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
+    [GraphQLName("name")] public string Name { get; set; } = string.Empty;
+    [GraphQLName("website")] public string? Website { get; set; }
+
+    [GraphQLName("customerFacingTermsAndConditionsUrl")]
+    public string? CustomerFacingTermsAndConditionsUrl { get; set; }
+
+    [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
 }

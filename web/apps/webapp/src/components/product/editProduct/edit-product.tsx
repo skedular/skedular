@@ -342,9 +342,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             name
             color
           }
-          organization {
-            id
-          }
           featureImages {
             original {
               url

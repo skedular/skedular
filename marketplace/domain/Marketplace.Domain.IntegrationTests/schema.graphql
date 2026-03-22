@@ -32,17 +32,21 @@ type ListingMetadata {
   includedFeatures: [String!]
 }
 
+type Marketplace_OrganizationDetails {
+  uniqueId: String!
+  customDomain: String
+  name: String!
+  website: String
+  customerFacingTermsAndConditionsUrl: String
+  logoUrl: String
+}
+
 type Mutation {
   addProduct(input: AddProductInput!): ProductPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
   deleteProducts(input: DeleteProductsInput!): ProductsPayload! @cost(weight: "10")
   activateProducts(input: ActivateProductsInput!): ProductsPayload! @cost(weight: "10")
   deactivateProducts(input: DeactivateProductsInput!): ProductsPayload! @cost(weight: "10")
-}
-
-type OrganizationDetails {
-  customDomain: String
-  id: ID!
 }
 
 type OrganizationTagDetails {
@@ -65,16 +69,16 @@ type PaymentMethodTypeDetails {
 }
 
 type ProductDetails {
-  organization: OrganizationDetails!
   inactive: Boolean!
   type: ProductTypeDetails!
   currency: CurrencyDetails!
   productTags: [OrganizationTagDetails!]!
   amenities: [OrganizationTagDetails!]!
-  latestProductVersionId: String!
+  organization: Marketplace_OrganizationDetails!
   featureImages: [CdnImageFile!]!
   pricingOptions: [ProductPricing!]!
   listingMetadata: ListingMetadata!
+  latestProductVersionId: String!
   id: ID!
 }
 
@@ -134,7 +138,6 @@ type ProductTypeDetails {
 }
 
 type ProductVersionDetails {
-  organization: OrganizationDetails!
   inactive: Boolean!
   listingMetadata: ListingMetadata!
   type: ProductTypeDetails!
@@ -142,6 +145,7 @@ type ProductVersionDetails {
   productTags: [OrganizationTagDetails!]!
   featureImages: [CdnImageFile!]!
   pricingOptions: [ProductPricing!]!
+  organization: Marketplace_OrganizationDetails!
   id: ID!
 }
 
