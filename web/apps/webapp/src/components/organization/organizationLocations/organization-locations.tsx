@@ -26,7 +26,7 @@ import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { joinErrors, startOfDay } from '@/libs/utils';
+import { getRelayErrorMessage, startOfDay } from '@/libs/utils';
 import type { organizationLocations_addCustomerPreferredLocationMutation } from '@/queries/__generated__/organizationLocations_addCustomerPreferredLocationMutation.graphql';
 import type { organizationLocations_deleteLocationMutation } from '@/queries/__generated__/organizationLocations_deleteLocationMutation.graphql';
 import type { organizationLocations_locations_availableOrganizationResources_query$key } from '@/queries/__generated__/organizationLocations_locations_availableOrganizationResources_query.graphql';
@@ -369,7 +369,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -408,7 +408,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -449,7 +449,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

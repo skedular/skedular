@@ -8,7 +8,7 @@ import { RelayError, toRootError } from '@/components/relayError';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { mySettings_rootQuery } from '@/queries/__generated__/mySettings_rootQuery.graphql';
 import type { mySettings_updateCustomerDetailsMutation, PersonalInformationVisibility } from '@/queries/__generated__/mySettings_updateCustomerDetailsMutation.graphql';
 import Box from '@mui/material/Box';
@@ -146,7 +146,7 @@ const MySettings = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update user profile details. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update user profile details. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

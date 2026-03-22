@@ -7,7 +7,7 @@ import isYesterday from 'dayjs/plugin/isYesterday';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import type { NextRequest } from 'next/server';
-import { PayloadError } from 'relay-runtime';
+import type { PayloadError } from 'relay-runtime';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -15,6 +15,15 @@ dayjs.extend(advancedFormat);
 dayjs.extend(isToday);
 dayjs.extend(isTomorrow);
 dayjs.extend(isYesterday);
+
+type ErrorWithGraphQlSource = {
+  message?: string | null;
+  source?: {
+    errors?: PayloadError[] | null;
+  } | null;
+};
+
+type RelayErrorLike = ErrorWithGraphQlSource | PayloadError[];
 
 const secondaryColors = [violet, aqua, sunbeam, flame];
 
@@ -239,7 +248,43 @@ const toFixed = (value: number, fractionDigits?: number): number => {
   return Number(value.toFixed(fractionDigits));
 };
 
-const joinErrors = (errors: PayloadError[]) => errors.map((error) => error.message).join('\n');
+const normalizeRelayErrorMessage = (message: string | null | undefined) => {
+  const trimmedMessage = message?.trim();
+  if (!trimmedMessage) {
+    return null;
+  }
+
+  if (trimmedMessage === 'See the error `source` property for more information..') {
+    return null;
+  }
+
+  return trimmedMessage;
+};
+
+const getRelayMessagesFromSingleError = (error: ErrorWithGraphQlSource) => {
+  const graphQlMessages = (error.source?.errors ?? []).map((item) => normalizeRelayErrorMessage(item.message)).filter((item): item is string => !!item);
+
+  if (graphQlMessages.length > 0) {
+    return graphQlMessages;
+  }
+
+  const fallbackMessage = normalizeRelayErrorMessage(error.message);
+  return fallbackMessage ? [fallbackMessage] : [];
+};
+
+const getRelayErrorMessage = (error: RelayErrorLike) => {
+  if (Array.isArray(error)) {
+    const messages = error.flatMap((item) => getRelayMessagesFromSingleError(item));
+    return Array.from(new Set(messages)).join('\n');
+  }
+
+  const messages = getRelayMessagesFromSingleError(error);
+  if (messages.length > 0) {
+    return Array.from(new Set(messages)).join('\n');
+  }
+
+  return 'Unknown error';
+};
 
 const stringToColor = (string: string) => {
   let hash = 0;
@@ -388,6 +433,7 @@ export {
   getCustomerShortName,
   getOpeningHoursFromDateTime,
   getPublicOrigin,
+  getRelayErrorMessage,
   isInSameMonth,
   isInSameWeek,
   isInSameYear,
@@ -395,7 +441,6 @@ export {
   isTodayDate,
   isTomorrowDate,
   isYesterdayDate,
-  joinErrors,
   localNow,
   now,
   startOfDay,

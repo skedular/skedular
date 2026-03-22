@@ -36,7 +36,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringCollectionToString, stringToMultiLines } from '@/libs/utils';
 import type { organizationLocation_activateResourcesMutation } from '@/queries/__generated__/organizationLocation_activateResourcesMutation.graphql';
 import type { organizationLocation_addCustomerPreferredResourceMutation } from '@/queries/__generated__/organizationLocation_addCustomerPreferredResourceMutation.graphql';
 import type { organizationLocation_addLocationPhysicalAddressMutation } from '@/queries/__generated__/organizationLocation_addLocationPhysicalAddressMutation.graphql';
@@ -945,7 +945,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${location?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update location '${location?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1073,7 +1073,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update location '${location?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to update location '${location?.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1145,7 +1145,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to add location '${location?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to add location '${location?.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1261,7 +1261,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate resources. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate resources. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1299,7 +1299,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate resources. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate resources. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1338,7 +1338,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove resources. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove resources. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1377,7 +1377,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate resource. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate resource. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1416,7 +1416,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate resource. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate resource. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1456,7 +1456,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove resource. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove resource. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -1496,7 +1496,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set resource '${resourceDetails.name}' as your preferred resource. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set resource '${resourceDetails.name}' as your preferred resource. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1537,7 +1537,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the resource '${resourceDetails.name}' as your preferred resource. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the resource '${resourceDetails.name}' as your preferred resource. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1582,7 +1582,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the location '${location.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1624,7 +1624,7 @@ const OrganizationLocation = ({ rootDataRelay, rootDataResourcesRelay, rootDataF
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update location '${location?.name}' opening hours . Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update location '${location?.name}' opening hours . Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

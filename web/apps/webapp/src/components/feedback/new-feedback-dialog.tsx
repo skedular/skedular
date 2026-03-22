@@ -2,7 +2,7 @@ import { BodyIconTypography, DefaultDialogTitle, FormStackColumn, TwoButtonsDial
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { InMsTeamsContext, PaletteModeContext } from '@/libs/providers';
-import { getCustomerShortName, joinErrors } from '@/libs/utils';
+import { getCustomerShortName, getRelayErrorMessage } from '@/libs/utils';
 import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFeedbackDialog_query.graphql';
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -77,7 +77,7 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to submit feedback. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to submit feedback. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

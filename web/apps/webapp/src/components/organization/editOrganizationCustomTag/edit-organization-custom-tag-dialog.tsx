@@ -4,7 +4,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editOrganizationCustomTagDialog_rootQuery } from '@/queries/__generated__/editOrganizationCustomTagDialog_rootQuery.graphql';
 import type { editOrganizationCustomTagDialog_updateCustomTagMutation } from '@/queries/__generated__/editOrganizationCustomTagDialog_updateCustomTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -96,7 +96,7 @@ const EditOrganizationCustomTagDialog = ({ queryReference, customTagId, isDialog
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update tag '${oldName}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update tag '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

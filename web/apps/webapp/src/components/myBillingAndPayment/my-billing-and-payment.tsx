@@ -19,7 +19,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { myBillingAndPayment_addMyBillingDetailsMutation } from '@/queries/__generated__/myBillingAndPayment_addMyBillingDetailsMutation.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_query$key } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_query.graphql';
 import type { myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment } from '@/queries/__generated__/myBillingAndPayment_customerPaymentMethodsDetails_refetchableFragment.graphql';
@@ -295,7 +295,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update billing. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to update billing. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -370,7 +370,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to add billing. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to add billing. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -439,7 +439,7 @@ const MyBillingAndPayment = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove payment method. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove payment method. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

@@ -3,7 +3,7 @@ import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, get
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { joinErrors, toShortDate } from '@/libs/utils';
+import { getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,
@@ -475,7 +475,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
         if (errors?.length) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't complete this booking. ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(errors)}`} />,
           });
           return;
         }
@@ -499,7 +499,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`We couldn't complete this booking. ${error.message}`} />,
+          render: <NotificationContent content={`We couldn't complete this booking. ${getRelayErrorMessage(error)}`} />,
         });
       },
     });

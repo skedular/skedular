@@ -10,7 +10,7 @@ import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addTeam_addTeamMutation } from '@/queries/__generated__/addTeam_addTeamMutation.graphql';
 import type { addTeam_rootQuery } from '@/queries/__generated__/addTeam_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -138,7 +138,7 @@ const AddTeam = ({ queryReference, onReloadRequired, organizationCustomDomain, o
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new team '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new team '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

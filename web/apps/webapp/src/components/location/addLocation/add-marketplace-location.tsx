@@ -11,7 +11,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout, stringToMultiLines } from '@/libs/utils';
 import type { addMarketplaceLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addMarketplaceLocation_addLocationMutation.graphql';
 import type { addMarketplaceLocation_rootQuery } from '@/queries/__generated__/addMarketplaceLocation_rootQuery.graphql';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -379,7 +379,7 @@ const AddMarketplaceLocation = ({ queryReference, onReloadRequired, organization
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

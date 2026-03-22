@@ -14,7 +14,7 @@ import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZ
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addResourceDialog_addResourceMutation } from '@/queries/__generated__/addResourceDialog_addResourceMutation.graphql';
 import type { addResourceDialog_rootQuery } from '@/queries/__generated__/addResourceDialog_rootQuery.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -172,7 +172,7 @@ const AddResourceDialog = ({ queryReference, organizationCustomDomain, locationI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add resource '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add resource '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

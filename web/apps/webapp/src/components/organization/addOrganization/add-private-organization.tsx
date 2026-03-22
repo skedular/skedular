@@ -8,7 +8,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addPrivateOrganization_addOrganizationMutation } from '@/queries/__generated__/addPrivateOrganization_addOrganizationMutation.graphql';
 import type { addPrivateOrganization_query$key } from '@/queries/__generated__/addPrivateOrganization_query.graphql';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -146,7 +146,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

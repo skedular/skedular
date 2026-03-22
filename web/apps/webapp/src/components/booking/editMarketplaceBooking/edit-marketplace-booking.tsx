@@ -17,8 +17,8 @@ import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
 import {
   getCustomerFullName,
   getOpeningHoursFromDateTime,
+  getRelayErrorMessage,
   isMidnight,
-  joinErrors,
   keyboardSearchDebounceTimeout,
   toOpeningHoursFromTime,
   toShortDate,
@@ -373,7 +373,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -389,7 +389,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

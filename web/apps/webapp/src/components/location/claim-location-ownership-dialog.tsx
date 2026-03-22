@@ -2,7 +2,7 @@ import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoButtonsDialogAc
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { claimLocationOwnershipDialog_claimLocationOwnershipMutation } from '@/queries/__generated__/claimLocationOwnershipDialog_claimLocationOwnershipMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -87,7 +87,7 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to claim ownership of location specified by claim code '${uniqueClaimCode}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to claim ownership of location specified by claim code '${uniqueClaimCode}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

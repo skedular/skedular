@@ -13,7 +13,7 @@ import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { locationCard_addCustomerPreferredLocationMutation } from '@/queries/__generated__/locationCard_addCustomerPreferredLocationMutation.graphql';
 import type { locationCard_deleteLocationMutation } from '@/queries/__generated__/locationCard_deleteLocationMutation.graphql';
 import type { locationCard_LocationDetails$key } from '@/queries/__generated__/locationCard_LocationDetails.graphql';
@@ -325,7 +325,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove location '${locationDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -359,7 +359,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -393,7 +393,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your preferred location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -427,7 +427,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Email. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -461,7 +461,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via call. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -495,7 +495,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via SMS. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -529,7 +529,7 @@ const LocationCard = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to toggle the location '${locationDetails.name}' contaced via Whatsapp. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

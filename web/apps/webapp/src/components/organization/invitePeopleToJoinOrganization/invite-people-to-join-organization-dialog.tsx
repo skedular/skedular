@@ -2,7 +2,7 @@ import { DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadIconTypography
 import { NotificationContent, errorNotificationOptions, infoNotificationOptions, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation } from '@/queries/__generated__/invitePeopleToJoinOrganizationDialog_inviteCustomersToJoinOrganizationMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -79,7 +79,7 @@ const InvitePeopleToJoinOrganizationDialog = ({ isDialogOpen, onInviteClicked, o
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to invite people to join organization. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to invite people to join organization. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

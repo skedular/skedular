@@ -5,7 +5,7 @@ import { AddPrivateOrganization } from '@/components/organization/addOrganizatio
 import { RelayError, toRootError } from '@/components/relayError';
 import { NoOrganizationRootShell } from '@/components/rootShell';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { pageAddPrivateOrganization_claimLocationOwnershipMutation } from '@/queries/__generated__/pageAddPrivateOrganization_claimLocationOwnershipMutation.graphql';
 import type { pageAddPrivateOrganization_completeOnboardingMutation } from '@/queries/__generated__/pageAddPrivateOrganization_completeOnboardingMutation.graphql';
 import type { pageAddPrivateOrganization_rootQuery } from '@/queries/__generated__/pageAddPrivateOrganization_rootQuery.graphql';
@@ -73,7 +73,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
             themedToast(
-              <NotificationContent content={`Failed to claim location with unique code ${locationUniqueClaimCode}. Error: ${joinErrors(errors)}.`} />,
+              <NotificationContent content={`Failed to claim location with unique code ${locationUniqueClaimCode}. Error: ${getRelayErrorMessage(errors)}.`} />,
               errorNotificationOptions,
             );
           }
@@ -102,7 +102,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             },
             onCompleted: (_, errors) => {
               if (errors && errors.length > 0) {
-                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
+                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
               }
 
               router.push(
@@ -154,7 +154,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
         },
         onCompleted: (_, errors) => {
           if (errors && errors.length > 0) {
-            themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
+            themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           }
 
           router.push(

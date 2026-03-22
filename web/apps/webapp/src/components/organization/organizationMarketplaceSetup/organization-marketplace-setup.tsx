@@ -26,7 +26,7 @@ import { ExistingStripeConnectAccountButton, NewStripeConnectAccountButton } fro
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
@@ -552,7 +552,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product tags. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product tags. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -591,7 +591,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product tag. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product tag. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -673,7 +673,9 @@ const OrganizationMarketplaceSetup = ({
           toast.update(toastId, {
             ...errorNotificationOptions,
             render: (
-              <NotificationContent content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${joinErrors(errors)}`} />
+              <NotificationContent
+                content={`Failed to set stripe connect account ${organizationStripeConnectAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`}
+              />
             ),
           });
 
@@ -722,7 +724,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove Stripe Connect accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -761,7 +763,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove Stripe Connect account. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -833,7 +835,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to set bank account ${organizationBankAccountDetails.name} as default. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -881,7 +883,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -920,7 +922,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove Bank accounts. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1305,7 +1307,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' marketplace listing. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1358,7 +1360,7 @@ const OrganizationMarketplaceSetup = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

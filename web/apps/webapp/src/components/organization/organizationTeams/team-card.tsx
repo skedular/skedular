@@ -8,7 +8,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { teamCard_deleteTeamMutation } from '@/queries/__generated__/teamCard_deleteTeamMutation.graphql';
 import type { teamCard_TeamDetails$key } from '@/queries/__generated__/teamCard_TeamDetails.graphql';
 import AvatarGroup from '@mui/material/AvatarGroup';
@@ -157,7 +157,7 @@ const TeamCard = ({ teamDetailsRelay, connectionIds, teammates }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

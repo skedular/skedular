@@ -3,7 +3,7 @@ import { SingleChoiceCountry } from '@/components/forms';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editBankAccount_query$key } from '@/queries/__generated__/editBankAccount_query.graphql';
 import type { editBankAccount_updateOrganizationBankAccountMutation } from '@/queries/__generated__/editBankAccount_updateOrganizationBankAccountMutation.graphql';
 import Box from '@mui/material/Box';
@@ -107,7 +107,7 @@ const EditBankAccount = ({ rootDataRelay }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Bank account '${account.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update Bank account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

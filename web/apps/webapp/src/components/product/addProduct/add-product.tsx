@@ -18,7 +18,7 @@ import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext, useKnownParams } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addProduct_addProductMutation, Currency, PaymentMethod, ProductPricingCadence, ProductType } from '@/queries/__generated__/addProduct_addProductMutation.graphql';
 import type { addProduct_rootQuery } from '@/queries/__generated__/addProduct_rootQuery.graphql';
 import Box from '@mui/material/Box';
@@ -497,7 +497,7 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new product '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new product '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

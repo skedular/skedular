@@ -12,7 +12,7 @@ import { NewTeamButton } from '@/components/team/addTeam';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { organizationTeams_deleteTeamMutation } from '@/queries/__generated__/organizationTeams_deleteTeamMutation.graphql';
 import type { organizationTeams_rootQuery } from '@/queries/__generated__/organizationTeams_rootQuery.graphql';
 import type { organizationTeams_teams_query$key } from '@/queries/__generated__/organizationTeams_teams_query.graphql';
@@ -224,7 +224,7 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove team '${teamDetails.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

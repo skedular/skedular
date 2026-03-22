@@ -3,7 +3,7 @@ import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { joinErrors, startOfDay, toShortDate } from '@/libs/utils';
+import { getRelayErrorMessage, startOfDay, toShortDate } from '@/libs/utils';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
 import Alert from '@mui/material/Alert';
@@ -272,7 +272,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
         if (errors?.length) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`We couldn't start this plan. ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`We couldn't start this plan. ${getRelayErrorMessage(errors)}`} />,
           });
           return;
         }

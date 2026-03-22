@@ -6,7 +6,7 @@ import { OrganizationTermsOfUse } from '@/components/organization';
 import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from '@/components/wizard';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addIndividualOrganization_addOrganizationMutation } from '@/queries/__generated__/addIndividualOrganization_addOrganizationMutation.graphql';
 import type { addIndividualOrganization_query$key } from '@/queries/__generated__/addIndividualOrganization_query.graphql';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -121,7 +121,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

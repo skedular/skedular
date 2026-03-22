@@ -3,7 +3,7 @@ import { BodyIconTypography, DefaultDialogTitle, FormFieldLabel, FormStackColumn
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { getCustomerFullName, joinErrors, keyboardSearchDebounceTimeout } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage, keyboardSearchDebounceTimeout } from '@/libs/utils';
 import type { addOrganizationTeamMemberDialog_addTeamMemberMutation } from '@/queries/__generated__/addOrganizationTeamMemberDialog_addTeamMemberMutation.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_query$key } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_query.graphql';
 import type { addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment } from '@/queries/__generated__/addOrganizationTeamMemberDialog_organizationMembers_refetchableFragment.graphql';
@@ -151,7 +151,7 @@ const AddOrganizationTeamMemberDialog = ({ rootDataRelay, connectionIds, teamId,
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add team member. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add team member. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

@@ -2,7 +2,7 @@ import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, TwoBu
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { newCustomTagDialog_addCustomTagMutation } from '@/queries/__generated__/newCustomTagDialog_addCustomTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -76,7 +76,7 @@ const NewCustomTagDialog = ({ connectionIds, isDialogOpen, onAddClicked, onCance
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add tag '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

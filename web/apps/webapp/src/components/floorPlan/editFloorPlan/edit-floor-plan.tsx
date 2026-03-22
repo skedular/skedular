@@ -5,7 +5,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editFloorPlan_query$key } from '@/queries/__generated__/editFloorPlan_query.graphql';
 import type { editFloorPlan_resources_query$key } from '@/queries/__generated__/editFloorPlan_resources_query.graphql';
 import type { editFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/editFloorPlan_resources_refetchableFragment.graphql';
@@ -235,7 +235,7 @@ const EditFloorPlan = ({ rootDataRelay, rootDataResourcesRelay }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update floor plan '${floorPlan.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

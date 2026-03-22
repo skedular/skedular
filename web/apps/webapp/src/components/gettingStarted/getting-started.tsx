@@ -11,7 +11,7 @@ import { InvitePeopleToJoinOrganizationDialog } from '@/components/organization/
 import { AddResourceDialog } from '@/components/resource/addResource';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultPadding, emerald } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { gettingStarted_completeOrganizationMemberOnboardingMutation } from '@/queries/__generated__/gettingStarted_completeOrganizationMemberOnboardingMutation.graphql';
 import type { gettingStarted_query$key } from '@/queries/__generated__/gettingStarted_query.graphql';
 import Box from '@mui/material/Box';
@@ -97,7 +97,7 @@ const GettingStarted = ({ rootDataRelay, onReloadRequired, organizationCustomDom
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to dismiss organization onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`Failed to dismiss organization onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
         }
 
         onReloadRequired();

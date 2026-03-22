@@ -16,7 +16,7 @@ import MultipleChoicesAmenities from '@/components/organization/multiple-choices
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { editProduct_query$key } from '@/queries/__generated__/editProduct_query.graphql';
 import type {
   Currency,
@@ -582,7 +582,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update product '${product.listingMetadata.title}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update product '${product.listingMetadata.title}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

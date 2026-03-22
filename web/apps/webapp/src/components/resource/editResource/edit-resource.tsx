@@ -14,7 +14,7 @@ import { MultipleChoicesCustomTags, MultipleChoicesProductTags, MultipleChoicesZ
 import { WeekOpeningHours, WeekOpeningHoursDetails } from '@/components/weekOpeningHours';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editResource_query$key } from '@/queries/__generated__/editResource_query.graphql';
 import type { editResource_updateLocationResourceAvailableHoursMutation } from '@/queries/__generated__/editResource_updateLocationResourceAvailableHoursMutation.graphql';
 import type { editResource_updateResourceMutation } from '@/queries/__generated__/editResource_updateResourceMutation.graphql';
@@ -408,7 +408,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Resource '${oldName}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update Resource '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -473,7 +473,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -538,7 +538,7 @@ const EditResource = ({ rootDataRelay, organizationCustomDomain }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update resource '${resource?.name}' available hours . Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

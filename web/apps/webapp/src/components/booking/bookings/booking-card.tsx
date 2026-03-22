@@ -9,7 +9,7 @@ import { Resources } from '@/components/resource';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { bookingCard_addPrivateBookingMutation } from '@/queries/__generated__/bookingCard_addPrivateBookingMutation.graphql';
 import type { bookingCard_BookingDetails$key } from '@/queries/__generated__/bookingCard_BookingDetails.graphql';
 import type { bookingCard_confirmBookingPaymentMutation } from '@/queries/__generated__/bookingCard_confirmBookingPaymentMutation.graphql';
@@ -347,7 +347,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -361,7 +361,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -378,7 +378,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -392,7 +392,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -422,7 +422,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -456,7 +456,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {
@@ -513,7 +513,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -527,7 +527,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {
@@ -568,7 +568,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -582,7 +582,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {
@@ -623,7 +623,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -637,7 +637,7 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

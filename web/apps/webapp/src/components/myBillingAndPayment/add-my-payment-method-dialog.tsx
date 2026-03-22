@@ -2,7 +2,7 @@ import { DefaultDialogTitle } from '@/components/commons';
 import { errorNotificationOptions, NotificationContent } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation } from '@/queries/__generated__/addMyPaymentMethodDialog_addCustomerPaymentMethodIntentMutation.graphql';
 import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
@@ -65,7 +65,7 @@ const AddMyPaymentMethodDialog = ({ isDialogOpen, onCancel }: Props) => {
       },
       onCompleted: (response, errors) => {
         if (errors && errors.length > 0) {
-          themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
+          themedToast(<NotificationContent content={`Failed to add new payment method. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
           handleDialogClose();
 
           return;

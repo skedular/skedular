@@ -6,7 +6,7 @@ import { NoOrganizationRootShell } from '@/components/rootShell';
 import type { UserType } from '@/components/setupFlow';
 import { SetupFlow } from '@/components/setupFlow';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { pageWelcome_completeOnboardingMutation } from '@/queries/__generated__/pageWelcome_completeOnboardingMutation.graphql';
 import type { pageWelcome_rootQuery } from '@/queries/__generated__/pageWelcome_rootQuery.graphql';
 import { useRouter } from 'next/navigation';
@@ -80,7 +80,7 @@ const RootPage = ({ queryReference, onReloadRequired }: Props) => {
             },
             onCompleted: (_, errors) => {
               if (errors && errors.length > 0) {
-                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${joinErrors(errors)}.`} />, errorNotificationOptions);
+                themedToast(<NotificationContent content={`Failed to complete onboarding. Error: ${getRelayErrorMessage(errors)}.`} />, errorNotificationOptions);
               }
 
               router.push(getRootLink(integratedPlatrform));

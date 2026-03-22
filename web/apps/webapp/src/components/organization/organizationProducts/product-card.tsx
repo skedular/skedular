@@ -6,7 +6,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, emerald, flame, sandstone } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { productCard_activateProductsMutation } from '@/queries/__generated__/productCard_activateProductsMutation.graphql';
 import type { productCard_deactivateProductsMutation } from '@/queries/__generated__/productCard_deactivateProductsMutation.graphql';
 import type { productCard_deleteProductsMutation } from '@/queries/__generated__/productCard_deleteProductsMutation.graphql';
@@ -186,7 +186,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -224,7 +224,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -272,7 +272,7 @@ const ProductCard = ({ rootDataRelay, productDetailsRelay, organizationCustomDom
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate product ${productDetails.listingMetadata.title}. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

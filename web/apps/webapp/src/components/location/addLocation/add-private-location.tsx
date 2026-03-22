@@ -10,7 +10,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { addPrivateLocation_addLocationMutation, LocationType } from '@/queries/__generated__/addPrivateLocation_addLocationMutation.graphql';
 import type { addPrivateLocation_rootQuery } from '@/queries/__generated__/addPrivateLocation_rootQuery.graphql';
 import ApartmentIcon from '@mui/icons-material/Apartment';
@@ -164,7 +164,7 @@ const AddPrivateLocation = ({ queryReference, onReloadRequired, organizationCust
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

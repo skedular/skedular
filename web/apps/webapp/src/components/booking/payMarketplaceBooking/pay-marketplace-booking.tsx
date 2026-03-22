@@ -9,7 +9,7 @@ import { getOrganizationProductsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
+import { getCustomerFullName, getOpeningHoursFromDateTime, getRelayErrorMessage, isMidnight, toOpeningHoursFromTime, toShortDate, toShortTime } from '@/libs/utils';
 import type { payMarketplaceBooking_booking_query$key } from '@/queries/__generated__/payMarketplaceBooking_booking_query.graphql';
 import type { payMarketplaceBooking_booking_Subscription } from '@/queries/__generated__/payMarketplaceBooking_booking_Subscription.graphql';
 import type { payMarketplaceBooking_confirmBookingPaymentMutation } from '@/queries/__generated__/payMarketplaceBooking_confirmBookingPaymentMutation.graphql';
@@ -277,7 +277,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -293,7 +293,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to cancel booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
     });
@@ -325,7 +325,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to confirm payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -339,7 +339,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to confirm payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {
@@ -385,7 +385,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject payment for booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -399,7 +399,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to reject payment for booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {
@@ -445,7 +445,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to make payment for booking ${bookingDetailsInfo} not required. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -459,7 +459,7 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to make payment for booking '${shortDateFormatFrom}' not required. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

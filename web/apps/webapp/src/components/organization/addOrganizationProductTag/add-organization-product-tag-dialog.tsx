@@ -2,7 +2,7 @@ import { ColorPicker, DefaultDialogTitle, FormFieldLabel, FormStackColumn, LeadI
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addOrganizationProductTagDialog_addProductTagMutation } from '@/queries/__generated__/addOrganizationProductTagDialog_addProductTagMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -76,7 +76,7 @@ const AddOrganizationProductTagDialog = ({ organizationCustomDomain, connectionI
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add product tag '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

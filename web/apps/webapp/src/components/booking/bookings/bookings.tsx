@@ -9,7 +9,7 @@ import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { bookings_addPrivateBookingMutation } from '@/queries/__generated__/bookings_addPrivateBookingMutation.graphql';
 import type { bookings_bookings_query$key } from '@/queries/__generated__/bookings_bookings_query.graphql';
 import type { bookings_bookings_refetchableFragment } from '@/queries/__generated__/bookings_bookings_refetchableFragment.graphql';
@@ -343,7 +343,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -357,7 +357,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -374,7 +374,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -388,7 +388,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -424,7 +424,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -458,7 +458,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to make a booking '${shortDateFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

@@ -20,7 +20,7 @@ import { TeamCard } from '@/components/organization/organizationTeams';
 import { SingleChoiceUserPersonalInformationVisibility } from '@/components/user';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationUser_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUser_changeOrganizationUsersStatusMutation.graphql';
 import type { organizationUser_query$key } from '@/queries/__generated__/organizationUser_query.graphql';
 import type { organizationUser_removeOrganizationUsersMutation } from '@/queries/__generated__/organizationUser_removeOrganizationUsersMutation.graphql';
@@ -283,7 +283,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update user profile details. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update user profile details. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -341,7 +341,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -380,7 +380,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -419,7 +419,7 @@ const OrganizationUser = ({ rootDataRelay, organizationCustomDomain, customerId 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

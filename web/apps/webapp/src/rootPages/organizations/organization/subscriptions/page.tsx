@@ -5,7 +5,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
@@ -180,7 +180,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to confirm payment for ${cycleLabel}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to confirm payment for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -216,7 +216,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject payment for ${cycleLabel}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject payment for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -252,7 +252,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to mark payment as not required for ${cycleLabel}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to mark payment as not required for ${cycleLabel}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

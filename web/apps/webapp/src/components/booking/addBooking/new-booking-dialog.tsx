@@ -7,7 +7,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { DialogTransition } from '@/components/transitions';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
-import { getCustomerFullName, isMidnight, joinErrors, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage, isMidnight, keyboardSearchDebounceTimeout, startOfDay, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
 import type { BookingCategory, newBookingDialog_addPrivateBookingMutation } from '@/queries/__generated__/newBookingDialog_addPrivateBookingMutation.graphql';
 import type { newBookingDialog_availableResources_query$key } from '@/queries/__generated__/newBookingDialog_availableResources_query.graphql';
 import type { newBookingDialog_availableResources_refetchableFragment } from '@/queries/__generated__/newBookingDialog_availableResources_refetchableFragment.graphql';
@@ -465,7 +465,7 @@ const NewBookingDialog = ({
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -501,7 +501,7 @@ const NewBookingDialog = ({
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to make a booking '${fromToPrint}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

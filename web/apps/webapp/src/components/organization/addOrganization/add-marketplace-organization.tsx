@@ -8,7 +8,7 @@ import { FeatureBox, LeftSidePanel, RightSidePanel, TwoSideVerticalWizard } from
 import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addMarketplaceOrganization_addOrganizationMutation } from '@/queries/__generated__/addMarketplaceOrganization_addOrganizationMutation.graphql';
 import type { addMarketplaceOrganization_query$key } from '@/queries/__generated__/addMarketplaceOrganization_query.graphql';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -149,7 +149,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

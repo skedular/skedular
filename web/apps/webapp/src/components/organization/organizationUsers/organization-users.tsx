@@ -12,7 +12,7 @@ import { TeamSelector } from '@/components/team/teamSelector';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationUsers_changeOrganizationMemberRoleMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationMemberRoleMutation.graphql';
 import type { organizationUsers_changeOrganizationUsersStatusMutation } from '@/queries/__generated__/organizationUsers_changeOrganizationUsersStatusMutation.graphql';
 import type { OrganizationMemberRole, organizationUsers_organizationMembers_query$key } from '@/queries/__generated__/organizationUsers_organizationMembers_query.graphql';
@@ -298,7 +298,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate users. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate users. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -337,7 +337,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate users. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate users. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -376,7 +376,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove users. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove users. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -450,7 +450,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -490,7 +490,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -530,7 +530,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove user. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove user. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -572,7 +572,7 @@ const OrganizationUsers = ({ queryReference, organizationCustomDomain }: Props) 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

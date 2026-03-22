@@ -2,7 +2,7 @@ import { AppBarWithStackColumn, BodyIconTypography, FormFieldLabel, FormStackCol
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addStripeConnectAccount_addStripeConnectAccountMutation } from '@/queries/__generated__/addStripeConnectAccount_addStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -71,7 +71,7 @@ const AddStripeConnectAccount = ({ onReloadRequired, organizationCustomDomain, o
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new Stripe Connect account '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

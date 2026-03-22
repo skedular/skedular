@@ -4,7 +4,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding, maxScreenWidth } from '@/libs/theme';
-import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { notifications_acceptInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinOrganizationMutation.graphql';
 import type { notifications_acceptInvitationToJoinTeamMutation } from '@/queries/__generated__/notifications_acceptInvitationToJoinTeamMutation.graphql';
 import type { notifications_rejectInvitationToJoinOrganizationMutation } from '@/queries/__generated__/notifications_rejectInvitationToJoinOrganizationMutation.graphql';
@@ -188,7 +188,9 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: (
+              <NotificationContent content={`Failed to reject invitation to join organization '${invitation.organization?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />
+            ),
           });
 
           return;
@@ -238,7 +240,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to accept invitation to join organization '${invitation.organization?.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -288,7 +290,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to reject invitation to join team '${invitation.team?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -338,7 +340,7 @@ const Notifications = ({ queryReference }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to accept invitation to join team '${invitation.team?.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

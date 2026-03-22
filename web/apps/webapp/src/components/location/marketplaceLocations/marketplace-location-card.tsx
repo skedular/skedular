@@ -5,7 +5,7 @@ import { getMarketplaceLocationLink, getSignInLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { marketplaceLocationCard_addCustomerFavouriteLocationMutation } from '@/queries/__generated__/marketplaceLocationCard_addCustomerFavouriteLocationMutation.graphql';
 import type { marketplaceLocationCard_LocationDetails$key } from '@/queries/__generated__/marketplaceLocationCard_LocationDetails.graphql';
 import type { marketplaceLocationCard_query$key } from '@/queries/__generated__/marketplaceLocationCard_query.graphql';
@@ -186,7 +186,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -228,7 +228,7 @@ const MarketplaceLocationCard = ({ rootDataRelay, locationDetailsRelay, onClose 
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the location '${locationDetails.name}' as your favourite location. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

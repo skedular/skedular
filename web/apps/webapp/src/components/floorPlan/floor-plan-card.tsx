@@ -5,7 +5,7 @@ import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, Mo
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { floorPlanCard_FloorPlanDetails$key } from '@/queries/__generated__/floorPlanCard_FloorPlanDetails.graphql';
 import type { floorPlanCard_deleteFloorPlanMutation } from '@/queries/__generated__/floorPlanCard_deleteFloorPlanMutation.graphql';
 import Card from '@mui/material/Card';
@@ -106,7 +106,7 @@ const FloorPlanCard = ({ floorPlanDetailsRelay, connectionIds, organizationCusto
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove floor plan ${floorPlanDetails.name}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

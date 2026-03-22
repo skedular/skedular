@@ -4,7 +4,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { RelayError, toRootError } from '@/components/relayError';
 import { DialogTransition } from '@/components/transitions';
 import { PaletteModeContext } from '@/libs/providers';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editOrganizationZoneDialog_rootQuery } from '@/queries/__generated__/editOrganizationZoneDialog_rootQuery.graphql';
 import type { editOrganizationZoneDialog_updateZoneMutation } from '@/queries/__generated__/editOrganizationZoneDialog_updateZoneMutation.graphql';
 import Dialog from '@mui/material/Dialog';
@@ -96,7 +96,7 @@ const EditOrganizationZoneDialog = ({ queryReference, zoneId, isDialogOpen, onAd
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update zone '${oldName}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update zone '${oldName}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

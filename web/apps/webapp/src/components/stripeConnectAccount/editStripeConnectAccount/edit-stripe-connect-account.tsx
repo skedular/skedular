@@ -13,7 +13,7 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { CompleteOnboardStripeConnectAccountButton } from '@/components/stripeConnectAccount';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { editStripeConnectAccount_query$key } from '@/queries/__generated__/editStripeConnectAccount_query.graphql';
 import type { editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation } from '@/queries/__generated__/editStripeConnectAccount_updateOrganizationStripeConnectAccountMutation.graphql';
 import Box from '@mui/material/Box';
@@ -109,7 +109,7 @@ const EditStripeConnectAccount = ({ rootDataRelay }: Props) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update Stripe Connect account '${account.name}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;

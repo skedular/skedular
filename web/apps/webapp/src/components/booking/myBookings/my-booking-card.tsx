@@ -9,7 +9,7 @@ import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, sandstone } from '@/libs/theme';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { myBookingCard_BookingDetails$key } from '@/queries/__generated__/myBookingCard_BookingDetails.graphql';
 import type { myBookingCard_deleteMarketplaceBookingMutation } from '@/queries/__generated__/myBookingCard_deleteMarketplaceBookingMutation.graphql';
 import type { myBookingCard_deletePrivateBookingMutation } from '@/queries/__generated__/myBookingCard_deletePrivateBookingMutation.graphql';
@@ -191,7 +191,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -205,7 +205,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -222,7 +222,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -236,7 +236,7 @@ const MyBookingCard = ({ bookingDetailsRelay, organizationCustomDomain, otherTea
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });

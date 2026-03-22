@@ -7,7 +7,7 @@ import { RelayError, toRootError } from '@/components/relayError';
 import { ImageFileUploader } from '@/libs/image-file-uploader';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { joinErrors } from '@/libs/utils';
+import { getRelayErrorMessage } from '@/libs/utils';
 import type { addFloorPlan_addFloorPlanMutation } from '@/queries/__generated__/addFloorPlan_addFloorPlanMutation.graphql';
 import type { addFloorPlan_resources_query$key } from '@/queries/__generated__/addFloorPlan_resources_query.graphql';
 import type { addFloorPlan_resources_refetchableFragment } from '@/queries/__generated__/addFloorPlan_resources_refetchableFragment.graphql';
@@ -195,7 +195,7 @@ const AddFloorPlan = ({ queryReference, onReloadRequired, locationId, onAdded, o
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to add new location '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

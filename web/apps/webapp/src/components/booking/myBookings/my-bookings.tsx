@@ -9,7 +9,7 @@ import Resources from '@/components/resource/resources';
 import { Zones } from '@/components/zone';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultGridStyle, defaultPadding } from '@/libs/theme';
-import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, joinErrors, toShortDate } from '@/libs/utils';
+import { dateRangeToShortDateWithAdditionalDayInfo, getCustomerFullName, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type { myBookings_bookings_query$key } from '@/queries/__generated__/myBookings_bookings_query.graphql';
 import type { myBookings_bookings_refetchableFragment } from '@/queries/__generated__/myBookings_bookings_refetchableFragment.graphql';
 import type { myBookings_deleteMarketplaceBookingMutation } from '@/queries/__generated__/myBookings_deleteMarketplaceBookingMutation.graphql';
@@ -297,7 +297,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -311,7 +311,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });
@@ -328,7 +328,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -342,7 +342,7 @@ const MyBookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDom
         onError: (error) => {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${error.message}.`} />,
+            render: <NotificationContent content={`Failed to remove booking ${bookingDetailsInfo}. Error: ${getRelayErrorMessage(error)}.`} />,
           });
         },
       });

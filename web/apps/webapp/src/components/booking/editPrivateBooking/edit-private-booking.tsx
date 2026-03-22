@@ -6,7 +6,15 @@ import { errorNotificationOptions, infoNotificationOptions, NotificationContent,
 import { Zones } from '@/components/zone';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
-import { getCustomerFullName, getOpeningHoursFromDateTime, isMidnight, joinErrors, keyboardSearchDebounceTimeout, toOpeningHoursFromTime, toShortDate } from '@/libs/utils';
+import {
+  getCustomerFullName,
+  getOpeningHoursFromDateTime,
+  getRelayErrorMessage,
+  isMidnight,
+  keyboardSearchDebounceTimeout,
+  toOpeningHoursFromTime,
+  toShortDate,
+} from '@/libs/utils';
 import type { editPrivateBooking_availableResources_query$key } from '@/queries/__generated__/editPrivateBooking_availableResources_query.graphql';
 import type { editPrivateBooking_availableResources_refetchableFragment } from '@/queries/__generated__/editPrivateBooking_availableResources_refetchableFragment.graphql';
 import type { editPrivateBooking_customerTeams_query$key } from '@/queries/__generated__/editPrivateBooking_customerTeams_query.graphql';
@@ -541,7 +549,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -557,7 +565,7 @@ const EditPrivateBooking = ({ rootDataRelay, rootDataTeamsRelay, rootDataOrganiz
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update booking '${shortDateTimeFormatFrom}'. Error: ${getRelayErrorMessage(error)}.`} />,
         });
       },
       optimisticResponse: {

@@ -34,7 +34,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { coal, defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { joinErrors, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
+import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/utils';
 import type { organizationAdmin_addCustomerPreferredOrganizationTagMutation } from '@/queries/__generated__/organizationAdmin_addCustomerPreferredOrganizationTagMutation.graphql';
 import type { organizationAdmin_addOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationBillingDetailsMutation.graphql';
 import type { organizationAdmin_addOrganizationPhysicalAddressMutation } from '@/queries/__generated__/organizationAdmin_addOrganizationPhysicalAddressMutation.graphql';
@@ -992,7 +992,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1098,7 +1098,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1174,7 +1174,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to add organization '${organization?.name}' billing. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to add organization '${organization?.name}' billing. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1280,7 +1280,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to update organization '${organization?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to update organization '${organization?.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1352,7 +1352,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           if (errors && errors.length > 0) {
             toast.update(toastId, {
               ...errorNotificationOptions,
-              render: <NotificationContent content={`Failed to add organization '${organization?.name}' physical address. Error: ${joinErrors(errors)}.`} />,
+              render: <NotificationContent content={`Failed to add organization '${organization?.name}' physical address. Error: ${getRelayErrorMessage(errors)}.`} />,
             });
 
             return;
@@ -1420,7 +1420,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' SSO settings. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1479,7 +1479,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' SSO settings. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1536,7 +1536,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' tax details. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' tax details. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1593,7 +1593,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' tax details. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove organization '${organization?.name}' tax details. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1671,7 +1671,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove zones. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove zones. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1710,7 +1710,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove zone. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove zone. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
           return;
         }
@@ -1779,7 +1779,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove tags. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove tags. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1818,7 +1818,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove tag. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove tag. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1866,7 +1866,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove payment method. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove payment method. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1907,7 +1907,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to cancel organization '${name}' active offering. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -1953,7 +1953,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization ${name} active offering. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           onReloadRequired();
@@ -1998,7 +1998,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -2039,7 +2039,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the zone '${organizationTagDetails.name}' as your preferred zone. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -2080,7 +2080,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to set tag '${organizationTagDetails.name}' as your preferred tag. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -2121,7 +2121,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the tag '${organizationTagDetails.name}' as your preferred tag. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -2162,7 +2162,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the organization '${name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;

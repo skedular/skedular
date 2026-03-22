@@ -24,7 +24,7 @@ import { ImageFileUploaderWithCropper } from '@/libs/image-file-uploader';
 import { defaultGridRowSelectionModelValue } from '@/libs/mui';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import { defaultButtonStyle, defaultGridActionPadding, defaultGridStyle, defaultPadding, emerald, flame, secondDrawerExpandedDrawerWidthPx } from '@/libs/theme';
-import { getCustomerFullName, joinErrors } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { organizationTeam_changeTeamMemberRoleMutation } from '@/queries/__generated__/organizationTeam_changeTeamMemberRoleMutation.graphql';
 import type { organizationTeam_changeTeamMembersStatusMutation } from '@/queries/__generated__/organizationTeam_changeTeamMembersStatusMutation.graphql';
 import type { organizationTeam_deleteTeamMutation } from '@/queries/__generated__/organizationTeam_deleteTeamMutation.graphql';
@@ -392,7 +392,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update team '${team?.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update team '${team?.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -446,7 +446,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate members. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -485,7 +485,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate members. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -524,7 +524,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove members. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove members. Error: ${getRelayErrorMessage(errors)}`} />,
           });
           return;
         }
@@ -580,7 +580,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to deactivate member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to deactivate member. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -620,7 +620,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to activate member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to activate member. Error: ${getRelayErrorMessage(errors)}`} />,
           });
 
           return;
@@ -660,7 +660,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove member. Error: ${joinErrors(errors)}`} />,
+            render: <NotificationContent content={`Failed to remove member. Error: ${getRelayErrorMessage(errors)}`} />,
           });
           return;
         }
@@ -700,7 +700,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update role to ${role}. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -753,7 +753,7 @@ const OrganizationTeam = ({ rootDataRelay, onReloadRequired, rootDataTeamMembers
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to remove the team '${team.name}'. Error: ${joinErrors(errors)}.`} />,
+            render: <NotificationContent content={`Failed to remove the team '${team.name}'. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
