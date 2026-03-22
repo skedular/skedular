@@ -6,10 +6,13 @@ import { v7 as uuid } from 'uuid';
 
 const HTTP_RETRY_ATTEMPTS = 5;
 const HTTP_RETRY_DELAY_MS = 1000;
+const GRAPHQL_ERROR_RETRY_ATTEMPTS = 3;
 
 const sleep = async (milliseconds: number) => {
   await new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
+
+const getGraphqlErrors = (payload: GraphQLResponse) => ('errors' in payload && Array.isArray(payload.errors) ? payload.errors : undefined);
 
 export function createNetwork(endpoint: string, token?: string | null | undefined) {
   const buildHeaders = () => {
@@ -29,6 +32,9 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
     void _cacheConfig;
     void _uploadables;
 
+    const isQueryOperation = params.operationKind === 'query';
+    let graphqlErrorAttempts = 0;
+
     for (let attempt = 1; attempt <= HTTP_RETRY_ATTEMPTS; attempt += 1) {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -39,11 +45,21 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
         }),
       });
 
-      if (response.status !== 504 || attempt === HTTP_RETRY_ATTEMPTS) {
-        return (await response.json()) as GraphQLResponse;
+      if (response.status === 504 && attempt < HTTP_RETRY_ATTEMPTS) {
+        await sleep(HTTP_RETRY_DELAY_MS);
+        continue;
       }
 
-      await sleep(HTTP_RETRY_DELAY_MS);
+      const payload = (await response.json()) as GraphQLResponse;
+      const errors = getGraphqlErrors(payload);
+      const hasGraphqlErrors = response.status === 200 && errors != null && errors.length > 0;
+      if (isQueryOperation && hasGraphqlErrors && graphqlErrorAttempts < GRAPHQL_ERROR_RETRY_ATTEMPTS) {
+        graphqlErrorAttempts += 1;
+        await sleep(HTTP_RETRY_DELAY_MS);
+        continue;
+      }
+
+      return payload;
     }
 
     throw new Error('GraphQL request retries exhausted.');
