@@ -15,6 +15,7 @@ public class AddMarketplaceBookingSubscriptionInput
     public IEnumerable<string>? OrganizationCustomDomains { get; set; }
 
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; } = [];
+    [GraphQLName("requestedResourceIds")] public IEnumerable<string>? RequestedResourceIds { get; set; } = [];
     [GraphQLName("startedAt")] public DateTimeOffset StartedAt { get; set; }
     [GraphQLName("autoRenew")] public bool AutoRenew { get; set; }
     [GraphQLName("cancelAtPeriodEnd")] public bool CancelAtPeriodEnd { get; set; }

@@ -7,6 +7,7 @@ using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
 using Customer = Booking.Shared.Database.Entities.Customer;
+using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using Team = Booking.Shared.Database.Entities.Team;
@@ -33,6 +34,7 @@ public class MarketplaceBookingSubscriptionService(
     IRepositoryFactory repositoryFactory,
     IMapper mapper,
     IProductVersionHelperService productVersionHelperService,
+    IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     ITemporalOutboxService temporalOutboxService,
     IRandomHelper randomHelper,
     TimeProvider timeProvider) : IMarketplaceBookingSubscriptionService
@@ -49,6 +51,15 @@ public class MarketplaceBookingSubscriptionService(
         if (customerEntities.Count != customerIds.Count)
         {
             throw new CustomerNotFound();
+        }
+
+        var requestedResourceIds = subscription.RequestedResources.Select(item => item.Id).Distinct().ToList();
+        var resourceEntities = requestedResourceIds.Count == 0
+            ? []
+            : await repositoryFactory.ResourceRepository.GetByIdsAsync(requestedResourceIds, false, cancellationToken);
+        if (resourceEntities.Count != requestedResourceIds.Count)
+        {
+            throw new ResourceNotFound();
         }
 
         var marketplaceBooking = subscription.MarketplaceBooking;
@@ -71,6 +82,8 @@ public class MarketplaceBookingSubscriptionService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
+        await EnsureRequestedResourceCanBeBookedAsync(subscription, productVersion, marketplaceBooking, marketplaceBookingOpeningHoursService,
+            cancellationToken);
         // Subscription checkout also happens asynchronously later in Temporal, so the initial
         // marketplace-booking template must carry the storefront URL that Stripe should return
         // the customer to after hosted checkout finishes or is cancelled.
@@ -108,6 +121,7 @@ public class MarketplaceBookingSubscriptionService(
             customerEntities,
             organizations,
             teams,
+            resourceEntities,
             customer,
             null,
             null,
@@ -180,6 +194,37 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         return returnUri.ToString();
+    }
+
+    private static async Task EnsureRequestedResourceCanBeBookedAsync(
+        MarketplaceBookingSubscription subscription,
+        ProductVersion productVersion,
+        MarketplaceBooking marketplaceBooking,
+        IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
+        CancellationToken cancellationToken)
+    {
+        var requestedResourceIds = subscription.RequestedResources.Select(item => item.Id).Distinct().ToList();
+        if (requestedResourceIds.Count == 0)
+        {
+            return;
+        }
+
+        var bookingDay = DateOnly.FromDateTime(subscription.StartedAt.UtcDateTime.Date);
+        var requiredResourceCount = marketplaceBooking.Quantity * marketplaceBooking.ProductPricing.NumberOfResourcesToBook;
+        var dailyPlan = await marketplaceBookingOpeningHoursService.TryResolveDailyPlanAsync(
+            null,
+            productVersion,
+            marketplaceBooking.ProductPricing,
+            bookingDay,
+            requiredResourceCount,
+            requestedResourceIds,
+            [],
+            null,
+            cancellationToken);
+        if (dailyPlan is null || dailyPlan.Resources.Count != requiredResourceCount)
+        {
+            throw new ResourceNotAvailable();
+        }
     }
 
     private void EnsureSubscriptionCanStillBeCancelled(Database.Entities.MarketplaceBookingSubscription existingSubscription)

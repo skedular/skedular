@@ -17,4 +17,6 @@ public class Resource : ReplicatedModelBaseWithDeleted
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
     public ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public ICollection<RecurringBooking> RequestedByRecurringBookings { get; set; } = [];
+    public ICollection<MarketplaceBookingSubscription> RequestedByMarketplaceBookingSubscriptions { get; set; } = [];
 }

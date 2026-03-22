@@ -52,9 +52,27 @@ public class PrivateRecurringBookingService(
             throw new CustomerNotFound();
         }
 
+        var requestedResourceIds = recurringBooking.RequestedResources.Select(item => item.Id).Distinct().ToList();
+        var resourceEntities = requestedResourceIds.Count == 0
+            ? []
+            : await repositoryFactory.ResourceRepository.GetByIdsAsync(requestedResourceIds, false, cancellationToken);
+        if (resourceEntities.Count != requestedResourceIds.Count)
+        {
+            throw new ResourceNotFound();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var recurringBookingEntity = mapper.MapTo(recurringBooking, customerEntities, organizations, teams, customer, null, null, null);
+        var recurringBookingEntity = mapper.MapTo(
+            recurringBooking,
+            customerEntities,
+            organizations,
+            teams,
+            resourceEntities,
+            customer,
+            null,
+            null,
+            null);
 
         recurringBookingEntity.Channel = BookingChannelConstants.Private;
 
@@ -91,6 +109,15 @@ public class PrivateRecurringBookingService(
             throw new CustomerNotFound();
         }
 
+        var requestedResourceIds = recurringBooking.RequestedResources.Select(item => item.Id).Distinct().ToList();
+        var resourceEntities = requestedResourceIds.Count == 0
+            ? []
+            : await repositoryFactory.ResourceRepository.GetByIdsAsync(requestedResourceIds, false, cancellationToken);
+        if (resourceEntities.Count != requestedResourceIds.Count)
+        {
+            throw new ResourceNotFound();
+        }
+
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         var recurringBookingEntity = mapper.MergeTo(
@@ -99,6 +126,7 @@ public class PrivateRecurringBookingService(
             customerEntities,
             organizations,
             teams,
+            resourceEntities,
             existingRecurringBooking.CreatedByCustomer,
             lastModifiedByCustomer,
             null,

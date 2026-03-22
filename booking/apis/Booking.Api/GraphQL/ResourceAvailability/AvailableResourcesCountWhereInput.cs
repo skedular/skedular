@@ -11,6 +11,7 @@ public class AvailableResourcesCountWhereInput
     public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("locationId")] public string? LocationId { get; set; }
+    [GraphQLName("requestedResourceIds")] public IEnumerable<string>? RequestedResourceIds { get; set; }
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("customTagIds")] public IEnumerable<string>? CustomTagIds { get; set; }

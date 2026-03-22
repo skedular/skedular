@@ -62,6 +62,7 @@ public interface IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -73,6 +74,7 @@ public interface IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -90,6 +92,7 @@ public interface IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -263,6 +266,7 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            RequestedResources = MapTo(src.RequestedResources).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -300,6 +304,7 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            RequestedResources = MapTo(src.RequestedResources).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -322,6 +327,11 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            Resources = src.RequestedResources
+                .Select(item => new ResourceCustomersPair(
+                    new Models.Resource { Id = item.Id },
+                    MapTo(src.InvolvedCustomers).ToList()))
+                .ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer)
         };
     }
@@ -347,7 +357,13 @@ public class Mapper : IMapper
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
-            Resources = booking.Resources,
+            Resources = src.RequestedResources.Count != 0
+                ? src.RequestedResources
+                    .Select(item => new ResourceCustomersPair(
+                        new Models.Resource { Id = item.Id },
+                        MapTo(src.InvolvedCustomers).ToList()))
+                    .ToList()
+                : booking.Resources,
             MarketplaceBooking = MapTo(marketplaceBooking)
         };
     }
@@ -444,6 +460,7 @@ public class Mapper : IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -454,6 +471,7 @@ public class Mapper : IMapper
             involvedCustomers,
             involvedOrganizations,
             involvedTeams,
+            requestedResources,
             createdByCustomer,
             lastModifiedByCustomer,
             deletedByCustomer,
@@ -465,6 +483,7 @@ public class Mapper : IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -487,6 +506,7 @@ public class Mapper : IMapper
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedTeams = involvedTeams;
+        dest.RequestedResources = requestedResources;
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;
@@ -513,6 +533,7 @@ public class Mapper : IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> involvedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -524,6 +545,7 @@ public class Mapper : IMapper
             involvedCustomers,
             involvedOrganizations,
             involvedTeams,
+            involvedResources,
             createdByCustomer,
             lastModifiedByCustomer,
             deletedByCustomer,
@@ -585,7 +607,8 @@ public class Mapper : IMapper
             Status = src.Status.ToMarketplaceBookingSubscriptionStatus(),
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
-            MarketplaceBooking = MapTo(src.MarketplaceBooking)!
+            MarketplaceBooking = MapTo(src.MarketplaceBooking)!,
+            RequestedResources = MapTo(src.RequestedResources).ToList()
         };
 
     private RecurringBooking MapToRecurringBookingWithoutSubscription(Database.Entities.RecurringBooking src) =>
@@ -612,6 +635,7 @@ public class Mapper : IMapper
             InvolvedCustomers = MapTo(src.InvolvedCustomers).ToList(),
             InvolvedOrganizations = MapTo(src.InvolvedOrganizations).ToList(),
             InvolvedTeams = MapTo(src.InvolvedTeams).ToList(),
+            RequestedResources = MapTo(src.RequestedResources).ToList(),
             CreatedByCustomer = MapTo(src.CreatedByCustomer),
             LastModifiedByCustomer = MapTo(src.LastModifiedByCustomer),
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
@@ -686,6 +710,7 @@ public class Mapper : IMapper
         ICollection<Customer> involvedCustomers,
         ICollection<Organization> involvedOrganizations,
         ICollection<Team> involvedTeams,
+        ICollection<Database.Entities.Resource> requestedResources,
         Customer? createdByCustomer,
         Customer? lastModifiedByCustomer,
         Customer? deletedByCustomer,
@@ -702,6 +727,7 @@ public class Mapper : IMapper
         dest.InvolvedCustomers = involvedCustomers;
         dest.InvolvedOrganizations = involvedOrganizations;
         dest.InvolvedTeams = involvedTeams;
+        dest.RequestedResources = requestedResources;
         dest.CreatedByCustomer = createdByCustomer;
         dest.LastModifiedByCustomer = lastModifiedByCustomer;
         dest.DeletedByCustomer = deletedByCustomer;

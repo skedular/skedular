@@ -24,6 +24,7 @@ public class RecurringBooking : ModelBaseWithDeleted
     public ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public ICollection<Team> InvolvedTeams { get; set; } = [];
+    public ICollection<Resource> RequestedResources { get; set; } = [];
     public Customer? CreatedByCustomer { get; set; }
     public Customer? LastModifiedByCustomer { get; set; }
     public Customer? DeletedByCustomer { get; set; }

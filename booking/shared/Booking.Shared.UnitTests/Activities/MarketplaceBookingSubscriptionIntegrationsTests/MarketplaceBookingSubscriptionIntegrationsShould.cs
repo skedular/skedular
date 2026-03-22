@@ -690,6 +690,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<ProductPricing>._,
                 new DateOnly(2026, 3, 17),
                 1,
+                A<ICollection<string>>.That.Matches(ids => ids.Count == 0),
                 A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
                 null,
                 environment.CancellationTokenSource.Token))
@@ -722,6 +723,7 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
                 A<ProductPricing>._,
                 new DateOnly(2026, 3, 17),
                 1,
+                A<ICollection<string>>.That.Matches(ids => ids.Count == 0),
                 A<ICollection<string>>.That.Matches(ids => ids.SequenceEqual(new[] { "res-7" })),
                 null,
                 environment.CancellationTokenSource.Token))

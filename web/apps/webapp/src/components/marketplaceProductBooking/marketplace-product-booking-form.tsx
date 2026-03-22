@@ -41,6 +41,7 @@ const availabilityQuery = `
   query marketplaceProductBookingFormAvailabilityQuery(
     $organizationCustomDomain: String
     $productId: String
+    $requestedResourceIds: [String!]
     $from: DateTime!
     $until: DateTime!
   ) {
@@ -48,6 +49,7 @@ const availabilityQuery = `
       where: {
         organizationCustomDomain: $organizationCustomDomain
         productId: $productId
+        requestedResourceIds: $requestedResourceIds
         from: $from
         until: $until
       }
@@ -166,6 +168,15 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
+  const selectedResourceIds = useMemo(() => {
+    const resourceIds = searchParams.get('resourceIds');
+    if (resourceIds) {
+      return resourceIds.split(',').filter(Boolean);
+    }
+
+    const resourceId = searchParams.get('resourceId');
+    return resourceId ? [resourceId] : [];
+  }, [searchParams]);
 
   const bookingPricingOptions = useMemo(
     () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => !isSubscriptionCadence(option.purchaseCadence)).sort((left, right) => left.index - right.index),
@@ -199,29 +210,6 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   );
   const isEventProduct = rootData.product?.type.type === 'EVENT';
   const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
-
-  useEffect(() => {
-    if (!selectedPricingOption) {
-      return;
-    }
-
-    // Half-day pricing is a fixed-duration product in this booking flow. Keep the selected
-    // start time but normalize the range to four hours so the summary and pricing stay valid.
-    if (selectedPricingOption.bookingCadence !== 'HALF_DAY') {
-      return;
-    }
-
-    const [timeFrom, timeUntil] = timeRange;
-    if (!timeFrom || !timeUntil) {
-      return;
-    }
-
-    if (timeUntil.diff(timeFrom, 'minutes') === 240) {
-      return;
-    }
-
-    onTimeRangeChange([timeFrom, timeFrom.add(4, 'hours')]);
-  }, [onTimeRangeChange, selectedPricingOption, timeRange]);
 
   const acceptedPaymentMethods = useMemo(() => selectedPricingOption?.acceptedPaymentMethods ?? [], [selectedPricingOption]);
   const availablePaymentMethods = useMemo(
@@ -340,7 +328,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const paymentLabel = isInArrearsBilling
     ? 'Invoice sent on billing cycle'
     : (availablePaymentMethods.find((item) => item.type === effectivePaymentMethod)?.name ?? 'Select payment method');
-  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id) : '';
+  const productLink = rootData.product ? getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds) : '';
   const handleSignInClick = () => {
     const returnTo = `${window.location.pathname}${window.location.search}`;
     router.push(`${getSignInLink()}?returnTo=${encodeURIComponent(returnTo)}`);
@@ -373,6 +361,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             variables: {
               organizationCustomDomain,
               productId: rootData.product?.id,
+              requestedResourceIds: selectedResourceIds,
               from: dateRangeValidation.from.toISOString(),
               until: dateRangeValidation.until.toISOString(),
             },
@@ -413,7 +402,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     return () => {
       abortController.abort();
     };
-  }, [dateRangeValidation.from, dateRangeValidation.until, dateRangeValidation.valid, organizationCustomDomain, rootData.product, selectedPricingOption]);
+  }, [dateRangeValidation.from, dateRangeValidation.until, dateRangeValidation.valid, organizationCustomDomain, rootData.product, selectedPricingOption, selectedResourceIds]);
 
   const handleSubmit = () => {
     if (!rootData.product || !selectedPricingOption) {
@@ -469,7 +458,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
           organizationCustomDomains: [organizationCustomDomain],
           organizationIds: [],
           teamIds: [],
-          resourceIds: [],
+          resourceIds: selectedResourceIds,
           category: bookingCategory,
           paymentMethod: submittedPaymentMethod as PaymentMethod,
           invoiceEmailList,
@@ -545,7 +534,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             label={
               rootData.product.type.type === 'EVENT'
                 ? 'Use this marketplace booking flow to reserve every matching event resource for the chosen time, including across multiple locations. If one required resource is unavailable, the booking cannot go ahead.'
-                : 'Use this marketplace booking flow to choose the date, time, payment method, and checkout details for this product.'
+                : selectedResourceIds.length > 0
+                  ? 'Use this marketplace booking flow to reserve the exact floor-plan resource selection you made. If any selected resource is unavailable for the chosen time, the booking cannot go ahead.'
+                  : 'Use this marketplace booking flow to choose the date, time, payment method, and checkout details for this product.'
             }
             sx={{ mt: 1, opacity: 0.82 }}
           />

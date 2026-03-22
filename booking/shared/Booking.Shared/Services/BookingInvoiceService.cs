@@ -273,6 +273,8 @@ public class BookingInvoiceService(
             return pricing.BookingCadence switch
             {
                 ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
+                ProductPricingCadence.HalfDay => marketplaceBooking.Quantity,
+                ProductPricingCadence.Daily => marketplaceBooking.Quantity,
                 ProductPricingCadence.PerMinute => marketplaceBooking.Quantity * totalMinutes,
                 ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15),
                 ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30),

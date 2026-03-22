@@ -1587,6 +1587,7 @@ input AddMarketplaceBookingSubscriptionInput {
   pricingId: String!
   productVersionId: String!
   quantity: Int!
+  requestedResourceIds: [String!]
   startedAt: DateTime!
   teamIds: [String!]
 }
@@ -1733,6 +1734,7 @@ input AddPrivateRecurringBookingInput {
   occurrenceCount: Int
   organizationCustomDomains: [String!]
   organizationIds: [String!]
+  requestedResourceIds: [String!]
   skippedDates: [DateTime!]
   startDate: DateTime!
   teamIds: [String!]
@@ -1820,6 +1822,7 @@ input AvailableResourcesCountWhereInput {
   organizationCustomDomain: String
   organizationId: String
   productId: String
+  requestedResourceIds: [String!]
   until: DateTime!
   zoneIds: [String!]
 }
@@ -2799,6 +2802,7 @@ input UpdatePrivateRecurringBookingInput {
   occurrenceCount: Int
   organizationCustomDomains: [String!]
   organizationIds: [String!]
+  requestedResourceIds: [String!]
   skippedDates: [DateTime!]
   startDate: DateTime!
   teamIds: [String!]

@@ -160,6 +160,15 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const initialPricingOptionId = searchParams.get('pricingOptionId');
+  const selectedResourceIds = useMemo(() => {
+    const resourceIds = searchParams.get('resourceIds');
+    if (resourceIds) {
+      return resourceIds.split(',').filter(Boolean);
+    }
+
+    const resourceId = searchParams.get('resourceId');
+    return resourceId ? [resourceId] : [];
+  }, [searchParams]);
 
   const subscriptionPricingOptions = useMemo(
     () => [...(rootData.product?.pricingOptions ?? [])].filter((option) => isSubscriptionCadence(option.purchaseCadence)).sort((left, right) => left.index - right.index),
@@ -247,6 +256,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           organizationIds: [],
           organizationCustomDomains: [organizationCustomDomain],
           teamIds: [],
+          requestedResourceIds: selectedResourceIds,
           startedAt: startedAt.utc().startOf('day').toISOString(),
           autoRenew: selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
           cancelAtPeriodEnd: false,
@@ -308,7 +318,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     );
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id);
+  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, rootData.product.id, selectedResourceIds);
 
   return (
     <Box
@@ -324,7 +334,11 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           <CaptionIconTypography label="Complete your plan" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
           <LeadIconTypography label="Reserve your access window" sx={{ mt: 1 }} />
           <BodyIconTypography
-            label="Choose the plan, start date, and contact emails. Resource allocation is handled in the background after purchase."
+            label={
+              selectedResourceIds.length > 0
+                ? 'Choose the plan, start date, and contact emails. This subscription will only try to book the floor-plan resource selection you made, and it will fail instead of switching to another resource.'
+                : 'Choose the plan, start date, and contact emails. Resource allocation is handled in the background after purchase.'
+            }
             sx={{ mt: 1, opacity: 0.82 }}
           />
 

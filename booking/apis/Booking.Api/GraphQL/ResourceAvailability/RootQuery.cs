@@ -37,6 +37,7 @@ public class RootQuery(IMapper mapper)
             where.OrganizationId,
             where.OrganizationCustomDomain,
             where.LocationId,
+            where.RequestedResourceIds.ToSafeCollection(),
             where.From,
             where.Until,
             where.CustomTagIds.ToSafeCollection(),

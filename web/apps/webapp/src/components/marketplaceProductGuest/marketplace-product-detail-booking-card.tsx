@@ -12,7 +12,7 @@ import Chip from '@mui/material/Chip';
 import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import NextLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useMemo } from 'react';
 import { graphql, useFragment } from 'react-relay';
 import type { MarketplaceProductPricingPlan, MarketplaceProductTypeSummary } from './types';
@@ -98,7 +98,17 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
     rootData.product,
   );
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { integratedPlatrform } = useIntegratedPlatrform();
+  const selectedResourceIds = useMemo(() => {
+    const resourceIds = searchParams.get('resourceIds');
+    if (resourceIds) {
+      return resourceIds.split(',').filter(Boolean);
+    }
+
+    const resourceId = searchParams.get('resourceId');
+    return resourceId ? [resourceId] : [];
+  }, [searchParams]);
   const productType: MarketplaceProductTypeSummary | null = product?.type
     ? {
         type: product.type.type,
@@ -191,8 +201,8 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
 
                     router.push(
                       isSubscriptionCadence(pricingPlan.cadence)
-                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id)
-                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id),
+                        ? getMarketplaceProductSubscribeLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds)
+                        : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, pricingPlan.id, selectedResourceIds),
                     );
                   }}
                   sx={{ mt: 1.2, textTransform: 'none' }}

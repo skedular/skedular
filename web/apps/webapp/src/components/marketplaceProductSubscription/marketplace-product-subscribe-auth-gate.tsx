@@ -87,6 +87,15 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
   const pricingOptionId = searchParams.get('pricingOptionId');
+  const selectedResourceIds = useMemo(() => {
+    const resourceIds = searchParams.get('resourceIds');
+    if (resourceIds) {
+      return resourceIds.split(',').filter(Boolean);
+    }
+
+    const resourceId = searchParams.get('resourceId');
+    return resourceId ? [resourceId] : [];
+  }, [searchParams]);
 
   const availablePricingOptions = useMemo(() => {
     const pricingOptions = [...(rootData.product?.pricingOptions ?? [])];
@@ -135,7 +144,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
             <Button
               variant="contained"
               sx={{ mt: 3, textTransform: 'none' }}
-              onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id))}
+              onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds))}
             >
               Back to product
             </Button>
@@ -151,7 +160,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
     return null;
   }
 
-  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id);
+  const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
   const priceLabel = `${currencyLabel} ${selectedPricingOption.price}`;
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
 

@@ -380,6 +380,7 @@ input AddMarketplaceBookingSubscriptionInput {
   organizationIds: [String!]
   organizationCustomDomains: [String!]
   teamIds: [String!]
+  requestedResourceIds: [String!]
   startedAt: DateTime!
   autoRenew: Boolean!
   cancelAtPeriodEnd: Boolean!
@@ -412,6 +413,7 @@ input AddPrivateRecurringBookingInput {
   organizationIds: [String!]
   organizationCustomDomains: [String!]
   teamIds: [String!]
+  requestedResourceIds: [String!]
   from: DateTime!
   until: DateTime!
   frequency: BookingFrequency!
@@ -431,6 +433,7 @@ input AvailableResourcesCountWhereInput {
   organizationId: String
   organizationCustomDomain: String
   locationId: String
+  requestedResourceIds: [String!]
   from: DateTime!
   until: DateTime!
   customTagIds: [String!]
@@ -620,6 +623,7 @@ input UpdatePrivateRecurringBookingInput {
   organizationIds: [String!]
   organizationCustomDomains: [String!]
   teamIds: [String!]
+  requestedResourceIds: [String!]
   from: DateTime!
   until: DateTime!
   frequency: BookingFrequency!

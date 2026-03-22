@@ -18,6 +18,7 @@ public class MarketplaceBookingSubscription : EntityBaseWithDeleted
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual ICollection<Resource> RequestedResources { get; set; } = [];
     public virtual Customer? CreatedByCustomer { get; set; }
     public virtual Customer? LastModifiedByCustomer { get; set; }
     public virtual Customer? DeletedByCustomer { get; set; }
@@ -39,6 +40,7 @@ public class MarketplaceBookingSubscriptionConfiguration : IEntityTypeConfigurat
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
         builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedMarketplaceBookingSubscription);
+        builder.HasMany(item => item.RequestedResources).WithMany(item => item.RequestedByMarketplaceBookingSubscriptions);
         builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedMarketplaceBookingSubscriptions);
         builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedMarketplaceBookingSubscriptions);
         builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedMarketplaceBookingSubscriptions);

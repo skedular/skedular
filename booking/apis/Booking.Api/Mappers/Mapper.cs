@@ -175,7 +175,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList()
         };
     }
 
@@ -204,7 +205,8 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList()
         };
     }
 
@@ -225,6 +227,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                     new Organization { CustomDomain = item }))
                 .ToList(),
             InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = src.Quantity,

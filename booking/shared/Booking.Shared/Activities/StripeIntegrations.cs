@@ -223,6 +223,8 @@ public class StripeIntegrations(
             Quantity = marketplaceBooking.ProductPricing.BookingCadence switch
             {
                 ProductPricingCadence.OneTime => marketplaceBooking.Quantity,
+                ProductPricingCadence.HalfDay => marketplaceBooking.Quantity,
+                ProductPricingCadence.Daily => marketplaceBooking.Quantity,
                 ProductPricingCadence.PerMinute =>
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) * marketplaceBooking.Quantity,
                 ProductPricingCadence.Per15Minutes =>
@@ -231,7 +233,6 @@ public class StripeIntegrations(
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 30 * marketplaceBooking.Quantity,
                 ProductPricingCadence.PerHour =>
                     Convert.ToInt32((schedule.Until - schedule.From).TotalMinutes) / 60 * marketplaceBooking.Quantity,
-                // TODO: 20260302 : Morteza: Implement other cadence 
                 _ => throw new ArgumentOutOfRangeException()
             }
         }).ToList();

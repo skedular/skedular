@@ -72,7 +72,7 @@ public class PrivateBookingService(
 
         var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        if (booking.InvolvedCustomers.Count == 1)
+        if (booking.InvolvedCustomers.Count == 1 && resourceIds.Count == 0)
         {
             if (resources.Count == 0)
             {
@@ -169,7 +169,7 @@ public class PrivateBookingService(
         // For non-customized recurring instances, the scheduler can request a best-effort rebooking.
         // In that mode we first try resources provided on the booking model, and only if none are
         // currently available, we fall back to preference-based auto assignment (the same strategy as AddAsync).
-        if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true)
+        if (bookResourceIfNoResourceProvidedOrAvailable && existingBooking.HasRecurringInstanceOverrides != true && resourceIds.Count == 0)
         {
             resources = await repositoryFactory.ResourceRepository.GetAvailableResourcesAsync(
                 null,

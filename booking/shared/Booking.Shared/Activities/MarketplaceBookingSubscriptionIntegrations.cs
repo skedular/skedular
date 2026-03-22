@@ -231,6 +231,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
                     recurringBooking.MarketplaceBooking.ProductPricing,
                     missingBookingDay,
                     requiredResourceCount,
+                    ResolveRequiredResourceIds(subscription),
                     preferredResourceIds,
                     preferredLocationId,
                     cancellationToken);
@@ -320,6 +321,12 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         return [];
     }
+
+    private static ICollection<string> ResolveRequiredResourceIds(MarketplaceBookingSubscription subscription) =>
+        subscription.RequestedResources
+            .Select(item => item.Id)
+            .Distinct()
+            .ToList();
 
     private async Task<RecurringBooking> EnsureCurrentCycleRecurringBookingAsync(
         MarketplaceBookingSubscription subscription,

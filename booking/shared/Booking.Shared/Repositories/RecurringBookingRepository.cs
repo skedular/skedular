@@ -42,6 +42,7 @@ internal static class RecurringBookingExtensions
             .Include(query => query.InvolvedOrganizations)
             .ThenInclude(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
             .Include(query => query.InvolvedTeams)
+            .Include(query => query.RequestedResources)
             .Include(query => query.CreatedByCustomer)
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer);

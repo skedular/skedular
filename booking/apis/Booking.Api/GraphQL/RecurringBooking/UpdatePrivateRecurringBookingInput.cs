@@ -16,6 +16,7 @@ public class UpdatePrivateRecurringBookingInput
     public IEnumerable<string>? OrganizationCustomDomains { get; set; }
 
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; } = [];
+    [GraphQLName("requestedResourceIds")] public IEnumerable<string>? RequestedResourceIds { get; set; } = [];
     [GraphQLName("from")] public DateTimeOffset From { get; set; }
     [GraphQLName("until")] public DateTimeOffset Until { get; set; }
     [GraphQLName("frequency")] public BookingFrequency Frequency { get; set; }

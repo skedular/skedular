@@ -29,6 +29,7 @@ public interface IMarketplaceBookingOpeningHoursService
     /// <param name="pricing">The pricing information for the product.</param>
     /// <param name="bookingDay">The date for which to resolve the booking plan.</param>
     /// <param name="requiredResourceCount">The number of resources required for the booking.</param>
+    /// <param name="requiredResourceIds">Collection of exact resource IDs that must be used.</param>
     /// <param name="preferredResourceIds">Collection of preferred resource IDs.</param>
     /// <param name="preferredLocationId">The preferred location ID, if any.</param>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
@@ -39,6 +40,7 @@ public interface IMarketplaceBookingOpeningHoursService
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
+        ICollection<string> requiredResourceIds,
         ICollection<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken);
@@ -78,6 +80,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
     /// <param name="pricing">The pricing information for the product.</param>
     /// <param name="bookingDay">The date for which to resolve the booking plan.</param>
     /// <param name="requiredResourceCount">The number of resources required for the booking.</param>
+    /// <param name="requiredResourceIds">Collection of exact resource IDs that must be used.</param>
     /// <param name="preferredResourceIds">Collection of preferred resource IDs.</param>
     /// <param name="preferredLocationId">The preferred location ID, if any.</param>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
@@ -88,6 +91,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
         ProductPricing pricing,
         DateOnly bookingDay,
         int requiredResourceCount,
+        ICollection<string> requiredResourceIds,
         ICollection<string> preferredResourceIds,
         string? preferredLocationId,
         CancellationToken cancellationToken)
@@ -118,6 +122,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                 location.Resources.Any(resource =>
                     !resource.DeletedAt.HasValue &&
                     !resource.Inactive &&
+                    (requiredResourceIds.Count == 0 || requiredResourceIds.Contains(resource.Id)) &&
                     resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id))))
             .OrderBy(location => GetLocationPriority(location.Id, preferredLocationId, preferredResourceLocationIds, preferredLocationIds))
             .ThenBy(location => location.Id)
@@ -129,6 +134,7 @@ public class MarketplaceBookingOpeningHoursService(IRepositoryFactory repository
                     location.Resources
                         .Where(resource => !resource.DeletedAt.HasValue)
                         .Where(resource => !resource.Inactive)
+                        .Where(resource => requiredResourceIds.Count == 0 || requiredResourceIds.Contains(resource.Id))
                         .Where(resource => resource.OrganizationTags.Any(tag => !tag.DeletedAt.HasValue && productTagIds.Contains(tag.Id)))
                         .ToList(),
                     customer,

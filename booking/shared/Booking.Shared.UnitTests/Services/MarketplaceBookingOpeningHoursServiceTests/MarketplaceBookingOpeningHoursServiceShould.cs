@@ -66,6 +66,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             bookingDay,
             1,
             [],
+            [],
             null,
             cancellationToken);
 
@@ -127,6 +128,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             bookingDay,
             1,
             [],
+            [],
             null,
             cancellationToken);
 
@@ -169,6 +171,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             CreatePricing(ProductPricingCadence.Daily),
             bookingDay,
             1,
+            [],
             [],
             null,
             cancellationToken);
@@ -254,6 +257,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             bookingDay,
             2,
             [],
+            [],
             null,
             cancellationToken);
 
@@ -336,6 +340,7 @@ public class MarketplaceBookingOpeningHoursServiceShould
             pricing,
             bookingDay,
             1,
+            [],
             ["res-2"],
             null,
             cancellationToken);

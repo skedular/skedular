@@ -1,3 +1,23 @@
+const appendQueryParams = (path: string, params: Record<string, string | string[] | undefined>) => {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      if (value.length > 0) {
+        searchParams.set(key, value.join(','));
+      }
+      return;
+    }
+
+    if (value) {
+      searchParams.set(key, value);
+    }
+  });
+
+  const query = searchParams.toString();
+  return query ? `${path}?${query}` : path;
+};
+
 export const getRootLink = (integratedPlatrform: string | undefined) => (integratedPlatrform ? `/${integratedPlatrform}` : '/');
 export const getSignInLink = () => '/signin';
 export const getSignUpLink = () => '/signup';
@@ -23,10 +43,17 @@ export const getMarketplaceSubscriptionsLink = (integratedPlatrform: string | un
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
 
-export const getMarketplaceProductLink = (integratedPlatrform: string | undefined, isCustomDomain: boolean, organizationCustomDomain: string, productId: string) => {
+export const getMarketplaceProductLink = (
+  integratedPlatrform: string | undefined,
+  isCustomDomain: boolean,
+  organizationCustomDomain: string,
+  productId: string,
+  resourceIds?: string[],
+) => {
   const baseLink = isCustomDomain ? `products/${productId}` : `organizations/${organizationCustomDomain}/products/${productId}`;
+  const link = appendQueryParams(baseLink, { resourceIds });
 
-  return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
+  return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${link}` : `/marketplace/${link}`;
 };
 
 export const getMarketplaceProductBookingLink = (
@@ -35,10 +62,10 @@ export const getMarketplaceProductBookingLink = (
   organizationCustomDomain: string,
   productId: string,
   pricingOptionId: string,
+  resourceIds?: string[],
 ) => {
-  const baseLink = isCustomDomain
-    ? `products/${productId}/book?pricingOptionId=${pricingOptionId}`
-    : `organizations/${organizationCustomDomain}/products/${productId}/book?pricingOptionId=${pricingOptionId}`;
+  const basePath = isCustomDomain ? `products/${productId}/book` : `organizations/${organizationCustomDomain}/products/${productId}/book`;
+  const baseLink = appendQueryParams(basePath, { pricingOptionId, resourceIds });
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };
@@ -67,10 +94,10 @@ export const getMarketplaceProductSubscribeLink = (
   organizationCustomDomain: string,
   productId: string,
   pricingOptionId: string,
+  resourceIds?: string[],
 ) => {
-  const baseLink = isCustomDomain
-    ? `products/${productId}/subscribe?pricingOptionId=${pricingOptionId}`
-    : `organizations/${organizationCustomDomain}/products/${productId}/subscribe?pricingOptionId=${pricingOptionId}`;
+  const basePath = isCustomDomain ? `products/${productId}/subscribe` : `organizations/${organizationCustomDomain}/products/${productId}/subscribe`;
+  const baseLink = appendQueryParams(basePath, { pricingOptionId, resourceIds });
 
   return integratedPlatrform ? `/${integratedPlatrform}/marketplace/${baseLink}` : `/marketplace/${baseLink}`;
 };

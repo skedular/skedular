@@ -29,6 +29,7 @@ public class RecurringBooking : EntityBaseWithDeleted
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];
     public virtual ICollection<Team> InvolvedTeams { get; set; } = [];
+    public virtual ICollection<Resource> RequestedResources { get; set; } = [];
     public virtual Customer? CreatedByCustomer { get; set; }
     public virtual Customer? LastModifiedByCustomer { get; set; }
     public virtual Customer? DeletedByCustomer { get; set; }
@@ -56,6 +57,7 @@ public class RecurringBookingConfiguration : IEntityTypeConfiguration<RecurringB
         builder.HasMany(item => item.InvolvedCustomers).WithMany(item => item.InvolvedRecurringBooking);
         builder.HasMany(item => item.InvolvedOrganizations).WithMany(item => item.InvolvedRecurringBooking);
         builder.HasMany(item => item.InvolvedTeams).WithMany(item => item.InvolvedRecurringBooking);
+        builder.HasMany(item => item.RequestedResources).WithMany(item => item.RequestedByRecurringBookings);
         builder.HasOne(item => item.CreatedByCustomer).WithMany(item => item.CreatedRecurringBookings);
         builder.HasOne(item => item.LastModifiedByCustomer).WithMany(item => item.LastModifiedRecurringBookings);
         builder.HasOne(item => item.DeletedByCustomer).WithMany(item => item.DeletedRecurringBookings);

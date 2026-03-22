@@ -23,6 +23,8 @@ public class Resource : ReplicatedEntityBaseWithDeleted
     public virtual ICollection<Customer> PreferredByCustomers { get; set; } = [];
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
+    public virtual ICollection<RecurringBooking> RequestedByRecurringBookings { get; set; } = [];
+    public virtual ICollection<MarketplaceBookingSubscription> RequestedByMarketplaceBookingSubscriptions { get; set; } = [];
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 

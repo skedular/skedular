@@ -756,8 +756,16 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                                   effectiveOrganizationCustomDomain,
                                                   product.id,
                                                   pricingRow.id,
+                                                  [selectedResource.id],
                                                 )
-                                              : getMarketplaceProductBookingLink(integratedPlatrform, isCustomDomain, effectiveOrganizationCustomDomain, product.id, pricingRow.id),
+                                              : getMarketplaceProductBookingLink(
+                                                  integratedPlatrform,
+                                                  isCustomDomain,
+                                                  effectiveOrganizationCustomDomain,
+                                                  product.id,
+                                                  pricingRow.id,
+                                                  [selectedResource.id],
+                                                ),
                                           )
                                         }
                                         sx={{ textTransform: 'none' }}
@@ -766,7 +774,11 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
                                       </Button>
                                       <Button
                                         variant="outlined"
-                                        onClick={() => router.push(getMarketplaceProductLink(integratedPlatrform, isCustomDomain, effectiveOrganizationCustomDomain, product.id))}
+                                        onClick={() =>
+                                          router.push(
+                                            getMarketplaceProductLink(integratedPlatrform, isCustomDomain, effectiveOrganizationCustomDomain, product.id, [selectedResource.id]),
+                                          )
+                                        }
                                         sx={{ textTransform: 'none' }}
                                       >
                                         Details
