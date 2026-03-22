@@ -4,6 +4,13 @@ import type { FetchFunction, GraphQLResponse, SubscribeFunction } from 'relay-ru
 import { Environment, Network, Observable, RecordSource, Store } from 'relay-runtime';
 import { v7 as uuid } from 'uuid';
 
+const HTTP_RETRY_ATTEMPTS = 5;
+const HTTP_RETRY_DELAY_MS = 1000;
+
+const sleep = async (milliseconds: number) => {
+  await new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
 export function createNetwork(endpoint: string, token?: string | null | undefined) {
   const buildHeaders = () => {
     const headers: { [key: string]: string } = {
@@ -22,16 +29,24 @@ export function createNetwork(endpoint: string, token?: string | null | undefine
     void _cacheConfig;
     void _uploadables;
 
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: buildHeaders(),
-      body: JSON.stringify({
-        query: params.text,
-        variables,
-      }),
-    });
+    for (let attempt = 1; attempt <= HTTP_RETRY_ATTEMPTS; attempt += 1) {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: buildHeaders(),
+        body: JSON.stringify({
+          query: params.text,
+          variables,
+        }),
+      });
 
-    return await response.json();
+      if (response.status !== 504 || attempt === HTTP_RETRY_ATTEMPTS) {
+        return (await response.json()) as GraphQLResponse;
+      }
+
+      await sleep(HTTP_RETRY_DELAY_MS);
+    }
+
+    throw new Error('GraphQL request retries exhausted.');
   };
 
   const sseFetch: typeof fetch = (input, init) =>
