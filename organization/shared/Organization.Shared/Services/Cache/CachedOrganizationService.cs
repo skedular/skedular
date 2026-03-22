@@ -8,7 +8,12 @@ namespace Organization.Shared.Services.Cache;
 public interface ICachedOrganizationService
 {
     ValueTask<Database.Entities.Organization?> GetByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+
+    ValueTask<ICollection<Database.Entities.Organization>>
+        GetMyOrganizationsByCustomerIdAsync(string customerId, CancellationToken cancellationToken);
+
     ValueTask UpdateByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
+    ValueTask RemoveMyOrganizationsByCustomerIdsAsync(ICollection<string> customerIds, CancellationToken cancellationToken);
     ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken);
 }
 
@@ -82,6 +87,27 @@ public class CachedOrganizationService(
         }
     }
 
+    public async ValueTask<ICollection<Database.Entities.Organization>> GetMyOrganizationsByCustomerIdAsync(
+        string customerId,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+
+        return await hybridCache.GetOrCreateAsync(
+            CreateKeyByCustomerIdOrganizations(customerId),
+            async ct => await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customerId, ct),
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            cancellationToken: cancellationToken);
+    }
+
+    public async ValueTask RemoveMyOrganizationsByCustomerIdsAsync(ICollection<string> customerIds, CancellationToken cancellationToken)
+    {
+        foreach (var customerId in customerIds.Where(customerId => !string.IsNullOrWhiteSpace(customerId)).Distinct())
+        {
+            await hybridCache.RemoveAsync(CreateKeyByCustomerIdOrganizations(customerId), cancellationToken);
+        }
+    }
+
     public async ValueTask RemoveByIdOrCustomDomainAsync(string? id, string? customDomain, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(id))
@@ -99,4 +125,7 @@ public class CachedOrganizationService(
 
     private string CreateKeyByUniqueAlphanumericName(string customDomain) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customDomain:{customDomain}";
+
+    private string CreateKeyByCustomerIdOrganizations(string customerId) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:organization-customer-id-organizations:{customerId}";
 }

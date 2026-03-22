@@ -48,7 +48,8 @@ public class InvitationService(
     ITemporalOutboxService temporalOutboxService,
     IOrganizationOutboxPublisher organizationOutboxPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
-    ICachedCustomerService cachedCustomerService) : IInvitationService
+    ICachedCustomerService cachedCustomerService,
+    ICachedOrganizationService cachedOrganizationService) : IInvitationService
 {
     public async Task<ICollection<JoinInvitation>> InviteMembersByEmailsAsync(
         string? organizationId,
@@ -182,6 +183,8 @@ public class InvitationService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
 
         return mapper.MapTo(joinInvitation);
     }

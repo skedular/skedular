@@ -195,6 +195,10 @@ public class OrganizationMemberService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            organizationMembers.Select(item => item.CustomerId).ToList(),
+            cancellationToken);
+
         return organizationMembers
             .Select(item =>
             {
@@ -260,6 +264,11 @@ public class OrganizationMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            organizationMembers.Select(item => item.CustomerId).ToList(),
+            cancellationToken);
+
         return organizationMembers.Select(item =>
         {
             var matchedOrganization = organizations.Single(organization => organization.Id == item.Organization.Id);
@@ -304,6 +313,9 @@ public class OrganizationMemberService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
+
         return mappedOrganization;
     }
 

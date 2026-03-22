@@ -204,6 +204,11 @@ public class OrganizationService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
+        if (customer is not null)
+        {
+            await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync([customer.Id], cancellationToken);
+        }
+
         return organization;
     }
 
@@ -249,6 +254,9 @@ public class OrganizationService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.RemoveByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            organization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            cancellationToken);
 
         return deletedOrganization;
     }
@@ -320,10 +328,10 @@ public class OrganizationService(
             return [];
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
 
         return mapper.MapTo(
-            await repositoryFactory.OrganizationRepository.GetMinimalOrganizationByCustomerIdUntrackedAsync(customer.Id, cancellationToken)).ToList();
+            await cachedOrganizationService.GetMyOrganizationsByCustomerIdAsync(customerId, cancellationToken)).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
@@ -384,6 +392,9 @@ public class OrganizationService(
         await transaction.CommitAsync(cancellationToken);
 
         await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(organization.Id, organization.CustomDomain, cancellationToken);
+        await cachedOrganizationService.RemoveMyOrganizationsByCustomerIdsAsync(
+            existingOrganization.OrganizationMembers.Select(item => item.CustomerId).ToList(),
+            cancellationToken);
 
         return organization;
     }
