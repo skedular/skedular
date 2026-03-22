@@ -37,7 +37,7 @@ const RootQuery = graphql`
     }
     upcomingBookings: bookings(
       first: 24
-      where: { organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today }
+      where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, channel: MARKETPLACE, fromGte: $today }
       orderBy: [{ field: FROM, direction: ASCENDING }]
     ) {
       totalCount
@@ -67,7 +67,7 @@ const RootQuery = graphql`
     }
     recentBookings: bookings(
       first: 24
-      where: { organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today }
+      where: { organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, channel: MARKETPLACE, fromLt: $today }
       orderBy: [{ field: FROM, direction: DESCENDING }]
     ) {
       totalCount

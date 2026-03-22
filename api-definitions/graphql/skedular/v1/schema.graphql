@@ -1854,8 +1854,8 @@ input BookingWhereInput {
   locationIds: [String!]
   nameContains: String
   notesContains: String
-  organizationCustomDomains: [String!]
-  organizationIds: [String!]
+  organizationCustomDomain: String
+  organizationId: String
   paymentStatuses: [PaymentStatus!]
   recurringBookingIds: [String!]
   teamIds: [String!]

@@ -94,12 +94,12 @@ public class BookingService(
                 NameContains = bookingSearchCriteria.NameContains.ToSafeString(),
                 Category = bookingSearchCriteria.Category.ToNullableBookingCategory().ToSafeString(),
                 IncludeMineOnly = bookingSearchCriteria.IncludeMineOnly ?? false,
-                IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false
+                IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false,
+                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString()
             }
         };
 
         adminGetPaginatedBookingsInput.Where.PaymentStatuses.Add(bookingSearchCriteria.PaymentStatuses.Select(item => item.ToPaymentStatus()));
-        adminGetPaginatedBookingsInput.Where.OrganizationIds.Add(bookingSearchCriteria.OrganizationIds);
         adminGetPaginatedBookingsInput.Where.LocationIds.Add(bookingSearchCriteria.LocationIds);
         adminGetPaginatedBookingsInput.Where.TeamIds.Add(bookingSearchCriteria.TeamIds);
         adminGetPaginatedBookingsInput.Where.CustomerIds.Add(bookingSearchCriteria.CustomerIds);
@@ -270,12 +270,12 @@ public class BookingService(
                 NameContains = bookingSearchCriteria.NameContains.ToSafeString(),
                 Category = bookingSearchCriteria.Category.ToNullableBookingCategory().ToSafeString(),
                 IncludeMineOnly = bookingSearchCriteria.IncludeMineOnly ?? false,
-                IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false
+                IncludeFutureBookingsOnly = bookingSearchCriteria.IncludeFutureBookingsOnly ?? false,
+                OrganizationId = bookingSearchCriteria.OrganizationId.ToSafeString()
             }
         };
 
         getPaginatedBookingsInput.Where.PaymentStatuses.Add(bookingSearchCriteria.PaymentStatuses.Select(item => item.ToPaymentStatus()));
-        getPaginatedBookingsInput.Where.OrganizationIds.Add(bookingSearchCriteria.OrganizationIds);
         getPaginatedBookingsInput.Where.LocationIds.Add(bookingSearchCriteria.LocationIds);
         getPaginatedBookingsInput.Where.TeamIds.Add(bookingSearchCriteria.TeamIds);
         getPaginatedBookingsInput.Where.CustomerIds.Add(bookingSearchCriteria.CustomerIds);

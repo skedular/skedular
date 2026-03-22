@@ -123,7 +123,7 @@ public class WorkspaceMemberService(
             Last = ((int?)null).ToNullInt(),
             Where = new BookingWhereInput { FromGte = from.ToTimestamp(), FromLte = until.ToTimestamp(), IncludeMineOnly = true }
         };
-        getPaginatedBookingsInput.Where.OrganizationIds.Add(workspace.Organization.Id);
+        getPaginatedBookingsInput.Where.OrganizationId = workspace.Organization.Id;
         getPaginatedBookingsInput.OrderBy.AddRange([
             new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From }
         ]);
@@ -143,7 +143,7 @@ public class WorkspaceMemberService(
             [],
             true,
             null,
-            [workspace.Organization.Id],
+            workspace.Organization.Id,
             [],
             [],
             []);

@@ -34,7 +34,7 @@ const GuestStoreFrontUpcomingBookingsStrip = ({ rootDataRelay }: Props) => {
         bookings(
           first: 6
           where: {
-            organizationCustomDomains: [$organizationCustomDomain]
+            organizationCustomDomain: $organizationCustomDomain
             fromGte: $bookingsSearchCriteriaFrom
             fromLte: $bookingsSearchCriteriaTo
             includeMineOnly: true

@@ -17,7 +17,7 @@ public record BookingSearchCriteria(
     ICollection<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
-    ICollection<string> OrganizationIds,
+    string? OrganizationId,
     ICollection<string> LocationIds,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);

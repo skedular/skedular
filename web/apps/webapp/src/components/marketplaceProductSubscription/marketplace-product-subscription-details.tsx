@@ -96,7 +96,7 @@ const RelatedBookingsQuery = graphql`
   ) {
     bookings(
       first: $relatedBookingsFirst
-      where: { includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today }
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today }
       orderBy: [{ field: FROM, direction: ASCENDING }]
     ) {
       totalCount

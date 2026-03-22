@@ -74,7 +74,7 @@ public class TeamDailyUpdaterService(
                 [],
                 false,
                 null,
-                [workspace.Organization.Id],
+                workspace.Organization.Id,
                 [],
                 [teamId],
                 []),

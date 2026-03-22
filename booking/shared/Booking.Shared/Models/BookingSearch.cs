@@ -19,12 +19,17 @@ public record BookingSearchCriteria(
     ICollection<PaymentStatus> PaymentStatuses,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
-    ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationCustomDomains,
+    string? OrganizationId,
+    string? OrganizationCustomDomain,
     ICollection<string> LocationIds,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds,
     ICollection<string> RecurringBookingIds);
+
+public record BookingAccessScope(
+    ICollection<string> OrganizationIds,
+    ICollection<string> LocationIds,
+    ICollection<string> TeamIds);
 
 public record BookingOrder(OrderDirection Direction, BookingOrderField Field);
 

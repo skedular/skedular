@@ -469,8 +469,8 @@ input BookingWhereInput {
   channel: BookingChannel
   paymentStatuses: [PaymentStatus!]
   nameContains: String
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
+  organizationId: String
+  organizationCustomDomain: String
   locationIds: [String!]
   teamIds: [String!]
   customerIds: [String!]

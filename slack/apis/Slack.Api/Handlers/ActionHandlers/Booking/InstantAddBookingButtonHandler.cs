@@ -96,7 +96,7 @@ public class InstantAddBookingButtonHandler(
                 [],
                 true,
                 null,
-                [workspace.Organization.Id],
+                workspace.Organization.Id,
                 string.IsNullOrWhiteSpace(context.LocationId) ? [] : [context.LocationId],
                 string.IsNullOrWhiteSpace(context.TeamId) ? [] : [context.TeamId],
                 []),

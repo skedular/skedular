@@ -74,7 +74,7 @@ public class LocationDailyUpdaterService(
                 [],
                 false,
                 null,
-                [workspace.Organization.Id],
+                workspace.Organization.Id,
                 [locationId],
                 [],
                 []),

@@ -70,8 +70,6 @@ public class RootQuery(IMapper mapper)
         [Service] IBookingService bookingService,
         CancellationToken cancellationToken)
     {
-        where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
-        where.OrganizationCustomDomains = where.OrganizationCustomDomains.RemoveInvalidIds();
         where.LocationIds = where.LocationIds.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
@@ -95,8 +93,8 @@ public class RootQuery(IMapper mapper)
                 where.PaymentStatuses.ToSafeCollection(),
                 where.IncludeMineOnly,
                 where.IncludeFutureBookingsOnly,
-                where.OrganizationIds.ToSafeCollection(),
-                where.OrganizationCustomDomains.ToSafeCollection(),
+                where.OrganizationId,
+                where.OrganizationCustomDomain,
                 where.LocationIds.ToSafeCollection(),
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection(),

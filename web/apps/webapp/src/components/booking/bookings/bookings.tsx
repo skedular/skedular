@@ -118,7 +118,7 @@ const Bookings = ({ rootDataRelay, rootDataBookingRelay, organizationCustomDomai
           first: $count
           after: $cursor
           where: {
-            organizationCustomDomains: [$organizationCustomDomain]
+            organizationCustomDomain: $organizationCustomDomain
             locationIds: $locationIds
             teamIds: $teamIds
             customerIds: $customerIds

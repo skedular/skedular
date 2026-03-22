@@ -19,10 +19,10 @@ public class BookingWhereInput
     [GraphQLName("channel")] public BookingChannel? Channel { get; set; }
     [GraphQLName("paymentStatuses")] public IEnumerable<PaymentStatus>? PaymentStatuses { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationCustomDomains")]
-    public IEnumerable<string>? OrganizationCustomDomains { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("locationIds")] public IEnumerable<string>? LocationIds { get; set; }
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; }

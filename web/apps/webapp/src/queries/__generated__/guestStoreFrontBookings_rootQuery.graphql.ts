@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cd2df4f5b1ec732510da260210d0a710>>
+ * @generated SignedSource<<26938dc190b476bace3aafb8bd018580>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -159,15 +159,9 @@ v5 = {
   "value": true
 },
 v6 = {
-  "items": [
-    {
-      "kind": "Variable",
-      "name": "organizationCustomDomains.0",
-      "variableName": "organizationCustomDomain"
-    }
-  ],
-  "kind": "ListValue",
-  "name": "organizationCustomDomains"
+  "kind": "Variable",
+  "name": "organizationCustomDomain",
+  "variableName": "organizationCustomDomain"
 },
 v7 = [
   (v3/*: any*/),
@@ -462,16 +456,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d4d58a83da636d9db63ad75e374f965a",
+    "cacheID": "00a0ee22ce21555d13f52e4caa5b3e71",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontBookings_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $today: DateTime!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationCustomDomains: [$organizationCustomDomain], includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontBookings_rootQuery(\n  $organizationCustomDomain: String!\n  $today: DateTime!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  upcomingBookings: bookings(first: 24, where: {organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, channel: MARKETPLACE, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n  recentBookings: bookings(first: 24, where: {organizationCustomDomain: $organizationCustomDomain, includeMineOnly: true, channel: MARKETPLACE, fromLt: $today}, orderBy: [{field: FROM, direction: DESCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f1ace61f23e9aa4db7cb9cabcfb9b1f5";
+(node as any).hash = "9fe642029dedb641818649d7d3e74d60";
 
 export default node;

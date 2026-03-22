@@ -80,7 +80,7 @@ message BookingWhereInput {
   google.protobuf.Timestamp toLte                     = 8;
   string                    notesContains             = 9;
   string                    nameContains              = 10;
-  repeated string           organizationIds           = 11;
+  string                    organizationId            = 11;
   repeated string           locationIds               = 12;
   repeated string           teamIds                   = 13;
   repeated string           customerIds               = 14;

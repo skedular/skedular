@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dc55fd41220b60a6480c4a0b0d4e17fa>>
+ * @generated SignedSource<<8a6362cd6c6a6ba8bb614b552c67b268>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -109,15 +109,9 @@ v1 = [
         "value": true
       },
       {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "organizationCustomDomains.0",
-            "variableName": "organizationCustomDomain"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "organizationCustomDomains"
+        "kind": "Variable",
+        "name": "organizationCustomDomain",
+        "variableName": "organizationCustomDomain"
       },
       {
         "kind": "Variable",
@@ -365,16 +359,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e75c459e5e84030fda7cd210f08cd102",
+    "cacheID": "258846ee0b3f2a714185ca23a88af8de",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_relatedBookingsQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_relatedBookingsQuery(\n  $organizationCustomDomain: String!\n  $recurringBookingIds: [String!]\n  $relatedBookingsFirst: Int!\n  $today: DateTime!\n) {\n  bookings(first: $relatedBookingsFirst, where: {includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        recurringBooking {\n          id\n        }\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_relatedBookingsQuery(\n  $organizationCustomDomain: String!\n  $recurringBookingIds: [String!]\n  $relatedBookingsFirst: Int!\n  $today: DateTime!\n) {\n  bookings(first: $relatedBookingsFirst, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, channel: MARKETPLACE, recurringBookingIds: $recurringBookingIds, fromGte: $today}, orderBy: [{field: FROM, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        recurringBooking {\n          id\n        }\n        from\n        until\n        involvedLocations {\n          name\n        }\n        bookingResources {\n          resource {\n            id\n            name\n          }\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "13fb8613819f2112284f06645c141f29";
+(node as any).hash = "eb23147e358b3020db76e63ff420cd1c";
 
 export default node;

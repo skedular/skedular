@@ -31,6 +31,7 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
+        BookingAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
 
@@ -114,7 +115,10 @@ internal static class BookingExtensions
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
-        internal IQueryable<Database.Entities.Booking> AddSearchCriteria(BookingSearchCriteria searchCriteria, TimeProvider timeProvider)
+        internal IQueryable<Database.Entities.Booking> AddSearchCriteria(
+            BookingSearchCriteria searchCriteria,
+            TimeProvider timeProvider,
+            BookingAccessScope? accessScope)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
@@ -192,18 +196,18 @@ internal static class BookingExtensions
                         .Contains(item.MarketplaceBooking.PaymentStatus));
             }
 
-            if (searchCriteria.OrganizationIds.Count != 0)
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
                 originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
-                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
+                    !organization.DeletedAt.HasValue && organization.Id == searchCriteria.OrganizationId));
             }
 
-            if (searchCriteria.OrganizationCustomDomains.Count != 0)
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
             {
                 originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
                     !organization.DeletedAt.HasValue &&
                     organization.CustomDomain != null &&
-                    searchCriteria.OrganizationCustomDomains.Contains(organization.CustomDomain)));
+                    organization.CustomDomain == searchCriteria.OrganizationCustomDomain));
             }
 
             if (searchCriteria.LocationIds.Count != 0)
@@ -235,6 +239,21 @@ internal static class BookingExtensions
                                                             EF.Functions.ILike(customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
                                                            (customer.FamilyName != null &&
                                                             EF.Functions.ILike(customer.FamilyName, $"%{searchCriteria.NameContains}%"))));
+            }
+
+            if (accessScope is not null &&
+                (accessScope.OrganizationIds.Count != 0 || accessScope.LocationIds.Count != 0 || accessScope.TeamIds.Count != 0))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    (accessScope.OrganizationIds.Count != 0 &&
+                     item.InvolvedOrganizations.Any(organization =>
+                         !organization.DeletedAt.HasValue && accessScope.OrganizationIds.Contains(organization.Id))) ||
+                    (accessScope.LocationIds.Count != 0 &&
+                     item.InvolvedLocations.Any(location =>
+                         !location.DeletedAt.HasValue && accessScope.LocationIds.Contains(location.Id))) ||
+                    (accessScope.TeamIds.Count != 0 &&
+                     item.InvolvedTeams.Any(team =>
+                         !team.DeletedAt.HasValue && accessScope.TeamIds.Contains(team.Id))));
             }
 
             return originalQuery;
@@ -298,9 +317,10 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
         PaginationInputParam paginationInputParam,
         BookingSearchCriteria searchCriteria,
         ICollection<BookingOrder> orderByFields,
+        BookingAccessScope? accessScope,
         CancellationToken cancellationToken) =>
         await DbContext.Booking
-            .AddSearchCriteria(searchCriteria, TimeProvider)
+            .AddSearchCriteria(searchCriteria, TimeProvider, accessScope)
             .AddSingleBookingMinimumDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 
