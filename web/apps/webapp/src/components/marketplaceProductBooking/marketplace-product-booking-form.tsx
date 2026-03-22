@@ -37,6 +37,32 @@ type Props = {
 };
 
 const bookingCategory = 'WORKING_FROM_COWORKING_SPACE' as BookingCategory;
+const availabilityQuery = `
+  query marketplaceProductBookingFormAvailabilityQuery(
+    $organizationCustomDomain: String
+    $productId: String
+    $from: DateTime!
+    $until: DateTime!
+  ) {
+    availableResourcesCount(
+      where: {
+        organizationCustomDomain: $organizationCustomDomain
+        productId: $productId
+        from: $from
+        until: $until
+      }
+    )
+  }
+`;
+
+type AvailabilityQueryResponse = {
+  data?: {
+    availableResourcesCount?: number | null;
+  };
+  errors?: Array<{
+    message?: string | null;
+  }>;
+};
 
 const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDataRelay, selectedDate, timeRange }: Props) => {
   const rootData = useFragment(
@@ -151,6 +177,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | ''>('');
   const [invoiceEmailList, setInvoiceEmailList] = useState<string[]>(() => [...(rootData.me?.emails ?? [])]);
   const [notes, setNotes] = useState('');
+  const [availableResourcesCount, setAvailableResourcesCount] = useState<number | null>(null);
+  const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [availabilityErrorMessage, setAvailabilityErrorMessage] = useState('');
 
   const effectiveSelectedPricingId = useMemo(() => {
     if (bookingPricingOptions.some((item) => item.id === selectedPricingId)) {
@@ -247,6 +276,45 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
   }, [selectedDate, selectedPricingOption, timeRange]);
 
   const effectiveQuantity = isEventProduct ? 1 : quantity;
+  const requiredResourceCount = useMemo(() => {
+    if (!selectedPricingOption) {
+      return 0;
+    }
+
+    return isEventProduct ? 1 : effectiveQuantity * selectedPricingOption.numberOfResourcesToBook;
+  }, [effectiveQuantity, isEventProduct, selectedPricingOption]);
+  const hasEnoughResourcesAvailable = useMemo(() => {
+    if (!dateRangeValidation.valid || availableResourcesCount === null) {
+      return false;
+    }
+
+    return availableResourcesCount >= requiredResourceCount;
+  }, [availableResourcesCount, dateRangeValidation.valid, requiredResourceCount]);
+  const availabilityMessage = useMemo(() => {
+    if (!dateRangeValidation.valid) {
+      return '';
+    }
+
+    if (availabilityErrorMessage) {
+      return availabilityErrorMessage;
+    }
+
+    if (isCheckingAvailability) {
+      return 'Checking live availability for this time...';
+    }
+
+    if (availableResourcesCount === null) {
+      return '';
+    }
+
+    if (hasEnoughResourcesAvailable) {
+      return requiredResourceCount === 1 ? 'A matching resource is available for this time.' : `${availableResourcesCount} matching resources are available for this time.`;
+    }
+
+    return requiredResourceCount === 1
+      ? 'No matching resource is available for the selected time.'
+      : `Only ${availableResourcesCount} matching resources are available, but this booking needs ${requiredResourceCount}.`;
+  }, [availabilityErrorMessage, availableResourcesCount, dateRangeValidation.valid, hasEnoughResourcesAvailable, isCheckingAvailability, requiredResourceCount]);
 
   const totalLabel = useMemo(() => {
     if (!selectedPricingOption || !dateRangeValidation.valid) {
@@ -278,6 +346,75 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
     router.push(`${getSignInLink()}?returnTo=${encodeURIComponent(returnTo)}`);
   };
 
+  useEffect(() => {
+    if (!rootData.product || !organizationCustomDomain || !selectedPricingOption || !dateRangeValidation.valid) {
+      setAvailableResourcesCount(null);
+      setAvailabilityErrorMessage('');
+      setIsCheckingAvailability(false);
+      return;
+    }
+
+    const abortController = new AbortController();
+
+    const checkAvailability = async () => {
+      try {
+        setIsCheckingAvailability(true);
+        setAvailabilityErrorMessage('');
+
+        const response = await fetch('/api/v1/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'same-origin',
+          signal: abortController.signal,
+          body: JSON.stringify({
+            query: availabilityQuery,
+            variables: {
+              organizationCustomDomain,
+              productId: rootData.product?.id,
+              from: dateRangeValidation.from.toISOString(),
+              until: dateRangeValidation.until.toISOString(),
+            },
+          }),
+        });
+
+        const payload = (await response.json()) as AvailabilityQueryResponse;
+        if (!response.ok) {
+          throw new Error(`Availability check failed with status ${response.status}.`);
+        }
+
+        if (payload.errors?.length) {
+          const errorMessage = payload.errors
+            .map((item) => item.message?.trim())
+            .filter((message): message is string => Boolean(message))
+            .join(' ');
+
+          throw new Error(errorMessage || 'Could not check availability right now.');
+        }
+
+        setAvailableResourcesCount(payload.data?.availableResourcesCount ?? 0);
+      } catch (error) {
+        if (abortController.signal.aborted) {
+          return;
+        }
+
+        setAvailableResourcesCount(null);
+        setAvailabilityErrorMessage(error instanceof Error ? error.message : 'Could not check availability right now.');
+      } finally {
+        if (!abortController.signal.aborted) {
+          setIsCheckingAvailability(false);
+        }
+      }
+    };
+
+    void checkAvailability();
+
+    return () => {
+      abortController.abort();
+    };
+  }, [dateRangeValidation.from, dateRangeValidation.until, dateRangeValidation.valid, organizationCustomDomain, rootData.product, selectedPricingOption]);
+
   const handleSubmit = () => {
     if (!rootData.product || !selectedPricingOption) {
       return;
@@ -292,6 +429,21 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
 
     if (!dateRangeValidation.valid) {
       toast.error(<NotificationContent content={dateRangeValidation.errorMessage} />);
+      return;
+    }
+
+    if (availabilityErrorMessage) {
+      toast.error(<NotificationContent content={availabilityErrorMessage} />);
+      return;
+    }
+
+    if (isCheckingAvailability) {
+      toast.error(<NotificationContent content="Availability is still being checked. Please wait a moment and try again." />);
+      return;
+    }
+
+    if (!hasEnoughResourcesAvailable) {
+      toast.error(<NotificationContent content="No matching resources are available for the selected date and time." />);
       return;
     }
 
@@ -455,6 +607,9 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
             )}
 
             {dateRangeValidation.errorMessage ? <Alert severity="warning">{dateRangeValidation.errorMessage}</Alert> : null}
+            {!dateRangeValidation.errorMessage && availabilityMessage ? (
+              <Alert severity={availabilityErrorMessage ? 'warning' : hasEnoughResourcesAvailable ? 'success' : 'error'}>{availabilityMessage}</Alert>
+            ) : null}
 
             {!isInArrearsBilling ? (
               <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
@@ -495,7 +650,12 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
                 <Button variant="text" onClick={() => router.push(productLink)} sx={{ textTransform: 'none' }}>
                   Back to product
                 </Button>
-                <Button variant="contained" onClick={handleSubmit} disabled={isInFlight || !selectedPricingOption} sx={{ textTransform: 'none' }}>
+                <Button
+                  variant="contained"
+                  onClick={handleSubmit}
+                  disabled={isInFlight || !selectedPricingOption || isCheckingAvailability || !dateRangeValidation.valid || !hasEnoughResourcesAvailable}
+                  sx={{ textTransform: 'none' }}
+                >
                   {rootData.me ? 'Book now' : 'Sign in to continue'}
                 </Button>
               </StackRow>
