@@ -24,6 +24,7 @@ public interface IRecurringBookingRepository : IRepository<RecurringBooking>
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
         ICollection<RecurringBookingOrder> orderByFields,
+        RecurringBookingAccessScope? accessScope,
         CancellationToken cancellationToken);
 }
 
@@ -45,7 +46,10 @@ internal static class RecurringBookingExtensions
             .Include(query => query.LastModifiedByCustomer)
             .Include(query => query.DeletedByCustomer);
 
-        internal IQueryable<RecurringBooking> AddSearchCriteria(RecurringBookingSearchCriteria searchCriteria, TimeProvider timeProvider)
+        internal IQueryable<RecurringBooking> AddSearchCriteria(
+            RecurringBookingSearchCriteria searchCriteria,
+            TimeProvider timeProvider,
+            RecurringBookingAccessScope? accessScope)
         {
             originalQuery = originalQuery.Where(item => !item.DeletedAt.HasValue);
 
@@ -110,18 +114,18 @@ internal static class RecurringBookingExtensions
                 originalQuery = originalQuery.Where(item => item.Channel == searchCriteria.Channel.Value.ToBookingChannel());
             }
 
-            if (searchCriteria.OrganizationIds.Count != 0)
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationId))
             {
                 originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
-                    !organization.DeletedAt.HasValue && searchCriteria.OrganizationIds.Contains(organization.Id)));
+                    !organization.DeletedAt.HasValue && organization.Id == searchCriteria.OrganizationId));
             }
 
-            if (searchCriteria.OrganizationCustomDomains.Count != 0)
+            if (!string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain))
             {
                 originalQuery = originalQuery.Where(item => item.InvolvedOrganizations.Any(organization =>
                     !organization.DeletedAt.HasValue &&
                     organization.CustomDomain != null &&
-                    searchCriteria.OrganizationCustomDomains.Contains(organization.CustomDomain)));
+                    organization.CustomDomain == searchCriteria.OrganizationCustomDomain));
             }
 
             if (searchCriteria.TeamIds.Count != 0)
@@ -141,6 +145,16 @@ internal static class RecurringBookingExtensions
                                                             EF.Functions.ILike(customer.MiddleName, $"%{searchCriteria.NameContains}%")) ||
                                                            (customer.FamilyName != null &&
                                                             EF.Functions.ILike(customer.FamilyName, $"%{searchCriteria.NameContains}%"))));
+            }
+
+            if (accessScope is not null && (accessScope.OrganizationIds.Count != 0 || accessScope.TeamIds.Count != 0))
+            {
+                originalQuery = originalQuery.Where(item =>
+                    (accessScope.OrganizationIds.Count != 0 &&
+                     item.InvolvedOrganizations.Any(organization =>
+                         !organization.DeletedAt.HasValue && accessScope.OrganizationIds.Contains(organization.Id))) ||
+                    (accessScope.TeamIds.Count != 0 &&
+                     item.InvolvedTeams.Any(team => !team.DeletedAt.HasValue && accessScope.TeamIds.Contains(team.Id))));
             }
 
             return originalQuery;
@@ -186,9 +200,10 @@ public class RecurringBookingRepository(BookingDbContext dbContext, TimeProvider
         PaginationInputParam paginationInputParam,
         RecurringBookingSearchCriteria searchCriteria,
         ICollection<RecurringBookingOrder> orderByFields,
+        RecurringBookingAccessScope? accessScope,
         CancellationToken cancellationToken) =>
         await DbContext.RecurringBooking
-            .AddSearchCriteria(searchCriteria, TimeProvider)
+            .AddSearchCriteria(searchCriteria, TimeProvider, accessScope)
             .AddDependentObjects(false)
             .ToPaginatedAsync(paginationInputParam, GetPaginationFields(orderByFields), cancellationToken);
 

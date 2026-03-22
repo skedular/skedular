@@ -35,7 +35,7 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscriptions(
       first: 50
-      where: { organizationCustomDomains: [$organizationCustomDomain], status: ACTIVE }
+      where: { organizationCustomDomain: $organizationCustomDomain, status: ACTIVE }
       orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
     ) {
       totalCount

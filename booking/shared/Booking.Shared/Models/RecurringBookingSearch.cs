@@ -17,10 +17,14 @@ public record RecurringBookingSearchCriteria(
     BookingChannel? Channel,
     bool? IncludeMineOnly,
     bool? IncludeFutureBookingsOnly,
-    ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationCustomDomains,
+    string? OrganizationId,
+    string? OrganizationCustomDomain,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);
+
+public record RecurringBookingAccessScope(
+    ICollection<string> OrganizationIds,
+    ICollection<string> TeamIds);
 
 public record RecurringBookingOrder(OrderDirection Direction, RecurringBookingOrderField Field);
 

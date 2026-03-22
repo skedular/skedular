@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fdb2ee6354c5c5cbb4446f5fb55d05e6>>
+ * @generated SignedSource<<3bd5b1c0c87bd23c4097b6b29fa36e78>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -105,15 +105,9 @@ return {
                   "value": true
                 },
                 {
-                  "items": [
-                    {
-                      "kind": "Variable",
-                      "name": "organizationCustomDomains.0",
-                      "variableName": "organizationCustomDomain"
-                    }
-                  ],
-                  "kind": "ListValue",
-                  "name": "organizationCustomDomains"
+                  "kind": "Variable",
+                  "name": "organizationCustomDomain",
+                  "variableName": "organizationCustomDomain"
                 },
                 {
                   "kind": "Literal",
@@ -304,6 +298,6 @@ return {
 };
 })();
 
-(node as any).hash = "c15559ab531491d0b7c6faea6908f448";
+(node as any).hash = "27a54b37958f3efa339aeb3d94e270a1";
 
 export default node;

@@ -20,10 +20,10 @@ public class MarketplaceBookingSubscriptionWhereInput
     [GraphQLName("nextRenewalAtLte")] public DateTimeOffset? NextRenewalAtLte { get; set; }
     [GraphQLName("status")] public MarketplaceBookingSubscriptionStatus? Status { get; set; }
     [GraphQLName("nameContains")] public string? NameContains { get; set; }
-    [GraphQLName("organizationIds")] public IEnumerable<string>? OrganizationIds { get; set; }
+    [GraphQLName("organizationId")] public string? OrganizationId { get; set; }
 
-    [GraphQLName("organizationCustomDomains")]
-    public IEnumerable<string>? OrganizationCustomDomains { get; set; }
+    [GraphQLName("organizationCustomDomain")]
+    public string? OrganizationCustomDomain { get; set; }
 
     [GraphQLName("teamIds")] public IEnumerable<string>? TeamIds { get; set; }
     [GraphQLName("customerIds")] public IEnumerable<string>? CustomerIds { get; set; }

@@ -41,8 +41,6 @@ public class RootQuery(IMapper mapper)
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        where.OrganizationIds = where.OrganizationIds.RemoveInvalidIds();
-        where.OrganizationCustomDomains = where.OrganizationCustomDomains.RemoveInvalidIds();
         where.TeamIds = where.TeamIds.RemoveInvalidIds();
         where.CustomerIds = where.CustomerIds.RemoveInvalidIds();
 
@@ -64,8 +62,8 @@ public class RootQuery(IMapper mapper)
                 where.NameContains,
                 where.Status,
                 where.IncludeMineOnly,
-                where.OrganizationIds.ToSafeCollection(),
-                where.OrganizationCustomDomains.ToSafeCollection(),
+                where.OrganizationId,
+                where.OrganizationCustomDomain,
                 where.TeamIds.ToSafeCollection(),
                 where.CustomerIds.ToSafeCollection()),
             orderBy.ToSafeCollection().Select(item => new MarketplaceBookingSubscriptionOrder(item.Direction, item.Field)).ToList(),

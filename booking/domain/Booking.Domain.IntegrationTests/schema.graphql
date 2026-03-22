@@ -539,8 +539,8 @@ input MarketplaceBookingSubscriptionWhereInput {
   nextRenewalAtLte: DateTime
   status: MarketplaceBookingSubscriptionStatus
   nameContains: String
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
+  organizationId: String
+  organizationCustomDomain: String
   teamIds: [String!]
   customerIds: [String!]
   includeMineOnly: Boolean
@@ -570,8 +570,8 @@ input RecurringBookingWhereInput {
   category: BookingCategory
   channel: BookingChannel
   nameContains: String
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
+  organizationId: String
+  organizationCustomDomain: String
   teamIds: [String!]
   customerIds: [String!]
   includeMineOnly: Boolean

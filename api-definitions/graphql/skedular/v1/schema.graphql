@@ -2203,8 +2203,8 @@ input MarketplaceBookingSubscriptionWhereInput {
   nextRenewalAtGte: DateTime
   nextRenewalAtLt: DateTime
   nextRenewalAtLte: DateTime
-  organizationCustomDomains: [String!]
-  organizationIds: [String!]
+  organizationCustomDomain: String
+  organizationId: String
   startedAtGt: DateTime
   startedAtGte: DateTime
   startedAtLt: DateTime
@@ -2369,8 +2369,8 @@ input RecurringBookingWhereInput {
   includeFutureBookingsOnly: Boolean
   includeMineOnly: Boolean
   nameContains: String
-  organizationCustomDomains: [String!]
-  organizationIds: [String!]
+  organizationCustomDomain: String
+  organizationId: String
   teamIds: [String!]
   toGt: DateTime
   toGte: DateTime

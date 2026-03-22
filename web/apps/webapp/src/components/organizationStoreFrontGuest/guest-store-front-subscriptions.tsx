@@ -36,7 +36,7 @@ const RootQuery = graphql`
     }
     marketplaceBookingSubscriptions(
       first: 24
-      where: { includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], status: ACTIVE }
+      where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE }
       orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
     ) {
       totalCount

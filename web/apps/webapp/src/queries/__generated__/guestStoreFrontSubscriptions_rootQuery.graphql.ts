@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3bd91ffa63cfaf3ad46cb0c4110eb087>>
+ * @generated SignedSource<<02b05c08989583800fb20a9e95ad9c66>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -143,15 +143,9 @@ v4 = [
         "value": true
       },
       {
-        "items": [
-          {
-            "kind": "Variable",
-            "name": "organizationCustomDomains.0",
-            "variableName": "organizationCustomDomain"
-          }
-        ],
-        "kind": "ListValue",
-        "name": "organizationCustomDomains"
+        "kind": "Variable",
+        "name": "organizationCustomDomain",
+        "variableName": "organizationCustomDomain"
       },
       {
         "kind": "Literal",
@@ -435,16 +429,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "063b53123a4f3033068ac48318a9ddba",
+    "cacheID": "33ff4ae26d365e4be9ecdc9e576c4cd9",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontSubscriptions_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  marketplaceBookingSubscriptions(first: 24, where: {includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], status: ACTIVE}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  marketplaceBookingSubscriptions(first: 24, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6b68a48fc670bd8c7ffefbc0f346836a";
+(node as any).hash = "f41261e2398996a9a313309f945547ec";
 
 export default node;

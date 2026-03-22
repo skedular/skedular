@@ -28,7 +28,7 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
       @argumentDefinitions(includeActiveSubscriptions: { type: "Boolean!", defaultValue: false }, organizationCustomDomain: { type: "String!" }) {
         marketplaceBookingSubscriptions(
           first: 3
-          where: { includeMineOnly: true, organizationCustomDomains: [$organizationCustomDomain], status: ACTIVE }
+          where: { includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE }
           orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
         ) @include(if: $includeActiveSubscriptions) {
           totalCount

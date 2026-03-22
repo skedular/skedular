@@ -19,10 +19,14 @@ public record MarketplaceBookingSubscriptionSearchCriteria(
     string? NameContains,
     MarketplaceBookingSubscriptionStatus? Status,
     bool? IncludeMineOnly,
-    ICollection<string> OrganizationIds,
-    ICollection<string> OrganizationCustomDomains,
+    string? OrganizationId,
+    string? OrganizationCustomDomain,
     ICollection<string> TeamIds,
     ICollection<string> CustomerIds);
+
+public record MarketplaceBookingSubscriptionAccessScope(
+    ICollection<string> OrganizationIds,
+    ICollection<string> TeamIds);
 
 public record MarketplaceBookingSubscriptionOrder(OrderDirection Direction, MarketplaceBookingSubscriptionOrderField Field);
 
