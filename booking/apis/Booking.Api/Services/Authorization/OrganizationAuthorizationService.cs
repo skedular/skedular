@@ -54,6 +54,11 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
+        if (organization.Type != OrganizationTypeConstants.Private)
+        {
+            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        }
+
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
@@ -66,6 +71,11 @@ public class OrganizationAuthorizationService(
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
 
+        if (organization.Type != OrganizationTypeConstants.Private)
+        {
+            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        }
+
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
             Status: OrganizationMemberStatusConstants.Active,
@@ -77,6 +87,11 @@ public class OrganizationAuthorizationService(
     {
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(organizationId, null, cancellationToken) ??
                            throw new OrganizationNotFound();
+
+        if (organization.Type != OrganizationTypeConstants.Private)
+        {
+            return await organizationSsoAuthorizationService.IsSsoValidAsync(organizationId, customerId, cancellationToken);
+        }
 
         return organization.OrganizationMembers.SingleOrDefault(item => item.Customer.Id == customerId) is
         {
