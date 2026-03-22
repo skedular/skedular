@@ -41,16 +41,16 @@ public class ResourceAvailableHoursService(
             ArgumentNullException.ThrowIfNull(availableHours);
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

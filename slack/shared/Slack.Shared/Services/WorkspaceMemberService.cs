@@ -98,8 +98,8 @@ public class WorkspaceMemberService(
         workspaceMemberEntity.LastProfileStatusUpdatedAt = now;
         repositoryFactory.WorkspaceMemberRepository.Update(workspaceMemberEntity);
 
-        var customerEntity = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
-        if (customerEntity is null)
+        var customer = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMemberId, cancellationToken);
+        if (customer is null)
         {
             return;
         }

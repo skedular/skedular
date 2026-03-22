@@ -43,7 +43,7 @@ public class RecurringBookingPaymentService(
         PaymentStatus paymentStatus,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(id, cancellationToken) ??
                                throw new RecurringBookingNotFound();
         if (recurringBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace || recurringBooking.MarketplaceBooking is null)
@@ -51,7 +51,7 @@ public class RecurringBookingPaymentService(
             throw new RecurringBookingIsNotMarketplace();
         }
 
-        await EnsureCustomerCanModifyPaymentAsync(recurringBooking, customer.Id, cancellationToken);
+        await EnsureCustomerCanModifyPaymentAsync(recurringBooking, customerId, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 

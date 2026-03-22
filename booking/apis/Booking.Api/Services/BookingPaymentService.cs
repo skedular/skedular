@@ -46,7 +46,7 @@ public class BookingPaymentService(
         bool releaseResources,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(id, cancellationToken) ?? throw new BookingNotFound();
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace || marketplaceBooking is null)
@@ -63,7 +63,7 @@ public class BookingPaymentService(
             false,
             cancellationToken) ?? throw new OrganizationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

@@ -220,10 +220,10 @@ public class LocationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanDeleteAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanDeleteAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -275,17 +275,18 @@ public class LocationService(
 
         var location = await cachedLocationService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
 
-        Customer? customer = null;
+        string? customerId = null;
         if (!ignoreAuthorizationCheck)
         {
             var verifiableToken = context.GetVerifiableToken();
             if (!string.IsNullOrWhiteSpace(verifiableToken) || location.Type.ToLocationType() != LocationType.Marketplace)
             {
-                customer = await cachedCustomerService.GetAsync(cancellationToken);
+                customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
             }
         }
 
-        if (customer is not null && !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customer.Id, cancellationToken))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -336,7 +337,7 @@ public class LocationService(
         string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
 
         Organization? organization = null;
         if (!string.IsNullOrWhiteSpace(organizationCustomDomain))
@@ -348,13 +349,13 @@ public class LocationService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-            if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAsync(organization.Id, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
-        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdUntrackedAsync(customer.Id, organization?.Id, cancellationToken);
+        var locations = await repositoryFactory.LocationRepository.GetByCustomerIdUntrackedAsync(customerId, organization?.Id, cancellationToken);
 
         return locations.Select(mapper.MapTo).ToList();
     }

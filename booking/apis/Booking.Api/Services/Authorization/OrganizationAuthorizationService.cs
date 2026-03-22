@@ -114,7 +114,7 @@ public class OrganizationAuthorizationService(
         string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await cachedOrganizationService.GetByIdOrCustomDomainAsync(
             organizationId,
             organizationCustomDomain,
@@ -122,11 +122,11 @@ public class OrganizationAuthorizationService(
 
         return new OrganizationPermissions
         {
-            CanViewBookings = await CanViewBookingsAsync(organization.Id, customer.Id, cancellationToken),
-            CanAddBooking = await CanAddBookingAsync(organization.Id, customer.Id, cancellationToken),
-            CanUpdateBooking = await CanUpdateBookingAsync(organization.Id, customer.Id, cancellationToken),
-            CanDeleteBooking = await CanDeleteBookingAsync(organization.Id, customer.Id, cancellationToken),
-            CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken)
+            CanViewBookings = await CanViewBookingsAsync(organization.Id, customerId, cancellationToken),
+            CanAddBooking = await CanAddBookingAsync(organization.Id, customerId, cancellationToken),
+            CanUpdateBooking = await CanUpdateBookingAsync(organization.Id, customerId, cancellationToken),
+            CanDeleteBooking = await CanDeleteBookingAsync(organization.Id, customerId, cancellationToken),
+            CanModifyPaymentMethod = await CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken)
         };
     }
 

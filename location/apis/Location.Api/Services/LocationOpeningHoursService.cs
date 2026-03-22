@@ -28,14 +28,14 @@ public class LocationOpeningHoursService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

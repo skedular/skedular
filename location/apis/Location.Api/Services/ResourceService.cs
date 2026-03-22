@@ -13,7 +13,6 @@ using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Location.Shared.Workflows;
 using Microsoft.EntityFrameworkCore;
-using Customer = Location.Shared.Database.Entities.Customer;
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 
 namespace Location.Api.Services;
@@ -57,10 +56,10 @@ public class ResourceService(
 
         ArgumentException.ThrowIfNullOrWhiteSpace(resource.Location.Id);
 
-        Customer? customer = null;
+        string? customerId = null;
         if (!ignoreAuthorizationCheck)
         {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
+            customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         }
 
         if (string.IsNullOrWhiteSpace(resource.Id))
@@ -72,20 +71,20 @@ public class ResourceService(
             var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken);
             if (existingResource is not null)
             {
-                return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
+                return await UpdateInternalAsync(resource, existingResource, customerId, cancellationToken);
             }
         }
 
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (customer is not null &&
-            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (customer is not null &&
-            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -154,27 +153,27 @@ public class ResourceService(
             ArgumentException.ThrowIfNullOrWhiteSpace(tag.Id);
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingResource = await repositoryFactory.ResourceRepository.GetByIdAsync(resource.Id, cancellationToken) ??
                                throw new ResourceNotFound();
 
-        return await UpdateInternalAsync(resource, existingResource, customer, cancellationToken);
+        return await UpdateInternalAsync(resource, existingResource, customerId, cancellationToken);
     }
 
     public async Task<Resource> DeleteAsync(string id, CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var resource = await repositoryFactory.ResourceRepository.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(resource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -207,14 +206,14 @@ public class ResourceService(
             return [];
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         foreach (var existingLocation in existingLocations)
         {
-            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
             {
                 throw new NoMoreInteractionAllowed();
             }
@@ -222,7 +221,7 @@ public class ResourceService(
 
         foreach (var existingOrganization in existingLocations)
         {
-            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -262,14 +261,14 @@ public class ResourceService(
             return [];
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         foreach (var existingLocation in existingLocations)
         {
-            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
             {
                 throw new NoMoreInteractionAllowed();
             }
@@ -277,7 +276,7 @@ public class ResourceService(
 
         foreach (var existingOrganization in existingLocations)
         {
-            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -321,14 +320,14 @@ public class ResourceService(
             return [];
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var resources = await repositoryFactory.ResourceRepository.GetByIdsAsync(ids, cancellationToken);
         var locationIds = resources.Select(item => item.Location.Id).ToList();
         var existingLocations = await repositoryFactory.LocationRepository.GetByIdsAsync(locationIds, cancellationToken);
 
         foreach (var existingLocation in existingLocations)
         {
-            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
             {
                 throw new NoMoreInteractionAllowed();
             }
@@ -336,7 +335,7 @@ public class ResourceService(
 
         foreach (var existingOrganization in existingLocations)
         {
-            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.OrganizationId, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -377,22 +376,22 @@ public class ResourceService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        Customer? customer = null;
+        string? customerId = null;
         if (!ignoreAuthorizationCheck)
         {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
+            customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         }
 
         var resource = await cachedResourceService.GetByIdAsync(id, cancellationToken) ?? throw new ResourceNotFound();
         var existingLocation = await cachedLocationService.GetByIdAsync(resource.Location.Id, cancellationToken) ?? throw new LocationNotFound();
         if (!ignoreAuthorizationCheck &&
-            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer!.Id, cancellationToken))
+            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId!, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
         if (!ignoreAuthorizationCheck &&
-            !await organizationAuthorizationService.CanViewAsync(existingLocation.Organization.Id, customer!.Id, cancellationToken))
+            !await organizationAuthorizationService.CanViewAsync(existingLocation.Organization.Id, customerId!, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -410,8 +409,8 @@ public class ResourceService(
 
         if (existingLocation.Type != LocationTypeConstants.Marketplace)
         {
-            var customer = await cachedCustomerService.GetAsync(cancellationToken);
-            if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewAsync(existingLocation.OrganizationId, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -429,19 +428,19 @@ public class ResourceService(
     private async Task<Resource> UpdateInternalAsync(
         Resource resource,
         Shared.Database.Entities.Resource existingResource,
-        Customer? customer,
+        string? customerId,
         CancellationToken cancellationToken)
     {
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(existingResource.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
-        if (customer is not null &&
-            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !await organizationOfferingService.IsMoreInteractionAllowedAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        if (customer is not null &&
-            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!string.IsNullOrWhiteSpace(customerId) &&
+            !await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

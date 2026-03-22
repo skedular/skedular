@@ -45,13 +45,13 @@ public class UpdateWorkspaceMemberProfileStatusJob(
                 var workspaceMemberIds = new List<string>();
                 foreach (var workspaceMember in workspaceMembers)
                 {
-                    var customerEntity = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
-                    if (customerEntity is null)
+                    var customer = await cachedCustomerService.GetByVerifiableTokenAsync(workspaceMember.Id, cancellationToken);
+                    if (customer is null)
                     {
                         continue;
                     }
 
-                    if (!now.IsMatchingHour(customerEntity.GetTimezone(), 7))
+                    if (!now.IsMatchingHour(customer.GetTimezone(), 7))
                     {
                         continue;
                     }

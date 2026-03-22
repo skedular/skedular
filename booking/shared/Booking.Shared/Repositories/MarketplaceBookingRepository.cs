@@ -18,7 +18,7 @@ internal static class MarketplaceBookingExtensions
     extension(IQueryable<MarketplaceBooking> originalQuery)
     {
         internal IIncludableQueryable<MarketplaceBooking, StripeCheckoutSession?> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.RecurringBooking)
             .Include(query => query.PaidByCustomer)
             .Include(query => query.PaidByOrganization)

@@ -51,7 +51,7 @@ internal static class OrganizationExtensions
             bool isTracked,
             bool includeDeletedOrganizationMembers,
             bool includeDeletedOrganizationTags) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.OrganizationSsoSettings)
             .Include(query =>
                 query.OrganizationMembers.Where(organizationMember =>

@@ -21,7 +21,7 @@ internal static class CustomerExtensions
     extension(IQueryable<Customer> originalQuery)
     {
         internal IIncludableQueryable<Customer, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities);
     }
 }
@@ -50,7 +50,7 @@ public class CustomerRepository(MarketplaceDbContext dbContext, TimeProvider tim
 
     public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);

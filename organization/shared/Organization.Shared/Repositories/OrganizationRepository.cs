@@ -45,7 +45,7 @@ internal static class OrganizationExtensions
         internal IIncludableQueryable<Database.Entities.Organization, OrganizationStripePaymentMethod> AddDependentObjects(bool isTracked,
             bool includeAllOfferings)
         {
-            var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
                 .Include(query => query.OrganizationSsoSettings)
                 .Include(query => query.OrganizationTaxDetails)
                 .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
@@ -197,6 +197,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         CancellationToken cancellationToken) =>
         await DbContext.Organization
             .Where(query => !query.DeletedAt.HasValue && query.OrganizationMembers.Select(item => item.Customer.Id).Contains(customerId))
+            .AsNoTracking()
             .ToListAsync(cancellationToken);
 
     public async Task<Database.Entities.Organization?> GetByAzureTenantIdUntrackedAsync(string azureTenantId, CancellationToken cancellationToken) =>

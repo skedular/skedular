@@ -10,6 +10,7 @@ namespace Location.Shared.Services.Cache;
 public interface ICachedCustomerService
 {
     ValueTask<bool> DoesCustomerExistAsync(CancellationToken cancellationToken);
+    ValueTask<string> GetIdAsync(CancellationToken cancellationToken);
     ValueTask<Customer> GetAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetNullableAsync(CancellationToken cancellationToken);
     ValueTask<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
@@ -42,6 +43,19 @@ public class CachedCustomerService(
         {
             return false;
         }
+    }
+
+    public async ValueTask<string> GetIdAsync(CancellationToken cancellationToken)
+    {
+        var verifiableToken = context.GetVerifiableToken();
+        ArgumentException.ThrowIfNullOrWhiteSpace(verifiableToken);
+
+        return await hybridCache.GetOrCreateAsync(
+            CreateKeyByVerifiableTokenId(verifiableToken),
+            async ct => (await repositoryFactory.CustomerRepository.GetMinimalByVerifiableTokenUntrackedAsync(verifiableToken, ct) ??
+                         throw new CustomerNotFound()).Id,
+            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
+            cancellationToken: cancellationToken);
     }
 
     public async ValueTask<Customer> GetAsync(CancellationToken cancellationToken)
@@ -122,4 +136,7 @@ public class CachedCustomerService(
 
     private string CreateKeyByAnyVerifiableToken(string verifiableToken) =>
         $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-exists-verifiabletoken:{verifiableToken}";
+
+    private string CreateKeyByVerifiableTokenId(string verifiableToken) =>
+        $"{applicationConfiguration.Environment}:{applicationConfiguration.Domain}:customer-verifiabletoken-id:{verifiableToken}";
 }

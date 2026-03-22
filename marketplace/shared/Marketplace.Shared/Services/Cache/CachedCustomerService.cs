@@ -71,60 +71,8 @@ public class CachedCustomerService(
         }
     }
 
-    private async ValueTask UpdateByIdAsync(string id, CancellationToken cancellationToken)
-    {
-        await RemoveByIdAsync(id, cancellationToken);
-
-        await hybridCache.SetAsync(
-            CreateKeyById(id),
-            await repositoryFactory.CustomerRepository.GetByIdAsync(id, cancellationToken) ?? throw new CustomerNotFound(),
-            new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-            cancellationToken: cancellationToken);
-    }
-
     public async ValueTask RemoveByIdAsync(string id, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyById(id), cancellationToken);
-
-    private async ValueTask<Customer?> GetByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken)
-    {
-        try
-        {
-            return await hybridCache.GetOrCreateAsync(
-                CreateKeyByVerifiableToken(verifiableToken),
-                async ct => await repositoryFactory.CustomerRepository.GetByVerifiableTokenAsync(verifiableToken, ct) ?? throw new CustomerNotFound(),
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
-        }
-        catch (CustomerNotFound)
-        {
-            return null;
-        }
-    }
-
-    private async ValueTask UpdateAsync(ICollection<Customer> customers, CancellationToken cancellationToken)
-    {
-        foreach (var item in customers)
-        {
-            await RemoveByIdAsync(item.Id, cancellationToken);
-
-            await hybridCache.SetAsync(
-                CreateKeyById(item.Id),
-                item,
-                new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                cancellationToken: cancellationToken);
-
-            foreach (var identity in item.Identities)
-            {
-                await RemoveByVerifiableTokenAsync(identity.Id, cancellationToken);
-
-                await hybridCache.SetAsync(
-                    CreateKeyByVerifiableToken(identity.Id),
-                    item,
-                    new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
-                    cancellationToken: cancellationToken);
-            }
-        }
-    }
 
     private async ValueTask RemoveByVerifiableTokenAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await hybridCache.RemoveAsync(CreateKeyByVerifiableToken(verifiableToken), cancellationToken);

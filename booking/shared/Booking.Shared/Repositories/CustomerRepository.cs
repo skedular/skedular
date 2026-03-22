@@ -13,7 +13,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByIdUntrackedAsync(string id, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
-    Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, bool includeActiveItemsOnly, CancellationToken cancellationToken);
+    Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<ICollection<Customer>> GetByIdsAsync(ICollection<string> ids, bool includeActiveItemsOnly, CancellationToken cancellationToken);
     Customer Update(Customer customer);
@@ -25,7 +25,7 @@ internal static class CustomerExtensions
     extension(IQueryable<Customer> originalQuery)
     {
         internal IIncludableQueryable<Customer, Organization?> AddDependentObjects(bool isTracked, bool includeActiveItemsOnly) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.DefaultOrganization)
             .Include(query => query.PreferredLocations.Where(location => !includeActiveItemsOnly || !location.DeletedAt.HasValue))
@@ -69,19 +69,16 @@ public class CustomerRepository(BookingDbContext dbContext, TimeProvider timePro
                     query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<Customer?> GetByVerifiableTokenUntrackedAsync(
-        string verifiableToken,
-        bool includeActiveItemsOnly,
-        CancellationToken cancellationToken) =>
+    public async Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AddDependentObjects(false, includeActiveItemsOnly)
+            .AsNoTracking()
             .FirstOrDefaultAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
     public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await DbContext.Customer
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);

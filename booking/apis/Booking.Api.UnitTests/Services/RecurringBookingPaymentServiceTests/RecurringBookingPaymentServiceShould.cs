@@ -58,8 +58,7 @@ public class RecurringBookingPaymentServiceShould
             cancellationToken,
             PaymentMethod.BankTransfer,
             PaymentStatus.Confirmed,
-            (service, recurringBookingId, token) => service.ConfirmPaymentAsync(recurringBookingId, token),
-            false);
+            (service, recurringBookingId, token) => service.ConfirmPaymentAsync(recurringBookingId, token));
 
     [Theory]
     [AutoFakeItEasyData]
@@ -95,8 +94,7 @@ public class RecurringBookingPaymentServiceShould
             cancellationToken,
             PaymentMethod.Card,
             PaymentStatus.Rejected,
-            (service, recurringBookingId, token) => service.RejectPaymentAsync(recurringBookingId, token),
-            true);
+            (service, recurringBookingId, token) => service.RejectPaymentAsync(recurringBookingId, token));
 
     [Theory]
     [AutoFakeItEasyData]
@@ -132,8 +130,7 @@ public class RecurringBookingPaymentServiceShould
             cancellationToken,
             PaymentMethod.BankTransfer,
             PaymentStatus.NoPaymentRequired,
-            (service, recurringBookingId, token) => service.MakePaymentNotRequiredAsync(recurringBookingId, token),
-            false);
+            (service, recurringBookingId, token) => service.MakePaymentNotRequiredAsync(recurringBookingId, token));
 
     private static async Task AssertUpdatePaymentStatusAsync(
         IDbTransactionBuilder transactionBuilder,
@@ -152,8 +149,7 @@ public class RecurringBookingPaymentServiceShould
         CancellationToken cancellationToken,
         PaymentMethod paymentMethod,
         PaymentStatus expectedPaymentStatus,
-        Func<RecurringBookingPaymentService, string, CancellationToken, Task<RecurringBooking>> act,
-        bool shouldSignalCardWorkflow)
+        Func<RecurringBookingPaymentService, string, CancellationToken, Task<RecurringBooking>> act)
     {
         var customer = new Customer { Id = "customer-1" };
         var subscription = new MarketplaceBookingSubscription { Id = "subscription-1" };
@@ -175,7 +171,7 @@ public class RecurringBookingPaymentServiceShould
         ICollection<BookingEntity> relatedBookings = new List<BookingEntity> { new() { Id = "booking-1" }, new() { Id = "booking-2" } };
         var mappedRecurringBooking = new RecurringBooking { Id = recurringBooking.Id };
 
-        A.CallTo(() => cachedCustomerService.GetAsync(cancellationToken)).Returns(customer);
+        A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns(customer.Id);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => repositoryFactory.RecurringBookingRepository).Returns(recurringBookingRepository);
         A.CallTo(() => repositoryFactory.MarketplaceBookingRepository).Returns(marketplaceBookingRepository);

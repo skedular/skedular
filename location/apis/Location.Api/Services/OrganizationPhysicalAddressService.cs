@@ -31,11 +31,11 @@ public class LocationPhysicalAddressService(
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Location);
         ArgumentException.ThrowIfNullOrWhiteSpace(locationPhysicalAddress.Location.Id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByIdAsync(locationPhysicalAddress.Location.Id, cancellationToken) ??
                                throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -86,7 +86,7 @@ public class LocationPhysicalAddressService(
     {
         ArgumentNullException.ThrowIfNull(locationPhysicalAddress.Id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingLocationPhysicalAddress = await repositoryFactory.LocationPhysicalAddressRepository.GetByIdAsync(
             locationPhysicalAddress.Id,
             cancellationToken) ?? throw new LocationPhysicalAddressNotFound();
@@ -95,7 +95,7 @@ public class LocationPhysicalAddressService(
             await repositoryFactory.LocationRepository.GetByIdAsync(existingLocationPhysicalAddress.Location.Id, cancellationToken) ??
             throw new LocationNotFound();
 
-        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanModifyAsync(existingLocation.OrganizationId, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }

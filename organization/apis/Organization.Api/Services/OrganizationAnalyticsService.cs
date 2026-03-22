@@ -48,7 +48,7 @@ public class OrganizationAnalyticsService(
                     !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organization.Id) &&
                     query.From >= from &&
                     query.Until <= until.AddDays(1)
-            }).AsNoTracking()
+            }).AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
@@ -59,7 +59,7 @@ public class OrganizationAnalyticsService(
                         query.Date <= until
                 }
                 .ApplyOrderBy(query => query.Date))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var organizationMemberAttendancePercentages = dailyMemberCounts.Select(item =>

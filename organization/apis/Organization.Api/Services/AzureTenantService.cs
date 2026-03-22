@@ -77,7 +77,7 @@ public class AzureTenantService(
 
                 return await repositoryFactory.AzureTenantRepository.Query(
                         new Specification<AzureTenant> { Criteria = query => !query.DeletedAt.HasValue && query.Id == tenantId.ToString() })
-                    .AsNoTracking()
+                    .AsNoTrackingWithIdentityResolution()
                     .AnyAsync(cancellationToken);
             });
     }

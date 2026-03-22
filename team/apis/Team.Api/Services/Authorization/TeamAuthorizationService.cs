@@ -44,16 +44,16 @@ public class TeamAuthorizationService(
 
     public async ValueTask<Permissions> GetPermissionsAsync(string teamId, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
 
         return new Permissions
         {
-            CanView = await CanViewAsync(team, customer.Id, cancellationToken),
-            CanModify = await CanModifyAsync(team, customer.Id, cancellationToken),
-            CanDelete = await CanDeleteAsync(team, customer.Id, cancellationToken),
-            CanInvitePeople = await CanInvitePeopleAsync(team, customer.Id, cancellationToken),
-            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken)
+            CanView = await CanViewAsync(team, customerId, cancellationToken),
+            CanModify = await CanModifyAsync(team, customerId, cancellationToken),
+            CanDelete = await CanDeleteAsync(team, customerId, cancellationToken),
+            CanInvitePeople = await CanInvitePeopleAsync(team, customerId, cancellationToken),
+            CanCancelPeopleExistingInvitations = await CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken)
         };
     }
 }

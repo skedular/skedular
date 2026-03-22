@@ -25,7 +25,7 @@ public class IndustryMainCategoryService(IRepositoryFactory repositoryFactory, I
                     .Query(new Specification<Shared.Database.Entities.IndustryMainCategory> { Criteria = query => !query.DeletedAt.HasValue }
                         .AddInclude(query => query.IndustrySubCategories)
                         .ApplyOrderBy(query => query.Name))
-                    .AsNoTracking()
+                    .AsNoTrackingWithIdentityResolution()
                     .ToListAsync(cancellationToken);
 
                 return mapper.MapTo(industryMainCategories).ToList();

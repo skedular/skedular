@@ -48,15 +48,15 @@ public class TeamAuthorizationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(teamId);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var team = await cachedTeamService.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
 
         return new TeamPermissions
         {
-            CanViewBookings = await CanViewBookingsAsync(team, customer.Id, cancellationToken),
-            CanAddBooking = await CanAddBookingAsync(team, customer.Id, cancellationToken),
-            CanUpdateBooking = await CanUpdateBookingAsync(team, customer.Id, cancellationToken),
-            CanDeleteBooking = await CanDeleteBookingAsync(team, customer.Id, cancellationToken)
+            CanViewBookings = await CanViewBookingsAsync(team, customerId, cancellationToken),
+            CanAddBooking = await CanAddBookingAsync(team, customerId, cancellationToken),
+            CanUpdateBooking = await CanUpdateBookingAsync(team, customerId, cancellationToken),
+            CanDeleteBooking = await CanDeleteBookingAsync(team, customerId, cancellationToken)
         };
     }
 

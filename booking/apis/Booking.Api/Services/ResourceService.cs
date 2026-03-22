@@ -68,9 +68,8 @@ public class ResourceService(
                            throw new OrganizationNotFound();
         if (organization.Type == OrganizationTypeConstants.Private)
         {
-            var customer = await cachedCustomerService.GetAsync(cancellationToken);
-
-            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -123,7 +122,7 @@ public class ResourceService(
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                organizationId,
                                organizationCustomDomain,
@@ -132,7 +131,7 @@ public class ResourceService(
                                cancellationToken) ??
                            throw new OrganizationNotFound();
 
-        if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -178,9 +177,8 @@ public class ResourceService(
                            throw new OrganizationNotFound();
         if (organization.Type == OrganizationTypeConstants.Private)
         {
-            var customer = await cachedCustomerService.GetAsync(cancellationToken);
-
-            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customer.Id, cancellationToken))
+            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+            if (!await organizationAuthorizationService.CanViewOrganizationDetailsAsync(organization.Id, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

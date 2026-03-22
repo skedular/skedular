@@ -184,11 +184,11 @@ public class InvitationService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var joinInvitation = await repositoryFactory.JoinInvitationRepository.GetByIdAsync(id, cancellationToken) ??
                              throw new TeamJoinInvitationNotFound();
         var team = await cachedTeamService.GetByIdAsync(joinInvitation.Team.Id, cancellationToken) ?? throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanCancelPeopleExistingInvitationsAsync(team, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -221,9 +221,9 @@ public class InvitationService(
         ICollection<JoinTeamInvitationOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         // Ensure we do not return another customer join invitation by forcing CustomerId as search criteria
-        searchCriteria = searchCriteria with { InviteeId = customer.Id };
+        searchCriteria = searchCriteria with { InviteeId = customerId };
 
         var (paginatedInfo, edges, totalCount) = await repositoryFactory.JoinInvitationRepository.GetPaginatedJoinInvitationsUntrackedAsync(
             paginationInputParam,

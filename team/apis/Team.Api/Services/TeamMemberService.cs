@@ -58,9 +58,9 @@ public class TeamMemberService(
         ICollection<TeamMemberOrder> orderByFields,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var team = await cachedTeamService.GetByIdAsync(searchCriteria.TeamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanViewAsync(team, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanViewAsync(team, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -76,15 +76,15 @@ public class TeamMemberService(
 
     public async Task<TeamMember> ChangeRoleAsync(string id, TeamMemberRole memberRole, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var teamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var team = await cachedTeamService.GetByIdAsync(teamMember.Team.Id, cancellationToken) ?? throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanModifyAsync(team, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanModifyAsync(team, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
 
-        var myMemberDetails = team.TeamMembers.Single(item => item.Customer.Id == customer.Id);
+        var myMemberDetails = team.TeamMembers.Single(item => item.Customer.Id == customerId);
         if (myMemberDetails.Role == TeamMemberRoleConstants.Administrator && memberRole == TeamMemberRole.Owner)
         {
             throw new UnauthorizedAccessException();
@@ -119,7 +119,7 @@ public class TeamMemberService(
         TeamMemberStatus status,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var distinctTeamMemberIds = ids.Distinct().ToList();
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByIdsAsync(distinctTeamMemberIds, cancellationToken);
         if (teamMembers.Count != distinctTeamMemberIds.Count)
@@ -128,7 +128,7 @@ public class TeamMemberService(
         }
 
         // Exclude calling customer from the list
-        teamMembers = teamMembers.Where(item => item.Customer.Id != customer.Id).ToList();
+        teamMembers = teamMembers.Where(item => item.Customer.Id != customerId).ToList();
         if (teamMembers.Count == 0)
         {
             return [];
@@ -138,8 +138,8 @@ public class TeamMemberService(
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
         foreach (var item in teamMembers)
         {
-            if (!await teamAuthorizationService.CanModifyAsync(teams.Single(organization => organization.Id == item.Team.Id), customer.Id,
-                    cancellationToken))
+            if (!await teamAuthorizationService.CanModifyAsync(
+                    teams.Single(organization => organization.Id == item.Team.Id), customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -166,9 +166,9 @@ public class TeamMemberService(
 
     public async Task<Shared.Models.Team> UpdateMembersAsync(string teamId, ICollection<TeamMember> members, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -179,12 +179,12 @@ public class TeamMemberService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
 
-        var rebuiltTeamMembers = await BuildMembersAsync(members, existingTeam, customer.Id, organization, cancellationToken);
+        var rebuiltTeamMembers = await BuildMembersAsync(members, existingTeam, customerId, organization, cancellationToken);
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByTeamIdAsync(existingTeam.Id, cancellationToken);
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
@@ -272,11 +272,11 @@ public class TeamMemberService(
 
     public async Task<TeamMember> RemoveAsync(string id, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingTeamMember = await repositoryFactory.TeamMemberRepository.GetByIdAsync(id, cancellationToken) ?? throw new TeamMemberNotFound();
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(existingTeamMember.Team.Id, cancellationToken) ??
                            throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -286,7 +286,7 @@ public class TeamMemberService(
                                existingTeam.Organization.CustomDomain,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }
@@ -314,7 +314,7 @@ public class TeamMemberService(
 
     public async Task<ICollection<TeamMember>> RemoveAsync(ICollection<string> ids, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var distinctTeamMemberIds = ids.Distinct().ToList();
         var teamMembers = await repositoryFactory.TeamMemberRepository.GetByIdsAsync(distinctTeamMemberIds, cancellationToken);
         if (teamMembers.Count != distinctTeamMemberIds.Count)
@@ -331,7 +331,7 @@ public class TeamMemberService(
         var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, cancellationToken);
         foreach (var item in teamMembers)
         {
-            if (!await teamAuthorizationService.CanModifyAsync(teams.Single(team => team.Id == item.Team.Id), customer.Id, cancellationToken))
+            if (!await teamAuthorizationService.CanModifyAsync(teams.Single(team => team.Id == item.Team.Id), customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }
@@ -360,9 +360,9 @@ public class TeamMemberService(
 
     public async Task<TeamMember> AddAsync(string teamId, TeamMember member, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingTeam = await repositoryFactory.TeamRepository.GetByIdAsync(teamId, cancellationToken) ?? throw new TeamNotFound();
-        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customer.Id, cancellationToken))
+        if (!await teamAuthorizationService.CanModifyAsync(existingTeam, customerId, cancellationToken))
         {
             throw new UnauthorizedAccessException();
         }
@@ -373,7 +373,7 @@ public class TeamMemberService(
                                false,
                                cancellationToken) ??
                            throw new OrganizationNotFound();
-        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customer.Id, cancellationToken))
+        if (!await organizationOfferingService.IsMoreInteractionAllowedAsync(organization.Id, customerId, cancellationToken))
         {
             throw new NoMoreInteractionAllowed();
         }

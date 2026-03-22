@@ -52,7 +52,7 @@ public class CachedCustomerService(
 
         return await hybridCache.GetOrCreateAsync(
             CreateKeyByVerifiableTokenId(verifiableToken),
-            async ct => (await repositoryFactory.CustomerRepository.GetByVerifiableTokenMinimalUntrackedAsync(verifiableToken, ct) ??
+            async ct => (await repositoryFactory.CustomerRepository.GetMinimalByVerifiableTokenUntrackedAsync(verifiableToken, ct) ??
                          throw new CustomerNotFound()).Id,
             new HybridCacheEntryOptions { Expiration = TimeSpan.FromMinutes(30), LocalCacheExpiration = TimeSpan.FromSeconds(30) },
             cancellationToken: cancellationToken);

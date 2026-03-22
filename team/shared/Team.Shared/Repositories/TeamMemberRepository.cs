@@ -36,7 +36,7 @@ internal static class TeamMemberExtensions
     extension(IQueryable<TeamMember> originalQuery)
     {
         internal IIncludableQueryable<TeamMember, ICollection<Identity>> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Team)
             .Include(query => query.Customer)
             .ThenInclude(query => query.Identities)

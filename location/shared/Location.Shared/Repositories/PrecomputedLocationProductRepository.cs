@@ -18,7 +18,7 @@ internal static class PrecomputedLocationProductExtensions
     extension(IQueryable<PrecomputedLocationProduct> originalQuery)
     {
         internal IIncludableQueryable<PrecomputedLocationProduct, Product> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Organization)
             .Include(query => query.Location)
             .ThenInclude(query => query.Organization)

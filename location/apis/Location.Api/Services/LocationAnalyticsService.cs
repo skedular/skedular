@@ -44,9 +44,9 @@ public class LocationAnalyticsService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(locationId);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var location = await repositoryFactory.LocationRepository.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
-        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken))
+        if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customerId, cancellationToken))
         {
             return new LocationAnalytics(locationId, string.Empty, [], [], []);
         }
@@ -78,11 +78,11 @@ public class LocationAnalyticsService(
             return [];
         }
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         foreach (var item in locations.Item2)
         {
             var location = await repositoryFactory.LocationRepository.GetByIdAsync(item.Node.Id, cancellationToken) ?? throw new LocationNotFound();
-            if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanViewAnalyticsAsync(location.OrganizationId, customerId, cancellationToken))
             {
                 return [];
             }
@@ -113,7 +113,7 @@ public class LocationAnalyticsService(
                     }
                     .AddInclude(query => query.Resources)
                     .AddInclude(query => query.InvolvedLocations))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyDeskCounts = await repositoryFactory.DailyDeskCountRecordingRepository
@@ -124,7 +124,7 @@ public class LocationAnalyticsService(
                 }
                 .ApplyOrderBy(query => query.Date)
                 .AddInclude(query => query.Location))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyRoomCounts = await repositoryFactory.DailyRoomCountRecordingRepository
@@ -135,7 +135,7 @@ public class LocationAnalyticsService(
                 }
                 .ApplyOrderBy(query => query.Date)
                 .AddInclude(query => query.Location))
-            .AsNoTracking()
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         return locationIds.Select(locationId =>

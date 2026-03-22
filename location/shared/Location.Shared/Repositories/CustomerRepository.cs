@@ -12,6 +12,7 @@ public interface ICustomerRepository : IRepository<Customer>
     Task<Customer?> GetByIdAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
     Task<Customer?> GetByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
+    Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken);
     Customer Update(Customer customer);
     Customer Remove(Customer customer);
@@ -22,7 +23,7 @@ internal static class CustomerExtensions
     extension(IQueryable<Customer> originalQuery)
     {
         internal IIncludableQueryable<Customer, Organization> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Identities)
             .Include(query => query.OrganizationMembers)
             .ThenInclude(query => query.Organization);
@@ -56,9 +57,16 @@ public class CustomerRepository(LocationDbContext dbContext, TimeProvider timePr
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);
 
-    public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+    public async Task<Customer?> GetMinimalByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
         await DbContext.Customer
             .AsNoTracking()
+            .FirstOrDefaultAsync(
+                query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
+                cancellationToken);
+
+    public async Task<bool> AnyByVerifiableTokenUntrackedAsync(string verifiableToken, CancellationToken cancellationToken) =>
+        await DbContext.Customer
+            .AsNoTrackingWithIdentityResolution()
             .AnyAsync(
                 query => !query.DeletedAt.HasValue && query.Identities.Select(identity => identity.Id).Contains(verifiableToken),
                 cancellationToken);

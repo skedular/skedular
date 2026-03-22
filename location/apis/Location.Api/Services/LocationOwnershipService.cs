@@ -37,21 +37,18 @@ public class LocationOwnershipService(
         string? organizationCustomDomain,
         CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
-
         ArgumentException.ThrowIfNullOrWhiteSpace(uniqueClaimCode);
 
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var existingLocation = await repositoryFactory.LocationRepository.GetByUniqueClaimCodeAsync(
             uniqueClaimCode.ToUpperInvariant(),
             cancellationToken) ?? throw new LocationUniqueClaimCodeNotFound();
-
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
             organizationId,
             organizationCustomDomain,
             false,
             false,
             cancellationToken);
-
         if (existingOrganization is null)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(organizationId);
@@ -59,7 +56,7 @@ public class LocationOwnershipService(
         }
         else
         {
-            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.Id, customer.Id, cancellationToken))
+            if (!await organizationAuthorizationService.CanModifyAsync(existingOrganization.Id, customerId, cancellationToken))
             {
                 throw new UnauthorizedAccessException();
             }

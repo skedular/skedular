@@ -31,7 +31,7 @@ internal static class MarketplaceBookingSubscriptionExtensions
     extension(IQueryable<MarketplaceBookingSubscription> originalQuery)
     {
         internal IIncludableQueryable<MarketplaceBookingSubscription, Customer?> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query.ProductVersion)
             .ThenInclude(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue))

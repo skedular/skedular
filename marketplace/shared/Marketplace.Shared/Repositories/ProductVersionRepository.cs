@@ -17,7 +17,7 @@ internal static class ProductVersionExtensions
     extension(IQueryable<ProductVersion> originalQuery)
     {
         internal IIncludableQueryable<ProductVersion, IEnumerable<OrganizationTag>> AddDependentObjects(bool isTracked) =>
-            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTracking())
+            (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
             .Include(query => query.Product)
             .ThenInclude(query => query.Organization)
             .Include(query => query.OrganizationTags.Where(tag => !tag.DeletedAt.HasValue));

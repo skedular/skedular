@@ -71,15 +71,15 @@ public class OrganizationAuthorizationService(
 
     public async ValueTask<Permissions> GetPermissionsAsync(string locationId, CancellationToken cancellationToken)
     {
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var location = await cachedLocationService.GetByIdAsync(locationId, cancellationToken) ?? throw new LocationNotFound();
 
         return new Permissions
         {
-            CanView = await CanViewAsync(location.OrganizationId, customer.Id, cancellationToken),
-            CanModify = await CanModifyAsync(location.OrganizationId, customer.Id, cancellationToken),
-            CanDelete = await CanDeleteAsync(location.OrganizationId, customer.Id, cancellationToken),
-            CanViewAnalytics = await CanViewAnalyticsAsync(location.OrganizationId, customer.Id, cancellationToken)
+            CanView = await CanViewAsync(location.OrganizationId, customerId, cancellationToken),
+            CanModify = await CanModifyAsync(location.OrganizationId, customerId, cancellationToken),
+            CanDelete = await CanDeleteAsync(location.OrganizationId, customerId, cancellationToken),
+            CanViewAnalytics = await CanViewAnalyticsAsync(location.OrganizationId, customerId, cancellationToken)
         };
     }
 }

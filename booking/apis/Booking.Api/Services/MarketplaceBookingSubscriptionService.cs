@@ -10,7 +10,6 @@ using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
-using Customer = Booking.Shared.Database.Entities.Customer;
 using Team = Booking.Shared.Database.Entities.Team;
 
 namespace Booking.Api.Services;
@@ -47,11 +46,11 @@ public class MarketplaceBookingSubscriptionService(
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
-        var customer = await cachedCustomerService.GetAsync(cancellationToken);
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         var subscription = await cachedMarketplaceBookingSubscriptionService.GetByIdAsync(id, cancellationToken) ??
                            throw new MarketplaceBookingSubscriptionNotFound();
 
-        await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customer, cancellationToken);
+        await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
 
         return sharedMapper.MapTo(subscription);
     }
@@ -63,15 +62,15 @@ public class MarketplaceBookingSubscriptionService(
         bool ignoreAuthorizationCheck,
         CancellationToken cancellationToken)
     {
-        Customer? customer = null;
+        string? customerId = null;
         if (!ignoreAuthorizationCheck)
         {
-            customer = await cachedCustomerService.GetAsync(cancellationToken);
+            customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
         }
 
-        if (customer is not null && searchCriteria.IncludeMineOnly.HasValue)
+        if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.IncludeMineOnly.HasValue)
         {
-            searchCriteria = searchCriteria with { CustomerIds = [customer.Id] };
+            searchCriteria = searchCriteria with { CustomerIds = [customerId] };
         }
 
         List<string>? organizationIds = null;
@@ -79,48 +78,48 @@ public class MarketplaceBookingSubscriptionService(
         List<string>? teamIds = null;
 
         if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
+            !string.IsNullOrWhiteSpace(customerId) &&
+            searchCriteria.CustomerIds.Any(item => item != customerId) &&
             searchCriteria.OrganizationIds.Count == 0 && searchCriteria.OrganizationCustomDomains.Count == 0)
         {
             throw new InvalidOperationException("You can only look for others' subscriptions if organization is included in your search");
         }
 
         if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
+            !string.IsNullOrWhiteSpace(customerId) &&
+            searchCriteria.CustomerIds.Any(item => item != customerId) &&
             searchCriteria.OrganizationIds.Count != 0)
         {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
             organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
 
-            if (searchCriteria.CustomerIds
-                .Any(customerId => !organizationCustomerPairs.Item1.Keys.Any(item => organizationCustomerPairs.Item1[item].Contains(customerId))))
+            if (searchCriteria.CustomerIds.Any(item =>
+                    !organizationCustomerPairs.Item1.Keys.Any(key => organizationCustomerPairs.Item1[key].Contains(item))))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
         if (searchCriteria.CustomerIds.Count != 0 &&
-            customer is not null &&
-            searchCriteria.CustomerIds.Any(item => item != customer.Id) &&
+            !string.IsNullOrWhiteSpace(customerId) &&
+            searchCriteria.CustomerIds.Any(item => item != customerId) &&
             searchCriteria.OrganizationCustomDomains.Count != 0)
         {
-            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+            var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
             organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
 
             if (searchCriteria.CustomerIds
-                .Any(customerId => !organizationCustomerPairs.Item2.Keys.Any(item => organizationCustomerPairs.Item2[item].Contains(customerId))))
+                .Any(item => !organizationCustomerPairs.Item2.Keys.Any(key => organizationCustomerPairs.Item2[key].Contains(item))))
             {
                 throw new UnauthorizedAccessException();
             }
         }
 
-        if (customer is not null && searchCriteria.OrganizationIds.Count != 0)
+        if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.OrganizationIds.Count != 0)
         {
             if (organizationIds is null)
             {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
             }
 
@@ -129,11 +128,11 @@ public class MarketplaceBookingSubscriptionService(
                 throw new UnauthorizedAccessException();
             }
         }
-        else if (customer is not null && searchCriteria.OrganizationCustomDomains.Count != 0)
+        else if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.OrganizationCustomDomains.Count != 0)
         {
             if (organizationCustomDomains is null)
             {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 organizationCustomDomains = organizationCustomerPairs.Item2.Keys.ToList();
             }
 
@@ -143,7 +142,7 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
-        if (customer is not null && searchCriteria.TeamIds.Count != 0)
+        if (!string.IsNullOrWhiteSpace(customerId) && searchCriteria.TeamIds.Count != 0)
         {
             var criteria = searchCriteria;
             var teams = await repositoryFactory.TeamRepository.Query(
@@ -155,7 +154,7 @@ public class MarketplaceBookingSubscriptionService(
             {
                 if (organizationIds is null)
                 {
-                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                    var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                     organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
                 }
 
@@ -166,7 +165,7 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
-        if (customer is not null &&
+        if (!string.IsNullOrWhiteSpace(customerId) &&
             (!searchCriteria.IncludeMineOnly.HasValue || !searchCriteria.IncludeMineOnly.Value) &&
             searchCriteria.OrganizationIds.Count == 0 &&
             searchCriteria.OrganizationCustomDomains.Count == 0 &&
@@ -174,11 +173,11 @@ public class MarketplaceBookingSubscriptionService(
         {
             if (organizationIds is null)
             {
-                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customer, cancellationToken);
+                var organizationCustomerPairs = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 organizationIds = organizationCustomerPairs.Item1.Keys.ToList();
             }
 
-            teamIds ??= await GetCustomerTeamIdsAsync(customer, cancellationToken);
+            teamIds ??= await GetCustomerTeamIdsAsync(customerId, cancellationToken);
 
             if (organizationIds.Count == 0 && teamIds.Count == 0)
             {
@@ -296,10 +295,10 @@ public class MarketplaceBookingSubscriptionService(
     }
 
     private async Task<(IDictionary<string, List<string>>, IDictionary<string, List<string>>)> GetCustomerOrganizationIdsAsync(
-        Customer customer,
+        string customerId,
         CancellationToken cancellationToken)
     {
-        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customer.Id, false, false, cancellationToken);
+        var organizations = await repositoryFactory.OrganizationRepository.GetByCustomerIdAsync(customerId, false, false, cancellationToken);
 
         return (organizations.ToDictionary(
                 item => item.Id, item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()),
@@ -310,15 +309,15 @@ public class MarketplaceBookingSubscriptionService(
                     item => item.OrganizationMembers.Select(organizationMember => organizationMember.Customer.Id).ToList()));
     }
 
-    private async Task<List<string>> GetCustomerTeamIdsAsync(Customer customer, CancellationToken cancellationToken)
+    private async Task<List<string>> GetCustomerTeamIdsAsync(string customerId, CancellationToken cancellationToken)
     {
-        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customer.Id, cancellationToken);
+        var teams = await repositoryFactory.TeamRepository.GetByCustomerIdAsync(customerId, cancellationToken);
         return teams.Select(item => item.Id).ToList();
     }
 
     private async Task EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(
         Shared.Database.Entities.MarketplaceBookingSubscription subscription,
-        Customer customer,
+        string customerId,
         CancellationToken cancellationToken)
     {
         var organizationIds = subscription.InvolvedOrganizations.Select(item => item.Id).Distinct().ToList();
@@ -333,7 +332,7 @@ public class MarketplaceBookingSubscriptionService(
 
             foreach (var organization in organizations)
             {
-                if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customer.Id, cancellationToken))
+                if (!await organizationAuthorizationService.CanViewBookingsAsync(organization.Id, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
@@ -346,7 +345,7 @@ public class MarketplaceBookingSubscriptionService(
             var teams = await repositoryFactory.TeamRepository.GetByIdsAsync(teamIds, false, cancellationToken);
             foreach (var team in teams)
             {
-                if (!await teamAuthorizationService.CanViewBookingsAsync(team, customer.Id, cancellationToken))
+                if (!await teamAuthorizationService.CanViewBookingsAsync(team, customerId, cancellationToken))
                 {
                     throw new UnauthorizedAccessException();
                 }
