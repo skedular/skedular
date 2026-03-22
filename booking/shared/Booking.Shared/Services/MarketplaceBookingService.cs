@@ -66,9 +66,14 @@ public interface IMarketplaceBookingService
     /// </summary>
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
+    /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
-    Task<Models.Booking> DeleteAsync(Database.Entities.Booking existingBooking, Customer? deletedByCustomer, CancellationToken cancellationToken);
+    Task<Models.Booking> DeleteAsync(
+        Database.Entities.Booking existingBooking,
+        Customer? deletedByCustomer,
+        bool ignoreCancellationPolicy,
+        CancellationToken cancellationToken);
 
     /// <summary>
     ///     Adjusts the required resources for a booking.
@@ -476,12 +481,14 @@ public class MarketplaceBookingService(
     /// </summary>
     /// <param name="existingBooking">The existing booking entity to delete.</param>
     /// <param name="deletedByCustomer">The customer performing the deletion.</param>
+    /// <param name="ignoreCancellationPolicy">Whether operator permissions should bypass the customer cancellation window.</param>
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     /// <returns>The deleted booking model.</returns>
     /// <exception cref="BookingIsNotMarketplace">Thrown when the booking is not a marketplace booking.</exception>
     public async Task<Models.Booking> DeleteAsync(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
+        bool ignoreCancellationPolicy,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
@@ -489,7 +496,7 @@ public class MarketplaceBookingService(
             throw new BookingIsNotMarketplace();
         }
 
-        if (deletedByCustomer is not null)
+        if (deletedByCustomer is not null && !ignoreCancellationPolicy)
         {
             EnsureBookingCanStillBeCancelled(existingBooking);
         }

@@ -137,7 +137,18 @@ public class MarketplaceBookingService(
             }
         }
 
-        return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, cancellationToken);
+        ArgumentNullException.ThrowIfNull(existingBooking.MarketplaceBooking);
+
+        var productVersionId = existingBooking.MarketplaceBooking.ProductVersion.Id;
+        ArgumentException.ThrowIfNullOrWhiteSpace(productVersionId);
+
+        var productVersion = await repositoryFactory.ProductVersionRepository.GetByIdAsync(productVersionId, cancellationToken) ??
+                             throw new ProductVersionNotFound();
+        var productOwnerOrganizationId = productVersion.Product.Organization.Id;
+        var ignoreCancellationPolicy =
+            await organizationAuthorizationService.CanDeleteBookingAsync(productOwnerOrganizationId, customer.Id, cancellationToken);
+
+        return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, ignoreCancellationPolicy, cancellationToken);
     }
 
     private async Task<Shared.Models.Booking> UpdateInternalAsync(

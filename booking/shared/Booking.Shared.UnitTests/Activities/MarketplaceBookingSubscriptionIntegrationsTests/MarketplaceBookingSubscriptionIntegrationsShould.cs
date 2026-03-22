@@ -554,17 +554,19 @@ public class MarketplaceBookingSubscriptionIntegrationsShould
             .Returns(subscription);
         A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync("rb-1", A<DateTimeOffset>._, null, environment.CancellationTokenSource.Token))
             .Returns([booking1, booking2]);
-        A.CallTo(() => marketplaceBookingService.DeleteAsync(A<Database.Entities.Booking>._, null, environment.CancellationTokenSource.Token))
-            .ReturnsLazily((Database.Entities.Booking booking, Customer? _, CancellationToken _) =>
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(A<Database.Entities.Booking>._, null, false, environment.CancellationTokenSource.Token))
+            .ReturnsLazily((Database.Entities.Booking booking, Customer? _, bool _, CancellationToken _) =>
                 Task.FromResult(new Models.Booking { Id = booking.Id }));
 
         await environment.RunAsync(() =>
             sut.ReleaseMarketplaceBookingSubscriptionResourcesAsync(
                 new ReleaseMarketplaceBookingSubscriptionResourcesInput("sub-1")));
 
-        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking1, subscription.DeletedByCustomer, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking1, subscription.DeletedByCustomer, false,
+                environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking2, subscription.DeletedByCustomer, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(booking2, subscription.DeletedByCustomer, false,
+                environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
     }
 
