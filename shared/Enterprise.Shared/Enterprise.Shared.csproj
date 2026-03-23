@@ -20,19 +20,19 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitVersion.MsBuild" Version="6.6.2">
+        <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.1.3"/>
-        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.1.3"/>
+        <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.0"/>
+        <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.0"/>
 
         <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.19.1"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.19.2"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.17"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.13.2"/>
@@ -96,7 +96,7 @@
         <PackageReference Include="Temporalio" Version="1.12.0"/>
         <PackageReference Include="Temporalio.Extensions.Hosting" Version="1.12.0"/>
 
-        <PackageReference Include="CountryData" Version="6.16.0"/>
+        <PackageReference Include="CountryData" Version="6.17.0"/>
         <PackageReference Include="EmailValidation" Version="1.3.0"/>
         <PackageReference Include="Flurl.Http" Version="4.0.2"/>
         <PackageReference Include="Google.Apis.Auth" Version="1.73.0"/>
@@ -106,14 +106,14 @@
         <PackageReference Include="NetTopologySuite.IO.GeoJSON4STJ" Version="4.0.0"/>
         <PackageReference Include="NSwag.AspNetCore" Version="14.6.3"/>
         <PackageReference Include="Polly" Version="8.6.6"/>
-        <PackageReference Include="QuestPDF" Version="2026.2.3"/>
+        <PackageReference Include="QuestPDF" Version="2026.2.4"/>
         <PackageReference Include="Scrutor" Version="7.0.0"/>
         <PackageReference Include="SimpleBase" Version="5.6.0"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.12.4"/>
-        <PackageReference Include="Stripe.net" Version="50.4.1"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5"/>
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0"/>
+        <PackageReference Include="StackExchange.Redis" Version="2.12.8"/>
+        <PackageReference Include="Stripe.net" Version="51.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0"/>
         <PackageReference Include="System.Reactive" Version="6.1.0"/>
         <PackageReference Include="WorkOS.net" Version="2.11.0"/>
         <PackageReference Include="YamlDotNet" Version="16.3.0"/>

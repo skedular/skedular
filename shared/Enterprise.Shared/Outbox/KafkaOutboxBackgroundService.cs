@@ -103,7 +103,7 @@ public class KafkaOutboxBackgroundService<TDbContext>(
                 catch (Exception ex)
                 {
                     outboxEvent.RetryCount += 1;
-                    outboxEvent.LastRetry = DateTimeOffset.UtcNow;
+                    outboxEvent.LastRetry = timeProvider.GetUtcNow();
                     outboxEvent.ProcessingErrors = ex.ToString().Truncate(Constants.MaxOutboxProcessingErrorsLength);
 
                     var level = outboxEvent.RetryCount < CriticalRetryThreshold ? LogLevel.Warning : LogLevel.Critical;
