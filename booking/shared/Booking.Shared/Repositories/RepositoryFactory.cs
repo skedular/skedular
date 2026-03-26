@@ -1,5 +1,6 @@
 ﻿using Booking.Shared.Database;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Shared.Repositories;

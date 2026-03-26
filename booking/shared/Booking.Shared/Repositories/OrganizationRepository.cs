@@ -2,6 +2,7 @@
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Sanitization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;

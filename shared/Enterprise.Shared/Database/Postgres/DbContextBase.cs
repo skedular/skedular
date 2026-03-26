@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using Enterprise.Shared.Database.Interceptors;
+using Enterprise.Shared.Database.Postgres.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
-namespace Enterprise.Shared.Database;
+namespace Enterprise.Shared.Database.Postgres;
 
 public abstract class DbContextBase<TDbContext>(DbContextOptions<TDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContext(options), IUnitOfWork where TDbContext : DbContextBase<TDbContext>

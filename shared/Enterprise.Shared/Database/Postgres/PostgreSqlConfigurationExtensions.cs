@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Npgsql;
 
-namespace Enterprise.Shared.Database;
+namespace Enterprise.Shared.Database.Postgres;
 
 public static class PostgreSqlConfigurationExtensions
 {

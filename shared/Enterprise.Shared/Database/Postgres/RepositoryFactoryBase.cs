@@ -1,4 +1,4 @@
-namespace Enterprise.Shared.Database;
+namespace Enterprise.Shared.Database.Postgres;
 
 public abstract class RepositoryFactoryBase<TDbContext> : IAsyncDisposable where TDbContext : DbContextBase<TDbContext>
 {

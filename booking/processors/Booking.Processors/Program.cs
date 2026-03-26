@@ -6,7 +6,7 @@ using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Payment;
 using Enterprise.Shared.Temporal;

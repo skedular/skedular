@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace Enterprise.Shared.Database;
+namespace Enterprise.Shared.Database.Postgres;
 
 public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
     where TDbContext : DbContextBase<TDbContext>

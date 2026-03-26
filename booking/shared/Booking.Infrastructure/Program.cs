@@ -2,7 +2,7 @@
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
 
 namespace Booking.Infrastructure;

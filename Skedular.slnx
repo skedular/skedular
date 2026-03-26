@@ -1,7 +1,4 @@
 <Solution>
-    <Folder Name="/.config/">
-        <File Path=".config/dotnet-tools.json"/>
-    </Folder>
     <Folder Name="/all-in-one/">
         <Project Path="all-in-one/AllApis/AllApis.csproj"/>
         <Project Path="all-in-one/AllApisJobs/AllApisJobs.csproj"/>
@@ -302,6 +299,7 @@
         <Project Path="shared/WebScrapper/WebScrapper.csproj"/>
     </Folder>
     <Folder Name="/solution-items/">
+        <File Path=".config\dotnet-tools.json"/>
         <File Path=".dockerignore"/>
         <File Path=".editorconfig"/>
         <File Path=".env"/>

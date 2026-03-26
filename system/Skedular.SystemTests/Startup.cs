@@ -14,6 +14,7 @@ using Core.Shared.Database;
 using Customer.Shared.Database;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
 using Flurl;
 using Location.Shared.Database;

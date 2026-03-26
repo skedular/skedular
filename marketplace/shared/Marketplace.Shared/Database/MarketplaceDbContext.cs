@@ -1,4 +1,5 @@
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
 using Marketplace.Shared.Database.Entities;

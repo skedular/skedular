@@ -3,7 +3,7 @@ using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Temporal;
 using MsTeams.Processors.Subscribers;

@@ -1,4 +1,5 @@
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Location.Shared.Database;
 using Location.Shared.Database.Entities;
 

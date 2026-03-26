@@ -1,5 +1,6 @@
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Marketplace.Shared.Database;
 using Marketplace.Shared.Database.Entities;
 using Microsoft.EntityFrameworkCore;

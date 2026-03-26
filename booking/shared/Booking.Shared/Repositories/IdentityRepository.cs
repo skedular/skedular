@@ -1,6 +1,7 @@
 using Booking.Shared.Database;
 using Booking.Shared.Database.Entities;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 
 namespace Booking.Shared.Repositories;
 

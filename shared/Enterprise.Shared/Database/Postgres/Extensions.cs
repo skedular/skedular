@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.Database.Interceptors;
+using Enterprise.Shared.Database.Postgres.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 
-namespace Enterprise.Shared.Database;
+namespace Enterprise.Shared.Database.Postgres;
 
 public static class Extensions
 {

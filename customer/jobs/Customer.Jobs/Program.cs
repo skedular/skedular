@@ -5,7 +5,7 @@ using Customer.Shared.Database;
 using Customer.Shared.Workflows;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
-using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Payment;

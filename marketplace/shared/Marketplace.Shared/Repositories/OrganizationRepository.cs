@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Sanitization;
 using Marketplace.Shared.Database;
 using Marketplace.Shared.Database.Entities;

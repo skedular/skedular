@@ -1,8 +1,9 @@
 ﻿using System.Data;
 using System.Data.Common;
+using Enterprise.Shared.Database.Interceptors;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Enterprise.Shared.Database.Interceptors;
+namespace Enterprise.Shared.Database.Postgres.Interceptors;
 
 /// <summary>
 ///     Update SQL commands to include FOR UPDATE commands if tagged

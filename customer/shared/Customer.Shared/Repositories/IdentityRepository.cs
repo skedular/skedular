@@ -2,6 +2,7 @@
 using Customer.Shared.Database.Entities;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.Database.Postgres;
 
 namespace Customer.Shared.Repositories;
 
