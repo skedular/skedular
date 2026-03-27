@@ -1,5 +1,6 @@
 ﻿using Enterprise.Shared.Kafka;
 using Enterprise.Shared.Kafka.Configurations;
+using Enterprise.Shared.UnitTests.Fixtures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -9,12 +10,12 @@ namespace Enterprise.Shared.UnitTests.Kafka.HealthCheckExtensionsTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class HealthCheckExtensionsTests
 {
-    [Fact]
-    public void AddKafkaBrokerHealthCheck_Should_Register_HealthCheck_with_services_tag()
+    [Theory]
+    [AutoFakeItEasyData([typeof(ServiceCollectionFixtureCustomizer)])]
+    public void AddKafkaBrokerHealthCheck_Should_Register_HealthCheck_with_services_tag(ServiceCollection serviceCollection)
     {
         const string BootstrapServers = "fakebootstrapservers";
         var kafkaConfiguration = new KafkaConfiguration { BootstrapServers = BootstrapServers };
-        var serviceCollection = new ServiceCollection();
 
         serviceCollection.AddKafkaBrokerHealthCheck(kafkaConfiguration);
 

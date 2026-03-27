@@ -18,7 +18,8 @@ public class InviteToJoinOrganizationShould
         InvitationIntegrations mockInvitationActivity,
         InviteToJoinOrganizationInput input,
         string taskQueue,
-        string workflowId)
+        string workflowId,
+        CancellationToken cancellationToken)
     {
         await using var env = await WorkflowEnvironment.StartTimeSkippingAsync();
         using var worker = new TemporalWorker(
@@ -40,7 +41,7 @@ public class InviteToJoinOrganizationShould
                     .MustHaveHappenedOnceExactly();
                 A.CallTo(() => mockEmailActivity.SendInviteCustomerToJoinOrganizationExistingCustomerAsync(A<string>._)).MustNotHaveHappened();
             },
-            TestContext.Current.CancellationToken);
+            cancellationToken);
     }
 
     [Theory]
@@ -50,7 +51,8 @@ public class InviteToJoinOrganizationShould
         InvitationIntegrations mockInvitationActivity,
         InviteToJoinOrganizationInput input,
         string taskQueue,
-        string workflowId)
+        string workflowId,
+        CancellationToken cancellationToken)
     {
         await using var env = await WorkflowEnvironment.StartTimeSkippingAsync();
         using var worker = new TemporalWorker(
@@ -71,7 +73,7 @@ public class InviteToJoinOrganizationShould
                     .MustHaveHappenedOnceExactly();
                 A.CallTo(() => mockEmailActivity.SendInviteCustomerToJoinOrganizationNewCustomerAsync(A<string>._)).MustNotHaveHappened();
             },
-            TestContext.Current.CancellationToken);
+            cancellationToken);
     }
 
     [Theory]
@@ -81,7 +83,8 @@ public class InviteToJoinOrganizationShould
         InvitationIntegrations mockInvitationActivity,
         InviteToJoinOrganizationInput input,
         string taskQueue,
-        string workflowId)
+        string workflowId,
+        CancellationToken cancellationToken)
     {
         await using var env = await WorkflowEnvironment.StartTimeSkippingAsync();
         using var worker = new TemporalWorker(
@@ -100,7 +103,7 @@ public class InviteToJoinOrganizationShould
 
                 A.CallTo(() => mockInvitationActivity.ExpireInvitationAsync(A<string>._)).MustHaveHappenedOnceExactly();
             },
-            TestContext.Current.CancellationToken);
+            cancellationToken);
     }
 
     [Theory]
@@ -110,7 +113,8 @@ public class InviteToJoinOrganizationShould
         InvitationIntegrations mockInvitationActivity,
         InviteToJoinOrganizationInput input,
         string taskQueue,
-        string workflowId)
+        string workflowId,
+        CancellationToken cancellationToken)
     {
         await using var env = await WorkflowEnvironment.StartTimeSkippingAsync();
         using var worker = new TemporalWorker(
@@ -130,6 +134,6 @@ public class InviteToJoinOrganizationShould
 
                 A.CallTo(() => mockInvitationActivity.ExpireInvitationAsync(A<string>._)).MustNotHaveHappened();
             },
-            TestContext.Current.CancellationToken);
+            cancellationToken);
     }
 }

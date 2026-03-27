@@ -2,7 +2,6 @@ using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture;
 using Customer.Shared.Database.Entities;
-using Testing.Shared;
 
 namespace Customer.Domain.IntegrationTests.Fixtures;
 

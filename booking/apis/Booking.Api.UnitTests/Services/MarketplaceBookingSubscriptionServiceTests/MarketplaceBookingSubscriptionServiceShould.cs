@@ -1,16 +1,15 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
 using FakeItEasy;
-using HotChocolate.Types.Pagination;
-using Testing.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
+using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
 
@@ -24,17 +23,17 @@ public class MarketplaceBookingSubscriptionServiceShould
     public async Task GetByIdAsync_Returns_Subscription_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var subscription = new Booking.Shared.Database.Entities.MarketplaceBookingSubscription
+        var subscription = new MarketplaceBookingSubscription
         {
             Id = "subscription-1",
             InvolvedCustomers = [new Customer { Id = "customer-1" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var mappedSubscription = new Booking.Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
+        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
@@ -53,18 +52,19 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var subscription = new Booking.Shared.Database.Entities.MarketplaceBookingSubscription
+        var subscription = new MarketplaceBookingSubscription
         {
             Id = "subscription-1",
             InvolvedCustomers = [new Customer { Id = "customer-2" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Administrator);
-        var mappedSubscription = new Booking.Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
+        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
+            OrganizationMemberRoleConstants.Administrator);
+        var mappedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = subscription.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedMarketplaceBookingSubscriptionService.GetByIdAsync(subscription.Id, cancellationToken)).Returns(subscription);
@@ -96,7 +96,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-1"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
         var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
@@ -138,7 +138,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         MarketplaceBookingSubscriptionService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-2"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-2"], "org-1");
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Member);
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");

@@ -1,8 +1,8 @@
-using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
 using Location.Shared.Models;
+using ProductType = Api.Shared.Clients.Events.Skedular.Marketplace.V1.Value.ProductType;
 using Customer = Location.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
@@ -354,7 +354,7 @@ public class Mapper : IMapper
             OrganizationTags = src.TagIds.Select(item => new Shared.Models.OrganizationTag { Id = item }).ToList(),
             Product = product
         };
-    
+
     private static Api.Shared.Services.Models.ProductType MapTo(ProductType src) =>
         src switch
         {
@@ -362,5 +362,4 @@ public class Mapper : IMapper
             ProductType.Event => Api.Shared.Services.Models.ProductType.Event,
             _ => throw new ArgumentOutOfRangeException(nameof(src), src, null)
         };
-
 }

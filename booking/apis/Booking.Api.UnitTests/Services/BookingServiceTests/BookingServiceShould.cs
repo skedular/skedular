@@ -1,15 +1,13 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
 using FakeItEasy;
-using HotChocolate.Types.Pagination;
-using Testing.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
@@ -24,17 +22,17 @@ public class BookingServiceShould
     public async Task GetByIdAsync_Returns_Booking_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
-        var booking = new Booking.Shared.Database.Entities.Booking
+        var booking = new Shared.Database.Entities.Booking
         {
             Id = "booking-1",
             InvolvedCustomers = [new Customer { Id = "customer-1" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var mappedBooking = new Booking.Shared.Models.Booking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.Booking { Id = booking.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -53,18 +51,19 @@ public class BookingServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedBookingService cachedBookingService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         BookingService sut,
         CancellationToken cancellationToken)
     {
-        var booking = new Booking.Shared.Database.Entities.Booking
+        var booking = new Shared.Database.Entities.Booking
         {
             Id = "booking-1",
             InvolvedCustomers = [new Customer { Id = "customer-2" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Administrator);
-        var mappedBooking = new Booking.Shared.Models.Booking { Id = booking.Id };
+        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
+            OrganizationMemberRoleConstants.Administrator);
+        var mappedBooking = new Shared.Models.Booking { Id = booking.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -96,7 +95,7 @@ public class BookingServiceShould
         BookingService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-1"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
         var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
@@ -119,7 +118,8 @@ public class BookingServiceShould
                 cancellationToken))
             .Returns((new PaginatedInfo(false, false, null, null), [], 0));
 
-        var result = await sut.GetPaginatedBookingsAsync(new PaginationInputParam(null, null, null, null), searchCriteria, [], false, cancellationToken);
+        var result = await sut.GetPaginatedBookingsAsync(new PaginationInputParam(null, null, null, null), searchCriteria, [], false,
+            cancellationToken);
 
         result.Item3.ShouldBe(0);
     }
@@ -134,7 +134,7 @@ public class BookingServiceShould
         BookingService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-2"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-2"], "org-1");
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Member);
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
@@ -158,7 +158,7 @@ public class BookingServiceShould
         BookingService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-2"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-2"], "org-1");
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Private, "customer-1", OrganizationMemberRoleConstants.Member);
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
@@ -181,7 +181,8 @@ public class BookingServiceShould
                 cancellationToken))
             .Returns((new PaginatedInfo(false, false, null, null), [], 0));
 
-        var result = await sut.GetPaginatedBookingsAsync(new PaginationInputParam(null, null, null, null), searchCriteria, [], false, cancellationToken);
+        var result = await sut.GetPaginatedBookingsAsync(new PaginationInputParam(null, null, null, null), searchCriteria, [], false,
+            cancellationToken);
 
         result.Item3.ShouldBe(0);
     }

@@ -1,7 +1,6 @@
 using Api.Shared.Clients.OpenApi.Skedular.Customer.V1;
 using Customer.Domain.IntegrationTests.Fixtures;
 using Customer.Shared.Repositories;
-using Testing.Shared;
 
 namespace Customer.Domain.IntegrationTests.Api.Rest.CustomerControllerTests;
 

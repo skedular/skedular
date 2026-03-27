@@ -3,6 +3,19 @@ using Npgsql;
 
 namespace Enterprise.Shared.Database.Postgres;
 
+internal static class PostgresUpsertCommandBuilder
+{
+    public static string BuildInsertIfMissing(string fullTableName, params string[] columnNames)
+    {
+        var columns = string.Join(", ", columnNames.Select(WrapIdentifier));
+        var values = string.Join(", ", columnNames.Select(columnName => $"@{columnName}"));
+
+        return $"INSERT INTO {fullTableName} ({columns}) VALUES ({values}) ON CONFLICT (\"Id\") DO NOTHING;";
+    }
+
+    private static string WrapIdentifier(string identifier) => $"\"{identifier}\"";
+}
+
 public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, TimeProvider timeProvider) : IRepository<TEntity>
     where TDbContext : DbContextBase<TDbContext>
     where TEntity : EntityBase
@@ -29,8 +42,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
         var schema = entityType.GetSchema();
         var fullTableName = schema == null ? $"public.\"{tableName}\"" : $"{schema}.\"{tableName}\"";
 
-        var sql =
-            $"INSERT INTO {fullTableName} (\"Id\", \"CreatedAt\") VALUES (@Id, @CreatedAt) ON CONFLICT (\"Id\") DO NOTHING;";
+        var sql = PostgresUpsertCommandBuilder.BuildInsertIfMissing(fullTableName, "Id", "CreatedAt");
         await DbContext.Database.ExecuteSqlRawAsync(
             sql,
             [
@@ -69,8 +81,7 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
         var schema = entityType.GetSchema();
         var fullTableName = schema == null ? $"public.\"{tableName}\"" : $"{schema}.\"{tableName}\"";
 
-        var sql =
-            $"INSERT INTO {fullTableName}  (\"Id\", \"CreatedAt\", \"{foreignKeyColumnName}\") VALUES (@Id, @CreatedAt, @ForeignKeyId) ON CONFLICT (\"Id\") DO NOTHING;";
+        var sql = PostgresUpsertCommandBuilder.BuildInsertIfMissing(fullTableName, "Id", "CreatedAt", foreignKeyColumnName);
         await DbContext.Database.ExecuteSqlRawAsync(
             sql,
             [
@@ -136,8 +147,12 @@ public abstract class RepositoryBase<TDbContext, TEntity>(TDbContext dbContext, 
         var schema = entityType.GetSchema();
         var fullTableName = schema == null ? $"public.\"{tableName}\"" : $"{schema}.\"{tableName}\"";
 
-        var sql =
-            $"INSERT INTO {fullTableName}  (\"Id\", \"CreatedAt\", \"{foreignKeyColumnName1}\", \"{foreignKeyColumnName2}\") VALUES (@Id, @CreatedAt, @ForeignKeyId1, @ForeignKeyId2) ON CONFLICT (\"Id\") DO NOTHING;";
+        var sql = PostgresUpsertCommandBuilder.BuildInsertIfMissing(
+            fullTableName,
+            "Id",
+            "CreatedAt",
+            foreignKeyColumnName1,
+            foreignKeyColumnName2);
         await DbContext.Database.ExecuteSqlRawAsync(
             sql,
             [

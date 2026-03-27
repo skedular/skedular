@@ -1,18 +1,17 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
+using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
 using FakeItEasy;
-using HotChocolate.Types.Pagination;
-using Testing.Shared;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Api.UnitTests.Services.RecurringBookingServiceTests;
 
@@ -24,17 +23,17 @@ public class RecurringBookingServiceShould
     public async Task GetByIdAsync_Returns_RecurringBooking_For_Involved_Customer(
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
-        var booking = new Booking.Shared.Database.Entities.RecurringBooking
+        var booking = new RecurringBooking
         {
             Id = "recurring-1",
             InvolvedCustomers = [new Customer { Id = "customer-1" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var mappedBooking = new Booking.Shared.Models.RecurringBooking { Id = booking.Id };
+        var mappedBooking = new Shared.Models.RecurringBooking { Id = booking.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -53,18 +52,19 @@ public class RecurringBookingServiceShould
         [Frozen] IOrganizationAuthorizationService organizationAuthorizationService,
         [Frozen] ICachedCustomerService cachedCustomerService,
         [Frozen] ICachedRecurringBookingService cachedRecurringBookingService,
-        [Frozen] Booking.Shared.Mappers.IMapper sharedMapper,
+        [Frozen] IMapper sharedMapper,
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
-        var booking = new Booking.Shared.Database.Entities.RecurringBooking
+        var booking = new RecurringBooking
         {
             Id = "recurring-1",
             InvolvedCustomers = [new Customer { Id = "customer-2" }],
             InvolvedOrganizations = [new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace }]
         };
-        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Administrator);
-        var mappedBooking = new Booking.Shared.Models.RecurringBooking { Id = booking.Id };
+        var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1",
+            OrganizationMemberRoleConstants.Administrator);
+        var mappedBooking = new Shared.Models.RecurringBooking { Id = booking.Id };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
         A.CallTo(() => cachedRecurringBookingService.GetByIdAsync(booking.Id, cancellationToken)).Returns(booking);
@@ -96,7 +96,7 @@ public class RecurringBookingServiceShould
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-1"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-1"], "org-1");
         var organization = new Organization { Id = "org-1", Type = OrganizationTypeConstants.Marketplace };
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");
@@ -138,7 +138,7 @@ public class RecurringBookingServiceShould
         RecurringBookingService sut,
         CancellationToken cancellationToken)
     {
-        var searchCriteria = CreateSearchCriteria(["customer-2"], organizationId: "org-1");
+        var searchCriteria = CreateSearchCriteria(["customer-2"], "org-1");
         var organization = CreateOrganization("org-1", OrganizationTypeConstants.Marketplace, "customer-1", OrganizationMemberRoleConstants.Member);
 
         A.CallTo(() => cachedCustomerService.GetIdAsync(cancellationToken)).Returns("customer-1");

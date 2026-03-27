@@ -11,7 +11,10 @@ public class UpdateOrganizationInput
     [GraphQLName("customDomain")] public string? CustomDomain { get; set; }
     [GraphQLName("name")] public string Name { get; set; } = string.Empty;
     [GraphQLName("website")] public string? Website { get; set; }
-    [GraphQLName("customerFacingTermsAndConditionsUrl")] public string? CustomerFacingTermsAndConditionsUrl { get; set; }
+
+    [GraphQLName("customerFacingTermsAndConditionsUrl")]
+    public string? CustomerFacingTermsAndConditionsUrl { get; set; }
+
     [GraphQLName("billingCycle")] public OrganizationBillingCycle BillingCycle { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }

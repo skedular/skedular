@@ -1,0 +1,37 @@
+using Enterprise.Shared.Database;
+using Enterprise.Shared.UnitTests.Database.TestSupport;
+using Microsoft.EntityFrameworkCore;
+
+namespace Enterprise.Shared.UnitTests.Database.DatabaseMigrationServiceTests;
+
+[Trait(CategoryNames.Key, CategoryNames.Unit)]
+public class MigrateAsyncShould
+{
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Create_database_when_it_does_not_exist(
+        DatabaseMigrationService sut,
+        string dbFileName,
+        CancellationToken cancellationToken)
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"{dbFileName}.db");
+
+        try
+        {
+            await using var context =
+                new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseSqlite($"Data Source={path}").Options);
+
+            await sut.MigrateAsync(context, cancellationToken);
+
+            File.Exists(path).ShouldBeTrue();
+            (await context.Database.CanConnectAsync(cancellationToken)).ShouldBeTrue();
+        }
+        finally
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+    }
+}

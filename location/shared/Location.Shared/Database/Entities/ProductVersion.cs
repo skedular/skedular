@@ -30,7 +30,7 @@ public class ProductVersionConfiguration : IEntityTypeConfiguration<ProductVersi
 
         builder.HasOne(item => item.Product).WithMany(item => item.ProductVersions).HasForeignKey(item => item.ProductId);
         builder.HasMany(item => item.OrganizationTags).WithMany(item => item.ProductVersionOrganizationTags);
-        
+
         builder.HasIndex(item => item.Type);
     }
 }

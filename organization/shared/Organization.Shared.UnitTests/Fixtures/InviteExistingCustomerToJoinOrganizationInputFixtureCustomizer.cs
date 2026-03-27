@@ -1,6 +1,5 @@
 using AutoFixture;
 using Organization.Shared.Workflows;
-using Testing.Shared;
 
 namespace Organization.Shared.UnitTests.Fixtures;
 

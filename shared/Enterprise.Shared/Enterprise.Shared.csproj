@@ -29,14 +29,12 @@
         <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.0"/>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.0"/>
 
-        <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
-        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
-
         <PackageReference Include="AWSSDK.S3" Version="4.0.19.2"/>
         <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.17"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.13.2"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.13.2"/>
+        <PackageReference Include="AspNetCore.HealthChecks.Kafka" Version="9.0.0"/>
 
         <PackageReference Include="Google.Protobuf" Version="3.34.1"/>
         <PackageReference Include="Grpc.AspNetCore" Version="2.76.0"/>
@@ -69,6 +67,10 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="10.0.1"/>
         <PackageReference Include="Npgsql.OpenTelemetry" Version="10.0.2"/>
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0"/>
+
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5"/>
+        <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0"/>
 
         <PackageReference Include="OpenTelemetry.Api" Version="1.15.0"/>
         <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0"/>

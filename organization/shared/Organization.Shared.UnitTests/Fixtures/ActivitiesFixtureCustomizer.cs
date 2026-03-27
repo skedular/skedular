@@ -1,7 +1,6 @@
 using AutoFixture;
 using FakeItEasy;
 using Organization.Shared.Activities;
-using Testing.Shared;
 
 namespace Organization.Shared.UnitTests.Fixtures;
 
