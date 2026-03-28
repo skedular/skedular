@@ -57,7 +57,7 @@ public class RootMutation(IMapper mapper)
         [Service] IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
         CancellationToken cancellationToken)
     {
-        var accounts = await organizationStripeConnectAccountService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var accounts = await organizationStripeConnectAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new OrganizationStripeConnectAccountsPayload
         {
             ClientMutationId = input.ClientMutationId, OrganizationStripeConnectAccounts = accounts.Select(item => mapper.MapTo(item)!)

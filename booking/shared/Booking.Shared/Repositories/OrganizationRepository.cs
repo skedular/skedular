@@ -146,8 +146,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
         bool includeDeletedOrganizationTags,
         CancellationToken cancellationToken)
     {
-        if (ids is not null && ids.RemoveInvalidIds()!.Any() &&
-            customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
+        if (ids is not null && ids.RemoveInvalidIds().Any() && customDomains is not null && customDomains.RemoveInvalidIds().Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
             customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
@@ -158,7 +157,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 .ToListAsync(cancellationToken);
         }
 
-        if (ids is not null && ids.RemoveInvalidIds()!.Any())
+        if (ids is not null && ids.RemoveInvalidIds().Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
 
@@ -168,7 +167,7 @@ public class OrganizationRepository(BookingDbContext dbContext, TimeProvider tim
                 .ToListAsync(cancellationToken);
         }
 
-        if (customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
+        if (customDomains is not null && customDomains.RemoveInvalidIds().Any())
         {
             customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 

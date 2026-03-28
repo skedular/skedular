@@ -43,7 +43,7 @@ public class RootMutation(IMapper mapper)
         [Service] IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var products = await productService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
     }
 
@@ -53,7 +53,7 @@ public class RootMutation(IMapper mapper)
         [Service] IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var products = await productService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
     }
 
@@ -63,7 +63,7 @@ public class RootMutation(IMapper mapper)
         [Service] IProductService productService,
         CancellationToken cancellationToken)
     {
-        var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var products = await productService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ProductsPayload { ClientMutationId = input.ClientMutationId, Products = products.Select(mapper.MapTo)! };
     }
 }

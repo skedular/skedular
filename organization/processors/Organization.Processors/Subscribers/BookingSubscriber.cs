@@ -28,7 +28,7 @@ public class BookingSubscriber(
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (!booking.InvolvedOrganizations.Select(item => item.Id).RemoveInvalidIds()!.Any())
+                    if (!booking.InvolvedOrganizations.Select(item => item.Id).RemoveInvalidIds().Any())
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }
@@ -61,8 +61,8 @@ public class BookingSubscriber(
 
     private async Task TrackActiveMembersAsync(Event @event, CancellationToken cancellationToken)
     {
-        var customerIds = @event.Data.Booking.InvolvedCustomerIds.RemoveInvalidIds()!.Distinct().ToList();
-        var organizationIds = @event.Data.Booking.InvolvedOrganizationIds.RemoveInvalidIds()!.Distinct().ToList();
+        var customerIds = @event.Data.Booking.InvolvedCustomerIds.RemoveInvalidIds().Distinct().ToList();
+        var organizationIds = @event.Data.Booking.InvolvedOrganizationIds.RemoveInvalidIds().Distinct().ToList();
 
         if (customerIds.Count == 0)
         {

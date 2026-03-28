@@ -21,7 +21,7 @@ public class BookingSubscriber(ILogger<BookingSubscriber> logger, IMapper mapper
             case Type.BookingUpserted:
                 {
                     var booking = mapper.MapTo(@event);
-                    if (!booking.InvolvedLocations.Select(item => item.Id).RemoveInvalidIds()!.Any())
+                    if (!booking.InvolvedLocations.Select(item => item.Id).RemoveInvalidIds().Any())
                     {
                         await HandleBookingDeletedEventAsync(booking, cancellationToken);
                     }

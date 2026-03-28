@@ -44,7 +44,7 @@ public class RootMutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var resources = await resourceService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
@@ -54,7 +54,7 @@ public class RootMutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.ActivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var resources = await resourceService.ActivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 
@@ -64,7 +64,7 @@ public class RootMutation(IMapper mapper)
         [Service] IResourceService resourceService,
         CancellationToken cancellationToken)
     {
-        var resources = await resourceService.DeactivateAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var resources = await resourceService.DeactivateAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new ResourcesPayload { ClientMutationId = input.ClientMutationId, Resources = resources.Select(mapper.MapTo) };
     }
 

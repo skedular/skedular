@@ -58,7 +58,7 @@ public class RootMutation(IMapper mapper)
         CancellationToken cancellationToken)
     {
         var organizationMembers =
-            await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds()!.ToList(), input.Status, cancellationToken);
+            await organizationMemberService.ChangeStatusAsync(input.Ids.RemoveInvalidIds().ToList(), input.Status, cancellationToken);
         return new TeamMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()
@@ -71,7 +71,7 @@ public class RootMutation(IMapper mapper)
         [Service] ITeamMemberService teamMemberService,
         CancellationToken cancellationToken)
     {
-        var organizationMembers = await teamMemberService.RemoveAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var organizationMembers = await teamMemberService.RemoveAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new TeamMembersDetailsPayload
         {
             ClientMutationId = input.ClientMutationId, Members = organizationMembers.Select(mapper.MapTo).ToArray()

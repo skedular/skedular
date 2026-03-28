@@ -145,7 +145,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 
     public Shared.Models.Booking MapTo(AddPrivateBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -157,18 +157,18 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Schedules = new List<BookingSchedule> { new(src.From, src.Until) },
             InvolvedCustomers = customers,
             InvolvedLocations = [],
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
     public RecurringBooking MapTo(AddPrivateRecurringBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new RecurringBooking
         {
@@ -187,18 +187,18 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             OccurrenceCount = src.OccurrenceCount,
             SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList()
         };
     }
 
     public RecurringBooking MapTo(UpdatePrivateRecurringBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new RecurringBooking
         {
@@ -217,18 +217,18 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             OccurrenceCount = src.OccurrenceCount,
             SkippedDates = src.SkippedDates.ToSafeCollection(),
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList()
         };
     }
 
     public MarketplaceBookingSubscription MapTo(AddMarketplaceBookingSubscriptionInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new MarketplaceBookingSubscription
         {
@@ -238,12 +238,12 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             AutoRenew = src.AutoRenew,
             CancelAtPeriodEnd = src.CancelAtPeriodEnd,
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+            InvolvedOrganizations = src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Resource { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
+            RequestedResources = src.RequestedResourceIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Resource { Id = item }).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = src.Quantity,
@@ -258,7 +258,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 
     public Shared.Models.Booking MapTo(UpdatePrivateBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -271,18 +271,18 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                    .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                    .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                         new Organization { CustomDomain = item }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
-            Resources = src.ResourceIds.RemoveInvalidIds()!.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
+            Resources = src.ResourceIds.RemoveInvalidIds().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
     public Shared.Models.Booking MapTo(AddMarketplaceBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -295,11 +295,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations = src.OrganizationIds
-                .ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                .ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                     new Organization { CustomDomain = item }))
                 .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.ToSafeCollection().Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList(),
             MarketplaceBooking = new MarketplaceBooking
             {
@@ -315,7 +315,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 
     public Shared.Models.Booking MapTo(UpdateMarketplaceBookingInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -325,11 +325,11 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvolvedCustomers = customers,
             InvolvedLocations = [],
             InvolvedOrganizations =
-                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds()!.Select(item => new Organization { Id = item })
-                    .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds()!.Select(item =>
+                src.OrganizationIds.ToSafeCollection().RemoveInvalidIds().Select(item => new Organization { Id = item })
+                    .Concat(src.OrganizationCustomDomains.ToSafeCollection().RemoveInvalidIds().Select(item =>
                         new Organization { CustomDomain = item }))
                     .ToList(),
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList()
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList()
         };
     }
 
@@ -387,7 +387,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
 
     public Shared.Models.Booking MapTo(AddPrivateInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -398,16 +398,16 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Category = MapTo(src.Category),
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Organization { Id = item }).ToList(),
+            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }
 
     public Shared.Models.Booking MapTo(UpdatePrivateInput src)
     {
-        var customers = src.CustomerIds.RemoveInvalidIds()!.Select(item => new Customer { Id = item }).ToList();
+        var customers = src.CustomerIds.RemoveInvalidIds().Select(item => new Customer { Id = item }).ToList();
 
         return new Shared.Models.Booking
         {
@@ -418,9 +418,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             Category = MapTo(src.Category),
             Schedules = new List<BookingSchedule> { new(src.From.ToDateTimeOffset(), src.Until.ToDateTimeOffset()) },
             InvolvedCustomers = customers,
-            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds()!.Select(item => new Organization { Id = item }).ToList(),
+            InvolvedOrganizations = src.OrganizationIds.RemoveInvalidIds().Select(item => new Organization { Id = item }).ToList(),
             InvolvedLocations = [],
-            InvolvedTeams = src.TeamIds.RemoveInvalidIds()!.Select(item => new Team { Id = item }).ToList(),
+            InvolvedTeams = src.TeamIds.RemoveInvalidIds().Select(item => new Team { Id = item }).ToList(),
             Resources = src.ResourceIds.Select(item => new ResourceCustomersPair(new Resource { Id = item }, customers)).ToList()
         };
     }

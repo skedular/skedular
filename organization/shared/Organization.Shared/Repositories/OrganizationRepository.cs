@@ -159,7 +159,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
         ICollection<string>? customDomains,
         CancellationToken cancellationToken)
     {
-        if (ids is not null && ids.RemoveInvalidIds()!.Any() && customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
+        if (ids is not null && ids.RemoveInvalidIds().Any() && customDomains is not null && customDomains.RemoveInvalidIds().Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
             customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
@@ -170,7 +170,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .ToListAsync(cancellationToken);
         }
 
-        if (ids is not null && ids.RemoveInvalidIds()!.Any())
+        if (ids is not null && ids.RemoveInvalidIds().Any())
         {
             ids = ids.RemoveInvalidIds().ToSafeCollection();
 
@@ -180,7 +180,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .ToListAsync(cancellationToken);
         }
 
-        if (customDomains is not null && customDomains.RemoveInvalidIds()!.Any())
+        if (customDomains is not null && customDomains.RemoveInvalidIds().Any())
         {
             customDomains = customDomains.RemoveInvalidIds().ToSafeCollection();
 

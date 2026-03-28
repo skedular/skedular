@@ -48,7 +48,7 @@ public class RootMutation(IMapper mapper)
         [Service] IOrganizationBankAccountService organizationBankAccountService,
         CancellationToken cancellationToken)
     {
-        var resources = await organizationBankAccountService.DeleteAsync(input.Ids.RemoveInvalidIds()!.ToList(), cancellationToken);
+        var resources = await organizationBankAccountService.DeleteAsync(input.Ids.RemoveInvalidIds().ToList(), cancellationToken);
         return new OrganizationBankAccountsPayload
         {
             ClientMutationId = input.ClientMutationId, OrganizationBankAccounts = resources.Select(mapper.MapTo)!
