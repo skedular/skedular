@@ -25,6 +25,7 @@ public interface IMapper
     CustomerCreateOptions MapToCustomerCreateOption(Organization src);
     CustomerCreateOptions MapToCustomerCreateOption(Customer src);
     Models.Booking MapTo(Database.Entities.Booking src);
+    OrganizationArrearsInvoice MapTo(Database.Entities.OrganizationArrearsInvoice src);
     RecurringBooking MapTo(Database.Entities.RecurringBooking src);
     MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src);
     Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date);
@@ -240,6 +241,22 @@ public class Mapper : IMapper
             RecurringBooking = src.RecurringBooking is null ? null : MapToRecurringBookingWithoutSubscription(src.RecurringBooking),
             MarketplaceBooking = MapTo(ResolveBookingMarketplaceBooking(src)),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
+        };
+
+    public OrganizationArrearsInvoice MapTo(Database.Entities.OrganizationArrearsInvoice src) =>
+        new()
+        {
+            Id = src.Id,
+            CreatedAt = src.CreatedAt,
+            ModifiedAt = src.ModifiedAt,
+            Organization = MapTo(src.Organization)!,
+            Customer = MapTo(src.Customer)!,
+            InvoiceNumber = src.InvoiceNumber,
+            InvoiceUrl = src.InvoiceUrl,
+            BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
+            BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
+            Currency = src.Currency,
+            TotalAmount = src.TotalAmount
         };
 
     public RecurringBooking MapTo(Database.Entities.RecurringBooking src) =>

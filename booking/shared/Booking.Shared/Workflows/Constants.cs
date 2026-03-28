@@ -6,6 +6,9 @@ public class Constants
     public const string PaidRecurringBookingViaCardPrefix = "paid_recurring_booking_via_card";
     public const string PaidViaBankTransferPrefix = "paid_via_bank_transfer";
     public const string PaidRecurringBookingViaBankTransferPrefix = "paid_recurring_booking_via_bank_transfer";
+    public const string InitialArrearsBookingInvoicePrefix = "initial_arrears_booking_invoice";
+    public const string InitialArrearsRecurringBookingInvoicePrefix = "initial_arrears_recurring_booking_invoice";
+    public const string OrganizationArrearsBillingPrefix = "organization_arrears_billing";
     public const string GenerateLocationResourcesSlotsPrefix = "generate_location_resources_slots";
     public const string GenerateResourcesSlotsPrefix = "generate_resources_slots";
 }

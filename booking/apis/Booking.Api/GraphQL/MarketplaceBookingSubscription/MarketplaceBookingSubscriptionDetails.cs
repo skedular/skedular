@@ -1,5 +1,7 @@
 using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.RecurringBooking;
+using Booking.Api.Mappers;
+using Booking.Api.Services;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -29,6 +31,12 @@ public class MarketplaceBookingSubscriptionDetails : Node
     public string? LastModifiedByCustomerId { get; set; }
 
     [GraphQLName("deletedByCustomerId")] public string? DeletedByCustomerId { get; set; }
+
+    public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoices(
+        [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
+        [Service] IMapper mapper,
+        CancellationToken cancellationToken) =>
+        (await marketplaceBookingSubscriptionService.GetArrearsInvoicesAsync(Id, cancellationToken)).Select(mapper.MapTo).ToList();
 }
 
 [ObjectType<MarketplaceBookingSubscriptionDetails>]

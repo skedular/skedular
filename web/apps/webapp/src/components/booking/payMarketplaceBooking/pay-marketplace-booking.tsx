@@ -1,10 +1,10 @@
 import { CustomerAvatar } from '@/components/avatars';
 import LocationAvatar from '@/components/avatars/location-avatar';
 import TeamAvatar from '@/components/avatars/team-avatar';
+import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import { AppBarWithStackColumn, BodyIconTypography, SmallIconTypography, StackRow } from '@/components/commons';
 import FormFieldLabel from '@/components/commons/form-field-label';
 import StackColumn from '@/components/commons/stack-column';
-import { PdfIcon } from '@/components/icons';
 import { getOrganizationProductsBaseLink } from '@/components/links';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
@@ -22,7 +22,6 @@ import Link from '@mui/material/Link';
 import Box from '@mui/system/Box';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import dayjs, { Dayjs } from 'dayjs';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { graphql, useFragment, useMutation, useSubscription } from 'react-relay';
@@ -109,6 +108,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
               name
             }
           }
+          arrearsInvoices {
+            invoiceNumber
+            invoiceUrl
+            billingPeriodStartInclusive
+            billingPeriodEndExclusive
+          }
         }
         organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {
           canModifyPaymentMethod
@@ -139,6 +144,12 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
                   type
                   name
                 }
+              }
+              arrearsInvoices {
+                invoiceNumber
+                invoiceUrl
+                billingPeriodStartInclusive
+                billingPeriodEndExclusive
               }
             }
           }
@@ -556,13 +567,9 @@ const PayMarketplaceBooking = ({ rootDataRelay, organizationCustomDomain }: Prop
               <BodyIconTypography label={`${booking.marketplaceBooking?.totalAmountToDisplay}`} />
             </FormFieldLabel>
 
-            {booking.marketplaceBooking?.invoiceUrl && (
-              <FormFieldLabel label="" stackLabelOnTop>
-                <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
-                  <BodyIconTypography label="Download Invoice" startElement={<PdfIcon />} />
-                </Link>
-              </FormFieldLabel>
-            )}
+            <FormFieldLabel label="" stackLabelOnTop>
+              <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} size="body" />
+            </FormFieldLabel>
 
             <StackColumn sx={{ paddingRight: defaultPadding, paddingTop: defaultPadding }}>
               <StackRow>

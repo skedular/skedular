@@ -82,6 +82,15 @@ public class BookingController(
         return Ok();
     }
 
+    public override async Task<IActionResult> GenerateOrganizationArrearsInvoices(
+        string organizationId,
+        CancellationToken cancellationToken = default)
+    {
+        await workaroundService.GenerateOrganizationArrearsInvoicesAsync(organizationId, cancellationToken);
+
+        return Ok();
+    }
+
     public override async Task<IActionResult> ProcessStripePlatformAccountEvent(
         // ReSharper disable once InconsistentNaming
         string? stripe_Signature,

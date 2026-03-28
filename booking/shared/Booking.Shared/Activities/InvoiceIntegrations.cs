@@ -71,7 +71,7 @@ public class InvoiceIntegrations(
         invoiceDocument.GeneratePdf(pdfStream);
         pdfStream.Seek(0, SeekOrigin.Begin);
 
-        var call = coreServiceClient.Admin_UploadToPrivateStorage(
+        using var call = coreServiceClient.Admin_UploadToPrivateStorage(
             coreConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 
@@ -145,7 +145,7 @@ public class InvoiceIntegrations(
         invoiceDocument.GeneratePdf(pdfStream);
         pdfStream.Seek(0, SeekOrigin.Begin);
 
-        var call = coreServiceClient.Admin_UploadToPrivateStorage(
+        using var call = coreServiceClient.Admin_UploadToPrivateStorage(
             coreConfiguration.ApiKey.CreateMetadata(),
             cancellationToken: cancellationToken);
 

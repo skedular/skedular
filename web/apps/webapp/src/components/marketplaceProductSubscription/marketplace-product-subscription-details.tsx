@@ -83,6 +83,12 @@ const RootQuery = graphql`
           }
         }
       }
+      arrearsInvoices {
+        invoiceNumber
+        invoiceUrl
+        billingPeriodStartInclusive
+        billingPeriodEndExclusive
+      }
     }
   }
 `;
@@ -188,6 +194,12 @@ const SubscriptionUpdates = graphql`
             name
           }
         }
+      }
+      arrearsInvoices {
+        invoiceNumber
+        invoiceUrl
+        billingPeriodStartInclusive
+        billingPeriodEndExclusive
       }
     }
   }
@@ -533,6 +545,7 @@ const MarketplaceProductSubscriptionDetails = ({
               checkoutUrl={currentMarketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
               ctaLabel="Pay for plan"
               entityLabel="subscription"
+              invoices={subscription.arrearsInvoices ?? []}
               invoiceUrl={currentMarketplaceBooking.invoiceUrl ?? null}
               isPaymentRequired={currentMarketplaceBooking.isPaymentRequired}
               pendingStatusMessage="Payment status: Pending. Your invoice will be sent on the next invoicing cycle and will be available to download from here once it has been issued."

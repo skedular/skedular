@@ -256,27 +256,38 @@ public class MarketplaceBookingService(
 
         if (recurringBooking is null)
         {
-            switch (marketplaceBooking.PaymentMethod)
+            if (marketplaceBooking.BillingMode == ProductPricingBillingMode.InArrears)
             {
-                case PaymentMethod.Card:
-                    temporalOutboxService.StartWorkflowPayBookingViaCard(
-                        new PayBookingViaCardInput(
-                            booking.Id,
-                            paymentExpiry,
-                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
-                    break;
+                temporalOutboxService.StartWorkflowGenerateInitialArrearsBookingInvoice(
+                    new GenerateInitialArrearsBookingInvoiceInput(
+                        booking.Id,
+                        marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
+                    repositoryFactory.UnitOfWork);
+            }
+            else
+            {
+                switch (marketplaceBooking.PaymentMethod)
+                {
+                    case PaymentMethod.Card:
+                        temporalOutboxService.StartWorkflowPayBookingViaCard(
+                            new PayBookingViaCardInput(
+                                booking.Id,
+                                paymentExpiry,
+                                marketplaceBooking.InvoiceEmailList.ToSafeCollection()), repositoryFactory.UnitOfWork);
+                        break;
 
-                case PaymentMethod.BankTransfer:
-                    temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
-                        new PayBookingViaBankTransferInput(
-                            booking.Id,
-                            paymentExpiry,
-                            marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
-                        repositoryFactory.UnitOfWork);
-                    break;
+                    case PaymentMethod.BankTransfer:
+                        temporalOutboxService.StartWorkflowPayBookingViaBankTransfer(
+                            new PayBookingViaBankTransferInput(
+                                booking.Id,
+                                paymentExpiry,
+                                marketplaceBooking.InvoiceEmailList.ToSafeCollection()),
+                            repositoryFactory.UnitOfWork);
+                        break;
 
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

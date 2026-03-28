@@ -17,6 +17,7 @@ namespace Booking.Api.Services;
 public interface IBookingService
 {
     Task<Shared.Models.Booking> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int )> GetPaginatedBookingsAsync(
         PaginationInputParam paginationInputParam,
@@ -44,6 +45,18 @@ public class BookingService(
         await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
 
         return sharedMapper.MapTo(booking);
+    }
+
+    public async Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string bookingId, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(bookingId);
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var booking = await cachedBookingService.GetByIdAsync(bookingId, cancellationToken) ?? throw new BookingNotFound();
+        await EnsureCustomerCanViewBookingAsync(booking, customerId, cancellationToken);
+
+        var invoices = await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByBookingIdUntrackedAsync(bookingId, cancellationToken);
+        return invoices.Select(sharedMapper.MapTo).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Booking>>, int)> GetPaginatedBookingsAsync(

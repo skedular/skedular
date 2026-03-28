@@ -1,4 +1,6 @@
+using Api.Shared.Services.Models;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
@@ -14,6 +16,7 @@ public interface IWorkaroundService
     Task RepublishAllBookingsAsync(CancellationToken cancellationToken);
     Task GenerateLocationResourcesSlotsAsync(string locationId, CancellationToken cancellationToken);
     Task GenerateAllLocationsResourcesSlotsAsync(CancellationToken cancellationToken);
+    Task GenerateOrganizationArrearsInvoicesAsync(string organizationId, CancellationToken cancellationToken);
 }
 
 public class WorkaroundService(
@@ -69,5 +72,25 @@ public class WorkaroundService(
                 new GenerateLocationResourcesSlotsInput(location.Id, null),
                 cancellationToken);
         }
+    }
+
+    public async Task GenerateOrganizationArrearsInvoicesAsync(string organizationId, CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+            organizationId,
+            null,
+            false,
+            false,
+            cancellationToken);
+        if (organization is null || organization.IsReplicatedDeleted())
+        {
+            return;
+        }
+
+        await temporalService.SignalRunOrganizationArrearsBillingWorkflowRunNowAsync(
+            new OrganizationArrearsBillingConfiguration(
+                organization.Id,
+                organization.BillingCycle.ToOrganizationBillingCycle()),
+            cancellationToken);
     }
 }

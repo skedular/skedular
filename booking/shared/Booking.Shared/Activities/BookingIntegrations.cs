@@ -58,7 +58,7 @@ public class BookingIntegrations(
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
+        var totalMinutes = (decimal)(booking.Until - booking.From).TotalMinutes;
         var totalPrice = marketplaceBooking.ProductPricing.BookingCadence switch
         {
             ProductPricingCadence.OneTime => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
@@ -66,14 +66,11 @@ public class BookingIntegrations(
             ProductPricingCadence.Daily => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.PerMinute => marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * totalMinutes,
             ProductPricingCadence.Per15Minutes =>
-                // ReSharper disable once PossibleLossOfFraction
-                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15),
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15m),
             ProductPricingCadence.Per30Minutes =>
-                // ReSharper disable once PossibleLossOfFraction
-                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30),
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30m),
             ProductPricingCadence.PerHour =>
-                // ReSharper disable once PossibleLossOfFraction
-                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60),
+                marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
             _ => throw new ArgumentOutOfRangeException()
         };
 

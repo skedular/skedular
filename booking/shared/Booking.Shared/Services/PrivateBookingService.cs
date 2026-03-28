@@ -80,10 +80,7 @@ public class PrivateBookingService(
                     customerEntities.First(),
                     booking.From,
                     booking.Until,
-                    booking.InvolvedOrganizations
-                        .Where(item => !string.IsNullOrWhiteSpace(item.Id))
-                        .Select(item => item.Id)
-                        .ToList(),
+                    booking.InvolvedOrganizations.Where(item => !string.IsNullOrWhiteSpace(item.Id)).Select(item => item.Id).ToList(),
                     booking.InvolvedOrganizations
                         .Where(item => !string.IsNullOrWhiteSpace(item.CustomDomain))
                         .Select(item => item.CustomDomain!)

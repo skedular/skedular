@@ -27,6 +27,7 @@ namespace Booking.Api.Mappers;
 public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
+    OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src);
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
     Shared.Models.Booking MapTo(AddPrivateBookingInput src);
@@ -73,6 +74,21 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             RecurringBooking = MapTo(src.RecurringBooking),
             MarketplaceBooking = MapTo(src.MarketplaceBooking),
             HasRecurringInstanceOverrides = src.HasRecurringInstanceOverrides
+        };
+
+    public OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src) =>
+        new()
+        {
+            InvoiceNumber = src.InvoiceNumber,
+            InvoiceUrl = src.InvoiceUrl,
+            BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
+            BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
+            Currency = src.Currency,
+            TotalAmount = src.TotalAmount,
+            TotalAmountToDisplay = string.IsNullOrWhiteSpace(src.Currency)
+                ? src.TotalAmount.ToRoundedDecimal()
+                : src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+            CreatedAt = src.CreatedAt
         };
 
     public RecurringBookingDetails? MapTo(RecurringBooking? src) =>

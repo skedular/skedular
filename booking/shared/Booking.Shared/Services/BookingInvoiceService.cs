@@ -1,3 +1,4 @@
+using System.Globalization;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
@@ -218,7 +219,7 @@ public class BookingInvoiceService(
                 });
 
                 table.Cell().Element(CellStyle).Padding(8).Text(GetDescription());
-                table.Cell().Element(CellStyle).AlignRight().Text(GetQuantity().ToString());
+                table.Cell().Element(CellStyle).AlignRight().Text(FormatQuantity(GetQuantity()));
                 table.Cell().Element(CellStyle).AlignRight().Text(GetUnitPriceLabel());
                 table.Cell().Element(CellStyle).AlignRight().Text(GetLineAmount().ToRoundedPrice());
 
@@ -226,12 +227,19 @@ public class BookingInvoiceService(
                 {
                     return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
                 }
+
+                static string FormatQuantity(decimal quantity)
+                {
+                    return quantity == decimal.Truncate(quantity)
+                        ? decimal.Truncate(quantity).ToString(CultureInfo.InvariantCulture)
+                        : quantity.ToString("0.####", CultureInfo.InvariantCulture);
+                }
             });
 
         protected abstract DateTimeOffset GetInvoiceDate();
         protected abstract string? GetInvoiceNumber();
         protected abstract string GetDescription();
-        protected abstract int GetQuantity();
+        protected abstract decimal GetQuantity();
         protected abstract decimal GetLineAmount();
         protected abstract string GetUnitPriceLabel();
         protected abstract string GetPaymentMethod();
@@ -262,13 +270,13 @@ public class BookingInvoiceService(
         protected override string GetDescription() =>
             $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}";
 
-        protected override int GetQuantity()
+        protected override decimal GetQuantity()
         {
             var marketplaceBooking = booking.MarketplaceBooking;
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
             var pricing = ResolvePricing();
-            var totalMinutes = (int)(booking.Until - booking.From).TotalMinutes;
+            var totalMinutes = (decimal)(booking.Until - booking.From).TotalMinutes;
 
             return pricing.BookingCadence switch
             {
@@ -276,9 +284,9 @@ public class BookingInvoiceService(
                 ProductPricingCadence.HalfDay => marketplaceBooking.Quantity,
                 ProductPricingCadence.Daily => marketplaceBooking.Quantity,
                 ProductPricingCadence.PerMinute => marketplaceBooking.Quantity * totalMinutes,
-                ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15),
-                ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30),
-                ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60),
+                ProductPricingCadence.Per15Minutes => marketplaceBooking.Quantity * (totalMinutes / 15m),
+                ProductPricingCadence.Per30Minutes => marketplaceBooking.Quantity * (totalMinutes / 30m),
+                ProductPricingCadence.PerHour => marketplaceBooking.Quantity * (totalMinutes / 60m),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
@@ -356,7 +364,7 @@ public class BookingInvoiceService(
                 $"{recurringBooking.StartDate.ToShortDate()} - {cycleEnd.ToShortDate()}";
         }
 
-        protected override int GetQuantity() => recurringBooking.MarketplaceBooking?.Quantity ?? 0;
+        protected override decimal GetQuantity() => recurringBooking.MarketplaceBooking?.Quantity ?? 0;
 
         protected override decimal GetLineAmount() => CalculateRecurringAmounts().TotalAmountExcludeTax;
 

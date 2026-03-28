@@ -7,10 +7,11 @@ namespace Enterprise.Shared.UnitTests.Database.SpecificationTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class SpecificationEvaluatorShould
 {
-    [Fact]
-    public void Return_original_query_when_specification_is_null()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Return_original_query_when_specification_is_null(string databaseName)
     {
-        using var context = CreateContext();
+        using var context = CreateContext(databaseName);
         Seed(context);
 
         var result = SpecificationEvaluator<SpecEntity>.GetQuery(context.Specs, null).ToList();
@@ -18,10 +19,10 @@ public class SpecificationEvaluatorShould
         result.Count.ShouldBe(3);
     }
 
-    [Fact]
-    public void Apply_criteria_ordering_includes_and_paging()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Apply_criteria_ordering_includes_and_paging(string databaseName)
     {
-        var databaseName = Guid.NewGuid().ToString();
         using var seedContext = CreateContext(databaseName);
         Seed(seedContext);
 
@@ -41,10 +42,11 @@ public class SpecificationEvaluatorShould
         result.Owner.ShouldNotBeNull();
     }
 
-    [Fact]
-    public void Apply_group_by_when_specification_requests_it()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Apply_group_by_when_specification_requests_it(string databaseName)
     {
-        using var context = CreateContext();
+        using var context = CreateContext(databaseName);
         Seed(context);
 
         var spec = new Specification<SpecEntity>().ApplyGroupBy(item => item.ParentId!);
@@ -53,8 +55,8 @@ public class SpecificationEvaluatorShould
         result.Count.ShouldBe(3);
     }
 
-    private static DatabaseTestContext CreateContext(string? databaseName = null) =>
-        new(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName ?? Guid.NewGuid().ToString()).Options);
+    private static DatabaseTestContext CreateContext(string databaseName) =>
+        new(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 
     private static void Seed(DatabaseTestContext context)
     {

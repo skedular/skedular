@@ -25,23 +25,30 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
         ICollection<string> involvedOrganizationCustomDomains,
         CancellationToken cancellationToken)
     {
-        var (organization, location) = await ResolveOrganizationAndLocationAsync(
+        var (organization, locations) = await ResolveOrganizationAndLocationAsync(
             involvedOrganizationIds.FirstOrDefault(),
             involvedOrganizationCustomDomains.FirstOrDefault(),
             customer,
             cancellationToken);
-        if (location is null)
+        if (locations.Count == 0)
         {
             return (ToOrganizations(organization), []);
         }
 
-        var availableResources = await GetAvailableDeskResourcesAsync(from, until, location.Id, cancellationToken);
-        var resources = SelectResourcesByCustomerPreferences(customer, availableResources);
+        foreach (var location in locations)
+        {
+            var availableResources = await GetAvailableDeskResourcesAsync(from, until, location.Id, cancellationToken);
+            var resources = SelectResourcesByCustomerPreferences(customer, availableResources);
+            if (resources.Count != 0)
+            {
+                return (ToOrganizations(organization), resources);
+            }
+        }
 
-        return (ToOrganizations(organization), resources);
+        return (ToOrganizations(organization), []);
     }
 
-    private async Task<(Organization?, Location?)> ResolveOrganizationAndLocationAsync(
+    private async Task<(Organization?, List<Location>)> ResolveOrganizationAndLocationAsync(
         string? organizationId,
         string? organizationCustomDomain,
         Customer customer,
@@ -53,11 +60,10 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             return await ResolveWithoutBookingOrganizationAsync(customer, cancellationToken);
         }
 
-        var locationEntity = customer.PreferredLocations.FirstOrDefault(item =>
-                                 item.Organization is not null && item.Organization.Id == organizationEntity.Id) ??
-                             organizationEntity.Locations.FirstOrDefault();
-
-        return (organizationEntity, locationEntity);
+        return (organizationEntity, OrderLocationsByCustomerPreference(
+            organizationEntity.Locations.Where(item => !item.DeletedAt.HasValue),
+            customer,
+            organizationEntity.Id));
     }
 
     private async Task<Organization?> ResolveBookingOrganizationAsync(
@@ -71,30 +77,32 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             false,
             cancellationToken);
 
-    private async Task<(Organization?, Location? )> ResolveWithoutBookingOrganizationAsync(
+    private async Task<(Organization?, List<Location>)> ResolveWithoutBookingOrganizationAsync(
         Customer customer,
         CancellationToken cancellationToken)
     {
-        Location? locationEntity;
         if (customer.DefaultOrganization is null)
         {
-            locationEntity = customer.PreferredLocations.FirstOrDefault();
+            var locationEntity = customer.PreferredLocations.FirstOrDefault();
             if (locationEntity is null)
             {
-                return (null, null);
+                return (null, []);
             }
 
             locationEntity = await repositoryFactory.LocationRepository.GetByIdAsync(locationEntity.Id, false, cancellationToken);
-            return (locationEntity?.Organization, locationEntity);
+            return locationEntity is null ? (null, []) : (locationEntity.Organization, [locationEntity]);
         }
 
-        var location = customer.PreferredLocations.FirstOrDefault(item =>
-            item.Organization is not null && item.Organization.Id == customer.DefaultOrganization.Id);
-        locationEntity = location is null
-            ? null
-            : await repositoryFactory.LocationRepository.GetByIdAsync(location.Id, false, cancellationToken);
+        var organizationEntity = await ResolveBookingOrganizationAsync(customer.DefaultOrganization.Id, null, cancellationToken);
+        if (organizationEntity is null)
+        {
+            return (null, []);
+        }
 
-        return (customer.DefaultOrganization, locationEntity);
+        return (organizationEntity, OrderLocationsByCustomerPreference(
+            organizationEntity.Locations.Where(item => !item.DeletedAt.HasValue),
+            customer,
+            organizationEntity.Id));
     }
 
     private async Task<ICollection<Resource>> GetAvailableDeskResourcesAsync(
@@ -142,6 +150,22 @@ public class PrivateBookingPreferenceService(IRepositoryFactory repositoryFactor
             .ToHashSet();
 
         return availableResources.FirstOrDefault(item => item.OrganizationTags.Any(tag => preferredTagIds.Contains(tag.Id)));
+    }
+
+    private static List<Location> OrderLocationsByCustomerPreference(
+        IEnumerable<Location> locations,
+        Customer customer,
+        string organizationId)
+    {
+        var preferredLocationIds = customer.PreferredLocations
+            .Where(item => item.Organization is not null && item.Organization.Id == organizationId)
+            .Select(item => item.Id)
+            .ToHashSet();
+
+        return locations
+            .OrderByDescending(item => preferredLocationIds.Contains(item.Id))
+            .ThenBy(item => item.Name)
+            .ToList();
     }
 
     private static ICollection<Organization> ToOrganizations(Organization? organizationEntity) =>

@@ -37,6 +37,7 @@ type BookingCheckoutSessionDetails {
 }
 
 type BookingDetails {
+  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   bookingResources: [BookingResourceDetails!]!
   category: BookingCategoryDetails!
   channel: BookingChannelDetails!
@@ -494,6 +495,7 @@ type MarketplaceBookingDetails {
 }
 
 type MarketplaceBookingSubscriptionDetails {
+  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   autoRenew: Boolean!
   cancelAtPeriodEnd: Boolean!
   cancelledAt: DateTime
@@ -706,6 +708,17 @@ type OrganizationActiveOfferingDetails {
 type OrganizationAnalytics {
   dailyBookingsTotals: [OrganizationDailyBookingsTotal!]!
   memberAttendancePercentage: [OrganizationMemberAttendancePercentage!]!
+}
+
+type OrganizationArrearsInvoiceDetails {
+  billingPeriodEndExclusive: DateTime!
+  billingPeriodStartInclusive: DateTime!
+  createdAt: DateTime!
+  currency: String!
+  invoiceNumber: String!
+  invoiceUrl: String!
+  totalAmount: Decimal!
+  totalAmountToDisplay: String!
 }
 
 type OrganizationAvailableResources {

@@ -107,6 +107,24 @@ export class BookingService {
         });
     }
     /**
+     * generate organization arrears invoices
+     * @param organizationId
+     * @returns any the status of generating organization arrears invoices
+     * @returns ProblemDetails unexpected error
+     * @throws ApiError
+     */
+    public generateOrganizationArrearsInvoices(
+        organizationId: string,
+    ): CancelablePromise<any | ProblemDetails> {
+        return this.httpRequest.request({
+            method: 'PUT',
+            url: '/v1/booking/organizations/{organizationId}/generate-arrears-invoices',
+            path: {
+                'organizationId': organizationId,
+            },
+        });
+    }
+    /**
      * Stripe Platform Account Webhook
      * @param stripeSignature Stripe webhook signature
      * @returns any the status of processing the Stripe Platform Account event

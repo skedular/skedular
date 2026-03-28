@@ -1,8 +1,10 @@
 ﻿using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Services.Models;
 using Booking.Processors.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
+using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Kafka.Consume;
 using Organization = Booking.Shared.Database.Entities.Organization;
@@ -15,6 +17,7 @@ public class OrganizationSubscriber(
     ILogger<OrganizationSubscriber> logger,
     IMapper mapper,
     IRepositoryFactory repositoryFactory,
+    ITemporalService temporalService,
     ICachedOrganizationService cachedOrganizationService)
     : IEventSubscriber<Key, Event>
 {
@@ -25,15 +28,23 @@ public class OrganizationSubscriber(
             case Type.OrganizationUpserted:
                 {
                     var organization = mapper.MapTo(@event);
-                    var existingOrganization = await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
-                    if (existingOrganization.EventRaisedAt > organization.EventRaisedAt)
+                    var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                        organization.Id,
+                        null,
+                        true,
+                        true,
+                        cancellationToken);
+                    if (existingOrganization is not null && existingOrganization.EventRaisedAt > organization.EventRaisedAt)
                     {
                         logger.LogInformation("Ignoring Organization event. Event timestamp is older that what is already processed.");
 
                         return EventSubscriberResults.Success;
                     }
 
-                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, cancellationToken);
+                    existingOrganization ??= await repositoryFactory.OrganizationRepository.UpsertNakedAsync(organization.Id, cancellationToken);
+
+                    await HandleOrganizationUpsertedEventAsync(organization, existingOrganization, existingOrganization.EventRaisedAt is null,
+                        cancellationToken);
                 }
                 break;
 
@@ -72,8 +83,12 @@ public class OrganizationSubscriber(
     private async Task HandleOrganizationUpsertedEventAsync(
         Shared.Models.Organization organization,
         Organization existingOrganization,
+        bool isNewOrganization,
         CancellationToken cancellationToken)
     {
+        var hadMarketplaceBillingWorkflow = existingOrganization.Type == OrganizationTypeConstants.Marketplace;
+        var billingCycleChanged = existingOrganization.BillingCycle != organization.BillingCycle.ToOrganizationBillingCycle();
+
         existingOrganization = repositoryFactory.OrganizationRepository.Update(mapper.MergeToEntity(organization, existingOrganization));
 
         existingOrganization = RebuildOrganizationTags(organization, existingOrganization);
@@ -81,11 +96,51 @@ public class OrganizationSubscriber(
         _ = RebuildOrganizationSsoSettings(organization.OrganizationSsoSettings, existingOrganization);
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await QueueArrearsBillingWorkflowAsync(
+            existingOrganization,
+            isNewOrganization,
+            hadMarketplaceBillingWorkflow,
+            billingCycleChanged,
+            cancellationToken);
         await cachedOrganizationService.UpdateByIdOrCustomDomainAsync(existingOrganization.Id, existingOrganization.CustomDomain, cancellationToken);
+    }
+
+    private async Task QueueArrearsBillingWorkflowAsync(
+        Organization organization,
+        bool isNewOrganization,
+        bool hadMarketplaceBillingWorkflow,
+        bool billingCycleChanged,
+        CancellationToken cancellationToken)
+    {
+        if (organization.Type != OrganizationTypeConstants.Marketplace)
+        {
+            if (hadMarketplaceBillingWorkflow)
+            {
+                await temporalService.SignalRunOrganizationArrearsBillingWorkflowStopAsync(organization.Id, cancellationToken);
+            }
+
+            return;
+        }
+
+        var configuration = new OrganizationArrearsBillingConfiguration(
+            organization.Id,
+            organization.BillingCycle.ToOrganizationBillingCycle());
+
+        // Always push the current configuration for marketplace organizations; the signal path
+        // is responsible for starting the workflow if it is not already running.
+        await temporalService.SignalRunOrganizationArrearsBillingWorkflowUpdateConfigurationAsync(
+            organization.Id,
+            configuration,
+            cancellationToken);
     }
 
     private async Task HandleOrganizationDeletedEventAsync(Organization existingOrganization, CancellationToken cancellationToken)
     {
+        if (existingOrganization.Type == OrganizationTypeConstants.Marketplace)
+        {
+            await temporalService.SignalRunOrganizationArrearsBillingWorkflowStopAsync(existingOrganization.Id, cancellationToken);
+        }
+
         repositoryFactory.OrganizationMemberRepository.RemoveRange(existingOrganization.OrganizationMembers);
         existingOrganization.CustomDomain = null;
         _ = repositoryFactory.OrganizationRepository.Remove(existingOrganization);

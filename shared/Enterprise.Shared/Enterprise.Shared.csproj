@@ -29,8 +29,8 @@
         <PackageReference Include="Aspire.Confluent.Kafka" Version="13.2.0"/>
         <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="13.2.0"/>
 
-        <PackageReference Include="AWSSDK.S3" Version="4.0.19.2"/>
-        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.17"/>
+        <PackageReference Include="AWSSDK.S3" Version="4.0.19.4"/>
+        <PackageReference Include="AWSSDK.SimpleEmail" Version="4.0.2.19"/>
 
         <PackageReference Include="Confluent.Kafka" Version="2.13.2"/>
         <PackageReference Include="Confluent.SchemaRegistry" Version="2.13.2"/>
@@ -72,11 +72,11 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5"/>
         <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0"/>
 
-        <PackageReference Include="OpenTelemetry.Api" Version="1.15.0"/>
-        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Api" Version="1.15.1"/>
+        <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.5.1"/>
-        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0"/>
-        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.0"/>
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.1"/>
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.15.0-beta.1"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.GrpcNetClient" Version="1.15.0-beta.1"/>
@@ -125,7 +125,7 @@
         <PackageReference Include="Microsoft.Agents.AI.AzureAI" Version="1.0.0-rc4"/>
         <PackageReference Include="Microsoft.Agents.AI.AzureAI.Persistent" Version="1.0.0-preview.260311.1"/>
         <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4"/>
-        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.1.0"/>
+        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.2.0"/>
         <PackageReference Include="OpenAI" Version="2.9.1"/>
 
         <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">

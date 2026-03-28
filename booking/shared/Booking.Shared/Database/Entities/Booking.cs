@@ -19,6 +19,7 @@ public class Booking : EntityBaseWithDeleted
     public bool? HasRecurringInstanceOverrides { get; set; }
 
     public virtual MarketplaceBooking? MarketplaceBooking { get; set; }
+    public virtual ICollection<OrganizationArrearsInvoiceLine> OrganizationArrearsInvoiceLines { get; set; } = [];
     public virtual ICollection<ResourceBookingSlot> ResourceBookingSlots { get; set; } = [];
     public virtual ICollection<Customer> InvolvedCustomers { get; set; } = [];
     public virtual ICollection<Organization> InvolvedOrganizations { get; set; } = [];

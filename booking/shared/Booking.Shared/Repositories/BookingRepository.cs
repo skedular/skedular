@@ -15,6 +15,8 @@ namespace Booking.Shared.Repositories;
 public interface IBookingRepository : IRepository<Database.Entities.Booking>
 {
     Task<Database.Entities.Booking?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Booking>> GetByIdsMinimalAsync(ICollection<string> ids, CancellationToken cancellationToken);
+    Task<ICollection<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(ICollection<string> ids, CancellationToken cancellationToken);
     Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
@@ -24,6 +26,13 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
         CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken);
+
+    Task<ICollection<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
+        string organizationId,
+        DateTimeOffset startInclusive,
+        DateTimeOffset endExclusive,
+        CancellationToken cancellationToken);
+
     Database.Entities.Booking Add(Database.Entities.Booking booking);
     Database.Entities.Booking Update(Database.Entities.Booking booking);
     Database.Entities.Booking Remove(Database.Entities.Booking booking);
@@ -267,6 +276,20 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingDependentObjects(true)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
+    public async Task<ICollection<Database.Entities.Booking>> GetByIdsMinimalAsync(ICollection<string> ids, CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query => ids.Contains(query.Id))
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Booking>> GetByIdsWithValidMarketplaceAsync(
+        ICollection<string> ids,
+        CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query => ids.Contains(query.Id) && !query.DeletedAt.HasValue && query.MarketplaceBooking != null)
+            .Include(query => query.MarketplaceBooking)
+            .AsSingleQuery()
+            .ToListAsync(cancellationToken);
+
     public async Task<Database.Entities.Booking?> GetByIdUntrackedAsync(string id, CancellationToken cancellationToken) =>
         await DbContext.Booking
             .AddSingleBookingMinimumDependentObjects(false)
@@ -288,6 +311,22 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
     public async Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken) =>
         await DbContext.Booking
             .AddSingleBookingDependentObjects(false)
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
+        string organizationId,
+        DateTimeOffset startInclusive,
+        DateTimeOffset endExclusive,
+        CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query =>
+                !query.DeletedAt.HasValue &&
+                query.From < endExclusive &&
+                query.Until > startInclusive &&
+                query.MarketplaceBooking != null &&
+                query.MarketplaceBooking.BillingMode == ProductPricingBillingMode.InArrears.ToProductPricingBillingMode() &&
+                query.InvolvedOrganizations.Any(organization => !organization.DeletedAt.HasValue && organization.Id == organizationId))
+            .AddSingleBookingDependentObjects(true)
             .ToListAsync(cancellationToken);
 
     public Database.Entities.Booking Add(Database.Entities.Booking booking)

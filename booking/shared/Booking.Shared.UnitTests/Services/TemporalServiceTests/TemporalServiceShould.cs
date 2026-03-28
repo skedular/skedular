@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
+using Booking.Shared.Models;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Temporal;
@@ -121,5 +123,60 @@ public class TemporalServiceShould
             sut.SignalPayBookingViaCardWorkflowAsync(bookingId, args, cancellationToken));
 
         A.CallTo(() => temporalClient.GetWorkflowHandle<PayBookingViaCard>(expectedWorkflowId)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Start_Workflow_Run_Organization_Arrears_Billing_With_Correct_Options(
+        [Frozen] TemporalConfiguration temporalConfiguration,
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        WorkflowHandle<RunOrganizationArrearsBilling> workflowHandle,
+        TemporalService sut,
+        CancellationToken cancellationToken)
+    {
+        var args = new RunOrganizationArrearsBillingInput(
+            new OrganizationArrearsBillingConfiguration(
+                "org-1",
+                OrganizationBillingCycle.Monthly));
+        const string expectedId = "organization-arrears-billing-org-1";
+
+        A.CallTo(() => temporalHelperService.ToId("organization_arrears_billing-org-1")).Returns(expectedId);
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+                A<Expression<Func<RunOrganizationArrearsBilling, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
+                    options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
+                    options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting)))
+            .Returns(workflowHandle);
+
+        await sut.StartWorkflowRunOrganizationArrearsBillingAsync(args, cancellationToken);
+
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+            A<Expression<Func<RunOrganizationArrearsBilling, Task>>>._,
+            A<WorkflowOptions>._)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Signal_Run_Organization_Arrears_Billing_Workflow_Run_Now_With_Correct_Handle(
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        TemporalService sut,
+        string expectedWorkflowId,
+        CancellationToken cancellationToken)
+    {
+        var configuration = new OrganizationArrearsBillingConfiguration("org-1", OrganizationBillingCycle.Weekly);
+        var workflowHandle = new WorkflowHandle<RunOrganizationArrearsBilling>(temporalClient, expectedWorkflowId);
+
+        A.CallTo(() => temporalHelperService.ToId("organization_arrears_billing-org-1")).Returns(expectedWorkflowId);
+        A.CallTo(() => temporalHelperService.IsRunningAsync<RunOrganizationArrearsBilling>(expectedWorkflowId, cancellationToken)).Returns(true);
+        A.CallTo(() => temporalClient.GetWorkflowHandle<RunOrganizationArrearsBilling>(expectedWorkflowId)).Returns(workflowHandle);
+
+        await Should.ThrowAsync<NullReferenceException>(() =>
+            sut.SignalRunOrganizationArrearsBillingWorkflowRunNowAsync(configuration, cancellationToken));
+
+        A.CallTo(() => temporalClient.GetWorkflowHandle<RunOrganizationArrearsBilling>(expectedWorkflowId)).MustHaveHappenedOnceExactly();
     }
 }

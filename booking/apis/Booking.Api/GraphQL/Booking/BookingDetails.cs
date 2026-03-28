@@ -1,4 +1,6 @@
 using Booking.Api.GraphQL.RecurringBooking;
+using Booking.Api.Mappers;
+using Booking.Api.Services;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
 using HotChocolate.Types;
@@ -32,6 +34,13 @@ public class BookingDetails : Node
 
     [GraphQLName("hasRecurringInstanceOverrides")]
     public bool? HasRecurringInstanceOverrides { get; set; }
+
+    public async Task<IEnumerable<OrganizationArrearsInvoiceDetails>> GetArrearsInvoicesAsync(
+        [Service] IBookingService bookingService,
+        [Service] IMapper mapper,
+        [Parent] BookingDetails booking,
+        CancellationToken cancellationToken) =>
+        (await bookingService.GetArrearsInvoicesAsync(booking.Id, cancellationToken)).Select(mapper.MapTo);
 }
 
 [ObjectType<BookingDetails>]

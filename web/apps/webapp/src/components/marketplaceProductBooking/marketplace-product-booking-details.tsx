@@ -50,6 +50,7 @@ const RootQuery = graphql`
         id
         quantity
         invoiceUrl
+        invoiceNumber
         isPaymentRequired
         paymentExpiry
         productVersion {
@@ -81,6 +82,12 @@ const RootQuery = graphql`
           name
         }
       }
+      arrearsInvoices {
+        invoiceNumber
+        invoiceUrl
+        billingPeriodStartInclusive
+        billingPeriodEndExclusive
+      }
     }
   }
 `;
@@ -91,6 +98,7 @@ const BookingSubscription = graphql`
       marketplaceBooking {
         id
         invoiceUrl
+        invoiceNumber
         isPaymentRequired
         paymentExpiry
         bookingCheckoutSession {
@@ -100,6 +108,12 @@ const BookingSubscription = graphql`
           type
           name
         }
+      }
+      arrearsInvoices {
+        invoiceNumber
+        invoiceUrl
+        billingPeriodStartInclusive
+        billingPeriodEndExclusive
       }
     }
   }
@@ -223,6 +237,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
             <MarketplaceProductBookingPaymentPanel
               checkoutUrl={marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
               entityLabel="booking"
+              invoices={booking.arrearsInvoices ?? []}
               invoiceUrl={marketplaceBooking.invoiceUrl ?? null}
               isPaymentRequired={marketplaceBooking.isPaymentRequired}
               paymentExpiry={marketplaceBooking.paymentExpiry}

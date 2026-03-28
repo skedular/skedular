@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<259994a929719ca58c63f4fca7fab7bf>>
+ * @generated SignedSource<<3e478dce5295fccd81e9503149a5ed2e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,12 @@ export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_RE
 import { FragmentRefs } from "relay-runtime";
 export type payMarketplaceBooking_booking_query$data = {
   readonly booking: {
+    readonly arrearsInvoices: ReadonlyArray<{
+      readonly billingPeriodEndExclusive: any;
+      readonly billingPeriodStartInclusive: any;
+      readonly invoiceNumber: string;
+      readonly invoiceUrl: string;
+    }>;
     readonly bookingResources: ReadonlyArray<{
       readonly resource: {
         readonly color: string | null | undefined;
@@ -137,7 +143,14 @@ v5 = {
   "name": "type",
   "storageKey": null
 },
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+},
+v7 = [
   (v5/*: any*/),
   (v1/*: any*/)
 ];
@@ -401,13 +414,7 @@ return {
               "name": "paymentExpiry",
               "storageKey": null
             },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "invoiceUrl",
-              "storageKey": null
-            },
+            (v6/*: any*/),
             {
               "alias": null,
               "args": null,
@@ -465,7 +472,40 @@ return {
               "kind": "LinkedField",
               "name": "paymentStatus",
               "plural": false,
-              "selections": (v6/*: any*/),
+              "selections": (v7/*: any*/),
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationArrearsInvoiceDetails",
+          "kind": "LinkedField",
+          "name": "arrearsInvoices",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "invoiceNumber",
+              "storageKey": null
+            },
+            (v6/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "billingPeriodStartInclusive",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "billingPeriodEndExclusive",
               "storageKey": null
             }
           ],
@@ -505,7 +545,7 @@ return {
       "kind": "LinkedField",
       "name": "paymentStatuses",
       "plural": true,
-      "selections": (v6/*: any*/),
+      "selections": (v7/*: any*/),
       "storageKey": null
     }
   ],
@@ -514,6 +554,6 @@ return {
 };
 })();
 
-(node as any).hash = "4443872cc38b7bbb925b7da8cafe59e2";
+(node as any).hash = "e8066e4030e1df7cc5b1c574adeaf36b";
 
 export default node;

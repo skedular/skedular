@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Booking.Shared.Models;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
@@ -17,6 +18,31 @@ namespace Booking.Shared.Services;
 /// </summary>
 public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSignalOutboxExecutor
 {
+    /// <summary>
+    ///     Starts the organization arrears billing workflow.
+    /// </summary>
+    /// <param name="args">The input arguments for the workflow.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
+    void StartWorkflowRunOrganizationArrearsBilling(RunOrganizationArrearsBillingInput args, IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the organization arrears billing workflow to refresh its configuration.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="configuration">The updated billing configuration.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
+    void SignalWorkflowRunOrganizationArrearsBillingUpdateConfiguration(
+        string organizationId,
+        OrganizationArrearsBillingConfiguration configuration,
+        IUnitOfWork unitOfWork);
+
+    /// <summary>
+    ///     Signals the organization arrears billing workflow to stop.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="unitOfWork">The unit of work for the operation.</param>
+    void SignalWorkflowRunOrganizationArrearsBillingStop(string organizationId, IUnitOfWork unitOfWork);
+
     /// <summary>
     ///     Starts a workflow to pay for a booking via card.
     /// </summary>
@@ -37,6 +63,12 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     /// <param name="args">The input arguments for the workflow.</param>
     /// <param name="unitOfWork">The unit of work for the operation.</param>
     void StartWorkflowPayRecurringBookingViaBankTransfer(PayRecurringBookingViaBankTransferInput args, IUnitOfWork unitOfWork);
+
+    void StartWorkflowGenerateInitialArrearsBookingInvoice(GenerateInitialArrearsBookingInvoiceInput args, IUnitOfWork unitOfWork);
+
+    void StartWorkflowGenerateInitialArrearsRecurringBookingInvoice(
+        GenerateInitialArrearsRecurringBookingInvoiceInput args,
+        IUnitOfWork unitOfWork);
 
     /// <summary>
     ///     Starts a workflow to pay for a booking via bank transfer.
@@ -147,10 +179,17 @@ public class TemporalOutboxService(
     private static readonly string s_payRecurringBookingViaCard = typeof(PayRecurringBookingViaCard).ToWorkflowType();
     private static readonly string s_payBookingViaBankTransfer = typeof(PayBookingViaBankTransfer).ToWorkflowType();
     private static readonly string s_payRecurringBookingViaBankTransfer = typeof(PayRecurringBookingViaBankTransfer).ToWorkflowType();
+    private static readonly string s_generateInitialArrearsBookingInvoice = typeof(GenerateInitialArrearsBookingInvoice).ToWorkflowType();
+
+    private static readonly string s_generateInitialArrearsRecurringBookingInvoice =
+        typeof(GenerateInitialArrearsRecurringBookingInvoice).ToWorkflowType();
+
     private static readonly string s_bookPrivateRecurringResources = typeof(BookPrivateRecurringResources).ToWorkflowType();
 
     private static readonly string s_bookMarketplaceBookingSubscriptionResources =
         typeof(BookMarketplaceBookingSubscriptionResources).ToWorkflowType();
+
+    private static readonly string s_runOrganizationArrearsBilling = typeof(RunOrganizationArrearsBilling).ToWorkflowType();
 
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
@@ -182,6 +221,40 @@ public class TemporalOutboxService(
             .GetMethod(nameof(BookMarketplaceBookingSubscriptionResources.MarketplaceBookingSubscriptionDeletedAsync))!
             .ToWorkflowSignalType();
 
+    private static readonly string s_runOrganizationArrearsBillingUpdateConfigurationAsync =
+        typeof(RunOrganizationArrearsBilling)
+            .GetMethod(nameof(RunOrganizationArrearsBilling.UpdateConfigurationAsync))!
+            .ToWorkflowSignalType();
+
+    private static readonly string s_runOrganizationArrearsBillingStopAsync =
+        typeof(RunOrganizationArrearsBilling)
+            .GetMethod(nameof(RunOrganizationArrearsBilling.StopAsync))!
+            .ToWorkflowSignalType();
+
+    public void StartWorkflowRunOrganizationArrearsBilling(RunOrganizationArrearsBillingInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<RunOrganizationArrearsBilling, RunOrganizationArrearsBillingInput>(
+            args,
+            ToOrganizationArrearsBillingWorkflowOptions(args.Configuration.OrganizationId),
+            unitOfWork);
+
+    public void SignalWorkflowRunOrganizationArrearsBillingUpdateConfiguration(
+        string organizationId,
+        OrganizationArrearsBillingConfiguration configuration,
+        IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}"),
+            s_runOrganizationArrearsBillingUpdateConfigurationAsync,
+            configuration,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
+    public void SignalWorkflowRunOrganizationArrearsBillingStop(string organizationId, IUnitOfWork unitOfWork) =>
+        temporalSignalOutboxWorkflowExecutor.Signal(
+            temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}"),
+            s_runOrganizationArrearsBillingStopAsync,
+            new WorkflowSignalOptions(),
+            unitOfWork);
+
     public void StartWorkflowPayBookingViaCard(PayBookingViaCardInput args, IUnitOfWork unitOfWork) =>
         temporalOutboxWorkflowExecutor.Execute<PayBookingViaCard, PayBookingViaCardInput>(
             args,
@@ -212,6 +285,32 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{args.RecurringBookingId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowGenerateInitialArrearsBookingInvoice(GenerateInitialArrearsBookingInvoiceInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<GenerateInitialArrearsBookingInvoice, GenerateInitialArrearsBookingInvoiceInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.InitialArrearsBookingInvoicePrefix}-{args.BookingId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
+            },
+            unitOfWork);
+
+    public void StartWorkflowGenerateInitialArrearsRecurringBookingInvoice(
+        GenerateInitialArrearsRecurringBookingInvoiceInput args,
+        IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<GenerateInitialArrearsRecurringBookingInvoice, GenerateInitialArrearsRecurringBookingInvoiceInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.InitialArrearsRecurringBookingInvoicePrefix}-{args.RecurringBookingId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -442,6 +541,22 @@ public class TemporalOutboxService(
             {
             }
         }
+        else if (workflowType == s_runOrganizationArrearsBilling)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<RunOrganizationArrearsBillingInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (RunOrganizationArrearsBilling workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
     }
 
     public async Task SignalAsync(
@@ -618,5 +733,46 @@ public class TemporalOutboxService(
                     });
             }
         }
+        else if (signalType == s_runOrganizationArrearsBillingUpdateConfigurationAsync)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+            var input = JsonSerializer.Deserialize<OrganizationArrearsBillingConfiguration>(executionArgs);
+            ArgumentNullException.ThrowIfNull(input);
+
+            if (await temporalHelperService.IsRunningAsync<RunOrganizationArrearsBilling>(workflowId, cancellationToken))
+            {
+                await temporalClient
+                    .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
+                    .SignalAsync(workflow => workflow.UpdateConfigurationAsync(input), workflowSignalOptions);
+            }
+            else
+            {
+                _ = await temporalClient.StartWorkflowAsync(
+                    (RunOrganizationArrearsBilling workflow) =>
+                        workflow.ExecuteAsync(new RunOrganizationArrearsBillingInput(input)),
+                    ToOrganizationArrearsBillingWorkflowOptions(input.OrganizationId));
+            }
+        }
+        else if (signalType == s_runOrganizationArrearsBillingStopAsync)
+        {
+            if (!await temporalHelperService.IsRunningAsync<RunOrganizationArrearsBilling>(workflowId, cancellationToken))
+            {
+                return;
+            }
+
+            await temporalClient
+                .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
+                .SignalAsync(workflow => workflow.StopAsync(), workflowSignalOptions);
+        }
     }
+
+    private WorkflowOptions ToOrganizationArrearsBillingWorkflowOptions(string organizationId) =>
+        new()
+        {
+            Id = temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}"),
+            TaskQueue = temporalConfiguration.Worker.TaskQueue,
+            RetryPolicy = null,
+            IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+            IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+        };
 }

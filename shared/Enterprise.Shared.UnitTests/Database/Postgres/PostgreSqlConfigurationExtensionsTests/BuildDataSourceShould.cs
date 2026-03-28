@@ -5,10 +5,11 @@ namespace Enterprise.Shared.UnitTests.Database.Postgres.PostgreSqlConfigurationE
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class BuildDataSourceShould
 {
-    [Fact]
-    public void Cache_data_source_per_connection_string()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Cache_data_source_per_connection_string(string uniqueId)
     {
-        var connectionString = $"Host=localhost;Database=test_{Guid.NewGuid():N};Username=test;Password=test";
+        var connectionString = $"Host=localhost;Database=test_{uniqueId};Username=test;Password=test";
 
         var dataSource = connectionString.BuildDataSource(false);
         var cachedDataSource = connectionString.BuildDataSource(false);

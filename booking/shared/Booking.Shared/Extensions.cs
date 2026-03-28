@@ -39,6 +39,9 @@ public static class Extensions
                 .AddSingleton<ITemporalService, TemporalService>()
                 .AddSingleton<IRecurringBookingScheduleService, RecurringBookingScheduleService>()
                 .AddSingleton<IProductVersionHelperService, ProductVersionHelperService>()
+                .AddSingleton<IOrganizationArrearsInvoiceService, OrganizationArrearsInvoiceService>()
+                .AddSingleton<IOrganizationArrearsChargeSegmentService, OrganizationArrearsChargeSegmentService>()
+                .AddSingleton<IOrganizationArrearsBillingPlannerService, OrganizationArrearsBillingPlannerService>()
                 .AddScoped<IMarketplaceBookingOpeningHoursService, MarketplaceBookingOpeningHoursService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()
                 .AddScoped<ICachedCustomerService, CachedCustomerService>()
@@ -87,7 +90,8 @@ public static class Extensions
                 .AddScoped<IStripePriceRepository, StripePriceRepository>()
                 .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
                 .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>()
-                .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>();
+                .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>()
+                .AddScoped<IOrganizationArrearsInvoiceRepository, OrganizationArrearsInvoiceRepository>();
 
         public IServiceCollection AddPublishers() =>
             services

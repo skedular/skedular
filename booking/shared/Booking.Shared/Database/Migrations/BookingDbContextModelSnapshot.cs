@@ -654,6 +654,146 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("Organization");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoice", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("BillingPeriodEndExclusive")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("BillingPeriodStartInclusive")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("InvoiceUrl")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillingPeriodEndExclusive");
+
+                    b.HasIndex("BillingPeriodStartInclusive");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Currency");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("OrganizationId", "InvoiceNumber")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationArrearsInvoice");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoiceLine", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<string>("BookingId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset>("EarnedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationArrearsInvoiceId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("SegmentKey")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<DateTimeOffset>("ServicePeriodEndExclusive")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("ServicePeriodStartInclusive")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Amount");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("EarnedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationArrearsInvoiceId");
+
+                    b.HasIndex("SegmentKey")
+                        .IsUnique();
+
+                    b.ToTable("OrganizationArrearsInvoiceLine");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationInvoiceCounter", b =>
                 {
                     b.Property<string>("Id")
@@ -2114,6 +2254,44 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("ProductVersion");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoice", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
+                        .WithMany("OrganizationArrearsInvoices")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("OrganizationArrearsInvoices")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoiceLine", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Booking", "Booking")
+                        .WithMany("OrganizationArrearsInvoiceLines")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.OrganizationArrearsInvoice", "OrganizationArrearsInvoice")
+                        .WithMany("Lines")
+                        .HasForeignKey("OrganizationArrearsInvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("OrganizationArrearsInvoice");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationInvoiceCounter", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
@@ -2635,6 +2813,8 @@ namespace Booking.Shared.Database.Migrations
             modelBuilder.Entity("Booking.Shared.Database.Entities.Booking", b =>
                 {
                     b.Navigation("MarketplaceBooking");
+
+                    b.Navigation("OrganizationArrearsInvoiceLines");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Customer", b =>
@@ -2658,6 +2838,8 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("LastModifiedMarketplaceBookingSubscriptions");
 
                     b.Navigation("LastModifiedRecurringBookings");
+
+                    b.Navigation("OrganizationArrearsInvoices");
 
                     b.Navigation("OrganizationMembers");
 
@@ -2692,6 +2874,8 @@ namespace Booking.Shared.Database.Migrations
 
                     b.Navigation("Locations");
 
+                    b.Navigation("OrganizationArrearsInvoices");
+
                     b.Navigation("OrganizationInvoiceCounters");
 
                     b.Navigation("OrganizationMembers");
@@ -2707,6 +2891,11 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("Tags");
 
                     b.Navigation("Teams");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoice", b =>
+                {
+                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Product", b =>

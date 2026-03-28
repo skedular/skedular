@@ -7,11 +7,12 @@ namespace Enterprise.Shared.UnitTests.Database.EntityBaseTests;
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ConfigureEntityBaseShould
 {
-    [Fact]
-    public void Configure_expected_key_indexes_and_row_version_metadata()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Configure_expected_key_indexes_and_row_version_metadata(string databaseName)
     {
         using var context =
-            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 
         var entityType = context.Model.FindEntityType(typeof(SpecEntity));
 
@@ -30,11 +31,12 @@ public class ConfigureEntityBaseShould
         indexNames.ShouldContain(nameof(EntityBaseWithDeleted.DeletedAt));
     }
 
-    [Fact]
-    public void Configure_replicated_entity_with_deleted_expected_indexes()
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Configure_replicated_entity_with_deleted_expected_indexes(string databaseName)
     {
         using var context =
-            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options);
+            new DatabaseTestContext(new DbContextOptionsBuilder<DatabaseTestContext>().UseInMemoryDatabase(databaseName).Options);
 
         var entityType = context.Model.FindEntityType(typeof(ReplicatedDeletedEntity));
 

@@ -346,6 +346,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         if (existingRecurringBooking is not null)
         {
             await EnsureCurrentCyclePaymentWorkflowStartedAsync(existingRecurringBooking, cancellationToken);
+            await EnsureInitialArrearsInvoiceStartedAsync(subscription, existingRecurringBooking, cycleStart, cancellationToken);
 
             return existingRecurringBooking;
         }
@@ -381,6 +382,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             });
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await EnsureInitialArrearsInvoiceStartedAsync(subscription, recurringBooking, cycleStart, cancellationToken);
 
         if (ShouldStartRecurringBookingCardPaymentWorkflow(recurringMarketplaceBooking))
         {
@@ -454,6 +456,30 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task EnsureInitialArrearsInvoiceStartedAsync(
+        MarketplaceBookingSubscription subscription,
+        RecurringBooking recurringBooking,
+        DateTimeOffset cycleStart,
+        CancellationToken cancellationToken)
+    {
+        recurringBooking = await EnsureRecurringBookingMarketplaceBookingLoadedAsync(recurringBooking, cancellationToken);
+        var recurringMarketplaceBooking = recurringBooking.MarketplaceBooking;
+        if (recurringMarketplaceBooking is null ||
+            string.IsNullOrWhiteSpace(recurringMarketplaceBooking.BillingMode) ||
+            recurringMarketplaceBooking.BillingMode.ToProductPricingBillingMode() != ProductPricingBillingMode.InArrears ||
+            !string.IsNullOrWhiteSpace(recurringMarketplaceBooking.InvoiceNumber) ||
+            cycleStart.UtcDateTime.Date != subscription.StartedAt.UtcDateTime.Date)
+        {
+            return;
+        }
+
+        await temporalService.StartWorkflowGenerateInitialArrearsRecurringBookingInvoiceAsync(
+            new GenerateInitialArrearsRecurringBookingInvoiceInput(
+                recurringBooking.Id,
+                recurringMarketplaceBooking.InvoiceEmailList.ToList()),
+            cancellationToken);
     }
 
     private async Task<RecurringBooking> EnsureRecurringBookingMarketplaceBookingLoadedAsync(

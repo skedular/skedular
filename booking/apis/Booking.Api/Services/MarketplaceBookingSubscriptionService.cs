@@ -18,6 +18,7 @@ namespace Booking.Api.Services;
 public interface IMarketplaceBookingSubscriptionService
 {
     Task<MarketplaceBookingSubscription> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(
         PaginationInputParam paginationInputParam,
@@ -54,6 +55,21 @@ public class MarketplaceBookingSubscriptionService(
         await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
 
         return sharedMapper.MapTo(subscription);
+    }
+
+    public async Task<ICollection<OrganizationArrearsInvoice>> GetArrearsInvoicesAsync(string id, CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var subscription = await cachedMarketplaceBookingSubscriptionService.GetByIdAsync(id, cancellationToken) ??
+                           throw new MarketplaceBookingSubscriptionNotFound();
+
+        await EnsureCustomerCanViewMarketplaceBookingSubscriptionAsync(subscription, customerId, cancellationToken);
+
+        var invoices =
+            await repositoryFactory.OrganizationArrearsInvoiceRepository.GetByMarketplaceBookingSubscriptionIdUntrackedAsync(id, cancellationToken);
+        return invoices.Select(sharedMapper.MapTo).ToList();
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<MarketplaceBookingSubscription>>, int)> GetPaginatedMarketplaceBookingSubscriptionsAsync(

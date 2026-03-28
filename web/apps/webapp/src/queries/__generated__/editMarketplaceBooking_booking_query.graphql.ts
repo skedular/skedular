@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<316df527d58f546c772e848e09240427>>
+ * @generated SignedSource<<4facaf59dbc07655910b5b1fb0b57fad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,12 @@ export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_RE
 import { FragmentRefs } from "relay-runtime";
 export type editMarketplaceBooking_booking_query$data = {
   readonly booking: {
+    readonly arrearsInvoices: ReadonlyArray<{
+      readonly billingPeriodEndExclusive: any;
+      readonly billingPeriodStartInclusive: any;
+      readonly invoiceNumber: string;
+      readonly invoiceUrl: string;
+    }>;
     readonly bookingResources: ReadonlyArray<{
       readonly resource: {
         readonly color: string | null | undefined;
@@ -105,7 +111,14 @@ v4 = [
   (v0/*: any*/),
   (v1/*: any*/),
   (v3/*: any*/)
-];
+],
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -329,11 +342,38 @@ return {
               ],
               "storageKey": null
             },
+            (v5/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationArrearsInvoiceDetails",
+          "kind": "LinkedField",
+          "name": "arrearsInvoices",
+          "plural": true,
+          "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "invoiceUrl",
+              "name": "invoiceNumber",
+              "storageKey": null
+            },
+            (v5/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "billingPeriodStartInclusive",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "billingPeriodEndExclusive",
               "storageKey": null
             }
           ],
@@ -348,6 +388,6 @@ return {
 };
 })();
 
-(node as any).hash = "aa80b1779d707e880694ea92eddb1a6c";
+(node as any).hash = "97d725a978baadf93c059d0d9fbc6d04";
 
 export default node;

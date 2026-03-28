@@ -26,6 +26,7 @@ type BookingDetails {
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
+  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   from: DateTime!
   until: DateTime!
   notes: String
@@ -139,6 +140,7 @@ type MarketplaceBookingSubscriptionDetails {
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
+  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
   nextRenewalAt: DateTime
@@ -183,6 +185,17 @@ type Mutation {
   addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+}
+
+type OrganizationArrearsInvoiceDetails {
+  invoiceNumber: String!
+  invoiceUrl: String!
+  billingPeriodStartInclusive: DateTime!
+  billingPeriodEndExclusive: DateTime!
+  currency: String!
+  totalAmount: Decimal!
+  totalAmountToDisplay: String!
+  createdAt: DateTime!
 }
 
 type OrganizationAvailableResources {

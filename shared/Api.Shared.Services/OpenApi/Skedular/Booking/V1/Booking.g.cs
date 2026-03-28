@@ -89,6 +89,15 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateLocationResourcesSlots(string locationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// generate organization arrears invoices
+        /// </summary>
+        /// <returns>the status of generating organization arrears invoices</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPut, Microsoft.AspNetCore.Mvc.Route("v1/booking/organizations/{organizationId}/generate-arrears-invoices")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("generate organization arrears invoices")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> GenerateOrganizationArrearsInvoices(string organizationId, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// Stripe Platform Account Webhook
         /// </summary>
         /// <param name="stripe_Signature">Stripe webhook signature</param>

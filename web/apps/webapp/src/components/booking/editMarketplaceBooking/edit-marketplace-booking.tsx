@@ -1,5 +1,6 @@
 import { CustomerAvatar } from '@/components/avatars';
 import { SingleChoiceMarketplaceBookingCategory } from '@/components/booking';
+import InvoiceDownloadLinks from '@/components/booking/invoice-download-links';
 import {
   AppBarWithStackColumn,
   BodyIconTypography,
@@ -10,7 +11,6 @@ import {
   StackColumn,
   StackRow,
 } from '@/components/commons';
-import { PdfIcon } from '@/components/icons';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { PaletteModeContext } from '@/libs/providers';
 import { defaultButtonStyle, defaultPadding } from '@/libs/theme';
@@ -35,12 +35,10 @@ import type { BookingCategory, editMarketplaceBooking_updateBookingMutation } fr
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
 import { createFilterOptions } from '@mui/material/useAutocomplete';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { Dayjs } from 'dayjs';
 import { Autocomplete, makeRequired, makeValidate, TextField } from 'mui-rff';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -155,6 +153,12 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
               name
             }
             invoiceUrl
+          }
+          arrearsInvoices {
+            invoiceNumber
+            invoiceUrl
+            billingPeriodStartInclusive
+            billingPeriodEndExclusive
           }
         }
       }
@@ -490,11 +494,7 @@ const EditMarketplaceBooking = ({ rootDataRelay, rootDataBookingRelay, rootDataT
                   </FormFieldLabel>
 
                   <FormFieldLabel label="Invoice" stackLabelOnTop>
-                    {booking.marketplaceBooking?.invoiceUrl && (
-                      <Link component={NextLink} href={booking.marketplaceBooking.invoiceUrl} target="_blank" rel="noopener noreferrer">
-                        <SmallIconTypography label="Download Invoice" startElement={<PdfIcon />} />
-                      </Link>
-                    )}
+                    <InvoiceDownloadLinks invoices={booking.arrearsInvoices ?? []} legacyInvoiceUrl={booking.marketplaceBooking?.invoiceUrl ?? null} />
                   </FormFieldLabel>
 
                   <FormFieldLabel label="User">

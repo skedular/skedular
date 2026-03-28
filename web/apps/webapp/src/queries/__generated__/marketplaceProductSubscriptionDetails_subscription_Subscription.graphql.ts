@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9338908274f0fb6a04450e0a0483b7c4>>
+ * @generated SignedSource<<f0490b54a21d8d4733b8bc86631ca617>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,12 @@ export type marketplaceProductSubscriptionDetails_subscription_Subscription$vari
 };
 export type marketplaceProductSubscriptionDetails_subscription_Subscription$data = {
   readonly marketplaceBookingSubscription: {
+    readonly arrearsInvoices: ReadonlyArray<{
+      readonly billingPeriodEndExclusive: any;
+      readonly billingPeriodStartInclusive: any;
+      readonly invoiceNumber: string;
+      readonly invoiceUrl: string;
+    }>;
     readonly autoRenew: boolean;
     readonly cancelAtPeriodEnd: boolean;
     readonly id: string;
@@ -112,7 +118,14 @@ v3 = [
   },
   (v2/*: any*/)
 ],
-v4 = [
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceUrl",
+  "storageKey": null
+},
+v5 = [
   {
     "alias": null,
     "args": [
@@ -239,13 +252,7 @@ v4 = [
                 "name": "quantity",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "invoiceUrl",
-                "storageKey": null
-              },
+              (v4/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -401,6 +408,39 @@ v4 = [
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "OrganizationArrearsInvoiceDetails",
+        "kind": "LinkedField",
+        "name": "arrearsInvoices",
+        "plural": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "invoiceNumber",
+            "storageKey": null
+          },
+          (v4/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "billingPeriodStartInclusive",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "billingPeriodEndExclusive",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
       }
     ],
     "storageKey": null
@@ -412,7 +452,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscriptionDetails_subscription_Subscription",
-    "selections": (v4/*: any*/),
+    "selections": (v5/*: any*/),
     "type": "Subscription",
     "abstractKey": null
   },
@@ -421,19 +461,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscriptionDetails_subscription_Subscription",
-    "selections": (v4/*: any*/)
+    "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "6fba408d62832fda9bd4e80dbc1bed45",
+    "cacheID": "7d53ec822098cf02c1bdccaaf256e115",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_subscription_Subscription",
     "operationKind": "subscription",
-    "text": "subscription marketplaceProductSubscriptionDetails_subscription_Subscription(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n  }\n}\n"
+    "text": "subscription marketplaceProductSubscriptionDetails_subscription_Subscription(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "29e7c5ea0d5023956c1cd1072a041679";
+(node as any).hash = "63f58c0830cd3d71bc9d1cbd7bdafc9b";
 
 export default node;

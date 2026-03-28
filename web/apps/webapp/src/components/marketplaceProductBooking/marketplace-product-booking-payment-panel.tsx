@@ -1,3 +1,4 @@
+import InvoiceDownloadLinks, { type InvoiceLinkItem } from '@/components/booking/invoice-download-links';
 import { BodyIconTypography, CaptionIconTypography, SubtitleIconTypography } from '@/components/commons';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,6 +12,7 @@ type Props = {
   checkoutUrl: string | null;
   ctaLabel?: string;
   entityLabel?: string;
+  invoices?: readonly InvoiceLinkItem[];
   invoiceUrl: string | null;
   isPaymentRequired: boolean;
   pendingStatusMessage?: string;
@@ -24,6 +26,7 @@ const MarketplaceProductBookingPaymentPanel = ({
   checkoutUrl,
   ctaLabel = 'Pay now',
   entityLabel = 'Booking',
+  invoices = [],
   invoiceUrl,
   isPaymentRequired,
   pendingStatusMessage,
@@ -91,11 +94,7 @@ const MarketplaceProductBookingPaymentPanel = ({
             </Button>
           ) : null}
 
-          {invoiceUrl ? (
-            <Button variant="text" href={invoiceUrl}>
-              View invoice
-            </Button>
-          ) : null}
+          {invoiceUrl || invoices.length > 0 ? <InvoiceDownloadLinks invoices={invoices} legacyInvoiceUrl={invoiceUrl} linkLabel="View invoice" size="body" /> : null}
         </Stack>
       </CardContent>
     </Card>
