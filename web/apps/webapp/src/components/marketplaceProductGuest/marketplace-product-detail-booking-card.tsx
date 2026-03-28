@@ -3,6 +3,7 @@ import { getMarketplaceLocationLink, getMarketplaceProductBookingLink, getMarket
 import MarketplaceCancellationPolicyDetails from '@/components/marketplaceProduct/cancellation-policy-details';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { formatPriceForDisplay } from '@/libs/utils';
 import type { marketplaceProductDetailBookingCard_product$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_product.graphql';
 import type { marketplaceProductDetailBookingCard_query$key } from '@/queries/__generated__/marketplaceProductDetailBookingCard_query.graphql';
 import Button from '@mui/material/Button';
@@ -135,7 +136,7 @@ const MarketplaceProductDetailBookingCard = ({ rootDataRelay }: Props) => {
         subTitle: pricingOption.listingMetadata.subTitle ?? '',
         cadence: pricingOption.purchaseCadence,
         cadenceLabel: rootData.productPricingCadences.find((item) => item.type === pricingOption.purchaseCadence)?.name ?? pricingOption.purchaseCadence,
-        amountLabel: `${currencyLabel}${pricingOption.price}`,
+        amountLabel: formatPriceForDisplay(currencyLabel, pricingOption.price, pricingOption.purchaseCadence),
         note: pricingOption.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         cancellationPolicyType: pricingOption.cancellationPolicyType,
         cancellationRefundRules: pricingOption.cancellationRefundRules,

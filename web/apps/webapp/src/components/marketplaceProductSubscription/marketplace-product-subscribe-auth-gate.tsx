@@ -1,6 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { ArrowRightIcon, CheckIcon, ClosedAllDayIcon } from '@/components/icons';
 import { getMarketplaceProductLink, getSignInLink, getSignUpLink } from '@/components/links';
+import { formatPriceForDisplay } from '@/libs/utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { marketplaceProductSubscribeAuthGate_query$key } from '@/queries/__generated__/marketplaceProductSubscribeAuthGate_query.graphql';
 import Box from '@mui/material/Box';
@@ -161,7 +162,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
   }
 
   const productLink = getMarketplaceProductLink(integratedPlatrform, isCustomDomain, organizationCustomDomain, product.id, selectedResourceIds);
-  const priceLabel = `${currencyLabel} ${selectedPricingOption.price}`;
+  const priceLabel = formatPriceForDisplay(currencyLabel, selectedPricingOption.price, selectedPricingOption.purchaseCadence);
   const pricingTitle = selectedPricingOption.listingMetadata.title ?? selectedPricingOption.listingMetadata.subTitle ?? cadenceLabel;
 
   return (
@@ -240,10 +241,7 @@ const MarketplaceProductSubscribeAuthGate = ({ bodyLabel, contextLabel = 'You’
                 sx={{ mt: 0.75, opacity: 0.96, color: 'rgba(255,255,255,0.96)', textShadow: '0 1px 14px rgba(0,0,0,0.3)' }}
               />
               <StackRow sx={{ mt: 2 }}>
-                <Chip
-                  label={`${pricingTitle} • ${priceLabel}/${cadenceLabel.toLowerCase()}`}
-                  sx={{ bgcolor: 'rgba(255,255,255,0.14)', color: 'common.white', borderRadius: 999 }}
-                />
+                <Chip label={`${pricingTitle} • ${priceLabel}`} sx={{ bgcolor: 'rgba(255,255,255,0.14)', color: 'common.white', borderRadius: 999 }} />
                 {rootData.product.amenities.slice(0, 2).map((amenity) => (
                   <Chip key={amenity.id} label={amenity.name} variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.22)', color: 'common.white', borderRadius: 999 }} />
                 ))}

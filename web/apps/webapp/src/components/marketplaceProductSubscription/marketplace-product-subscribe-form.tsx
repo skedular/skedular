@@ -3,7 +3,7 @@ import { getMarketplaceProductLink, getMarketplaceSubscriptionDetailsLink } from
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getRelayErrorMessage, startOfDay, toShortDate } from '@/libs/utils';
+import { formatPriceForDisplay, getRelayErrorMessage, startOfDay, toShortDate } from '@/libs/utils';
 import type { marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscribeForm_addMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscribeForm_query$key, PaymentMethod } from '@/queries/__generated__/marketplaceProductSubscribeForm_query.graphql';
 import Alert from '@mui/material/Alert';
@@ -225,7 +225,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     [rootData.productPricingCadences, subscriptionPricingOptions],
   );
 
-  const totalLabel = selectedPricingOption ? `${currencyLabel} ${Number(selectedPricingOption.price) * quantity}` : '';
+  const totalLabel = selectedPricingOption ? formatPriceForDisplay(currencyLabel, Number(selectedPricingOption.price) * quantity, selectedPricingOption.purchaseCadence) : '';
   const cadenceLabel = selectedPricingOption
     ? (rootData.productPricingCadences.find((item) => item.type === selectedPricingOption.purchaseCadence)?.name ?? selectedPricingOption.purchaseCadence)
     : '';

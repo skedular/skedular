@@ -419,6 +419,37 @@ const getPublicOrigin = (request: NextRequest) => {
   return request.nextUrl.origin;
 };
 
+const monthlyPricingCadenceMonthCount: Record<string, number> = {
+  TWO_MONTHS: 2,
+  QUARTERLY: 3,
+  FOUR_MONTHS: 4,
+  FIVE_MONTHS: 5,
+  SIX_MONTHS: 6,
+  YEARLY: 12,
+};
+
+const getMonthlyPricingCadenceMonthCount = (cadence?: string | null) => {
+  if (!cadence) {
+    return null;
+  }
+
+  return monthlyPricingCadenceMonthCount[cadence] ?? null;
+};
+
+const formatCompactNumber = (value: number) => {
+  return new Intl.NumberFormat('en-NZ', { maximumFractionDigits: 2, minimumFractionDigits: 0 }).format(value);
+};
+
+const formatPriceForDisplay = (currencyLabel: string | null | undefined, amount: number | string, cadence?: string | null) => {
+  const numericAmount = Number(amount);
+  const months = getMonthlyPricingCadenceMonthCount(cadence);
+  const displayAmount = months ? numericAmount / months : numericAmount;
+  const formattedAmount = Number.isFinite(displayAmount) ? formatCompactNumber(displayAmount) : `${amount}`;
+  const prefix = currencyLabel ? `${currencyLabel} ` : '';
+
+  return months ? `${prefix}${formattedAmount}/month` : `${prefix}${formattedAmount}`;
+};
+
 export {
   convertCalendarDayToStartOfDay,
   convertStringToLowercaseExceptFirstLetter,
@@ -428,6 +459,7 @@ export {
   endOfDay,
   endOfMonth,
   endOfWeek,
+  formatPriceForDisplay,
   getCustomerAvatarLetters,
   getCustomerFullName,
   getCustomerShortName,

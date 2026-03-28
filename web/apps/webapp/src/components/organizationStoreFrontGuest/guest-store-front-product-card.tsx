@@ -1,4 +1,5 @@
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
+import { formatPriceForDisplay } from '@/libs/utils';
 import type { guestStoreFrontProductCard_product$key } from '@/queries/__generated__/guestStoreFrontProductCard_product.graphql';
 import type { guestStoreFrontProductCard_query$key } from '@/queries/__generated__/guestStoreFrontProductCard_query.graphql';
 import { memo, useMemo } from 'react';
@@ -76,7 +77,7 @@ const GuestStoreFrontProductCard = ({ rootDataRelay, productRelay, organizationC
           title: option.listingMetadata.title ?? '',
           cadence: option.purchaseCadence,
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
-          amountLabel: currency ? `${currency} ${option.price}` : `${option.price}`,
+          amountLabel: formatPriceForDisplay(currency, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         })),
     [currency, product.pricingOptions, rootData.productPricingCadences],

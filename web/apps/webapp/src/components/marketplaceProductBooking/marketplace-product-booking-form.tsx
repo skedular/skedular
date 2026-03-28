@@ -3,7 +3,7 @@ import { getMarketplaceProductBookingDetailsLink, getMarketplaceProductLink, get
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getRelayErrorMessage, toShortDate } from '@/libs/utils';
+import { formatPriceForDisplay, getRelayErrorMessage, toShortDate } from '@/libs/utils';
 import type {
   BookingCategory,
   marketplaceProductBookingForm_addMarketplaceBookingMutation,
@@ -321,7 +321,7 @@ const MarketplaceProductBookingForm = ({ onDateChange, onTimeRangeChange, rootDa
       total = (price / 60) * effectiveQuantity * minutes;
     }
 
-    return `${currencyLabel} ${total.toFixed(2)}`;
+    return formatPriceForDisplay(currencyLabel, total.toFixed(2), selectedPricingOption.purchaseCadence);
   }, [currencyLabel, dateRangeValidation, effectiveQuantity, selectedPricingOption]);
 
   const durationLabel = dateRangeValidation.valid ? `${dateRangeValidation.until.diff(dateRangeValidation.from, 'minutes')} minutes` : 'Invalid time';

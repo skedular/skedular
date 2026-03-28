@@ -21,6 +21,7 @@ import {
 import { MarketplaceProductCard } from '@/components/marketplaceProductCard';
 import { isSubscriptionCadence } from '@/components/marketplaceProductSubscription/subscription-utils';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
+import { formatPriceForDisplay } from '@/libs/utils';
 import type { marketplaceLocation_query$key } from '@/queries/__generated__/marketplaceLocation_query.graphql';
 import type { marketplaceLocation_refetchableFragment } from '@/queries/__generated__/marketplaceLocation_refetchableFragment.graphql';
 import '@/styles/leaflet/leaflet.css';
@@ -430,7 +431,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
           title: option.listingMetadata.title ?? '',
           cadence: option.purchaseCadence,
           cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
-          amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
+          amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
           taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
         }));
 
@@ -485,7 +486,7 @@ const MarketplaceLocation = ({ rootDataRelay }: Props) => {
             title: option.listingMetadata.title ?? '',
             cadence: option.purchaseCadence,
             cadenceLabel: rootData.productPricingCadences.find((cadence) => cadence.type === option.purchaseCadence)?.name ?? option.purchaseCadence,
-            amountLabel: currencyLabel ? `${currencyLabel} ${option.price}` : `${option.price}`,
+            amountLabel: formatPriceForDisplay(currencyLabel, option.price, option.purchaseCadence),
             taxLabel: option.isTaxInclusive ? 'incl. tax' : 'excl. tax',
             bookingLabel: isSubscriptionCadence(option.purchaseCadence) ? 'Choose plan' : 'Book this option',
           })),
