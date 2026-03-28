@@ -7,6 +7,8 @@ namespace Enterprise.Shared.FileStorage;
 
 public static class Extensions
 {
+    private static readonly string s_homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
     public static IServiceCollection AddFileStorage(
         this IServiceCollection services,
         IConfiguration configuration,
@@ -33,14 +35,14 @@ public static class Extensions
         {
             if (string.IsNullOrWhiteSpace(fileStorageConfiguration.LocalCdnPath))
             {
-                fileStorageConfiguration.LocalCdnPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "cdn");
+                fileStorageConfiguration.LocalCdnPath = Path.Combine(s_homeDirectory, "wwwroot", "cdn");
             }
 
             Directory.CreateDirectory(fileStorageConfiguration.LocalCdnPath);
 
             if (string.IsNullOrWhiteSpace(fileStorageConfiguration.LocalPrivateFilePath))
             {
-                fileStorageConfiguration.LocalPrivateFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "private");
+                fileStorageConfiguration.LocalPrivateFilePath = Path.Combine(s_homeDirectory, "wwwroot", "private");
             }
 
             Directory.CreateDirectory(fileStorageConfiguration.LocalPrivateFilePath);
