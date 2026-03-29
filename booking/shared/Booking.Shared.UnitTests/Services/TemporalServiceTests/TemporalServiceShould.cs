@@ -76,35 +76,6 @@ public class TemporalServiceShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public async Task Start_Workflow_Book_Marketplace_Booking_Subscription_Resources_With_Correct_Options(
-        [Frozen] TemporalConfiguration temporalConfiguration,
-        [Frozen] ITemporalClient temporalClient,
-        [Frozen] ITemporalHelperService temporalHelperService,
-        WorkflowHandle<BookMarketplaceBookingSubscriptionResources> workflowHandle,
-        TemporalService sut,
-        BookMarketplaceBookingSubscriptionResourcesInput args,
-        string expectedId,
-        CancellationToken cancellationToken)
-    {
-        args = args with { MarketplaceBookingSubscriptionId = "sub-1" };
-
-        A.CallTo(() => temporalHelperService.ToId("sub-1")).Returns(expectedId);
-        A.CallTo(() => temporalClient.StartWorkflowAsync(
-                A<Expression<Func<BookMarketplaceBookingSubscriptionResources, Task>>>._,
-                A<WorkflowOptions>.That.Matches(options =>
-                    options.Id == expectedId &&
-                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue)))
-            .Returns(workflowHandle);
-
-        await sut.StartWorkflowBookMarketplaceBookingSubscriptionResourcesAsync(args, cancellationToken);
-
-        A.CallTo(() => temporalClient.StartWorkflowAsync(
-            A<Expression<Func<BookMarketplaceBookingSubscriptionResources, Task>>>._,
-            A<WorkflowOptions>._)).MustHaveHappenedOnceExactly();
-    }
-
-    [Theory]
-    [AutoFakeItEasyData]
     public async Task Signal_Pay_Booking_Via_Card_Workflow_With_Correct_Handle(
         [Frozen] ITemporalClient temporalClient,
         [Frozen] ITemporalHelperService temporalHelperService,
