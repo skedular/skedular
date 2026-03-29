@@ -232,6 +232,8 @@ public class OrganizationArrearsChargeSegmentServiceShould
                 Quantity = quantity,
                 Currency = Currency.Nzd,
                 BillingMode = billingMode,
+                ProductVersion =
+                    new ProductVersion { Currency = Currency.Nzd, Product = new Product { Organization = new Organization { Id = "org-1" } } },
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {
                     PurchaseCadence = purchaseCadence,

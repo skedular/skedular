@@ -39,8 +39,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 {
     [Activity]
     public async Task<AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsyncResponse>
-        AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(
-            AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput args)
+        AdjustRequiredResourcesForMarketplaceBookingSubscriptionAsync(AdjustRequiredResourcesForMarketplaceBookingSubscriptionInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
         var subscription = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(
@@ -221,7 +220,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             booking.Id = randomHelper.Generate();
             if (useOpeningHoursWindow)
             {
-                // Missing marketplace instances are created only for days where a location is open
+                // Missing marketplace instances are created only for days when a location is open
                 // and enough resources exist for the product tags.
                 // The opening-hours service will prefer resource-level overridden availability
                 // over the parent location opening hours when selecting the booking window.
@@ -621,13 +620,11 @@ public class MarketplaceBookingSubscriptionIntegrations(
     }
 
     private static bool ShouldStartRecurringBookingCardPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
-        marketplaceBooking.IsPaymentRequired &&
-        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking is { IsPaymentRequired: true, ProductPricing.BillingMode: ProductPricingBillingMode.Upfront } &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
 
     private static bool ShouldStartRecurringBookingBankTransferPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
-        marketplaceBooking.IsPaymentRequired &&
-        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking is { IsPaymentRequired: true, ProductPricing.BillingMode: ProductPricingBillingMode.Upfront } &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer;
 
     private static bool ShouldSkipResourceMaterializationForTerminalPaymentStatus(MarketplaceBooking? marketplaceBooking) =>
@@ -663,7 +660,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return false;
         }
 
-        if (subscription.AutoRenew && subscription.MarketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal)
+        if (subscription is { AutoRenew: true, MarketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal: true })
         {
             return false;
         }

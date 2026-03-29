@@ -7,6 +7,7 @@ namespace Booking.Shared.Services;
 public interface IOrganizationArrearsChargeSegmentService
 {
     ICollection<ArrearsChargeSegment> BuildChargeSegments(Models.Booking booking, OrganizationBillingCycle billingCycle);
+    ICollection<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(RecurringBooking recurringBooking, OrganizationBillingCycle billingCycle);
 }
 
 public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsChargeSegmentService
@@ -19,13 +20,13 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             return [];
         }
 
-        var organizationId = booking.InvolvedOrganizations.Select(item => item.Id).FirstOrDefault();
+        var organizationId = marketplaceBooking.ProductVersion.Product.Organization.Id;
         var customerId = marketplaceBooking.PaidByCustomer?.Id
                          ?? booking.CreatedByCustomer?.Id
                          ?? booking.InvolvedCustomers.Select(item => item.Id).Distinct().SingleOrDefault();
-        var currency = marketplaceBooking.Currency;
+        var currency = marketplaceBooking.Currency ?? marketplaceBooking.ProductVersion.Currency;
 
-        if (string.IsNullOrWhiteSpace(organizationId) || string.IsNullOrWhiteSpace(customerId) || currency is null)
+        if (string.IsNullOrWhiteSpace(organizationId) || string.IsNullOrWhiteSpace(customerId))
         {
             return [];
         }
@@ -33,8 +34,37 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
 
         return ShouldSplitByBillingCycle(purchaseCadence, billingCycle)
-            ? BuildInstallmentsByBillingCycle(booking, organizationId, customerId, currency.Value, billingCycle)
-            : [BuildSingleChargeSegment(booking, organizationId, customerId, currency.Value)];
+            ? BuildInstallmentsByBillingCycle(booking, organizationId, customerId, currency, billingCycle)
+            : [BuildSingleChargeSegment(booking, organizationId, customerId, currency)];
+    }
+
+    public ICollection<ArrearsChargeSegment> BuildInitialRecurringChargeSegments(
+        RecurringBooking recurringBooking,
+        OrganizationBillingCycle billingCycle)
+    {
+        var marketplaceBooking = recurringBooking.MarketplaceBooking;
+        if (marketplaceBooking is null || marketplaceBooking.BillingMode != ProductPricingBillingMode.InArrears || !recurringBooking.EndDate.HasValue)
+        {
+            return [];
+        }
+
+        var organizationId = marketplaceBooking.ProductVersion.Product.Organization.Id;
+        var customerId = marketplaceBooking.PaidByCustomer?.Id
+                         ?? recurringBooking.CreatedByCustomer?.Id
+                         ?? recurringBooking.InvolvedCustomers.Select(item => item.Id).Distinct().SingleOrDefault();
+        var currency = marketplaceBooking.Currency ?? marketplaceBooking.ProductVersion.Currency;
+
+        if (string.IsNullOrWhiteSpace(organizationId) || string.IsNullOrWhiteSpace(customerId))
+        {
+            return [];
+        }
+
+        var servicePeriod = new BillingPeriod(recurringBooking.StartDate, recurringBooking.EndDate.Value.AddDays(1));
+        var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
+
+        return ShouldSplitByBillingCycle(purchaseCadence, billingCycle)
+            ? BuildRecurringInstallmentsByBillingCycle(recurringBooking, organizationId, customerId, currency, billingCycle, servicePeriod)
+            : [BuildSingleRecurringChargeSegment(recurringBooking, organizationId, customerId, currency, servicePeriod)];
     }
 
     private static ArrearsChargeSegment BuildSingleChargeSegment(
@@ -95,6 +125,66 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         return items;
     }
 
+    private static ArrearsChargeSegment BuildSingleRecurringChargeSegment(
+        RecurringBooking recurringBooking,
+        string organizationId,
+        string customerId,
+        Currency currency,
+        BillingPeriod servicePeriod)
+    {
+        var amount = CalculateRecurringChargeAmount(recurringBooking, servicePeriod).RoundedDecimal();
+        var earnedAt = GetEarnedAt(servicePeriod);
+
+        return new ArrearsChargeSegment(
+            BuildSegmentKey(recurringBooking.Id, customerId, servicePeriod.StartInclusive, servicePeriod.EndExclusive),
+            recurringBooking.Id,
+            organizationId,
+            customerId,
+            currency,
+            servicePeriod,
+            earnedAt,
+            amount,
+            BuildDescription(recurringBooking, servicePeriod));
+    }
+
+    private static ICollection<ArrearsChargeSegment> BuildRecurringInstallmentsByBillingCycle(
+        RecurringBooking recurringBooking,
+        string organizationId,
+        string customerId,
+        Currency currency,
+        OrganizationBillingCycle billingCycle,
+        BillingPeriod fullServicePeriod)
+    {
+        var totalAmount = CalculateRecurringChargeAmount(recurringBooking, fullServicePeriod).RoundedDecimal();
+        var servicePeriods = SplitIntoBillingCyclePeriods(fullServicePeriod.StartInclusive, fullServicePeriod.EndExclusive, billingCycle);
+        var totalDurationTicks = servicePeriods.Sum(item => (item.EndExclusive - item.StartInclusive).Ticks);
+        var remaining = totalAmount;
+        var items = new List<ArrearsChargeSegment>(servicePeriods.Count);
+
+        for (var index = 0; index < servicePeriods.Count; index++)
+        {
+            var servicePeriod = servicePeriods[index];
+            var earnedAt = GetEarnedAt(servicePeriod);
+            var installmentAmount = index == servicePeriods.Count - 1
+                ? remaining.RoundedDecimal()
+                : (totalAmount * (servicePeriod.EndExclusive - servicePeriod.StartInclusive).Ticks / totalDurationTicks).RoundedDecimal();
+            remaining -= installmentAmount;
+
+            items.Add(new ArrearsChargeSegment(
+                BuildSegmentKey(recurringBooking.Id, customerId, servicePeriod.StartInclusive, servicePeriod.EndExclusive),
+                recurringBooking.Id,
+                organizationId,
+                customerId,
+                currency,
+                servicePeriod,
+                earnedAt,
+                installmentAmount,
+                BuildDescription(recurringBooking, servicePeriod)));
+        }
+
+        return items;
+    }
+
     private static decimal CalculateBookingChargeAmount(Models.Booking booking)
     {
         var marketplaceBooking = booking.MarketplaceBooking!;
@@ -102,6 +192,34 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         var totalMinutes = (decimal)(booking.Until - booking.From).TotalMinutes;
 
         return pricing.BookingCadence switch
+        {
+            ProductPricingCadence.OneTime => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.HalfDay => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Daily => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Weekly => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Fortnightly => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Monthly => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.PerMinute => pricing.Price * marketplaceBooking.Quantity * totalMinutes,
+            ProductPricingCadence.Per15Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 15m),
+            ProductPricingCadence.Per30Minutes => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 30m),
+            ProductPricingCadence.PerHour => pricing.Price * marketplaceBooking.Quantity * (totalMinutes / 60m),
+            ProductPricingCadence.TwoMonths => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Quarterly => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.FourMonths => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.FiveMonths => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.SixMonths => pricing.Price * marketplaceBooking.Quantity,
+            ProductPricingCadence.Yearly => pricing.Price * marketplaceBooking.Quantity,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
+
+    private static decimal CalculateRecurringChargeAmount(RecurringBooking recurringBooking, BillingPeriod servicePeriod)
+    {
+        var marketplaceBooking = recurringBooking.MarketplaceBooking!;
+        var pricing = marketplaceBooking.ProductPricing;
+        var totalMinutes = (decimal)(servicePeriod.EndExclusive - servicePeriod.StartInclusive).TotalMinutes;
+
+        return pricing.PurchaseCadence switch
         {
             ProductPricingCadence.OneTime => pricing.Price * marketplaceBooking.Quantity,
             ProductPricingCadence.HalfDay => pricing.Price * marketplaceBooking.Quantity,
@@ -214,6 +332,14 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         return string.IsNullOrWhiteSpace(title)
             ? $"{booking.From:yyyy-MM-dd HH:mm} - {booking.Until:yyyy-MM-dd HH:mm}"
             : $"{title}{Environment.NewLine}{booking.From:yyyy-MM-dd HH:mm} - {booking.Until:yyyy-MM-dd HH:mm}";
+    }
+
+    private static string BuildDescription(RecurringBooking recurringBooking, BillingPeriod servicePeriod)
+    {
+        var title = recurringBooking.MarketplaceBooking?.ProductPricing.ListingMetadata.Title;
+        return string.IsNullOrWhiteSpace(title)
+            ? $"{servicePeriod.StartInclusive:yyyy-MM-dd HH:mm} - {servicePeriod.EndExclusive:yyyy-MM-dd HH:mm}"
+            : $"{title}{Environment.NewLine}{servicePeriod.StartInclusive:yyyy-MM-dd HH:mm} - {servicePeriod.EndExclusive:yyyy-MM-dd HH:mm}";
     }
 
     private static string BuildSegmentKey(string bookingId, string customerId, DateTimeOffset periodStart, DateTimeOffset periodEnd) =>

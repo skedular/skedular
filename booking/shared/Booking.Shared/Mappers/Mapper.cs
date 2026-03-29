@@ -9,6 +9,7 @@ using Customer = Booking.Shared.Database.Entities.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Organization = Booking.Shared.Database.Entities.Organization;
+using Product = Booking.Shared.Models.Product;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
 using Resource = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Resource;
 using StripeCheckoutSession = Booking.Shared.Database.Entities.StripeCheckoutSession;
@@ -608,8 +609,23 @@ public class Mapper : IMapper
             Type = src.Type.ToSafeString().ToProductType(),
             Currency = src.Currency.ToSafeString().ToCurrency(),
             ListingMetadata = src.ListingMetadata ?? ListingMetadata.Empty,
-            PricingOptions = src.PricingOptions.ToSafeCollection()
+            PricingOptions = src.PricingOptions.ToSafeCollection(),
+            Product = MapTo(src.Product)!,
+            OrganizationTags = MapTo(src.OrganizationTags).ToList()
         };
+
+    private static Product? MapTo(Database.Entities.Product? src) =>
+        src is null
+            ? null
+            : new Product
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                DeletedAt = src.DeletedAt,
+                ModifiedAt = src.ModifiedAt,
+                EventRaisedAt = src.EventRaisedAt,
+                Organization = MapTo(src.Organization) ?? new Models.Organization()
+            };
 
     private MarketplaceBookingSubscription MapToSubscriptionShallow(Database.Entities.MarketplaceBookingSubscription src) =>
         new()

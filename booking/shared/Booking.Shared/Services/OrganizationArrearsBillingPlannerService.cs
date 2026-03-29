@@ -10,6 +10,11 @@ public interface IOrganizationArrearsBillingPlannerService
         OrganizationBillingCycle billingCycle,
         ICollection<Models.Booking> bookings,
         ICollection<string>? excludedSegmentKeys = null);
+
+    ArrearsInvoiceDraft? BuildInitialRecurringInvoiceDraft(
+        RecurringBooking recurringBooking,
+        OrganizationBillingCycle billingCycle,
+        ICollection<string>? excludedSegmentKeys = null);
 }
 
 public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsChargeSegmentService organizationArrearsChargeSegmentService)
@@ -43,4 +48,33 @@ public class OrganizationArrearsBillingPlannerService(IOrganizationArrearsCharge
                         item.Description))
                     .ToList()))
             .ToList();
+
+    public ArrearsInvoiceDraft? BuildInitialRecurringInvoiceDraft(
+        RecurringBooking recurringBooking,
+        OrganizationBillingCycle billingCycle,
+        ICollection<string>? excludedSegmentKeys = null) =>
+        organizationArrearsChargeSegmentService.BuildInitialRecurringChargeSegments(recurringBooking, billingCycle)
+            .Where(item => excludedSegmentKeys is null || !excludedSegmentKeys.Contains(item.SegmentKey))
+            .OrderBy(item => item.EarnedAt)
+            .GroupBy(item => new { item.OrganizationId, item.CustomerId, item.Currency })
+            .Select(group =>
+            {
+                var firstSegment = group.First();
+
+                return new ArrearsInvoiceDraft(
+                    group.Key.OrganizationId,
+                    group.Key.CustomerId,
+                    group.Key.Currency,
+                    firstSegment.ServicePeriod,
+                    [
+                        new ArrearsInvoiceDraftLine(
+                            firstSegment.SegmentKey,
+                            firstSegment.BookingId,
+                            firstSegment.ServicePeriod,
+                            firstSegment.EarnedAt,
+                            firstSegment.Amount,
+                            firstSegment.Description)
+                    ]);
+            })
+            .FirstOrDefault();
 }

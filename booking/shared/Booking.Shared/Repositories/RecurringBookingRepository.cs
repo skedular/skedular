@@ -38,6 +38,8 @@ internal static class RecurringBookingExtensions
             .Include(query => query.MarketplaceBookingSubscription)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
+            .ThenInclude(query => query.Product)
+            .ThenInclude(query => query.Organization)
             .Include(query => query.InvolvedCustomers)
             .ThenInclude(query => query.Identities)
             .Include(query => query.InvolvedOrganizations)

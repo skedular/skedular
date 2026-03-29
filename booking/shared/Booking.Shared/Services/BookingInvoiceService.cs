@@ -3,6 +3,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -40,7 +41,10 @@ public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    IProductVersionHelperService productVersionHelperService) : IBookingInvoiceService
+    IProductVersionHelperService productVersionHelperService,
+    IMapper mapper,
+    IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
+    IOrganizationArrearsInvoiceService organizationArrearsInvoiceService) : IBookingInvoiceService
 {
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
     {
@@ -82,6 +86,31 @@ public class BookingInvoiceService(
         if (productVersion is null)
         {
             throw new ProductVersionNotFound();
+        }
+
+        if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears)
+        {
+            ArgumentNullException.ThrowIfNull(productVersion.Product);
+            ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
+
+            var recurringBookingModel = mapper.MapTo(recurringBooking);
+            var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
+                recurringBookingModel,
+                productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
+            if (draft is null)
+            {
+                return null;
+            }
+
+            var arrearsOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+                                          productVersion.Product.Organization.Id,
+                                          null,
+                                          false,
+                                          false,
+                                          cancellationToken) ??
+                                      throw new OrganizationNotFound();
+
+            return organizationArrearsInvoiceService.GenerateInvoice(arrearsOrganization, draft, marketplaceBooking.InvoiceNumber ?? string.Empty);
         }
 
         var (organization, bankAccount) = await GetOrganizationAndBankAccountAsync(productVersion.Product.Organization.Id, cancellationToken);
