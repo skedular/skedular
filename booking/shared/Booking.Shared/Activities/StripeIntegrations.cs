@@ -332,7 +332,9 @@ public class StripeIntegrations(
                 return null;
             }
 
-            var checkoutAmount = marketplaceBooking.TotalAmount ?? draft.TotalAmount;
+            var checkoutAmount = marketplaceBooking.ProductPricing.IsTaxInclusive
+                ? marketplaceBooking.TotalAmount ?? draft.TotalAmount
+                : marketplaceBooking.TotalAmountExcludeTax ?? draft.TotalAmount;
 
             lineItems =
             [
@@ -343,8 +345,10 @@ public class StripeIntegrations(
                     {
                         Currency = draft.Currency.ToString().ToLowerInvariant(),
                         UnitAmountDecimal = (checkoutAmount * 100).RoundedDecimal(),
+                        TaxBehavior = marketplaceBooking.ProductPricing.IsTaxInclusive ? "inclusive" : "exclusive",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
+                            TaxCode = "txcd_10103001",
                             Name = draft.Lines.FirstOrDefault()?.Description ??
                                    productVersion.ListingMetadata?.Title ??
                                    "Subscription invoice"
@@ -372,7 +376,7 @@ public class StripeIntegrations(
                 ClientReferenceId = recurringBooking.Id,
                 SuccessUrl = checkoutReturnUrl,
                 CancelUrl = checkoutReturnUrl,
-                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = !isInArrears },
+                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
                 CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
             },
             new RequestOptions { IdempotencyKey = recurringBooking.Id, StripeAccount = args.StripeConnectAccountId },

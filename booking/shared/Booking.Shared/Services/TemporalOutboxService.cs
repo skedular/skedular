@@ -138,6 +138,8 @@ public class TemporalOutboxService(
     private static readonly string s_bookMarketplaceBookingSubscriptionResources =
         typeof(BookMarketplaceBookingSubscriptionResources).ToWorkflowType();
 
+    private static readonly string s_generateInitialArrearsBookingInvoice = typeof(GenerateInitialArrearsBookingInvoice).ToWorkflowType();
+
     private static readonly string s_payBookingViaCardSetPaymentStatusAsync =
         typeof(PayBookingViaCard).GetMethod(nameof(PayBookingViaCard.SetPaymentStatusAsync))!.ToWorkflowSignalType();
 
@@ -368,6 +370,22 @@ public class TemporalOutboxService(
             {
             }
         }
+        else if (workflowType == s_generateInitialArrearsBookingInvoice)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<GenerateInitialArrearsBookingInvoiceInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync(
+                    (GenerateInitialArrearsBookingInvoice workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
         else if (workflowType == s_bookMarketplaceBookingSubscriptionResources)
         {
             try
@@ -561,14 +579,4 @@ public class TemporalOutboxService(
             }
         }
     }
-
-    private WorkflowOptions ToOrganizationArrearsBillingWorkflowOptions(string organizationId) =>
-        new()
-        {
-            Id = temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}"),
-            TaskQueue = temporalConfiguration.Worker.TaskQueue,
-            RetryPolicy = null,
-            IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
-            IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
-        };
 }

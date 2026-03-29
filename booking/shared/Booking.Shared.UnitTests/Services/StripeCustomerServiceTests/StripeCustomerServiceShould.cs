@@ -61,7 +61,7 @@ public class StripeCustomerServiceShould
         A.CallTo(() => randomHelper.Generate()).Returns(generatedId);
         A.CallTo(() => stripeCustomerRepository.Add(A<StripeCustomer>._))
             .Invokes((StripeCustomer stripeCustomerEntity) => addedStripeCustomer = stripeCustomerEntity)
-            .ReturnsLazily(call => call.GetArgument<StripeCustomer>(0));
+            .ReturnsLazily(call => call.GetArgument<StripeCustomer>(0)!);
 
         var result = await sut.AddCustomerAsync(organization, stripeAccountId, cancellationToken);
 

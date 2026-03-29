@@ -45,8 +45,7 @@ public class BookingInvoiceService(
     OrganizationService.OrganizationServiceClient organizationServiceClient,
     IProductVersionHelperService productVersionHelperService,
     IMapper mapper,
-    IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
-    IOrganizationArrearsInvoiceService organizationArrearsInvoiceService) : IBookingInvoiceService
+    IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService) : IBookingInvoiceService
 {
     public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
     {
@@ -436,10 +435,7 @@ public class BookingInvoiceService(
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
             if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears &&
-                marketplaceBooking.TotalAmountExcludeTax.HasValue &&
-                marketplaceBooking.TaxAmount.HasValue &&
-                marketplaceBooking.TaxRatePercentage.HasValue &&
-                marketplaceBooking.TotalAmount.HasValue)
+                marketplaceBooking is { TotalAmountExcludeTax: not null, TaxAmount: not null, TaxRatePercentage: not null, TotalAmount: not null })
             {
                 return (
                     marketplaceBooking.TotalAmountExcludeTax.Value,
