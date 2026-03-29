@@ -1,5 +1,6 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
+using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Grpc;
 using Enterprise.Shared.Random;
@@ -137,7 +138,15 @@ public class OrganizationBookingDerivedState(
         do
         {
             var response = await bookingServiceClient.Admin_GetPaginatedBookingsAsync(
-                new Admin_GetPaginatedBookingsInput { After = after ?? string.Empty, First = 1000, Where = where },
+                new Admin_GetPaginatedBookingsInput
+                {
+                    After = after ?? string.Empty,
+                    First = 1000,
+                    Before = string.Empty,
+                    Last = ((int?)null).ToNullInt(),
+                    Where = where,
+                    OrderBy = { new BookingOrderInput { Direction = OrderDirection.Ascending, Field = BookingOrderField.From } }
+                },
                 bookingConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken);
 
