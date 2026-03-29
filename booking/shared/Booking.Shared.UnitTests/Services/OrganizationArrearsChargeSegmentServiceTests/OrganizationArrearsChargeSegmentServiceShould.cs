@@ -230,7 +230,7 @@ public class OrganizationArrearsChargeSegmentServiceShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = quantity,
-                Currency = "NZD",
+                Currency = Currency.Nzd,
                 BillingMode = billingMode,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {

@@ -469,7 +469,7 @@ type LocationTypeDetails {
 type MarketplaceBookingDetails {
   billingMode: ProductPricingBillingMode!
   bookingCheckoutSession: BookingCheckoutSessionDetails
-  currency: String
+  currency: CurrencyDetails
   currencyToDisplay: String!
   id: ID!
   invoiceEmailList: [String!]!

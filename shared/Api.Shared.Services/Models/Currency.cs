@@ -14,6 +14,19 @@ public static class CurrencyConstants
 
 public static class CurrencyExtensions
 {
+    extension(Currency? src)
+    {
+        public string? ToNullableCurrency() =>
+            src is null
+                ? null
+                : src switch
+                {
+                    Currency.Nzd => CurrencyConstants.Nzd,
+                    Currency.Usd => CurrencyConstants.Usd,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+    }
+
     extension(Currency src)
     {
         public string ToCurrency() =>
@@ -35,14 +48,6 @@ public static class CurrencyExtensions
 
     extension(string src)
     {
-        public string ToCurrencyName() =>
-            src switch
-            {
-                CurrencyConstants.Nzd => "NZD - $",
-                CurrencyConstants.Usd => "USD - $",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
         public string ToInvoiceCurrencyName() =>
             src switch
             {
@@ -58,5 +63,18 @@ public static class CurrencyExtensions
                 CurrencyConstants.Usd => Currency.Usd,
                 _ => throw new ArgumentOutOfRangeException()
             };
+    }
+
+    extension(string? src)
+    {
+        public Currency? ToNullableCurrency() =>
+            src is null
+                ? null
+                : src switch
+                {
+                    CurrencyConstants.Nzd => Currency.Nzd,
+                    CurrencyConstants.Usd => Currency.Usd,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
     }
 }

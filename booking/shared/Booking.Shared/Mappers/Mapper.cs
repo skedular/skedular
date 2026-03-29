@@ -255,7 +255,7 @@ public class Mapper : IMapper
             InvoiceUrl = src.InvoiceUrl,
             BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
             BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
-            Currency = src.Currency,
+            Currency = src.Currency.ToCurrency(),
             TotalAmount = src.TotalAmount
         };
 
@@ -589,7 +589,7 @@ public class Mapper : IMapper
                 TaxAmount = src.TaxAmount,
                 TaxRatePercentage = src.TaxRatePercentage,
                 TotalAmount = src.TotalAmount,
-                Currency = src.Currency,
+                Currency = src.Currency.ToNullableCurrency(),
                 InvoiceUrl = src.InvoiceUrl,
                 InvoiceNumber = src.InvoiceNumber,
                 CheckoutReturnUrl = src.CheckoutReturnUrl,
@@ -677,7 +677,7 @@ public class Mapper : IMapper
         src.TaxAmount = marketplaceBooking.TaxAmount;
         src.TaxRatePercentage = marketplaceBooking.TaxRatePercentage;
         src.TotalAmount = marketplaceBooking.TotalAmount;
-        src.Currency = marketplaceBooking.Currency;
+        src.Currency = marketplaceBooking.Currency.ToNullableCurrency();
         src.InvoiceUrl = marketplaceBooking.InvoiceUrl;
         src.InvoiceNumber = marketplaceBooking.InvoiceNumber;
         src.CheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl;
@@ -711,7 +711,7 @@ public class Mapper : IMapper
         dest.TaxAmount = src.TaxAmount;
         dest.TaxRatePercentage = src.TaxRatePercentage;
         dest.TotalAmount = src.TotalAmount;
-        dest.Currency = src.Currency;
+        dest.Currency = src.Currency.ToNullableCurrency();
         dest.InvoiceUrl = src.InvoiceUrl;
         dest.InvoiceNumber = src.InvoiceNumber;
         dest.CheckoutReturnUrl = src.CheckoutReturnUrl;

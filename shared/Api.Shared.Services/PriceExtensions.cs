@@ -14,15 +14,4 @@ public static class PriceExtensions
                 _ => throw new ArgumentOutOfRangeException()
             };
     }
-
-    extension(Currency currency)
-    {
-        public string ToCurrencyToDisplay() =>
-            currency switch
-            {
-                Currency.Nzd => "NZ$",
-                Currency.Usd => "US$",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-    }
 }

@@ -83,11 +83,9 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             InvoiceUrl = src.InvoiceUrl,
             BillingPeriodStartInclusive = src.BillingPeriodStartInclusive,
             BillingPeriodEndExclusive = src.BillingPeriodEndExclusive,
-            Currency = src.Currency,
+            Currency = src.Currency.ToCurrency(),
             TotalAmount = src.TotalAmount,
-            TotalAmountToDisplay = string.IsNullOrWhiteSpace(src.Currency)
-                ? src.TotalAmount.ToRoundedDecimal()
-                : src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+            TotalAmountToDisplay = src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency),
             CreatedAt = src.CreatedAt
         };
 
@@ -544,21 +542,22 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
                 InvoiceEmailList = src.InvoiceEmailList,
                 BillingMode = src.BillingMode,
                 TotalAmountExcludeTax = src.TotalAmountExcludeTax,
-                TotalAmountExcludeTaxToDisplay = src.TotalAmountExcludeTax is null || string.IsNullOrWhiteSpace(src.Currency)
+                TotalAmountExcludeTaxToDisplay = src.TotalAmountExcludeTax is null || src.Currency is null
                     ? "N/A"
-                    : src.TotalAmountExcludeTax.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                    : src.TotalAmountExcludeTax.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.Value),
                 TaxAmount = src.TaxAmount,
-                TaxAmountToDisplay = src.TaxAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                TaxAmountToDisplay = src.TaxAmount is null || src.Currency is null
                     ? "N/A"
-                    : src.TaxAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
+                    : src.TaxAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.Value),
                 TaxRatePercentage = src.TaxRatePercentage,
                 TaxRatePercentageToDisplay = src.TaxRatePercentage is null ? "N/A" : src.TaxRatePercentage.Value.ToRoundedDecimal(),
                 TotalAmount = src.TotalAmount,
-                TotalAmountToDisplay = src.TotalAmount is null || string.IsNullOrWhiteSpace(src.Currency)
+                TotalAmountToDisplay = src.TotalAmount is null || src.Currency is null
                     ? "N/A"
-                    : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.ToCurrency()),
-                Currency = src.Currency,
-                CurrencyToDisplay = string.IsNullOrWhiteSpace(src.Currency) ? "N/A" : src.Currency.ToCurrencyName()
+                    : src.TotalAmount.Value.ToRoundedPrice().ToPriceToDisplay(src.Currency.Value),
+                Currency =
+                    src.Currency is null ? null : new CurrencyDetails { Type = src.Currency.Value, Name = src.Currency.Value.ToCurrencyName() },
+                CurrencyToDisplay = src.Currency is null ? "N/A" : src.Currency.Value.ToCurrencyName()
             };
 
     private static global::Api.Shared.Services.Grpc.Skedular.Booking.V1.MarketplaceBooking? MapToGrpcResponse(MarketplaceBooking? src)
@@ -591,7 +590,7 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             TaxAmount = src.TaxAmount.ToNullDouble(),
             TaxRatePercentage = src.TaxRatePercentage.ToNullDouble(),
             TotalAmount = src.TotalAmount.ToNullDouble(),
-            Currency = src.Currency.ToSafeString(),
+            Currency = src.Currency.ToNullableCurrency(),
             InvoiceUrl = src.InvoiceUrl.ToSafeString(),
             InvoiceNumber = src.InvoiceNumber.ToSafeString(),
             PaymentMethod = src.PaymentMethod switch

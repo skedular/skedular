@@ -25,7 +25,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
                          ?? booking.InvolvedCustomers.Select(item => item.Id).Distinct().SingleOrDefault();
         var currency = marketplaceBooking.Currency;
 
-        if (string.IsNullOrWhiteSpace(organizationId) || string.IsNullOrWhiteSpace(customerId) || string.IsNullOrWhiteSpace(currency))
+        if (string.IsNullOrWhiteSpace(organizationId) || string.IsNullOrWhiteSpace(customerId) || currency is null)
         {
             return [];
         }
@@ -33,15 +33,15 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         var purchaseCadence = marketplaceBooking.ProductPricing.PurchaseCadence;
 
         return ShouldSplitByBillingCycle(purchaseCadence, billingCycle)
-            ? BuildInstallmentsByBillingCycle(booking, organizationId, customerId, currency, billingCycle)
-            : [BuildSingleChargeSegment(booking, organizationId, customerId, currency)];
+            ? BuildInstallmentsByBillingCycle(booking, organizationId, customerId, currency.Value, billingCycle)
+            : [BuildSingleChargeSegment(booking, organizationId, customerId, currency.Value)];
     }
 
     private static ArrearsChargeSegment BuildSingleChargeSegment(
         Models.Booking booking,
         string organizationId,
         string customerId,
-        string currency)
+        Currency currency)
     {
         var amount = CalculateBookingChargeAmount(booking).RoundedDecimal();
         var earnedAt = GetEarnedAt(new BillingPeriod(booking.From, booking.Until));
@@ -62,7 +62,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         Models.Booking booking,
         string organizationId,
         string customerId,
-        string currency,
+        Currency currency,
         OrganizationBillingCycle billingCycle)
     {
         var totalAmount = CalculateBookingChargeAmount(booking).RoundedDecimal();

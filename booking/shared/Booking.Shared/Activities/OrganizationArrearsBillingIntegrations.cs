@@ -240,7 +240,7 @@ public class OrganizationArrearsBillingIntegrations(
                 InvoiceUrl = invoiceUrl,
                 BillingPeriodStartInclusive = draft.BillingPeriod.StartInclusive,
                 BillingPeriodEndExclusive = draft.BillingPeriod.EndExclusive,
-                Currency = draft.Currency,
+                Currency = draft.Currency.ToCurrency(),
                 TotalAmount = draft.TotalAmount,
                 Lines = draft.Lines.Select(line => new OrganizationArrearsInvoiceLine
                 {

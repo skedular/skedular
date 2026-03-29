@@ -89,6 +89,11 @@ type ConnectionOfRecurringBookingEdge {
   totalCount: Int!
 }
 
+type CurrencyDetails {
+  type: Currency!
+  name: String!
+}
+
 type CustomerDetails {
   id: ID!
 }
@@ -120,7 +125,7 @@ type MarketplaceBookingDetails {
   taxRatePercentageToDisplay: String!
   totalAmount: Decimal
   totalAmountToDisplay: String!
-  currency: String
+  currency: CurrencyDetails
   currencyToDisplay: String!
   invoiceUrl: String
   invoiceNumber: String
@@ -682,6 +687,11 @@ enum BookingOrderField {
   NOTES
   CATEGORY
   CHANNEL
+}
+
+enum Currency {
+  NZD
+  USD
 }
 
 enum DayOfWeek {

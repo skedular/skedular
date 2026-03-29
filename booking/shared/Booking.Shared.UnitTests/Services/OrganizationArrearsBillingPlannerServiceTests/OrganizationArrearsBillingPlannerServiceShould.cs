@@ -41,7 +41,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     firstBooking.Id,
                     "org-1",
                     "customer-1",
-                    "NZD",
+                    Currency.Nzd,
                     new BillingPeriod(firstBooking.From, firstBooking.Until),
                     firstBooking.Until,
                     20m,
@@ -55,7 +55,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     secondBooking.Id,
                     "org-1",
                     "customer-1",
-                    "NZD",
+                    Currency.Nzd,
                     new BillingPeriod(secondBooking.From, secondBooking.Until),
                     secondBooking.Until,
                     25m,
@@ -95,7 +95,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
                     booking.Id,
                     "org-1",
                     "customer-1",
-                    "NZD",
+                    Currency.Nzd,
                     new BillingPeriod(booking.From, booking.Until),
                     booking.Until,
                     25m,
@@ -126,7 +126,7 @@ public class OrganizationArrearsBillingPlannerServiceShould
             MarketplaceBooking = new MarketplaceBooking
             {
                 Quantity = quantity,
-                Currency = "NZD",
+                Currency = Currency.Nzd,
                 BillingMode = billingMode,
                 ProductPricing = ProductPricing.Empty("pricing-1") with
                 {

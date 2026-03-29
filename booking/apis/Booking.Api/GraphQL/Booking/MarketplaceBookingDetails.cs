@@ -34,7 +34,7 @@ public class MarketplaceBookingDetails : Node
 
     [GraphQLName("totalAmount")] public decimal? TotalAmount { get; set; }
     [GraphQLName("totalAmountToDisplay")] public string TotalAmountToDisplay { get; set; } = string.Empty;
-    [GraphQLName("currency")] public string? Currency { get; set; }
+    [GraphQLName("currency")] public CurrencyDetails? Currency { get; set; }
     [GraphQLName("currencyToDisplay")] public string CurrencyToDisplay { get; set; } = string.Empty;
     [GraphQLName("invoiceUrl")] public string? InvoiceUrl { get; set; }
     [GraphQLName("invoiceNumber")] public string? InvoiceNumber { get; set; }

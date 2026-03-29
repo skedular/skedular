@@ -19,7 +19,7 @@ public record ArrearsChargeSegment(
     string BookingId,
     string OrganizationId,
     string CustomerId,
-    string Currency,
+    Currency Currency,
     BillingPeriod ServicePeriod,
     DateTimeOffset EarnedAt,
     decimal Amount,
@@ -36,7 +36,7 @@ public record ArrearsInvoiceDraftLine(
 public record ArrearsInvoiceDraft(
     string OrganizationId,
     string CustomerId,
-    string Currency,
+    Currency Currency,
     BillingPeriod BillingPeriod,
     ICollection<ArrearsInvoiceDraftLine> Lines)
 {

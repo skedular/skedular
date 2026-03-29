@@ -15,7 +15,7 @@ public class MarketplaceBooking : ModelBase
     public decimal? TaxAmount { get; set; }
     public decimal? TaxRatePercentage { get; set; }
     public decimal? TotalAmount { get; set; }
-    public string? Currency { get; set; }
+    public Currency? Currency { get; set; }
     public string? InvoiceUrl { get; set; }
     public string? InvoiceNumber { get; set; }
     public string? CheckoutReturnUrl { get; set; }
