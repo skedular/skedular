@@ -89,6 +89,8 @@ public class LocationSubscriber(
         (existingLocation, var resourceIdsToRegenerateBookingSlots) =
             await RebuildResourcesAsync(location, existingLocation, organization, cancellationToken);
 
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+
         if (locationOpeningHoursChanged)
         {
             if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
@@ -101,7 +103,7 @@ public class LocationSubscriber(
         }
         else
         {
-            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName)
+            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName && resourceIdsToRegenerateBookingSlots.Count != 0)
             {
                 // Regenerate those changed
                 await temporalService.StartWorkflowGenerateResourcesSlotsAsync(
@@ -110,8 +112,6 @@ public class LocationSubscriber(
                     cancellationToken);
             }
         }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandleLocationDeletedEventAsync(Location existingLocation, CancellationToken cancellationToken)
