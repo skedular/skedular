@@ -6,6 +6,11 @@ This file is the entry point for AI agents working in `customer/`.
 
 - `customer/` owns customer-facing identity and customer domain state used by other domains.
 
+## Replication Boundary
+
+- Customer and customer-identity data are intentionally replicated into other domains because many domains perform local authorization and membership-aware access checks.
+- Changes to customer shape, identity semantics, or replication assumptions can break authorization behavior outside `customer/`.
+
 ## Where To Read Next
 
 - `customer/apis/AGENTS.md`

@@ -8,6 +8,12 @@ This file covers `organization/shared/`.
 - It does not own replicated booking entities.
 - Recompute is driven by booking events that trigger Temporal, then the workflow/activity pulls authoritative booking data and rewrites compact local snapshots.
 
+## Replication Boundary
+
+- `organization/shared/` may still contain replicated organization-adjacent auth state consumed by local authorization flows.
+- Keep organization, organization-member, customer, and customer-identity replicas where they support local access checks.
+- Do not treat auth-critical replicas as candidates for the workflow-rebuild pattern used for booking-derived analytics.
+
 ## Temporal Rule
 
 - Organization booking-derived recompute uses a short-lived signal-with-start workflow pattern.

@@ -15,6 +15,7 @@ Other domains often depend on organization state for:
 - bank accounts
 - Stripe connect accounts
 - precomputed organization analytics and usage-related state
+- replicated authorization state such as organization membership and related access checks
 
 ## Where To Read Next
 
@@ -29,6 +30,12 @@ Other domains often depend on organization state for:
 - If some future feature needs to know whether an organization has future bookings, ask the booking domain directly instead of rebuilding the old local flag.
 - Organization analytics and booking-derived usage snapshots are precomputed locally from booking-owned source data.
 - Booking events should be treated as invalidation/recompute triggers, not as payloads for organization-side booking persistence.
+
+## Replication Boundary
+
+- Cross-domain replication is still allowed when the replicated data is needed for authorization or membership-aware access decisions.
+- In practice, organization, organization members, customer, and customer identity are expected to remain replicated across domains when those domains enforce local access rules.
+- The removal target is booking-derived or other passive denormalized state that is not required for authorization, routing, or ownership decisions.
 
 ## Agent Rule
 

@@ -19,6 +19,12 @@ This file is the entry point for AI agents working in `team/`.
 - `team/` does not expose or persist a local `HasFutureBooking` concept.
 - If a future requirement needs team booking existence, that query should go to the booking domain instead of rebuilding team-local state.
 
+## Replication Boundary
+
+- `team/` is still expected to keep replicated organization, organization-member, customer, and customer-identity data where that data is required to enforce local access rules.
+- Do not treat auth-critical replicas as cleanup candidates.
+- Only non-auth booking-derived or passive denormalized state should be removed from `team/`.
+
 ## Agent Rule
 
 - Treat team identity and membership semantics as shared contracts with other domains.

@@ -11,6 +11,11 @@ This file covers `location/shared/`.
 - It does not own replicated booking entities.
 - Recompute is driven by booking events that trigger Temporal, then the workflow/activity pulls authoritative booking data and rewrites compact local snapshots.
 
+## Replication Boundary
+
+- `location/shared/` may still keep replicated organization, organization-member, customer, and customer-identity state when that state is required for local authorization.
+- Those auth-critical replicas are separate from booking-derived analytics and should not be removed by applying the analytics pattern too broadly.
+
 ## Temporal Rule
 
 - Location booking-derived recompute uses a short-lived signal-with-start workflow pattern.
