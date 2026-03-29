@@ -2,8 +2,8 @@ using System.Globalization;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
@@ -13,8 +13,10 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
+using OrganizationBillingCycle = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 
 namespace Booking.Shared.Services;
 
@@ -88,34 +90,34 @@ public class BookingInvoiceService(
             throw new ProductVersionNotFound();
         }
 
-        if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears)
-        {
-            ArgumentNullException.ThrowIfNull(productVersion.Product);
-            ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
-
-            var recurringBookingModel = mapper.MapTo(recurringBooking);
-            var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
-                recurringBookingModel,
-                productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
-            if (draft is null)
-            {
-                return null;
-            }
-
-            var arrearsOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
-                                          productVersion.Product.Organization.Id,
-                                          null,
-                                          false,
-                                          false,
-                                          cancellationToken) ??
-                                      throw new OrganizationNotFound();
-
-            return organizationArrearsInvoiceService.GenerateInvoice(arrearsOrganization, draft, marketplaceBooking.InvoiceNumber ?? string.Empty);
-        }
-
         var (organization, bankAccount) = await GetOrganizationAndBankAccountAsync(productVersion.Product.Organization.Id, cancellationToken);
 
-        return new RecurringInvoiceDocument(recurringBooking, bankAccount, organization, productVersion, marketplaceBooking.PaymentExpiry, fullyPaid);
+        if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() != ProductPricingBillingMode.InArrears)
+        {
+            return new RecurringInvoiceDocument(recurringBooking, bankAccount, organization, productVersion, marketplaceBooking.PaymentExpiry,
+                fullyPaid);
+        }
+
+        ArgumentNullException.ThrowIfNull(productVersion.Product);
+        ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
+
+        var recurringBookingModel = mapper.MapTo(recurringBooking);
+        var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
+            recurringBookingModel,
+            productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
+        if (draft is null)
+        {
+            return null;
+        }
+
+        return new RecurringInvoiceDocument(
+            recurringBooking,
+            bankAccount,
+            organization,
+            productVersion,
+            marketplaceBooking.PaymentExpiry,
+            fullyPaid,
+            draft.Lines.FirstOrDefault());
     }
 
     private async Task<(Organization Organization, BankAccount BankAccount)> GetOrganizationAndBankAccountAsync(
@@ -370,7 +372,8 @@ public class BookingInvoiceService(
         Organization organization,
         ProductVersion productVersion,
         DateTimeOffset dueDate,
-        bool fullyPaid)
+        bool fullyPaid,
+        ArrearsInvoiceDraftLine? initialArrearsLine = null)
         : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate, fullyPaid)
     {
         protected override DateTimeOffset GetInvoiceDate() => recurringBooking.CreatedAt;
@@ -383,6 +386,11 @@ public class BookingInvoiceService(
 
         protected override string GetDescription()
         {
+            if (initialArrearsLine is not null)
+            {
+                return initialArrearsLine.Description;
+            }
+
             var marketplaceBooking = recurringBooking.MarketplaceBooking;
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
             var cycleEnd = recurringBooking.EndDate ?? recurringBooking.StartDate;
@@ -406,6 +414,19 @@ public class BookingInvoiceService(
             var quantity = marketplaceBooking.Quantity;
             var unitPrice = quantity > 0 ? subtotal / quantity : subtotal;
 
+            if (initialArrearsLine is not null)
+            {
+                var billingCycleLabel = marketplaceBooking.ProductVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle() switch
+                {
+                    OrganizationBillingCycle.Weekly => "weekly",
+                    OrganizationBillingCycle.Fortnightly => "fortnightly",
+                    OrganizationBillingCycle.Monthly => "monthly",
+                    _ => marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName()
+                };
+
+                return $"{unitPrice.ToRoundedPrice()} {billingCycleLabel}";
+            }
+
             return $"{unitPrice.ToRoundedPrice()} {marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName()}";
         }
 
@@ -413,6 +434,19 @@ public class BookingInvoiceService(
         {
             var marketplaceBooking = recurringBooking.MarketplaceBooking;
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+            if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears &&
+                marketplaceBooking.TotalAmountExcludeTax.HasValue &&
+                marketplaceBooking.TaxAmount.HasValue &&
+                marketplaceBooking.TaxRatePercentage.HasValue &&
+                marketplaceBooking.TotalAmount.HasValue)
+            {
+                return (
+                    marketplaceBooking.TotalAmountExcludeTax.Value,
+                    marketplaceBooking.TaxAmount.Value,
+                    marketplaceBooking.TaxRatePercentage.Value,
+                    marketplaceBooking.TotalAmount.Value);
+            }
 
             var totalPrice = (marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity).RoundedDecimal();
             if (Organization.TaxDetails is null)

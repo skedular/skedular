@@ -154,25 +154,6 @@ public class BookingIntegrations(
             {
                 totalPrice = draft.TotalAmount.RoundedDecimal();
             }
-
-            marketplaceBooking.TotalAmountExcludeTax = totalPrice;
-            marketplaceBooking.TaxAmount = 0.00m;
-            marketplaceBooking.TaxRatePercentage = 0.00m;
-            marketplaceBooking.TotalAmount = totalPrice;
-
-            repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
-            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
-
-            if (recurringBooking.MarketplaceBookingSubscription is not null)
-            {
-                await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
-                    Constants.MarketplaceBookingSubscriptionTopicName,
-                    recurringBooking.MarketplaceBookingSubscription.Id,
-                    cancellationToken);
-            }
-
-            return;
         }
 
         if (organization.TaxDetails is null)

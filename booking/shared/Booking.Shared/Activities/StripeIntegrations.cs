@@ -332,6 +332,8 @@ public class StripeIntegrations(
                 return null;
             }
 
+            var checkoutAmount = marketplaceBooking.TotalAmount ?? draft.TotalAmount;
+
             lineItems =
             [
                 new SessionLineItemOptions
@@ -340,7 +342,7 @@ public class StripeIntegrations(
                     PriceData = new SessionLineItemPriceDataOptions
                     {
                         Currency = draft.Currency.ToString().ToLowerInvariant(),
-                        UnitAmountDecimal = (draft.TotalAmount * 100).RoundedDecimal(),
+                        UnitAmountDecimal = (checkoutAmount * 100).RoundedDecimal(),
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
                             Name = draft.Lines.FirstOrDefault()?.Description ??
