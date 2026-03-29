@@ -156,8 +156,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         BillingPeriod fullServicePeriod)
     {
         var totalAmount = CalculateRecurringChargeAmount(recurringBooking, fullServicePeriod).RoundedDecimal();
-        var servicePeriods = SplitIntoBillingCyclePeriods(fullServicePeriod.StartInclusive, fullServicePeriod.EndExclusive, billingCycle);
-        var totalDurationTicks = servicePeriods.Sum(item => (item.EndExclusive - item.StartInclusive).Ticks);
+        var servicePeriods = SplitIntoBillingCyclePeriodsFromStart(fullServicePeriod.StartInclusive, fullServicePeriod.EndExclusive, billingCycle);
         var remaining = totalAmount;
         var items = new List<ArrearsChargeSegment>(servicePeriods.Count);
 
@@ -167,7 +166,7 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
             var earnedAt = GetEarnedAt(servicePeriod);
             var installmentAmount = index == servicePeriods.Count - 1
                 ? remaining.RoundedDecimal()
-                : (totalAmount * (servicePeriod.EndExclusive - servicePeriod.StartInclusive).Ticks / totalDurationTicks).RoundedDecimal();
+                : (totalAmount / servicePeriods.Count).RoundedDecimal();
             remaining -= installmentAmount;
 
             items.Add(new ArrearsChargeSegment(
@@ -183,6 +182,32 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
         }
 
         return items;
+    }
+
+    private static List<BillingPeriod> SplitIntoBillingCyclePeriodsFromStart(
+        DateTimeOffset from,
+        DateTimeOffset until,
+        OrganizationBillingCycle billingCycle)
+    {
+        var periods = new List<BillingPeriod>();
+        var cursor = from;
+
+        while (cursor < until)
+        {
+            var nextBoundary = billingCycle switch
+            {
+                OrganizationBillingCycle.Weekly => cursor.AddDays(7),
+                OrganizationBillingCycle.Fortnightly => cursor.AddDays(14),
+                OrganizationBillingCycle.Monthly => cursor.AddMonths(1),
+                _ => throw new ArgumentOutOfRangeException(nameof(billingCycle))
+            };
+
+            var periodEnd = nextBoundary < until ? nextBoundary : until;
+            periods.Add(new BillingPeriod(cursor, periodEnd));
+            cursor = periodEnd;
+        }
+
+        return periods;
     }
 
     private static decimal CalculateBookingChargeAmount(Models.Booking booking)

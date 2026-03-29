@@ -119,7 +119,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
     public async Task ReleaseRecurringBookingResourcesAsync(ReleaseRecurringBookingResourcesInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
+        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdUntrackedAsync(args.RecurringBookingId, cancellationToken);
         if (recurringBooking is null)
         {
             return;
@@ -466,6 +466,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         recurringBooking = await EnsureRecurringBookingMarketplaceBookingLoadedAsync(recurringBooking, cancellationToken);
         var recurringMarketplaceBooking = recurringBooking.MarketplaceBooking;
         if (recurringMarketplaceBooking is null ||
+            recurringMarketplaceBooking.IsPaymentRequired ||
             string.IsNullOrWhiteSpace(recurringMarketplaceBooking.BillingMode) ||
             recurringMarketplaceBooking.BillingMode.ToProductPricingBillingMode() != ProductPricingBillingMode.InArrears ||
             !string.IsNullOrWhiteSpace(recurringMarketplaceBooking.InvoiceNumber) ||
@@ -582,8 +583,9 @@ public class MarketplaceBookingSubscriptionIntegrations(
     {
         var marketplaceBooking = subscription.MarketplaceBooking;
         var bookingCadence = ResolveInstanceBookingCadence(marketplaceBooking.ProductPricing.PurchaseCadence);
-        var isUpfront = marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront;
-        var paymentExpiry = isUpfront
+        var requiresPaymentForCurrentCycle =
+            marketplaceBooking.ProductPricing.BillingMode is ProductPricingBillingMode.Upfront or ProductPricingBillingMode.InArrears;
+        var paymentExpiry = requiresPaymentForCurrentCycle
             ? timeProvider.GetUtcNow()
                 .TrimAllAfterSeconds()
                 .AddMinutes(GetBookingPaymentExpiryInMinutes(marketplaceBooking.ProductPricing, marketplaceBooking.PaymentMethod.ToPaymentMethod()))
@@ -593,11 +595,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
             new MarketplaceBooking
             {
                 Id = randomHelper.Generate(),
-                // Both upfront and in-arrears subscription cycles begin unpaid. Upfront
-                // cycles later create hosted checkout immediately, while in-arrears cycles
-                // stay pending until the organization bills and confirms payment.
+                // Every subscription cycle starts unpaid. Upfront cycles charge the full
+                // cadence now, while in-arrears cycles charge only the first billing slice now.
                 PaymentStatus = PaymentStatus.Pending.ToPaymentStatus(),
-                IsPaymentRequired = isUpfront,
+                IsPaymentRequired = requiresPaymentForCurrentCycle,
                 Quantity = marketplaceBooking.Quantity,
                 ProductPricing = marketplaceBooking.ProductPricing with { BookingCadence = bookingCadence },
                 PaymentMethod = marketplaceBooking.PaymentMethod,
@@ -620,16 +621,16 @@ public class MarketplaceBookingSubscriptionIntegrations(
     }
 
     private static bool ShouldStartRecurringBookingCardPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
-        marketplaceBooking is { IsPaymentRequired: true, ProductPricing.BillingMode: ProductPricingBillingMode.Upfront } &&
+        marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
 
     private static bool ShouldStartRecurringBookingBankTransferPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
-        marketplaceBooking is { IsPaymentRequired: true, ProductPricing.BillingMode: ProductPricingBillingMode.Upfront } &&
+        marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer;
 
     private static bool ShouldSkipResourceMaterializationForTerminalPaymentStatus(MarketplaceBooking? marketplaceBooking) =>
         marketplaceBooking is not null &&
-        marketplaceBooking.ProductPricing.BillingMode == ProductPricingBillingMode.Upfront &&
+        marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.PaymentStatus.ToPaymentStatus() is PaymentStatus.Expired or PaymentStatus.Rejected or PaymentStatus.RecordNeverCreated;
 
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>

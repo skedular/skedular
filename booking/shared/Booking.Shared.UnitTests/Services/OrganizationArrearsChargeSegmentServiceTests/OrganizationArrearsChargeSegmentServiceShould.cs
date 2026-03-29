@@ -211,6 +211,38 @@ public class OrganizationArrearsChargeSegmentServiceShould
         result.Select(item => item.Amount).ToList().ShouldBe([48.28m, 135.17m, 96.55m]);
     }
 
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Split_Initial_Recurring_Quarterly_Cadence_Into_Full_Month_Installments_From_Subscription_Start(
+        OrganizationArrearsChargeSegmentService sut)
+    {
+        var recurringBooking = CreateRecurringBooking(
+            ProductPricingCadence.Quarterly,
+            1450m,
+            1,
+            new DateTimeOffset(2026, 3, 29, 0, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2026, 6, 28, 0, 0, 0, TimeSpan.Zero));
+
+        var result = sut.BuildInitialRecurringChargeSegments(recurringBooking, OrganizationBillingCycle.Monthly).ToList();
+
+        result.Count.ShouldBe(3);
+        result.Select(item => item.ServicePeriod).ToList().ShouldBe(
+        [
+            new BillingPeriod(
+                new DateTimeOffset(2026, 3, 29, 0, 0, 0, TimeSpan.Zero),
+                new DateTimeOffset(2026, 4, 29, 0, 0, 0, TimeSpan.Zero)),
+            new BillingPeriod(
+                new DateTimeOffset(2026, 4, 29, 0, 0, 0, TimeSpan.Zero),
+                new DateTimeOffset(2026, 5, 29, 0, 0, 0, TimeSpan.Zero)),
+            new BillingPeriod(
+                new DateTimeOffset(2026, 5, 29, 0, 0, 0, TimeSpan.Zero),
+                new DateTimeOffset(2026, 6, 29, 0, 0, 0, TimeSpan.Zero))
+        ]);
+        result.First().Amount.ShouldBe(483.33m);
+        result.Select(item => item.Amount).ToList().ShouldBe([483.33m, 483.33m, 483.34m]);
+        result.Select(item => item.Amount).Sum().ShouldBe(1450m);
+    }
+
     private static Models.Booking CreateBooking(
         ProductPricingCadence purchaseCadence,
         ProductPricingCadence bookingCadence,
@@ -238,6 +270,39 @@ public class OrganizationArrearsChargeSegmentServiceShould
                 {
                     PurchaseCadence = purchaseCadence,
                     BookingCadence = bookingCadence,
+                    Price = price,
+                    BillingMode = billingMode,
+                    ListingMetadata = ListingMetadata.Empty with { Title = "Area Pass" }
+                }
+            }
+        };
+
+    private static RecurringBooking CreateRecurringBooking(
+        ProductPricingCadence purchaseCadence,
+        decimal price,
+        int quantity,
+        DateTimeOffset startDate,
+        DateTimeOffset endDate,
+        ProductPricingBillingMode billingMode = ProductPricingBillingMode.InArrears) =>
+        new()
+        {
+            Id = "recurring-booking-1",
+            StartDate = startDate,
+            EndDate = endDate,
+            InvolvedOrganizations = [new Organization { Id = "org-1" }],
+            InvolvedCustomers = [new Customer { Id = "customer-1" }],
+            CreatedByCustomer = new Customer { Id = "customer-1" },
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Quantity = quantity,
+                Currency = Currency.Nzd,
+                BillingMode = billingMode,
+                ProductVersion =
+                    new ProductVersion { Currency = Currency.Nzd, Product = new Product { Organization = new Organization { Id = "org-1" } } },
+                ProductPricing = ProductPricing.Empty("pricing-1") with
+                {
+                    PurchaseCadence = purchaseCadence,
+                    BookingCadence = ProductPricingCadence.Daily,
                     Price = price,
                     BillingMode = billingMode,
                     ListingMetadata = ListingMetadata.Empty with { Title = "Area Pass" }

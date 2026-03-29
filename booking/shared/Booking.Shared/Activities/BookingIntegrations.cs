@@ -28,6 +28,7 @@ public class BookingIntegrations(
     IDbTransactionBuilder transactionBuilder,
     IBookingResourceSlotsHelperService bookingResourceSlotsHelperService,
     IMapper mapper,
+    IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ICachedBookingService cachedBookingService,
     IGraphQlTopicEventSender graphQlTopicEventSender)
@@ -142,6 +143,37 @@ public class BookingIntegrations(
 
         var totalPrice = (marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity).RoundedDecimal();
         marketplaceBooking.Currency = marketplaceBooking.ProductVersion.Currency;
+
+        if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears)
+        {
+            var recurringBookingModel = mapper.MapTo(recurringBooking);
+            var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
+                recurringBookingModel,
+                marketplaceBooking.ProductVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
+            if (draft is not null)
+            {
+                totalPrice = draft.TotalAmount.RoundedDecimal();
+            }
+
+            marketplaceBooking.TotalAmountExcludeTax = totalPrice;
+            marketplaceBooking.TaxAmount = 0.00m;
+            marketplaceBooking.TaxRatePercentage = 0.00m;
+            marketplaceBooking.TotalAmount = totalPrice;
+
+            repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            if (recurringBooking.MarketplaceBookingSubscription is not null)
+            {
+                await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+                    Constants.MarketplaceBookingSubscriptionTopicName,
+                    recurringBooking.MarketplaceBookingSubscription.Id,
+                    cancellationToken);
+            }
+
+            return;
+        }
 
         if (organization.TaxDetails is null)
         {

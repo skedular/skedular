@@ -2,6 +2,7 @@ using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Database.Entities;
+using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared;
@@ -46,6 +47,8 @@ public class StripeIntegrations(
     IStripeCustomerService stripeCustomerService,
     ICreatable<Session, SessionCreateOptions> sessionCreateService,
     IRandomHelper randomHelper,
+    IMapper mapper,
+    IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IGraphQlTopicEventSender graphQlTopicEventSender)
 {
     [Activity]
@@ -253,7 +256,7 @@ public class StripeIntegrations(
                 Customer = args.StripeCustomerId,
                 LineItems = lineItems,
                 Mode = "payment",
-                UiMode = "hosted",
+                UiMode = "hosted_page",
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = booking.Id,
                 SuccessUrl = checkoutReturnUrl,
@@ -315,22 +318,59 @@ public class StripeIntegrations(
         }
 
         var checkoutReturnUrl = marketplaceBooking.CheckoutReturnUrl ?? applicationConfiguration.WebAppBaseDomain.ToString();
+        var isInArrears = marketplaceBooking.BillingMode.ToProductPricingBillingMode() == ProductPricingBillingMode.InArrears;
+        List<SessionLineItemOptions> lineItems;
+
+        if (isInArrears)
+        {
+            var recurringBookingModel = mapper.MapTo(recurringBooking);
+            var draft = organizationArrearsBillingPlannerService.BuildInitialRecurringInvoiceDraft(
+                recurringBookingModel,
+                productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
+            if (draft is null)
+            {
+                return null;
+            }
+
+            lineItems =
+            [
+                new SessionLineItemOptions
+                {
+                    Quantity = 1,
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = draft.Currency.ToString().ToLowerInvariant(),
+                        UnitAmountDecimal = (draft.TotalAmount * 100).RoundedDecimal(),
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = draft.Lines.FirstOrDefault()?.Description ??
+                                   productVersion.ListingMetadata?.Title ??
+                                   "Subscription invoice"
+                        }
+                    }
+                }
+            ];
+        }
+        else
+        {
+            lineItems =
+            [
+                new SessionLineItemOptions { Price = stripeProduct.StripePrice.StripePriceId, Quantity = marketplaceBooking.Quantity }
+            ];
+        }
 
         var session = await sessionCreateService.CreateAsync(
             new SessionCreateOptions
             {
                 Customer = args.StripeCustomerId,
-                LineItems =
-                [
-                    new SessionLineItemOptions { Price = stripeProduct.StripePrice.StripePriceId, Quantity = marketplaceBooking.Quantity }
-                ],
+                LineItems = lineItems,
                 Mode = "payment",
-                UiMode = "hosted",
+                UiMode = "hosted_page",
                 PaymentMethodTypes = ["card"],
                 ClientReferenceId = recurringBooking.Id,
                 SuccessUrl = checkoutReturnUrl,
                 CancelUrl = checkoutReturnUrl,
-                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = true },
+                AutomaticTax = new SessionAutomaticTaxOptions { Enabled = !isInArrears },
                 CustomerUpdate = new SessionCustomerUpdateOptions { Address = "auto", Shipping = "auto" }
             },
             new RequestOptions { IdempotencyKey = recurringBooking.Id, StripeAccount = args.StripeConnectAccountId },

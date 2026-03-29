@@ -198,8 +198,6 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
     () => subscriptionPricingOptions.find((item) => item.id === effectiveSelectedPricingId) ?? subscriptionPricingOptions[0] ?? null,
     [effectiveSelectedPricingId, subscriptionPricingOptions],
   );
-  const isInArrearsBilling = selectedPricingOption?.billingMode === 'IN_ARREARS';
-
   const acceptedPaymentMethods = useMemo(() => selectedPricingOption?.acceptedPaymentMethods ?? [], [selectedPricingOption]);
   const availablePaymentMethods = useMemo(
     () => rootData.paymentMethodTypes.filter((item) => acceptedPaymentMethods.length === 0 || acceptedPaymentMethods.includes(item.type)),
@@ -229,16 +227,14 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
   const cadenceLabel = selectedPricingOption
     ? (rootData.productPricingCadences.find((item) => item.type === selectedPricingOption.purchaseCadence)?.name ?? selectedPricingOption.purchaseCadence)
     : '';
-  const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'Invoice issued with payment terms' : 'Payment due at checkout';
+  const billingModeLabel = selectedPricingOption?.billingMode === 'IN_ARREARS' ? 'First invoice due now, later cycles billed in arrears' : 'Payment due at checkout';
 
   const handleSubmit = () => {
     if (!rootData.product || !selectedPricingOption) {
       return;
     }
 
-    const submittedPaymentMethod = isInArrearsBilling ? (availablePaymentMethods[0]?.type ?? '') : effectivePaymentMethod;
-
-    if (!submittedPaymentMethod) {
+    if (!effectivePaymentMethod) {
       toast.error(<NotificationContent content="Select a payment method to continue." />);
       return;
     }
@@ -260,7 +256,7 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
           startedAt: startedAt.utc().startOf('day').toISOString(),
           autoRenew: selectedPricingOption.supportsSubscriptionAutoRenewal ? autoRenew : false,
           cancelAtPeriodEnd: false,
-          paymentMethod: submittedPaymentMethod as PaymentMethod,
+          paymentMethod: effectivePaymentMethod as PaymentMethod,
           invoiceEmailList,
           quantity,
           productVersionId: rootData.product.latestProductVersionId,
@@ -372,19 +368,13 @@ const MarketplaceProductSubscribeForm = ({ rootDataRelay }: Props) => {
               sx={{ width: { xs: '100%', sm: 160 } }}
             />
 
-            {!isInArrearsBilling ? (
-              <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
-                {availablePaymentMethods.map((method) => (
-                  <MenuItem key={method.type} value={method.type}>
-                    {method.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            ) : (
-              <Alert severity="info" sx={{ borderRadius: 3 }}>
-                This plan is invoiced in arrears. You will receive an invoice in line with the organization&apos;s billing cycle, so there is nothing to choose here yet.
-              </Alert>
-            )}
+            <TextField select label="Payment method" value={effectivePaymentMethod} onChange={(event) => setPaymentMethod(event.target.value as PaymentMethod)}>
+              {availablePaymentMethods.map((method) => (
+                <MenuItem key={method.type} value={method.type}>
+                  {method.name}
+                </MenuItem>
+              ))}
+            </TextField>
 
             <Autocomplete
               multiple
