@@ -10,6 +10,10 @@ public interface ITemporalService
 {
     Task StartWorkflowGenerateLocationDailyAnalyticsAsync(GenerateLocationDailyAnalyticsInput args, CancellationToken cancellationToken);
 
+    Task StartOrSignalWorkflowRecomputeLocationBookingDerivedStateAsync(
+        RecomputeLocationBookingDerivedStateInput args,
+        CancellationToken cancellationToken);
+
     Task StartComputeOrganizationLocationsAndProductsRelationshipsAsync(
         ComputeOrganizationLocationsAndProductsRelationshipsInput args,
         CancellationToken cancellationToken);
@@ -33,6 +37,26 @@ public class TemporalService(
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
+
+    public async Task StartOrSignalWorkflowRecomputeLocationBookingDerivedStateAsync(
+        RecomputeLocationBookingDerivedStateInput args,
+        CancellationToken cancellationToken)
+    {
+        var workflowOptions = new WorkflowOptions
+        {
+            Id = temporalHelperService.ToId($"{Constants.RecomputeLocationBookingDerivedStatePrefix}-{args.LocationId}"),
+            TaskQueue = temporalConfiguration.Worker.TaskQueue,
+            RetryPolicy = null,
+            IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+            Rpc = new RpcOptions { CancellationToken = cancellationToken }
+        };
+
+        workflowOptions.SignalWithStart((RecomputeLocationBookingDerivedState workflow) => workflow.BookingChangedAsync());
+
+        await temporalClient.StartWorkflowAsync(
+            (RecomputeLocationBookingDerivedState workflow) => workflow.ExecuteAsync(args),
+            workflowOptions);
+    }
 
     public async Task StartComputeOrganizationLocationsAndProductsRelationshipsAsync(
         ComputeOrganizationLocationsAndProductsRelationshipsInput args,

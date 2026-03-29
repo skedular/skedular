@@ -29,12 +29,12 @@ public class Organization : EntityBaseWithDeleted
     public virtual TermsOfUse? TermsOfUse { get; set; }
     public virtual ICollection<OrganizationOffering> OrganizationOfferings { get; set; } = [];
     public virtual ICollection<DailyMemberCountRecording> DailyMemberCountRecordings { get; set; } = [];
+    public virtual ICollection<DailyBookingCountRecording> DailyBookingCountRecordings { get; set; } = [];
     public virtual ICollection<IndustrySubCategory> IndustrySubCategories { get; set; } = [];
     public virtual ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
     public virtual ICollection<AzureTenant> AzureTenants { get; set; } = [];
     public virtual OrganizationSsoSettings? OrganizationSsoSettings { get; set; }
     public virtual ICollection<Tag> Tags { get; set; } = [];
-    public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual ICollection<OrganizationStripePaymentMethod> OrganizationStripePaymentMethods { get; set; } = [];
     public virtual OrganizationStripeCustomer? OrganizationStripeCustomer { get; set; }
     public virtual OrganizationBillingDetails? BillingDetails { get; set; }

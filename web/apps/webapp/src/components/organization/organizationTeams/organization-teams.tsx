@@ -110,7 +110,6 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
                   }
                 }
               }
-              hasFutureBooking
               canModify
               canDelete
               ...teamCard_TeamDetails
@@ -366,11 +365,7 @@ const Teams = ({ queryReference, organizationCustomDomain }: Props) => {
         <Dialog slots={{ transition: DialogTransition }} open={teamRemoveConfirmationDialogOpen} onClose={handleCancelRemovingTeamClick}>
           <DefaultDialogTitle title="Remove Team" />
           <DialogContent sx={{ marginTop: 2 }}>
-            <DialogContentText>
-              {teamDetails.hasFutureBooking
-                ? `Bookings are scheduled for the team "${teamDetails.name}". Are you sure you want to remove it?`
-                : `Are you sure you want to remove the team "${teamDetails.name}"?`}
-            </DialogContentText>
+            <DialogContentText>{`Are you sure you want to remove the team "${teamDetails.name}"?`}</DialogContentText>
             <TwoButtonsDialogActions
               onPrimaryClicked={handleConfirmRemovingTeamClick}
               onSecondaryClicked={handleCancelRemovingTeamClick}

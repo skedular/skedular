@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d55e5e7e356efb89131e1bd2c2ed3fd0>>
+ * @generated SignedSource<<fa07a1b0ed4a5b9045f5ff1f5843cb02>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,6 @@ export type organizationTeams_teams_query$data = {
       readonly node: {
         readonly canDelete: boolean;
         readonly canModify: boolean;
-        readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly members: {
           readonly edges: ReadonlyArray<{
@@ -291,13 +290,6 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "hasFutureBooking",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "canModify",
                   "storageKey": null
                 },
@@ -379,6 +371,6 @@ return {
 };
 })();
 
-(node as any).hash = "d04499b5b0d601f359ab39bdf5c2f6c6";
+(node as any).hash = "529692b1b50c7c8ecac2cb1ee48293e5";
 
 export default node;

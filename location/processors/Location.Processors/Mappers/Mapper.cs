@@ -14,7 +14,6 @@ using OrganizationSsoSetting = Location.Shared.Database.Entities.OrganizationSso
 using OrganizationTag = Location.Shared.Database.Entities.OrganizationTag;
 using OrganizationType = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationType;
 using ProductVersion = Location.Shared.Database.Entities.ProductVersion;
-using Resource = Location.Shared.Database.Entities.Resource;
 using OrganizationMemberRole = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberRole;
 using OrganizationMemberStatus = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationMemberStatus;
 
@@ -24,16 +23,9 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-
-    Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Resource> resources,
-        ICollection<Shared.Database.Entities.Location> involvedLocations);
 
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -176,24 +168,6 @@ public class Mapper : IMapper
         return organization;
     }
 
-
-    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
-    {
-        var booking = src.Data.Booking;
-        var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Booking
-        {
-            Id = booking.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            From = booking.From.ToDateTimeOffset(),
-            Until = booking.Until.ToDateTimeOffset(),
-            InvolvedLocations = booking.InvolvedLocationIds.Select(item => new Shared.Models.Location { Id = item }).ToList()
-        };
-    }
-
     public Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities)
     {
         dest.Id = src.Id;
@@ -215,21 +189,6 @@ public class Mapper : IMapper
             dest.Customer = customer;
         }
 
-        return dest;
-    }
-
-    public Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Resource> resources,
-        ICollection<Shared.Database.Entities.Location> involvedLocations)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.From = src.From;
-        dest.Until = src.Until;
-        dest.Resources = resources;
-        dest.InvolvedLocations = involvedLocations;
         return dest;
     }
 

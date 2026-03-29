@@ -14,7 +14,6 @@ public interface IRepositoryFactory
     IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     IAzureTenantRepository AzureTenantRepository { get; }
     IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
-    IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
     IIdentityRepository IdentityRepository { get; }
@@ -49,7 +48,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
         AzureInstallStateUserIdLookupRepository = new AzureInstallStateUserIdLookupRepository(_dbContext, timeProvider);
         AzureTenantRepository = new AzureTenantRepository(_dbContext, timeProvider);
         AzureTenantMemberRepository = new AzureTenantMemberRepository(_dbContext, timeProvider);
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyMemberCountRecordingRepository = new DailyMemberCountRecordingRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
@@ -79,7 +77,6 @@ public class RepositoryFactory : RepositoryFactoryBase<OrganizationDbContext>, I
     public IAzureInstallStateUserIdLookupRepository AzureInstallStateUserIdLookupRepository { get; }
     public IAzureTenantRepository AzureTenantRepository { get; }
     public IAzureTenantMemberRepository AzureTenantMemberRepository { get; }
-    public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IDailyMemberCountRecordingRepository DailyMemberCountRecordingRepository { get; }
     public IIdentityRepository IdentityRepository { get; }

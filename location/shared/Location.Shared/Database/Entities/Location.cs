@@ -30,10 +30,12 @@ public class Location : EntityBaseWithDeleted
 
     public virtual ICollection<Resource> Resources { get; set; } = [];
     public virtual ICollection<FloorPlan> FloorPlans { get; set; } = [];
+    public virtual ICollection<DailyBookingCountRecording> DailyBookingCountRecordings { get; set; } = [];
     public virtual ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
+    public virtual ICollection<DailyDeskBookingCountRecording> DailyDeskBookingCountRecordings { get; set; } = [];
     public virtual ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
+    public virtual ICollection<DailyRoomBookingCountRecording> DailyRoomBookingCountRecordings { get; set; } = [];
     public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
-    public virtual ICollection<Booking> InvolvedBookings { get; set; } = [];
     public virtual LocationPhysicalAddress? PhysicalAddress { get; set; }
     public virtual ICollection<PrecomputedLocationProduct> PrecomputedLocationProducts { get; set; } = [];
 }

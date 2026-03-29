@@ -40,11 +40,14 @@ public class Program
             .AddOutboxPublishers()
             .AddJobs()
             .AddServices()
+            .AddSharedCrossDomainClients(configuration)
             .AddTemporalWorker(configuration, typeof(Program).Assembly.GetName().Name!, GitVersionInformation.InformationalVersion, "temporal")
             .AddWorkflow<GenerateLocationDailyAnalytics>()
+            .AddWorkflow<RecomputeLocationBookingDerivedState>()
             .AddWorkflow<ComputeOrganizationLocationsAndProductsRelationships>()
             .AddWorkflow<NewLocationJoined>()
             .AddScopedActivities<LocationDailyAnalytics>()
+            .AddScopedActivities<LocationBookingDerivedState>()
             .AddScopedActivities<LocationsProductsRelationships>()
             .AddScopedActivities<EmailIntegrations>();
 

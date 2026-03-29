@@ -48,6 +48,7 @@ public class Program
             .AddWorkflow<AddOrganizationStripePaymentMethod>()
             .AddWorkflow<InviteToJoinOrganization>()
             .AddWorkflow<GenerateOrganizationDailyAnalytics>()
+            .AddWorkflow<RecomputeOrganizationBookingDerivedState>()
             .AddWorkflow<ReSyncAzureTenant>()
             .AddWorkflow<NewOrganizationJoined>()
             .AddScopedActivities<OrganizationOfferings>()
@@ -55,6 +56,7 @@ public class Program
             .AddScopedActivities<EmailIntegrations>()
             .AddScopedActivities<InvitationIntegrations>()
             .AddScopedActivities<OrganizationDailyAnalytics>()
+            .AddScopedActivities<OrganizationBookingDerivedState>()
             .AddScopedActivities<AzureTenantIntegrations>();
 
         return builder.Build().UseWebApplicationDefaults<Program>();

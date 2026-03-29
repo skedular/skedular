@@ -403,7 +403,6 @@ type LocationDetails {
   deskCapacity: Int!
   extraMetadata: LocationExtraMetadata
   featureImages: [CdnImageFile!]!
-  hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
   listingMetadata: ListingMetadata!
   name: String!
@@ -811,7 +810,6 @@ type OrganizationDetails {
   customTags(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: CustomTagOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
   featureImages: [CdnImageFile!]!
   hasAttachedPaymentMethod: Boolean!
-  hasFutureBooking: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
   isMyOnboardingDone: Boolean!
@@ -1379,7 +1377,6 @@ type TeamDetails {
   canInvitePeople: Boolean!
   canModify: Boolean!
   featureImages: [CdnImageFile!]!
-  hasFutureBooking: Boolean! @cost(weight: "10")
   id: ID!
   members(after: String before: String first: Int last: Int orderBy: [TeamMemberOrderInput!] where: TeamMemberWhereInput): ConnectionOfTeamMemberEdge! @cost(weight: "10")
   name: String!

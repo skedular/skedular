@@ -91,6 +91,8 @@
     </Folder>
     <Folder Name="/booking/shared/">
         <File Path="booking\shared\AGENTS.md"/>
+        <File Path="booking\shared\Booking.Shared.UnitTests\AGENTS.md"/>
+        <File Path="booking\shared\Booking.Shared\AGENTS.md"/>
         <Project Path="booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
         <Project Path="booking/shared/Booking.Shared.UnitTests/Booking.Shared.UnitTests.csproj"/>
         <Project Path="booking/shared/Booking.Shared/Booking.Shared.csproj"/>

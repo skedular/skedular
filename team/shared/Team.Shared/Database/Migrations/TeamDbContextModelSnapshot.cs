@@ -30,21 +30,6 @@ namespace Team.Shared.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookingTeam", b =>
-                {
-                    b.Property<string>("InvolvedBookingsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("InvolvedTeamsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("InvolvedBookingsId", "InvolvedTeamsId");
-
-                    b.HasIndex("InvolvedTeamsId");
-
-                    b.ToTable("BookingTeam");
-                });
-
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.KafkaOutbox", b =>
                 {
                     b.Property<string>("Id")
@@ -175,55 +160,6 @@ namespace Team.Shared.Database.Migrations
                     b.HasIndex("RetryCount");
 
                     b.ToTable("TemporalSignalOutbox");
-                });
-
-            modelBuilder.Entity("Team.Shared.Database.Entities.Booking", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("From")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("Until")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("From");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Until");
-
-                    b.ToTable("Booking");
                 });
 
             modelBuilder.Entity("Team.Shared.Database.Entities.Customer", b =>
@@ -757,21 +693,6 @@ namespace Team.Shared.Database.Migrations
                         .IsUnique();
 
                     b.ToTable("TeamMember");
-                });
-
-            modelBuilder.Entity("BookingTeam", b =>
-                {
-                    b.HasOne("Team.Shared.Database.Entities.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedBookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Team.Shared.Database.Entities.Team", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedTeamsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Team.Shared.Database.Entities.Identity", b =>

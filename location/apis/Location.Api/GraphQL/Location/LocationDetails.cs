@@ -108,14 +108,6 @@ public class LocationDetails : Node
             TotalCount = totalCount
         };
     }
-
-    [UseResolverScope]
-    public async Task<bool> HasFutureBookingAsync(
-        [Parent] LocationDetails location,
-        [Service] ILocationService locationService,
-        CancellationToken cancellationToken) =>
-        location.OrganizationCustomDomain != Constants.SkedularPublicLocationsCustomDomainName &&
-        await locationService.HasFutureBookingAsync(location.Id, false, cancellationToken);
 }
 
 [ObjectType<LocationDetails>]

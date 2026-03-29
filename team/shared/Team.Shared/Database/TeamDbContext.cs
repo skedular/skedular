@@ -11,7 +11,6 @@ namespace Team.Shared.Database;
 public class TeamDbContext(DbContextOptions<TeamDbContext> options, CustomDbContextOptions customDbContextOptions)
     : DbContextBase<TeamDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
-    public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<JoinInvitation> JoinInvitation { get; set; }

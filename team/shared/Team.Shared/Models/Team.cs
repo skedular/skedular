@@ -11,9 +11,7 @@ public class Team : ModelBaseWithDeleted
     public ICollection<CdnImageFile> FeatureImages { get; set; } = [];
     public Organization Organization { get; set; } = new();
     public Location? PrimaryLocation { get; set; }
-    public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<TeamMember> TeamMembers { get; set; } = [];
     public ICollection<JoinInvitation> JoinInvitations { get; set; } = [];
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public Permissions Permissions { get; set; } = new();
 }

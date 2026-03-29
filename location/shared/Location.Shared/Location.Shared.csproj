@@ -26,6 +26,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Grpc.Tools" Version="2.78.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/booking_v1.proto" GrpcServices="Client"/>
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.5">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,152 +1,32 @@
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
-using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka.Consume;
-using Enterprise.Shared.Random;
 using Enterprise.Shared.Sanitization;
-using Microsoft.EntityFrameworkCore;
-using Organization.Processors.Mappers;
-using Organization.Shared.Database.Entities;
-using Organization.Shared.Publishers;
-using Organization.Shared.Repositories;
+using Organization.Shared.Services;
+using Organization.Shared.Workflows;
 using Event = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event;
-using Booking = Organization.Shared.Database.Entities.Booking;
 using Type = Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Type;
 
 namespace Organization.Processors.Subscribers;
 
 public class BookingSubscriber(
-    ILogger<BookingSubscriber> logger,
-    IMapper mapper,
-    IRepositoryFactory repositoryFactory,
-    IRandomHelper randomHelper,
-    IOrganizationPublisher organizationPublisher) : IEventSubscriber<Key, Event>
+    ITemporalService temporalService) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
     {
         switch (@event.Metadata.Type)
         {
             case Type.BookingUpserted:
-                {
-                    var booking = mapper.MapTo(@event);
-                    if (!booking.InvolvedOrganizations.Select(item => item.Id).RemoveInvalidIds().Any())
-                    {
-                        await HandleBookingDeletedEventAsync(booking, cancellationToken);
-                    }
-                    else
-                    {
-                        var existingBooking = await repositoryFactory.BookingRepository.UpsertNakedAsync(booking.Id, cancellationToken);
-                        if (existingBooking.EventRaisedAt > booking.EventRaisedAt)
-                        {
-                            logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
-
-                            return EventSubscriberResults.Success;
-                        }
-
-                        await TrackActiveMembersAsync(@event, cancellationToken);
-                        await HandleBookingUpsertedEventAsync(booking, existingBooking, cancellationToken);
-                    }
-                }
-                break;
-
             case Type.BookingDeleted:
+                foreach (var organizationId in @event.Data.Booking.InvolvedOrganizationIds.RemoveInvalidIds().Distinct())
                 {
-                    var booking = mapper.MapTo(@event);
-                    await HandleBookingDeletedEventAsync(booking, cancellationToken);
+                    await temporalService.StartOrSignalWorkflowRecomputeOrganizationBookingDerivedStateAsync(
+                        new RecomputeOrganizationBookingDerivedStateInput(organizationId),
+                        cancellationToken);
                 }
+
                 break;
         }
 
         return EventSubscriberResults.Success;
-    }
-
-    private async Task TrackActiveMembersAsync(Event @event, CancellationToken cancellationToken)
-    {
-        var customerIds = @event.Data.Booking.InvolvedCustomerIds.RemoveInvalidIds().Distinct().ToList();
-        var organizationIds = @event.Data.Booking.InvolvedOrganizationIds.RemoveInvalidIds().Distinct().ToList();
-
-        if (customerIds.Count == 0)
-        {
-            // The booking is not attached to any customer for whatever reason, ignoring it
-            return;
-        }
-
-        if (organizationIds.Count == 0)
-        {
-            // Booking not attached to organization, ignoring it
-            return;
-        }
-
-        var organizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
-            organizationIds,
-            null,
-            cancellationToken);
-        foreach (var organization in organizations)
-        {
-            var organizationOffering = organization.OrganizationOfferings.SingleOrDefault();
-            if (organizationOffering is null)
-            {
-                // Organization offering does not exist for whatever reason, ignoring it
-                return;
-            }
-
-            var organizationMember = organization.OrganizationMembers.SingleOrDefault(item => customerIds.Contains(item.Customer.Id));
-            if (organizationMember is null)
-            {
-                // Customer isn't found ignoring it
-                return;
-            }
-
-            var organizationOfferingActiveMember = await repositoryFactory.OrganizationOfferingActiveMemberRepository.Query(
-                new Specification<OrganizationOfferingActiveMember>
-                {
-                    Criteria = query =>
-                        query.OrganizationOffering.Id == organizationOffering.Id && query.OrganizationMember.Id == organizationMember.Id
-                }.ApplyOrderBy(query => query.Id)).FirstOrDefaultAsync(cancellationToken);
-
-            _ = organizationOfferingActiveMember is null
-                ? repositoryFactory.OrganizationOfferingActiveMemberRepository.Add(
-                    new OrganizationOfferingActiveMember
-                    {
-                        Id = randomHelper.Generate(), OrganizationMember = organizationMember, OrganizationOffering = organizationOffering
-                    })
-                : repositoryFactory.OrganizationOfferingActiveMemberRepository.Update(organizationOfferingActiveMember);
-
-            if (organizationOfferingActiveMember is null)
-            {
-                await organizationPublisher.PublishOrganizationsAsync([mapper.MapTo(organization)], cancellationToken);
-            }
-        }
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task HandleBookingUpsertedEventAsync(Shared.Models.Booking booking, Booking existingBooking, CancellationToken cancellationToken)
-    {
-        var involvedOrganizations = await repositoryFactory.OrganizationRepository.GetByIdsOrCustomDomainsAsync(
-            booking.InvolvedOrganizations.Select(item => item.Id).ToList(),
-            null,
-            cancellationToken);
-        _ = repositoryFactory.BookingRepository.Update(mapper.MergeToEntity(booking, existingBooking, involvedOrganizations));
-
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-    }
-
-    private async Task HandleBookingDeletedEventAsync(Shared.Models.Booking booking, CancellationToken cancellationToken)
-    {
-        var existingBooking = await repositoryFactory.BookingRepository.GetByIdAsync(booking.Id, cancellationToken);
-        if (existingBooking is not null && existingBooking.EventRaisedAt > booking.EventRaisedAt)
-        {
-            logger.LogInformation("Ignoring Booking event. Event timestamp is older that what is already processed.");
-
-            return;
-        }
-
-        if (existingBooking is null)
-        {
-            return;
-        }
-
-        _ = repositoryFactory.BookingRepository.Remove(existingBooking);
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

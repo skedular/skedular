@@ -454,7 +454,6 @@ public class Mapper : IMapper
             CanDelete = src.CanDelete,
             CanInvitePeople = src.CanInvitePeople,
             CanViewAnalytics = src.CanViewAnalytics,
-            HasFutureBooking = src.HasFutureBooking,
             IsMyOnboardingDone = src.IsMyOnboardingDone,
             ResourceTypes = src.Tags
                 .Where(item => OrganizationTagTypeConstants.ResourceTypes.Any(resourceType => resourceType == item.Type))
@@ -629,7 +628,6 @@ public class Mapper : IMapper
                 UnitPrice = organizationOffering.UnitPrice
             },
             HasAttachedPaymentMethod = src.HasAttachedPaymentMethod,
-            HasFutureBooking = src.HasFutureBooking,
             TaxDetails = MapToGrpcResponse(src.OrganizationTaxDetails),
             PhysicalAddress = MapToGrpcResponse(src.PhysicalAddress)
         };

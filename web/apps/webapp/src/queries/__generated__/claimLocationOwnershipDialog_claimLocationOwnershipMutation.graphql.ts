@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2fcade932aa80011a2611c39acfc2b61>>
+ * @generated SignedSource<<35b513aecbcb07622c015e1b09e49881>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -30,7 +30,6 @@ export type claimLocationOwnershipDialog_claimLocationOwnershipMutation$data = {
         readonly id: string;
         readonly name: string;
       }>;
-      readonly hasFutureBooking: boolean;
       readonly id: string;
       readonly name: string;
       readonly organization: {
@@ -149,24 +148,17 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "hasFutureBooking",
+  "name": "canModify",
   "storageKey": null
 },
 v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "canModify",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "canDelete",
   "storageKey": null
 },
-v12 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -215,7 +207,6 @@ return {
               },
               (v9/*: any*/),
               (v10/*: any*/),
-              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -224,7 +215,7 @@ return {
                 "name": "organization",
                 "plural": false,
                 "selections": [
-                  (v12/*: any*/)
+                  (v11/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -280,7 +271,6 @@ return {
               },
               (v9/*: any*/),
               (v10/*: any*/),
-              (v11/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -289,7 +279,7 @@ return {
                 "name": "organization",
                 "plural": false,
                 "selections": [
-                  (v12/*: any*/),
+                  (v11/*: any*/),
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -324,16 +314,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "bcf27578a0f957f51b299ee23ffe4475",
+    "cacheID": "864d8674faf82b9ba38b2d9bcab49cec",
     "id": null,
     "metadata": {},
     "name": "claimLocationOwnershipDialog_claimLocationOwnershipMutation",
     "operationKind": "mutation",
-    "text": "mutation claimLocationOwnershipDialog_claimLocationOwnershipMutation(\n  $input: ClaimLocationOwnershipInput!\n) {\n  claimLocationOwnership(input: $input) {\n    location {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      resources {\n        totalCount\n      }\n      physicalAddress {\n        formattedAddress\n        id\n      }\n      hasFutureBooking\n      canModify\n      canDelete\n      organization {\n        customDomain\n        id\n      }\n    }\n  }\n}\n"
+    "text": "mutation claimLocationOwnershipDialog_claimLocationOwnershipMutation(\n  $input: ClaimLocationOwnershipInput!\n) {\n  claimLocationOwnership(input: $input) {\n    location {\n      id\n      name\n      customTags {\n        id\n        name\n        color\n      }\n      zones {\n        id\n        name\n        color\n      }\n      resources {\n        totalCount\n      }\n      physicalAddress {\n        formattedAddress\n        id\n      }\n      canModify\n      canDelete\n      organization {\n        customDomain\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8028649323f0788ca937e89bc701b199";
+(node as any).hash = "c98237234ddc5dc6b6f2336453589041";
 
 export default node;

@@ -1,7 +1,6 @@
 using Api.Shared.Services.Models;
 using Api.Shared.Services.Offering;
 using Enterprise.Shared;
-using Team.Shared.Models;
 using Customer = Team.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
@@ -21,7 +20,6 @@ public interface IMapper
 {
     Customer MapTo(Event src);
     Organization MapTo(Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event src);
-    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
     Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src);
 
     Shared.Database.Entities.Location MergeToEntity(
@@ -32,11 +30,6 @@ public interface IMapper
     Shared.Database.Entities.Customer MergeToEntity(Customer src, Shared.Database.Entities.Customer dest, ICollection<Identity> identities);
     Identity MapToEntity(Shared.Models.Identity src, Shared.Database.Entities.Customer? customer);
     Identity MergeToEntity(Shared.Models.Identity src, Identity dest, Shared.Database.Entities.Customer? customer);
-
-    Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Team> involvedTeams);
 
     Shared.Database.Entities.Organization MergeToEntity(Organization src, Shared.Database.Entities.Organization dest);
 
@@ -156,23 +149,6 @@ public class Mapper : IMapper
         return organization;
     }
 
-    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
-    {
-        var booking = src.Data.Booking;
-        var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Booking
-        {
-            Id = booking.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            From = booking.From.ToDateTimeOffset(),
-            Until = booking.Until.ToDateTimeOffset(),
-            InvolvedTeams = booking.InvolvedTeamIds.Select(item => new Shared.Models.Team { Id = item }).ToList()
-        };
-    }
-
     public Location MapTo(Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event src)
     {
         var location = src.Data.Location;
@@ -224,19 +200,6 @@ public class Mapper : IMapper
             dest.Customer = customer;
         }
 
-        return dest;
-    }
-
-    public Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Team> involvedTeams)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.From = src.From;
-        dest.Until = src.Until;
-        dest.InvolvedTeams = involvedTeams;
         return dest;
     }
 

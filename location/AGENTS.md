@@ -5,12 +5,20 @@ This file is the entry point for AI agents working in `location/`.
 ## Purpose
 
 - `location/` owns locations, resources, and availability-related domain state.
+- `location/` also owns precomputed location analytics derived from booking data.
 
 ## Where To Read Next
 
 - `location/apis/AGENTS.md`
 - `location/domain/AGENTS.md`
 - `location/shared/AGENTS.md`
+
+## Booking-Derived State
+
+- `location/` no longer stores replicated booking rows.
+- `location/` no longer exposes or persists a local `HasFutureBooking` concept.
+- If some future feature needs to know whether a location has future bookings, ask the booking domain directly instead of rebuilding the old local flag.
+- Location analytics should come from local precomputed snapshot tables, not request-time cross-domain API calls.
 
 ## Agent Rule
 

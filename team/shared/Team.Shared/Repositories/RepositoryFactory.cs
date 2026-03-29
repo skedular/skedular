@@ -10,7 +10,6 @@ public interface IRepositoryFactory
 {
     TeamDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
-    IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IIdentityRepository IdentityRepository { get; }
     IJoinInvitationRepository JoinInvitationRepository { get; }
@@ -28,7 +27,6 @@ public class RepositoryFactory : RepositoryFactoryBase<TeamDbContext>, IReposito
     {
         _dbContext = dbContextFactory.CreateDbContext();
 
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         IdentityRepository = new IdentityRepository(_dbContext, timeProvider);
         JoinInvitationRepository = new JoinInvitationRepository(_dbContext, timeProvider);
@@ -40,7 +38,6 @@ public class RepositoryFactory : RepositoryFactoryBase<TeamDbContext>, IReposito
         OrganizationSsoSettingRepository = new OrganizationSsoSettingRepository(_dbContext, timeProvider);
     }
 
-    public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IIdentityRepository IdentityRepository { get; }
     public IJoinInvitationRepository JoinInvitationRepository { get; }

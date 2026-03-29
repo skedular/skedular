@@ -9,6 +9,11 @@ namespace Organization.Shared.Services;
 public interface ITemporalService
 {
     Task StartWorkflowGenerateOrganizationDailyAnalyticsAsync(GenerateOrganizationDailyAnalyticsInput args, CancellationToken cancellationToken);
+
+    Task StartOrSignalWorkflowRecomputeOrganizationBookingDerivedStateAsync(
+        RecomputeOrganizationBookingDerivedStateInput args,
+        CancellationToken cancellationToken);
+
     Task StartWorkflowReSyncAzureTenantAsync(ReSyncAzureTenantInput args, CancellationToken cancellationToken);
     Task StartWorkflowAddOrganizationStripePaymentMethodAsync(AddOrganizationStripePaymentMethodInput args, CancellationToken cancellationToken);
 
@@ -36,6 +41,26 @@ public class TemporalService(
                 IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
                 Rpc = new RpcOptions { CancellationToken = cancellationToken }
             });
+
+    public async Task StartOrSignalWorkflowRecomputeOrganizationBookingDerivedStateAsync(
+        RecomputeOrganizationBookingDerivedStateInput args,
+        CancellationToken cancellationToken)
+    {
+        var workflowOptions = new WorkflowOptions
+        {
+            Id = temporalHelperService.ToId($"{Constants.RecomputeOrganizationBookingDerivedStatePrefix}-{args.OrganizationId}"),
+            TaskQueue = temporalConfiguration.Worker.TaskQueue,
+            RetryPolicy = null,
+            IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+            Rpc = new RpcOptions { CancellationToken = cancellationToken }
+        };
+
+        workflowOptions.SignalWithStart((RecomputeOrganizationBookingDerivedState workflow) => workflow.BookingChangedAsync());
+
+        await temporalClient.StartWorkflowAsync(
+            (RecomputeOrganizationBookingDerivedState workflow) => workflow.ExecuteAsync(args),
+            workflowOptions);
+    }
 
     public async Task StartWorkflowReSyncAzureTenantAsync(ReSyncAzureTenantInput args, CancellationToken cancellationToken) =>
         await temporalClient.StartWorkflowAsync((ReSyncAzureTenant workflow) => workflow.ExecuteAsync(args),

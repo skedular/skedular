@@ -34,8 +34,6 @@ public interface ILocationService
         string? organizationCustomDomain,
         CancellationToken cancellationToken);
 
-    Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(
         PaginationInputParam paginationInputParam,
         LocationSearchCriteria searchCriteria,
@@ -267,31 +265,6 @@ public class LocationService(
         }
 
         return await EnrichLocationAsync(customer, location, cancellationToken);
-    }
-
-    public async Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        var location = await cachedLocationService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-
-        string? customerId = null;
-        if (!ignoreAuthorizationCheck)
-        {
-            var verifiableToken = context.GetVerifiableToken();
-            if (!string.IsNullOrWhiteSpace(verifiableToken) || location.Type.ToLocationType() != LocationType.Marketplace)
-            {
-                customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-            }
-        }
-
-        if (!string.IsNullOrWhiteSpace(customerId) &&
-            !await organizationAuthorizationService.CanViewAsync(location.OrganizationId, customerId, cancellationToken))
-        {
-            throw new UnauthorizedAccessException();
-        }
-
-        return await repositoryFactory.BookingRepository.AnyBookingExistsUntrackedAsync(location.Id, timeProvider.GetUtcNow(), cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Location>>, int)> GetPaginatedLocationsAsync(

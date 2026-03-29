@@ -8,7 +8,6 @@ using Team.Api.GraphQL.Member;
 using Team.Api.Mappers;
 using Team.Api.Services;
 using Team.Shared.Models;
-using Constants = Api.Shared.Services.Constants;
 
 namespace Team.Api.GraphQL.Team;
 
@@ -61,14 +60,6 @@ public class TeamDetails : Node
             TotalCount = totalCount
         };
     }
-
-    [UseResolverScope]
-    public async Task<bool> HasFutureBookingAsync(
-        [Parent] TeamDetails team,
-        [Service] ITeamService teamService,
-        CancellationToken cancellationToken) =>
-        team.OrganizationCustomDomain != Constants.SkedularPublicLocationsCustomDomainName &&
-        await teamService.HasFutureBookingAsync(team.Id, false, cancellationToken);
 }
 
 [ObjectType<TeamDetails>]

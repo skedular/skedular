@@ -15,7 +15,6 @@ using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
 using Organization.Shared.Workflows;
-using Booking = Organization.Shared.Database.Entities.Booking;
 using Constants = Enterprise.Shared.Constants;
 using Customer = Organization.Shared.Models.Customer;
 using IndustrySubCategory = Organization.Shared.Database.Entities.IndustrySubCategory;
@@ -520,7 +519,6 @@ public class OrganizationService(
                 organization.AzureTenants = [];
                 organization.OrganizationSsoSettings = null;
                 organization.Tags = [];
-                organization.InvolvedBookings = [];
                 organization.OrganizationStripePaymentMethods = [];
                 organization.OrganizationStripeCustomer = null;
                 organization.BillingDetails = null;
@@ -556,15 +554,6 @@ public class OrganizationService(
             customerId!,
             cancellationToken);
 
-        var now = timeProvider.GetUtcNow();
-        mappedOrganization.HasFutureBooking = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organization.Id) && query.From >= now
-            })
-            .AnyAsync(cancellationToken);
-
         if (!ignoreAuthorizationCheck)
         {
             var organizationMember = organization.OrganizationMembers.FirstOrDefault(item => item.CustomerId == customerId);
@@ -590,7 +579,6 @@ public class OrganizationService(
         organization.JoinInvitations = [];
         organization.AzureTenants = [];
         organization.OrganizationSsoSettings = null;
-        organization.InvolvedBookings = [];
         organization.OrganizationStripePaymentMethods = [];
         organization.OrganizationStripeCustomer = null;
         organization.BillingDetails = null;

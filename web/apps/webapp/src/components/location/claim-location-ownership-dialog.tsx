@@ -53,7 +53,6 @@ const ClaimLocationOwnershipDialog = ({ connectionIds, isDialogOpen, onClaimClic
           physicalAddress {
             formattedAddress
           }
-          hasFutureBooking
           canModify
           canDelete
           organization {

@@ -182,7 +182,6 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
                 longitude
                 latitude
               }
-              hasFutureBooking
               canModify
               canDelete
               organization {
@@ -753,11 +752,7 @@ const OrganizationLocations = ({ queryReference, onReloadRequired, organizationC
         <Dialog slots={{ transition: DialogTransition }} open={locationRemoveConfirmationDialogOpen} onClose={handleCancelRemovingLocationClick}>
           <DefaultDialogTitle title="Remove Location" />
           <DialogContent sx={{ marginTop: 2 }}>
-            <DialogContentText>
-              {locationDetails.hasFutureBooking
-                ? `Bookings are scheduled for the location "${locationDetails.name}". Are you sure you want to remove it?`
-                : `Are you sure you want to remove the location "${locationDetails.name}"?`}
-            </DialogContentText>
+            <DialogContentText>{`Are you sure you want to remove the location "${locationDetails.name}"?`}</DialogContentText>
             <TwoButtonsDialogActions
               onPrimaryClicked={handleConfirmRemovingLocationClick}
               onSecondaryClicked={handleCancelRemovingLocationClick}

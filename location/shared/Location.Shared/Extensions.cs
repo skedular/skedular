@@ -1,4 +1,6 @@
-﻿using Enterprise.Shared.Outbox;
+﻿using Api.Shared.Clients.Configurations.Grpc;
+using Api.Shared.Clients.Grpc;
+using Enterprise.Shared.Outbox;
 using Location.Shared.Configurations;
 using Location.Shared.Mappers;
 using Location.Shared.Publishers;
@@ -7,6 +9,7 @@ using Location.Shared.Services;
 using Location.Shared.Services.Cache;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
 
 namespace Location.Shared;
 
@@ -44,7 +47,6 @@ public static class Extensions
         public IServiceCollection AddRepositories() =>
             services
                 .AddScoped<ILocationPhysicalAddressRepository, LocationPhysicalAddressRepository>()
-                .AddScoped<IBookingRepository, BookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IDailyDeskCountRecordingRepository, DailyDeskCountRecordingRepository>()
                 .AddScoped<IDailyRoomCountRecordingRepository, DailyRoomCountRecordingRepository>()
@@ -67,5 +69,17 @@ public static class Extensions
         public IServiceCollection AddOutboxPublishers() =>
             services
                 .AddSingleton<ILocationOutboxPublisher, LocationOutboxPublisher>();
+
+        public IServiceCollection AddSharedCrossDomainClients(IConfiguration configuration)
+        {
+            var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
+            ArgumentNullException.ThrowIfNull(bookingConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(bookingConfiguration.GrpcUrl);
+
+            services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
+
+            return services.AddSingleton(bookingConfiguration);
+        }
     }
 }

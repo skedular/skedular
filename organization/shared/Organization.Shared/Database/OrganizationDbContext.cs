@@ -16,8 +16,8 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<AzureTenant> AzureTenant { get; set; }
     public DbSet<OrganizationSsoSettings> OrganizationSsoSettings { get; set; }
     public DbSet<AzureTenantMember> AzureTenantMember { get; set; }
-    public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
+    public DbSet<DailyBookingCountRecording> DailyBookingCountRecording { get; set; }
     public DbSet<DailyMemberCountRecording> DailyMemberCountRecording { get; set; }
     public DbSet<Identity> Identity { get; set; }
     public DbSet<IndustryMainCategory> IndustryMainCategory { get; set; }

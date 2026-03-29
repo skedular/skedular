@@ -1,12 +1,10 @@
 using Api.Shared.Services;
 using Enterprise.Shared.Database;
 using Microsoft.EntityFrameworkCore;
-using Organization.Api.Models;
+using Organization.Api.GraphQL.Analytics;
 using Organization.Api.Services.Authorization;
-using Organization.Shared.Models;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services.Cache;
-using Booking = Organization.Shared.Database.Entities.Booking;
 using DailyMemberCountRecording = Organization.Shared.Database.Entities.DailyMemberCountRecording;
 
 namespace Organization.Api.Services;
@@ -41,14 +39,11 @@ public class OrganizationAnalyticsService(
             throw new UnauthorizedAccessException();
         }
 
-        var bookings = await repositoryFactory.BookingRepository
-            .Query(new Specification<Booking>
-            {
-                Criteria = query =>
-                    !query.DeletedAt.HasValue && query.InvolvedOrganizations.Select(item => item.Id).Contains(organization.Id) &&
-                    query.From >= from &&
-                    query.Until <= until.AddDays(1)
-            }).AsNoTrackingWithIdentityResolution()
+        var dailyBookingCounts = await repositoryFactory.DbContext.DailyBookingCountRecording
+            .Where(item =>
+                !item.DeletedAt.HasValue && item.Organization.Id == organization.Id && item.Date >= from && item.Date <= until)
+            .OrderBy(item => item.Date)
+            .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
         var dailyMemberCounts = await repositoryFactory.DailyMemberCountRecordingRepository
@@ -69,24 +64,21 @@ public class OrganizationAnalyticsService(
                 return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = 0 };
             }
 
-            var matchedBookingsCount = bookings.Count(booking =>
-                item.Date.Year == booking.From.Year &&
-                item.Date.Month == booking.From.Month &&
-                item.Date.Day == booking.From.Day);
+            var matchedBookingsCount = dailyBookingCounts
+                .Where(recording => recording.Date == item.Date)
+                .Select(recording => recording.Count)
+                .SingleOrDefault();
 
             return new OrganizationMemberAttendancePercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
         }).ToList();
 
-        var organizationDailyBookingsTotals = dailyMemberCounts.Select(item =>
+        var organizationDailyBookingsTotals = dailyBookingCounts
+            .Select(item => new OrganizationDailyBookingsTotal { Date = item.Date, Total = item.Count })
+            .ToList();
+
+        return new OrganizationAnalytics
         {
-            var matchedBookingsCount = bookings.Count(booking =>
-                item.Date.Year == booking.From.Year &&
-                item.Date.Month == booking.From.Month &&
-                item.Date.Day == booking.From.Day);
-
-            return new OrganizationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
-        }).ToList();
-
-        return new OrganizationAnalytics(organization.Id, organizationMemberAttendancePercentages, organizationDailyBookingsTotals);
+            MemberAttendancePercentage = organizationMemberAttendancePercentages, DailyBookingsTotals = organizationDailyBookingsTotals
+        };
     }
 }

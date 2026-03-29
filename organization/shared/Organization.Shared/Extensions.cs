@@ -1,7 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
-using Api.Shared.Services.Grpc.Skedular.Location.V1;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +9,9 @@ using Organization.Shared.Publishers;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
+using BookingService = Api.Shared.Services.Grpc.Skedular.Booking.V1.BookingService;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
+using LocationService = Api.Shared.Services.Grpc.Skedular.Location.V1.LocationService;
 
 namespace Organization.Shared;
 
@@ -54,7 +55,6 @@ public static class Extensions
                 .AddScoped<IAzureInstallStateUserIdLookupRepository, AzureInstallStateUserIdLookupRepository>()
                 .AddScoped<IAzureTenantRepository, AzureTenantRepository>()
                 .AddScoped<IAzureTenantMemberRepository, AzureTenantMemberRepository>()
-                .AddScoped<IBookingRepository, BookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IDailyMemberCountRecordingRepository, DailyMemberCountRecordingRepository>()
                 .AddScoped<IIdentityRepository, IdentityRepository>()
@@ -87,6 +87,11 @@ public static class Extensions
 
         public IServiceCollection AddSharedCrossDomainClients(IConfiguration configuration)
         {
+            var bookingConfiguration = configuration.GetSection(BookingConfiguration.Key).Get<BookingConfiguration>();
+            ArgumentNullException.ThrowIfNull(bookingConfiguration);
+            ArgumentException.ThrowIfNullOrWhiteSpace(bookingConfiguration.ApiKey);
+            ArgumentNullException.ThrowIfNull(bookingConfiguration.GrpcUrl);
+
             var customerConfiguration = configuration.GetSection(CustomerConfiguration.Key).Get<CustomerConfiguration>();
             ArgumentNullException.ThrowIfNull(customerConfiguration);
             ArgumentException.ThrowIfNullOrWhiteSpace(customerConfiguration.ApiKey);
@@ -97,10 +102,12 @@ public static class Extensions
             ArgumentException.ThrowIfNullOrWhiteSpace(locationConfiguration.ApiKey);
             ArgumentNullException.ThrowIfNull(locationConfiguration.GrpcUrl);
 
+            services.AddGrpcClient<BookingService.BookingServiceClient>(GrpcClients.ConfigureBooking);
             services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
             services.AddGrpcClient<LocationService.LocationServiceClient>(GrpcClients.ConfigureLocation);
 
             return services
+                .AddSingleton(bookingConfiguration)
                 .AddSingleton(customerConfiguration)
                 .AddSingleton(locationConfiguration);
         }

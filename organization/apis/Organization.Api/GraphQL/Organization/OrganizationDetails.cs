@@ -40,7 +40,6 @@ public class OrganizationDetails : Node
     [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }
     [GraphQLName("availableOfferings")] public IEnumerable<OrganizationOfferingDetails> AvailableOfferings { get; set; } = [];
     [GraphQLName("activeOffering")] public OrganizationActiveOfferingDetails ActiveOffering { get; set; } = new();
-    [GraphQLName("hasFutureBooking")] public bool HasFutureBooking { get; set; }
     [GraphQLName("canModify")] public bool CanModify { get; set; }
     [GraphQLName("canDelete")] public bool CanDelete { get; set; }
     [GraphQLName("canInvitePeople")] public bool CanInvitePeople { get; set; }
@@ -186,7 +185,6 @@ public class OrganizationDetails : Node
         DateTimeOffset until,
         [Parent] OrganizationDetails organization,
         [Service] IOrganizationAnalyticsService organizationAnalyticsService,
-        [Service] IMapper mapper,
         CancellationToken cancellationToken)
     {
         var organizationAnalytics = await organizationAnalyticsService.GetAnalyticsAsync(
@@ -195,7 +193,7 @@ public class OrganizationDetails : Node
             from,
             until,
             cancellationToken);
-        return mapper.MapTo(organizationAnalytics.MemberAttendancePercentage, organizationAnalytics.DailyBookingsTotal);
+        return organizationAnalytics;
     }
 
     [UseResolverScope]

@@ -11,7 +11,6 @@ public interface IRepositoryFactory
     LocationDbContext DbContext { get; }
     IUnitOfWork UnitOfWork { get; }
     ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
-    IBookingRepository BookingRepository { get; }
     ICustomerRepository CustomerRepository { get; }
     IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }
@@ -36,7 +35,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
         _dbContext = dbContextFactory.CreateDbContext();
 
         LocationPhysicalAddressRepository = new LocationPhysicalAddressRepository(_dbContext, timeProvider);
-        BookingRepository = new BookingRepository(_dbContext, timeProvider);
         CustomerRepository = new CustomerRepository(_dbContext, timeProvider);
         DailyDeskCountRecordingRepository = new DailyDeskCountRecordingRepository(_dbContext, timeProvider);
         DailyRoomCountRecordingRepository = new DailyRoomCountRecordingRepository(_dbContext, timeProvider);
@@ -55,7 +53,6 @@ public class RepositoryFactory : RepositoryFactoryBase<LocationDbContext>, IRepo
     }
 
     public ILocationPhysicalAddressRepository LocationPhysicalAddressRepository { get; }
-    public IBookingRepository BookingRepository { get; }
     public ICustomerRepository CustomerRepository { get; }
     public IDailyDeskCountRecordingRepository DailyDeskCountRecordingRepository { get; }
     public IDailyRoomCountRecordingRepository DailyRoomCountRecordingRepository { get; }

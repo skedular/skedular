@@ -1,6 +1,5 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Clients.Grpc;
-using Api.Shared.Services.Grpc.Skedular.Customer.V1;
 using Enterprise.Shared.Outbox;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +9,7 @@ using Team.Shared.Publishers;
 using Team.Shared.Repositories;
 using Team.Shared.Services;
 using Team.Shared.Services.Cache;
+using CustomerService = Api.Shared.Services.Grpc.Skedular.Customer.V1.CustomerService;
 
 namespace Team.Shared;
 
@@ -44,7 +44,6 @@ public static class Extensions
 
         public IServiceCollection AddRepositories() =>
             services
-                .AddScoped<IBookingRepository, BookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IIdentityRepository, IdentityRepository>()
                 .AddScoped<IJoinInvitationRepository, JoinInvitationRepository>()
@@ -72,8 +71,7 @@ public static class Extensions
 
             services.AddGrpcClient<CustomerService.CustomerServiceClient>(GrpcClients.ConfigureCustomer);
 
-            return services
-                .AddSingleton(customerConfiguration);
+            return services.AddSingleton(customerConfiguration);
         }
     }
 }

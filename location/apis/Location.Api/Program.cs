@@ -43,6 +43,7 @@ public class Program
             .AddJobs()
             .AddServices()
             .AddGrpcServices(configuration)
+            .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal")
             .AddGrpc();
 

@@ -32,36 +32,6 @@ namespace Location.Shared.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookingLocation", b =>
-                {
-                    b.Property<string>("InvolvedBookingsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("InvolvedLocationsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("InvolvedBookingsId", "InvolvedLocationsId");
-
-                    b.HasIndex("InvolvedLocationsId");
-
-                    b.ToTable("BookingLocation");
-                });
-
-            modelBuilder.Entity("BookingResource", b =>
-                {
-                    b.Property<string>("BookingsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("ResourcesId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("BookingsId", "ResourcesId");
-
-                    b.HasIndex("ResourcesId");
-
-                    b.ToTable("BookingResource");
-                });
-
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.KafkaOutbox", b =>
                 {
                     b.Property<string>("Id")
@@ -194,55 +164,6 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("TemporalSignalOutbox");
                 });
 
-            modelBuilder.Entity("Location.Shared.Database.Entities.Booking", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("From")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("Until")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("From");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Until");
-
-                    b.ToTable("Booking");
-                });
-
             modelBuilder.Entity("Location.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
@@ -282,6 +203,102 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("Type");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyBookingCountRecording", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.ToTable("DailyBookingCountRecording");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyDeskBookingCountRecording", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.ToTable("DailyDeskBookingCountRecording");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.DailyDeskCountRecording", b =>
@@ -330,6 +347,54 @@ namespace Location.Shared.Database.Migrations
                     b.HasIndex("ModifiedAt");
 
                     b.ToTable("DailyDeskCountRecording");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyRoomBookingCountRecording", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.ToTable("DailyRoomBookingCountRecording");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.DailyRoomCountRecording", b =>
@@ -1242,40 +1307,43 @@ namespace Location.Shared.Database.Migrations
                     b.ToTable("OrganizationTagResource");
                 });
 
-            modelBuilder.Entity("BookingLocation", b =>
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyBookingCountRecording", b =>
                 {
-                    b.HasOne("Location.Shared.Database.Entities.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedBookingsId")
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("DailyBookingCountRecordings")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Location.Shared.Database.Entities.Location", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedLocationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Location");
                 });
 
-            modelBuilder.Entity("BookingResource", b =>
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyDeskBookingCountRecording", b =>
                 {
-                    b.HasOne("Location.Shared.Database.Entities.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("BookingsId")
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("DailyDeskBookingCountRecordings")
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Location.Shared.Database.Entities.Resource", null)
-                        .WithMany()
-                        .HasForeignKey("ResourcesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Location.Shared.Database.Entities.DailyDeskCountRecording", b =>
                 {
                     b.HasOne("Location.Shared.Database.Entities.Location", "Location")
                         .WithMany("DailyDeskCountRecordings")
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Location.Shared.Database.Entities.DailyRoomBookingCountRecording", b =>
+                {
+                    b.HasOne("Location.Shared.Database.Entities.Location", "Location")
+                        .WithMany("DailyRoomBookingCountRecordings")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1530,7 +1598,13 @@ namespace Location.Shared.Database.Migrations
 
             modelBuilder.Entity("Location.Shared.Database.Entities.Location", b =>
                 {
+                    b.Navigation("DailyBookingCountRecordings");
+
+                    b.Navigation("DailyDeskBookingCountRecordings");
+
                     b.Navigation("DailyDeskCountRecordings");
+
+                    b.Navigation("DailyRoomBookingCountRecordings");
 
                     b.Navigation("DailyRoomCountRecordings");
 

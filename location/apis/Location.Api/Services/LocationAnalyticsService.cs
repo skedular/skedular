@@ -1,5 +1,4 @@
 using Api.Shared.Services;
-using Api.Shared.Services.Models;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Pagination;
 using Location.Api.Models;
@@ -8,7 +7,6 @@ using Location.Shared.Models;
 using Location.Shared.Repositories;
 using Location.Shared.Services.Cache;
 using Microsoft.EntityFrameworkCore;
-using Booking = Location.Shared.Database.Entities.Booking;
 using DailyDeskCountRecording = Location.Shared.Database.Entities.DailyDeskCountRecording;
 using DailyRoomCountRecording = Location.Shared.Database.Entities.DailyRoomCountRecording;
 
@@ -103,16 +101,25 @@ public class LocationAnalyticsService(
         DateTimeOffset until,
         CancellationToken cancellationToken)
     {
-        var bookings = await repositoryFactory.BookingRepository.Query(
-                new Specification<Booking>
-                    {
-                        Criteria = query =>
-                            !query.DeletedAt.HasValue && locationIds.Any(id => query.InvolvedLocations.Select(item => item.Id).Contains(id)) &&
-                            query.From >= from &&
-                            query.Until <= until.AddDays(1)
-                    }
-                    .AddInclude(query => query.Resources)
-                    .AddInclude(query => query.InvolvedLocations))
+        var dailyBookingCounts = await repositoryFactory.DbContext.DailyBookingCountRecording
+            .Where(item =>
+                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
+            .OrderBy(item => item.Date)
+            .Include(item => item.Location)
+            .AsNoTrackingWithIdentityResolution()
+            .ToListAsync(cancellationToken);
+        var dailyDeskBookingCounts = await repositoryFactory.DbContext.DailyDeskBookingCountRecording
+            .Where(item =>
+                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
+            .OrderBy(item => item.Date)
+            .Include(item => item.Location)
+            .AsNoTrackingWithIdentityResolution()
+            .ToListAsync(cancellationToken);
+        var dailyRoomBookingCounts = await repositoryFactory.DbContext.DailyRoomBookingCountRecording
+            .Where(item =>
+                !item.DeletedAt.HasValue && locationIds.Contains(item.Location.Id) && item.Date >= from && item.Date <= until)
+            .OrderBy(item => item.Date)
+            .Include(item => item.Location)
             .AsNoTrackingWithIdentityResolution()
             .ToListAsync(cancellationToken);
 
@@ -149,28 +156,19 @@ public class LocationAnalyticsService(
                         return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = 0 };
                     }
 
-                    var matchedBookingsCount = bookings.Count(booking =>
-                        item.Date.Year == booking.From.Year &&
-                        item.Date.Month == booking.From.Month &&
-                        item.Date.Day == booking.From.Day &&
-                        booking.Resources.Count(resource =>
-                            resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceDesk)) >
-                        0);
+                    var matchedBookingsCount = dailyDeskBookingCounts
+                        .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
+                        .Select(recording => recording.Count)
+                        .SingleOrDefault();
 
                     return new LocationDesksOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
                 }).ToList();
 
-            var dailyBookingsTotal = dailyDeskCounts
+            var dailyBookingsTotal = dailyBookingCounts
                 .Where(item => item.Location.Id == locationId)
                 .Select(item =>
-                {
-                    var matchedBookingsCount = bookings.Count(booking =>
-                        item.Date.Year == booking.From.Year &&
-                        item.Date.Month == booking.From.Month &&
-                        item.Date.Day == booking.From.Day);
-
-                    return new LocationDailyBookingsTotal { Date = item.Date, Total = matchedBookingsCount };
-                }).ToList();
+                    new LocationDailyBookingsTotal { Date = item.Date, Total = item.Count })
+                .ToList();
 
             var roomsOccupancyPercentage = dailyRoomCounts
                 .Where(item => item.Location.Id == locationId)
@@ -181,13 +179,10 @@ public class LocationAnalyticsService(
                         return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = 0 };
                     }
 
-                    var matchedBookingsCount = bookings.Count(booking =>
-                        item.Date.Year == booking.From.Year &&
-                        item.Date.Month == booking.From.Month &&
-                        item.Date.Day == booking.From.Day &&
-                        booking.Resources.Count(resource =>
-                            resource.OrganizationTags.Any(tag => tag.Type == OrganizationTagTypeConstants.ResourceRoom)) >
-                        0);
+                    var matchedBookingsCount = dailyRoomBookingCounts
+                        .Where(recording => recording.Location.Id == locationId && recording.Date == item.Date)
+                        .Select(recording => recording.Count)
+                        .SingleOrDefault();
 
                     return new LocationRoomsOccupancyPercentage { Date = item.Date, Percentage = matchedBookingsCount / (float)item.Count * 100 };
                 }).ToList();

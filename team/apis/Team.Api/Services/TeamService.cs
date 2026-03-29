@@ -20,7 +20,6 @@ public interface ITeamService
     Task<Shared.Models.Team> UpdateAsync(Shared.Models.Team team, bool updateTeamMembers, CancellationToken cancellationToken);
     Task<Shared.Models.Team> DeleteAsync(string id, CancellationToken cancellationToken);
     Task<Shared.Models.Team?> GetByIdAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
-    Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken);
 
     Task<ICollection<Shared.Models.Team>> GetMyTeamsAsync(
         string? organizationId,
@@ -45,7 +44,6 @@ public class TeamService(
     IOrganizationOfferingService organizationOfferingService,
     ITeamOutboxPublisher teamOutboxPublisher,
     IMapper mapper,
-    TimeProvider timeProvider,
     ITeamMemberService teamMemberService,
     ICachedTeamService cachedTeamService) : ITeamService
 {
@@ -239,28 +237,6 @@ public class TeamService(
         }
 
         return await EnrichTeamAsync(customerId, team, cancellationToken);
-    }
-
-    public async Task<bool> HasFutureBookingAsync(string id, bool ignoreAuthorizationCheck, CancellationToken cancellationToken)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(id);
-
-        var team = await cachedTeamService.GetByIdAsync(id, cancellationToken) ?? throw new LocationNotFound();
-        if (team.Organization.CustomDomain == Constants.SkedularPublicLocationsCustomDomainName)
-        {
-            return false;
-        }
-
-        if (!ignoreAuthorizationCheck)
-        {
-            var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
-            if (!await teamAuthorizationService.CanViewAsync(team, customerId, cancellationToken))
-            {
-                throw new UnauthorizedAccessException();
-            }
-        }
-
-        return await repositoryFactory.BookingRepository.AnyBookingExistsUntrackedAsync(team.Id, timeProvider.GetUtcNow(), cancellationToken);
     }
 
     public async Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Team>>, int)> GetPaginatedTeamsAsync(

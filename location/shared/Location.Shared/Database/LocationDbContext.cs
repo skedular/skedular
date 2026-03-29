@@ -1,4 +1,4 @@
-﻿using Enterprise.Shared.Database;
+using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Outbox.Database;
 using Enterprise.Shared.Outbox.Database.Entities;
@@ -12,9 +12,11 @@ public class LocationDbContext(DbContextOptions<LocationDbContext> options, Cust
     : DbContextBase<LocationDbContext>(options, customDbContextOptions), IKafkaOutboxStore, ITemporalOutboxStore, ITemporalSignalOutboxStore
 {
     public DbSet<LocationPhysicalAddress> LocationPhysicalAddress { get; set; }
-    public DbSet<Booking> Booking { get; set; }
     public DbSet<Customer> Customer { get; set; }
+    public DbSet<DailyBookingCountRecording> DailyBookingCountRecording { get; set; }
+    public DbSet<DailyDeskBookingCountRecording> DailyDeskBookingCountRecording { get; set; }
     public DbSet<DailyDeskCountRecording> DailyDeskCountRecording { get; set; }
+    public DbSet<DailyRoomBookingCountRecording> DailyRoomBookingCountRecording { get; set; }
     public DbSet<DailyRoomCountRecording> DailyRoomCountRecording { get; set; }
     public DbSet<FloorPlan> FloorPlan { get; set; }
     public DbSet<Identity> Identity { get; set; }

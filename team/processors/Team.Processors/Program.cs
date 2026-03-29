@@ -1,5 +1,5 @@
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
-using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
+using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Cache;
@@ -9,6 +9,8 @@ using Enterprise.Shared.Temporal;
 using Team.Processors.Subscribers;
 using Team.Shared;
 using Team.Shared.Database;
+using OrganizationEvent = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Event;
+using OrganizationKey = Api.Shared.Clients.Events.Skedular.Organization.V1.Key.Key;
 
 namespace Team.Processors;
 
@@ -28,21 +30,17 @@ public class Program
             .AddRedis(configuration, "redis")
             .WithPooledDbContextFactory<TeamDbContext>(configuration, environment, "teamdb", true)
             .AddKafkaReliableEventConsumers<
-                BookingSubscriber,
-                Api.Shared.Clients.Events.Skedular.Booking.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
                 CustomerSubscriber,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Key.Key,
                 Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event>(kafkaConfiguration)
             .AddKafkaReliableEventConsumers<
                 LocationSubscriber,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Key.Key,
-                Api.Shared.Clients.Events.Skedular.Location.V1.Value.Event>(kafkaConfiguration)
-            .AddKafkaReliableEventConsumers<
-                OrganizationSubscriber,
                 Key,
                 Event>(kafkaConfiguration)
+            .AddKafkaReliableEventConsumers<
+                OrganizationSubscriber,
+                OrganizationKey,
+                OrganizationEvent>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
             .AddDomainSharedServices()
@@ -51,7 +49,6 @@ public class Program
             .AddRepositoryFactory()
             .AddPublishers()
             .AddMappers()
-            .AddSharedCrossDomainClients(configuration)
             .AddTemporalClient(configuration, "temporal");
 
         return builder.Build().UseWebApplicationDefaults<Program>();

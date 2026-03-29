@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e66bd0a31a6e41d8d3b32d864880aae4>>
+ * @generated SignedSource<<c7169dd05e2486e8602f3e60bf5a1f13>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,7 +20,6 @@ export type teamCard_TeamDetails$data = {
       readonly width: number | null | undefined;
     } | null | undefined;
   }>;
-  readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly members: {
     readonly edges: ReadonlyArray<{
@@ -230,13 +229,6 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "hasFutureBooking",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "canModify",
       "storageKey": null
     },
@@ -253,6 +245,6 @@ return {
 };
 })();
 
-(node as any).hash = "4b79797a2fa7152d265078a448d4fa43";
+(node as any).hash = "862f271555f92460965871cd7315006a";
 
 export default node;

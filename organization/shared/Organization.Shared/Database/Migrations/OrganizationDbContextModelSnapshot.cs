@@ -31,21 +31,6 @@ namespace Organization.Shared.Database.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BookingOrganization", b =>
-                {
-                    b.Property<string>("InvolvedBookingsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("InvolvedOrganizationsId")
-                        .HasColumnType("character varying(100)");
-
-                    b.HasKey("InvolvedBookingsId", "InvolvedOrganizationsId");
-
-                    b.HasIndex("InvolvedOrganizationsId");
-
-                    b.ToTable("BookingOrganization");
-                });
-
             modelBuilder.Entity("Enterprise.Shared.Outbox.Database.Entities.KafkaOutbox", b =>
                 {
                     b.Property<string>("Id")
@@ -378,55 +363,6 @@ namespace Organization.Shared.Database.Migrations
                     b.ToTable("AzureTenantMember");
                 });
 
-            modelBuilder.Entity("Organization.Shared.Database.Entities.Booking", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<uint>("EntityFrameworkVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("xid")
-                        .HasColumnName("xmin");
-
-                    b.Property<DateTimeOffset?>("EventRaisedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("From")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.Property<DateTimeOffset?>("ModifiedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTimeOffset>("Until")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)));
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAt");
-
-                    b.HasIndex("DeletedAt");
-
-                    b.HasIndex("From");
-
-                    b.HasIndex("ModifiedAt");
-
-                    b.HasIndex("Until");
-
-                    b.ToTable("Booking");
-                });
-
             modelBuilder.Entity("Organization.Shared.Database.Entities.Customer", b =>
                 {
                     b.Property<string>("Id")
@@ -524,6 +460,54 @@ namespace Organization.Shared.Database.Migrations
                     b.HasIndex("Type");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.DailyBookingCountRecording", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Count");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("Date");
+
+                    b.HasIndex("DeletedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.ToTable("DailyBookingCountRecording");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.DailyMemberCountRecording", b =>
@@ -3267,21 +3251,6 @@ namespace Organization.Shared.Database.Migrations
                         });
                 });
 
-            modelBuilder.Entity("BookingOrganization", b =>
-                {
-                    b.HasOne("Organization.Shared.Database.Entities.Booking", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedBookingsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Organization.Shared.Database.Entities.Organization", null)
-                        .WithMany()
-                        .HasForeignKey("InvolvedOrganizationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("IndustrySubCategoryOrganization", b =>
                 {
                     b.HasOne("Organization.Shared.Database.Entities.IndustrySubCategory", null)
@@ -3317,6 +3286,17 @@ namespace Organization.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("AzureTenant");
+                });
+
+            modelBuilder.Entity("Organization.Shared.Database.Entities.DailyBookingCountRecording", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany("DailyBookingCountRecordings")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("Organization.Shared.Database.Entities.DailyMemberCountRecording", b =>
@@ -3595,6 +3575,8 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("AzureTenants");
 
                     b.Navigation("BillingDetails");
+
+                    b.Navigation("DailyBookingCountRecordings");
 
                     b.Navigation("DailyMemberCountRecordings");
 

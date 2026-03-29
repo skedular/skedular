@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5c89f98ccecbe148289d44cbae7d7fc>>
+ * @generated SignedSource<<af53074d60fe84a31bb374fee60201c0>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,7 +33,6 @@ export type organizationLocations_locations_availableOrganizationResources_query
             readonly contactPhones: ReadonlyArray<string> | null | undefined;
           } | null | undefined;
         } | null | undefined;
-        readonly hasFutureBooking: boolean;
         readonly id: string;
         readonly name: string;
         readonly organization: {
@@ -298,13 +297,6 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "hasFutureBooking",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
                   "name": "canModify",
                   "storageKey": null
                 },
@@ -489,6 +481,6 @@ return {
 };
 })();
 
-(node as any).hash = "1cffee856f08ff60b4aebd2e3e10e0ec";
+(node as any).hash = "2f4609b4ca9bff10b3f06821753456fa";
 
 export default node;

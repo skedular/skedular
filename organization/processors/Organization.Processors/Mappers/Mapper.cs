@@ -4,7 +4,6 @@ using Organization.Shared.Models;
 using Stripe;
 using Event = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.Event;
 using Identity = Organization.Shared.Models.Identity;
-using Booking = Organization.Shared.Models.Booking;
 using Customer = Organization.Shared.Models.Customer;
 using CustomerType = Api.Shared.Clients.Events.Skedular.Customer.V1.Value.CustomerType;
 using OrganizationMember = Organization.Shared.Database.Entities.OrganizationMember;
@@ -16,7 +15,6 @@ namespace Organization.Processors.Mappers;
 public interface IMapper
 {
     Customer MapTo(Event src);
-    Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src);
 
     Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
@@ -29,11 +27,6 @@ public interface IMapper
         Identity src,
         Shared.Database.Entities.Identity dest,
         Shared.Database.Entities.Customer? customer);
-
-    Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Organization> involvedOrganizations);
 
     Shared.Models.Organization MapTo(Shared.Database.Entities.Organization src);
     OrganizationStripeConnectAccount MergeTo(Account src, OrganizationStripeConnectAccount dest);
@@ -76,23 +69,6 @@ public class Mapper : IMapper
         };
     }
 
-    public Booking MapTo(Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Event src)
-    {
-        var booking = src.Data.Booking;
-        var deletedAt = booking.DeletedAt?.ToDateTimeOffset();
-        var eventRaisedAt = src.Metadata.Time?.ToDateTimeOffset() ?? DateTimeOffset.MinValue;
-
-        return new Booking
-        {
-            Id = booking.Id,
-            DeletedAt = deletedAt,
-            EventRaisedAt = eventRaisedAt,
-            From = booking.From.ToDateTimeOffset(),
-            Until = booking.Until.ToDateTimeOffset(),
-            InvolvedOrganizations = booking.InvolvedOrganizationIds.Select(item => new Shared.Models.Organization { Id = item }).ToList()
-        };
-    }
-
     public Shared.Database.Entities.Customer MergeToEntity(
         Customer src,
         Shared.Database.Entities.Customer dest,
@@ -132,19 +108,6 @@ public class Mapper : IMapper
             dest.Customer = customer;
         }
 
-        return dest;
-    }
-
-    public Shared.Database.Entities.Booking MergeToEntity(
-        Booking src,
-        Shared.Database.Entities.Booking dest,
-        ICollection<Shared.Database.Entities.Organization> involvedOrganizations)
-    {
-        dest.Id = src.Id;
-        dest.EventRaisedAt = src.EventRaisedAt;
-        dest.From = src.From;
-        dest.Until = src.Until;
-        dest.InvolvedOrganizations = involvedOrganizations;
         return dest;
     }
 

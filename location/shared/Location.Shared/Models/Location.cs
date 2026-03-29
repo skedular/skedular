@@ -20,7 +20,6 @@ public class Location : ModelBaseWithDeleted
 
     public Organization Organization { get; set; } = new();
     public ICollection<Resource> Resources { get; set; } = [];
-    public ICollection<Booking> Bookings { get; set; } = [];
     public ICollection<DailyDeskCountRecording> DailyDeskCountRecordings { get; set; } = [];
     public ICollection<DailyRoomCountRecording> DailyRoomCountRecordings { get; set; } = [];
     public ICollection<OrganizationTag> OrganizationTags { get; set; } = [];
@@ -44,7 +43,6 @@ public class Location : ModelBaseWithDeleted
     public ICollection<OrganizationTag> Amenities =>
         OrganizationTags.Where(item => OrganizationTagTypeConstants.Amenities.Any(tagType => item.Type == tagType)).ToList();
 
-    public ICollection<Booking> InvolvedBookings { get; set; } = [];
     public ICollection<FloorPlan> FloorPlans { get; set; } = [];
     public LocationPhysicalAddress? PhysicalAddress { get; set; }
     public Permissions Permissions { get; set; } = new();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d9e218a4f7ca31972096240ab4e49d40>>
+ * @generated SignedSource<<becce121df1c7f900553d7fb33d93499>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -36,7 +36,6 @@ export type locationCard_LocationDetails$data = {
       readonly width: number | null | undefined;
     } | null | undefined;
   }>;
-  readonly hasFutureBooking: boolean;
   readonly id: string;
   readonly name: string;
   readonly organization: {
@@ -214,13 +213,6 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "hasFutureBooking",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "canModify",
       "storageKey": null
     },
@@ -333,6 +325,6 @@ return {
 };
 })();
 
-(node as any).hash = "5dd3dba845ce653e3e5c1bf1b4896cd4";
+(node as any).hash = "8aabf7b1b8d61f7c827088ece97b1cbd";
 
 export default node;
