@@ -139,6 +139,8 @@ type Mutation {
   deleteProductTags(input: DeleteProductTagsInput!): OrganizationTagsPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
   removeOrganizationTaxDetails(input: RemoveOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationXeroConnection(input: UpdateOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
+  disconnectOrganizationXeroConnection(input: DisconnectOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
 }
 
 type MyOrganizationDetails {
@@ -268,6 +270,7 @@ type OrganizationDetails {
   paymentMethods: [OrganizationPaymentMethod!]!
   ssoSettings: OrganizationSsoSettingsDetails
   taxDetails: OrganizationTaxDetails
+  xeroConnection: OrganizationXeroConnection
   featureImages: [CdnImageFile!]!
   listingMetadata: ListingMetadata!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
@@ -497,6 +500,34 @@ type OrganizationTypeDetails {
   name: String!
 }
 
+type OrganizationXeroBillingModeDetails {
+  type: OrganizationXeroBillingMode!
+  name: String!
+}
+
+type OrganizationXeroConnection {
+  tenantId: String!
+  tenantName: String!
+  billingMode: OrganizationXeroBillingMode!
+  scopes: String
+  isActive: Boolean!
+  sendInvoicesViaXero: Boolean!
+  autoReconcilePayments: Boolean!
+  defaultSalesAccountCode: String
+  defaultReceivablesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  defaultBrandingThemeId: String
+  defaultReferencePrefix: String
+  accessTokenExpiresAt: DateTime
+  refreshTokenExpiresAt: DateTime
+  lastSuccessfulSyncAt: DateTime
+  lastError: String
+  hasAccessToken: Boolean!
+  hasRefreshToken: Boolean!
+  id: ID!
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -518,6 +549,7 @@ type Query {
   organizationOffering(code: String!): OrganizationOfferingDetails!
   organizationTypes: [OrganizationTypeDetails!]!
   organizationBillingCycles: [OrganizationBillingCycleDetails!]!
+  organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
   organizationCustomerRecordSynced: Boolean! @cost(weight: "10")
   activeOrganizationTermsOfUse: OrganizationTermsOfUse! @cost(weight: "10")
   organizationIndustryMainCategoriesReferences: [OrganizationIndustryMainCategoryReferenceDetails!]! @cost(weight: "10")
@@ -788,6 +820,12 @@ input DeleteZonesInput {
   ids: [String!]!
 }
 
+input DisconnectOrganizationXeroConnectionInput {
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+}
+
 input InviteCustomersToJoinOrganizationInput {
   clientMutationId: String
   organizationId: String
@@ -1018,6 +1056,25 @@ input UpdateOrganizationTaxDetailsInput {
   organizationCustomDomain: String
   taxId: String!
   taxRatePercentage: Decimal!
+}
+
+input UpdateOrganizationXeroConnectionInput {
+  clientMutationId: String
+  organizationId: String
+  organizationCustomDomain: String
+  tenantId: String!
+  tenantName: String!
+  billingMode: OrganizationXeroBillingMode!
+  scopes: String
+  isActive: Boolean!
+  sendInvoicesViaXero: Boolean!
+  autoReconcilePayments: Boolean!
+  defaultSalesAccountCode: String
+  defaultReceivablesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  defaultBrandingThemeId: String
+  defaultReferencePrefix: String
 }
 
 input UpdateProductTagInput {
@@ -1279,6 +1336,11 @@ enum OrganizationType {
   PRIVATE
   MARKETPLACE
   INDIVIDUAL
+}
+
+enum OrganizationXeroBillingMode {
+  DISABLED
+  ENABLED
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

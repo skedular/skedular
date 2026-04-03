@@ -5,7 +5,7 @@ namespace Core.Shared;
 
 public class CoreApiHelper
 {
-    public static string GetPublicCdnFileEndpoint()
+    private static readonly Lazy<string> s_publicCdnFileEndpoint = new(() =>
     {
         var method = typeof(CoreControllerBase).GetMethod(nameof(CoreControllerBase.GetPublicCdnFile));
         ArgumentNullException.ThrowIfNull(method);
@@ -14,9 +14,9 @@ public class CoreApiHelper
         ArgumentNullException.ThrowIfNull(routeAttribute);
 
         return routeAttribute.Template[..routeAttribute.Template.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase)];
-    }
+    });
 
-    public static string GetPrivateFileEndpoint()
+    private static readonly Lazy<string> s_privateFileEndpoint = new(() =>
     {
         var method = typeof(CoreControllerBase).GetMethod(nameof(CoreControllerBase.GetPrivateFile));
         ArgumentNullException.ThrowIfNull(method);
@@ -25,5 +25,9 @@ public class CoreApiHelper
         ArgumentNullException.ThrowIfNull(routeAttribute);
 
         return routeAttribute.Template[..routeAttribute.Template.LastIndexOf("/", StringComparison.InvariantCultureIgnoreCase)];
-    }
+    });
+
+    public static string GetPublicCdnFileEndpoint() => s_publicCdnFileEndpoint.Value;
+
+    public static string GetPrivateFileEndpoint() => s_privateFileEndpoint.Value;
 }

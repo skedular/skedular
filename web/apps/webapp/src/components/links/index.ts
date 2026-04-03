@@ -246,6 +246,8 @@ export const getOrganizationMarketplaceSetupMarketplaceListingBaseLink = (integr
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=marketplace-listing`;
 export const getOrganizationMarketplaceSetupBillingCycleBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=billing-cycle`;
+export const getOrganizationMarketplaceSetupXeroBaseLink = (integratedPlatrform: string | undefined, id: string) =>
+  `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=xero-setup`;
 export const getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>
   `${getOrganizationBaseLink(integratedPlatrform, id)}/setup-marketplace?section=stripe-connect-accounts-setup`;
 export const getOrganizationMarketplaceSetupBankAccountsBaseLink = (integratedPlatrform: string | undefined, id: string) =>

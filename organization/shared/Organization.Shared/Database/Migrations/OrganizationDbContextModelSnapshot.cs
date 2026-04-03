@@ -3137,6 +3137,126 @@ namespace Organization.Shared.Database.Migrations
                     b.ToTable("OrganizationTaxDetails");
                 });
 
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationXeroConnection", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AccessTokenEncrypted")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<DateTimeOffset?>("AccessTokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("AutoReconcilePayments")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("BillingMode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("DISABLED");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DefaultBrandingThemeId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DefaultReceivablesAccountCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("DefaultReferencePrefix")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("DefaultSalesAccountCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("DefaultTrackingCategory1")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("DefaultTrackingCategory2")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<DateTimeOffset?>("LastSuccessfulSyncAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("RefreshTokenEncrypted")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<DateTimeOffset?>("RefreshTokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Scopes")
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.Property<bool>("SendInvoicesViaXero")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<string>("TenantId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("TenantName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillingMode");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("OrganizationXeroConnection");
+                });
+
             modelBuilder.Entity("Organization.Shared.Database.Entities.Tag", b =>
                 {
                     b.Property<string>("Id")
@@ -3538,6 +3658,15 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("Organization.Shared.Database.Entities.OrganizationXeroConnection", b =>
+                {
+                    b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
+                        .WithOne("OrganizationXeroConnection")
+                        .HasForeignKey("Organization.Shared.Database.Entities.OrganizationXeroConnection", "OrganizationId");
+
+                    b.Navigation("Organization");
+                });
+
             modelBuilder.Entity("Organization.Shared.Database.Entities.Tag", b =>
                 {
                     b.HasOne("Organization.Shared.Database.Entities.Organization", "Organization")
@@ -3597,6 +3726,8 @@ namespace Organization.Shared.Database.Migrations
                     b.Navigation("OrganizationStripePaymentMethods");
 
                     b.Navigation("OrganizationTaxDetails");
+
+                    b.Navigation("OrganizationXeroConnection");
 
                     b.Navigation("PhysicalAddress");
 

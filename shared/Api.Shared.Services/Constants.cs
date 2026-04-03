@@ -125,14 +125,47 @@ public static class Constants
 
     public const int MaxInvoiceNumberLength = 100;
     public const int MaxTaxDetailsTaxIdLength = 100;
+    public const int MaxAccountingProviderLength = 32;
+    public const int MaxAccountingEntityTypeLength = 64;
+    public const int MaxAccountingStatusLength = 64;
+    public const int MaxAccountingExternalIdLength = 200;
+    public const int MaxAccountingAccountCodeLength = 50;
+    public const int MaxAccountingReferencePrefixLength = 100;
+    public const int MaxAccountingScopesLength = 4000;
+    public const int MaxAccountingErrorLength = 10000;
+    public const int MaxEncryptedTokenLength = 10000;
+    public const int MaxXeroTenantIdLength = 100;
+    public const int MaxXeroBillingModeLength = 50;
+
     public const int DefaultMaxAllowedResourcesLockTimePaidViaCard = 5; // Default to 5 minutes
     public const int DefaultMaxAllowedResourcesLockTimePaidViaBankTransfer = 30 * 24 * 60; // Default to 30 days
     public const int MaxCustomerTypeLength = 20;
-
     public const int MaxProductTypeLength = 20;
-
-    public const string SkedularPublicLocationsCustomDomainName = "skedularpubliclocations";
-
     public const int MaxRecurringBookingFrequencyLength = 10;
     public const int MaxRecurringBookingEndTypeLength = 10;
+
+    public const string SkedularPublicLocationsCustomDomainName = "skedularpubliclocations";
+}
+
+public static class AccountingProviderConstants
+{
+    public const string Xero = "Xero";
+}
+
+public static class AccountingEntityTypeConstants
+{
+    public const string Organization = "Organization";
+    public const string Customer = "Customer";
+    public const string MarketplaceBooking = "MarketplaceBooking";
+    public const string RecurringBooking = "RecurringBooking";
+    public const string OrganizationArrearsInvoice = "OrganizationArrearsInvoice";
+}
+
+public static class AccountingStatusConstants
+{
+    public const string PendingExport = "PendingExport";
+    public const string Exported = "Exported";
+    public const string Sent = "Sent";
+    public const string Paid = "Paid";
+    public const string Failed = "Failed";
 }

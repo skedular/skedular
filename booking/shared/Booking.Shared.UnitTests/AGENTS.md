@@ -37,3 +37,12 @@ If you change recurring in-arrears logic, the minimum useful unit coverage shoul
 2. equal installment amounts for initial recurring draft
 3. month-end / boundary regressions
 4. earned-at selection relative to the billing period
+
+## Xero Unit-Test Boundary
+
+- Xero unit tests that belong here are the deterministic shared-layer seams:
+    - webhook payload routing
+    - Temporal signal-or-start behavior
+    - billing-period and invoice-export decision logic
+- Do not try to prove real Xero API delivery or end-to-end webhook ingress here. Those are system or manual integration
+  concerns.

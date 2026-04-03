@@ -66,7 +66,7 @@ public class OrganizationStripeConnectAccountService(
     IOrganizationStripeConnectAccountLinkService organizationStripeConnectAccountLinkService,
     ICreatable<OAuthToken, OAuthTokenCreateOptions> oauthTokenCreateService) : IOrganizationStripeConnectAccountService
 {
-    private readonly Lazy<string> _stripeConnectAccountOAuthCallbackBaseUrl = new(() =>
+    private static readonly Lazy<string> s_stripeConnectAccountOAuthCallbackBaseUrl = new(() =>
     {
         var method = typeof(OrganizationControllerBase).GetMethod(nameof(OrganizationControllerBase.StripeConnectAccountOAuthCallback));
         ArgumentNullException.ThrowIfNull(method);
@@ -422,7 +422,7 @@ public class OrganizationStripeConnectAccountService(
                 .SetQueryParam("state", organizationId)
                 .SetQueryParam(
                     "redirect_uri",
-                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), _stripeConnectAccountOAuthCallbackBaseUrl.Value)));
+                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), s_stripeConnectAccountOAuthCallbackBaseUrl.Value)));
 
     private async Task<OrganizationStripeConnectAccount> UpdateInternalAsync(
         string nickname,

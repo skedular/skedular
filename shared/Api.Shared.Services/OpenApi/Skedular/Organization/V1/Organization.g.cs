@@ -185,6 +185,22 @@ namespace Api.Shared.Services.OpenApi.Skedular.Organization.V1
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> StripeConnectAccountOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string scope, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
         /// <summary>
+        /// Xero OAuth start
+        /// </summary>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/xero/oauth/start")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Xero OAuth start")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> StartXeroOAuth([Microsoft.AspNetCore.Mvc.FromQuery] string? organizationId, [Microsoft.AspNetCore.Mvc.FromQuery] string? organizationCustomDomain, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
+        /// Xero OAuth callback
+        /// </summary>
+        [Microsoft.AspNetCore.Mvc.HttpGet, Microsoft.AspNetCore.Mvc.Route("v1/organization/xero/oauth/callback")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Xero OAuth callback")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> XeroOAuthCallback([Microsoft.AspNetCore.Mvc.FromQuery] string code, [Microsoft.AspNetCore.Mvc.FromQuery] string state, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
+        /// <summary>
         /// resync all azure tenants
         /// </summary>
         /// <returns>the status of resyncing all azure tenants</returns>

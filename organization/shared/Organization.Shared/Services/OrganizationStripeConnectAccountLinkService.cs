@@ -24,7 +24,7 @@ public class OrganizationStripeConnectAccountLinkService(
     IRepositoryFactory repositoryFactory,
     ICreatable<AccountLink, AccountLinkCreateOptions> accountLinkCreateService) : IOrganizationStripeConnectAccountLinkService
 {
-    private readonly Lazy<string> _refreshLinkBaseUrl = new(() =>
+    private static readonly Lazy<string> s_refreshLinkBaseUrl = new(() =>
     {
         var method = typeof(OrganizationControllerBase).GetMethod(
             nameof(OrganizationControllerBase.RefreshOrganizationStripeConnectAccountOnboarding));
@@ -48,7 +48,7 @@ public class OrganizationStripeConnectAccountLinkService(
             {
                 Account = id,
                 RefreshUrl =
-                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), _refreshLinkBaseUrl.Value).SetQueryParam("code", code),
+                    Url.Combine(applicationConfiguration.ApiBaseDomain.ToString(), s_refreshLinkBaseUrl.Value).SetQueryParam("code", code),
                 ReturnUrl = redirectUrl,
                 Type = "account_onboarding"
             },

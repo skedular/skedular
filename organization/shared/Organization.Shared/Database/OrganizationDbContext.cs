@@ -38,6 +38,7 @@ public class OrganizationDbContext(DbContextOptions<OrganizationDbContext> optio
     public DbSet<OrganizationStripeConnectAccountRefreshCode> OrganizationStripeConnectAccountRefreshCode { get; set; }
     public DbSet<OrganizationBankAccount> OrganizationBankAccount { get; set; }
     public DbSet<OrganizationTaxDetails> OrganizationTaxDetails { get; set; }
+    public DbSet<OrganizationXeroConnection> OrganizationXeroConnection { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
     public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }

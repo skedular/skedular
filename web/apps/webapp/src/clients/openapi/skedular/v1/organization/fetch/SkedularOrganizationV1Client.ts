@@ -23,6 +23,7 @@ import { StripeService } from './services/StripeService';
 import { V1Service } from './services/V1Service';
 import { WebhookService } from './services/WebhookService';
 import { WorkaroundService } from './services/WorkaroundService';
+import { XeroService } from './services/XeroService';
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 export class SkedularOrganizationV1Client {
     public readonly analytics: AnalyticsService;
@@ -43,6 +44,7 @@ export class SkedularOrganizationV1Client {
     public readonly v1: V1Service;
     public readonly webhook: WebhookService;
     public readonly workaround: WorkaroundService;
+    public readonly xero: XeroService;
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
@@ -74,6 +76,7 @@ export class SkedularOrganizationV1Client {
         this.v1 = new V1Service(this.request);
         this.webhook = new WebhookService(this.request);
         this.workaround = new WorkaroundService(this.request);
+        this.xero = new XeroService(this.request);
     }
 }
 

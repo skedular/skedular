@@ -13,6 +13,8 @@ service OrganizationService {
   rpc Admin_AddMember (Admin_AddMemberInput) returns (Organization);
   rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
   rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
+  rpc Admin_GetXeroConnection (Admin_GetXeroConnectionInput) returns (XeroConnection);
+  rpc Admin_RefreshXeroConnectionTokens (Admin_RefreshXeroConnectionTokensInput) returns (XeroConnection);
   rpc Admin_GetTag (Admin_GetTagInput) returns (Tag);
   rpc Admin_GetPaginatedTags (Admin_GetPaginatedTagsInput) returns (TagConnection);
   rpc Admin_GetCustomTag (Admin_GetCustomTagInput) returns (CustomTag);
@@ -181,6 +183,44 @@ message Offering {
 message Admin_GetInput {
   string id           = 1;
   string customDomain = 2;
+}
+
+message Admin_GetXeroConnectionInput {
+  string organizationId           = 1;
+  string organizationCustomDomain = 2;
+}
+
+message XeroConnection {
+  string                    id                            = 1;
+  string                    tenantId                      = 2;
+  string                    tenantName                    = 3;
+  string                    billingMode                   = 4;
+  string                    scopes                        = 5;
+  bool                      isActive                      = 6;
+  bool                      sendInvoicesViaXero           = 7;
+  bool                      autoReconcilePayments         = 8;
+  string                    defaultSalesAccountCode       = 9;
+  string                    defaultReceivablesAccountCode = 10;
+  string                    defaultTrackingCategory1      = 11;
+  string                    defaultTrackingCategory2      = 12;
+  string                    defaultBrandingThemeId        = 13;
+  string                    defaultReferencePrefix        = 14;
+  google.protobuf.Timestamp accessTokenExpiresAt          = 15;
+  google.protobuf.Timestamp refreshTokenExpiresAt         = 16;
+  google.protobuf.Timestamp lastSuccessfulSyncAt          = 17;
+  string                    lastError                     = 18;
+  bool                      hasAccessToken                = 19;
+  bool                      hasRefreshToken               = 20;
+  string                    accessTokenEncrypted          = 21;
+  string                    refreshTokenEncrypted         = 22;
+}
+
+message Admin_RefreshXeroConnectionTokensInput {
+  string                    organizationId        = 1;
+  string                    accessTokenEncrypted  = 2;
+  string                    refreshTokenEncrypted = 3;
+  google.protobuf.Timestamp accessTokenExpiresAt  = 4;
+  google.protobuf.Timestamp refreshTokenExpiresAt = 5;
 }
 
 message GetInput {

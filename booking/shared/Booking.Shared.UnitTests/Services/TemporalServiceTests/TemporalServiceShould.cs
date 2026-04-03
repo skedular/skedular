@@ -150,4 +150,118 @@ public class TemporalServiceShould
 
         A.CallTo(() => temporalClient.GetWorkflowHandle<RunOrganizationArrearsBilling>(expectedWorkflowId)).MustHaveHappenedOnceExactly();
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Signal_Maintain_Accounting_Invoice_State_Workflow_When_Running(
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        TemporalService sut,
+        MaintainAccountingInvoiceStateInput args,
+        string expectedWorkflowId,
+        CancellationToken cancellationToken)
+    {
+        var workflowHandle = new WorkflowHandle<MaintainAccountingInvoiceState>(temporalClient, expectedWorkflowId);
+
+        A.CallTo(() => temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"))
+            .Returns(expectedWorkflowId);
+        A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(expectedWorkflowId, cancellationToken)).Returns(true);
+        A.CallTo(() => temporalClient.GetWorkflowHandle<MaintainAccountingInvoiceState>(expectedWorkflowId)).Returns(workflowHandle);
+
+        await Should.ThrowAsync<NullReferenceException>(() =>
+            sut.SignalWorkflowMaintainAccountingInvoiceStateAsync(args, cancellationToken));
+
+        A.CallTo(() => temporalClient.GetWorkflowHandle<MaintainAccountingInvoiceState>(expectedWorkflowId)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Start_Maintain_Accounting_Invoice_State_Workflow_When_Not_Running(
+        [Frozen] TemporalConfiguration temporalConfiguration,
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        WorkflowHandle<MaintainAccountingInvoiceState> workflowHandle,
+        TemporalService sut,
+        MaintainAccountingInvoiceStateInput args,
+        string expectedWorkflowId,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"))
+            .Returns(expectedWorkflowId);
+        A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(expectedWorkflowId, cancellationToken)).Returns(false);
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+                A<Expression<Func<MaintainAccountingInvoiceState, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedWorkflowId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
+                    options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
+                    options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting)))
+            .Returns(workflowHandle);
+
+        await sut.SignalWorkflowMaintainAccountingInvoiceStateAsync(args, cancellationToken);
+
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+            A<Expression<Func<MaintainAccountingInvoiceState, Task>>>._,
+            A<WorkflowOptions>._)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Signal_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Running(
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        TemporalService sut,
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        string expectedWorkflowId,
+        CancellationToken cancellationToken)
+    {
+        var workflowHandle = new WorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(temporalClient, expectedWorkflowId);
+
+        A.CallTo(() => temporalHelperService.ToId(
+                $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"))
+            .Returns(expectedWorkflowId);
+        A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId, cancellationToken))
+            .Returns(true);
+        A.CallTo(() => temporalClient.GetWorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId))
+            .Returns(workflowHandle);
+
+        await Should.ThrowAsync<NullReferenceException>(() =>
+            sut.SignalWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(args, cancellationToken));
+
+        A.CallTo(() => temporalClient.GetWorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId))
+            .MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Start_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Not_Running(
+        [Frozen] TemporalConfiguration temporalConfiguration,
+        [Frozen] ITemporalClient temporalClient,
+        [Frozen] ITemporalHelperService temporalHelperService,
+        WorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState> workflowHandle,
+        TemporalService sut,
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        string expectedWorkflowId,
+        CancellationToken cancellationToken)
+    {
+        A.CallTo(() => temporalHelperService.ToId(
+                $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"))
+            .Returns(expectedWorkflowId);
+        A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId, cancellationToken))
+            .Returns(false);
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+                A<Expression<Func<MaintainOrganizationArrearsInvoiceAccountingState, Task>>>._,
+                A<WorkflowOptions>.That.Matches(options =>
+                    options.Id == expectedWorkflowId &&
+                    options.TaskQueue == temporalConfiguration.Worker.TaskQueue &&
+                    options.IdReusePolicy == WorkflowIdReusePolicy.AllowDuplicate &&
+                    options.IdConflictPolicy == WorkflowIdConflictPolicy.TerminateExisting)))
+            .Returns(workflowHandle);
+
+        await sut.SignalWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(args, cancellationToken);
+
+        A.CallTo(() => temporalClient.StartWorkflowAsync(
+            A<Expression<Func<MaintainOrganizationArrearsInvoiceAccountingState, Task>>>._,
+            A<WorkflowOptions>._)).MustHaveHappenedOnceExactly();
+    }
 }

@@ -16,6 +16,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
     void StartWorkflowScheduleRenewOrganizationOffering(ScheduleRenewOrganizationOfferingInput args, IUnitOfWork unitOfWork);
     void StartWorkflowInviteToJoin(InviteToJoinOrganizationInput args, IUnitOfWork unitOfWork);
     void StartWorkflowOrganizationDailyAnalytics(GenerateOrganizationDailyAnalyticsInput args, IUnitOfWork unitOfWork);
+    void StartWorkflowMaintainOrganizationXeroConnection(MaintainOrganizationXeroConnectionInput args, IUnitOfWork unitOfWork);
     void StartWorkflowReSyncAzureTenant(ReSyncAzureTenantInput args, IUnitOfWork unitOfWork);
     void StartWorkflowNewOrganizationJoined(NewOrganizationJoinedInput args, IUnitOfWork unitOfWork);
 
@@ -34,6 +35,7 @@ public class TemporalOutboxService(
     private static readonly string s_addOrganizationStripePaymentMethodType = typeof(AddOrganizationStripePaymentMethod).ToWorkflowType();
     private static readonly string s_inviteToJoinOrganizationExistingCustomer = typeof(InviteToJoinOrganization).ToWorkflowType();
     private static readonly string s_generateOrganizationDailyAnalytics = typeof(GenerateOrganizationDailyAnalytics).ToWorkflowType();
+    private static readonly string s_maintainOrganizationXeroConnection = typeof(MaintainOrganizationXeroConnection).ToWorkflowType();
     private static readonly string s_reSyncAzureTenant = typeof(ReSyncAzureTenant).ToWorkflowType();
     private static readonly string s_newOrganizationJoined = typeof(NewOrganizationJoined).ToWorkflowType();
 
@@ -77,6 +79,19 @@ public class TemporalOutboxService(
             new WorkflowOptions
             {
                 Id = temporalHelperService.ToId($"{Constants.GenerateOrganizationDailyAnalyticsPrefix}-{args.OrganizationId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
+            },
+            unitOfWork);
+
+    public void StartWorkflowMaintainOrganizationXeroConnection(MaintainOrganizationXeroConnectionInput args, IUnitOfWork unitOfWork) =>
+        temporalOutboxWorkflowExecutor.Execute<MaintainOrganizationXeroConnection, MaintainOrganizationXeroConnectionInput>(
+            args,
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.MaintainOrganizationXeroConnectionPrefix}-{args.OrganizationId}"),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -189,6 +204,21 @@ public class TemporalOutboxService(
                 ArgumentNullException.ThrowIfNull(input);
 
                 _ = await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(input),
+                    workflowOptions);
+            }
+            catch (WorkflowAlreadyStartedException)
+            {
+            }
+        }
+        else if (workflowType == s_maintainOrganizationXeroConnection)
+        {
+            try
+            {
+                ArgumentException.ThrowIfNullOrWhiteSpace(executionArgs);
+                var input = JsonSerializer.Deserialize<MaintainOrganizationXeroConnectionInput>(executionArgs);
+                ArgumentNullException.ThrowIfNull(input);
+
+                _ = await temporalClient.StartWorkflowAsync((MaintainOrganizationXeroConnection workflow) => workflow.ExecuteAsync(input),
                     workflowOptions);
             }
             catch (WorkflowAlreadyStartedException)

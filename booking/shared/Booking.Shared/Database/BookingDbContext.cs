@@ -35,6 +35,9 @@ public class BookingDbContext(DbContextOptions<BookingDbContext> options, Custom
     public DbSet<OrganizationInvoiceCounter> OrganizationInvoiceCounter { get; set; }
     public DbSet<OrganizationArrearsInvoice> OrganizationArrearsInvoice { get; set; }
     public DbSet<OrganizationArrearsInvoiceLine> OrganizationArrearsInvoiceLine { get; set; }
+    public DbSet<AccountingInvoiceLink> AccountingInvoiceLink { get; set; }
+    public DbSet<AccountingContactLink> AccountingContactLink { get; set; }
+    public DbSet<AccountingPaymentEvent> AccountingPaymentEvent { get; set; }
     public DbSet<KafkaOutbox> KafkaOutbox { get; set; }
     public DbSet<TemporalOutbox> TemporalOutbox { get; set; }
     public DbSet<TemporalSignalOutbox> TemporalSignalOutbox { get; set; }

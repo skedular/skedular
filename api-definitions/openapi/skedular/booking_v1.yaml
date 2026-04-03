@@ -251,6 +251,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/booking/xero/webhook:
+    post:
+      tags:
+        - v1
+        - booking
+        - xero
+        - webhook
+      summary: Xero Webhook
+      operationId: processXeroWebhookEvent
+      parameters:
+        - in: header
+          name: x-xero-signature
+          schema:
+            type: string
+          required: false
+          description: Xero webhook signature
+
+      responses:
+        "200":
+          description: the status of processing the Xero webhook event
+        "401":
+          description: invalid Xero webhook signature
+
 components:
   schemas:
     ProblemDetails:

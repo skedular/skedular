@@ -1,0 +1,50 @@
+using Api.Shared.Services;
+using Enterprise.Shared.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Booking.Shared.Database.Entities;
+
+#pragma warning disable CS8618
+public class AccountingInvoiceLink : EntityBase
+{
+    public string Provider { get; set; }
+    public string LocalEntityType { get; set; }
+    public string LocalEntityId { get; set; }
+    public string? ExternalInvoiceId { get; set; }
+    public string? ExternalInvoiceNumber { get; set; }
+    public string? ExternalInvoiceUrl { get; set; }
+    public string ExternalStatus { get; set; }
+    public DateTimeOffset? SentAt { get; set; }
+    public DateTimeOffset? PaidAt { get; set; }
+    public DateTimeOffset? LastSyncedAt { get; set; }
+    public string? LastError { get; set; }
+
+    public string OrganizationId { get; set; }
+    public virtual Organization Organization { get; set; }
+}
+#pragma warning restore CS8618
+
+public class AccountingInvoiceLinkConfiguration : IEntityTypeConfiguration<AccountingInvoiceLink>
+{
+    public void Configure(EntityTypeBuilder<AccountingInvoiceLink> builder)
+    {
+        builder.ConfigureEntityBase();
+
+        builder.Property(item => item.Provider).HasMaxLength(Constants.MaxAccountingProviderLength);
+        builder.Property(item => item.LocalEntityType).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
+        builder.Property(item => item.LocalEntityId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
+        builder.Property(item => item.ExternalInvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
+        builder.Property(item => item.ExternalInvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.ExternalStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
+
+        builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);
+
+        builder.HasIndex(item => item.OrganizationId);
+        builder.HasIndex(item => new { item.Provider, item.LocalEntityType, item.LocalEntityId }).IsUnique();
+        builder.HasIndex(item => new { item.Provider, item.ExternalInvoiceId }).IsUnique();
+        builder.HasIndex(item => item.ExternalStatus);
+    }
+}

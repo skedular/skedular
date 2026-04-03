@@ -7,50 +7,60 @@ This file is the entry point for AI agents working anywhere under `booking/`.
 - `Booking` is the one-off booking model.
 - `RecurringBooking` is the subscription-style booking model.
 - `MarketplaceBooking` carries pricing, payment, invoice, tax, and checkout state.
-- `ProductVersion -> Product -> Organization` is the owner chain for pricing context, tax settings, and organization billing cycle.
+- `ProductVersion -> Product -> Organization` is the owner chain for pricing context, tax settings, and organization
+  billing cycle.
 - `InArrears` means usage is earned first, then invoiced later.
+- Xero is currently an accounting and bank-transfer integration, not the source of truth for card checkout.
 
 ## Where To Read Next
 
 - For billing, arrears, invoice, and Stripe rules:
-  - `booking/shared/AGENTS.md`
-  - `booking/shared/Booking.Shared/AGENTS.md`
+    - `booking/shared/AGENTS.md`
+    - `booking/shared/Booking.Shared/AGENTS.md`
 - For API trigger and workflow-entry behavior:
-  - `booking/apis/AGENTS.md`
+    - `booking/apis/AGENTS.md`
 - For booking-domain test placement:
-  - `booking/domain/AGENTS.md`
+    - `booking/domain/AGENTS.md`
 
 ## Important Domain Boundaries
 
 - `booking/apis/`
-  - HTTP/GraphQL/grpc entry points and workflow triggers
+    - HTTP/GraphQL/grpc entry points and workflow triggers
 - `booking/shared/`
-  - most billing logic, repositories, workflows, invoice generation, Stripe checkout
+    - most billing logic, repositories, workflows, invoice generation, Stripe checkout
 - `booking/domain/`
-  - domain-local Aspire app host and domain integration tests
+    - domain-local Aspire app host and domain integration tests
 - `booking/processors/`
-  - event/subscriber driven processing
+    - event/subscriber driven processing
 - `booking/jobs/`
-  - scheduled/background job hosting
+    - scheduled/background job hosting
 
 ## Rules That Matter Across The Whole Booking Domain
 
-- Do not simplify billing logic in one layer without checking PDF invoice generation, stored totals, and Stripe checkout.
+- Do not simplify billing logic in one layer without checking PDF invoice generation, stored totals, and Stripe
+  checkout.
 - Do not assume first recurring arrears invoicing and later scheduled arrears billing use the same code path.
-- When arrears logic returns nothing unexpectedly, inspect loaded entity graph and owner/customer/currency availability before assuming billing math is wrong.
+- When arrears logic returns nothing unexpectedly, inspect loaded entity graph and owner/customer/currency availability
+  before assuming billing math is wrong.
 - Prefer adding tests when changing billing-cycle behavior.
+- Stripe remains the card-payment path.
+- Xero is the invoice/export/reconciliation provider for supported invoiceable flows when the org Xero billing mode is
+  `Enabled`.
+- Stripe still remains the card-payment path, even when the invoice itself is exported and reconciled through Xero.
+- Do not push provider-specific Xero fields into core booking entities when the accounting side-table model already
+  exists.
 
 ## Source Map
 
 - API trigger:
-  - `booking/apis/Booking.Api/Controllers/BookingController.cs`
-  - `booking/apis/Booking.Api/Services/WorkaroundService.cs`
+    - `booking/apis/Booking.Api/Controllers/BookingController.cs`
+    - `booking/apis/Booking.Api/Services/WorkaroundService.cs`
 - Shared billing logic:
-  - `booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`
-  - `booking/shared/Booking.Shared/Services/OrganizationArrearsBillingPlannerService.cs`
-  - `booking/shared/Booking.Shared/Activities/OrganizationArrearsBillingIntegrations.cs`
-  - `booking/shared/Booking.Shared/Services/BookingInvoiceService.cs`
-  - `booking/shared/Booking.Shared/Activities/StripeIntegrations.cs`
+    - `booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`
+    - `booking/shared/Booking.Shared/Services/OrganizationArrearsBillingPlannerService.cs`
+    - `booking/shared/Booking.Shared/Activities/OrganizationArrearsBillingIntegrations.cs`
+    - `booking/shared/Booking.Shared/Services/BookingInvoiceService.cs`
+    - `booking/shared/Booking.Shared/Activities/StripeIntegrations.cs`
 
 ## Working Style For Agents In This Domain
 

@@ -25,13 +25,14 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Ch1ib29raW5nX2ludGVybmFsX3YxX2tleS5wcm90bxIPYm9va2luZ2ludGVy",
-            "bmFsIi0KA0tleRImCh5zdHJpcGVDb25uZWN0QWNjb3VudFdlYmhvb2tLZXkY",
-            "ASABKAlCPKoCOUFwaS5TaGFyZWQuQ2xpZW50cy5FdmVudHMuU2tlZHVsYXIu",
-            "Qm9va2luZ0ludGVybmFsLlYxLktleWIGcHJvdG8z"));
+            "bmFsIkUKA0tleRImCh5zdHJpcGVDb25uZWN0QWNjb3VudFdlYmhvb2tLZXkY",
+            "ASABKAkSFgoOeGVyb1dlYmhvb2tLZXkYAiABKAlCPKoCOUFwaS5TaGFyZWQu",
+            "Q2xpZW50cy5FdmVudHMuU2tlZHVsYXIuQm9va2luZ0ludGVybmFsLlYxLktl",
+            "eWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key.Parser, new[]{ "StripeConnectAccountWebhookKey" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key), global::Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key.Parser, new[]{ "StripeConnectAccountWebhookKey", "XeroWebhookKey" }, null, null, null, null)
           }));
     }
     #endregion
@@ -74,6 +75,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public Key(Key other) : this() {
       stripeConnectAccountWebhookKey_ = other.stripeConnectAccountWebhookKey_;
+      xeroWebhookKey_ = other.xeroWebhookKey_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -95,6 +97,18 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       }
     }
 
+    /// <summary>Field number for the "xeroWebhookKey" field.</summary>
+    public const int XeroWebhookKeyFieldNumber = 2;
+    private string xeroWebhookKey_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string XeroWebhookKey {
+      get { return xeroWebhookKey_; }
+      set {
+        xeroWebhookKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -111,6 +125,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
         return true;
       }
       if (StripeConnectAccountWebhookKey != other.StripeConnectAccountWebhookKey) return false;
+      if (XeroWebhookKey != other.XeroWebhookKey) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -119,6 +134,7 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
     public override int GetHashCode() {
       int hash = 1;
       if (StripeConnectAccountWebhookKey.Length != 0) hash ^= StripeConnectAccountWebhookKey.GetHashCode();
+      if (XeroWebhookKey.Length != 0) hash ^= XeroWebhookKey.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -141,6 +157,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
+      if (XeroWebhookKey.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(XeroWebhookKey);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -155,6 +175,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
         output.WriteRawTag(10);
         output.WriteString(StripeConnectAccountWebhookKey);
       }
+      if (XeroWebhookKey.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(XeroWebhookKey);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -167,6 +191,9 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       int size = 0;
       if (StripeConnectAccountWebhookKey.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(StripeConnectAccountWebhookKey);
+      }
+      if (XeroWebhookKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(XeroWebhookKey);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -182,6 +209,9 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
       }
       if (other.StripeConnectAccountWebhookKey.Length != 0) {
         StripeConnectAccountWebhookKey = other.StripeConnectAccountWebhookKey;
+      }
+      if (other.XeroWebhookKey.Length != 0) {
+        XeroWebhookKey = other.XeroWebhookKey;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -206,6 +236,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
             StripeConnectAccountWebhookKey = input.ReadString();
             break;
           }
+          case 18: {
+            XeroWebhookKey = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -227,6 +261,10 @@ namespace Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key {
             break;
           case 10: {
             StripeConnectAccountWebhookKey = input.ReadString();
+            break;
+          }
+          case 18: {
+            XeroWebhookKey = input.ReadString();
             break;
           }
         }

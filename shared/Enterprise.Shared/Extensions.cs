@@ -175,7 +175,7 @@ public static class Extensions
             {
                 services
                     .AddSingleton(cookieConfiguration)
-                    .AddSingleton<ICookieHelper, CookieHelper>();
+                    .AddSingleton<ICookieEncryptionService, CookieEncryptionService>();
             }
 
             services.AddHybridCache(options =>
@@ -193,6 +193,7 @@ public static class Extensions
                 .AddCors()
                 .AddProblemDetails()
                 .AddHttpContextAccessor()
+                .AddSingleton<IStringEncryptionAlgorithm, StringEncryptionAlgorithm>()
                 .AddSingleton<IVersionService, VersionService<TProgram>>()
                 .AddSingleton<IImageHelper, ImageHelper>()
                 .AddSingleton<IContext, Context.Context>()

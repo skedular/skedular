@@ -26,6 +26,7 @@ using Tag = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.Tag;
 using CdnFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnFile;
 using CdnImageFile = Api.Shared.Clients.Events.Skedular.Organization.V1.Value.CdnImageFile;
 using ListingMetadata = Api.Shared.Services.Models.ListingMetadata;
+using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 
 namespace Organization.Shared.Mappers;
 
@@ -185,6 +186,7 @@ public class Mapper : IMapper
         organization.OrganizationStripeCustomer = MapTo(src.OrganizationStripeCustomer, organization);
         organization.OrganizationStripePaymentMethods = MapTo(src.OrganizationStripePaymentMethods, organization).ToList();
         organization.OrganizationStripeConnectAccounts = MapTo(src.OrganizationStripeConnectAccounts, organization).ToList();
+        organization.OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection, organization);
 
         return organization;
     }
@@ -285,6 +287,40 @@ public class Mapper : IMapper
             : new Api.Shared.Clients.Events.Skedular.Organization.V1.Value.OrganizationTaxDetails
             {
                 Id = src.Id, TaxId = src.TaxId.ToSafeString(), TaxRatePercentage = Convert.ToDouble(src.TaxRatePercentage)
+            };
+
+    private static OrganizationXeroConnection? MapTo(
+        Database.Entities.OrganizationXeroConnection? src,
+        Models.Organization organization) =>
+        src is null
+            ? null
+            : new OrganizationXeroConnection
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                TenantId = src.TenantId,
+                TenantName = src.TenantName,
+                BillingMode = src.BillingMode.ToOrganizationXeroBillingMode(),
+                Scopes = src.Scopes,
+                IsActive = src.IsActive,
+                SendInvoicesViaXero = src.SendInvoicesViaXero,
+                AutoReconcilePayments = src.AutoReconcilePayments,
+                DefaultSalesAccountCode = src.DefaultSalesAccountCode,
+                DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode,
+                DefaultTrackingCategory1 = src.DefaultTrackingCategory1,
+                DefaultTrackingCategory2 = src.DefaultTrackingCategory2,
+                DefaultBrandingThemeId = src.DefaultBrandingThemeId,
+                DefaultReferencePrefix = src.DefaultReferencePrefix,
+                AccessTokenExpiresAt = src.AccessTokenExpiresAt,
+                RefreshTokenExpiresAt = src.RefreshTokenExpiresAt,
+                LastSuccessfulSyncAt = src.LastSuccessfulSyncAt,
+                LastError = src.LastError,
+                AccessTokenEncrypted = src.AccessTokenEncrypted,
+                RefreshTokenEncrypted = src.RefreshTokenEncrypted,
+                HasAccessToken = !string.IsNullOrWhiteSpace(src.AccessTokenEncrypted),
+                HasRefreshToken = !string.IsNullOrWhiteSpace(src.RefreshTokenEncrypted),
+                Organization = organization
             };
 
     private static TermsOfUse? MapTo(Database.Entities.TermsOfUse? src) =>

@@ -5,6 +5,7 @@ using Enterprise.Shared.Pagination;
 using HotChocolate;
 using HotChocolate.Fusion.SourceSchema.Types;
 using HotChocolate.Types;
+using Organization.Api.GraphQL.Xero;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
@@ -29,6 +30,13 @@ public class RootQuery(IMapper mapper)
         new() { Type = OrganizationBillingCycle.Weekly, Name = OrganizationBillingCycle.Weekly.ToOrganizationBillingCycleName() },
         new() { Type = OrganizationBillingCycle.Fortnightly, Name = OrganizationBillingCycle.Fortnightly.ToOrganizationBillingCycleName() },
         new() { Type = OrganizationBillingCycle.Monthly, Name = OrganizationBillingCycle.Monthly.ToOrganizationBillingCycleName() }
+    ];
+
+    [UseResolverScope]
+    public IEnumerable<OrganizationXeroBillingModeDetails> OrganizationXeroBillingModes() =>
+    [
+        new() { Type = OrganizationXeroBillingMode.Disabled, Name = OrganizationXeroBillingMode.Disabled.ToOrganizationXeroBillingModeName() },
+        new() { Type = OrganizationXeroBillingMode.Enabled, Name = OrganizationXeroBillingMode.Enabled.ToOrganizationXeroBillingModeName() }
     ];
 
     [UseResolverScope]

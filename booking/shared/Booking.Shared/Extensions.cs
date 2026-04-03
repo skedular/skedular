@@ -22,9 +22,7 @@ public static class Extensions
         {
             var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
             ArgumentNullException.ThrowIfNull(emailConfiguration);
-            services.AddSingleton(emailConfiguration);
-
-            return services;
+            return services.AddSingleton(emailConfiguration);
         }
 
         public IServiceCollection AddDomainSharedMappers() =>
@@ -53,6 +51,7 @@ public static class Extensions
                 .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
                 .AddScoped<IStripeCustomerService, StripeCustomerService>()
+                .AddScoped<IXeroWebhookService, XeroWebhookService>()
                 .AddScoped<IBookingInvoiceService, BookingInvoiceService>()
                 .AddScoped<IOrganizationInvoiceCounterService, OrganizationInvoiceCounterService>()
                 .AddScoped<IResourceService, ResourceService>()

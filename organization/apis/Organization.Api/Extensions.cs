@@ -37,6 +37,7 @@ public static class Extensions
                 .AddScoped<IOrganizationStripeConnectAccountService, OrganizationStripeConnectAccountService>()
                 .AddScoped<IOrganizationBankAccountService, OrganizationBankAccountService>()
                 .AddScoped<IOrganizationTaxDetailsService, OrganizationTaxDetailsService>()
+                .AddScoped<IOrganizationXeroConnectionService, OrganizationXeroConnectionService>()
                 .AddScoped<IOrganizationPhysicalAddressService, OrganizationPhysicalAddressService>()
                 .AddScoped<IOrganizationOwnershipService, OrganizationOwnershipService>();
 

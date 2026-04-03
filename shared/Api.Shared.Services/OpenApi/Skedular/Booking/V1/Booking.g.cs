@@ -117,6 +117,16 @@ namespace Api.Shared.Services.OpenApi.Skedular.Booking.V1
         [System.ComponentModel.Description("Stripe Connect Account Webhook")]
         public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessStripeConnectAccountEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "Stripe-Signature")] string? stripe_Signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
 
+        /// <summary>
+        /// Xero Webhook
+        /// </summary>
+        /// <param name="x_xero_signature">Xero webhook signature</param>
+        /// <returns>the status of processing the Xero webhook event</returns>
+        [Microsoft.AspNetCore.Mvc.HttpPost, Microsoft.AspNetCore.Mvc.Route("v1/booking/xero/webhook")]
+        [ModelContextProtocol.Server.McpServerTool]
+        [System.ComponentModel.Description("Xero Webhook")]
+        public abstract System.Threading.Tasks.Task<Microsoft.AspNetCore.Mvc.IActionResult> ProcessXeroWebhookEvent([Microsoft.AspNetCore.Mvc.FromHeader(Name = "x-xero-signature")] string? x_xero_signature, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))")]

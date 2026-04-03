@@ -164,3 +164,45 @@ public class ProductPricingMaxDurationIncrementInvalid(string durationStepLabel)
 
 public class ProductPricingMaxDurationMustNotBeLessThanMinDuration()
     : Exception("MaxDurationMinutes must be greater or equal than productVersion.MinDurationMinutes");
+
+public class OrganizationXeroConnectionUnauthorizedException()
+    : UnauthorizedAccessException("You do not have permission to modify this organization's Xero connection.");
+
+public class InvalidXeroAuthorizeStateException() : InvalidOperationException("Invalid Xero state.");
+
+public class EmptyXeroTokenResponseException() : InvalidOperationException("Xero token response was empty.");
+
+public class XeroTenantReconnectRequiredException() : InvalidOperationException("Disconnect Xero before changing the connected tenant.");
+
+public class XeroActivationRequiresConnectionException() : InvalidOperationException("Connect Xero first before activating Xero-managed billing.");
+
+public class XeroActivationRequiresTenantSelectionException()
+    : InvalidOperationException("Select a Xero tenant before activating Xero-managed billing.");
+
+public class UnsupportedXeroBillingModeException(string billingMode)
+    : ArgumentOutOfRangeException(nameof(billingMode), billingMode, "Unsupported Xero billing mode.");
+
+public class UnavailableXeroTenantSelectionException()
+    : InvalidOperationException("Selected Xero tenant is not available for the current Xero connection.");
+
+public class XeroTokenRefreshFailedException(string message) : InvalidOperationException(message);
+
+public class NoXeroOrganizationTenantConnectionsException() : InvalidOperationException("No Xero organization tenant connections were returned.");
+
+public class MissingXeroRefreshTokenException() : InvalidOperationException("Xero refresh token is missing. Reconnect required.");
+
+public class XeroContactExportFailedException() : InvalidOperationException("Xero contact export did not return a contact.");
+
+public class XeroInvoiceExportFailedException() : InvalidOperationException("Xero invoice export did not return an invoice.");
+
+public class MixedXeroInvoiceTaxInclusivityException()
+    : InvalidOperationException("Xero invoice export does not support mixing tax-inclusive and tax-exclusive line pricing on the same invoice.");
+
+public class AzureTenantOnboardingFailedException(string error, string? errorDescription)
+    : InvalidOperationException($"Azure tenant onboarding went wrong with error {error} and message {errorDescription}.");
+
+public class OrganizationLookupRequiresIdOrCustomDomainException()
+    : InvalidOperationException("Either id or customDomain must be provided.");
+
+public class OrganizationLookupRequiresIdsOrCustomDomainsException()
+    : InvalidOperationException("Either ids or customDomains must be provided.");

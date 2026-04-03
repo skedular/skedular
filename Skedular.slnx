@@ -354,6 +354,7 @@
         <File Path=".env.template"/>
         <File Path=".gitattributes"/>
         <File Path=".gitignore"/>
+        <File Path="AGENTS.md"/>
         <File Path="docker-compose-crm.yml"/>
         <File Path="docker-compose-min.yml"/>
         <File Path="docker-compose-production.yml"/>

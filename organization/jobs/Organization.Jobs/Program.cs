@@ -1,5 +1,6 @@
 using Api.Shared.Services;
 using Enterprise.Shared;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -33,6 +34,7 @@ public class Program
             .AddTemporalOutboxBackgroundService<OrganizationDbContext>()
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -50,9 +52,11 @@ public class Program
             .AddWorkflow<GenerateOrganizationDailyAnalytics>()
             .AddWorkflow<RecomputeOrganizationBookingDerivedState>()
             .AddWorkflow<ReSyncAzureTenant>()
+            .AddWorkflow<MaintainOrganizationXeroConnection>()
             .AddWorkflow<NewOrganizationJoined>()
             .AddScopedActivities<OrganizationOfferings>()
             .AddScopedActivities<StripeIntegrations>()
+            .AddScopedActivities<XeroIntegrations>()
             .AddScopedActivities<EmailIntegrations>()
             .AddScopedActivities<InvitationIntegrations>()
             .AddScopedActivities<OrganizationDailyAnalytics>()

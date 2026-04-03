@@ -9,6 +9,8 @@ public class Constants
     public const string InitialArrearsBookingInvoicePrefix = "initial_arrears_booking_invoice";
     public const string InitialArrearsRecurringBookingInvoicePrefix = "initial_arrears_recurring_booking_invoice";
     public const string OrganizationArrearsBillingPrefix = "organization_arrears_billing";
+    public const string MaintainOrganizationArrearsInvoiceAccountingStatePrefix = "maintain_organization_arrears_invoice_accounting_state";
+    public const string MaintainAccountingInvoiceStatePrefix = "maintain_accounting_invoice_state";
     public const string GenerateLocationResourcesSlotsPrefix = "generate_location_resources_slots";
     public const string GenerateResourcesSlotsPrefix = "generate_resources_slots";
 }

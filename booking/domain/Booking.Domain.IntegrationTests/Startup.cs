@@ -3,6 +3,7 @@ using Api.Shared.Services;
 using Aspire.Hosting.Testing;
 using Booking.Shared;
 using Booking.Shared.Database;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -60,6 +61,7 @@ public class Startup
                 "bookingdb")
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddRepositoryFactory()

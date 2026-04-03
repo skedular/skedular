@@ -34,6 +34,7 @@ public class OrganizationGrpcService(
     IOrganizationBankAccountService organizationBankAccountService,
     ITagService tagService,
     IOrganizationBillingService organizationBillingService,
+    IOrganizationXeroConnectionService organizationXeroConnectionService,
     IMapper mapper,
     ITopicEventSender topicEventSender) : OrganizationService.OrganizationServiceBase
 {
@@ -172,6 +173,37 @@ public class OrganizationGrpcService(
 
         connection.Edges.AddRange(edges.Select(mapper.MapToGrpcResponse));
         return connection;
+    }
+
+    public override async Task<XeroConnection> Admin_GetXeroConnection(Admin_GetXeroConnectionInput request, ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var organization = await organizationService.GetByIdOrCustomDomainAsync(
+                               request.OrganizationId,
+                               request.OrganizationCustomDomain,
+                               true,
+                               context.CancellationToken) ??
+                           throw new OrganizationNotFound();
+
+        return mapper.MapToGrpcResponse(organization.OrganizationXeroConnection) ?? new XeroConnection();
+    }
+
+    public override async Task<XeroConnection> Admin_RefreshXeroConnectionTokens(
+        Admin_RefreshXeroConnectionTokensInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var xeroConnection = await organizationXeroConnectionService.RefreshTokensAsync(
+            request.OrganizationId,
+            request.AccessTokenEncrypted,
+            request.RefreshTokenEncrypted,
+            request.AccessTokenExpiresAt.ToDateTimeOffset(),
+            request.RefreshTokenExpiresAt.ToDateTimeOffset(),
+            context.CancellationToken);
+
+        return mapper.MapToGrpcResponse(xeroConnection) ?? new XeroConnection();
     }
 
     public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Get(

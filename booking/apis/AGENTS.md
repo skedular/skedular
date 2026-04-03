@@ -53,3 +53,16 @@ If the bug is about:
 - Stripe checkout
 
 the real fix is usually under `booking/shared/Booking.Shared/`, not in the controller or workaround service.
+
+## Xero API Boundary
+
+- `booking/apis/` should not become the source of truth for org Xero connection state.
+- If booking API logic needs Xero-readiness, it should rely on organization-owned connection state and booking-shared
+  export/reconciliation logic.
+- Keep card-payment behavior Stripe-owned unless there is an explicit redesign.
+- The booking Xero webhook endpoint is fast-ingress only:
+    - validate `x-xero-signature`
+    - optionally log raw JSON when config enables it
+    - publish the full raw payload to Kafka
+- Do not move booking webhook reconciliation logic back into the API request path. Async processing belongs in
+  processors/shared services.

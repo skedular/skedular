@@ -23,7 +23,6 @@ public static class Extensions
         {
             var emailConfiguration = configuration.GetSection(EmailConfiguration.Key).Get<EmailConfiguration>();
             ArgumentNullException.ThrowIfNull(emailConfiguration);
-
             return services.AddSingleton(emailConfiguration);
         }
 
@@ -37,8 +36,10 @@ public static class Extensions
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
+                .AddSingleton<IXeroTokenRefreshClient, XeroTokenRefreshClient>()
                 .AddSingleton<IGraphService, GraphService>()
                 .AddSingleton<IOrganizationDefaultValuesProvider, OrganizationDefaultValuesProvider>()
+                .AddScoped<IXeroTokenRefreshService, XeroTokenRefreshService>()
                 .AddScoped<IOrganizationStripeConnectAccountLinkService, OrganizationStripeConnectAccountLinkService>()
                 .AddScoped<IOrganizationMemberService, OrganizationMemberService>()
                 .AddScoped<ICachedOrganizationService, CachedOrganizationService>()

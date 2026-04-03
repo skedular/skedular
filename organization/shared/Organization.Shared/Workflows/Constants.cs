@@ -6,4 +6,5 @@ public class Constants
     public const string GenerateOrganizationDailyAnalyticsPrefix = "generate_organization_daily_analytics";
     public const string RecomputeOrganizationBookingDerivedStatePrefix = "recompute_organization_booking_derived_state";
     public const string NewOrganizationJoinedPrefix = "new_organization_joined";
+    public const string MaintainOrganizationXeroConnectionPrefix = "maintain_organization_xero_connection";
 }

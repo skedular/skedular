@@ -16,6 +16,7 @@ using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Stripe;
 using Organization.Api.GraphQL.Tag;
 using Organization.Api.GraphQL.TaxDetails;
+using Organization.Api.GraphQL.Xero;
 using Organization.Shared.Models;
 using Stripe;
 using AddCustomTagInput = Organization.Api.GraphQL.Tag.AddCustomTagInput;
@@ -57,6 +58,7 @@ using OrganizationStripeConnectAccount = Organization.Shared.Database.Entities.O
 using OrganizationStripeConnectAccountAuthorization = Organization.Shared.Models.OrganizationStripeConnectAccountAuthorization;
 using OrganizationStripeCustomer = Organization.Shared.Models.OrganizationStripeCustomer;
 using OrganizationStripePaymentMethod = Organization.Shared.Models.OrganizationStripePaymentMethod;
+using OrganizationXeroConnection = Organization.Shared.Models.OrganizationXeroConnection;
 using UpdateOrganizationBillingDetailsInput = Organization.Api.GraphQL.Billing.UpdateOrganizationBillingDetailsInput;
 using OrganizationPhysicalAddress = Organization.Shared.Database.Entities.OrganizationPhysicalAddress;
 using OrganizationType = Api.Shared.Services.Grpc.Skedular.Organization.V1.OrganizationType;
@@ -100,6 +102,7 @@ public interface IMapper
     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.TermsOfUse MapToGrpcResponse(Shared.Models.TermsOfUse src);
     Shared.Models.Organization MapTo(Admin_AddInput src);
     global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src);
+    XeroConnection? MapToGrpcResponse(OrganizationXeroConnection? src);
 
     Shared.Database.Entities.OrganizationMember MapToEntity(
         OrganizationMember src,
@@ -205,6 +208,19 @@ public interface IMapper
         Shared.Database.Entities.OrganizationTaxDetails dest,
         Shared.Database.Entities.Organization organization);
 
+    OrganizationXeroConnection MapTo(UpdateOrganizationXeroConnectionInput src);
+
+    Shared.Database.Entities.OrganizationXeroConnection MapToEntity(
+        OrganizationXeroConnection src,
+        Shared.Database.Entities.Organization organization);
+
+    Shared.Database.Entities.OrganizationXeroConnection MergeToEntity(
+        OrganizationXeroConnection src,
+        Shared.Database.Entities.OrganizationXeroConnection dest,
+        Shared.Database.Entities.Organization organization);
+
+    OrganizationXeroConnectionDetails? MapTo(OrganizationXeroConnection? src);
+
     OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization);
 
     OrganizationPhysicalAddress MergeTo(
@@ -252,7 +268,8 @@ public class Mapper : IMapper
             TermsOfUse = MapTo(src.TermsOfUse),
             IndustrySubCategories = MapTo(src.IndustrySubCategories, null).ToList(),
             OrganizationSsoSettings = MapTo(src.OrganizationSsoSettings),
-            OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails)
+            OrganizationTaxDetails = MapTo(src.OrganizationTaxDetails),
+            OrganizationXeroConnection = MapTo(src.OrganizationXeroConnection)
         };
 
         organization.OrganizationMembers = MapTo(src.OrganizationMembers, organization).ToList();
@@ -465,7 +482,8 @@ public class Mapper : IMapper
                 .Where(item => OrganizationTagTypeConstants.Amenities.Any(resourceType => resourceType == item.Type))
                 .Select(item => MapTo(item)!),
             SsoSettings = MapTo(src.OrganizationSsoSettings),
-            TaxDetails = MapTo(src.OrganizationTaxDetails)
+            TaxDetails = MapTo(src.OrganizationTaxDetails),
+            XeroConnection = MapTo(src.OrganizationXeroConnection)
         };
     }
 
@@ -649,6 +667,35 @@ public class Mapper : IMapper
 
         return organization;
     }
+
+    public XeroConnection? MapToGrpcResponse(OrganizationXeroConnection? src) =>
+        src is null
+            ? null
+            : new XeroConnection
+            {
+                Id = src.Id,
+                TenantId = src.TenantId,
+                TenantName = src.TenantName,
+                BillingMode = src.BillingMode.ToOrganizationXeroBillingMode(),
+                Scopes = src.Scopes.ToSafeString(),
+                IsActive = src.IsActive,
+                SendInvoicesViaXero = src.SendInvoicesViaXero,
+                AutoReconcilePayments = src.AutoReconcilePayments,
+                DefaultSalesAccountCode = src.DefaultSalesAccountCode.ToSafeString(),
+                DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode.ToSafeString(),
+                DefaultTrackingCategory1 = src.DefaultTrackingCategory1.ToSafeString(),
+                DefaultTrackingCategory2 = src.DefaultTrackingCategory2.ToSafeString(),
+                DefaultBrandingThemeId = src.DefaultBrandingThemeId.ToSafeString(),
+                DefaultReferencePrefix = src.DefaultReferencePrefix.ToSafeString(),
+                AccessTokenExpiresAt = src.AccessTokenExpiresAt?.ToTimestamp(),
+                RefreshTokenExpiresAt = src.RefreshTokenExpiresAt?.ToTimestamp(),
+                LastSuccessfulSyncAt = src.LastSuccessfulSyncAt?.ToTimestamp(),
+                LastError = src.LastError.ToSafeString(),
+                AccessTokenEncrypted = src.AccessTokenEncrypted.ToSafeString(),
+                RefreshTokenEncrypted = src.RefreshTokenEncrypted.ToSafeString(),
+                HasAccessToken = src.HasAccessToken,
+                HasRefreshToken = src.HasRefreshToken
+            };
 
     public Shared.Database.Entities.OrganizationMember MapToEntity(
         OrganizationMember src,
@@ -1337,6 +1384,93 @@ public class Mapper : IMapper
         return dest;
     }
 
+    public OrganizationXeroConnection MapTo(UpdateOrganizationXeroConnectionInput src) =>
+        new()
+        {
+            TenantId = src.TenantId,
+            TenantName = src.TenantName,
+            BillingMode = src.BillingMode,
+            Scopes = src.Scopes,
+            IsActive = src.IsActive,
+            SendInvoicesViaXero = src.SendInvoicesViaXero,
+            AutoReconcilePayments = src.AutoReconcilePayments,
+            DefaultSalesAccountCode = src.DefaultSalesAccountCode,
+            DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode,
+            DefaultTrackingCategory1 = src.DefaultTrackingCategory1,
+            DefaultTrackingCategory2 = src.DefaultTrackingCategory2,
+            DefaultBrandingThemeId = src.DefaultBrandingThemeId,
+            DefaultReferencePrefix = src.DefaultReferencePrefix,
+            Organization = new Shared.Models.Organization
+            {
+                Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
+            }
+        };
+
+    public Shared.Database.Entities.OrganizationXeroConnection MapToEntity(
+        OrganizationXeroConnection src,
+        Shared.Database.Entities.Organization organization) =>
+        MergeToEntity(src, new Shared.Database.Entities.OrganizationXeroConnection(), organization);
+
+    public Shared.Database.Entities.OrganizationXeroConnection MergeToEntity(
+        OrganizationXeroConnection src,
+        Shared.Database.Entities.OrganizationXeroConnection dest,
+        Shared.Database.Entities.Organization organization)
+    {
+        dest.Id = src.Id;
+        dest.TenantId = src.TenantId;
+        dest.TenantName = src.TenantName;
+        dest.BillingMode = src.BillingMode.ToOrganizationXeroBillingMode();
+        dest.Scopes = src.Scopes;
+        dest.IsActive = src.IsActive;
+        dest.SendInvoicesViaXero = src.SendInvoicesViaXero;
+        dest.AutoReconcilePayments = src.AutoReconcilePayments;
+        dest.DefaultSalesAccountCode = src.DefaultSalesAccountCode;
+        dest.DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode;
+        dest.DefaultTrackingCategory1 = src.DefaultTrackingCategory1;
+        dest.DefaultTrackingCategory2 = src.DefaultTrackingCategory2;
+        dest.DefaultBrandingThemeId = src.DefaultBrandingThemeId;
+        dest.DefaultReferencePrefix = src.DefaultReferencePrefix;
+        if (src.AccessTokenExpiresAt is not null)
+        {
+            dest.AccessTokenExpiresAt = src.AccessTokenExpiresAt;
+        }
+
+        if (src.RefreshTokenExpiresAt is not null)
+        {
+            dest.RefreshTokenExpiresAt = src.RefreshTokenExpiresAt;
+        }
+
+        dest.Organization = organization;
+        return dest;
+    }
+
+    public OrganizationXeroConnectionDetails? MapTo(OrganizationXeroConnection? src) =>
+        src is null
+            ? null
+            : new OrganizationXeroConnectionDetails
+            {
+                Id = src.Id,
+                TenantId = src.TenantId,
+                TenantName = src.TenantName,
+                BillingMode = src.BillingMode,
+                Scopes = src.Scopes,
+                IsActive = src.IsActive,
+                SendInvoicesViaXero = src.SendInvoicesViaXero,
+                AutoReconcilePayments = src.AutoReconcilePayments,
+                DefaultSalesAccountCode = src.DefaultSalesAccountCode,
+                DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode,
+                DefaultTrackingCategory1 = src.DefaultTrackingCategory1,
+                DefaultTrackingCategory2 = src.DefaultTrackingCategory2,
+                DefaultBrandingThemeId = src.DefaultBrandingThemeId,
+                DefaultReferencePrefix = src.DefaultReferencePrefix,
+                AccessTokenExpiresAt = src.AccessTokenExpiresAt,
+                RefreshTokenExpiresAt = src.RefreshTokenExpiresAt,
+                LastSuccessfulSyncAt = src.LastSuccessfulSyncAt,
+                LastError = src.LastError,
+                HasAccessToken = src.HasAccessToken,
+                HasRefreshToken = src.HasRefreshToken
+            };
+
     public OrganizationPhysicalAddress MapTo(Shared.Models.OrganizationPhysicalAddress src, Shared.Database.Entities.Organization organization) =>
         MergeTo(src, new OrganizationPhysicalAddress(), organization);
 
@@ -1970,6 +2104,37 @@ public class Mapper : IMapper
         src is null
             ? null
             : new GraphQL.TaxDetails.OrganizationTaxDetails { Id = src.Id, TaxId = src.TaxId, TaxRatePercentage = src.TaxRatePercentage };
+
+    private static OrganizationXeroConnection? MapTo(Shared.Database.Entities.OrganizationXeroConnection? src) =>
+        src is null
+            ? null
+            : new OrganizationXeroConnection
+            {
+                Id = src.Id,
+                CreatedAt = src.CreatedAt,
+                ModifiedAt = src.ModifiedAt,
+                TenantId = src.TenantId,
+                TenantName = src.TenantName,
+                BillingMode = src.BillingMode.ToOrganizationXeroBillingMode(),
+                Scopes = src.Scopes,
+                IsActive = src.IsActive,
+                SendInvoicesViaXero = src.SendInvoicesViaXero,
+                AutoReconcilePayments = src.AutoReconcilePayments,
+                DefaultSalesAccountCode = src.DefaultSalesAccountCode,
+                DefaultReceivablesAccountCode = src.DefaultReceivablesAccountCode,
+                DefaultTrackingCategory1 = src.DefaultTrackingCategory1,
+                DefaultTrackingCategory2 = src.DefaultTrackingCategory2,
+                DefaultBrandingThemeId = src.DefaultBrandingThemeId,
+                DefaultReferencePrefix = src.DefaultReferencePrefix,
+                AccessTokenExpiresAt = src.AccessTokenExpiresAt,
+                RefreshTokenExpiresAt = src.RefreshTokenExpiresAt,
+                LastSuccessfulSyncAt = src.LastSuccessfulSyncAt,
+                LastError = src.LastError,
+                AccessTokenEncrypted = src.AccessTokenEncrypted,
+                RefreshTokenEncrypted = src.RefreshTokenEncrypted,
+                HasAccessToken = !string.IsNullOrWhiteSpace(src.AccessTokenEncrypted),
+                HasRefreshToken = !string.IsNullOrWhiteSpace(src.RefreshTokenEncrypted)
+            };
 
     private static OrganizationPhysicalAddressDetails? MapToGraphQl(Shared.Models.OrganizationPhysicalAddress? src) =>
         src is null

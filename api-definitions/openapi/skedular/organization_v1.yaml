@@ -465,6 +465,56 @@ paths:
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
 
+  /v1/organization/xero/oauth/start:
+    get:
+      tags:
+        - v1
+        - organization
+        - xero
+        - oauth
+      summary: Xero OAuth start
+      operationId: startXeroOAuth
+      parameters:
+        - in: query
+          name: organizationId
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: organizationCustomDomain
+          schema:
+            type: string
+          required: false
+
+      responses:
+        "302":
+          description: redirect to Xero consent page
+
+  /v1/organization/xero/oauth/callback:
+    get:
+      tags:
+        - v1
+        - organization
+        - xero
+        - oauth
+      summary: Xero OAuth callback
+      operationId: xeroOAuthCallback
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: state
+          schema:
+            type: string
+          required: true
+
+      responses:
+        "302":
+          description: redirect back to organization marketplace setup
+
   /v1/organization/azure-tenant/resync-all-azure-tenants:
     put:
       tags:

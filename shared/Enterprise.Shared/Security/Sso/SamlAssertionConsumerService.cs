@@ -23,7 +23,7 @@ public interface ISamlAssertionConsumerService
     Task<bool> ValidateCertificateAsync(string metadataUrl, CancellationToken cancellationToken);
 }
 
-public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider timeProvider, ICookieHelper cookieHelper)
+public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider timeProvider, ICookieEncryptionService cookieEncryptionService)
     : ISamlAssertionConsumerService
 {
     public async Task<bool> ValidateSamlResponseSignatureAsync(
@@ -148,7 +148,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
     public void StoreSamlResponseInCookie(HttpResponse response, string organizationId, SamlResponse samlResponse) =>
         response.Cookies.Append(
             $"{Constants.OrganizationSsoCookiePrefix}-{organizationId}",
-            cookieHelper.Encrypt(JsonSerializer.Serialize(samlResponse)),
+            cookieEncryptionService.Encrypt(JsonSerializer.Serialize(samlResponse)),
             new CookieOptions
             {
                 HttpOnly = true,
@@ -158,7 +158,7 @@ public class SamlAssertionConsumerService(IMemoryCache memoryCache, TimeProvider
             });
 
     public SamlResponse RetrieveSamlResponseFromCookie(string rawResponse) =>
-        JsonSerializer.Deserialize<SamlResponse>(cookieHelper.Decrypt(rawResponse))!;
+        JsonSerializer.Deserialize<SamlResponse>(cookieEncryptionService.Decrypt(rawResponse))!;
 
     public async Task<bool> ValidateMetadataAsync(string metadataUrl, CancellationToken cancellationToken)
     {

@@ -1,6 +1,7 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Api.Shared.Services;
 using Aspire.Hosting.Testing;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -60,6 +61,7 @@ public class Startup
                 "organizationdb")
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddRepositoryFactory()

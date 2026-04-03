@@ -13,6 +13,7 @@ export { default as SingleChoiceCurrency } from './single-choice-currency';
 export { default as SingleChoiceOrganizationBillingCycle } from './single-choice-organization-billing-cycle';
 export { default as SingleChoiceOrganizationStripeConnectAccount } from './single-choice-organization-stripe-connect-account';
 export { default as SingleChoiceOrganizationType } from './single-choice-organization-type';
+export { default as SingleChoiceOrganizationXeroBillingMode } from './single-choice-organization-xero-billing-mode';
 export { default as SingleChoicePaymentMethodType } from './single-choice-payment-method-type';
 export { default as SingleChoiceProductPricingBillingMode } from './single-choice-product-pricing-billing-mode';
 export { default as SingleChoiceProductPricingCadence } from './single-choice-product-pricing-cadence';

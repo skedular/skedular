@@ -4,6 +4,7 @@ using Booking.Shared.Activities;
 using Booking.Shared.Database;
 using Booking.Shared.Workflows;
 using Enterprise.Shared;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -33,6 +34,7 @@ public class Program
             .AddTemporalOutboxBackgroundService<BookingDbContext>()
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()
@@ -56,6 +58,8 @@ public class Program
             .AddWorkflow<PayRecurringBookingViaBankTransfer>()
             .AddWorkflow<PayRecurringBookingViaCard>()
             .AddWorkflow<RunOrganizationArrearsBilling>()
+            .AddWorkflow<MaintainAccountingInvoiceState>()
+            .AddWorkflow<MaintainOrganizationArrearsInvoiceAccountingState>()
             .AddScopedActivities<BookingIntegrations>()
             .AddScopedActivities<InvoiceIntegrations>()
             .AddScopedActivities<LocationResourceSlot>()

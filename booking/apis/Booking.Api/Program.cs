@@ -3,6 +3,7 @@ using Booking.Api.Grpc;
 using Booking.Shared;
 using Booking.Shared.Database;
 using Enterprise.Shared;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.GraphQL;
@@ -34,6 +35,7 @@ public class Program
             .AddGraphql(configuration, requestExecutorBuilder => { requestExecutorBuilder.AddApiTypes(); })
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

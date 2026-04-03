@@ -1,3 +1,4 @@
+using Api.Shared.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Database.Postgres;
@@ -49,6 +50,7 @@ internal static class OrganizationExtensions
             var updatedQuery = (isTracked ? originalQuery.AsTracking() : originalQuery.AsNoTrackingWithIdentityResolution())
                 .Include(query => query.OrganizationSsoSettings)
                 .Include(query => query.OrganizationTaxDetails)
+                .Include(query => query.OrganizationXeroConnection)
                 .Include(query => query.AzureTenants.Where(azureTenant => !azureTenant.DeletedAt.HasValue))
                 .ThenInclude(query => query.AzureTenantMembers.Where(azureTenantMember => !azureTenantMember.DeletedAt.HasValue))
                 .Include(query => query.OrganizationMembers.Where(organizationMember => !organizationMember.DeletedAt.HasValue))
@@ -151,7 +153,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                     cancellationToken);
         }
 
-        throw new InvalidOperationException("Either id or customDomain must be provided.");
+        throw new OrganizationLookupRequiresIdOrCustomDomainException();
     }
 
     public async Task<ICollection<Database.Entities.Organization>> GetByIdsOrCustomDomainsAsync(
@@ -190,7 +192,7 @@ public class OrganizationRepository(OrganizationDbContext dbContext, TimeProvide
                 .ToListAsync(cancellationToken);
         }
 
-        throw new InvalidOperationException("Either ids or customDomains must be provided.");
+        throw new OrganizationLookupRequiresIdsOrCustomDomainsException();
     }
 
     public async Task<ICollection<Database.Entities.Organization>> GetMinimalOrganizationByCustomerIdUntrackedAsync(

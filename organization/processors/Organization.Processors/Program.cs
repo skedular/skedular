@@ -2,6 +2,7 @@ using Api.Shared.Clients.Events.Skedular.Customer.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Customer.V1.Value;
 using Api.Shared.Services;
 using Enterprise.Shared;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Cache;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -42,6 +43,7 @@ public class Program
                 Event>(kafkaConfiguration)
             .AddDomainSharedConfigurations(configuration)
             .AddRootLevelSharedServices()
+            .AddXeroServices(configuration)
             .AddDomainSharedServices()
             .AddDomainSharedMappers()
             .AddMappers()

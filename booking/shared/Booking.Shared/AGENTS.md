@@ -24,7 +24,8 @@ Example:
 Historical bug to avoid reintroducing:
 
 - aligning the first split to calendar month boundaries created tiny stub periods
-- example symptom: start date near month-end created a first invoice around `47` instead of the expected monthly installment
+- example symptom: start date near month-end created a first invoice around `47` instead of the expected monthly
+  installment
 
 Relevant code:
 
@@ -61,24 +62,44 @@ Expected behavior:
 - set `TaxCode`
 - enable `AutomaticTax`
 - send the right base amount:
-  - inclusive total for tax-inclusive pricing
-  - ex-tax subtotal for tax-exclusive pricing
+    - inclusive total for tax-inclusive pricing
+    - ex-tax subtotal for tax-exclusive pricing
 
 Relevant code:
 
 - `Activities/StripeIntegrations.cs`
+
+## Xero Rules
+
+- Xero does not replace Stripe for card checkout in the current design.
+- When org Xero billing mode is `Enabled`, Xero is the invoice sender, host, and reconciliation source for supported
+  invoiceable flows.
+- If Xero is enabled but configured not to send invoices, keep the local fallback behavior instead of creating a draft
+  in Xero and returning silently.
+- Reconciliation should flow through the accounting link/event model and existing booking payment workflows, not around
+  them.
+- Use the normal accounting payment-event flow when confirming Xero-paid invoices so downstream subscribers still see
+  the normal booking payment transitions.
+- The booking webhook path should only publish raw payloads; async processor code then signals or starts the per-invoice
+  monitor workflows.
+- `MaintainAccountingInvoiceState` and `MaintainOrganizationArrearsInvoiceAccountingState` are per-invoice monitor
+  workflows. Webhooks should wake them early; polling remains the safety net.
+- Xero invoice line descriptions should stay aligned with the local booking invoice description rules rather than
+  collapsing down to just the product name.
+- Tax-inclusive vs tax-exclusive pricing must be preserved when exporting Xero invoice lines. Do not send an inclusive
+  amount as an exclusive line.
 
 ## Invoice Template Rules
 
 Current intended template behavior:
 
 - first recurring in-arrears invoice:
-  - use `RecurringInvoiceDocument`
-  - preserve the marketplace invoice template structure
-  - preserve bank-transfer details and due-date section behavior
+    - use `RecurringInvoiceDocument`
+    - preserve the marketplace invoice template structure
+    - preserve bank-transfer details and due-date section behavior
 - later scheduled billing-cycle invoice:
-  - still uses `OrganizationArrearsInvoiceService`
-  - supports multi-line grouped billing
+    - still uses `OrganizationArrearsInvoiceService`
+    - supports multi-line grouped billing
 
 Do not assume the later scheduled invoice should automatically reuse the first recurring invoice template.
 
@@ -133,3 +154,4 @@ If you edit recurring in-arrears logic, verify:
 4. Stripe checkout breakdown
 5. scheduled later billing-cycle behavior
 6. unit tests for segment splitting
+7. Xero export and reconciliation behavior if the change affects bank-transfer or arrears invoices

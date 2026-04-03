@@ -85,6 +85,27 @@ public interface ITemporalService
     ///     Requests the organization in-arrears billing workflow to stop.
     /// </summary>
     Task SignalRunOrganizationArrearsBillingWorkflowStopAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        CancellationToken cancellationToken);
+
+    Task StartWorkflowMaintainAccountingInvoiceStateAsync(
+        MaintainAccountingInvoiceStateInput args,
+        CancellationToken cancellationToken);
+
+    Task SignalWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        CancellationToken cancellationToken);
+
+    Task SignalWorkflowMaintainAccountingInvoiceStateAsync(
+        MaintainAccountingInvoiceStateInput args,
+        CancellationToken cancellationToken);
+
+    Task SignalPayRecurringBookingViaBankTransferWorkflowAsync(
+        string recurringBookingId,
+        SetPaymentStatusArgs args,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -276,6 +297,95 @@ public class TemporalService(
             .SignalAsync(
                 workflow => workflow.StopAsync(),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+    }
+
+    public async Task StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (MaintainOrganizationArrearsInvoiceAccountingState workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId(
+                    $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    public async Task StartWorkflowMaintainAccountingInvoiceStateAsync(
+        MaintainAccountingInvoiceStateInput args,
+        CancellationToken cancellationToken) =>
+        await temporalClient.StartWorkflowAsync(
+            (MaintainAccountingInvoiceState workflow) => workflow.ExecuteAsync(args),
+            new WorkflowOptions
+            {
+                Id = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"),
+                TaskQueue = temporalConfiguration.Worker.TaskQueue,
+                RetryPolicy = null,
+                IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
+                IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting,
+                Rpc = new RpcOptions { CancellationToken = cancellationToken }
+            });
+
+    public async Task SignalWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        MaintainOrganizationArrearsInvoiceAccountingStateInput args,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = temporalHelperService.ToId(
+            $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}");
+
+        if (await temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId, cancellationToken))
+        {
+            await temporalClient
+                .GetWorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId)
+                .SignalAsync(
+                    workflow => workflow.RefreshNowAsync(args),
+                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+            return;
+        }
+
+        await StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(args, cancellationToken);
+    }
+
+    public async Task SignalWorkflowMaintainAccountingInvoiceStateAsync(
+        MaintainAccountingInvoiceStateInput args,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}");
+
+        if (await temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(workflowId, cancellationToken))
+        {
+            await temporalClient
+                .GetWorkflowHandle<MaintainAccountingInvoiceState>(workflowId)
+                .SignalAsync(
+                    workflow => workflow.RefreshNowAsync(args),
+                    new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+            return;
+        }
+
+        await StartWorkflowMaintainAccountingInvoiceStateAsync(args, cancellationToken);
+    }
+
+    public async Task SignalPayRecurringBookingViaBankTransferWorkflowAsync(
+        string recurringBookingId,
+        SetPaymentStatusArgs args,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{recurringBookingId}");
+        if (!await temporalHelperService.IsRunningAsync<PayRecurringBookingViaBankTransfer>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<PayRecurringBookingViaBankTransfer>(workflowId)
+            .SignalAsync(
+                workflow => workflow.SetPaymentStatusAsync(args),
+                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
+            );
     }
 
     private string ToOrganizationArrearsBillingWorkflowId(string organizationId) =>

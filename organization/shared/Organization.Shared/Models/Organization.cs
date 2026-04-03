@@ -38,6 +38,7 @@ public class Organization : ModelBaseWithDeleted
     public ICollection<OrganizationStripeConnectAccount> OrganizationStripeConnectAccounts { get; set; } = [];
     public ICollection<OrganizationBankAccount> OrganizationBankAccounts { get; set; } = [];
     public OrganizationTaxDetails? OrganizationTaxDetails { get; set; }
+    public OrganizationXeroConnection? OrganizationXeroConnection { get; set; }
     public OrganizationPhysicalAddress? PhysicalAddress { get; set; }
 
     public bool CanModify { get; set; }

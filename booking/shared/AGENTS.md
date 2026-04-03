@@ -6,11 +6,12 @@ This file covers the shared booking layer. Most non-trivial booking billing beha
 
 - Applies to `booking/shared/`
 - Most important for:
-  - arrears billing
-  - recurring billing-cycle splitting
-  - invoice generation
-  - Stripe checkout integration
-  - repository loading assumptions
+    - arrears billing
+    - recurring billing-cycle splitting
+    - invoice generation
+    - Stripe checkout integration
+    - Xero bank-transfer and arrears invoice export
+    - repository loading assumptions
 
 ## Arrears Billing Has Two Different Invoice Shapes
 
@@ -46,21 +47,46 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 ## Important Files
 
 - Segment generation:
-  - `booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`
+    - `booking/shared/Booking.Shared/Services/OrganizationArrearsChargeSegmentService.cs`
 - Planner:
-  - `booking/shared/Booking.Shared/Services/OrganizationArrearsBillingPlannerService.cs`
+    - `booking/shared/Booking.Shared/Services/OrganizationArrearsBillingPlannerService.cs`
 - Scheduled workflow activity:
-  - `booking/shared/Booking.Shared/Activities/OrganizationArrearsBillingIntegrations.cs`
+    - `booking/shared/Booking.Shared/Activities/OrganizationArrearsBillingIntegrations.cs`
 - Recurring invoice rendering:
-  - `booking/shared/Booking.Shared/Services/BookingInvoiceService.cs`
+    - `booking/shared/Booking.Shared/Services/BookingInvoiceService.cs`
 - Stripe checkout:
-  - `booking/shared/Booking.Shared/Activities/StripeIntegrations.cs`
+    - `booking/shared/Booking.Shared/Activities/StripeIntegrations.cs`
+- Xero export/reconciliation:
+    - `booking/shared/Booking.Shared/Activities/InvoiceIntegrations.cs`
+    - `booking/shared/Booking.Shared/Activities/OrganizationArrearsBillingIntegrations.cs`
 - Repository loading:
-  - `booking/shared/Booking.Shared/Repositories/BookingRepository.cs`
+    - `booking/shared/Booking.Shared/Repositories/BookingRepository.cs`
+
+## Xero Integration Rules
+
+- Xero handling in booking is export/reconciliation logic, not org connection ownership.
+- Booking reads org Xero connection state from organization and exports invoices only when the org connection is active,
+  has a refresh token, and has a selected tenant.
+- Keep using side tables such as accounting invoice/contact/payment links for provider state.
+- Do not add Xero-specific fields directly to `MarketplaceBooking`, `RecurringBooking`, or `OrganizationArrearsInvoice`
+  unless there is a deliberate domain redesign.
+- Use `IXeroTokenEncryptionService` for Xero token values when booking needs to refresh or reuse encrypted Xero tokens.
+- When org Xero billing mode is `Enabled`, booking should treat Xero as the invoice/export/reconciliation provider for
+  supported invoiceable flows.
+- Xero webhook handling is raw-body -> Kafka -> processors -> shared reconciliation. Do not add a second direct mutation
+  path beside the existing accounting link/payment-event flow.
+- Webhook processing should wake the existing per-invoice Temporal monitor workflow immediately through
+  `ITemporalService` signal-or-start behavior.
+- Keep the invoice monitor workflows per invoice-bearing local entity, not per organization.
+- Xero invoice creation and reconciliation must keep local invoice references in sync so `InvoiceUrl` / invoice number
+  surfaces can point at the Xero-hosted invoice when available.
+- Xero email-send is best-effort. Export should not fail just because Xero email delivery fails after the invoice
+  already exists.
 
 ## Common Failure Modes
 
-- Missing `ProductVersion -> Product -> Organization` on loaded bookings causes arrears generation to return no segments.
+- Missing `ProductVersion -> Product -> Organization` on loaded bookings causes arrears generation to return no
+  segments.
 - Missing customer identity on the booking graph causes arrears generation to return no segments.
 - Fixing first recurring invoice amount without re-checking tax produces GST `0%` regressions.
 - Fixing PDF totals without re-checking Stripe checkout produces checkout mismatch regressions.
@@ -69,4 +95,5 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 
 - Pure billing math belongs in `Booking.Shared.UnitTests`.
 - End-to-end workflow behavior does not belong in booking shared unit tests.
-- If you are validating real API + Temporal + DB effects, use system tests instead of inventing fakes in booking-local integration tests.
+- If you are validating real API + Temporal + DB effects, use system tests instead of inventing fakes in booking-local
+  integration tests.

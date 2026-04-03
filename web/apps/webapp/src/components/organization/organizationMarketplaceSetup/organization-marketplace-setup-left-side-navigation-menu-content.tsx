@@ -6,6 +6,7 @@ import {
   getOrganizationMarketplaceSetupMarketplaceListingBaseLink,
   getOrganizationMarketplaceSetupProductTagsBaseLink,
   getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink,
+  getOrganizationMarketplaceSetupXeroBaseLink,
 } from '@/components/links';
 import { PaletteModeContext, useIntegratedPlatrform } from '@/libs/providers';
 import {
@@ -70,6 +71,7 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
   const billingCycleLink = getOrganizationMarketplaceSetupBillingCycleBaseLink(integratedPlatrform, organizationCustomDomain);
   const stripeConnectAccountsLink = getOrganizationMarketplaceSetupStripeConnectAccountsBaseLink(integratedPlatrform, organizationCustomDomain);
   const bankAccountsLink = getOrganizationMarketplaceSetupBankAccountsBaseLink(integratedPlatrform, organizationCustomDomain);
+  const xeroLink = getOrganizationMarketplaceSetupXeroBaseLink(integratedPlatrform, organizationCustomDomain);
   const productTagsLink = getOrganizationMarketplaceSetupProductTagsBaseLink(integratedPlatrform, organizationCustomDomain);
 
   return (
@@ -115,6 +117,23 @@ const OrganizationMarketplaceSetupLeftSideNavigationMenuContent = ({ organizatio
                 startElement={!hideIcons && <BillingIcon color="inherit" />}
                 spacing={3}
                 invertDefaultColor={fullPath === billingCycleLink && paletteMode === 'dark'}
+                noWrap
+              />
+            )}
+          </ListItemButton>
+        </Link>
+      </ListItem>
+
+      <ListItem disablePadding>
+        <Link component={NextLink} href={xeroLink}>
+          <ListItemButton selected={fullPath === xeroLink} sx={{ ...styles, borderRadius: getSelectedListItemBorderRadius(fullPath === xeroLink) }}>
+            {collapsed && <BodyIconTypography startElement={!hideIcons && <BillingIcon color="inherit" />} invertDefaultColor={fullPath === xeroLink && paletteMode === 'dark'} />}
+            {!collapsed && (
+              <BodyIconTypography
+                label="Xero"
+                startElement={!hideIcons && <BillingIcon color="inherit" />}
+                spacing={3}
+                invertDefaultColor={fullPath === xeroLink && paletteMode === 'dark'}
                 noWrap
               />
             )}

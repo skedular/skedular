@@ -603,6 +603,7 @@ type Mutation {
   deleteTeam(input: DeleteTeamInput!): TeamPayload! @cost(weight: "10")
   deleteZone(input: DeleteZoneInput!): OrganizationTagPayload! @cost(weight: "10")
   deleteZones(input: DeleteZonesInput!): OrganizationTagsPayload! @cost(weight: "10")
+  disconnectOrganizationXeroConnection(input: DisconnectOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
   inviteCustomersToJoinOrganization(input: InviteCustomersToJoinOrganizationInput!): InvitationsToJoinOrganizationPayload! @cost(weight: "10")
   inviteCustomersToJoinTeam(input: InviteCustomersToJoinTeamInput!): InviteCustomersToJoinTeamPayload! @cost(weight: "10")
   makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
@@ -650,6 +651,7 @@ type Mutation {
   updateOrganizationSsoSettings(input: UpdateOrganizationSsoSettingsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationStripeConnectAccount(input: UpdateOrganizationStripeConnectAccountInput!): OrganizationStripeConnectAccountPayload! @cost(weight: "10")
   updateOrganizationTaxDetails(input: UpdateOrganizationTaxDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationXeroConnection(input: UpdateOrganizationXeroConnectionInput!): OrganizationPayload! @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
   updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
   updateProduct(input: UpdateProductInput!): ProductPayload! @cost(weight: "10")
@@ -832,6 +834,7 @@ type OrganizationDetails {
   termsOfUse: OrganizationTermsOfUse
   type: OrganizationTypeDetails!
   website: String
+  xeroConnection: OrganizationXeroConnection
   zones(after: String before: String first: Int last: Int orderBy: [OrganizationTagOrderInput!] where: ZoneOrganizationTagWhereInput): ConnectionOfOrganizationTagEdge! @cost(weight: "10")
 }
 
@@ -1055,6 +1058,34 @@ type OrganizationTypeDetails {
   type: OrganizationType!
 }
 
+type OrganizationXeroBillingModeDetails {
+  name: String!
+  type: OrganizationXeroBillingMode!
+}
+
+type OrganizationXeroConnection {
+  accessTokenExpiresAt: DateTime
+  autoReconcilePayments: Boolean!
+  billingMode: OrganizationXeroBillingMode!
+  defaultBrandingThemeId: String
+  defaultReceivablesAccountCode: String
+  defaultReferencePrefix: String
+  defaultSalesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  hasAccessToken: Boolean!
+  hasRefreshToken: Boolean!
+  id: ID!
+  isActive: Boolean!
+  lastError: String
+  lastSuccessfulSyncAt: DateTime
+  refreshTokenExpiresAt: DateTime
+  scopes: String
+  sendInvoicesViaXero: Boolean!
+  tenantId: String!
+  tenantName: String!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -1237,6 +1268,7 @@ type Query {
   organizationStripeConnectAccounts(after: String before: String first: Int last: Int orderBy: [OrganizationStripeConnectAccountOrderInput!] where: OrganizationStripeConnectAccountWhereInput!): ConnectionOfOrganizationStripeConnectAccountEdge! @cost(weight: "10")
   organizationTypes: [OrganizationTypeDetails!]!
   organizationVersion: Version!
+  organizationXeroBillingModes: [OrganizationXeroBillingModeDetails!]!
   otherResourceType: OrganizationTagType!
   parkingResourceType: OrganizationTagType!
   paymentMethods: [PaymentMethodTypeDetails!]!
@@ -2105,6 +2137,12 @@ input DeleteZonesInput {
   ids: [String!]!
 }
 
+input DisconnectOrganizationXeroConnectionInput {
+  clientMutationId: String
+  organizationCustomDomain: String
+  organizationId: String
+}
+
 input FloorPlanOrderInput {
   direction: OrderDirection!
   field: FloorPlanOrderField!
@@ -2782,6 +2820,25 @@ input UpdateOrganizationTaxDetailsInput {
   taxRatePercentage: Decimal!
 }
 
+input UpdateOrganizationXeroConnectionInput {
+  autoReconcilePayments: Boolean!
+  billingMode: OrganizationXeroBillingMode!
+  clientMutationId: String
+  defaultBrandingThemeId: String
+  defaultReceivablesAccountCode: String
+  defaultReferencePrefix: String
+  defaultSalesAccountCode: String
+  defaultTrackingCategory1: String
+  defaultTrackingCategory2: String
+  isActive: Boolean!
+  organizationCustomDomain: String
+  organizationId: String
+  scopes: String
+  sendInvoicesViaXero: Boolean!
+  tenantId: String!
+  tenantName: String!
+}
+
 input UpdatePrivateBookingInput {
   category: BookingCategory
   clientMutationId: String
@@ -3255,6 +3312,11 @@ enum OrganizationType {
   INDIVIDUAL
   MARKETPLACE
   PRIVATE
+}
+
+enum OrganizationXeroBillingMode {
+  DISABLED
+  ENABLED
 }
 
 enum PaymentMethod {

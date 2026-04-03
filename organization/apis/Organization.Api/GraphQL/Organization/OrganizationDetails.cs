@@ -10,6 +10,7 @@ using Organization.Api.GraphQL.Offering;
 using Organization.Api.GraphQL.PhysicalAddress;
 using Organization.Api.GraphQL.Sso;
 using Organization.Api.GraphQL.Tag;
+using Organization.Api.GraphQL.Xero;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Shared.Models;
@@ -51,6 +52,7 @@ public class OrganizationDetails : Node
     [GraphQLName("paymentMethods")] public IEnumerable<OrganizationPaymentMethod> PaymentMethods { get; set; } = [];
     [GraphQLName("ssoSettings")] public OrganizationSsoSettingsDetails? SsoSettings { get; set; }
     [GraphQLName("taxDetails")] public OrganizationTaxDetails? TaxDetails { get; set; }
+    [GraphQLName("xeroConnection")] public OrganizationXeroConnectionDetails? XeroConnection { get; set; }
     [GraphQLName("featureImages")] public IEnumerable<CdnImageFile> FeatureImages { get; set; } = [];
     [GraphQLName("listingMetadata")] public ListingMetadata ListingMetadata { get; set; } = ListingMetadata.Empty;
 

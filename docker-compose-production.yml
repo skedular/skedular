@@ -241,6 +241,11 @@ services:
       Application__ApiBaseDomain: https://apistaging.skedular.app
       Cookie__EncryptionKey__Key: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${STAGING_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      Xero__ClientId: ${STAGING_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${STAGING_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${STAGING_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${STAGING_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${STAGING_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
@@ -350,6 +355,11 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      Xero__ClientId: ${STAGING_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${STAGING_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${STAGING_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${STAGING_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${STAGING_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
@@ -449,6 +459,11 @@ services:
       Application__PublicWebSiteBaseDomain: https://staging.getskedular.com
       Application__WebAppBaseDomain: https://staging.skedular.app
       Application__ApiBaseDomain: https://apistaging.skedular.app
+      Xero__ClientId: ${STAGING_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${STAGING_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${STAGING_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${STAGING_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${STAGING_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${STAGING_POSTGRES_BOOKING_CONNECTIONSTRING}
@@ -624,6 +639,11 @@ services:
       Application__ApiBaseDomain: https://api.skedular.app
       Cookie__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_KEY}
       Cookie__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_COOKIE_ENCRYPTION_IV}
+      Xero__ClientId: ${PRODUCTION_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${PRODUCTION_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${PRODUCTION_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
@@ -732,6 +752,11 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      Xero__ClientId: ${PRODUCTION_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${PRODUCTION_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${PRODUCTION_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}
@@ -831,6 +856,11 @@ services:
       Application__PublicWebSiteBaseDomain: https://getskedular.com
       Application__WebAppBaseDomain: https://skedular.app
       Application__ApiBaseDomain: https://api.skedular.app
+      Xero__ClientId: ${PRODUCTION_SKEDULAR_XERO_CLIENT_ID}
+      Xero__ClientSecret: ${PRODUCTION_SKEDULAR_XERO_CLIENT_SECRET}
+      Xero__WebhookKey: ${PRODUCTION_SKEDULAR_XERO_WEBHOOK_KEY}
+      Xero__EncryptionKey__Key: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_KEY}
+      Xero__EncryptionKey__Iv: ${PRODUCTION_SKEDULAR_XERO_ENCRYPTION_IV}
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
       ConnectionStrings__temporal: "temporal:7233"
       ConnectionStrings__bookingdb: ${PRODUCTION_POSTGRES_BOOKING_CONNECTIONSTRING}

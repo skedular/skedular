@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<094d4c63ea7aeb60c4511af5ff714cce>>
+ * @generated SignedSource<<cc5c88d140ae868f319cacbe00d52e5b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,6 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
+export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_query$data = {
   readonly organization: {
@@ -25,8 +26,28 @@ export type organizationMarketplaceSetup_query$data = {
       readonly title: string | null | undefined;
     };
     readonly name: string;
+    readonly xeroConnection: {
+      readonly autoReconcilePayments: boolean;
+      readonly billingMode: OrganizationXeroBillingMode;
+      readonly defaultBrandingThemeId: string | null | undefined;
+      readonly defaultReceivablesAccountCode: string | null | undefined;
+      readonly defaultReferencePrefix: string | null | undefined;
+      readonly defaultSalesAccountCode: string | null | undefined;
+      readonly defaultTrackingCategory1: string | null | undefined;
+      readonly defaultTrackingCategory2: string | null | undefined;
+      readonly hasAccessToken: boolean;
+      readonly hasRefreshToken: boolean;
+      readonly id: string;
+      readonly isActive: boolean;
+      readonly lastError: string | null | undefined;
+      readonly lastSuccessfulSyncAt: any | null | undefined;
+      readonly scopes: string | null | undefined;
+      readonly sendInvoicesViaXero: boolean;
+      readonly tenantId: string;
+      readonly tenantName: string;
+    } | null | undefined;
   } | null | undefined;
-  readonly " $fragmentSpreads": FragmentRefs<"existingStripeConnectAccountButton_query" | "singleChoiceOrganizationBillingCycle_query">;
+  readonly " $fragmentSpreads": FragmentRefs<"existingStripeConnectAccountButton_query" | "singleChoiceOrganizationBillingCycle_query" | "singleChoiceOrganizationXeroBillingMode_query">;
   readonly " $fragmentType": "organizationMarketplaceSetup_query";
 };
 export type organizationMarketplaceSetup_query$key = {
@@ -36,6 +57,13 @@ export type organizationMarketplaceSetup_query$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -67,14 +95,8 @@ return {
       "name": "organization",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
         (v0/*: any*/),
+        (v1/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -129,7 +151,138 @@ return {
               "name": "type",
               "storageKey": null
             },
-            (v0/*: any*/)
+            (v1/*: any*/)
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationXeroConnection",
+          "kind": "LinkedField",
+          "name": "xeroConnection",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "tenantId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "tenantName",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "billingMode",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "scopes",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "isActive",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "sendInvoicesViaXero",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "autoReconcilePayments",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultSalesAccountCode",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultReceivablesAccountCode",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultTrackingCategory1",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultTrackingCategory2",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultBrandingThemeId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "defaultReferencePrefix",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "lastSuccessfulSyncAt",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "lastError",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasAccessToken",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasRefreshToken",
+              "storageKey": null
+            }
           ],
           "storageKey": null
         }
@@ -145,6 +298,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "singleChoiceOrganizationBillingCycle_query"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "singleChoiceOrganizationXeroBillingMode_query"
     }
   ],
   "type": "Query",
@@ -152,6 +310,6 @@ return {
 };
 })();
 
-(node as any).hash = "0339934aad49494b6627c2652d3e9e5e";
+(node as any).hash = "486308d8e061143477aa96e56351bcec";
 
 export default node;

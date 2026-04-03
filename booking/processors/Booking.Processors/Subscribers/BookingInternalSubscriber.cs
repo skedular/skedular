@@ -17,6 +17,7 @@ namespace Booking.Processors.Subscribers;
 public class BookingInternalSubscriber(
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
+    IXeroWebhookService xeroWebhookService,
     IGraphQlTopicEventSender graphQlTopicEventSender) : IEventSubscriber<Key, Event>
 {
     public async Task<EventSubscriberResult> HandleAsync(EventContext eventContext, Key key, Event @event, CancellationToken cancellationToken)
@@ -25,6 +26,9 @@ public class BookingInternalSubscriber(
         {
             case Type.StripeConnectAccountWebhookEventReceived:
                 await HandleStripeConnectAccountWebhookEventReceivedAsync(@event.StripeConnectAccountWebhookEventPayload, cancellationToken);
+                break;
+            case Type.XeroWebhookEventReceived:
+                await xeroWebhookService.ProcessAsync(@event.XeroWebhookEventPayload, cancellationToken);
                 break;
         }
 

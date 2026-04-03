@@ -1,4 +1,5 @@
 using System.Globalization;
+using Api.Shared.Services;
 using Api.Shared.Services.Configurations.Grpc;
 using Api.Shared.Services.Offering;
 using Api.Shared.Services.OpenApi.Skedular.Organization.V1;
@@ -24,6 +25,7 @@ public class OrganizationController(
     IPaymentService paymentService,
     IOrganizationInternalPublisher organizationInternalPublisher,
     IOrganizationStripeConnectAccountService organizationStripeConnectAccountService,
+    IOrganizationXeroConnectionService organizationXeroConnectionService,
     IOrganizationOfferingService organizationOfferingService,
     IOrganizationOwnershipService organizationOwnershipService,
     TimeProvider timeProvider,
@@ -135,7 +137,7 @@ public class OrganizationController(
     {
         if (!string.IsNullOrWhiteSpace(error))
         {
-            throw new InvalidOperationException($"Azure tenant onboarding went wrong with error {error} and message {error_description}.");
+            throw new AzureTenantOnboardingFailedException(error, error_description);
         }
 
         var redirectUri = await azureTenantService.InstallAsync(tenant, state, cancellationToken);
@@ -183,6 +185,24 @@ public class OrganizationController(
         return Redirect(onboardingUrl);
     }
 
+    public override async Task<IActionResult> StartXeroOAuth(
+        string? organizationId,
+        string? organizationCustomDomain,
+        CancellationToken cancellationToken = default)
+    {
+        var authorizeUrl = await organizationXeroConnectionService.GetAuthorizeUrlAsync(organizationId, organizationCustomDomain, cancellationToken);
+        return Redirect(authorizeUrl.ToString());
+    }
+
+    public override async Task<IActionResult> XeroOAuthCallback(
+        string code,
+        string state,
+        CancellationToken cancellationToken = default)
+    {
+        var redirectUrl = await organizationXeroConnectionService.ConnectAsync(code, state, cancellationToken);
+        return Redirect(redirectUrl.ToString());
+    }
+
     public override async Task<IActionResult> ProcessStripePlatformAccountEvent(
         // ReSharper disable once InconsistentNaming
         string? stripe_Signature,
@@ -196,7 +216,8 @@ public class OrganizationController(
             {
                 var tempFileDirectoryPath = Path.Combine(s_homeDirectory, "stripe-logs/organization/platform");
                 Directory.CreateDirectory(tempFileDirectoryPath);
-                var tempFilePath = Path.Combine(tempFileDirectoryPath,
+                var tempFilePath = Path.Combine(
+                    tempFileDirectoryPath,
                     $"{timeProvider.GetUtcNow().ToString("o", CultureInfo.InvariantCulture)}.json");
                 await System.IO.File.WriteAllTextAsync(tempFilePath, json, cancellationToken);
                 logger.LogInformation("Stripe Platform account event JSON logged to file: {FilePath}", tempFilePath);

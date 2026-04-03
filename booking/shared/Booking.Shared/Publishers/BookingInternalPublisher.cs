@@ -10,6 +10,7 @@ namespace Booking.Shared.Publishers;
 public interface IBookingInternalPublisher
 {
     Task PublishStripeConnectAccountWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
+    Task PublishXeroWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken);
 }
 
 public class BookingInternalPublisher(ApplicationConfiguration applicationConfiguration, IContext context, IKafkaPublisher<Key, Event> publisher)
@@ -26,6 +27,22 @@ public class BookingInternalPublisher(ApplicationConfiguration applicationConfig
                 Type.StripeConnectAccountWebhookEventReceived,
                 context.GetCorrelationId()),
             StripeConnectAccountWebhookEventPayload = payload
+        };
+
+        await publisher.PublishAsync(key, @event, cancellationToken);
+    }
+
+    public async Task PublishXeroWebhookEventReceivedAsync(string id, string payload, CancellationToken cancellationToken)
+    {
+        var key = new Key { XeroWebhookKey = id };
+        var @event = new Event
+        {
+            Metadata = Event.NewMetadata(
+                applicationConfiguration.DomainSource,
+                applicationConfiguration.AppSource,
+                Type.XeroWebhookEventReceived,
+                context.GetCorrelationId()),
+            XeroWebhookEventPayload = payload
         };
 
         await publisher.PublishAsync(key, @event, cancellationToken);
