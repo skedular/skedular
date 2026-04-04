@@ -36,7 +36,7 @@ services:
     volumes:
       - skedular_redis_data:/data
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 5s
       retries: 100
@@ -121,6 +121,16 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:9100/subjects >/dev/null || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
     networks:
       - skedular_network
 
@@ -170,6 +180,9 @@ services:
   staging-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
+    depends_on:
+      schema-registry:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
@@ -375,8 +388,6 @@ services:
         condition: service_healthy
       staging-infra-provision:
         condition: service_completed_successfully
-      staging-apis-01:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
@@ -485,8 +496,6 @@ services:
         condition: service_healthy
       staging-infra-provision:
         condition: service_completed_successfully
-      staging-processors-01:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: staging
@@ -590,6 +599,9 @@ services:
   prod-infra-provision:
     image: ghcr.io/unityhubio/allinfra:latest
     restart: on-failure
+    depends_on:
+      schema-registry:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__redis: "redis:6379,abortConnect=false"
@@ -649,8 +661,6 @@ services:
         condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
-      staging-apis-01:
-        condition: service_healthy
     ports:
       - 9000:9000
       - 10000:10000
@@ -796,8 +806,6 @@ services:
         condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
-      prod-apis-01:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
@@ -906,8 +914,6 @@ services:
         condition: service_healthy
       prod-infra-provision:
         condition: service_completed_successfully
-      prod-processors-01:
-        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Application__Environment: prod
