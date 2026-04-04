@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Slack.Shared\Slack.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Slack.Shared/Slack.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

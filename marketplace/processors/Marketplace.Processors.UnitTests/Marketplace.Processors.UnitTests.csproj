@@ -41,8 +41,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Marketplace.Processors\Marketplace.Processors.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Testing.Shared\Testing.Shared.csproj"/>
+        <ProjectReference Include="../Marketplace.Processors/Marketplace.Processors.csproj"/>
+        <ProjectReference Include="../../../shared/Testing.Shared/Testing.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

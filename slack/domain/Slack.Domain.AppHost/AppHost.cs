@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var slackFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Slack_Domain_FakeDependencies>("slackfakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var slackDatabase = postgres.AddDatabase("slackdb");
 var slackInfrastructure = builder
@@ -32,7 +41,7 @@ var slackInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(slackDatabase);
 
-builder
+var slackApi = builder
     .AddProject<Slack_Api>("slackapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
-builder
+var slackProcessors = builder
     .AddProject<Slack_Processors>("slackprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
-builder
+var slackJobs = builder
     .AddProject<Slack_Jobs>("slackjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(slackFakeDependencies);
+
+    slackApi.WaitFor(slackFakeDependencies);
+    slackProcessors.WaitFor(slackFakeDependencies);
+    slackJobs.WaitFor(slackFakeDependencies);
+}
 
 await builder.Build().RunAsync();

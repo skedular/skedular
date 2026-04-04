@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var organizationFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Organization_Domain_FakeDependencies>("organizationfakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var organizationDatabase = postgres.AddDatabase("organizationdb");
 var organizationInfrastructure = builder
@@ -32,7 +41,7 @@ var organizationInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(organizationDatabase);
 
-builder
+var organizationApi = builder
     .AddProject<Organization_Api>("organizationapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
-builder
+var organizationProcessors = builder
     .AddProject<Organization_Processors>("organizationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
-builder
+var organizationJobs = builder
     .AddProject<Organization_Jobs>("organizationjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(organizationFakeDependencies);
+
+    organizationApi.WaitFor(organizationFakeDependencies);
+    organizationProcessors.WaitFor(organizationFakeDependencies);
+    organizationJobs.WaitFor(organizationFakeDependencies);
+}
 
 await builder.Build().RunAsync();

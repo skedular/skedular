@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Team.Shared\Team.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Team.Shared/Team.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

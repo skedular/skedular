@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Organization.Shared\Organization.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Organization.Shared/Organization.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

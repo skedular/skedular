@@ -33,6 +33,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
 </Project>

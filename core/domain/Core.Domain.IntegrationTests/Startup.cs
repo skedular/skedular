@@ -1,8 +1,10 @@
 using Api.Shared.Clients.OpenApi.Skedular.Core.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Grpc.Skedular.Core.V1;
 using Aspire.Hosting.Testing;
 using Core.Shared;
 using Core.Shared.Database;
+using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -13,7 +15,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Hosting.Internal;
 using Projects;
+using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
+using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace Core.Domain.IntegrationTests;
 
@@ -26,6 +30,7 @@ public class Startup
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
 #pragma warning disable CA2012
+        DomainAppHostEnvironmentVariables.SetSharedInfrastructureGrpc(true);
         var builder = DistributedApplicationTestingBuilder.CreateAsync<Core_Domain_AppHost>().Result;
         var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
 
@@ -43,11 +48,34 @@ public class Startup
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
 
+        var coreFakeDependenciesHttpClient = distributedApp.CreateHttpClient("corefakedependencies");
+        ArgumentNullException.ThrowIfNull(coreFakeDependenciesHttpClient.BaseAddress);
+
+#pragma warning disable VSTHRD104
+#pragma warning disable VSTHRD002
+#pragma warning disable CA2012
+        coreFakeDependenciesHttpClient
+            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
+            .GetAwaiter()
+            .GetResult();
+#pragma warning restore CA2012
+#pragma warning restore VSTHRD002
+#pragma warning restore VSTHRD104
+
+        var coreApiGrpcEndpoint = distributedApp.GetEndpoint("coreapi", "Grpc").ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(coreApiGrpcEndpoint);
+
         var coreApiClient = distributedApp.CreateHttpClient("coreapi");
+        ArgumentNullException.ThrowIfNull(coreApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        var coreApiGrpcChannel = GrpcChannelFactory.Create(coreApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);
+        services
+            .AddKeyedSingleton("core-api-grpc-channel", coreApiGrpcChannel)
+            .AddTestingSharedIntegrationTests()
+            .AddSingleton(_ => new CoreService.CoreServiceClient(coreApiGrpcChannel));
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 

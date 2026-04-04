@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var customerFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Customer_Domain_FakeDependencies>("customerfakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var customerDatabase = postgres.AddDatabase("customerdb");
 var customerInfrastructure = builder
@@ -32,7 +41,7 @@ var customerInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(customerDatabase);
 
-builder
+var customerApi = builder
     .AddProject<Customer_Api>("customerapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
-builder
+var customerProcessors = builder
     .AddProject<Customer_Processors>("customerprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
-builder
+var customerJobs = builder
     .AddProject<Customer_Jobs>("customerjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(customerFakeDependencies);
+
+    customerApi.WaitFor(customerFakeDependencies);
+    customerProcessors.WaitFor(customerFakeDependencies);
+    customerJobs.WaitFor(customerFakeDependencies);
+}
 
 await builder.Build().RunAsync();

@@ -1,6 +1,5 @@
 ﻿using Enterprise.Shared;
 using Enterprise.Shared.Kafka;
-using Infrastructure.Shared.Services;
 
 namespace Infrastructure.Shared;
 
@@ -15,16 +14,9 @@ public class Program
         var configuration = builder.Configuration;
         _ = services.AddKafka(configuration, "kafka");
 
-        services
-            .AddServices()
-            .AddJobs();
+        services.AddServices().AddJobs();
 
-        return builder.Build().UseWebApplicationDefaults<Program>();
-    }
-
-    public static async Task MigrateAsync(WebApplication app, CancellationToken cancellationToken)
-    {
-        await using var scope = app.Services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<IMigrationService>().MigrateAsync(cancellationToken);
+        var app = builder.Build().UseWebApplicationDefaults<Program>();
+        return app;
     }
 }

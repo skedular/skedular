@@ -20,12 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="..\..\..\shared\Infrastructure.Shared\Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="..\..\apis\Marketplace.Api\Marketplace.Api.csproj"/>
-        <ProjectReference Include="..\..\jobs\Marketplace.Jobs\Marketplace.Jobs.csproj"/>
-        <ProjectReference Include="..\..\processors\Marketplace.Processors\Marketplace.Processors.csproj"/>
-        <ProjectReference Include="..\..\shared\Marketplace.Infrastructure\Marketplace.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
+        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
+        <ProjectReference Include="../Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
+        <ProjectReference Include="../../apis/Marketplace.Api/Marketplace.Api.csproj"/>
+        <ProjectReference Include="../../jobs/Marketplace.Jobs/Marketplace.Jobs.csproj"/>
+        <ProjectReference Include="../../processors/Marketplace.Processors/Marketplace.Processors.csproj"/>
+        <ProjectReference Include="../../shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

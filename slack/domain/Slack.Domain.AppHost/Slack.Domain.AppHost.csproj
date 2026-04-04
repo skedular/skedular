@@ -20,12 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="..\..\..\shared\Infrastructure.Shared\Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="..\..\apis\Slack.Api\Slack.Api.csproj"/>
-        <ProjectReference Include="..\..\jobs\Slack.Jobs\Slack.Jobs.csproj"/>
-        <ProjectReference Include="..\..\processors\Slack.Processors\Slack.Processors.csproj"/>
-        <ProjectReference Include="..\..\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
+        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
+        <ProjectReference Include="../Slack.Domain.FakeDependencies/Slack.Domain.FakeDependencies.csproj"/>
+        <ProjectReference Include="../../apis/Slack.Api/Slack.Api.csproj"/>
+        <ProjectReference Include="../../jobs/Slack.Jobs/Slack.Jobs.csproj"/>
+        <ProjectReference Include="../../processors/Slack.Processors/Slack.Processors.csproj"/>
+        <ProjectReference Include="../../shared/Slack.Infrastructure/Slack.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

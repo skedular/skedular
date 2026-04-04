@@ -51,12 +51,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Services/Api.Shared.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="EmailTemplates\NewSlackWorkspaceJoined\template.html"/>
-        <EmbeddedResource Include="EmailTemplates\NewSlackWorkspaceJoined\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/NewSlackWorkspaceJoined/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/NewSlackWorkspaceJoined/template.txt"/>
     </ItemGroup>
 </Project>

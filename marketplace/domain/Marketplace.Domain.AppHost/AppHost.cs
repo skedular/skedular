@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var marketplaceFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Marketplace_Domain_FakeDependencies>("marketplacefakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var marketplaceDatabase = postgres.AddDatabase("marketplacedb");
 var marketplaceInfrastructure = builder
@@ -32,7 +41,7 @@ var marketplaceInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(marketplaceDatabase);
 
-builder
+var marketplaceApi = builder
     .AddProject<Marketplace_Api>("marketplaceapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
-builder
+var marketplaceProcessors = builder
     .AddProject<Marketplace_Processors>("marketplaceprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
-builder
+var marketplaceJobs = builder
     .AddProject<Marketplace_Jobs>("marketplacejobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(marketplaceFakeDependencies);
+
+    marketplaceApi.WaitFor(marketplaceFakeDependencies);
+    marketplaceProcessors.WaitFor(marketplaceFakeDependencies);
+    marketplaceJobs.WaitFor(marketplaceFakeDependencies);
+}
 
 await builder.Build().RunAsync();

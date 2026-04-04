@@ -1,6 +1,8 @@
 using Api.Shared.Clients.OpenApi.Skedular.Organization.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Aspire.Hosting.Testing;
+using Enterprise.Shared;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres;
@@ -14,7 +16,9 @@ using Microsoft.Extensions.Hosting.Internal;
 using Organization.Shared;
 using Organization.Shared.Database;
 using Projects;
+using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
+using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace Organization.Domain.IntegrationTests;
 
@@ -27,6 +31,7 @@ public class Startup
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
 #pragma warning disable CA2012
+        DomainAppHostEnvironmentVariables.SetSharedInfrastructureGrpc(true);
         var builder = DistributedApplicationTestingBuilder.CreateAsync<Organization_Domain_AppHost>().Result;
         var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
 
@@ -44,11 +49,34 @@ public class Startup
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
 
+        var organizationFakeDependenciesHttpClient = distributedApp.CreateHttpClient("organizationfakedependencies");
+        ArgumentNullException.ThrowIfNull(organizationFakeDependenciesHttpClient.BaseAddress);
+
+#pragma warning disable VSTHRD104
+#pragma warning disable VSTHRD002
+#pragma warning disable CA2012
+        organizationFakeDependenciesHttpClient
+            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
+            .GetAwaiter()
+            .GetResult();
+#pragma warning restore CA2012
+#pragma warning restore VSTHRD002
+#pragma warning restore VSTHRD104
+
+        var organizationApiGrpcEndpoint = distributedApp.GetEndpoint("organizationapi", "Grpc").ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(organizationApiGrpcEndpoint);
+
         var organizationApiClient = distributedApp.CreateHttpClient("organizationapi");
+        ArgumentNullException.ThrowIfNull(organizationApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        var organizationApiGrpcChannel = GrpcChannelFactory.Create(organizationApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);
+        services
+            .AddKeyedSingleton("organization-api-grpc-channel", organizationApiGrpcChannel)
+            .AddTestingSharedIntegrationTests()
+            .AddSingleton(_ => new OrganizationService.OrganizationServiceClient(organizationApiGrpcChannel));
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 

@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Booking.Shared\Booking.Shared.csproj"/>
+        <ProjectReference Include="../Booking.Shared/Booking.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

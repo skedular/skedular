@@ -1,13 +1,11 @@
 using System.Diagnostics;
-using Enterprise.Shared.Hosting;
 using Infrastructure.Shared.Services;
 
 namespace Infrastructure.Shared.Jobs;
 
 public class InfrastructureMigrationJob(
     IServiceProvider serviceProvider,
-    IHostEnvironment hostEnvironment,
-    IHostApplicationLifetimeWrapper hostApplicationLifetimeWrapper) : BackgroundService
+    IHostEnvironment hostEnvironment) : BackgroundService
 {
     private readonly ActivitySource _activitySource = new(hostEnvironment.ApplicationName);
 
@@ -27,7 +25,5 @@ public class InfrastructureMigrationJob(
             activity?.AddException(ex);
             throw;
         }
-
-        hostApplicationLifetimeWrapper.StopApplication();
     }
 }

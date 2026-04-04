@@ -1,6 +1,8 @@
 using Api.Shared.Clients.OpenApi.Skedular.MsTeams.V1;
 using Api.Shared.Services;
+using Api.Shared.Services.Grpc.Skedular.MsTeams.V1;
 using Aspire.Hosting.Testing;
+using Enterprise.Shared;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database.Postgres;
 using Enterprise.Shared.Kafka;
@@ -13,7 +15,9 @@ using Microsoft.Extensions.Hosting.Internal;
 using MsTeams.Shared;
 using MsTeams.Shared.Database;
 using Projects;
+using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
+using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace MsTeams.Domain.IntegrationTests;
 
@@ -26,6 +30,7 @@ public class Startup
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
 #pragma warning disable CA2012
+        DomainAppHostEnvironmentVariables.SetSharedInfrastructureGrpc(true);
         var builder = DistributedApplicationTestingBuilder.CreateAsync<MsTeams_Domain_AppHost>().Result;
         var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
 
@@ -43,11 +48,34 @@ public class Startup
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
 
+        var msTeamsFakeDependenciesHttpClient = distributedApp.CreateHttpClient("msteamsfakedependencies");
+        ArgumentNullException.ThrowIfNull(msTeamsFakeDependenciesHttpClient.BaseAddress);
+
+#pragma warning disable VSTHRD104
+#pragma warning disable VSTHRD002
+#pragma warning disable CA2012
+        msTeamsFakeDependenciesHttpClient
+            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
+            .GetAwaiter()
+            .GetResult();
+#pragma warning restore CA2012
+#pragma warning restore VSTHRD002
+#pragma warning restore VSTHRD104
+
+        var msTeamsApiGrpcEndpoint = distributedApp.GetEndpoint("msteamsapi", "Grpc").ToString();
+        ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsApiGrpcEndpoint);
+
         var msteamsApiClient = distributedApp.CreateHttpClient("msteamsapi");
+        ArgumentNullException.ThrowIfNull(msteamsApiClient.BaseAddress);
 
         var configuration = new ConfigurationBuilder().BuildConfig<Startup>(environment.EnvironmentName);
+        var msTeamsApiGrpcChannel = GrpcChannelFactory.Create(msTeamsApiGrpcEndpoint);
 
         services.TryAddSingleton(TimeProvider.System);
+        services
+            .AddKeyedSingleton("msteams-api-grpc-channel", msTeamsApiGrpcChannel)
+            .AddTestingSharedIntegrationTests()
+            .AddSingleton(_ => new MsTeamsService.MsTeamsServiceClient(msTeamsApiGrpcChannel));
 
         services.AddKafkaWithConnectionString(configuration, kafkaConnectionString);
 

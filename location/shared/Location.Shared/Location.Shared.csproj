@@ -45,12 +45,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Services/Api.Shared.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="EmailTemplates\NewLocationJoined\template.html"/>
-        <EmbeddedResource Include="EmailTemplates\NewLocationJoined\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/NewLocationJoined/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/NewLocationJoined/template.txt"/>
     </ItemGroup>
 </Project>

@@ -20,12 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="..\..\..\shared\Infrastructure.Shared\Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="..\..\apis\Team.Api\Team.Api.csproj"/>
-        <ProjectReference Include="..\..\jobs\Team.Jobs\Team.Jobs.csproj"/>
-        <ProjectReference Include="..\..\processors\Team.Processors\Team.Processors.csproj"/>
-        <ProjectReference Include="..\..\shared\Team.Infrastructure\Team.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
+        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
+        <ProjectReference Include="../Team.Domain.FakeDependencies/Team.Domain.FakeDependencies.csproj"/>
+        <ProjectReference Include="../../apis/Team.Api/Team.Api.csproj"/>
+        <ProjectReference Include="../../jobs/Team.Jobs/Team.Jobs.csproj"/>
+        <ProjectReference Include="../../processors/Team.Processors/Team.Processors.csproj"/>
+        <ProjectReference Include="../../shared/Team.Infrastructure/Team.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

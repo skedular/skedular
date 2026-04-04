@@ -50,6 +50,7 @@
         <File Path="api-definitions/grpc/skedular/organization_v1.proto"/>
         <File Path="api-definitions/grpc/skedular/slack_v1.proto"/>
         <File Path="api-definitions/grpc/skedular/team_v1.proto"/>
+        <File Path="api-definitions/grpc/skedular/infrastructure_test_v1.proto"/>
     </Folder>
     <Folder Name="/api-definitions/openapi/">
         <File Path="api-definitions/openapi/clients.Dockerfile"/>
@@ -69,15 +70,18 @@
         <File Path="api-definitions/openapi/skedular/team_v1.yaml"/>
     </Folder>
     <Folder Name="/booking/">
-        <File Path="booking\AGENTS.md"/>
+        <File Path="booking/AGENTS.md"/>
     </Folder>
     <Folder Name="/booking/apis/">
-        <File Path="booking\apis\AGENTS.md"/>
+        <File Path="booking/apis/AGENTS.md"/>
         <Project Path="booking/apis/Booking.Api.UnitTests/Booking.Api.UnitTests.csproj"/>
         <Project Path="booking/apis/Booking.Api/Booking.Api.csproj"/>
     </Folder>
     <Folder Name="/booking/domain/">
-        <File Path="booking\domain\AGENTS.md"/>
+        <File Path="booking/domain/AGENTS.md"/>
+        <File Path="booking/domain/Booking.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="booking/domain/Booking.Domain.FakeDependencies/Booking.Domain.FakeDependencies.csproj"/>
+        <File Path="booking/domain/Booking.Domain.IntegrationTests/AGENTS.md"/>
         <Project Path="booking/domain/Booking.Domain.AppHost/Booking.Domain.AppHost.csproj"/>
         <Project Path="booking/domain/Booking.Domain.IntegrationTests/Booking.Domain.IntegrationTests.csproj"/>
     </Folder>
@@ -90,24 +94,26 @@
         <Project Path="booking/processors/Booking.Processors/Booking.Processors.csproj"/>
     </Folder>
     <Folder Name="/booking/shared/">
-        <File Path="booking\shared\AGENTS.md"/>
-        <File Path="booking\shared\Booking.Shared.UnitTests\AGENTS.md"/>
-        <File Path="booking\shared\Booking.Shared\AGENTS.md"/>
+        <File Path="booking/shared/AGENTS.md"/>
+        <File Path="booking/shared/Booking.Shared.UnitTests/AGENTS.md"/>
+        <File Path="booking/shared/Booking.Shared/AGENTS.md"/>
         <Project Path="booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
         <Project Path="booking/shared/Booking.Shared.UnitTests/Booking.Shared.UnitTests.csproj"/>
         <Project Path="booking/shared/Booking.Shared/Booking.Shared.csproj"/>
     </Folder>
     <Folder Name="/core/">
-        <File Path="core\AGENTS.md"/>
+        <File Path="core/AGENTS.md"/>
     </Folder>
     <Folder Name="/core/apis/">
-        <File Path="core\apis\AGENTS.md"/>
+        <File Path="core/apis/AGENTS.md"/>
         <Project Path="core/apis/Core.Api.UnitTests/Core.Api.UnitTests.csproj"/>
         <Project Path="core/apis/Core.Api/Core.Api.csproj"/>
     </Folder>
     <Folder Name="/core/domain/">
-        <File Path="core\domain\AGENTS.md"/>
+        <File Path="core/domain/AGENTS.md"/>
         <Project Path="core/domain/Core.Domain.AppHost/Core.Domain.AppHost.csproj"/>
+        <File Path="core/domain/Core.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="core/domain/Core.Domain.FakeDependencies/Core.Domain.FakeDependencies.csproj"/>
         <Project Path="core/domain/Core.Domain.IntegrationTests/Core.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/core/jobs/">
@@ -119,22 +125,24 @@
         <Project Path="core/processors/Core.Processors/Core.Processors.csproj"/>
     </Folder>
     <Folder Name="/core/shared/">
-        <File Path="core\shared\AGENTS.md"/>
+        <File Path="core/shared/AGENTS.md"/>
         <Project Path="core/shared/Core.Infrastructure/Core.Infrastructure.csproj"/>
         <Project Path="core/shared/Core.Shared.UnitTests/Core.Shared.UnitTests.csproj"/>
         <Project Path="core/shared/Core.Shared/Core.Shared.csproj"/>
     </Folder>
     <Folder Name="/customer/">
-        <File Path="customer\AGENTS.md"/>
+        <File Path="customer/AGENTS.md"/>
     </Folder>
     <Folder Name="/customer/apis/">
-        <File Path="customer\apis\AGENTS.md"/>
+        <File Path="customer/apis/AGENTS.md"/>
         <Project Path="customer/apis/Customer.Api.UnitTests/Customer.Api.UnitTests.csproj"/>
         <Project Path="customer/apis/Customer.Api/Customer.Api.csproj"/>
     </Folder>
     <Folder Name="/customer/domain/">
-        <File Path="customer\domain\AGENTS.md"/>
+        <File Path="customer/domain/AGENTS.md"/>
         <Project Path="customer/domain/Customer.Domain.AppHost/Customer.Domain.AppHost.csproj"/>
+        <File Path="customer/domain/Customer.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="customer/domain/Customer.Domain.FakeDependencies/Customer.Domain.FakeDependencies.csproj"/>
         <Project Path="customer/domain/Customer.Domain.IntegrationTests/Customer.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/customer/jobs/">
@@ -146,7 +154,7 @@
         <Project Path="customer/processors/Customer.Processors/Customer.Processors.csproj"/>
     </Folder>
     <Folder Name="/customer/shared/">
-        <File Path="customer\shared\AGENTS.md"/>
+        <File Path="customer/shared/AGENTS.md"/>
         <Project Path="customer/shared/Customer.Infrastructure/Customer.Infrastructure.csproj"/>
         <Project Path="customer/shared/Customer.Shared.UnitTests/Customer.Shared.UnitTests.csproj"/>
         <Project Path="customer/shared/Customer.Shared/Customer.Shared.csproj"/>
@@ -156,16 +164,18 @@
         <Project Path="gateway/apis/Gateway/Gateway.csproj"/>
     </Folder>
     <Folder Name="/location/">
-        <File Path="location\AGENTS.md"/>
+        <File Path="location/AGENTS.md"/>
     </Folder>
     <Folder Name="/location/apis/">
-        <File Path="location\apis\AGENTS.md"/>
+        <File Path="location/apis/AGENTS.md"/>
         <Project Path="location/apis/Location.Api.UnitTests/Location.Api.UnitTests.csproj"/>
         <Project Path="location/apis/Location.Api/Location.Api.csproj"/>
     </Folder>
     <Folder Name="/location/domain/">
-        <File Path="location\domain\AGENTS.md"/>
+        <File Path="location/domain/AGENTS.md"/>
         <Project Path="location/domain/Location.Domain.AppHost/Location.Domain.AppHost.csproj"/>
+        <File Path="location/domain/Location.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="location/domain/Location.Domain.FakeDependencies/Location.Domain.FakeDependencies.csproj"/>
         <Project Path="location/domain/Location.Domain.IntegrationTests/Location.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/location/jobs/">
@@ -177,22 +187,25 @@
         <Project Path="location/processors/Location.Processors/Location.Processors.csproj"/>
     </Folder>
     <Folder Name="/location/shared/">
-        <File Path="location\shared\AGENTS.md"/>
+        <File Path="location/shared/AGENTS.md"/>
         <Project Path="location/shared/Location.Infrastructure/Location.Infrastructure.csproj"/>
         <Project Path="location/shared/Location.Shared.UnitTests/Location.Shared.UnitTests.csproj"/>
         <Project Path="location/shared/Location.Shared/Location.Shared.csproj"/>
     </Folder>
     <Folder Name="/marketplace/">
-        <File Path="marketplace\AGENTS.md"/>
+        <File Path="marketplace/AGENTS.md"/>
     </Folder>
     <Folder Name="/marketplace/apis/">
-        <File Path="marketplace\apis\AGENTS.md"/>
+        <File Path="marketplace/apis/AGENTS.md"/>
         <Project Path="marketplace/apis/Marketplace.Api.UnitTests/Marketplace.Api.UnitTests.csproj"/>
         <Project Path="marketplace/apis/Marketplace.Api/Marketplace.Api.csproj"/>
     </Folder>
     <Folder Name="/marketplace/domain/">
-        <File Path="marketplace\domain\AGENTS.md"/>
+        <File Path="marketplace/domain/AGENTS.md"/>
         <Project Path="marketplace/domain/Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj"/>
+        <File Path="marketplace/domain/Marketplace.Domain.FakeDependencies/AGENTS.md"/>
+        <Project
+                Path="marketplace/domain/Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
         <Project
                 Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
     </Folder>
@@ -206,22 +219,24 @@
         <Project Path="marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj"/>
     </Folder>
     <Folder Name="/marketplace/shared/">
-        <File Path="marketplace\shared\AGENTS.md"/>
+        <File Path="marketplace/shared/AGENTS.md"/>
         <Project Path="marketplace/shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj"/>
         <Project Path="marketplace/shared/Marketplace.Shared.UnitTests/Marketplace.Shared.UnitTests.csproj"/>
         <Project Path="marketplace/shared/Marketplace.Shared/Marketplace.Shared.csproj"/>
     </Folder>
     <Folder Name="/msteams/">
-        <File Path="msteams\AGENTS.md"/>
+        <File Path="msteams/AGENTS.md"/>
     </Folder>
     <Folder Name="/msteams/apis/">
-        <File Path="msteams\apis\AGENTS.md"/>
+        <File Path="msteams/apis/AGENTS.md"/>
         <Project Path="msteams/apis/MsTeams.Api.UnitTests/MsTeams.Api.UnitTests.csproj"/>
         <Project Path="msteams/apis/MsTeams.Api/MsTeams.Api.csproj"/>
     </Folder>
     <Folder Name="/msteams/domain/">
-        <File Path="msteams\domain\AGENTS.md"/>
+        <File Path="msteams/domain/AGENTS.md"/>
         <Project Path="msteams/domain/MsTeams.Domain.AppHost/MsTeams.Domain.AppHost.csproj"/>
+        <File Path="msteams/domain/MsTeams.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="msteams/domain/MsTeams.Domain.FakeDependencies/MsTeams.Domain.FakeDependencies.csproj"/>
         <Project Path="msteams/domain/MsTeams.Domain.IntegrationTests/MsTeams.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/msteams/jobs/">
@@ -233,22 +248,25 @@
         <Project Path="msteams/processors/MsTeams.Processors/MsTeams.Processors.csproj"/>
     </Folder>
     <Folder Name="/msteams/shared/">
-        <File Path="msteams\shared\AGENTS.md"/>
+        <File Path="msteams/shared/AGENTS.md"/>
         <Project Path="msteams/shared/MsTeams.Infrastructure/MsTeams.Infrastructure.csproj"/>
         <Project Path="msteams/shared/MsTeams.Shared.UnitTests/MsTeams.Shared.UnitTests.csproj"/>
         <Project Path="msteams/shared/MsTeams.Shared/MsTeams.Shared.csproj"/>
     </Folder>
     <Folder Name="/organization/">
-        <File Path="organization\AGENTS.md"/>
+        <File Path="organization/AGENTS.md"/>
     </Folder>
     <Folder Name="/organization/apis/">
-        <File Path="organization\apis\AGENTS.md"/>
+        <File Path="organization/apis/AGENTS.md"/>
         <Project Path="organization/apis/Organization.Api.UnitTests/Organization.Api.UnitTests.csproj"/>
         <Project Path="organization/apis/Organization.Api/Organization.Api.csproj"/>
     </Folder>
     <Folder Name="/organization/domain/">
-        <File Path="organization\domain\AGENTS.md"/>
+        <File Path="organization/domain/AGENTS.md"/>
         <Project Path="organization/domain/Organization.Domain.AppHost/Organization.Domain.AppHost.csproj"/>
+        <File Path="organization/domain/Organization.Domain.FakeDependencies/AGENTS.md"/>
+        <Project
+                Path="organization/domain/Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
         <Project
                 Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
     </Folder>
@@ -262,22 +280,24 @@
         <Project Path="organization/processors/Organization.Processors/Organization.Processors.csproj"/>
     </Folder>
     <Folder Name="/organization/shared/">
-        <File Path="organization\shared\AGENTS.md"/>
+        <File Path="organization/shared/AGENTS.md"/>
         <Project Path="organization/shared/Organization.Infrastructure/Organization.Infrastructure.csproj"/>
         <Project Path="organization/shared/Organization.Shared.UnitTests/Organization.Shared.UnitTests.csproj"/>
         <Project Path="organization/shared/Organization.Shared/Organization.Shared.csproj"/>
     </Folder>
     <Folder Name="/slack/">
-        <File Path="slack\AGENTS.md"/>
+        <File Path="slack/AGENTS.md"/>
     </Folder>
     <Folder Name="/slack/apis/">
-        <File Path="slack\apis\AGENTS.md"/>
+        <File Path="slack/apis/AGENTS.md"/>
         <Project Path="slack/apis/Slack.Api.UnitTests/Slack.Api.UnitTests.csproj"/>
         <Project Path="slack/apis/Slack.Api/Slack.Api.csproj"/>
     </Folder>
     <Folder Name="/slack/domain/">
-        <File Path="slack\domain\AGENTS.md"/>
+        <File Path="slack/domain/AGENTS.md"/>
         <Project Path="slack/domain/Slack.Domain.AppHost/Slack.Domain.AppHost.csproj"/>
+        <File Path="slack/domain/Slack.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="slack/domain/Slack.Domain.FakeDependencies/Slack.Domain.FakeDependencies.csproj"/>
         <Project Path="slack/domain/Slack.Domain.IntegrationTests/Slack.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/slack/jobs/">
@@ -289,27 +309,29 @@
         <Project Path="slack/processors/Slack.Processors/Slack.Processors.csproj"/>
     </Folder>
     <Folder Name="/slack/shared/">
-        <File Path="slack\shared\AGENTS.md"/>
+        <File Path="slack/shared/AGENTS.md"/>
         <Project Path="slack/shared/Slack.Infrastructure/Slack.Infrastructure.csproj"/>
         <Project Path="slack/shared/Slack.Shared.UnitTests/Slack.Shared.UnitTests.csproj"/>
         <Project Path="slack/shared/Slack.Shared/Slack.Shared.csproj"/>
     </Folder>
     <Folder Name="/system/">
-        <File Path="system\AGENTS.md"/>
+        <File Path="system/AGENTS.md"/>
         <Project Path="system/Skedular.AppHost/Skedular.AppHost.csproj"/>
         <Project Path="system/Skedular.SystemTests/Skedular.SystemTests.csproj"/>
     </Folder>
     <Folder Name="/team/">
-        <File Path="team\AGENTS.md"/>
+        <File Path="team/AGENTS.md"/>
     </Folder>
     <Folder Name="/team/apis/">
-        <File Path="team\apis\AGENTS.md"/>
+        <File Path="team/apis/AGENTS.md"/>
         <Project Path="team/apis/Team.Api.UnitTests/Team.Api.UnitTests.csproj"/>
         <Project Path="team/apis/Team.Api/Team.Api.csproj"/>
     </Folder>
     <Folder Name="/team/domain/">
-        <File Path="team\domain\AGENTS.md"/>
+        <File Path="team/domain/AGENTS.md"/>
         <Project Path="team/domain/Team.Domain.AppHost/Team.Domain.AppHost.csproj"/>
+        <File Path="team/domain/Team.Domain.FakeDependencies/AGENTS.md"/>
+        <Project Path="team/domain/Team.Domain.FakeDependencies/Team.Domain.FakeDependencies.csproj"/>
         <Project Path="team/domain/Team.Domain.IntegrationTests/Team.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/team/jobs/">
@@ -321,7 +343,7 @@
         <Project Path="team/processors/Team.Processors/Team.Processors.csproj"/>
     </Folder>
     <Folder Name="/team/shared/">
-        <File Path="team\shared\AGENTS.md"/>
+        <File Path="team/shared/AGENTS.md"/>
         <Project Path="team/shared/Team.Infrastructure/Team.Infrastructure.csproj"/>
         <Project Path="team/shared/Team.Shared.UnitTests/Team.Shared.UnitTests.csproj"/>
         <Project Path="team/shared/Team.Shared/Team.Shared.csproj"/>
@@ -334,6 +356,9 @@
         <File Path="scripts/start-dependencies.sh"/>
     </Folder>
     <Folder Name="/shared/">
+        <File Path="shared/Enterprise.Shared/AGENTS.md"/>
+        <File Path="shared/Infrastructure.Shared/AGENTS.md"/>
+        <File Path="shared/Testing.Shared.IntegrationTests/AGENTS.md"/>
         <Project Path="shared/Api.Shared.Clients.UnitTests/Api.Shared.Clients.UnitTests.csproj"/>
         <Project Path="shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
         <Project Path="shared/Api.Shared.Services.UnitTests/Api.Shared.Services.UnitTests.csproj"/>
@@ -347,7 +372,7 @@
         <Project Path="shared/WebScrapper/WebScrapper.csproj"/>
     </Folder>
     <Folder Name="/solution-items/">
-        <File Path=".config\dotnet-tools.json"/>
+        <File Path=".config/dotnet-tools.json"/>
         <File Path=".dockerignore"/>
         <File Path=".editorconfig"/>
         <File Path=".env"/>

@@ -35,15 +35,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\booking\shared\Booking.Infrastructure\Booking.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\customer\shared\Customer.Infrastructure\Customer.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\location\shared\Location.Infrastructure\Location.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Infrastructure\Marketplace.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\msteams\shared\MsTeams.Infrastructure\MsTeams.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\organization\shared\Organization.Infrastructure\Organization.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\slack\shared\Slack.Infrastructure\Slack.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\team\shared\Team.Infrastructure\Team.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\core\shared\Core.Infrastructure\Core.Infrastructure.csproj"/>
+        <ProjectReference Include="../../booking/shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
+        <ProjectReference Include="../../customer/shared/Customer.Infrastructure/Customer.Infrastructure.csproj"/>
+        <ProjectReference Include="../../location/shared/Location.Infrastructure/Location.Infrastructure.csproj"/>
+        <ProjectReference Include="../../marketplace/shared/Marketplace.Infrastructure/Marketplace.Infrastructure.csproj"/>
+        <ProjectReference Include="../../msteams/shared/MsTeams.Infrastructure/MsTeams.Infrastructure.csproj"/>
+        <ProjectReference Include="../../organization/shared/Organization.Infrastructure/Organization.Infrastructure.csproj"/>
+        <ProjectReference Include="../../slack/shared/Slack.Infrastructure/Slack.Infrastructure.csproj"/>
+        <ProjectReference Include="../../team/shared/Team.Infrastructure/Team.Infrastructure.csproj"/>
+        <ProjectReference Include="../../core/shared/Core.Infrastructure/Core.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,7 +1,8 @@
 using Enterprise.Shared.Configurations;
-using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using Constants = Enterprise.Shared.HealthCheck.Constants;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var bookingFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Booking_Domain_FakeDependencies>("bookingfakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var bookingDatabase = postgres.AddDatabase("bookingdb");
 var bookingInfrastructure = builder
@@ -32,34 +41,62 @@ var bookingInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(bookingDatabase);
 
-builder
+var bookingApi = builder
     .AddProject<Booking_Api>("bookingapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
+    .WithReference(sharedInfrastructure)
     .WithReference(kafka)
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
-builder
+var bookingProcessors = builder
     .AddProject<Booking_Processors>("bookingprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
+    .WithReference(sharedInfrastructure)
     .WithReference(kafka)
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
-builder
+var bookingJobs = builder
     .AddProject<Booking_Jobs>("bookingjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
+    .WithReference(sharedInfrastructure)
     .WithReference(kafka)
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(bookingFakeDependencies);
+
+    bookingApi.WaitFor(bookingFakeDependencies);
+    bookingProcessors.WaitFor(bookingFakeDependencies);
+    bookingJobs.WaitFor(bookingFakeDependencies);
+
+    ConfigureSharedInfrastructureGrpc(bookingApi, bookingFakeDependencies);
+    ConfigureSharedInfrastructureGrpc(bookingProcessors, bookingFakeDependencies);
+    ConfigureSharedInfrastructureGrpc(bookingJobs, bookingFakeDependencies);
+}
+
 await builder.Build().RunAsync();
+
+static void ConfigureSharedInfrastructureGrpc(
+    IResourceBuilder<ProjectResource> project,
+    IResourceBuilder<ProjectResource> fakeDependencies)
+{
+    project.WithEnvironment(context =>
+    {
+        context.EnvironmentVariables["Core__GrpcUrl"] = fakeDependencies.GetEndpoint("Grpc");
+        context.EnvironmentVariables["Organization__GrpcUrl"] = fakeDependencies.GetEndpoint("Grpc");
+        return Task.CompletedTask;
+    });
+}

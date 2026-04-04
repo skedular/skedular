@@ -34,12 +34,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
+        <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="appsettings.json"/>
-        <EmbeddedResource Include="Events\Resources\EventMetadata.liquid"/>
-        <EmbeddedResource Include="Events\Resources\EventWithoutMetadata.liquid"/>
+        <EmbeddedResource Include="Events/Resources/EventMetadata.liquid"/>
+        <EmbeddedResource Include="Events/Resources/EventWithoutMetadata.liquid"/>
     </ItemGroup>
 </Project>

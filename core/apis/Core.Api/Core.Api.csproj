@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Core.Shared\Core.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Core.Shared/Core.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\shared\Marketplace.Shared\Marketplace.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Marketplace.Shared/Marketplace.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

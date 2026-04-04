@@ -1,0 +1,105 @@
+syntax = "proto3";
+package infrastructuretest;
+
+option csharp_namespace = "Api.Shared.Services.Grpc.Skedular.InfrastructureTest.V1";
+
+service InfrastructureTestService {
+  rpc Reset (ResetInput) returns (ResetResponse);
+  rpc ClearRecordedRequests (ClearRecordedRequestsInput) returns (ClearRecordedRequestsResponse);
+  rpc ConfigureScenario (ConfigureScenarioInput) returns (ConfigureScenarioResponse);
+  rpc GetRecordedRequests (GetRecordedRequestsInput) returns (GetRecordedRequestsResponse);
+}
+
+message ResetInput {
+}
+
+message ResetResponse {
+}
+
+message ClearRecordedRequestsInput {
+}
+
+message ClearRecordedRequestsResponse {
+}
+
+message ConfigureScenarioInput {
+  CoreScenario         core         = 1;
+  OrganizationScenario organization = 2;
+}
+
+message ConfigureScenarioResponse {
+}
+
+message CoreScenario {
+  UploadToPrivateStorageScenario uploadToPrivateStorage = 1;
+}
+
+message UploadToPrivateStorageScenario {
+  string uploadId    = 1;
+  string url         = 2;
+  string contentType = 3;
+  int32  width       = 4;
+  int32  height      = 5;
+}
+
+message OrganizationScenario {
+  XeroConnectionScenario xeroConnection = 1;
+}
+
+message XeroConnectionScenario {
+  string id                            = 1;
+  string tenantId                      = 2;
+  string tenantName                    = 3;
+  string billingMode                   = 4;
+  string scopes                        = 5;
+  bool   isActive                      = 6;
+  bool   sendInvoicesViaXero           = 7;
+  bool   autoReconcilePayments         = 8;
+  string defaultSalesAccountCode       = 9;
+  string defaultReceivablesAccountCode = 10;
+  string defaultTrackingCategory1      = 11;
+  string defaultTrackingCategory2      = 12;
+  string defaultBrandingThemeId        = 13;
+  string defaultReferencePrefix        = 14;
+  string lastError                     = 15;
+  bool   hasAccessToken                = 16;
+  bool   hasRefreshToken               = 17;
+  string accessTokenEncrypted          = 18;
+  string refreshTokenEncrypted         = 19;
+}
+
+message GetRecordedRequestsInput {
+  bool clearAfterRead = 1;
+}
+
+message GetRecordedRequestsResponse {
+  repeated CoreUploadToPrivateStorageRequest              coreUploadToPrivateStorageRequests                  = 1;
+  repeated OrganizationGetXeroConnectionRequest           organizationGetXeroConnectionRequests               = 2;
+  int32                                                   coreUploadToPrivateStorageRequestCount              = 3;
+  int32                                                   organizationGetXeroConnectionRequestCount           = 4;
+  repeated OrganizationRefreshXeroConnectionTokensRequest organizationRefreshXeroConnectionTokensRequests     = 5;
+  int32                                                   organizationRefreshXeroConnectionTokensRequestCount = 6;
+}
+
+message CoreUploadToPrivateStorageRequest {
+  string requestedAtUtc = 1;
+  string extension      = 2;
+  string contentType    = 3;
+  int32  contentLength  = 4;
+  bytes  content        = 5;
+}
+
+message OrganizationGetXeroConnectionRequest {
+  string requestedAtUtc           = 1;
+  string organizationId           = 2;
+  string organizationCustomDomain = 3;
+}
+
+message OrganizationRefreshXeroConnectionTokensRequest {
+  string requestedAtUtc           = 1;
+  string organizationId           = 2;
+  bool   hasAccessTokenEncrypted  = 3;
+  bool   hasRefreshTokenEncrypted = 4;
+  string accessTokenExpiresAtUtc  = 5;
+  string refreshTokenExpiresAtUtc = 6;
+}

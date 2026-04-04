@@ -29,7 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../Api.Shared.Clients/Api.Shared.Clients.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

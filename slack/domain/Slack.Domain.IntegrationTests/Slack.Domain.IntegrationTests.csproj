@@ -21,9 +21,15 @@
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Grpc.Tools" Version="2.80.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Protobuf Include="../../../api-definitions/grpc/skedular/slack_v1.proto" GrpcServices="Client"/>
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0"/>
         <PackageReference Include="StrawberryShake.Server" Version="15.1.12"/>
         <PackageReference Include="coverlet.collector" Version="8.0.1">
@@ -37,10 +43,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Testing.Shared.IntegrationTests\Testing.Shared.IntegrationTests.csproj"/>
-        <ProjectReference Include="..\..\shared\Slack.Shared\Slack.Shared.csproj"/>
-        <ProjectReference Include="..\Slack.Domain.AppHost\Slack.Domain.AppHost.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <ProjectReference Include="../../shared/Slack.Shared/Slack.Shared.csproj"/>
+        <ProjectReference Include="../Slack.Domain.AppHost/Slack.Domain.AppHost.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -59,7 +65,7 @@
         <GraphQL Update="schema.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
-        <GraphQL Update="Api\GraphQL\GetVersion.graphql">
+        <GraphQL Update="Api/GraphQL/GetVersion.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
     </ItemGroup>

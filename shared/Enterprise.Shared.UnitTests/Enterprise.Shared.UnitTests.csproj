@@ -38,15 +38,15 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Enterprise.Shared\Enterprise.Shared.csproj"/>
-        <ProjectReference Include="..\Testing.Shared\Testing.Shared.csproj"/>
+        <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
+        <ProjectReference Include="../Testing.Shared/Testing.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Resources\sso-sample-cert.cer">
+        <None Update="Resources/sso-sample-cert.cer">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
-        <None Update="Resources\sso-sample-metadata.xml">
+        <None Update="Resources/sso-sample-metadata.xml">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

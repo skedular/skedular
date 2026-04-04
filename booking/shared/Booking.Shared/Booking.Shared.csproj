@@ -46,14 +46,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Api.Shared.Services\Api.Shared.Services.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../../../shared/Api.Shared.Services/Api.Shared.Services.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.html"/>
-        <EmbeddedResource Include="EmailTemplates\BookingInvoice\template.txt"/>
-        <EmbeddedResource Include="EmailTemplates\OrganizationArrearsInvoice\template.html"/>
-        <EmbeddedResource Include="EmailTemplates\OrganizationArrearsInvoice\template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/BookingInvoice/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/BookingInvoice/template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/OrganizationArrearsInvoice/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/OrganizationArrearsInvoice/template.txt"/>
     </ItemGroup>
 </Project>

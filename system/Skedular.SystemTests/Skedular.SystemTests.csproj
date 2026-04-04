@@ -37,19 +37,19 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Skedular.AppHost\Skedular.AppHost.csproj"/>
+        <ProjectReference Include="../Skedular.AppHost/Skedular.AppHost.csproj"/>
 
-        <ProjectReference Include="..\..\booking\shared\Booking.Shared\Booking.Shared.csproj"/>
-        <ProjectReference Include="..\..\core\shared\Core.Shared\Core.Shared.csproj"/>
-        <ProjectReference Include="..\..\customer\shared\Customer.Shared\Customer.Shared.csproj"/>
-        <ProjectReference Include="..\..\location\shared\Location.Shared\Location.Shared.csproj"/>
-        <ProjectReference Include="..\..\marketplace\shared\Marketplace.Shared\Marketplace.Shared.csproj"/>
-        <ProjectReference Include="..\..\msteams\shared\MsTeams.Shared\MsTeams.Shared.csproj"/>
-        <ProjectReference Include="..\..\organization\shared\Organization.Shared\Organization.Shared.csproj"/>
-        <ProjectReference Include="..\..\shared\Api.Shared.Clients\Api.Shared.Clients.csproj"/>
-        <ProjectReference Include="..\..\shared\Testing.Shared.IntegrationTests\Testing.Shared.IntegrationTests.csproj"/>
-        <ProjectReference Include="..\..\slack\shared\Slack.Shared\Slack.Shared.csproj"/>
-        <ProjectReference Include="..\..\team\shared\Team.Shared\Team.Shared.csproj"/>
+        <ProjectReference Include="../../booking/shared/Booking.Shared/Booking.Shared.csproj"/>
+        <ProjectReference Include="../../core/shared/Core.Shared/Core.Shared.csproj"/>
+        <ProjectReference Include="../../customer/shared/Customer.Shared/Customer.Shared.csproj"/>
+        <ProjectReference Include="../../location/shared/Location.Shared/Location.Shared.csproj"/>
+        <ProjectReference Include="../../marketplace/shared/Marketplace.Shared/Marketplace.Shared.csproj"/>
+        <ProjectReference Include="../../msteams/shared/MsTeams.Shared/MsTeams.Shared.csproj"/>
+        <ProjectReference Include="../../organization/shared/Organization.Shared/Organization.Shared.csproj"/>
+        <ProjectReference Include="../../shared/Api.Shared.Clients/Api.Shared.Clients.csproj"/>
+        <ProjectReference Include="../../shared/Testing.Shared.IntegrationTests/Testing.Shared.IntegrationTests.csproj"/>
+        <ProjectReference Include="../../slack/shared/Slack.Shared/Slack.Shared.csproj"/>
+        <ProjectReference Include="../../team/shared/Team.Shared/Team.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -68,7 +68,7 @@
         <GraphQL Update="schema.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
-        <GraphQL Update="Gateway\GraphQl\GetVersion.graphql">
+        <GraphQL Update="Gateway/GraphQl/GetVersion.graphql">
             <Generator>MSBuild:GenerateGraphQLCode</Generator>
         </GraphQL>
     </ItemGroup>

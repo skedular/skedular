@@ -20,12 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\shared\Enterprise.Shared\Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
-        <ProjectReference Include="..\..\..\shared\Infrastructure.Shared\Infrastructure.Shared.csproj"/>
-        <ProjectReference Include="..\..\apis\Booking.Api\Booking.Api.csproj"/>
-        <ProjectReference Include="..\..\jobs\Booking.Jobs\Booking.Jobs.csproj"/>
-        <ProjectReference Include="..\..\processors\Booking.Processors\Booking.Processors.csproj"/>
-        <ProjectReference Include="..\..\shared\Booking.Infrastructure\Booking.Infrastructure.csproj"/>
+        <ProjectReference Include="../../../shared/Enterprise.Shared/Enterprise.Shared.csproj" IsAspireProjectResource="false"/>
+        <ProjectReference Include="../../../shared/Infrastructure.Shared/Infrastructure.Shared.csproj"/>
+        <ProjectReference Include="../Booking.Domain.FakeDependencies/Booking.Domain.FakeDependencies.csproj"/>
+        <ProjectReference Include="../../apis/Booking.Api/Booking.Api.csproj"/>
+        <ProjectReference Include="../../jobs/Booking.Jobs/Booking.Jobs.csproj"/>
+        <ProjectReference Include="../../processors/Booking.Processors/Booking.Processors.csproj"/>
+        <ProjectReference Include="../../shared/Booking.Infrastructure/Booking.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

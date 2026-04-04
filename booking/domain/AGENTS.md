@@ -5,9 +5,11 @@ This file covers the `booking/domain/` area.
 ## What This Area Is For
 
 - `Booking.Domain.AppHost`
-  - Aspire app host for the booking domain
+    - Aspire app host for the booking domain
+- `Booking.Domain.FakeDependencies`
+    - booking-owned fake external dependency host for booking integration tests
 - `Booking.Domain.IntegrationTests`
-  - booking-domain-scoped integration tests
+    - booking-domain-scoped integration tests
 
 ## Important Testing Boundary
 
@@ -26,7 +28,8 @@ prefer `system/Skedular.SystemTests` instead.
 
 ## Guidance From Recent Billing Work
 
-The recurring in-arrears billing scenarios were a bad fit for booking-domain integration tests when fake services were introduced to make them pass.
+The recurring in-arrears billing scenarios were a bad fit for booking-domain integration tests when fake services were
+introduced to make them pass.
 
 Preferred rule:
 

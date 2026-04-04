@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var locationFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Location_Domain_FakeDependencies>("locationfakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var locationDatabase = postgres.AddDatabase("locationdb");
 var locationInfrastructure = builder
@@ -32,7 +41,7 @@ var locationInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(locationDatabase);
 
-builder
+var locationApi = builder
     .AddProject<Location_Api>("locationapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
-builder
+var locationProcessors = builder
     .AddProject<Location_Processors>("locationprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
-builder
+var locationJobs = builder
     .AddProject<Location_Jobs>("locationjobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(locationFakeDependencies);
+
+    locationApi.WaitFor(locationFakeDependencies);
+    locationProcessors.WaitFor(locationFakeDependencies);
+    locationJobs.WaitFor(locationFakeDependencies);
+}
 
 await builder.Build().RunAsync();

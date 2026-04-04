@@ -2,6 +2,7 @@ using Enterprise.Shared.Configurations;
 using Enterprise.Shared.HealthCheck;
 using Microsoft.Extensions.Hosting;
 using Projects;
+using DomainAppHostEnvironmentVariables = Enterprise.Shared.DomainAppHostEnvironmentVariables;
 
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", ".env"), CancellationToken.None);
 await EnvironmentHelper.LoadEnvFileAsync(Path.Join(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "..", ".env"), CancellationToken.None);
@@ -13,12 +14,20 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
+var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
+
+var coreFakeDependencies = useSharedInfrastructureGrpc
+    ? builder
+        .AddProject<Core_Domain_FakeDependencies>("corefakedependencies")
+        .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
+        .WithHttpHealthCheck(Constants.ReadinessPath)
+    : null;
 
 var coreDatabase = postgres.AddDatabase("coredb");
 var coreInfrastructure = builder
@@ -32,7 +41,7 @@ var coreInfrastructure = builder
     .WaitFor(sharedInfrastructure)
     .WaitFor(coreDatabase);
 
-builder
+var coreApi = builder
     .AddProject<Core_Api>("coreapi")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -42,7 +51,7 @@ builder
     .WithReference(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
-builder
+var coreProcessors = builder
     .AddProject<Core_Processors>("coreprocessors")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -52,7 +61,7 @@ builder
     .WithReference(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
-builder
+var coreJobs = builder
     .AddProject<Core_Jobs>("corejobs")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
@@ -61,5 +70,14 @@ builder
     .WithReference(redis)
     .WithReference(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
+
+if (useSharedInfrastructureGrpc)
+{
+    ArgumentNullException.ThrowIfNull(coreFakeDependencies);
+
+    coreApi.WaitFor(coreFakeDependencies);
+    coreProcessors.WaitFor(coreFakeDependencies);
+    coreJobs.WaitFor(coreFakeDependencies);
+}
 
 await builder.Build().RunAsync();

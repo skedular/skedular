@@ -36,8 +36,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Slack.Jobs\Slack.Jobs.csproj"/>
-        <ProjectReference Include="..\..\..\shared\Testing.Shared\Testing.Shared.csproj"/>
+        <ProjectReference Include="../Slack.Jobs/Slack.Jobs.csproj"/>
+        <ProjectReference Include="../../../shared/Testing.Shared/Testing.Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
