@@ -15,14 +15,10 @@ namespace Api.Shared.Clients.Events.Skedular.Team.V1.Key;
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "team.v1.event",
     topicPartitionCount: 3,
-    retryTopicNamePrefix: "team.v1.event.retry",
     retryTopicCount: 1,
     retryTopicPartitionCount: 3,
-    deadLetterTopicName: "team.v1.event.deadletter",
-    deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package team;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Team.V1.Key\";message Key {  string teamId = 1;}")]
+    deadLetterTopicPartitionCount: 3)]
 public partial class Key : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

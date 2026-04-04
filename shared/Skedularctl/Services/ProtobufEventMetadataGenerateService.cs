@@ -41,9 +41,6 @@ public class ProtobufEventMetadataGenerateOptions
         HelpText = "Specify the dead letter topic partition count")]
     public int DeadLetterTopicPartitionCount { get; set; } = 3;
 
-    [Option("protobuf-schema-file-path", Required = true, HelpText = "Specify the protobuf schema file path")]
-    public string ProtobufSchemaFilePath { get; set; } = string.Empty;
-
     [Option("generate-metadata-function-helper", Required = false, HelpText = "Generate Metadata Function Helper")]
     public BoolType GenerateMetadataFunctionHelper { get; set; } = BoolType.True;
 
@@ -65,13 +62,7 @@ public class ProtobufEventMetadataGenerateService : IProtobufEventMetadataGenera
         ArgumentException.ThrowIfNullOrWhiteSpace(options.TopicName);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.RetryTopicNamePrefix);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.DeadLetterTopicName);
-        ArgumentException.ThrowIfNullOrWhiteSpace(options.ProtobufSchemaFilePath);
         ArgumentException.ThrowIfNullOrWhiteSpace(options.OutputFilePath);
-
-        if (!File.Exists(options.ProtobufSchemaFilePath))
-        {
-            throw new ArgumentException($"File {options.ProtobufSchemaFilePath} does not exist.");
-        }
 
         await using var stream = Assembly.GetExecutingAssembly()
             .GetManifestResourceStream(options.GenerateMetadataFunctionHelper == BoolType.True
@@ -95,10 +86,7 @@ public class ProtobufEventMetadataGenerateService : IProtobufEventMetadataGenera
             retry_topic_name_count = options.RetryTopicCount,
             retry_topic_partition_count = options.RetryTopicPartitionCount,
             dead_letter_topic_name = options.DeadLetterTopicName,
-            dead_letter_topic_partition_count = options.DeadLetterTopicPartitionCount,
-            protobuf_schema = (await File.ReadAllTextAsync(options.ProtobufSchemaFilePath, cancellationToken))
-                .Replace("\"", "\\\"")
-                .Replace(Environment.NewLine, string.Empty)
+            dead_letter_topic_partition_count = options.DeadLetterTopicPartitionCount
         }));
 
         await File.WriteAllTextAsync(options.OutputFilePath, renderedContent, cancellationToken);

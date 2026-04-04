@@ -21,9 +21,8 @@ generate_metadata() {
     local retry_topic_name_prefix="$4"
     local retry_topic_count="$5"
     local dead_letter_topic_name="$6"
-    local protobuf_schema_file_path="$7"
-    local output_file_path="$8"
-    local generate_metadata_function_helper="${9:-True}"
+    local output_file_path="$7"
+    local generate_metadata_function_helper="${8:-True}"
 
     mkdir -p "$(dirname "${output_file_path}")"
 
@@ -35,7 +34,6 @@ generate_metadata() {
         --retry-topic-count "${retry_topic_count}" \
         --dead-letter-topic-name "${dead_letter_topic_name}" \
         --generate-metadata-function-helper "${generate_metadata_function_helper}" \
-        --protobuf-schema-file-path "${protobuf_schema_file_path}" \
         --output-file-path "${output_file_path}"
 }
 
@@ -46,7 +44,6 @@ generate_metadata \
     "booking.v1.event.retry" \
     "1" \
     "booking.v1.event.deadletter" \
-    "${EVENTS_DIR}/booking_v1_key.proto" \
     "${OUTPUT_DIR}/Booking/V1/BookingKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -56,7 +53,6 @@ generate_metadata \
     "booking.v1.event.retry" \
     "1" \
     "booking.v1.event.deadletter" \
-    "${EVENTS_DIR}/booking_v1_value.proto" \
     "${OUTPUT_DIR}/Booking/V1/BookingValueMetadata.g.cs"
 
 generate_metadata \
@@ -66,7 +62,6 @@ generate_metadata \
     "booking.v1.internal.retry" \
     "1" \
     "booking.v1.internal.deadletter" \
-    "${EVENTS_DIR}/booking_internal_v1_key.proto" \
     "${OUTPUT_DIR}/BookingInternal/V1/BookingInternalKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -76,7 +71,6 @@ generate_metadata \
     "booking.v1.internal.retry" \
     "1" \
     "booking.v1.internal.deadletter" \
-    "${EVENTS_DIR}/booking_internal_v1_value.proto" \
     "${OUTPUT_DIR}/BookingInternal/V1/BookingInternalValueMetadata.g.cs"
 
 generate_metadata \
@@ -86,7 +80,6 @@ generate_metadata \
     "customer.v1.event.retry" \
     "1" \
     "customer.v1.event.deadletter" \
-    "${EVENTS_DIR}/customer_v1_key.proto" \
     "${OUTPUT_DIR}/Customer/V1/CustomerKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -96,7 +89,6 @@ generate_metadata \
     "customer.v1.event.retry" \
     "1" \
     "customer.v1.event.deadletter" \
-    "${EVENTS_DIR}/customer_v1_value.proto" \
     "${OUTPUT_DIR}/Customer/V1/CustomerValueMetadata.g.cs"
 
 generate_metadata \
@@ -106,7 +98,6 @@ generate_metadata \
     "location.v1.event.retry" \
     "1" \
     "location.v1.event.deadletter" \
-    "${EVENTS_DIR}/location_v1_key.proto" \
     "${OUTPUT_DIR}/Location/V1/LocationKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -116,7 +107,6 @@ generate_metadata \
     "location.v1.event.retry" \
     "1" \
     "location.v1.event.deadletter" \
-    "${EVENTS_DIR}/location_v1_value.proto" \
     "${OUTPUT_DIR}/Location/V1/LocationValueMetadata.g.cs"
 
 generate_metadata \
@@ -126,7 +116,6 @@ generate_metadata \
     "marketplace.v1.event.retry" \
     "1" \
     "marketplace.v1.event.deadletter" \
-    "${EVENTS_DIR}/marketplace_v1_key.proto" \
     "${OUTPUT_DIR}/Marketplace/V1/MarketplaceKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -136,7 +125,6 @@ generate_metadata \
     "marketplace.v1.event.retry" \
     "1" \
     "marketplace.v1.event.deadletter" \
-    "${EVENTS_DIR}/marketplace_v1_value.proto" \
     "${OUTPUT_DIR}/Marketplace/V1/MarketplaceValueMetadata.g.cs"
 
 generate_metadata \
@@ -146,7 +134,6 @@ generate_metadata \
     "organization.v1.internal.retry" \
     "1" \
     "organization.v1.internal.deadletter" \
-    "${EVENTS_DIR}/organization_internal_v1_key.proto" \
     "${OUTPUT_DIR}/OrganizationInternal/V1/OrganizationInternalKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -156,7 +143,6 @@ generate_metadata \
     "organization.v1.internal.retry" \
     "1" \
     "organization.v1.internal.deadletter" \
-    "${EVENTS_DIR}/organization_internal_v1_value.proto" \
     "${OUTPUT_DIR}/OrganizationInternal/V1/OrganizationInternalValueMetadata.g.cs"
 
 generate_metadata \
@@ -166,7 +152,6 @@ generate_metadata \
     "organization.member.v1.event.retry" \
     "1" \
     "organization.member.v1.event.deadletter" \
-    "${EVENTS_DIR}/organization_member_v1_key.proto" \
     "${OUTPUT_DIR}/OrganizationMember/V1/OrganizationMemberKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -176,7 +161,6 @@ generate_metadata \
     "organization.member.v1.event.retry" \
     "1" \
     "organization.member.v1.event.deadletter" \
-    "${EVENTS_DIR}/organization_member_v1_value.proto" \
     "${OUTPUT_DIR}/OrganizationMember/V1/OrganizationMemberValueMetadata.g.cs"
 
 generate_metadata \
@@ -186,7 +170,6 @@ generate_metadata \
     "organization.v1.event.retry" \
     "1" \
     "organization.v1.event.deadletter" \
-    "${EVENTS_DIR}/organization_v1_key.proto" \
     "${OUTPUT_DIR}/Organization/V1/OrganizationKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -196,7 +179,6 @@ generate_metadata \
     "organization.v1.event.retry" \
     "1" \
     "organization.v1.event.deadletter" \
-    "${EVENTS_DIR}/organization_v1_value.proto" \
     "${OUTPUT_DIR}/Organization/V1/OrganizationValueMetadata.g.cs"
 
 generate_metadata \
@@ -206,7 +188,6 @@ generate_metadata \
     "team.v1.event.retry" \
     "1" \
     "team.v1.event.deadletter" \
-    "${EVENTS_DIR}/team_v1_key.proto" \
     "${OUTPUT_DIR}/Team/V1/TeamKeyMetadata.g.cs" \
     "False"
 generate_metadata \
@@ -216,5 +197,4 @@ generate_metadata \
     "team.v1.event.retry" \
     "1" \
     "team.v1.event.deadletter" \
-    "${EVENTS_DIR}/team_v1_value.proto" \
     "${OUTPUT_DIR}/Team/V1/TeamValueMetadata.g.cs"

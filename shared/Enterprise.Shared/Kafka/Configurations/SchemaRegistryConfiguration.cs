@@ -5,4 +5,6 @@ public class SchemaRegistryConfiguration
     public string Url { get; set; } = string.Empty;
     public string ApiKey { get; set; } = string.Empty;
     public string SecretKey { get; set; } = string.Empty;
+    public bool AutoRegisterSchema { get; set; } = true;
+    public bool UseLatestVersion { get; set; }
 }

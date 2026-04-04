@@ -40,7 +40,19 @@ public static class Extensions
             services.AddSingleton(kafkaConfiguration);
             if (kafkaConfiguration.SchemaRegistry is not null)
             {
-                services.AddSingleton(new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url });
+                var schemaRegistryConfig = new SchemaRegistryConfig { Url = kafkaConfiguration.SchemaRegistry.Url };
+
+                if (!string.IsNullOrWhiteSpace(kafkaConfiguration.SchemaRegistry.ApiKey) &&
+                    !string.IsNullOrWhiteSpace(kafkaConfiguration.SchemaRegistry.SecretKey))
+                {
+                    schemaRegistryConfig.BasicAuthCredentialsSource = AuthCredentialsSource.UserInfo;
+                    schemaRegistryConfig.BasicAuthUserInfo =
+                        $"{kafkaConfiguration.SchemaRegistry.ApiKey}:{kafkaConfiguration.SchemaRegistry.SecretKey}";
+                }
+
+                services.AddSingleton(schemaRegistryConfig);
+                services.AddSingleton<ISchemaRegistryClient>(sp =>
+                    new CachedSchemaRegistryClient(sp.GetRequiredService<SchemaRegistryConfig>()));
             }
 
             services

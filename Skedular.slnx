@@ -343,6 +343,7 @@
         <File Path="scripts/start-dependencies-min.sh"/>
         <File Path="scripts/start-dependencies.sh"/>
         <File Path="scripts/update-dotnet-tools.sh"/>
+        <File Path="scripts/generate-event-metadata.sh"/>
     </Folder>
     <Folder Name="/shared/">
         <Project Path="shared/Api.Shared.Clients.UnitTests/Api.Shared.Clients.UnitTests.csproj"/>

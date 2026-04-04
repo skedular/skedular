@@ -100,11 +100,27 @@ services:
     image: redpandadata/console:latest
     restart: unless-stopped
     depends_on:
+      - schema-registry
       - kafka1
     environment:
       KAFKA_BROKERS: "kafka1:29092"
+      KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry:9100
+      KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
     ports:
       - 8888:8080
+    networks:
+      - skedular_network
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    depends_on:
+      - kafka1
+    ports:
+      - "9100:9100"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
     networks:
       - skedular_network
 
@@ -169,6 +185,12 @@ services:
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Application__Environment: staging
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       FileStorage__UseLocal: false
@@ -258,6 +280,12 @@ services:
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
@@ -372,6 +400,12 @@ services:
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
@@ -476,6 +510,12 @@ services:
       ConnectionStrings__teamdb: ${STAGING_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${STAGING_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${STAGING_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${STAGING_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: staging
       Kafka__OutgoingTopicPrefix: staging
       Booking__ApiKey: ${STAGING_SKEDULAR_BOOKING_APIKEY}
@@ -565,6 +605,12 @@ services:
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Application__Environment: prod
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       FileStorage__UseLocal: false
@@ -656,6 +702,12 @@ services:
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Subgraphs__Booking__Url: http://localhost:10300/v1/graphql
@@ -769,6 +821,12 @@ services:
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}
@@ -873,6 +931,12 @@ services:
       ConnectionStrings__teamdb: ${PRODUCTION_POSTGRES_TEAM_CONNECTIONSTRING}
       ConnectionStrings__coredb: ${PRODUCTION_POSTGRES_CORE_CONNECTIONSTRING}
       Kafka__BootstrapServers: "kafka1:29092"
+      Kafka__UseSchemaRegistry: true
+      Kafka__SchemaRegistry__Url: "http://schema-registry:9100"
+      Kafka__SchemaRegistry__ApiKey: ${PRODUCTION_SCHEMA_REGISTRY_APIKEY:-}
+      Kafka__SchemaRegistry__SecretKey: ${PRODUCTION_SCHEMA_REGISTRY_SECRETKEY:-}
+      Kafka__SchemaRegistry__AutoRegisterSchema: false
+      Kafka__SchemaRegistry__UseLatestVersion: false
       Kafka__IncomingTopicPrefix: prod
       Kafka__OutgoingTopicPrefix: prod
       Booking__ApiKey: ${PRODUCTION_SKEDULAR_BOOKING_APIKEY}

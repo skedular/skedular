@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Events.Skedular.Location.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Location.V1.Value;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Kafka;
@@ -16,7 +17,10 @@ public class MigrationService(IKafkaHelper kafkaHelper, IRepositoryFactory repos
     public async Task MigrateAsync(CancellationToken cancellationToken) =>
         await Task.WhenAll(databaseMigrationService.MigrateAsync(repositoryFactory.DbContext, cancellationToken), CreateTopicsAsync());
 
-    private async Task CreateTopicsAsync() => await kafkaHelper.CreateTopicForEventAsync<Event>();
-    // await kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>();
-    // await kafkaHelper.RegisterValueProtobufSchemaAsync<Event>();
+    private async Task CreateTopicsAsync()
+    {
+        await kafkaHelper.CreateTopicForEventAsync<Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Event>();
+    }
 }

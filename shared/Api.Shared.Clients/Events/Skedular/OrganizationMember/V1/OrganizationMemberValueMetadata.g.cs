@@ -15,14 +15,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value;
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "organization.member.v1.event",
     topicPartitionCount: 3,
-    retryTopicNamePrefix: "organization.member.v1.event.retry",
     retryTopicCount: 1,
     retryTopicPartitionCount: 3,
-    deadLetterTopicName: "organization.member.v1.event.deadletter",
-    deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package organizationmember;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.OrganizationMember.V1.Value\";enum Type {  Type_OrganizationMemberUpserted = 0;  Type_OrganizationMemberDeleted  = 1;}message Event {  Metadata metadata = 1;  Data     data     = 2;}message Metadata {  string                    id            = 1;  string                    domainSource  = 2;  string                    appSource     = 3;  Type                      type          = 4;  google.protobuf.Timestamp time          = 5;  string                    correlationId = 6;}message Data {  OrganizationMember organizationMember = 1;}message OrganizationMember {  string                    id             = 1;  google.protobuf.Timestamp deletedAt      = 2;  string                    organizationId = 3;  string                    customerId     = 4;  Role                      role           = 5;  Status                    status         = 6;}enum Status {  Status_Active   = 0;  Status_Inactive = 1;}enum Role {  Role_Owner         = 0;  Rol_eAdministrator = 1;  Role_Member        = 2;}")]
+    deadLetterTopicPartitionCount: 3)]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

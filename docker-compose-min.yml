@@ -81,12 +81,27 @@ services:
     image: redpandadata/console:latest
     restart: unless-stopped
     depends_on:
+      - schema-registry
       - kafka1
     environment:
       KAFKA_BROKERS: "kafka1:29092"
-      KAFKA_SCHEMAREGISTRY_ENABLED: "FALSE"
+      KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry:9100
+      KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
     ports:
       - 8888:8080
+    networks:
+      - skedular_network
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    depends_on:
+      - kafka1
+    ports:
+      - "9100:9100"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka1:29092"
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9100
     networks:
       - skedular_network
 

@@ -15,14 +15,10 @@ namespace Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key;
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "organization.v1.internal",
     topicPartitionCount: 3,
-    retryTopicNamePrefix: "organization.v1.internal.retry",
     retryTopicCount: 1,
     retryTopicPartitionCount: 3,
-    deadLetterTopicName: "organization.v1.internal.deadletter",
-    deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package organizationinternal;option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.OrganizationInternal.V1.Key\";message Key {  string stripeConnectAccountWebhookKey = 1;}")]
+    deadLetterTopicPartitionCount: 3)]
 public partial class Key : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

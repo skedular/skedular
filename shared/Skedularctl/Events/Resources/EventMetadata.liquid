@@ -15,14 +15,10 @@ namespace {{ namespace }};
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "{{ topic_name }}",
     topicPartitionCount: {{ topic_partition_count }},
-    retryTopicNamePrefix: "{{ retry_topic_name_prefix }}",
     retryTopicCount: {{ retry_topic_name_count }},
     retryTopicPartitionCount: {{ retry_topic_partition_count }},
-    deadLetterTopicName: "{{ dead_letter_topic_name }}",
-    deadLetterTopicPartitionCount: {{ dead_letter_topic_partition_count }},
-    protobufSchema: "{{ protobuf_schema }}")]
+    deadLetterTopicPartitionCount: {{ dead_letter_topic_partition_count }})]
 public partial class {{ event_type }} : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =

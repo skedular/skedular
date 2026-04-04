@@ -1,3 +1,4 @@
+using Api.Shared.Clients.Events.Skedular.Booking.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Booking.V1.Value;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Database;
@@ -19,11 +20,11 @@ public class MigrationService(IKafkaHelper kafkaHelper, IRepositoryFactory repos
     private async Task CreateTopicsAsync()
     {
         await kafkaHelper.CreateTopicForEventAsync<Event>();
-        // await kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>();
-        // await kafkaHelper.RegisterValueProtobufSchemaAsync<Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Event>();
 
         await kafkaHelper.CreateTopicForEventAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
-        // await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key>();
-        // await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
+        await kafkaHelper.RegisterKeyProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Key.Key>();
+        await kafkaHelper.RegisterValueProtobufSchemaAsync<Api.Shared.Clients.Events.Skedular.BookingInternal.V1.Value.Event>();
     }
 }

@@ -15,14 +15,10 @@ namespace Api.Shared.Clients.Events.Skedular.Booking.V1.Value;
 public partial class Metadata : IMetadata { }
 
 [KafkaTopic(
-    topicName: "booking.v1.event",
     topicPartitionCount: 3,
-    retryTopicNamePrefix: "booking.v1.event.retry",
     retryTopicCount: 1,
     retryTopicPartitionCount: 3,
-    deadLetterTopicName: "booking.v1.event.deadletter",
-    deadLetterTopicPartitionCount: 3,
-    protobufSchema: "syntax = \"proto3\";package booking;import \"google/protobuf/timestamp.proto\";option csharp_namespace = \"Api.Shared.Clients.Events.Skedular.Booking.V1.Value\";enum Type {  Type_BookingUpserted = 0;  Type_BookingDeleted  = 1;}message Event {  Metadata metadata = 1;  Data     data     = 2;}message Metadata {  string                    id            = 1;  string                    domainSource  = 2;  string                    appSource     = 3;  Type                      type          = 4;  google.protobuf.Timestamp time          = 5;  string                    correlationId = 6;}message Data { Booking booking = 1; }message Booking {  string                    id                            = 1;  google.protobuf.Timestamp deletedAt                     = 2;  google.protobuf.Timestamp from                          = 3;  google.protobuf.Timestamp until                         = 4;  string                    notes                         = 5;  BookingCategory           category                      = 6;  repeated string           involvedCustomerIds           = 7;  repeated string           involvedOrganizationIds       = 8;  repeated string           involvedLocationIds           = 9;  repeated string           involvedTeamIds               = 10;  repeated Resource         resources                     = 11;  repeated BookingSchedule  Schedules                     = 12;  string                    createdByCustomerId           = 13;  string                    lastModifiedByCustomerId      = 14;  string                    deletedByCustomerId           = 15;  BookingChannel            channel                       = 17;  bool                      hasRecurringInstanceOverrides = 18;}enum BookingCategory{  BookingCategory_WorkingFromHome           = 0;  BookingCategory_WorkingFromOffice         = 1;  BookingCategory_WorkingFromCoworkingSpace = 2;  BookingCategory_SickLeave                 = 3;  BookingCategory_AnnualLeave               = 4;  BookingCategory_WellbeingLeave            = 5;  BookingCategory_ClientOffice              = 6;  BookingCategory_Vacation                  = 7;  BookingCategory_TravelingForWork          = 8;  BookingCategory_NonWorkingDay             = 9;}enum BookingChannel{  BookingChannel_Private     = 0;  BookingChannel_Marketplace = 1;}message Resource {  string id = 1;}message BookingSchedule {  google.protobuf.Timestamp from  = 1;  google.protobuf.Timestamp until = 2;}")]
+    deadLetterTopicPartitionCount: 3)]
 public partial class Event : IMetadataEvent
 {
     private static readonly Regex ValidKafkaTopicCharacters =
