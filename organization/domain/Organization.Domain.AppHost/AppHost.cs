@@ -14,7 +14,7 @@ var temporal = builder.AddTemporalServerContainer("temporal");
 #pragma warning disable ASPIRECERTIFICATES001
 var redis = builder.AddRedis("redis").WithoutHttpsCertificate();
 #pragma warning restore ASPIRECERTIFICATES001
-var useSharedInfrastructureGrpc = DomainAppHostEnvironmentVariables.IsSharedInfrastructureGrpcEnabled();
+var useFakeDependencies = DomainAppHostEnvironmentVariables.IsFakeDependenciesEnabled();
 
 var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
@@ -22,7 +22,7 @@ var sharedInfrastructure = builder
     .WithHttpHealthCheck(Constants.ReadinessPath)
     .WithReference(kafka);
 
-var organizationFakeDependencies = useSharedInfrastructureGrpc
+var organizationFakeDependencies = useFakeDependencies
     ? builder
         .AddProject<Organization_Domain_FakeDependencies>("organizationfakedependencies")
         .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
@@ -71,7 +71,7 @@ var organizationJobs = builder
     .WithReference(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
-if (useSharedInfrastructureGrpc)
+if (useFakeDependencies)
 {
     ArgumentNullException.ThrowIfNull(organizationFakeDependencies);
 

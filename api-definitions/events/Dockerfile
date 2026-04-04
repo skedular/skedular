@@ -8,7 +8,7 @@ RUN apt-get update -y && \
     apt-get install unzip curl -y && \
     apt-get clean
 
-ENV GIT_TAG="34.0"
+ENV GIT_TAG="34.1"
 ENV PROTOC_ZIP=protoc-$GIT_TAG-linux-x86_64.zip
 RUN curl -OL https://github.com/google/protobuf/releases/download/v$GIT_TAG/$PROTOC_ZIP
 RUN unzip -o $PROTOC_ZIP -d /usr/local bin/protoc

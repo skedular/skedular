@@ -166,7 +166,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/booking/version"
                     urlBuilder_.Append("v1/booking/version");
 
@@ -254,7 +254,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
                     request_.Method = new System.Net.Http.HttpMethod("GET");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/booking/raiseGraphqlChange/{topicName}/{id}"
                     urlBuilder_.Append("v1/booking/raiseGraphqlChange/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(topicName, System.Globalization.CultureInfo.InvariantCulture)));
@@ -333,7 +333,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/booking/{bookingId}/republish"
                     urlBuilder_.Append("v1/booking/");
                     urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(bookingId, System.Globalization.CultureInfo.InvariantCulture)));
@@ -868,7 +868,7 @@ namespace Api.Shared.Clients.OpenApi.Skedular.Booking.V1
                     request_.Method = new System.Net.Http.HttpMethod("POST");
 
                     var urlBuilder_ = new System.Text.StringBuilder();
-
+                
                     // Operation Path: "v1/booking/xero/webhook"
                     urlBuilder_.Append("v1/booking/xero/webhook");
 

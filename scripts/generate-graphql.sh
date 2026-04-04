@@ -60,39 +60,49 @@ dotnet run -- schema export --output ../../../api-definitions/graphql/skedular/v
 cd "${BASE_DIR}/booking/domain/Booking.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Booking.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/core/domain/Core.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Core.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/customer/domain/Customer.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Customer.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/location/domain/Location.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Location.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/marketplace/domain/Marketplace.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Marketplace.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/msteams/domain/MsTeams.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/MsTeams.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/organization/domain/Organization.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Organization.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/slack/domain/Slack.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Slack.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/team/domain/Team.Domain.IntegrationTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../apis/Team.Api/schema.graphql
+git checkout ./.graphqlrc.json
 
 cd "${BASE_DIR}/system/Skedular.SystemTests"
 rm -f schema.graphql
 dotnet graphql init -f ../../api-definitions/graphql/skedular/v1/schema.graphql
+git checkout ./.graphqlrc.json

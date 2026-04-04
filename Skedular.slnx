@@ -204,18 +204,15 @@
         <File Path="marketplace/domain/AGENTS.md"/>
         <Project Path="marketplace/domain/Marketplace.Domain.AppHost/Marketplace.Domain.AppHost.csproj"/>
         <File Path="marketplace/domain/Marketplace.Domain.FakeDependencies/AGENTS.md"/>
-        <Project
-                Path="marketplace/domain/Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
-        <Project
-                Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
+        <Project Path="marketplace/domain/Marketplace.Domain.FakeDependencies/Marketplace.Domain.FakeDependencies.csproj"/>
+        <Project Path="marketplace/domain/Marketplace.Domain.IntegrationTests/Marketplace.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/marketplace/jobs/">
         <Project Path="marketplace/jobs/Marketplace.Jobs.UnitTests/Marketplace.Jobs.UnitTests.csproj"/>
         <Project Path="marketplace/jobs/Marketplace.Jobs/Marketplace.Jobs.csproj"/>
     </Folder>
     <Folder Name="/marketplace/processors/">
-        <Project
-                Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj"/>
+        <Project Path="marketplace/processors/Marketplace.Processors.UnitTests/Marketplace.Processors.UnitTests.csproj"/>
         <Project Path="marketplace/processors/Marketplace.Processors/Marketplace.Processors.csproj"/>
     </Folder>
     <Folder Name="/marketplace/shared/">
@@ -265,18 +262,15 @@
         <File Path="organization/domain/AGENTS.md"/>
         <Project Path="organization/domain/Organization.Domain.AppHost/Organization.Domain.AppHost.csproj"/>
         <File Path="organization/domain/Organization.Domain.FakeDependencies/AGENTS.md"/>
-        <Project
-                Path="organization/domain/Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
-        <Project
-                Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
+        <Project Path="organization/domain/Organization.Domain.FakeDependencies/Organization.Domain.FakeDependencies.csproj"/>
+        <Project Path="organization/domain/Organization.Domain.IntegrationTests/Organization.Domain.IntegrationTests.csproj"/>
     </Folder>
     <Folder Name="/organization/jobs/">
         <Project Path="organization/jobs/Organization.Jobs.UnitTests/Organization.Jobs.UnitTests.csproj"/>
         <Project Path="organization/jobs/Organization.Jobs/Organization.Jobs.csproj"/>
     </Folder>
     <Folder Name="/organization/processors/">
-        <Project
-                Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj"/>
+        <Project Path="organization/processors/Organization.Processors.UnitTests/Organization.Processors.UnitTests.csproj"/>
         <Project Path="organization/processors/Organization.Processors/Organization.Processors.csproj"/>
     </Folder>
     <Folder Name="/organization/shared/">
@@ -354,6 +348,7 @@
         <File Path="scripts/lint.sh"/>
         <File Path="scripts/start-dependencies-min.sh"/>
         <File Path="scripts/start-dependencies.sh"/>
+        <File Path="scripts/update-dotnet-tools.sh"/>
     </Folder>
     <Folder Name="/shared/">
         <File Path="shared/Enterprise.Shared/AGENTS.md"/>

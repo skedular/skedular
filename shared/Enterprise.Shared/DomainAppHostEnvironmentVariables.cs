@@ -2,11 +2,11 @@ namespace Enterprise.Shared;
 
 public static class DomainAppHostEnvironmentVariables
 {
-    public const string UseSharedInfrastructureGrpc = "DOMAIN_USE_SHARED_INFRA_GRPC";
+    public const string UseFakeDependencies = "FAKE_DEPENDENCIES";
 
-    public static bool IsSharedInfrastructureGrpcEnabled() =>
-        bool.TryParse(Environment.GetEnvironmentVariable(UseSharedInfrastructureGrpc), out var enabled) && enabled;
+    public static bool IsFakeDependenciesEnabled() =>
+        bool.TryParse(Environment.GetEnvironmentVariable(UseFakeDependencies), out var enabled) && enabled;
 
-    public static void SetSharedInfrastructureGrpc(bool enabled) =>
-        Environment.SetEnvironmentVariable(UseSharedInfrastructureGrpc, enabled.ToString());
+    public static void SetFakeDependencies(bool enabled) =>
+        Environment.SetEnvironmentVariable(UseFakeDependencies, enabled.ToString());
 }

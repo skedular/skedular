@@ -30,7 +30,7 @@ public class Startup
 #pragma warning disable VSTHRD104
 #pragma warning disable VSTHRD002
 #pragma warning disable CA2012
-        DomainAppHostEnvironmentVariables.SetSharedInfrastructureGrpc(true);
+        DomainAppHostEnvironmentVariables.SetFakeDependencies(true);
         var builder = DistributedApplicationTestingBuilder.CreateAsync<MsTeams_Domain_AppHost>().Result;
         var distributedApp = builder.AddDefaultServices().StartAsync(CancellationToken.None).Result;
 
