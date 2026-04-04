@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var coreFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var coreInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(coreDatabase);
 
@@ -49,6 +53,10 @@ var coreApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
 var coreProcessors = builder
@@ -59,6 +67,10 @@ var coreProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
 var coreJobs = builder
@@ -69,6 +81,10 @@ var coreJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
 if (useFakeDependencies)

@@ -70,6 +70,8 @@ internal static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
+            .ThenInclude(query => query!.Product)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -79,6 +81,8 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
+            .ThenInclude(query => query!.Product)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 
@@ -113,6 +117,8 @@ internal static class BookingExtensions
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
+            .ThenInclude(query => query!.Product)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.RecurringBooking)
             .ThenInclude(query => query!.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession)
@@ -122,6 +128,8 @@ internal static class BookingExtensions
             .ThenInclude(query => query!.PaidByOrganization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.ProductVersion)
+            .ThenInclude(query => query!.Product)
+            .ThenInclude(query => query!.Organization)
             .Include(query => query.MarketplaceBooking)
             .ThenInclude(query => query!.StripeCheckoutSession);
 

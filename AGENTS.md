@@ -59,6 +59,14 @@ This file applies to the whole repository.
 - For OpenAPI controller routes, add/change the route in `api-definitions/openapi/skedular/*.yaml` first, regenerate,
   then implement the generated controller/base surface.
 
+## Integration Test Persistence Rule
+
+- In integration-test projects, do not query `DbContext` or Entity Framework directly from tests.
+- If a test needs to inspect persisted state, add or reuse a repository-layer query and assert through that repository
+  method instead.
+- Repository methods may exist specifically to support integration-test assertions; that is preferable to leaking EF
+  into tests.
+
 ## Shared Xero Wiring
 
 - Reusable Xero configuration and Enterprise-level service registration live in `shared/Enterprise.Shared/Accounting`.
@@ -74,3 +82,12 @@ This file applies to the whole repository.
 - `IXeroTokenEncryptionService` is the Xero token wrapper.
 - Both can reuse the same low-level encryption algorithm, but they must stay separate at the service and configuration
   boundary.
+
+## Aspire Readiness Ownership
+
+- Dependency readiness for Aspire-hosted projects belongs in each `AppHost.cs`.
+- If a project uses `.WithReference(...)` to a dependency such as Kafka, Temporal, Redis, a database, shared
+  infrastructure, or fake dependencies, the app host should also add the matching `WaitFor(...)` or
+  `WaitForCompletion(...)` edge there.
+- Do not duplicate startup polling for those dependencies in integration-test `Startup.cs` files when the dependency
+  relationship can be expressed in Aspire.

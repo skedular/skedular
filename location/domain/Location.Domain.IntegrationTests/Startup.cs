@@ -17,7 +17,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Projects;
 using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
-using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace Location.Domain.IntegrationTests;
 
@@ -47,20 +46,6 @@ public class Startup
 
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
-
-        var locationFakeDependenciesHttpClient = distributedApp.CreateHttpClient("locationfakedependencies");
-        ArgumentNullException.ThrowIfNull(locationFakeDependenciesHttpClient.BaseAddress);
-
-#pragma warning disable VSTHRD104
-#pragma warning disable VSTHRD002
-#pragma warning disable CA2012
-        locationFakeDependenciesHttpClient
-            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
-#pragma warning restore CA2012
-#pragma warning restore VSTHRD002
-#pragma warning restore VSTHRD104
 
         var locationApiGrpcEndpoint = distributedApp.GetEndpoint("locationapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(locationApiGrpcEndpoint);

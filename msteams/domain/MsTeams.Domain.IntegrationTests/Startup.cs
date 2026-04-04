@@ -17,7 +17,6 @@ using MsTeams.Shared.Database;
 using Projects;
 using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
-using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace MsTeams.Domain.IntegrationTests;
 
@@ -47,20 +46,6 @@ public class Startup
 
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
-
-        var msTeamsFakeDependenciesHttpClient = distributedApp.CreateHttpClient("msteamsfakedependencies");
-        ArgumentNullException.ThrowIfNull(msTeamsFakeDependenciesHttpClient.BaseAddress);
-
-#pragma warning disable VSTHRD104
-#pragma warning disable VSTHRD002
-#pragma warning disable CA2012
-        msTeamsFakeDependenciesHttpClient
-            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
-#pragma warning restore CA2012
-#pragma warning restore VSTHRD002
-#pragma warning restore VSTHRD104
 
         var msTeamsApiGrpcEndpoint = distributedApp.GetEndpoint("msteamsapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(msTeamsApiGrpcEndpoint);

@@ -29,9 +29,20 @@ This file applies to everything under `shared/Testing.Shared.IntegrationTests`.
   it in each project startup.
 - Keep these helpers transport-correct but lightweight. They should support real HTTP/gRPC interaction without hiding
   too much of the underlying test flow.
+- Integration tests using these helpers should inspect persisted state through repository methods, not by reaching for
+  `DbContext`/Entity Framework directly inside the test classes.
 
 ## Current Patterns
 
 - `Eventually` is the shared polling primitive for async integration assertions.
 - `GrpcChannelFactory` is the shared gRPC client channel helper.
 - `HttpClientExtensions` contains reusable readiness/wait helpers for started test hosts.
+
+## Aspire Rule
+
+- Domain app hosts should own dependency readiness through Aspire resource wiring such as `WithHttpHealthCheck(...)`,
+  `WaitFor(...)`, and `WaitForCompletion(...)`.
+- If a project uses `.WithReference(...)` to a dependency in an app host, prefer adding the matching Aspire
+  `WaitFor(...)` edge in that same app host.
+- Do not add extra liveness/readiness polling inside each integration-test startup unless there is a proved gap that
+  cannot be expressed in the app host.

@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var organizationFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var organizationInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(organizationDatabase);
 
@@ -49,6 +53,10 @@ var organizationApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
 var organizationProcessors = builder
@@ -59,6 +67,10 @@ var organizationProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
 var organizationJobs = builder
@@ -69,6 +81,10 @@ var organizationJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
 if (useFakeDependencies)

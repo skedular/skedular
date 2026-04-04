@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var slackFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var slackInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(slackDatabase);
 
@@ -49,6 +53,10 @@ var slackApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
 var slackProcessors = builder
@@ -59,6 +67,10 @@ var slackProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
 var slackJobs = builder
@@ -69,6 +81,10 @@ var slackJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
 if (useFakeDependencies)

@@ -19,7 +19,6 @@ using Microsoft.Extensions.Hosting.Internal;
 using Projects;
 using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
-using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace Booking.Domain.IntegrationTests;
 
@@ -49,20 +48,6 @@ public class Startup
 
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
-
-        var bookingFakeDependenciesHttpClient = distributedApp.CreateHttpClient("bookingfakedependencies");
-        ArgumentNullException.ThrowIfNull(bookingFakeDependenciesHttpClient.BaseAddress);
-
-#pragma warning disable VSTHRD104
-#pragma warning disable VSTHRD002
-#pragma warning disable CA2012
-        bookingFakeDependenciesHttpClient
-            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
-#pragma warning restore CA2012
-#pragma warning restore VSTHRD002
-#pragma warning restore VSTHRD104
 
         var infrastructureSharedGrpcEndpoint = distributedApp.GetEndpoint("bookingfakedependencies", "Grpc").ToString();
         var bookingApiGrpcEndpoint = distributedApp.GetEndpoint("bookingapi", "Grpc").ToString();

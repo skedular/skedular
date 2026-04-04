@@ -144,6 +144,16 @@ Relevant code:
 
 - `Repositories/BookingRepository.cs`
 
+## Integration Test Query Rule
+
+- Repository methods may be added specifically to support booking integration-test assertions.
+- If an integration test needs persisted-state inspection, expose that query through a repository instead of reaching
+  for `BookingDbContext` or Entity Framework directly in the test project.
+
+Relevant code:
+
+- `Repositories/OrganizationArrearsInvoiceRepository.cs`
+
 ## Edit Checklist
 
 If you edit recurring in-arrears logic, verify:

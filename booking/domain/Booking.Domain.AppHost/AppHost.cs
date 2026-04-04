@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var bookingFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var bookingInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(bookingDatabase);
 
@@ -50,6 +54,11 @@ var bookingApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(sharedInfrastructure)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
 var bookingProcessors = builder
@@ -61,6 +70,11 @@ var bookingProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(sharedInfrastructure)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
 var bookingJobs = builder
@@ -72,6 +86,11 @@ var bookingJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(sharedInfrastructure)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
 if (useFakeDependencies)

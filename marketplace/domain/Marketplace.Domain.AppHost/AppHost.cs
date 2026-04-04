@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var marketplaceFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var marketplaceInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(marketplaceDatabase);
 
@@ -49,6 +53,10 @@ var marketplaceApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
 var marketplaceProcessors = builder
@@ -59,6 +67,10 @@ var marketplaceProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
 var marketplaceJobs = builder
@@ -69,6 +81,10 @@ var marketplaceJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
 if (useFakeDependencies)

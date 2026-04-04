@@ -86,6 +86,21 @@ public interface ITemporalService
     /// </summary>
     Task SignalRunOrganizationArrearsBillingWorkflowStopAsync(string organizationId, CancellationToken cancellationToken);
 
+    /// <summary>
+    ///     Terminates the organization in-arrears billing workflow immediately.
+    ///     Intended for deterministic cleanup paths such as integration-test teardown.
+    /// </summary>
+    Task TerminateRunOrganizationArrearsBillingWorkflowAsync(string organizationId, CancellationToken cancellationToken);
+
+    Task TerminateWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        string organizationArrearsInvoiceId,
+        CancellationToken cancellationToken);
+
+    Task TerminateWorkflowMaintainAccountingInvoiceStateAsync(
+        string localEntityType,
+        string localEntityId,
+        CancellationToken cancellationToken);
+
     Task StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
         MaintainOrganizationArrearsInvoiceAccountingStateInput args,
         CancellationToken cancellationToken);
@@ -297,6 +312,59 @@ public class TemporalService(
             .SignalAsync(
                 workflow => workflow.StopAsync(),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+    }
+
+    public async Task TerminateRunOrganizationArrearsBillingWorkflowAsync(string organizationId, CancellationToken cancellationToken)
+    {
+        var workflowId = ToOrganizationArrearsBillingWorkflowId(organizationId);
+        if (!await temporalHelperService.IsRunningAsync<RunOrganizationArrearsBilling>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<RunOrganizationArrearsBilling>(workflowId)
+            .TerminateAsync(
+                "Integration test cleanup",
+                new WorkflowTerminateOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+    }
+
+    public async Task TerminateWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(
+        string organizationArrearsInvoiceId,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = temporalHelperService.ToId(
+            $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{organizationArrearsInvoiceId}");
+
+        if (!await temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId)
+            .TerminateAsync(
+                "Integration test cleanup",
+                new WorkflowTerminateOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+    }
+
+    public async Task TerminateWorkflowMaintainAccountingInvoiceStateAsync(
+        string localEntityType,
+        string localEntityId,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{localEntityType}-{localEntityId}");
+
+        if (!await temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<MaintainAccountingInvoiceState>(workflowId)
+            .TerminateAsync(
+                "Integration test cleanup",
+                new WorkflowTerminateOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
     }
 
     public async Task StartWorkflowMaintainOrganizationArrearsInvoiceAccountingStateAsync(

@@ -18,7 +18,6 @@ using Organization.Shared.Database;
 using Projects;
 using Testing.Shared.IntegrationTests;
 using Testing.Shared.IntegrationTests.Aspire;
-using Constants = Enterprise.Shared.HealthCheck.Constants;
 
 namespace Organization.Domain.IntegrationTests;
 
@@ -48,20 +47,6 @@ public class Startup
 
         Console.WriteLine($"pgadmin: {pgadmin}");
         Console.WriteLine($"kafkaUi: {kafkaUi}");
-
-        var organizationFakeDependenciesHttpClient = distributedApp.CreateHttpClient("organizationfakedependencies");
-        ArgumentNullException.ThrowIfNull(organizationFakeDependenciesHttpClient.BaseAddress);
-
-#pragma warning disable VSTHRD104
-#pragma warning disable VSTHRD002
-#pragma warning disable CA2012
-        organizationFakeDependenciesHttpClient
-            .WaitForSuccessfulGetAsync(Constants.LivenessPath, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
-#pragma warning restore CA2012
-#pragma warning restore VSTHRD002
-#pragma warning restore VSTHRD104
 
         var organizationApiGrpcEndpoint = distributedApp.GetEndpoint("organizationapi", "Grpc").ToString();
         ArgumentException.ThrowIfNullOrWhiteSpace(organizationApiGrpcEndpoint);

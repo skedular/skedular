@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var customerFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var customerInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(customerDatabase);
 
@@ -49,6 +53,10 @@ var customerApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
 var customerProcessors = builder
@@ -59,6 +67,10 @@ var customerProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
 var customerJobs = builder
@@ -69,6 +81,10 @@ var customerJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
 if (useFakeDependencies)

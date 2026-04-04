@@ -18,7 +18,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 /******************************************************************************************************************************/
 var bookingDatabase = postgres.AddDatabase("bookingdb");
@@ -30,6 +31,9 @@ var bookingInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(bookingDatabase);
 
@@ -50,6 +54,10 @@ var bookingApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
 builder
@@ -69,6 +77,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 
 builder
@@ -88,6 +100,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(bookingDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(bookingDatabase)
     .WaitForCompletion(bookingInfrastructure);
 /******************************************************************************************************************************/
 
@@ -101,6 +117,9 @@ var coreInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(coreDatabase);
 
@@ -121,6 +140,10 @@ var coreApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
 builder
@@ -140,6 +163,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 
 builder
@@ -159,6 +186,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(coreDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(coreDatabase)
     .WaitForCompletion(coreInfrastructure);
 /******************************************************************************************************************************/
 
@@ -172,6 +203,9 @@ var customerInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(customerDatabase);
 
@@ -192,6 +226,10 @@ var customerApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
 builder
@@ -211,6 +249,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 
 builder
@@ -230,6 +272,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(customerDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(customerDatabase)
     .WaitForCompletion(customerInfrastructure);
 /******************************************************************************************************************************/
 
@@ -243,6 +289,9 @@ var locationInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(locationDatabase);
 
@@ -263,6 +312,10 @@ var locationApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
 builder
@@ -282,6 +335,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
 builder
@@ -301,6 +358,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 /******************************************************************************************************************************/
 
@@ -314,6 +375,9 @@ var marketplaceInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(marketplaceDatabase);
 
@@ -334,6 +398,10 @@ var marketplaceApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
 builder
@@ -353,6 +421,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 
 builder
@@ -372,6 +444,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(marketplaceDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(marketplaceDatabase)
     .WaitForCompletion(marketplaceInfrastructure);
 /******************************************************************************************************************************/
 
@@ -385,6 +461,9 @@ var msteamsInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msteamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(msteamsDatabase);
 
@@ -405,6 +484,10 @@ var msteamsApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msteamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msteamsDatabase)
     .WaitForCompletion(msteamsInfrastructure);
 
 builder
@@ -424,6 +507,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msteamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msteamsDatabase)
     .WaitForCompletion(msteamsInfrastructure);
 
 builder
@@ -443,6 +530,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msteamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msteamsDatabase)
     .WaitForCompletion(msteamsInfrastructure);
 /******************************************************************************************************************************/
 
@@ -456,6 +547,9 @@ var organizationInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(organizationDatabase);
 
@@ -476,6 +570,10 @@ var organizationApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
 builder
@@ -495,6 +593,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 
 builder
@@ -514,6 +616,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(organizationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(organizationDatabase)
     .WaitForCompletion(organizationInfrastructure);
 /******************************************************************************************************************************/
 
@@ -527,6 +633,9 @@ var slackInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(slackDatabase);
 
@@ -547,6 +656,10 @@ var slackApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
 builder
@@ -566,6 +679,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 
 builder
@@ -585,6 +702,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(slackDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(slackDatabase)
     .WaitForCompletion(slackInfrastructure);
 /******************************************************************************************************************************/
 
@@ -598,6 +719,9 @@ var teamInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(teamDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(teamDatabase);
 
@@ -618,6 +742,10 @@ var teamApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(teamDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(teamDatabase)
     .WaitForCompletion(teamInfrastructure);
 
 builder
@@ -637,6 +765,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(teamDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(teamDatabase)
     .WaitForCompletion(teamInfrastructure);
 
 builder
@@ -656,6 +788,10 @@ builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(teamDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(teamDatabase)
     .WaitForCompletion(teamInfrastructure);
 /******************************************************************************************************************************/
 

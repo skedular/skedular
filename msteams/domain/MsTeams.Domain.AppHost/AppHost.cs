@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var msTeamsFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var msTeamsInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msTeamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(msTeamsDatabase);
 
@@ -49,6 +53,10 @@ var msTeamsApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msTeamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msTeamsDatabase)
     .WaitForCompletion(msTeamsInfrastructure);
 
 var msTeamsProcessors = builder
@@ -59,6 +67,10 @@ var msTeamsProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msTeamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msTeamsDatabase)
     .WaitForCompletion(msTeamsInfrastructure);
 
 var msTeamsJobs = builder
@@ -69,6 +81,10 @@ var msTeamsJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(msTeamsDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(msTeamsDatabase)
     .WaitForCompletion(msTeamsInfrastructure);
 
 if (useFakeDependencies)

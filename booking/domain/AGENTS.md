@@ -45,6 +45,13 @@ For DI-backed integration tests:
 - prefer repository factories over manually creating raw db contexts in the test body
 - use the normal `CancellationToken` parameter pattern
 
+## Aspire App Host Rule
+
+- Keep booking dependency readiness in `Booking.Domain.AppHost/AppHost.cs`.
+- If a booking resource references Kafka, Temporal, Redis, the booking database, shared infrastructure, or fake
+  dependencies, add the matching `WaitFor(...)` or `WaitForCompletion(...)` there instead of polling for it in
+  integration-test startup.
+
 ## Anti-Pattern To Avoid
 
 - writing a planner-only or service-only test and calling it an integration test

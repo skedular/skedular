@@ -20,7 +20,8 @@ var sharedInfrastructure = builder
     .AddProject<Infrastructure_Shared>("infrastructureshared")
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", Environments.Development)
     .WithHttpHealthCheck(Constants.ReadinessPath)
-    .WithReference(kafka);
+    .WithReference(kafka)
+    .WaitFor(kafka);
 
 var locationFakeDependencies = useFakeDependencies
     ? builder
@@ -38,6 +39,9 @@ var locationInfrastructure = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
     .WaitFor(sharedInfrastructure)
     .WaitFor(locationDatabase);
 
@@ -49,6 +53,10 @@ var locationApi = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
 var locationProcessors = builder
@@ -59,6 +67,10 @@ var locationProcessors = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
 var locationJobs = builder
@@ -69,6 +81,10 @@ var locationJobs = builder
     .WithReference(temporal)
     .WithReference(redis)
     .WithReference(locationDatabase)
+    .WaitFor(kafka)
+    .WaitFor(temporal)
+    .WaitFor(redis)
+    .WaitFor(locationDatabase)
     .WaitForCompletion(locationInfrastructure);
 
 if (useFakeDependencies)
