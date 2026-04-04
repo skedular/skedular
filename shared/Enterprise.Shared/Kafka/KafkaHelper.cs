@@ -139,6 +139,7 @@ public class KafkaHelper : IKafkaHelper
             });
 
         await serializer.SerializeAsync(new TEvent(), new SerializationContext(componentType, topic));
+        await _schemaRegistryClient.UpdateCompatibilityAsync(Compatibility.Forward, GetSubjectName(topic, componentType));
     }
 
     private (string Topic, string[] RetryTopics, string DeadLetterTopic) GetTopicNames<TEvent>() where TEvent : IEvent, new()
@@ -151,4 +152,12 @@ public class KafkaHelper : IKafkaHelper
 
         return (topic, retryTopics, @event.GetDeadLetterTopicName(_kafkaConfiguration.OutgoingTopicPrefix));
     }
+
+    private static string GetSubjectName(string topic, MessageComponentType componentType) =>
+        componentType switch
+        {
+            MessageComponentType.Key => $"{topic}-key",
+            MessageComponentType.Value => $"{topic}-value",
+            _ => throw new ArgumentOutOfRangeException(nameof(componentType), componentType, null)
+        };
 }
