@@ -17,12 +17,37 @@
         <LangVersion>14</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <!-- Event protobuf classes are generated into obj/ instead of checked-in source paths.
+             Suppress the protobuf target warning about those generated files not being in the old expected location. -->
+        <Protobuf_NoWarnMissingExpected>true</Protobuf_NoWarnMissingExpected>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="GitVersion.MsBuild" Version="6.7.0">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Grpc.Tools" Version="2.80.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Protobuf Include="../../api-definitions/events/skedular/booking_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/booking_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/booking_internal_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/booking_internal_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/customer_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/customer_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/location_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/location_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/marketplace_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/marketplace_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_internal_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_internal_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_member_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_member_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/organization_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/team_v1_key.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
+        <Protobuf Include="../../api-definitions/events/skedular/team_v1_value.proto" GrpcServices="None" ProtoRoot="../../api-definitions/events/skedular" OutputOptions="file_extension=.g.cs" CompileOutputs="true"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -35,4 +60,14 @@
     <ItemGroup>
         <ProjectReference Include="../Enterprise.Shared/Enterprise.Shared.csproj"/>
     </ItemGroup>
+
+    <Target Name="IncludeGeneratedEventProtobufSources" BeforeTargets="CoreCompile">
+        <ItemGroup>
+            <!-- Event protobuf classes are generated into obj/ and intentionally not checked into the repo.
+                 Include those transient outputs after protobuf generation so checked-in metadata companions can compile
+                 against them on clean builds and in CI. -->
+            <Compile Include="$(IntermediateOutputPath)*Key.g.cs" Visible="false"/>
+            <Compile Include="$(IntermediateOutputPath)*Value.g.cs" Visible="false"/>
+        </ItemGroup>
+    </Target>
 </Project>

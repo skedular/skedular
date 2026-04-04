@@ -36,7 +36,7 @@ public partial class {{ event_type }} : IMetadataEvent
     public static Metadata NewMetadata(
         string domainSource,
         string appSource,
-        Type type,
+        global::{{ namespace }}.Type type,
         string? correlationId,
         Guid? id = null) =>
         new() {
