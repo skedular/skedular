@@ -104,8 +104,8 @@ services:
       - kafka1
     environment:
       KAFKA_BROKERS: "kafka1:29092"
-      KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry:9100
-      KAFKA_SCHEMAREGISTRY_ENABLED: "TRUE"
+      SCHEMAREGISTRY_ENABLED: "true"
+      SCHEMAREGISTRY_URLS: "http://schema-registry:9100"
     ports:
       - 8888:8080
     networks:
