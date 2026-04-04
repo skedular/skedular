@@ -1,4 +1,3 @@
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using MsTeams.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -14,13 +13,13 @@ public interface ITemporalService
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
-    ITemporalHelperService temporalHelperService) : ITemporalService
+    IWorkflowIdService workflowIdService) : ITemporalService
 {
     public async Task StartWorkflowReSyncMsTeamsAsync(ReSyncMsTeamsInput args, CancellationToken cancellationToken) =>
         await temporalClient.StartWorkflowAsync((ReSyncMsTeams workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.ReSyncMsTeamsPrefix}-{args.TenantId}"),
+                Id = workflowIdService.ReSyncMsTeams(args.TenantId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

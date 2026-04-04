@@ -1,4 +1,3 @@
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Organization.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -26,7 +25,7 @@ public interface ITemporalService
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
-    ITemporalHelperService temporalHelperService) : ITemporalService
+    IWorkflowIdService workflowIdService) : ITemporalService
 {
     public async Task StartWorkflowGenerateOrganizationDailyAnalyticsAsync(
         GenerateOrganizationDailyAnalyticsInput args,
@@ -34,7 +33,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((GenerateOrganizationDailyAnalytics workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateOrganizationDailyAnalyticsPrefix}-{args.OrganizationId}"),
+                Id = workflowIdService.GenerateOrganizationDailyAnalytics(args.OrganizationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -48,7 +47,7 @@ public class TemporalService(
     {
         var workflowOptions = new WorkflowOptions
         {
-            Id = temporalHelperService.ToId($"{Constants.RecomputeOrganizationBookingDerivedStatePrefix}-{args.OrganizationId}"),
+            Id = workflowIdService.RecomputeOrganizationBookingDerivedState(args.OrganizationId),
             TaskQueue = temporalConfiguration.Worker.TaskQueue,
             RetryPolicy = null,
             IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -66,7 +65,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((ReSyncAzureTenant workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.ReSyncAzureTenantPrefix}-{args.TenantId}"),
+                Id = workflowIdService.ReSyncAzureTenant(args.TenantId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -80,7 +79,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((AddOrganizationStripePaymentMethod workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.ClientSecret),
+                Id = workflowIdService.AddOrganizationStripePaymentMethod(args.ClientSecret),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -92,7 +91,8 @@ public class TemporalService(
         StripePaymentMethodEventState args,
         CancellationToken cancellationToken)
     {
-        var handle = temporalClient.GetWorkflowHandle<AddOrganizationStripePaymentMethod>(temporalHelperService.ToId(clientSecret));
+        var handle = temporalClient.GetWorkflowHandle<AddOrganizationStripePaymentMethod>(
+            workflowIdService.AddOrganizationStripePaymentMethod(clientSecret));
 
         await handle.SignalAsync(
             workflow => workflow.StripePaymentMethodEventReceivedAsync(args),

@@ -1,4 +1,3 @@
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -22,7 +21,7 @@ public interface ITemporalService
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
-    ITemporalHelperService temporalHelperService) : ITemporalService
+    IWorkflowIdService workflowIdService) : ITemporalService
 {
     public async Task StartWorkflowGenerateLocationDailyAnalyticsAsync(
         GenerateLocationDailyAnalyticsInput args,
@@ -30,7 +29,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((GenerateLocationDailyAnalytics workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}"),
+                Id = workflowIdService.GenerateLocationDailyAnalytics(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -44,7 +43,7 @@ public class TemporalService(
     {
         var workflowOptions = new WorkflowOptions
         {
-            Id = temporalHelperService.ToId($"{Constants.RecomputeLocationBookingDerivedStatePrefix}-{args.LocationId}"),
+            Id = workflowIdService.RecomputeLocationBookingDerivedState(args.LocationId),
             TaskQueue = temporalConfiguration.Worker.TaskQueue,
             RetryPolicy = null,
             IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -64,7 +63,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((ComputeOrganizationLocationsAndProductsRelationships workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{args.OrganizationId}"),
+                Id = workflowIdService.ComputeOrganizationLocationsAndProductsRelationships(args.OrganizationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

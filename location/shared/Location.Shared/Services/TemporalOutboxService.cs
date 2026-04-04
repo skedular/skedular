@@ -2,7 +2,6 @@ using System.Text.Json;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Location.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -25,7 +24,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
     TemporalConfiguration temporalConfiguration,
-    ITemporalHelperService temporalHelperService,
+    IWorkflowIdService workflowIdService,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxService
 {
     private static readonly string s_generateLocationDailyAnalytics = typeof(GenerateLocationDailyAnalytics).ToWorkflowType();
@@ -40,7 +39,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{args.LocationId}"),
+                Id = workflowIdService.GenerateLocationDailyAnalytics(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -56,7 +55,7 @@ public class TemporalOutboxService(
                 args,
                 new WorkflowOptions
                 {
-                    Id = temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{args.OrganizationId}"),
+                    Id = workflowIdService.ComputeOrganizationLocationsAndProductsRelationships(args.OrganizationId),
                     TaskQueue = temporalConfiguration.Worker.TaskQueue,
                     RetryPolicy = null,
                     IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -69,7 +68,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.NewLocationJoinedPrefix}-{args.LocationId}"),
+                Id = workflowIdService.NewLocationJoined(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

@@ -1,5 +1,4 @@
 using Customer.Shared.Workflows;
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
@@ -19,7 +18,7 @@ public interface ITemporalService
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
-    ITemporalHelperService temporalHelperService) : ITemporalService
+    IWorkflowIdService workflowIdService) : ITemporalService
 {
     public async Task StartWorkflowAddCustomerStripePaymentMethodAsync(
         AddCustomerStripePaymentMethodInput args,
@@ -27,7 +26,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((AddCustomerStripePaymentMethod workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.ClientSecret),
+                Id = workflowIdService.AddCustomerStripePaymentMethod(args.ClientSecret),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -39,7 +38,8 @@ public class TemporalService(
         StripePaymentMethodEventState args,
         CancellationToken cancellationToken)
     {
-        var handle = temporalClient.GetWorkflowHandle<AddCustomerStripePaymentMethod>(temporalHelperService.ToId(clientSecret));
+        var handle = temporalClient.GetWorkflowHandle<AddCustomerStripePaymentMethod>(
+            workflowIdService.AddCustomerStripePaymentMethod(clientSecret));
 
         await handle.SignalAsync(
             workflow => workflow.StripePaymentMethodEventReceivedAsync(args),

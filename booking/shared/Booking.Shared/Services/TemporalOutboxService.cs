@@ -126,6 +126,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 /// </summary>
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
+    IWorkflowIdService workflowIdService,
     ITemporalHelperService temporalHelperService,
     TemporalConfiguration temporalConfiguration,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
@@ -175,7 +176,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{args.BookingId}"),
+                Id = workflowIdService.PayBookingViaCard(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -187,7 +188,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.InitialArrearsBookingInvoicePrefix}-{args.BookingId}"),
+                Id = workflowIdService.GenerateInitialArrearsBookingInvoice(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -199,7 +200,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{args.BookingId}"),
+                Id = workflowIdService.PayBookingViaBankTransfer(args.BookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -211,7 +212,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.RecurringBookingId),
+                Id = workflowIdService.BookPrivateRecurringResources(args.RecurringBookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -226,7 +227,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.MarketplaceBookingSubscriptionId),
+                Id = workflowIdService.BookMarketplaceBookingSubscriptionResources(args.MarketplaceBookingSubscriptionId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -236,7 +237,7 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowPayBookingViaCardDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"),
+            workflowIdService.PayBookingViaCard(bookingId),
             s_payBookingViaCardDeleteBookingAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
@@ -246,7 +247,7 @@ public class TemporalOutboxService(
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"),
+            workflowIdService.PayBookingViaCard(bookingId),
             s_payBookingViaCardSetPaymentStatusAsync,
             executionArgs,
             new WorkflowSignalOptions(),
@@ -257,7 +258,7 @@ public class TemporalOutboxService(
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaCardPrefix}-{recurringBookingId}"),
+            workflowIdService.PayRecurringBookingViaCard(recurringBookingId),
             s_payRecurringBookingViaCardSetPaymentStatusAsync,
             executionArgs,
             new WorkflowSignalOptions(),
@@ -268,7 +269,7 @@ public class TemporalOutboxService(
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{recurringBookingId}"),
+            workflowIdService.PayRecurringBookingViaBankTransfer(recurringBookingId),
             s_payRecurringBookingViaBankTransferSetPaymentStatusAsync,
             executionArgs,
             new WorkflowSignalOptions(),
@@ -279,7 +280,7 @@ public class TemporalOutboxService(
         SetPaymentStatusArgs executionArgs,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{bookingId}"),
+            workflowIdService.PayBookingViaBankTransfer(bookingId),
             s_payBookingViaBankTransferSetPaymentStatusAsync,
             executionArgs,
             new WorkflowSignalOptions(),
@@ -287,14 +288,14 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowPayBookingViaBankTransferDeleteBooking(string bookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId($"{Constants.PaidViaBankTransferPrefix}-{bookingId}"),
+            workflowIdService.PayBookingViaBankTransfer(bookingId),
             s_payBookingViaBankTransferDeleteBookingAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
 
     public void SignalWorkflowBookPrivateRecurringResourcesUpdated(string recurringBookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(recurringBookingId),
+            workflowIdService.BookPrivateRecurringResources(recurringBookingId),
             s_bookPrivateRecurringResourcesRecurringBookingUpdatedAsync,
             new PrivateRecurringBookingUpdatedArgs(recurringBookingId),
             new WorkflowSignalOptions(),
@@ -302,7 +303,7 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowBookPrivateRecurringResourcesDeleted(string recurringBookingId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(recurringBookingId),
+            workflowIdService.BookPrivateRecurringResources(recurringBookingId),
             s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync,
             new PrivateRecurringBookingDeletedArgs(recurringBookingId),
             new WorkflowSignalOptions(),
@@ -312,7 +313,7 @@ public class TemporalOutboxService(
         string marketplaceBookingSubscriptionId,
         IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(marketplaceBookingSubscriptionId),
+            workflowIdService.BookMarketplaceBookingSubscriptionResources(marketplaceBookingSubscriptionId),
             s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync,
             new MarketplaceBookingSubscriptionDeletedArgs(marketplaceBookingSubscriptionId),
             new WorkflowSignalOptions(),
@@ -514,7 +515,7 @@ public class TemporalOutboxService(
                         workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
                     new WorkflowOptions
                     {
-                        Id = temporalHelperService.ToId(input.RecurringBookingId),
+                        Id = workflowIdService.BookPrivateRecurringResources(input.RecurringBookingId),
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -541,7 +542,7 @@ public class TemporalOutboxService(
                         workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
                     new WorkflowOptions
                     {
-                        Id = temporalHelperService.ToId(input.RecurringBookingId),
+                        Id = workflowIdService.BookPrivateRecurringResources(input.RecurringBookingId),
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -570,7 +571,7 @@ public class TemporalOutboxService(
                         workflow.ExecuteAsync(new BookMarketplaceBookingSubscriptionResourcesInput(input.MarketplaceBookingSubscriptionId)),
                     new WorkflowOptions
                     {
-                        Id = temporalHelperService.ToId(input.MarketplaceBookingSubscriptionId),
+                        Id = workflowIdService.BookMarketplaceBookingSubscriptionResources(input.MarketplaceBookingSubscriptionId),
                         TaskQueue = temporalConfiguration.Worker.TaskQueue,
                         RetryPolicy = null,
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,

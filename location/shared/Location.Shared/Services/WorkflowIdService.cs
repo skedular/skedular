@@ -1,0 +1,27 @@
+using Enterprise.Shared.Temporal;
+using Location.Shared.Workflows;
+
+namespace Location.Shared.Services;
+
+public interface IWorkflowIdService
+{
+    string GenerateLocationDailyAnalytics(string locationId);
+    string RecomputeLocationBookingDerivedState(string locationId);
+    string ComputeOrganizationLocationsAndProductsRelationships(string organizationId);
+    string NewLocationJoined(string locationId);
+}
+
+public class WorkflowIdService(ITemporalHelperService temporalHelperService) : IWorkflowIdService
+{
+    public string GenerateLocationDailyAnalytics(string locationId) =>
+        temporalHelperService.ToId($"{Constants.GenerateLocationDailyAnalyticsPrefix}-{locationId}");
+
+    public string RecomputeLocationBookingDerivedState(string locationId) =>
+        temporalHelperService.ToId($"{Constants.RecomputeLocationBookingDerivedStatePrefix}-{locationId}");
+
+    public string ComputeOrganizationLocationsAndProductsRelationships(string organizationId) =>
+        temporalHelperService.ToId($"{Constants.ComputeLocationProductRelationshipsPrefix}-{organizationId}");
+
+    public string NewLocationJoined(string locationId) =>
+        temporalHelperService.ToId($"{Constants.NewLocationJoinedPrefix}-{locationId}");
+}

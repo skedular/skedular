@@ -12,3 +12,12 @@ This file applies to everything under `shared/Enterprise.Shared`.
 
 - `DomainAppHostEnvironmentVariables` lives here because it is shared by app hosts and integration tests.
 - Do not move app-host-wide toggles into `Infrastructure.Shared` unless they are truly owned by that host alone.
+
+## Unit Test File Shape
+
+- For unit tests of shared services, keep one test class/file per public method instead of one large `...Should.cs` file
+  covering the whole service.
+- Group them under the service namespace, for example `...TemporalHelperServiceTests`, with files like `ToIdShould.cs`.
+- Prefer injected test inputs over fixed local strings unless the test is validating a specific literal contract.
+- When a service dependency is frozen/injected into the SUT, keep that dependency before `sut` in the test method
+  signature, and keep random inputs after `sut`.

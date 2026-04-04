@@ -91,3 +91,24 @@ This file applies to the whole repository.
   `WaitForCompletion(...)` edge there.
 - Do not duplicate startup polling for those dependencies in integration-test `Startup.cs` files when the dependency
   relationship can be expressed in Aspire.
+
+## Workflow ID Ownership
+
+- Workflow ID construction belongs in a domain-shared workflow ID service, not inline at Temporal call sites.
+- When a domain starts, signals, queries, or terminates workflows, route the deterministic ID generation through that
+  domain's shared `WorkflowIdService` interface.
+- Keep raw prefixes and ID-shape rules centralized there so production code and unit tests share the same contract.
+
+## Unit Test File Shape
+
+- Prefer method-based unit test files for service tests.
+- If a service under test has multiple public methods, do not collapse all coverage into one `...Should.cs` file.
+- Keep the namespace grouped by the service, for example `...WorkflowIdServiceTests`, but create one test class/file per
+  method, such as `GenerateLocationResourcesSlotsShould.cs`.
+- Even very small tests should follow that structure when they are testing different public methods.
+- In unit tests, prefer injected test inputs over fixed local strings unless the test is validating a specific literal
+  contract.
+- Order unit-test parameters as:
+  1. frozen/injected constructor dependencies
+  2. `sut`
+  3. random test inputs and expected values

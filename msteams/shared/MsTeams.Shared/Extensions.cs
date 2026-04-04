@@ -21,6 +21,7 @@ public static class Extensions
 
         public IServiceCollection AddDomainSharedServices() =>
             services
+                .AddSingleton<IWorkflowIdService, WorkflowIdService>()
                 .AddSingleton<ITemporalOutboxService, TemporalOutboxService>()
                 .AddSingleton<ITemporalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())

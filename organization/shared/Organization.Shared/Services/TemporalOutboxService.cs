@@ -26,6 +26,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
+    IWorkflowIdService workflowIdService,
     ITemporalHelperService temporalHelperService,
     TemporalConfiguration temporalConfiguration,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
@@ -52,7 +53,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.OrganizationOfferingId),
+                Id = workflowIdService.ScheduleRenewOrganizationOffering(args.OrganizationOfferingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -65,7 +66,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.JoinInvitationId),
+                Id = workflowIdService.InviteToJoin(args.JoinInvitationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -78,7 +79,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateOrganizationDailyAnalyticsPrefix}-{args.OrganizationId}"),
+                Id = workflowIdService.GenerateOrganizationDailyAnalytics(args.OrganizationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -91,7 +92,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.MaintainOrganizationXeroConnectionPrefix}-{args.OrganizationId}"),
+                Id = workflowIdService.MaintainOrganizationXeroConnection(args.OrganizationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -104,7 +105,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.ReSyncAzureTenantPrefix}-{args.TenantId}"),
+                Id = workflowIdService.ReSyncAzureTenant(args.TenantId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -117,8 +118,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(
-                    $"{Constants.NewOrganizationJoinedPrefix}-{args.OrganizationId ?? string.Empty}-{args.OrganizationCustomDomain ?? string.Empty}"),
+                Id = workflowIdService.NewOrganizationJoined(args.OrganizationId, args.OrganizationCustomDomain),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -127,14 +127,14 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowScheduleRenewOrganizationOfferingCancelOffering(string offeringId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(offeringId),
+            workflowIdService.ScheduleRenewOrganizationOffering(offeringId),
             s_scheduleRenewOrganizationOfferingCancelOfferingAsync,
             new WorkflowSignalOptions(),
             unitOfWork);
 
     public void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(joinInvitationId),
+            workflowIdService.InviteToJoin(joinInvitationId),
             s_inviteToJoinOrganizationInvitationStatusChangedAsync,
             new WorkflowSignalOptions(),
             unitOfWork);

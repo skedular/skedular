@@ -46,3 +46,15 @@ This file covers `organization/shared/`.
   concern.
 - Refresh failures that require reconnect should deactivate the org Xero connection and persist a reconnect-required
   error instead of silently continuing.
+
+## Workflow ID Rule
+
+- Organization Temporal workflow IDs belong in `organization/shared/Organization.Shared/Services/WorkflowIdService.cs`.
+- Do not rebuild organization workflow IDs inline in Temporal services, outbox services, or tests.
+
+## Workflow ID Test Shape
+
+- Keep organization workflow ID unit tests split one class/file per `WorkflowIdService` method under
+  `Organization.Shared.UnitTests/Services/WorkflowIdServiceTests`.
+- In organization unit tests, keep frozen/injected constructor dependencies before `sut`, and keep random inputs after
+  `sut`.

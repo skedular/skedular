@@ -97,3 +97,15 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - End-to-end workflow behavior does not belong in booking shared unit tests.
 - If you are validating real API + Temporal + DB effects, use system tests instead of inventing fakes in booking-local
   integration tests.
+
+## Workflow ID Rule
+
+- Booking workflow IDs belong in `booking/shared/Booking.Shared/Services/WorkflowIdService.cs`.
+- Do not inline Temporal workflow ID prefixes or string interpolation in booking services, outbox services, or tests.
+- If a workflow ID shape changes, update the workflow ID service and its unit tests instead of patching call sites one by one.
+
+## Workflow ID Test Shape
+
+- Keep booking workflow ID unit tests under `Booking.Shared.UnitTests/Services/WorkflowIdServiceTests`.
+- Use one test class/file per workflow ID method, not one monolithic workflow ID test file.
+- In booking unit tests, keep frozen/injected constructor dependencies before `sut`, and keep random inputs after `sut`.

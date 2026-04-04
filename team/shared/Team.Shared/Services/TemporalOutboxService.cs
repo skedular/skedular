@@ -22,6 +22,7 @@ public class TemporalOutboxService(
     ITemporalClient temporalClient,
     TemporalConfiguration temporalConfiguration,
     ITemporalHelperService temporalHelperService,
+    IWorkflowIdService workflowIdService,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor,
     ITemporalSignalOutboxWorkflowExecutor temporalSignalOutboxWorkflowExecutor) : ITemporalOutboxService
 {
@@ -35,7 +36,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(args.JoinInvitationId),
+                Id = workflowIdService.InviteToJoin(args.JoinInvitationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -45,7 +46,7 @@ public class TemporalOutboxService(
 
     public void SignalWorkflowInviteToJoinInvitationStatusChanged(string joinInvitationId, IUnitOfWork unitOfWork) =>
         temporalSignalOutboxWorkflowExecutor.Signal(
-            temporalHelperService.ToId(joinInvitationId),
+            workflowIdService.InviteToJoin(joinInvitationId),
             s_inviteToJoinTeamInvitationStatusChangedAsync,
             new WorkflowSignalOptions(),
             unitOfWork);

@@ -2,7 +2,6 @@ using System.Text.Json;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Outbox;
 using Enterprise.Shared.Outbox.Publishers;
-using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
 using Slack.Shared.Workflows;
 using Temporalio.Api.Enums.V1;
@@ -20,7 +19,7 @@ public interface ITemporalOutboxService : ITemporalOutboxExecutor, ITemporalSign
 public class TemporalOutboxService(
     ITemporalClient temporalClient,
     TemporalConfiguration temporalConfiguration,
-    ITemporalHelperService temporalHelperService,
+    IWorkflowIdService workflowIdService,
     ITemporalOutboxWorkflowExecutor temporalOutboxWorkflowExecutor) : ITemporalOutboxService
 {
     private static readonly string s_newSlackWorkspaceJoined = typeof(NewSlackWorkspaceJoined).ToWorkflowType();
@@ -31,7 +30,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Workflows.Constants.NewSlackWorkspaceJoinedPrefix}-{args.WorkspaceId}"),
+                Id = workflowIdService.NewSlackWorkspaceJoined(args.WorkspaceId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly
@@ -43,7 +42,7 @@ public class TemporalOutboxService(
             args,
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Workflows.Constants.ReSyncSlackWorkspacePrefix}-{args.WorkspaceId}"),
+                Id = workflowIdService.ReSyncSlackWorkspace(args.WorkspaceId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly

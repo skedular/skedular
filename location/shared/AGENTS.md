@@ -30,3 +30,15 @@ This file covers `location/shared/`.
 
 - Be careful with date/time boundaries and generated availability assumptions.
 - Do not reintroduce a persisted `HasFutureBooking` flag or booking-row replica into location shared state.
+
+## Workflow ID Rule
+
+- Location Temporal workflow IDs belong in `location/shared/Location.Shared/Services/WorkflowIdService.cs`.
+- Keep the analytics/recompute workflow ID prefixes centralized there rather than rebuilding them inline.
+
+## Workflow ID Test Shape
+
+- Keep location workflow ID unit tests split one class/file per `WorkflowIdService` method under
+  `Location.Shared.UnitTests/Services/WorkflowIdServiceTests`.
+- In location unit tests, keep frozen/injected constructor dependencies before `sut`, and keep random inputs after
+  `sut`.

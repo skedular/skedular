@@ -129,6 +129,7 @@ public interface ITemporalService
 public class TemporalService(
     TemporalConfiguration temporalConfiguration,
     ITemporalClient temporalClient,
+    IWorkflowIdService workflowIdService,
     ITemporalHelperService temporalHelperService) : ITemporalService
 {
     /// <summary>
@@ -142,7 +143,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((GenerateLocationResourcesSlots workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateLocationResourcesSlotsPrefix}-{args.LocationId}"),
+                Id = workflowIdService.GenerateLocationResourcesSlots(args.LocationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -163,7 +164,7 @@ public class TemporalService(
         await temporalClient.StartWorkflowAsync((GenerateResourcesSlots workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.GenerateResourcesSlotsPrefix}-{locationId}"),
+                Id = workflowIdService.GenerateResourcesSlots(locationId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -181,7 +182,7 @@ public class TemporalService(
             (PayRecurringBookingViaCard workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaCardPrefix}-{args.RecurringBookingId}"),
+                Id = workflowIdService.PayRecurringBookingViaCard(args.RecurringBookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -200,7 +201,7 @@ public class TemporalService(
             (PayRecurringBookingViaBankTransfer workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{args.RecurringBookingId}"),
+                Id = workflowIdService.PayRecurringBookingViaBankTransfer(args.RecurringBookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -214,7 +215,7 @@ public class TemporalService(
             (GenerateInitialArrearsRecurringBookingInvoice workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.InitialArrearsRecurringBookingInvoicePrefix}-{args.RecurringBookingId}"),
+                Id = workflowIdService.GenerateInitialArrearsRecurringBookingInvoice(args.RecurringBookingId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicateFailedOnly,
@@ -232,8 +233,7 @@ public class TemporalService(
         SetPaymentStatusArgs args,
         CancellationToken cancellationToken) =>
         await temporalClient
-            .GetWorkflowHandle<PayRecurringBookingViaCard>(
-                temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaCardPrefix}-{recurringBookingId}"))
+            .GetWorkflowHandle<PayRecurringBookingViaCard>(workflowIdService.PayRecurringBookingViaCard(recurringBookingId))
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
@@ -247,7 +247,7 @@ public class TemporalService(
     /// <param name="cancellationToken">A token to cancel the operation.</param>
     public async Task SignalPayBookingViaCardWorkflowAsync(string bookingId, SetPaymentStatusArgs args, CancellationToken cancellationToken) =>
         await temporalClient
-            .GetWorkflowHandle<PayBookingViaCard>(temporalHelperService.ToId($"{Constants.PaidViaCardPrefix}-{bookingId}"))
+            .GetWorkflowHandle<PayBookingViaCard>(workflowIdService.PayBookingViaCard(bookingId))
             .SignalAsync(
                 workflow => workflow.SetPaymentStatusAsync(args),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
@@ -333,8 +333,7 @@ public class TemporalService(
         string organizationArrearsInvoiceId,
         CancellationToken cancellationToken)
     {
-        var workflowId = temporalHelperService.ToId(
-            $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{organizationArrearsInvoiceId}");
+        var workflowId = workflowIdService.MaintainOrganizationArrearsInvoiceAccountingState(organizationArrearsInvoiceId);
 
         if (!await temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId, cancellationToken))
         {
@@ -353,7 +352,7 @@ public class TemporalService(
         string localEntityId,
         CancellationToken cancellationToken)
     {
-        var workflowId = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{localEntityType}-{localEntityId}");
+        var workflowId = workflowIdService.MaintainAccountingInvoiceState(localEntityType, localEntityId);
 
         if (!await temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(workflowId, cancellationToken))
         {
@@ -374,8 +373,7 @@ public class TemporalService(
             (MaintainOrganizationArrearsInvoiceAccountingState workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId(
-                    $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"),
+                Id = workflowIdService.MaintainOrganizationArrearsInvoiceAccountingState(args.OrganizationArrearsInvoiceId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -390,7 +388,7 @@ public class TemporalService(
             (MaintainAccountingInvoiceState workflow) => workflow.ExecuteAsync(args),
             new WorkflowOptions
             {
-                Id = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"),
+                Id = workflowIdService.MaintainAccountingInvoiceState(args.LocalEntityType, args.LocalEntityId),
                 TaskQueue = temporalConfiguration.Worker.TaskQueue,
                 RetryPolicy = null,
                 IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
@@ -402,8 +400,7 @@ public class TemporalService(
         MaintainOrganizationArrearsInvoiceAccountingStateInput args,
         CancellationToken cancellationToken)
     {
-        var workflowId = temporalHelperService.ToId(
-            $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}");
+        var workflowId = workflowIdService.MaintainOrganizationArrearsInvoiceAccountingState(args.OrganizationArrearsInvoiceId);
 
         if (await temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(workflowId, cancellationToken))
         {
@@ -422,7 +419,7 @@ public class TemporalService(
         MaintainAccountingInvoiceStateInput args,
         CancellationToken cancellationToken)
     {
-        var workflowId = temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}");
+        var workflowId = workflowIdService.MaintainAccountingInvoiceState(args.LocalEntityType, args.LocalEntityId);
 
         if (await temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(workflowId, cancellationToken))
         {
@@ -442,7 +439,7 @@ public class TemporalService(
         SetPaymentStatusArgs args,
         CancellationToken cancellationToken)
     {
-        var workflowId = temporalHelperService.ToId($"{Constants.PaidRecurringBookingViaBankTransferPrefix}-{recurringBookingId}");
+        var workflowId = workflowIdService.PayRecurringBookingViaBankTransfer(recurringBookingId);
         if (!await temporalHelperService.IsRunningAsync<PayRecurringBookingViaBankTransfer>(workflowId, cancellationToken))
         {
             return;
@@ -457,7 +454,7 @@ public class TemporalService(
     }
 
     private string ToOrganizationArrearsBillingWorkflowId(string organizationId) =>
-        temporalHelperService.ToId($"{Constants.OrganizationArrearsBillingPrefix}-{organizationId}");
+        workflowIdService.RunOrganizationArrearsBilling(organizationId);
 
     private WorkflowOptions ToOrganizationArrearsBillingWorkflowOptions(
         string organizationId,

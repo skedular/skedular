@@ -20,7 +20,7 @@ public class TemporalServiceShould
     public async Task Start_Workflow_Generate_Location_Resources_Slots_With_Correct_Options(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen] IWorkflowIdService workflowIdService,
         WorkflowHandle<GenerateLocationResourcesSlots> workflowHandle,
         TemporalService sut,
         GenerateLocationResourcesSlotsInput args,
@@ -29,7 +29,7 @@ public class TemporalServiceShould
     {
         args = args with { LocationId = "loc-1" };
 
-        A.CallTo(() => temporalHelperService.ToId("generate-location-resources-slots-loc-1")).Returns(expectedId);
+        A.CallTo(() => workflowIdService.GenerateLocationResourcesSlots("loc-1")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
                 A<Expression<Func<GenerateLocationResourcesSlots, Task>>>._,
                 A<WorkflowOptions>.That.Matches(options =>
@@ -51,7 +51,7 @@ public class TemporalServiceShould
     public async Task Start_Workflow_Generate_Resources_Slots_With_Correct_Options(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen] IWorkflowIdService workflowIdService,
         WorkflowHandle<GenerateResourcesSlots> workflowHandle,
         TemporalService sut,
         GenerateResourcesSlotsInput args,
@@ -59,7 +59,7 @@ public class TemporalServiceShould
         string expectedId,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => temporalHelperService.ToId($"generate-resources-slots-{locationId}")).Returns(expectedId);
+        A.CallTo(() => workflowIdService.GenerateResourcesSlots(locationId)).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
                 A<Expression<Func<GenerateResourcesSlots, Task>>>._,
                 A<WorkflowOptions>.That.Matches(options =>
@@ -78,7 +78,7 @@ public class TemporalServiceShould
     [AutoFakeItEasyData]
     public async Task Signal_Pay_Booking_Via_Card_Workflow_With_Correct_Handle(
         [Frozen] ITemporalClient temporalClient,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen] IWorkflowIdService workflowIdService,
         TemporalService sut,
         SetPaymentStatusArgs args,
         string bookingId,
@@ -87,7 +87,7 @@ public class TemporalServiceShould
     {
         var workflowHandle = new WorkflowHandle<PayBookingViaCard>(temporalClient, expectedWorkflowId);
 
-        A.CallTo(() => temporalHelperService.ToId($"paid_via_card-{bookingId}")).Returns(expectedWorkflowId);
+        A.CallTo(() => workflowIdService.PayBookingViaCard(bookingId)).Returns(expectedWorkflowId);
         A.CallTo(() => temporalClient.GetWorkflowHandle<PayBookingViaCard>(expectedWorkflowId)).Returns(workflowHandle);
 
         await Should.ThrowAsync<NullReferenceException>(() =>
@@ -101,7 +101,7 @@ public class TemporalServiceShould
     public async Task Start_Workflow_Run_Organization_Arrears_Billing_With_Correct_Options(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,
-        [Frozen] ITemporalHelperService temporalHelperService,
+        [Frozen] IWorkflowIdService workflowIdService,
         WorkflowHandle<RunOrganizationArrearsBilling> workflowHandle,
         TemporalService sut,
         CancellationToken cancellationToken)
@@ -112,7 +112,7 @@ public class TemporalServiceShould
                 OrganizationBillingCycle.Monthly));
         const string expectedId = "organization-arrears-billing-org-1";
 
-        A.CallTo(() => temporalHelperService.ToId("organization_arrears_billing-org-1")).Returns(expectedId);
+        A.CallTo(() => workflowIdService.RunOrganizationArrearsBilling("org-1")).Returns(expectedId);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
                 A<Expression<Func<RunOrganizationArrearsBilling, Task>>>._,
                 A<WorkflowOptions>.That.Matches(options =>
@@ -133,6 +133,7 @@ public class TemporalServiceShould
     [AutoFakeItEasyData]
     public async Task Signal_Run_Organization_Arrears_Billing_Workflow_Run_Now_With_Correct_Handle(
         [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalHelperService temporalHelperService,
         TemporalService sut,
         string expectedWorkflowId,
@@ -141,7 +142,7 @@ public class TemporalServiceShould
         var configuration = new OrganizationArrearsBillingConfiguration("org-1", OrganizationBillingCycle.Weekly);
         var workflowHandle = new WorkflowHandle<RunOrganizationArrearsBilling>(temporalClient, expectedWorkflowId);
 
-        A.CallTo(() => temporalHelperService.ToId("organization_arrears_billing-org-1")).Returns(expectedWorkflowId);
+        A.CallTo(() => workflowIdService.RunOrganizationArrearsBilling("org-1")).Returns(expectedWorkflowId);
         A.CallTo(() => temporalHelperService.IsRunningAsync<RunOrganizationArrearsBilling>(expectedWorkflowId, cancellationToken)).Returns(true);
         A.CallTo(() => temporalClient.GetWorkflowHandle<RunOrganizationArrearsBilling>(expectedWorkflowId)).Returns(workflowHandle);
 
@@ -155,6 +156,7 @@ public class TemporalServiceShould
     [AutoFakeItEasyData]
     public async Task Signal_Maintain_Accounting_Invoice_State_Workflow_When_Running(
         [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalHelperService temporalHelperService,
         TemporalService sut,
         MaintainAccountingInvoiceStateInput args,
@@ -163,7 +165,7 @@ public class TemporalServiceShould
     {
         var workflowHandle = new WorkflowHandle<MaintainAccountingInvoiceState>(temporalClient, expectedWorkflowId);
 
-        A.CallTo(() => temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"))
+        A.CallTo(() => workflowIdService.MaintainAccountingInvoiceState(args.LocalEntityType, args.LocalEntityId))
             .Returns(expectedWorkflowId);
         A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(expectedWorkflowId, cancellationToken)).Returns(true);
         A.CallTo(() => temporalClient.GetWorkflowHandle<MaintainAccountingInvoiceState>(expectedWorkflowId)).Returns(workflowHandle);
@@ -179,6 +181,7 @@ public class TemporalServiceShould
     public async Task Start_Maintain_Accounting_Invoice_State_Workflow_When_Not_Running(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalHelperService temporalHelperService,
         WorkflowHandle<MaintainAccountingInvoiceState> workflowHandle,
         TemporalService sut,
@@ -186,7 +189,7 @@ public class TemporalServiceShould
         string expectedWorkflowId,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => temporalHelperService.ToId($"{Constants.MaintainAccountingInvoiceStatePrefix}-{args.LocalEntityType}-{args.LocalEntityId}"))
+        A.CallTo(() => workflowIdService.MaintainAccountingInvoiceState(args.LocalEntityType, args.LocalEntityId))
             .Returns(expectedWorkflowId);
         A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainAccountingInvoiceState>(expectedWorkflowId, cancellationToken)).Returns(false);
         A.CallTo(() => temporalClient.StartWorkflowAsync(
@@ -209,6 +212,7 @@ public class TemporalServiceShould
     [AutoFakeItEasyData]
     public async Task Signal_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Running(
         [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalHelperService temporalHelperService,
         TemporalService sut,
         MaintainOrganizationArrearsInvoiceAccountingStateInput args,
@@ -217,8 +221,7 @@ public class TemporalServiceShould
     {
         var workflowHandle = new WorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState>(temporalClient, expectedWorkflowId);
 
-        A.CallTo(() => temporalHelperService.ToId(
-                $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"))
+        A.CallTo(() => workflowIdService.MaintainOrganizationArrearsInvoiceAccountingState(args.OrganizationArrearsInvoiceId))
             .Returns(expectedWorkflowId);
         A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId, cancellationToken))
             .Returns(true);
@@ -237,6 +240,7 @@ public class TemporalServiceShould
     public async Task Start_Maintain_Organization_Arrears_Invoice_Accounting_State_Workflow_When_Not_Running(
         [Frozen] TemporalConfiguration temporalConfiguration,
         [Frozen] ITemporalClient temporalClient,
+        [Frozen] IWorkflowIdService workflowIdService,
         [Frozen] ITemporalHelperService temporalHelperService,
         WorkflowHandle<MaintainOrganizationArrearsInvoiceAccountingState> workflowHandle,
         TemporalService sut,
@@ -244,8 +248,7 @@ public class TemporalServiceShould
         string expectedWorkflowId,
         CancellationToken cancellationToken)
     {
-        A.CallTo(() => temporalHelperService.ToId(
-                $"{Constants.MaintainOrganizationArrearsInvoiceAccountingStatePrefix}-{args.OrganizationArrearsInvoiceId}"))
+        A.CallTo(() => workflowIdService.MaintainOrganizationArrearsInvoiceAccountingState(args.OrganizationArrearsInvoiceId))
             .Returns(expectedWorkflowId);
         A.CallTo(() => temporalHelperService.IsRunningAsync<MaintainOrganizationArrearsInvoiceAccountingState>(expectedWorkflowId, cancellationToken))
             .Returns(false);
