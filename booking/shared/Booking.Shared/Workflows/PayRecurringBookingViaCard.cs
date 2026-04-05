@@ -88,16 +88,6 @@ public class PayRecurringBookingViaCard
                 createCheckoutSessionAsyncResponse.PaymentStatus.ToPaymentStatus() is PaymentStatus.Confirmed
                     or PaymentStatus.NoPaymentRequired)
             {
-                await Workflow.ExecuteActivityAsync(
-                    (InvoiceIntegrations activity) =>
-                        activity.GenerateAndSendRecurringInvoiceAsync(
-                            new GenerateAndSendRecurringInvoiceInput(args.RecurringBookingId, true, args.InvoiceEmailList)),
-                    new ActivityOptions
-                    {
-                        StartToCloseTimeout = TimeSpan.FromMinutes(2),
-                        TaskQueue = Workflow.Info.TaskQueue,
-                        RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-                    });
                 return;
             }
 
@@ -139,19 +129,7 @@ public class PayRecurringBookingViaCard
 
         if (_state.RecurringBookingDeleted)
         {
-            return;
         }
-
-        await Workflow.ExecuteActivityAsync(
-            (InvoiceIntegrations activity) =>
-                activity.GenerateAndSendRecurringInvoiceAsync(
-                    new GenerateAndSendRecurringInvoiceInput(args.RecurringBookingId, true, args.InvoiceEmailList)),
-            new ActivityOptions
-            {
-                StartToCloseTimeout = TimeSpan.FromMinutes(2),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-            });
     }
 
     [WorkflowSignal]

@@ -60,8 +60,6 @@ public class PayBookingViaBankTransfer
                     (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                         new ReleaseBookingResourcesInput(args.BookingId)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
-
-                return;
             }
         }
         catch (Exception)
@@ -70,19 +68,7 @@ public class PayBookingViaBankTransfer
                 (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                     new ReleaseBookingResourcesInput(args.BookingId)),
                 new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
-
-            return;
         }
-
-        await Workflow.ExecuteActivityAsync(
-            (InvoiceIntegrations activity) =>
-                activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, true, args.InvoiceEmailList)),
-            new ActivityOptions
-            {
-                StartToCloseTimeout = TimeSpan.FromMinutes(2),
-                TaskQueue = Workflow.Info.TaskQueue,
-                RetryPolicy = new RetryPolicy { MaximumAttempts = 3, MaximumInterval = TimeSpan.FromSeconds(5) }
-            });
     }
 
     [WorkflowSignal]

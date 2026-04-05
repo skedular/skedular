@@ -100,7 +100,6 @@ public class InvoiceIntegrations(
                 marketplaceBooking,
                 productVersion,
                 xeroConnection!,
-                args.FullyPaid,
                 cancellationToken);
 
             if (xeroConnection!.SendInvoicesViaXero)
@@ -199,7 +198,6 @@ public class InvoiceIntegrations(
                     marketplaceBooking,
                     productVersion,
                     xeroConnection!,
-                    args.FullyPaid,
                     cancellationToken);
             }
 
@@ -315,7 +313,6 @@ public class InvoiceIntegrations(
         MarketplaceBooking marketplaceBooking,
         ProductVersion productVersion,
         XeroConnection xeroConnection,
-        bool fullyPaid,
         CancellationToken cancellationToken)
     {
         var localEntityType = booking is null ? AccountingEntityTypeConstants.RecurringBooking : AccountingEntityTypeConstants.MarketplaceBooking;
@@ -338,7 +335,6 @@ public class InvoiceIntegrations(
             contact,
             refreshedConnection,
             accessToken,
-            fullyPaid,
             cancellationToken);
 
         await ProcessAccountingPaymentEventsAsync(accountingInvoiceLink, cancellationToken);
@@ -457,10 +453,7 @@ public class InvoiceIntegrations(
             cancellationToken: cancellationToken);
 
     private static bool IsXeroConnectionReady(XeroConnection? xeroConnection) =>
-        xeroConnection is not null &&
-        xeroConnection.IsActive &&
-        xeroConnection.HasRefreshToken &&
-        !string.IsNullOrWhiteSpace(xeroConnection.TenantId);
+        xeroConnection is { IsActive: true, HasRefreshToken: true } && !string.IsNullOrWhiteSpace(xeroConnection.TenantId);
 
     private static bool IsXeroManagedForStandardInvoicing(XeroConnection? xeroConnection) =>
         IsXeroConnectionReady(xeroConnection) &&
@@ -642,7 +635,6 @@ public class InvoiceIntegrations(
         Contact contact,
         XeroConnection xeroConnection,
         string accessToken,
-        bool fullyPaid,
         CancellationToken cancellationToken)
     {
         var organization = await GetOrganizationAsync(organizationId, cancellationToken);
@@ -866,9 +858,6 @@ public class InvoiceIntegrations(
 
         return fallbackTitle;
     }
-
-    private static decimal CalculateUnitAmount(MarketplaceBooking marketplaceBooking) =>
-        CalculateUnitAmount(CalculateInvoiceTotalAmount(marketplaceBooking), marketplaceBooking.Quantity);
 
     private static decimal CalculateInvoiceTotalAmount(MarketplaceBooking marketplaceBooking) =>
         marketplaceBooking.ProductPricing.IsTaxInclusive

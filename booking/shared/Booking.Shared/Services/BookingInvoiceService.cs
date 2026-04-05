@@ -73,7 +73,6 @@ public class BookingInvoiceService(
             organization,
             productVersion,
             dueDate,
-            fullyPaid,
             productVersionHelperService);
     }
 
@@ -101,9 +100,13 @@ public class BookingInvoiceService(
 
         if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() != ProductPricingBillingMode.InArrears)
         {
-            return new RecurringInvoiceDocument(recurringBooking, bankAccount, organization, productVersion, dueDate,
-                billingDefinition,
-                fullyPaid);
+            return new RecurringInvoiceDocument(
+                recurringBooking,
+                bankAccount,
+                organization,
+                productVersion,
+                dueDate,
+                billingDefinition);
         }
 
         ArgumentNullException.ThrowIfNull(productVersion.Product);
@@ -125,7 +128,6 @@ public class BookingInvoiceService(
             productVersion,
             dueDate,
             billingDefinition,
-            fullyPaid,
             draft.Lines.FirstOrDefault());
     }
 
@@ -158,8 +160,7 @@ public class BookingInvoiceService(
         BankAccount bankAccount,
         Organization organization,
         ProductVersion productVersion,
-        DateTimeOffset dueDate,
-        bool fullyPaid) : IDocument
+        DateTimeOffset dueDate) : IDocument
     {
         protected ProductVersion ProductVersion => productVersion;
         protected Organization Organization => organization;
@@ -227,7 +228,7 @@ public class BookingInvoiceService(
 
                 column.Item().Element(ComposeTable);
                 column.Item().Component(new TotalsExcludeGstComponent(GetTotalAmountExcludeTax(), GetTaxRatePercentage(), GetTaxAmount()));
-                column.Item().Component(new TotalsAmountComponent(currency, GetTotalAmount(), fullyPaid));
+                column.Item().Component(new TotalsAmountComponent(currency, GetTotalAmount()));
 
                 if (GetPaymentMethod() == PaymentMethodConstants.BankTransfer)
                 {
@@ -295,9 +296,8 @@ public class BookingInvoiceService(
         Organization organization,
         ProductVersion productVersion,
         DateTimeOffset dueDate,
-        bool fullyPaid,
         IProductVersionHelperService productVersionHelperService)
-        : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate, fullyPaid)
+        : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate)
     {
         protected override DateTimeOffset GetInvoiceDate() => booking.CreatedAt;
         protected override string? GetInvoiceNumber() => booking.MarketplaceBooking?.InvoiceNumber;
@@ -382,9 +382,8 @@ public class BookingInvoiceService(
         ProductVersion productVersion,
         DateTimeOffset dueDate,
         RecurringInvoiceBillingDefinition billingDefinition,
-        bool fullyPaid,
         ArrearsInvoiceDraftLine? initialArrearsLine = null)
-        : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate, fullyPaid)
+        : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate)
     {
         protected override DateTimeOffset GetInvoiceDate() => recurringBooking.CreatedAt;
         protected override string? GetInvoiceNumber() => recurringBooking.MarketplaceBooking?.InvoiceNumber;
@@ -498,7 +497,7 @@ public class BookingInvoiceService(
             });
     }
 
-    private class TotalsAmountComponent(string currency, decimal totalAmount, bool fullyPaid) : IComponent
+    private class TotalsAmountComponent(string currency, decimal totalAmount) : IComponent
     {
         public void Compose(IContainer container)
         {
@@ -513,23 +512,8 @@ public class BookingInvoiceService(
                 });
 
                 var totalAmountText = totalAmount.ToRoundedPrice();
-                table.Cell().AlignRight().Text($"TOTAL {currency.ToInvoiceCurrencyName()}").Bold();
+                table.Cell().AlignRight().Text($"Amount {currency.ToInvoiceCurrencyName()}").Bold();
                 table.Cell().PaddingBottom(5).AlignRight().Text(totalAmountText);
-
-                if (fullyPaid)
-                {
-                    table.Cell().AlignRight().Text("Amount Paid");
-                    table.Cell().PaddingBottom(5).AlignRight().Text(totalAmountText);
-                    table.Cell().AlignRight().Text("Amount Due");
-                    table.Cell().PaddingBottom(5).AlignRight().Text("0.00");
-                }
-                else
-                {
-                    table.Cell().AlignRight().Text("Amount Paid");
-                    table.Cell().PaddingBottom(5).AlignRight().Text("0.00");
-                    table.Cell().AlignRight().Text("Amount Due");
-                    table.Cell().PaddingBottom(5).AlignRight().Text(totalAmountText);
-                }
 
                 table.Cell().PaddingLeft(300).LineHorizontal(1);
                 table.Cell().LineHorizontal(1);
