@@ -849,11 +849,15 @@ public class InvoiceIntegrations(
 
         if (recurringBooking is not null)
         {
-            var cycleEnd = recurringBooking.EndDate ?? recurringBooking.StartDate;
+            var billingDefinition = new RecurringInvoiceBillingScheduleService().GetSchedule(
+                recurringBooking,
+                marketplaceBooking,
+                productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
+            var (displayStart, displayEnd) = BookingInvoiceService.ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
             return
                 $"{fallbackTitle}{Environment.NewLine}" +
                 $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
-                $"{recurringBooking.StartDate.ToShortDate()} - {cycleEnd.ToShortDate()}";
+                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}";
         }
 
         return fallbackTitle;

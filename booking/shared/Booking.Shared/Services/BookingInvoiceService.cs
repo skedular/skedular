@@ -156,6 +156,46 @@ public class BookingInvoiceService(
         return (organization, bankAccount);
     }
 
+    public static (DateTimeOffset StartInclusive, DateTimeOffset EndInclusive) ResolveRecurringInvoiceDisplayPeriod(
+        RecurringBooking recurringBooking,
+        RecurringInvoiceBillingDefinition billingDefinition)
+    {
+        ArgumentNullException.ThrowIfNull(recurringBooking.MarketplaceBooking);
+
+        var fullTermStart = recurringBooking.StartDate;
+        var fullTermEndInclusive = recurringBooking.EndDate ?? recurringBooking.StartDate;
+
+        if (billingDefinition.Source != XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle)
+        {
+            return (fullTermStart, fullTermEndInclusive);
+        }
+
+        var periodStart = recurringBooking.CreatedAt > fullTermStart
+            ? recurringBooking.CreatedAt
+            : fullTermStart;
+        var periodEndExclusive = billingDefinition.Cadence switch
+        {
+            ProductPricingCadence.Daily => periodStart.AddDays(1),
+            ProductPricingCadence.Weekly => periodStart.AddDays(7),
+            ProductPricingCadence.Fortnightly => periodStart.AddDays(14),
+            ProductPricingCadence.Monthly => periodStart.AddMonths(1),
+            ProductPricingCadence.TwoMonths => periodStart.AddMonths(2),
+            ProductPricingCadence.Quarterly => periodStart.AddMonths(3),
+            ProductPricingCadence.FourMonths => periodStart.AddMonths(4),
+            ProductPricingCadence.FiveMonths => periodStart.AddMonths(5),
+            ProductPricingCadence.SixMonths => periodStart.AddMonths(6),
+            ProductPricingCadence.Yearly => periodStart.AddYears(1),
+            _ => periodStart.AddDays(1)
+        };
+        var periodEndInclusive = periodEndExclusive.AddDays(-1);
+
+        return (
+            periodStart,
+            periodEndInclusive > fullTermEndInclusive
+                ? fullTermEndInclusive
+                : periodEndInclusive);
+    }
+
     private abstract class InvoiceDocumentBase(
         BankAccount bankAccount,
         Organization organization,
@@ -402,12 +442,12 @@ public class BookingInvoiceService(
 
             var marketplaceBooking = recurringBooking.MarketplaceBooking;
             ArgumentNullException.ThrowIfNull(marketplaceBooking);
-            var cycleEnd = recurringBooking.EndDate ?? recurringBooking.StartDate;
+            var (displayStart, displayEnd) = ResolveRecurringInvoiceDisplayPeriod(recurringBooking, billingDefinition);
 
             return
                 $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}" +
                 $"{marketplaceBooking.ProductPricing.PurchaseCadence.ToProductPricingCadenceName()} pass{Environment.NewLine}" +
-                $"{recurringBooking.StartDate.ToShortDate()} - {cycleEnd.ToShortDate()}";
+                $"{displayStart.ToShortDate()} - {displayEnd.ToShortDate()}";
         }
 
         protected override decimal GetQuantity() => recurringBooking.MarketplaceBooking?.Quantity ?? 0;
