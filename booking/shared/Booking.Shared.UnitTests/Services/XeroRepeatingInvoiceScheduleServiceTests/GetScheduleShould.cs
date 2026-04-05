@@ -32,7 +32,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(2);
-        result.InvoiceAmount.ShouldBe(42.8571m);
+        result.InvoiceAmount.ShouldBe(600m);
     }
 
     [Theory]
@@ -58,7 +58,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(22.6415m);
+        result.InvoiceAmount.ShouldBe(1200m);
     }
 
     [Theory]
@@ -135,7 +135,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(23.0769m);
+        result.InvoiceAmount.ShouldBe(300m);
     }
 
     [Theory]
@@ -186,7 +186,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.MONTHLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(100m);
+        result.InvoiceAmount.ShouldBe(200m);
     }
 
     [Theory]
@@ -212,7 +212,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.MONTHLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(100m);
+        result.InvoiceAmount.ShouldBe(400m);
     }
 
     [Theory]
@@ -238,7 +238,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.MONTHLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(100m);
+        result.InvoiceAmount.ShouldBe(500m);
     }
 
     [Theory]
@@ -264,7 +264,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.MONTHLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(100m);
+        result.InvoiceAmount.ShouldBe(600m);
     }
 
     [Theory]
@@ -290,7 +290,7 @@ public class GetScheduleShould
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Unit.ShouldBe(Schedule.UnitEnum.WEEKLY);
         result.Period.ShouldBe(1);
-        result.InvoiceAmount.ShouldBe(22.6415m);
+        result.InvoiceAmount.ShouldBe(1200m);
     }
 
     [Theory]

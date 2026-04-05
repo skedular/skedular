@@ -71,7 +71,7 @@ public class GetScheduleShould
 
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Cadence.ShouldBe(ProductPricingCadence.Monthly);
-        result.InvoiceAmount.ShouldBe(100m);
+        result.InvoiceAmount.ShouldBe(600m);
     }
 
     [Theory]
@@ -93,7 +93,29 @@ public class GetScheduleShould
 
         result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
         result.Cadence.ShouldBe(ProductPricingCadence.Weekly);
-        result.InvoiceAmount.ShouldBe(23.0769m);
+        result.InvoiceAmount.ShouldBe(300m);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Split_Full_Cadence_Product_Price_Into_Installments_When_Persisted_Totals_Are_Not_Populated(
+        string pricingId)
+    {
+        var sut = new RecurringInvoiceBillingScheduleService();
+        var recurringBooking = new RecurringBooking
+        {
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 9, 30, 0, 0, 0, TimeSpan.Zero)
+        };
+        var marketplaceBooking = new MarketplaceBooking
+        {
+            ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.SixMonths, Price = 600m }
+        };
+
+        var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
+
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle);
+        result.Cadence.ShouldBe(ProductPricingCadence.Monthly);
+        result.InvoiceAmount.ShouldBe(100m);
     }
 
     [Theory]

@@ -4,10 +4,7 @@ using XeroRepeatingInvoiceScheduleSourceConstants = Booking.Shared.Models.XeroRe
 
 namespace Booking.Shared.Services;
 
-public record RecurringInvoiceBillingDefinition(
-    string Source,
-    ProductPricingCadence Cadence,
-    decimal InvoiceAmount);
+public record RecurringInvoiceBillingDefinition(string Source, ProductPricingCadence Cadence, decimal InvoiceAmount);
 
 public interface IRecurringInvoiceBillingScheduleService
 {
@@ -56,6 +53,11 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
         ProductPricingCadence purchaseCadence,
         OrganizationBillingCycle organizationBillingCycle)
     {
+        if (HasPersistedRecurringChargeAmount(marketplaceBooking))
+        {
+            return CalculateTotalRecurringChargeAmount(marketplaceBooking);
+        }
+
         var totalAmount = CalculateTotalRecurringChargeAmount(marketplaceBooking);
         var cycleEndExclusive = ResolveCycleEndExclusive(recurringBooking, purchaseCadence);
         var installmentCount = SplitIntoBillingCyclePeriodsFromStart(recurringBooking.StartDate, cycleEndExclusive, organizationBillingCycle).Count;
@@ -64,6 +66,11 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
             ? totalAmount
             : decimal.Round(totalAmount / installmentCount, 4, MidpointRounding.AwayFromZero);
     }
+
+    private static bool HasPersistedRecurringChargeAmount(MarketplaceBooking marketplaceBooking) =>
+        marketplaceBooking.ProductPricing.IsTaxInclusive
+            ? marketplaceBooking.TotalAmount.HasValue || marketplaceBooking.TotalAmountExcludeTax.HasValue
+            : marketplaceBooking.TotalAmountExcludeTax.HasValue || marketplaceBooking.TotalAmount.HasValue;
 
     private static decimal CalculateTotalRecurringChargeAmount(MarketplaceBooking marketplaceBooking)
     {

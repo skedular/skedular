@@ -169,14 +169,14 @@ public class XeroInvoiceService(
         CancellationToken cancellationToken) =>
         SyncAccountingInvoiceStateInternalAsync(input, cancellationToken);
 
-    internal static bool IsXeroManagedForStandardInvoicing(XeroConnection? xeroConnection) =>
+    private static bool IsXeroManagedForStandardInvoicing(XeroConnection? xeroConnection) =>
         IsXeroConnectionReady(xeroConnection) &&
         xeroConnection!.BillingMode is XeroBillingModeConstants.Enabled or XeroBillingModeConstants.RepeatingInvoices;
 
-    internal static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
+    private static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
         recurringBooking.StartDate.UtcDateTime.Date;
 
-    internal static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
+    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
         string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
         string.Equals(accountingInvoiceLink.ExportConfigurationState, AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
             StringComparison.Ordinal);
