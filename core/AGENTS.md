@@ -8,7 +8,8 @@ This file is the entry point for AI agents working in `core/`.
 
 ## Replication Boundary
 
-- `core/` should assume that replicated organization, organization-member, customer, and customer-identity state may be required for local authorization decisions.
+- `core/` should assume that replicated organization, organization-member, customer, and customer-identity state may be
+  required for local authorization decisions.
 - Do not remove auth-critical replicas in `core/` without a broader authorization redesign.
 
 ## Where To Read Next

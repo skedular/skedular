@@ -1,5 +1,4 @@
 using System.Reflection;
-using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
@@ -14,10 +13,7 @@ public class IsXeroManagedForStandardInvoicingShould
     {
         var xeroConnection = new XeroConnection
         {
-            IsActive = true,
-            HasRefreshToken = true,
-            TenantId = "tenant-1",
-            BillingMode = XeroBillingModeConstants.RepeatingInvoices
+            IsActive = true, HasRefreshToken = true, TenantId = "tenant-1", BillingMode = XeroBillingModeConstants.RepeatingInvoices
         };
 
         Invoke(xeroConnection).ShouldBeTrue();

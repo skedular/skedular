@@ -12,10 +12,7 @@ public class ResolveRepeatingInvoiceStartDateShould
     public void Return_Recurring_Booking_Start_Date(
         DateTimeOffset startDate)
     {
-        var recurringBooking = new RecurringBookingEntity
-        {
-            StartDate = startDate
-        };
+        var recurringBooking = new RecurringBookingEntity { StartDate = startDate };
 
         Invoke(recurringBooking).ShouldBe(startDate.UtcDateTime.Date);
     }

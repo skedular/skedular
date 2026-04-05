@@ -1,3 +1,4 @@
+using System.Web;
 using AutoFixture.Xunit3;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
@@ -8,6 +9,7 @@ using FakeItEasy;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;
+using Organization.Shared.Models;
 using Organization.Shared.Repositories;
 using Organization.Shared.Services;
 using Organization.Shared.Services.Cache;
@@ -36,24 +38,16 @@ public class OrganizationXeroConnectionServiceShould
         TimeProvider timeProvider,
         CancellationToken cancellationToken)
     {
-        var applicationConfiguration = new ApplicationConfiguration
-        {
-            ApiBaseDomain = new Uri("http://localhost:10200/")
-        };
+        var applicationConfiguration = new ApplicationConfiguration { ApiBaseDomain = new Uri("http://localhost:10200/") };
         var xeroConfiguration = new XeroConfiguration
         {
             AuthorizeEndpoint = "https://login.xero.com/identity/connect/authorize",
             ClientId = "client-id-1",
             Scopes = "offline_access accounting.transactions"
         };
-        var organization = new Organization.Shared.Database.Entities.Organization
-        {
-            Id = "org-1",
-            Name = "Org 1",
-            CustomDomain = "org-1"
-        };
-        var customer = new Organization.Shared.Models.Customer { Id = "customer-1" };
-        var customerEntity = new Organization.Shared.Database.Entities.Customer { Id = "customer-1" };
+        var organization = new Shared.Database.Entities.Organization { Id = "org-1", Name = "Org 1", CustomDomain = "org-1" };
+        var customer = new Customer { Id = "customer-1" };
+        var customerEntity = new Shared.Database.Entities.Customer { Id = "customer-1" };
         const string encryptedState = "encrypted-state";
 
         A.CallTo(() => repositoryFactory.OrganizationRepository).Returns(organizationRepository);
@@ -83,7 +77,7 @@ public class OrganizationXeroConnectionServiceShould
 
         result.Scheme.ShouldBe("https");
         result.Host.ShouldBe("login.xero.com");
-        var query = System.Web.HttpUtility.ParseQueryString(result.Query);
+        var query = HttpUtility.ParseQueryString(result.Query);
         query["client_id"].ShouldBe("client-id-1");
         query["scope"].ShouldBe("offline_access accounting.transactions");
         query["state"].ShouldBe(encryptedState);

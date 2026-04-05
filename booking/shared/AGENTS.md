@@ -146,10 +146,10 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - `BookMarketplaceBookingSubscriptionResources` is the owning workflow for marketplace subscription maintenance.
 - It runs reconciliation on a daily cadence, not on every resource-state change.
 - Daily reconciliation:
-  - ensures the current cycle recurring booking exists
-  - repairs required resources for existing generated marketplace bookings
-  - removes obsolete or duplicate future generated bookings
-  - materializes missing future booking days inside the current cycle
+    - ensures the current cycle recurring booking exists
+    - repairs required resources for existing generated marketplace bookings
+    - removes obsolete or duplicate future generated bookings
+    - materializes missing future booking days inside the current cycle
 - Auto-renew uses the subscription purchase cadence and `NextRenewalAt` to advance cycles.
 - Renewal reloads the current `ProductVersion` and re-matches pricing through product-version pricing selection; if no
   compatible auto-renewable pricing remains, the subscription moves to renewal failed rather than renewing incorrectly.

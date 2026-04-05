@@ -1,8 +1,8 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
 using AutoFixture.Xunit3;
-using Booking.Shared.Configurations;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Grpc;
@@ -13,6 +13,7 @@ using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;
 using ProductEntity = Booking.Shared.Database.Entities.Product;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;
+using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
@@ -73,16 +74,11 @@ public class GenerateRecurringInvoiceAsyncShould
             {
                 Organization = new OrganizationEntity
                 {
-                    Id = organizationId,
-                    BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle()
+                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Weekly.ToOrganizationBillingCycle()
                 }
             }
         };
-        var organization = new Organization
-        {
-            Id = organizationId,
-            BillingDetails = new BillingDetails { InvoiceDueInDays = 7 }
-        };
+        var organization = new Organization { Id = organizationId, BillingDetails = new BillingDetails { InvoiceDueInDays = 7 } };
         var bankAccountConnection = new BankAccountConnection
         {
             Edges =
@@ -102,7 +98,7 @@ public class GenerateRecurringInvoiceAsyncShould
             }
         };
         var billingDefinition = new RecurringInvoiceBillingDefinition(
-            Booking.Shared.Models.XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
+            XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             ProductPricingCadence.Weekly,
             23.0769m);
 
@@ -123,14 +119,16 @@ public class GenerateRecurringInvoiceAsyncShould
                 A<Method<Admin_GetBankAccountsInput, BankAccountConnection>>._,
                 A<string?>._,
                 A<CallOptions>.That.Matches(options => options.Headers != null &&
-                    options.Headers.Any(item => item.Key == Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
+                                                       options.Headers.Any(item =>
+                                                           item.Key == Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
                 A<Admin_GetBankAccountsInput>.That.Matches(input => input.Where.OrganizationId == organizationId)))
             .Returns(CreateResponse(bankAccountConnection));
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetInput, Organization>>._,
                 A<string?>._,
                 A<CallOptions>.That.Matches(options => options.Headers != null &&
-                    options.Headers.Any(item => item.Key == Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
+                                                       options.Headers.Any(item =>
+                                                           item.Key == Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
                 A<Admin_GetInput>.That.Matches(input => input.Id == organizationId)))
             .Returns(CreateResponse(organization));
 

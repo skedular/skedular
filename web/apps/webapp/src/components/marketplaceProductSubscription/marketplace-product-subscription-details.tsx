@@ -10,7 +10,7 @@ import {
   TwoButtonsDialogActions,
 } from '@/components/commons';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
-import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink, getOrganizationProductsBaseLink } from '@/components/links';
+import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,

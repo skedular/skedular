@@ -103,7 +103,8 @@ public class LocationSubscriber(
         }
         else
         {
-            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName && resourceIdsToRegenerateBookingSlots.Count != 0)
+            if (existingLocation.Organization?.CustomDomain != Constants.SkedularPublicLocationsCustomDomainName &&
+                resourceIdsToRegenerateBookingSlots.Count != 0)
             {
                 // Regenerate those changed
                 await temporalService.StartWorkflowGenerateResourcesSlotsAsync(
