@@ -18,42 +18,61 @@ public interface IXeroRepeatingInvoiceScheduleService
         OrganizationBillingCycle organizationBillingCycle);
 }
 
-public class XeroRepeatingInvoiceScheduleService : IXeroRepeatingInvoiceScheduleService
+public class XeroRepeatingInvoiceScheduleService(IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService)
+    : IXeroRepeatingInvoiceScheduleService
 {
-    private readonly IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService;
-
-    public XeroRepeatingInvoiceScheduleService(IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService) =>
-        this.recurringInvoiceBillingScheduleService = recurringInvoiceBillingScheduleService;
-
     public XeroRepeatingInvoiceScheduleDefinition? GetSchedule(
         RecurringBooking recurringBooking,
         MarketplaceBooking marketplaceBooking,
         OrganizationBillingCycle organizationBillingCycle)
     {
-        var billingDefinition = recurringInvoiceBillingScheduleService.GetSchedule(
-            recurringBooking,
-            marketplaceBooking,
-            organizationBillingCycle);
-
+        var billingDefinition = recurringInvoiceBillingScheduleService.GetSchedule(recurringBooking, marketplaceBooking, organizationBillingCycle);
         return billingDefinition.Cadence switch
         {
-            ProductPricingCadence.Weekly => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.WEEKLY, 1,
+            ProductPricingCadence.Weekly => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.WEEKLY,
+                1,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.Fortnightly => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.WEEKLY, 2,
+            ProductPricingCadence.Fortnightly => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.WEEKLY,
+                2,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.Monthly => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 1,
+            ProductPricingCadence.Monthly => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                1,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.TwoMonths => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 2,
+            ProductPricingCadence.TwoMonths => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                2,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.Quarterly => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 3,
+            ProductPricingCadence.Quarterly => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                3,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.FourMonths => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 4,
+            ProductPricingCadence.FourMonths => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                4,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.FiveMonths => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 5,
+            ProductPricingCadence.FiveMonths => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                5,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.SixMonths => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 6,
+            ProductPricingCadence.SixMonths => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                6,
                 billingDefinition.InvoiceAmount),
-            ProductPricingCadence.Yearly => new XeroRepeatingInvoiceScheduleDefinition(billingDefinition.Source, Schedule.UnitEnum.MONTHLY, 12,
+            ProductPricingCadence.Yearly => new XeroRepeatingInvoiceScheduleDefinition(
+                billingDefinition.Source,
+                Schedule.UnitEnum.MONTHLY,
+                12,
                 billingDefinition.InvoiceAmount),
             _ => null
         };

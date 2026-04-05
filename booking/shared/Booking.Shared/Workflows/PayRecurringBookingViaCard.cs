@@ -35,7 +35,7 @@ public class PayRecurringBookingViaCard
             await Workflow.ExecuteActivityAsync(
                 (InvoiceIntegrations activity) =>
                     activity.GenerateAndSendRecurringInvoiceAsync(
-                        new GenerateAndSendRecurringInvoiceInput(args.RecurringBookingId, false, args.InvoiceEmailList)),
+                        new GenerateAndSendRecurringInvoiceInput(args.RecurringBookingId, args.InvoiceEmailList)),
                 new ActivityOptions
                 {
                     StartToCloseTimeout = TimeSpan.FromMinutes(2),

@@ -32,7 +32,6 @@ public class XeroRecurringInvoiceTransitionService : IXeroRecurringInvoiceTransi
     {
         var hasExistingExternalInvoice = existingLink is not null && !string.IsNullOrWhiteSpace(existingLink.ExternalInvoiceId);
         var existingMode = existingLink?.ExternalInvoiceMode;
-
         if (existingMode == AccountingInvoiceExportModeConstants.RepeatingInvoice && hasExistingExternalInvoice)
         {
             if (!useRepeatingInvoices)
@@ -67,25 +66,20 @@ public class XeroRecurringInvoiceTransitionService : IXeroRecurringInvoiceTransi
                 null);
         }
 
-        if (useRepeatingInvoices && hasExistingExternalInvoice)
+        return useRepeatingInvoices switch
         {
-            return new XeroRecurringInvoiceTransitionDecision(
+            true when hasExistingExternalInvoice => new XeroRecurringInvoiceTransitionDecision(
                 XeroRecurringInvoiceExportPath.StandardInvoice,
                 AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
-                "Existing recurring invoice export remains on standard Xero invoices until it is migrated manually.");
-        }
-
-        if (useRepeatingInvoices && desiredSchedule is not null)
-        {
-            return new XeroRecurringInvoiceTransitionDecision(
+                "Existing recurring invoice export remains on standard Xero invoices until it is migrated manually."),
+            true when desiredSchedule is not null => new XeroRecurringInvoiceTransitionDecision(
                 XeroRecurringInvoiceExportPath.RepeatingInvoice,
                 AccountingInvoiceExportConfigurationStateConstants.Active,
-                null);
-        }
-
-        return new XeroRecurringInvoiceTransitionDecision(
-            XeroRecurringInvoiceExportPath.StandardInvoice,
-            AccountingInvoiceExportConfigurationStateConstants.Active,
-            null);
+                null),
+            _ => new XeroRecurringInvoiceTransitionDecision(
+                XeroRecurringInvoiceExportPath.StandardInvoice,
+                AccountingInvoiceExportConfigurationStateConstants.Active,
+                null)
+        };
     }
 }

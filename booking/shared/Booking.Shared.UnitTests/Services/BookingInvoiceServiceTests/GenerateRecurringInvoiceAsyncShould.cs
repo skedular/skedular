@@ -132,7 +132,7 @@ public class GenerateRecurringInvoiceAsyncShould
                 A<Admin_GetInput>.That.Matches(input => input.Id == organizationId)))
             .Returns(CreateResponse(organization));
 
-        var result = await sut.GenerateRecurringInvoiceAsync(recurringBookingId, false, CancellationToken.None);
+        var result = await sut.GenerateRecurringInvoiceAsync(recurringBookingId, CancellationToken.None);
 
         result.ShouldNotBeNull();
         result.ShouldBeAssignableTo<IDocument>();

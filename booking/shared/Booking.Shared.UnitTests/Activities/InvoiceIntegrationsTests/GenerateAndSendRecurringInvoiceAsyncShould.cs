@@ -143,7 +143,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
             ExternalInvoiceId = existingTemplateId,
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
-            RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
+            RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
             RepeatingSchedulePeriod = 3
         };
         var xeroConnection = new XeroConnection
@@ -209,7 +209,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).Returns(1);
 
         await environment.RunAsync(() =>
-            sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, false, [])));
+            sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, [])));
 
         A.CallTo(() => xeroRepeatingInvoiceScheduleService.GetSchedule(
                 recurringBooking,
@@ -227,7 +227,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
                 !string.IsNullOrWhiteSpace(link.ExportConfigurationMessage))))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => bookingInvoiceService.GenerateRecurringInvoiceAsync(recurringBookingId, false, environment.CancellationTokenSource.Token))
+        A.CallTo(() => bookingInvoiceService.GenerateRecurringInvoiceAsync(recurringBookingId, environment.CancellationTokenSource.Token))
             .MustNotHaveHappened();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.MarketplaceBookingSubscriptionTopicName,
@@ -344,7 +344,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
             ExternalInvoiceId = existingTemplateId,
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
-            RepeatingScheduleUnit = Schedule.UnitEnum.MONTHLY.ToString(),
+            RepeatingScheduleUnit = nameof(Schedule.UnitEnum.MONTHLY),
             RepeatingSchedulePeriod = 1
         };
         var xeroConnection = new XeroConnection
@@ -400,7 +400,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).Returns(1);
 
         await environment.RunAsync(() =>
-            sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, false, [])));
+            sut.GenerateAndSendRecurringInvoiceAsync(new GenerateAndSendRecurringInvoiceInput(recurringBookingId, [])));
 
         A.CallTo(() => xeroRepeatingInvoiceScheduleService.GetSchedule(A<RecurringBookingEntity>._, A<MarketplaceBookingEntity>._,
                 A<OrganizationBillingCycleModel>._))
@@ -416,7 +416,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
                 !string.IsNullOrWhiteSpace(link.ExportConfigurationMessage))))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => bookingInvoiceService.GenerateRecurringInvoiceAsync(recurringBookingId, false, environment.CancellationTokenSource.Token))
+        A.CallTo(() => bookingInvoiceService.GenerateRecurringInvoiceAsync(recurringBookingId, environment.CancellationTokenSource.Token))
             .MustNotHaveHappened();
         A.CallTo(() => graphQlTopicEventSender.RaiseGraphqlChangeAsync(
                 Constants.MarketplaceBookingSubscriptionTopicName,

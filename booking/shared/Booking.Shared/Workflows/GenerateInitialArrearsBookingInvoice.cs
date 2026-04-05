@@ -13,7 +13,7 @@ public class GenerateInitialArrearsBookingInvoice
     public async Task ExecuteAsync(GenerateInitialArrearsBookingInvoiceInput args) =>
         await Workflow.ExecuteActivityAsync(
             (InvoiceIntegrations activity) =>
-                activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, false, args.InvoiceEmailList)),
+                activity.GenerateAndSendInvoiceAsync(new GenerateAndSendInvoiceInput(args.BookingId, args.InvoiceEmailList)),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(2),

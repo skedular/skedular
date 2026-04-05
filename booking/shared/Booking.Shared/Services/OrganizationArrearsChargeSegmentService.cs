@@ -355,16 +355,16 @@ public class OrganizationArrearsChargeSegmentService : IOrganizationArrearsCharg
     {
         var title = booking.MarketplaceBooking?.ProductPricing.ListingMetadata.Title;
         return string.IsNullOrWhiteSpace(title)
-            ? $"{booking.From:yyyy-MM-dd HH:mm} - {booking.Until:yyyy-MM-dd HH:mm}"
-            : $"{title}{Environment.NewLine}{booking.From:yyyy-MM-dd HH:mm} - {booking.Until:yyyy-MM-dd HH:mm}";
+            ? BookingInvoiceService.FormatInvoicePeriod(booking.From, booking.Until)
+            : $"{title}{Environment.NewLine}{BookingInvoiceService.FormatInvoicePeriod(booking.From, booking.Until)}";
     }
 
     private static string BuildDescription(RecurringBooking recurringBooking, BillingPeriod servicePeriod)
     {
         var title = recurringBooking.MarketplaceBooking?.ProductPricing.ListingMetadata.Title;
         return string.IsNullOrWhiteSpace(title)
-            ? $"{servicePeriod.StartInclusive:yyyy-MM-dd HH:mm} - {servicePeriod.EndExclusive:yyyy-MM-dd HH:mm}"
-            : $"{title}{Environment.NewLine}{servicePeriod.StartInclusive:yyyy-MM-dd HH:mm} - {servicePeriod.EndExclusive:yyyy-MM-dd HH:mm}";
+            ? BookingInvoiceService.FormatInvoicePeriod(servicePeriod.StartInclusive, servicePeriod.EndExclusive)
+            : $"{title}{Environment.NewLine}{BookingInvoiceService.FormatInvoicePeriod(servicePeriod.StartInclusive, servicePeriod.EndExclusive)}";
     }
 
     private static string BuildSegmentKey(string bookingId, string customerId, DateTimeOffset periodStart, DateTimeOffset periodEnd) =>

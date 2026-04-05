@@ -37,9 +37,9 @@ using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
 
 namespace Booking.Shared.Activities;
 
-public record GenerateAndSendInvoiceInput(string BookingId, bool FullyPaid, ICollection<string> InvoiceEmailList);
+public record GenerateAndSendInvoiceInput(string BookingId, ICollection<string> InvoiceEmailList);
 
-public record GenerateAndSendRecurringInvoiceInput(string RecurringBookingId, bool FullyPaid, ICollection<string> InvoiceEmailList);
+public record GenerateAndSendRecurringInvoiceInput(string RecurringBookingId, ICollection<string> InvoiceEmailList);
 
 public record SyncAccountingInvoiceStateInput(string OrganizationId, string LocalEntityType, string LocalEntityId);
 
@@ -109,7 +109,7 @@ public class InvoiceIntegrations(
             }
         }
 
-        var invoiceDocument = await bookingInvoiceService.GenerateInvoiceAsync(args.BookingId, args.FullyPaid, cancellationToken);
+        var invoiceDocument = await bookingInvoiceService.GenerateInvoiceAsync(args.BookingId, cancellationToken);
         if (invoiceDocument is null)
         {
             return;
@@ -208,7 +208,7 @@ public class InvoiceIntegrations(
             }
         }
 
-        var invoiceDocument = await bookingInvoiceService.GenerateRecurringInvoiceAsync(args.RecurringBookingId, args.FullyPaid, cancellationToken);
+        var invoiceDocument = await bookingInvoiceService.GenerateRecurringInvoiceAsync(args.RecurringBookingId, cancellationToken);
         if (invoiceDocument is null)
         {
             return;
@@ -843,8 +843,7 @@ public class InvoiceIntegrations(
 
         if (booking is not null)
         {
-            return
-                $"{fallbackTitle}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}";
+            return $"{fallbackTitle}{Environment.NewLine}{BookingInvoiceService.FormatInvoicePeriod(booking.From, booking.Until)}";
         }
 
         if (recurringBooking is not null)
@@ -1397,10 +1396,7 @@ public class InvoiceIntegrations(
             .Replace("{{RECIPIENT_NAME}}", booking.CreatedByCustomer is null ? string.Empty : booking.CreatedByCustomer.ToDisplayableName());
 
         var attachments = new List<EmailAttachment> { new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf") };
-
-        var subject = args.FullyPaid
-            ? $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}"
-            : $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name} is due";
+        var subject = $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}";
 
         await emailService.SendRawEmailAsync(
             subject,
@@ -1464,10 +1460,7 @@ public class InvoiceIntegrations(
             .Replace("{{RECIPIENT_NAME}}", recipientName);
 
         var attachments = new List<EmailAttachment> { new(pdfStream, $"{marketplaceBooking.InvoiceNumber}.pdf", "application/pdf") };
-
-        var subject = args.FullyPaid
-            ? $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}"
-            : $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name} is due";
+        var subject = $"Invoice #{marketplaceBooking.InvoiceNumber} from {organization.Name}";
 
         await emailService.SendRawEmailAsync(
             subject,

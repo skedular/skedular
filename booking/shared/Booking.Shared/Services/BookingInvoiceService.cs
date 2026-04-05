@@ -28,12 +28,12 @@ public interface IBookingInvoiceService
     /// <summary>
     ///     Generates an invoice document for the specified booking.
     /// </summary>
-    Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken);
+    Task<IDocument?> GenerateInvoiceAsync(string bookingId, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Generates an invoice document for the specified recurring booking cycle.
     /// </summary>
-    Task<IDocument?> GenerateRecurringInvoiceAsync(string recurringBookingId, bool fullyPaid, CancellationToken cancellationToken);
+    Task<IDocument?> GenerateRecurringInvoiceAsync(string recurringBookingId, CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -49,7 +49,7 @@ public class BookingInvoiceService(
     IMapper mapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService) : IBookingInvoiceService
 {
-    public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, bool fullyPaid, CancellationToken cancellationToken)
+    public async Task<IDocument?> GenerateInvoiceAsync(string bookingId, CancellationToken cancellationToken)
     {
         var booking = await repositoryFactory.BookingRepository.GetByIdAsync(bookingId, cancellationToken);
         if (booking is null || booking.IsDeleted() || booking.MarketplaceBooking is null)
@@ -76,7 +76,7 @@ public class BookingInvoiceService(
             productVersionHelperService);
     }
 
-    public async Task<IDocument?> GenerateRecurringInvoiceAsync(string recurringBookingId, bool fullyPaid, CancellationToken cancellationToken)
+    public async Task<IDocument?> GenerateRecurringInvoiceAsync(string recurringBookingId, CancellationToken cancellationToken)
     {
         var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(recurringBookingId, cancellationToken);
         if (recurringBooking is null || recurringBooking.IsDeleted() || recurringBooking.MarketplaceBooking is null)
@@ -129,6 +129,14 @@ public class BookingInvoiceService(
             dueDate,
             billingDefinition,
             draft.Lines.FirstOrDefault());
+    }
+
+    public static string FormatInvoicePeriod(DateTimeOffset from, DateTimeOffset until)
+    {
+        var isDateOnlyRange = from.TimeOfDay == TimeSpan.Zero && until.TimeOfDay == TimeSpan.Zero;
+        return isDateOnlyRange
+            ? $"{from.ToShortDate()} - {until.ToShortDate()}"
+            : $"{from.ToShortDate()} {from.ToShortTime()} - {until.ToShortDate()} {until.ToShortTime()}";
     }
 
     private async Task<(Organization Organization, BankAccount BankAccount)> GetOrganizationAndBankAccountAsync(
@@ -348,7 +356,7 @@ public class BookingInvoiceService(
         protected override decimal GetTotalAmount() => booking.MarketplaceBooking?.TotalAmount ?? 0;
 
         protected override string GetDescription() =>
-            $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}{booking.From.ToShortDate()}{Environment.NewLine}{booking.From.ToShortTime()} - {booking.Until.ToShortTime()}";
+            $"{ProductVersion.ListingMetadata?.Title}{Environment.NewLine}{FormatInvoicePeriod(booking.From, booking.Until)}";
 
         protected override decimal GetQuantity()
         {
