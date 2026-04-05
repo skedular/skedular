@@ -109,6 +109,6 @@ This file applies to the whole repository.
 - In unit tests, prefer injected test inputs over fixed local strings unless the test is validating a specific literal
   contract.
 - Order unit-test parameters as:
-  1. frozen/injected constructor dependencies
-  2. `sut`
-  3. random test inputs and expected values
+    1. frozen/injected constructor dependencies
+    2. `sut`
+    3. random test inputs and expected values
