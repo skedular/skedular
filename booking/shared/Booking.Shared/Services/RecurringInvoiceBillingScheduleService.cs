@@ -67,14 +67,16 @@ public class RecurringInvoiceBillingScheduleService : IRecurringInvoiceBillingSc
 
     private static decimal CalculateTotalRecurringChargeAmount(MarketplaceBooking marketplaceBooking)
     {
-        var totalAmount = marketplaceBooking.ProductPricing.IsTaxInclusive
-            ? marketplaceBooking.TotalAmount ?? marketplaceBooking.TotalAmountExcludeTax ?? 0m
-            : marketplaceBooking.TotalAmountExcludeTax ?? marketplaceBooking.TotalAmount ?? 0m;
         var quantity = marketplaceBooking.Quantity <= 0 ? 1 : marketplaceBooking.Quantity;
+        var fallbackTotalAmount = decimal.Round(
+            marketplaceBooking.ProductPricing.Price * quantity,
+            4,
+            MidpointRounding.AwayFromZero);
+        var totalAmount = marketplaceBooking.ProductPricing.IsTaxInclusive
+            ? marketplaceBooking.TotalAmount ?? marketplaceBooking.TotalAmountExcludeTax ?? fallbackTotalAmount
+            : marketplaceBooking.TotalAmountExcludeTax ?? marketplaceBooking.TotalAmount ?? fallbackTotalAmount;
 
-        return quantity <= 1
-            ? totalAmount
-            : decimal.Round(totalAmount, 4, MidpointRounding.AwayFromZero);
+        return decimal.Round(totalAmount, 4, MidpointRounding.AwayFromZero);
     }
 
     private static DateTimeOffset ResolveCycleEndExclusive(RecurringBooking recurringBooking, ProductPricingCadence purchaseCadence) =>

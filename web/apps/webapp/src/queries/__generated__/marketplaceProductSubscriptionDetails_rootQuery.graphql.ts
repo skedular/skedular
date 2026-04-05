@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<388e5941258a94d7f508f51729acf466>>
+ * @generated SignedSource<<02badecabfad2c76600159fec21bbdc5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
@@ -80,6 +81,10 @@ export type marketplaceProductSubscriptionDetails_rootQuery$data = {
       readonly type: MarketplaceBookingSubscriptionStatus;
     };
   } | null | undefined;
+  readonly marketplaceBookingSubscriptionCancellationModes: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MarketplaceBookingSubscriptionCancellationMode;
+  }>;
 };
 export type marketplaceProductSubscriptionDetails_rootQuery = {
   response: marketplaceProductSubscriptionDetails_rootQuery$data;
@@ -98,17 +103,10 @@ v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v3 = [
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -116,8 +114,15 @@ v3 = [
     "name": "type",
     "storageKey": null
   },
-  (v2/*: any*/)
+  (v1/*: any*/)
 ],
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
 v4 = {
   "alias": null,
   "args": null,
@@ -126,6 +131,16 @@ v4 = {
   "storageKey": null
 },
 v5 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "MarketplaceBookingSubscriptionCancellationModeDetails",
+    "kind": "LinkedField",
+    "name": "marketplaceBookingSubscriptionCancellationModes",
+    "plural": true,
+    "selections": (v2/*: any*/),
+    "storageKey": null
+  },
   {
     "alias": null,
     "args": [
@@ -140,7 +155,7 @@ v5 = [
     "name": "marketplaceBookingSubscription",
     "plural": false,
     "selections": [
-      (v1/*: any*/),
+      (v3/*: any*/),
       {
         "alias": null,
         "args": null,
@@ -176,7 +191,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "status",
         "plural": false,
-        "selections": (v3/*: any*/),
+        "selections": (v2/*: any*/),
         "storageKey": null
       },
       {
@@ -187,8 +202,8 @@ v5 = [
         "name": "involvedCustomers",
         "plural": true,
         "selections": [
+          (v3/*: any*/),
           (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -221,7 +236,7 @@ v5 = [
         "name": "recurringBookings",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -244,7 +259,7 @@ v5 = [
             "name": "marketplaceBooking",
             "plural": false,
             "selections": [
-              (v1/*: any*/),
+              (v3/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -275,7 +290,7 @@ v5 = [
                 "name": "productVersion",
                 "plural": false,
                 "selections": [
-                  (v1/*: any*/),
+                  (v3/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -390,7 +405,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "paymentMethod",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v2/*: any*/),
                 "storageKey": null
               },
               {
@@ -400,7 +415,7 @@ v5 = [
                 "kind": "LinkedField",
                 "name": "paymentStatus",
                 "plural": false,
-                "selections": (v3/*: any*/),
+                "selections": (v2/*: any*/),
                 "storageKey": null
               }
             ],
@@ -464,16 +479,16 @@ return {
     "selections": (v5/*: any*/)
   },
   "params": {
-    "cacheID": "ade6dcb6d9bf0968e8f943e544479d42",
+    "cacheID": "d6ce380e7c5cdb53c6b3d66d1b82f2c6",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "92ccd263d28d414584481d558636100e";
+(node as any).hash = "8062e7691773260850aa6fb9024e51fa";
 
 export default node;

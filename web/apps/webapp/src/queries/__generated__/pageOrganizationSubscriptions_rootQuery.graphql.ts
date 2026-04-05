@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<161d54af7e1a5d675e12da83c04f2153>>
+ * @generated SignedSource<<bdd3e2ce6f68cdf01b425d945aba65bd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,18 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
+export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type pageOrganizationSubscriptions_rootQuery$variables = {
   organizationCustomDomain: string;
 };
 export type pageOrganizationSubscriptions_rootQuery$data = {
+  readonly marketplaceBookingSubscriptionCancellationModes: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MarketplaceBookingSubscriptionCancellationMode;
+  }>;
   readonly marketplaceBookingSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -64,6 +70,10 @@ export type pageOrganizationSubscriptions_rootQuery$data = {
           readonly startDate: any;
         }>;
         readonly startedAt: any;
+        readonly status: {
+          readonly name: string;
+          readonly type: MarketplaceBookingSubscriptionStatus;
+        };
       };
     }>;
     readonly totalCount: number;
@@ -89,30 +99,50 @@ var v0 = [
     "name": "organizationCustomDomain"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "customDomain",
-    "variableName": "organizationCustomDomain"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
+v2 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+],
 v3 = {
-  "kind": "Variable",
-  "name": "organizationCustomDomain",
-  "variableName": "organizationCustomDomain"
-},
-v4 = {
   "alias": null,
-  "args": [
-    (v3/*: any*/)
-  ],
+  "args": null,
+  "concreteType": "MarketplaceBookingSubscriptionCancellationModeDetails",
+  "kind": "LinkedField",
+  "name": "marketplaceBookingSubscriptionCancellationModes",
+  "plural": true,
+  "selections": (v2/*: any*/),
+  "storageKey": null
+},
+v4 = [
+  {
+    "kind": "Variable",
+    "name": "customDomain",
+    "variableName": "organizationCustomDomain"
+  }
+],
+v5 = [
+  {
+    "kind": "Variable",
+    "name": "organizationCustomDomain",
+    "variableName": "organizationCustomDomain"
+  }
+],
+v6 = {
+  "alias": null,
+  "args": (v5/*: any*/),
   "concreteType": "OrganizationBookingPermissions",
   "kind": "LinkedField",
   "name": "organizationBookingPermissions",
@@ -135,7 +165,7 @@ v4 = {
   ],
   "storageKey": null
 },
-v5 = [
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -152,61 +182,64 @@ v5 = [
     ]
   },
   {
-    "fields": [
-      (v3/*: any*/),
-      {
-        "kind": "Literal",
-        "name": "status",
-        "value": "ACTIVE"
-      }
-    ],
+    "fields": (v5/*: any*/),
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v7 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "startedAt",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "nextRenewalAt",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "autoRenew",
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cancelAtPeriodEnd",
   "storageKey": null
 },
-v12 = {
+v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MarketplaceBookingSubscriptionStatusDetails",
+  "kind": "LinkedField",
+  "name": "status",
+  "plural": false,
+  "selections": (v2/*: any*/),
+  "storageKey": null
+},
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "CustomerDetails",
@@ -214,8 +247,8 @@ v12 = {
   "name": "involvedCustomers",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
-    (v2/*: any*/),
+    (v9/*: any*/),
+    (v1/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -240,44 +273,34 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "quantity",
   "storageKey": null
 },
-v14 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "type",
-    "storageKey": null
-  },
-  (v2/*: any*/)
-],
-v15 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": (v14/*: any*/),
+  "selections": (v2/*: any*/),
   "storageKey": null
 },
-v16 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
   "kind": "LinkedField",
   "name": "paymentMethod",
   "plural": false,
-  "selections": (v14/*: any*/),
+  "selections": (v2/*: any*/),
   "storageKey": null
 },
-v17 = {
+v19 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
@@ -295,7 +318,7 @@ v17 = {
   ],
   "storageKey": null
 },
-v18 = {
+v20 = {
   "alias": null,
   "args": null,
   "concreteType": "RecurringBookingDetails",
@@ -303,7 +326,7 @@ v18 = {
   "name": "recurringBookings",
   "plural": true,
   "selections": [
-    (v7/*: any*/),
+    (v9/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -326,8 +349,8 @@ v18 = {
       "name": "marketplaceBooking",
       "plural": false,
       "selections": [
-        (v7/*: any*/),
-        (v13/*: any*/),
+        (v9/*: any*/),
+        (v16/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -335,8 +358,8 @@ v18 = {
           "name": "invoiceUrl",
           "storageKey": null
         },
-        (v15/*: any*/),
-        (v16/*: any*/)
+        (v17/*: any*/),
+        (v18/*: any*/)
       ],
       "storageKey": null
     }
@@ -350,28 +373,29 @@ return {
     "metadata": null,
     "name": "pageOrganizationSubscriptions_rootQuery",
     "selections": [
+      (v3/*: any*/),
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v1/*: any*/)
         ],
         "storageKey": null
       },
-      (v4/*: any*/),
+      (v6/*: any*/),
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v7/*: any*/),
         "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscriptions",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -388,12 +412,13 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
+                  (v13/*: any*/),
+                  (v14/*: any*/),
+                  (v15/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -402,9 +427,9 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v13/*: any*/),
-                      (v15/*: any*/),
                       (v16/*: any*/),
+                      (v17/*: any*/),
+                      (v18/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -413,14 +438,14 @@ return {
                         "name": "productVersion",
                         "plural": false,
                         "selections": [
-                          (v17/*: any*/)
+                          (v19/*: any*/)
                         ],
                         "storageKey": null
                       }
                     ],
                     "storageKey": null
                   },
-                  (v18/*: any*/)
+                  (v20/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -440,29 +465,30 @@ return {
     "kind": "Operation",
     "name": "pageOrganizationSubscriptions_rootQuery",
     "selections": [
+      (v3/*: any*/),
       {
         "alias": null,
-        "args": (v1/*: any*/),
+        "args": (v4/*: any*/),
         "concreteType": "OrganizationDetails",
         "kind": "LinkedField",
         "name": "organization",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v7/*: any*/)
+          (v1/*: any*/),
+          (v9/*: any*/)
         ],
         "storageKey": null
       },
-      (v4/*: any*/),
+      (v6/*: any*/),
       {
         "alias": null,
-        "args": (v5/*: any*/),
+        "args": (v7/*: any*/),
         "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscriptions",
         "plural": false,
         "selections": [
-          (v6/*: any*/),
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -479,12 +505,13 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
-                  (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
                   (v11/*: any*/),
                   (v12/*: any*/),
+                  (v13/*: any*/),
+                  (v14/*: any*/),
+                  (v15/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -493,9 +520,9 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v13/*: any*/),
-                      (v15/*: any*/),
                       (v16/*: any*/),
+                      (v17/*: any*/),
+                      (v18/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -504,16 +531,16 @@ return {
                         "name": "productVersion",
                         "plural": false,
                         "selections": [
-                          (v17/*: any*/),
-                          (v7/*: any*/)
+                          (v19/*: any*/),
+                          (v9/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v7/*: any*/)
+                      (v9/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v18/*: any*/)
+                  (v20/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -526,16 +553,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "55c0a0528327187ddbfca0d22a072b05",
+    "cacheID": "c703eafa50727cf2bb7c9690561594f3",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationSubscriptions_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canViewBookings\n    canModifyPaymentMethod\n  }\n  marketplaceBookingSubscriptions(first: 50, where: {organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            type\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n          marketplaceBooking {\n            id\n            quantity\n            invoiceUrl\n            paymentStatus {\n              type\n              name\n            }\n            paymentMethod {\n              type\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query pageOrganizationSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  organizationBookingPermissions(organizationCustomDomain: $organizationCustomDomain) {\n    canViewBookings\n    canModifyPaymentMethod\n  }\n  marketplaceBookingSubscriptions(first: 50, where: {organizationCustomDomain: $organizationCustomDomain}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        status {\n          type\n          name\n        }\n        involvedCustomers {\n          id\n          name\n          givenName\n          middleName\n          familyName\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            type\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n          marketplaceBooking {\n            id\n            quantity\n            invoiceUrl\n            paymentStatus {\n              type\n              name\n            }\n            paymentMethod {\n              type\n              name\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "71449ad93bfa8e4ff99198cf13c2f1bd";
+(node as any).hash = "1bfc5e1121b22e828ce093c6b7ec3f65";
 
 export default node;

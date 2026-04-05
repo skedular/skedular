@@ -101,11 +101,48 @@ This file applies to the whole repository.
 - Do not silently rewrite live Xero repeating schedules when org billing settings change. First freeze existing live
   recurring exports locally and mark them for explicit migration. Pending local links with no external Xero id should
   still follow the current configuration.
-- Deleting a recurring booking is not currently a full invoice-provider cancellation flow.
-- For self-generated invoices, future sends can no-op once the recurring booking is deleted, but already-generated or
-  already-sent invoices are not retracted automatically.
-- For live Xero repeating templates, deleting the recurring booking does not currently cancel or archive the template in
-  Xero. Future Xero-generated invoices can continue until an explicit cancellation/archive path is implemented.
+- For self-generated recurring invoices, cancellation should stop future invoice sends/workflows, but already-generated
+  or already-sent invoices are not retracted automatically.
+- The same booking-owned accounting-invoice cancellation boundary should be used for one-time marketplace booking
+  cancellation too; do not leave one-time booking delete as a payment-workflow-only cleanup path.
+- For marketplace subscription cancellation, booking must propagate that cancellation into billing too:
+    - stop active recurring payment/invoice workflows for the affected recurring booking instances
+    - cancel live Xero repeating invoice templates for those recurring booking instances instead of only freezing local
+      state
+- `CancelAtPeriodEnd` is different from immediate delete:
+    - immediate delete should stop the subscription now
+    - `CancelAtPeriodEnd` should keep the current cycle active, disable renewal, and transition to `Cancelled` only at
+      the cycle boundary
+- Expose that choice explicitly at the API boundary. Do not rely on callers pre-mutating stored subscription state to
+  decide whether `DeleteAsync` means immediate cancellation or scheduled period-end cancellation.
+- Do not leave recurring-subscription cancellation as a booking/resource-only cleanup path if billing is still active.
+- Timeout, expiry, and payment-failure cleanup should route through the same accounting invoice cancellation path as
+  explicit booking/subscription deletion.
+- If Xero invoice cancellation cannot be completed during local cancellation, keep the local cancellation authoritative
+  and mark the export as `TransitionRequired` instead of failing the whole local cleanup.
+- For recurring booking cleanup, mark the parent recurring marketplace booking payment status as terminal too so the
+  subscription scheduler does not restart payment/invoice workflows or rematerialize instances after cancellation or
+  payment expiry.
+- Internal/self-hosted invoices need durable cancellation state too. Do not make invoice-cancelled persistence depend
+  only on Xero-specific accounting links.
+
+## Marketplace Subscription Auto-Renew
+
+- Marketplace auto-renewable subscriptions are maintained by the Temporal workflow
+  `BookMarketplaceBookingSubscriptionResources`.
+- That workflow wakes on a daily cadence and runs booking/resource reconciliation for the current subscription cycle.
+- Daily reconciliation currently:
+    1. ensures the current cycle recurring booking exists
+    2. repairs or removes future generated booking instances that no longer match the schedule
+    3. creates any missing future booking days for the current cycle
+- Renewal is driven from `NextRenewalAt` and the subscription purchase cadence, not from the per-instance booking
+  cadence.
+- On renewal, booking shared reloads the current `ProductVersion` and re-matches pricing so the renewed cycle stays
+  aligned with the product's current pricing options.
+- If no matching auto-renewable pricing exists anymore, the subscription must move to renewal failed instead of
+  silently renewing on the wrong pricing.
+- Current known gap: resource repair for existing marketplace subscription instances is best-effort and does not yet
+  explicitly fail when reassignment cannot satisfy the full required resource count.
 
 ## Xero Token Encryption Boundary
 
@@ -144,3 +181,13 @@ This file applies to the whole repository.
     1. frozen/injected constructor dependencies
     2. `sut`
     3. random test inputs and expected values
+
+## GraphQL Choice Types
+
+- When exposing a selectable enum-like value to GraphQL clients, do not only expose the raw enum/input value.
+- Follow the existing repo pattern:
+    1. shared model/constants + name mapping
+    2. GraphQL `...Details` type with `type` and `name`
+    3. query field returning the available choices for the UI
+- Prefer driving UI choice controls from those queryable details types instead of hardcoded labels or duplicated enum
+  lists.

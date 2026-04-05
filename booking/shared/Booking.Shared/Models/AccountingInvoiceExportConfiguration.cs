@@ -10,6 +10,7 @@ public static class AccountingInvoiceExportConfigurationStateConstants
 {
     public const string Active = "Active";
     public const string TransitionRequired = "TransitionRequired";
+    public const string Cancelled = "Cancelled";
 }
 
 public static class XeroRepeatingInvoiceScheduleSourceConstants

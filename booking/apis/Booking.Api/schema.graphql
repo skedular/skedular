@@ -1,960 +1,972 @@
 schema {
-  query: Query
-  mutation: Mutation
-  subscription: Subscription
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
 }
 
 type BookingCategoryDetails {
-  category: BookingCategory!
-  name: String!
+    category: BookingCategory!
+    name: String!
 }
 
 type BookingChannelDetails {
-  channel: BookingChannel!
-  name: String!
+    channel: BookingChannel!
+    name: String!
 }
 
 type BookingCheckoutSessionDetails {
-  uniqueId: String!
-  checkoutUrl: String!
+    uniqueId: String!
+    checkoutUrl: String!
 }
 
 type BookingDetails {
-  involvedCustomers: [CustomerDetails!]!
-  createdByCustomer: CustomerDetails
-  lastModifiedByCustomer: CustomerDetails
-  deletedByCustomer: CustomerDetails
-  involvedOrganizations: [OrganizationDetails!]!
-  involvedTeams: [TeamDetails!]!
-  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
-  from: DateTime!
-  until: DateTime!
-  notes: String
-  category: BookingCategoryDetails!
-  channel: BookingChannelDetails!
-  bookingResources: [BookingResourceDetails!]!
-  involvedLocations: [Booking_LocationDetails!]!
-  recurringBooking: RecurringBookingDetails
-  marketplaceBooking: MarketplaceBookingDetails
-  hasRecurringInstanceOverrides: Boolean
-  id: ID!
+    involvedCustomers: [CustomerDetails!]!
+    createdByCustomer: CustomerDetails
+    lastModifiedByCustomer: CustomerDetails
+    deletedByCustomer: CustomerDetails
+    involvedOrganizations: [OrganizationDetails!]!
+    involvedTeams: [TeamDetails!]!
+    arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
+    from: DateTime!
+    until: DateTime!
+    notes: String
+    category: BookingCategoryDetails!
+    channel: BookingChannelDetails!
+    bookingResources: [BookingResourceDetails!]!
+    involvedLocations: [Booking_LocationDetails!]!
+    recurringBooking: RecurringBookingDetails
+    marketplaceBooking: MarketplaceBookingDetails
+    hasRecurringInstanceOverrides: Boolean
+    id: ID!
 }
 
 type BookingEdge {
-  node: BookingDetails!
-  cursor: String!
+    node: BookingDetails!
+    cursor: String!
 }
 
 type BookingFrequencyDetails {
-  frequency: BookingFrequency!
-  name: String!
+    frequency: BookingFrequency!
+    name: String!
 }
 
 type BookingPayload {
-  clientMutationId: String
-  booking: BookingDetails!
+    clientMutationId: String
+    booking: BookingDetails!
 }
 
 type BookingRecurrenceEndTypeDetails {
-  endType: RecurringBookingEndType!
-  name: String!
+    endType: RecurringBookingEndType!
+    name: String!
 }
 
 type BookingResourceDetails {
-  customers: [CustomerDetails!]!
-  resource: ResourceDetails!
-  location: Booking_LocationDetails
+    customers: [CustomerDetails!]!
+    resource: ResourceDetails!
+    location: Booking_LocationDetails
 }
 
 type Booking_LocationDetails {
-  uniqueId: String!
-  name: String!
+    uniqueId: String!
+    name: String!
 }
 
 type ConnectionOfBookingEdge {
-  pageInfo: PageInfo!
-  edges: [BookingEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [BookingEdge!]!
+    totalCount: Int!
 }
 
 type ConnectionOfMarketplaceBookingSubscriptionEdge {
-  pageInfo: PageInfo!
-  edges: [MarketplaceBookingSubscriptionEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [MarketplaceBookingSubscriptionEdge!]!
+    totalCount: Int!
 }
 
 type ConnectionOfRecurringBookingEdge {
-  pageInfo: PageInfo!
-  edges: [RecurringBookingEdge!]!
-  totalCount: Int!
+    pageInfo: PageInfo!
+    edges: [RecurringBookingEdge!]!
+    totalCount: Int!
 }
 
 type CurrencyDetails {
-  type: Currency!
-  name: String!
+    type: Currency!
+    name: String!
 }
 
 type CustomerDetails {
-  id: ID!
+    id: ID!
 }
 
 type DayOfWeekDetails {
-  dayOfWeek: DayOfWeek!
-  name: String!
+    dayOfWeek: DayOfWeek!
+    name: String!
 }
 
 type ListingMetadata {
-  about: String
-  title: String
-  subTitle: String
-  includedFeatures: [String!]
+    about: String
+    title: String
+    subTitle: String
+    includedFeatures: [String!]
 }
 
 type MarketplaceBookingDetails {
-  paidByCustomer: CustomerDetails
-  paidByOrganization: OrganizationDetails
-  productVersion: ProductVersionDetails!
-  quantity: Int!
-  productPricing: ProductPricing!
-  paymentMethod: PaymentMethodTypeDetails!
-  totalAmountExcludeTax: Decimal
-  totalAmountExcludeTaxToDisplay: String!
-  taxAmount: Decimal
-  taxAmountToDisplay: String!
-  taxRatePercentage: Decimal
-  taxRatePercentageToDisplay: String!
-  totalAmount: Decimal
-  totalAmountToDisplay: String!
-  currency: CurrencyDetails
-  currencyToDisplay: String!
-  invoiceUrl: String
-  invoiceNumber: String
-  invoiceEmailList: [String!]!
-  billingMode: ProductPricingBillingMode!
-  isPaymentRequired: Boolean!
-  bookingCheckoutSession: BookingCheckoutSessionDetails
-  paymentExpiry: DateTime!
-  paymentStatus: PaymentStatusDetails!
-  id: ID!
+    paidByCustomer: CustomerDetails
+    paidByOrganization: OrganizationDetails
+    productVersion: ProductVersionDetails!
+    quantity: Int!
+    productPricing: ProductPricing!
+    paymentMethod: PaymentMethodTypeDetails!
+    totalAmountExcludeTax: Decimal
+    totalAmountExcludeTaxToDisplay: String!
+    taxAmount: Decimal
+    taxAmountToDisplay: String!
+    taxRatePercentage: Decimal
+    taxRatePercentageToDisplay: String!
+    totalAmount: Decimal
+    totalAmountToDisplay: String!
+    currency: CurrencyDetails
+    currencyToDisplay: String!
+    invoiceUrl: String
+    invoiceNumber: String
+    invoiceEmailList: [String!]!
+    billingMode: ProductPricingBillingMode!
+    isPaymentRequired: Boolean!
+    bookingCheckoutSession: BookingCheckoutSessionDetails
+    paymentExpiry: DateTime!
+    paymentStatus: PaymentStatusDetails!
+    id: ID!
+}
+
+type MarketplaceBookingSubscriptionCancellationModeDetails {
+    type: MarketplaceBookingSubscriptionCancellationMode!
+    name: String!
 }
 
 type MarketplaceBookingSubscriptionDetails {
-  involvedCustomers: [CustomerDetails!]!
-  createdByCustomer: CustomerDetails
-  lastModifiedByCustomer: CustomerDetails
-  deletedByCustomer: CustomerDetails
-  involvedOrganizations: [OrganizationDetails!]!
-  involvedTeams: [TeamDetails!]!
-  arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
-  startedAt: DateTime!
-  cancelledAt: DateTime
-  nextRenewalAt: DateTime
-  status: MarketplaceBookingSubscriptionStatusDetails!
-  autoRenew: Boolean!
-  cancelAtPeriodEnd: Boolean!
-  marketplaceBooking: MarketplaceBookingDetails!
-  recurringBookings: [RecurringBookingDetails!]!
-  id: ID!
+    involvedCustomers: [CustomerDetails!]!
+    createdByCustomer: CustomerDetails
+    lastModifiedByCustomer: CustomerDetails
+    deletedByCustomer: CustomerDetails
+    involvedOrganizations: [OrganizationDetails!]!
+    involvedTeams: [TeamDetails!]!
+    arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
+    startedAt: DateTime!
+    cancelledAt: DateTime
+    nextRenewalAt: DateTime
+    status: MarketplaceBookingSubscriptionStatusDetails!
+    autoRenew: Boolean!
+    cancelAtPeriodEnd: Boolean!
+    marketplaceBooking: MarketplaceBookingDetails!
+    recurringBookings: [RecurringBookingDetails!]!
+    id: ID!
 }
 
 type MarketplaceBookingSubscriptionEdge {
-  node: MarketplaceBookingSubscriptionDetails!
-  cursor: String!
+    node: MarketplaceBookingSubscriptionDetails!
+    cursor: String!
 }
 
 type MarketplaceBookingSubscriptionPayload {
-  clientMutationId: String
-  marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails!
+    clientMutationId: String
+    marketplaceBookingSubscription: MarketplaceBookingSubscriptionDetails!
 }
 
 type MarketplaceBookingSubscriptionStatusDetails {
-  type: MarketplaceBookingSubscriptionStatus!
-  name: String!
+    type: MarketplaceBookingSubscriptionStatus!
+    name: String!
 }
 
 type Mutation {
-  addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
-  addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
-  addMarketplaceBookingSubscription(input: AddMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
-  deleteMarketplaceBookingSubscription(input: DeleteMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
-  confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
-  rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
-  makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
-  confirmRecurringBookingPayment(input: ConfirmRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
-  rejectRecurringBookingPayment(input: RejectRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
-  makeRecurringBookingPaymentNotRequired(input: MakeRecurringBookingPaymentNotRequiredInput!): RecurringBookingPayload! @cost(weight: "10")
-  addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
-  updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
-  deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+    addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
+    updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+    deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
+    addMarketplaceBooking(input: AddMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+    updateMarketplaceBooking(input: UpdateMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+    deleteMarketplaceBooking(input: DeleteMarketplaceBookingInput!): BookingPayload! @cost(weight: "10")
+    addMarketplaceBookingSubscription(input: AddMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
+    deleteMarketplaceBookingSubscription(input: DeleteMarketplaceBookingSubscriptionInput!): MarketplaceBookingSubscriptionPayload! @cost(weight: "10")
+    confirmBookingPayment(input: ConfirmBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+    rejectBookingPayment(input: RejectBookingPaymentInput!): BookingPayload! @cost(weight: "10")
+    makeBookingPaymentNotRequired(input: MakeBookingPaymentNotRequiredInput!): BookingPayload! @cost(weight: "10")
+    confirmRecurringBookingPayment(input: ConfirmRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
+    rejectRecurringBookingPayment(input: RejectRecurringBookingPaymentInput!): RecurringBookingPayload! @cost(weight: "10")
+    makeRecurringBookingPaymentNotRequired(input: MakeRecurringBookingPaymentNotRequiredInput!): RecurringBookingPayload! @cost(weight: "10")
+    addPrivateRecurringBooking(input: AddPrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+    updatePrivateRecurringBooking(input: UpdatePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
+    deletePrivateRecurringBooking(input: DeletePrivateRecurringBookingInput!): RecurringBookingPayload! @cost(weight: "10")
 }
 
 type OrganizationArrearsInvoiceDetails {
-  invoiceNumber: String!
-  invoiceUrl: String!
-  billingPeriodStartInclusive: DateTime!
-  billingPeriodEndExclusive: DateTime!
-  currency: String!
-  totalAmount: Decimal!
-  totalAmountToDisplay: String!
-  createdAt: DateTime!
+    invoiceNumber: String!
+    invoiceUrl: String!
+    billingPeriodStartInclusive: DateTime!
+    billingPeriodEndExclusive: DateTime!
+    currency: String!
+    totalAmount: Decimal!
+    totalAmountToDisplay: String!
+    createdAt: DateTime!
 }
 
 type OrganizationAvailableResources {
-  resourcesCount: Int!
-  availableResourcesCount: Int!
+    resourcesCount: Int!
+    availableResourcesCount: Int!
 }
 
 type OrganizationBookingPermissions {
-  canViewBookings: Boolean!
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
-  canModifyPaymentMethod: Boolean!
+    canViewBookings: Boolean!
+    canAddBooking: Boolean!
+    canUpdateBooking: Boolean!
+    canDeleteBooking: Boolean!
+    canModifyPaymentMethod: Boolean!
 }
 
 type OrganizationDetails {
-  customDomain: String
-  id: ID!
+    customDomain: String
+    id: ID!
 }
 
 type OrganizationTagDetails {
-  name: String!
-  type: OrganizationTagType
-  color: String
-  id: ID!
+    name: String!
+    type: OrganizationTagType
+    color: String
+    id: ID!
 }
 
 type PageInfo {
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-  endCursor: String
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
 }
 
 type PaymentMethodTypeDetails {
-  type: PaymentMethod!
-  name: String!
+    type: PaymentMethod!
+    name: String!
 }
 
 type PaymentStatusDetails {
-  type: PaymentStatus!
-  name: String!
+    type: PaymentStatus!
+    name: String!
 }
 
 type ProductPricing {
-  id: String!
-  index: Int!
-  listingMetadata: ListingMetadata!
-  purchaseCadence: ProductPricingCadence!
-  bookingCadence: ProductPricingCadence!
-  price: Decimal!
-  isTaxInclusive: Boolean!
-  supportsSubscriptionAutoRenewal: Boolean!
-  acceptedPaymentMethods: [PaymentMethod!]!
-  billingMode: ProductPricingBillingMode!
-  minDurationMinutes: Int
-  maxDurationMinutes: Int
-  maxAllowedResourcesLockTimePaidViaCard: Int!
-  maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
-  numberOfResourcesToBook: Int!
-  cancellationPolicyType: ProductPricingCancellationPolicyType!
-  cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
+    id: String!
+    index: Int!
+    listingMetadata: ListingMetadata!
+    purchaseCadence: ProductPricingCadence!
+    bookingCadence: ProductPricingCadence!
+    price: Decimal!
+    isTaxInclusive: Boolean!
+    supportsSubscriptionAutoRenewal: Boolean!
+    acceptedPaymentMethods: [PaymentMethod!]!
+    billingMode: ProductPricingBillingMode!
+    minDurationMinutes: Int
+    maxDurationMinutes: Int
+    maxAllowedResourcesLockTimePaidViaCard: Int!
+    maxAllowedResourcesLockTimePaidViaBankTransfer: Int!
+    numberOfResourcesToBook: Int!
+    cancellationPolicyType: ProductPricingCancellationPolicyType!
+    cancellationRefundRules: [ProductPricingCancellationRefundRule!]!
 }
 
 type ProductPricingCancellationRefundRule {
-  minutesBefore: Int!
-  refundPercentage: Int!
+    minutesBefore: Int!
+    refundPercentage: Int!
 }
 
 type ProductVersionDetails {
-  id: ID!
+    id: ID!
 }
 
 type Query {
-  bookingCategories: [BookingCategoryDetails!]!
-  marketplaceBookingCategories: [BookingCategoryDetails!]!
-  booking(id: String!): BookingDetails @cost(weight: "10")
-  bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
-  bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
-  allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
-  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
-  marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails @lookup @internal @cost(weight: "10")
-  marketplaceBookingSubscriptions(after: String first: Int before: String last: Int where: MarketplaceBookingSubscriptionWhereInput! orderBy: [MarketplaceBookingSubscriptionOrderInput!]): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
-  allMarketplaceBookingSubscriptions(where: MarketplaceBookingSubscriptionWhereInput!): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
-  paymentMethodTypes: [PaymentMethodTypeDetails!]!
-  paymentStatuses: [PaymentStatusDetails!]!
-  organizationBookingPermissions(organizationId: String organizationCustomDomain: String): OrganizationBookingPermissions! @cost(weight: "10")
-  teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
-  recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
-  recurringBookingById(id: String!): RecurringBookingDetails @lookup @internal @cost(weight: "10")
-  recurringBookings(after: String first: Int before: String last: Int where: RecurringBookingWhereInput! orderBy: [RecurringBookingOrderInput!]): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
-  allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
-  availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
-  availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int! @cost(weight: "10")
-  organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
-  bookingVersion: Version!
-  bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
+    bookingCategories: [BookingCategoryDetails!]!
+    marketplaceBookingCategories: [BookingCategoryDetails!]!
+    booking(id: String!): BookingDetails @cost(weight: "10")
+    bookingById(id: String!): BookingDetails @lookup @internal @cost(weight: "10")
+    bookings(after: String first: Int before: String last: Int where: BookingWhereInput! orderBy: [BookingOrderInput!]): ConnectionOfBookingEdge! @cost(weight: "10")
+    allBookings(where: BookingWhereInput!): [BookingDetails!]! @cost(weight: "10")
+    marketplaceBookingSubscriptionCancellationModes: [MarketplaceBookingSubscriptionCancellationModeDetails!]!
+    marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails @cost(weight: "10")
+    marketplaceBookingSubscriptionById(id: String!): MarketplaceBookingSubscriptionDetails @lookup @internal @cost(weight: "10")
+    marketplaceBookingSubscriptions(after: String first: Int before: String last: Int where: MarketplaceBookingSubscriptionWhereInput! orderBy: [MarketplaceBookingSubscriptionOrderInput!]): ConnectionOfMarketplaceBookingSubscriptionEdge! @cost(weight: "10")
+    allMarketplaceBookingSubscriptions(where: MarketplaceBookingSubscriptionWhereInput!): [MarketplaceBookingSubscriptionDetails!]! @cost(weight: "10")
+    paymentMethodTypes: [PaymentMethodTypeDetails!]!
+    paymentStatuses: [PaymentStatusDetails!]!
+    organizationBookingPermissions(organizationId: String organizationCustomDomain: String): OrganizationBookingPermissions! @cost(weight: "10")
+    teamBookingPermissions(teamId: String!): TeamBookingPermissions! @cost(weight: "10")
+    recurringBooking(id: String!): RecurringBookingDetails @cost(weight: "10")
+    recurringBookingById(id: String!): RecurringBookingDetails @lookup @internal @cost(weight: "10")
+    recurringBookings(after: String first: Int before: String last: Int where: RecurringBookingWhereInput! orderBy: [RecurringBookingOrderInput!]): ConnectionOfRecurringBookingEdge! @cost(weight: "10")
+    allRecurringBookings(where: RecurringBookingWhereInput!): [RecurringBookingDetails!]! @cost(weight: "10")
+    availableResources(where: AvailableResourcesWhereInput!): [BookingResourceDetails!]! @cost(weight: "10")
+    availableResourcesCount(where: AvailableResourcesCountWhereInput!): Int! @cost(weight: "10")
+    organizationResourcesAvailability(where: OrganizationAvailableResourcesWhereInput!): OrganizationAvailableResources! @cost(weight: "10")
+    bookingVersion: Version!
+    bookingCustomerRecordSynced: Boolean! @cost(weight: "10")
 }
 
 type RecurringBookingDetails {
-  involvedCustomers: [CustomerDetails!]!
-  createdByCustomer: CustomerDetails
-  lastModifiedByCustomer: CustomerDetails
-  deletedByCustomer: CustomerDetails
-  involvedOrganizations: [OrganizationDetails!]!
-  involvedTeams: [TeamDetails!]!
-  from: DateTime!
-  until: DateTime!
-  category: BookingCategoryDetails!
-  channel: BookingChannelDetails!
-  frequency: BookingFrequencyDetails!
-  interval: Int!
-  byMonthDay: Int
-  bySetPosition: Int
-  byWeekDays: [DayOfWeekDetails!]!
-  endType: BookingRecurrenceEndTypeDetails!
-  startDate: DateTime!
-  endDate: DateTime
-  occurrenceCount: Int
-  skippedDates: [DateTime!]!
-  marketplaceBooking: MarketplaceBookingDetails
-  id: ID!
+    involvedCustomers: [CustomerDetails!]!
+    createdByCustomer: CustomerDetails
+    lastModifiedByCustomer: CustomerDetails
+    deletedByCustomer: CustomerDetails
+    involvedOrganizations: [OrganizationDetails!]!
+    involvedTeams: [TeamDetails!]!
+    from: DateTime!
+    until: DateTime!
+    category: BookingCategoryDetails!
+    channel: BookingChannelDetails!
+    frequency: BookingFrequencyDetails!
+    interval: Int!
+    byMonthDay: Int
+    bySetPosition: Int
+    byWeekDays: [DayOfWeekDetails!]!
+    endType: BookingRecurrenceEndTypeDetails!
+    startDate: DateTime!
+    endDate: DateTime
+    occurrenceCount: Int
+    skippedDates: [DateTime!]!
+    marketplaceBooking: MarketplaceBookingDetails
+    id: ID!
 }
 
 type RecurringBookingEdge {
-  node: RecurringBookingDetails!
-  cursor: String!
+    node: RecurringBookingDetails!
+    cursor: String!
 }
 
 type RecurringBookingPayload {
-  clientMutationId: String
-  recurringBooking: RecurringBookingDetails!
+    clientMutationId: String
+    recurringBooking: RecurringBookingDetails!
 }
 
 type ResourceDetails {
-  name: String!
-  inactive: Boolean!
-  requireBookingApproval: Boolean!
-  color: String
-  capacity: Int!
-  isAvailableHoursOverridden: Boolean!
-  customTags: [OrganizationTagDetails!]!
-  zones: [OrganizationTagDetails!]!
-  productTags: [OrganizationTagDetails!]!
-  resourceType: OrganizationTagDetails!
-  id: ID!
+    name: String!
+    inactive: Boolean!
+    requireBookingApproval: Boolean!
+    color: String
+    capacity: Int!
+    isAvailableHoursOverridden: Boolean!
+    customTags: [OrganizationTagDetails!]!
+    zones: [OrganizationTagDetails!]!
+    productTags: [OrganizationTagDetails!]!
+    resourceType: OrganizationTagDetails!
+    id: ID!
 }
 
 type Subscription {
-  booking(id: String!): BookingDetails!
-  marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
+    booking(id: String!): BookingDetails!
+    marketplaceBookingSubscription(id: String!): MarketplaceBookingSubscriptionDetails!
 }
 
 type TeamBookingPermissions {
-  canAddBooking: Boolean!
-  canUpdateBooking: Boolean!
-  canDeleteBooking: Boolean!
+    canAddBooking: Boolean!
+    canUpdateBooking: Boolean!
+    canDeleteBooking: Boolean!
 }
 
 type TeamDetails {
-  id: ID!
+    id: ID!
 }
 
 type Version {
-  major: Int!
-  minor: Int!
-  build: Int!
-  revision: Int!
+    major: Int!
+    minor: Int!
+    build: Int!
+    revision: Int!
 }
 
 input AddMarketplaceBookingInput {
-  clientMutationId: String
-  id: String
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  notes: String
-  category: BookingCategory
-  resourceIds: [String!]
-  paymentMethod: PaymentMethod!
-  invoiceEmailList: [String!]
-  quantity: Int!
-  productVersionId: String!
-  pricingId: String!
-  checkoutReturnUrl: String
+    clientMutationId: String
+    id: String
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    notes: String
+    category: BookingCategory
+    resourceIds: [String!]
+    paymentMethod: PaymentMethod!
+    invoiceEmailList: [String!]
+    quantity: Int!
+    productVersionId: String!
+    pricingId: String!
+    checkoutReturnUrl: String
 }
 
 input AddMarketplaceBookingSubscriptionInput {
-  clientMutationId: String
-  id: String
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  requestedResourceIds: [String!]
-  startedAt: DateTime!
-  autoRenew: Boolean!
-  cancelAtPeriodEnd: Boolean!
-  paymentMethod: PaymentMethod!
-  invoiceEmailList: [String!]
-  quantity: Int!
-  productVersionId: String!
-  pricingId: String!
-  checkoutReturnUrl: String
+    clientMutationId: String
+    id: String
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    requestedResourceIds: [String!]
+    startedAt: DateTime!
+    autoRenew: Boolean!
+    cancelAtPeriodEnd: Boolean!
+    paymentMethod: PaymentMethod!
+    invoiceEmailList: [String!]
+    quantity: Int!
+    productVersionId: String!
+    pricingId: String!
+    checkoutReturnUrl: String
 }
 
 input AddPrivateBookingInput {
-  clientMutationId: String
-  id: String
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  notes: String
-  category: BookingCategory
-  resourceIds: [String!]
+    clientMutationId: String
+    id: String
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    notes: String
+    category: BookingCategory
+    resourceIds: [String!]
 }
 
 input AddPrivateRecurringBookingInput {
-  clientMutationId: String
-  id: String
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  requestedResourceIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  frequency: BookingFrequency!
-  interval: Int!
-  byMonthDay: Int
-  bySetPosition: Int
-  byWeekDays: [DayOfWeek!]!
-  endType: RecurringBookingEndType!
-  startDate: DateTime!
-  endDate: DateTime
-  occurrenceCount: Int
-  skippedDates: [DateTime!]
-  category: BookingCategory
+    clientMutationId: String
+    id: String
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    requestedResourceIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    frequency: BookingFrequency!
+    interval: Int!
+    byMonthDay: Int
+    bySetPosition: Int
+    byWeekDays: [DayOfWeek!]!
+    endType: RecurringBookingEndType!
+    startDate: DateTime!
+    endDate: DateTime
+    occurrenceCount: Int
+    skippedDates: [DateTime!]
+    category: BookingCategory
 }
 
 input AvailableResourcesCountWhereInput {
-  organizationId: String
-  organizationCustomDomain: String
-  locationId: String
-  requestedResourceIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  customTagIds: [String!]
-  zoneIds: [String!]
-  productId: String
+    organizationId: String
+    organizationCustomDomain: String
+    locationId: String
+    requestedResourceIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    customTagIds: [String!]
+    zoneIds: [String!]
+    productId: String
 }
 
 input AvailableResourcesWhereInput {
-  organizationId: String
-  organizationCustomDomain: String
-  locationId: String
-  from: DateTime!
-  until: DateTime!
-  customTagIds: [String!]
-  zoneIds: [String!]
-  resourceIdsToInclude: [String!]
-  productId: String
+    organizationId: String
+    organizationCustomDomain: String
+    locationId: String
+    from: DateTime!
+    until: DateTime!
+    customTagIds: [String!]
+    zoneIds: [String!]
+    resourceIdsToInclude: [String!]
+    productId: String
 }
 
 input BookingOrderInput {
-  direction: OrderDirection!
-  field: BookingOrderField!
+    direction: OrderDirection!
+    field: BookingOrderField!
 }
 
 input BookingWhereInput {
-  fromGt: DateTime
-  fromGte: DateTime
-  fromLt: DateTime
-  fromLte: DateTime
-  toGt: DateTime
-  toGte: DateTime
-  toLt: DateTime
-  toLte: DateTime
-  notesContains: String
-  category: BookingCategory
-  channel: BookingChannel
-  paymentStatuses: [PaymentStatus!]
-  nameContains: String
-  organizationId: String
-  organizationCustomDomain: String
-  locationIds: [String!]
-  teamIds: [String!]
-  customerIds: [String!]
-  recurringBookingIds: [String!]
-  includeMineOnly: Boolean
-  includeFutureBookingsOnly: Boolean
+    fromGt: DateTime
+    fromGte: DateTime
+    fromLt: DateTime
+    fromLte: DateTime
+    toGt: DateTime
+    toGte: DateTime
+    toLt: DateTime
+    toLte: DateTime
+    notesContains: String
+    category: BookingCategory
+    channel: BookingChannel
+    paymentStatuses: [PaymentStatus!]
+    nameContains: String
+    organizationId: String
+    organizationCustomDomain: String
+    locationIds: [String!]
+    teamIds: [String!]
+    customerIds: [String!]
+    recurringBookingIds: [String!]
+    includeMineOnly: Boolean
+    includeFutureBookingsOnly: Boolean
 }
 
 input ConfirmBookingPaymentInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input ConfirmRecurringBookingPaymentInput {
-  id: String!
-  clientMutationId: String
+    id: String!
+    clientMutationId: String
 }
 
 input DeleteMarketplaceBookingInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeleteMarketplaceBookingSubscriptionInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
+    cancellationMode: MarketplaceBookingSubscriptionCancellationMode!
 }
 
 input DeletePrivateBookingInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input DeletePrivateRecurringBookingInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input MakeBookingPaymentNotRequiredInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input MakeRecurringBookingPaymentNotRequiredInput {
-  id: String!
-  clientMutationId: String
+    id: String!
+    clientMutationId: String
 }
 
 input MarketplaceBookingSubscriptionOrderInput {
-  direction: OrderDirection!
-  field: MarketplaceBookingSubscriptionOrderField!
+    direction: OrderDirection!
+    field: MarketplaceBookingSubscriptionOrderField!
 }
 
 input MarketplaceBookingSubscriptionWhereInput {
-  startedAtGt: DateTime
-  startedAtGte: DateTime
-  startedAtLt: DateTime
-  startedAtLte: DateTime
-  cancelledAtGt: DateTime
-  cancelledAtGte: DateTime
-  cancelledAtLt: DateTime
-  cancelledAtLte: DateTime
-  nextRenewalAtGt: DateTime
-  nextRenewalAtGte: DateTime
-  nextRenewalAtLt: DateTime
-  nextRenewalAtLte: DateTime
-  status: MarketplaceBookingSubscriptionStatus
-  nameContains: String
-  organizationId: String
-  organizationCustomDomain: String
-  teamIds: [String!]
-  customerIds: [String!]
-  includeMineOnly: Boolean
+    startedAtGt: DateTime
+    startedAtGte: DateTime
+    startedAtLt: DateTime
+    startedAtLte: DateTime
+    cancelledAtGt: DateTime
+    cancelledAtGte: DateTime
+    cancelledAtLt: DateTime
+    cancelledAtLte: DateTime
+    nextRenewalAtGt: DateTime
+    nextRenewalAtGte: DateTime
+    nextRenewalAtLt: DateTime
+    nextRenewalAtLte: DateTime
+    status: MarketplaceBookingSubscriptionStatus
+    nameContains: String
+    organizationId: String
+    organizationCustomDomain: String
+    teamIds: [String!]
+    customerIds: [String!]
+    includeMineOnly: Boolean
 }
 
 input OrganizationAvailableResourcesWhereInput {
-  organizationId: String
-  organizationCustomDomain: String
-  from: DateTime!
-  until: DateTime!
+    organizationId: String
+    organizationCustomDomain: String
+    from: DateTime!
+    until: DateTime!
 }
 
 input RecurringBookingOrderInput {
-  direction: OrderDirection!
-  field: RecurringBookingOrderField!
+    direction: OrderDirection!
+    field: RecurringBookingOrderField!
 }
 
 input RecurringBookingWhereInput {
-  fromGt: DateTime
-  fromGte: DateTime
-  fromLt: DateTime
-  fromLte: DateTime
-  toGt: DateTime
-  toGte: DateTime
-  toLt: DateTime
-  toLte: DateTime
-  category: BookingCategory
-  channel: BookingChannel
-  nameContains: String
-  organizationId: String
-  organizationCustomDomain: String
-  teamIds: [String!]
-  customerIds: [String!]
-  includeMineOnly: Boolean
-  includeFutureBookingsOnly: Boolean
+    fromGt: DateTime
+    fromGte: DateTime
+    fromLt: DateTime
+    fromLte: DateTime
+    toGt: DateTime
+    toGte: DateTime
+    toLt: DateTime
+    toLte: DateTime
+    category: BookingCategory
+    channel: BookingChannel
+    nameContains: String
+    organizationId: String
+    organizationCustomDomain: String
+    teamIds: [String!]
+    customerIds: [String!]
+    includeMineOnly: Boolean
+    includeFutureBookingsOnly: Boolean
 }
 
 input RejectBookingPaymentInput {
-  clientMutationId: String
-  id: String!
+    clientMutationId: String
+    id: String!
 }
 
 input RejectRecurringBookingPaymentInput {
-  id: String!
-  clientMutationId: String
+    id: String!
+    clientMutationId: String
 }
 
 input UpdateMarketplaceBookingInput {
-  clientMutationId: String
-  id: String!
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  notes: String
-  category: BookingCategory
+    clientMutationId: String
+    id: String!
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    notes: String
+    category: BookingCategory
 }
 
 input UpdatePrivateBookingInput {
-  clientMutationId: String
-  id: String!
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  notes: String
-  category: BookingCategory
-  resourceIds: [String!]
+    clientMutationId: String
+    id: String!
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    notes: String
+    category: BookingCategory
+    resourceIds: [String!]
 }
 
 input UpdatePrivateRecurringBookingInput {
-  clientMutationId: String
-  id: String!
-  customerIds: [String!]!
-  organizationIds: [String!]
-  organizationCustomDomains: [String!]
-  teamIds: [String!]
-  requestedResourceIds: [String!]
-  from: DateTime!
-  until: DateTime!
-  frequency: BookingFrequency!
-  interval: Int!
-  byMonthDay: Int
-  bySetPosition: Int
-  byWeekDays: [DayOfWeek!]!
-  endType: RecurringBookingEndType!
-  startDate: DateTime!
-  endDate: DateTime
-  occurrenceCount: Int
-  skippedDates: [DateTime!]
-  category: BookingCategory
+    clientMutationId: String
+    id: String!
+    customerIds: [String!]!
+    organizationIds: [String!]
+    organizationCustomDomains: [String!]
+    teamIds: [String!]
+    requestedResourceIds: [String!]
+    from: DateTime!
+    until: DateTime!
+    frequency: BookingFrequency!
+    interval: Int!
+    byMonthDay: Int
+    bySetPosition: Int
+    byWeekDays: [DayOfWeek!]!
+    endType: RecurringBookingEndType!
+    startDate: DateTime!
+    endDate: DateTime
+    occurrenceCount: Int
+    skippedDates: [DateTime!]
+    category: BookingCategory
 }
 
 enum BookingCategory {
-  WORKING_FROM_HOME
-  WORKING_FROM_OFFICE
-  WORKING_FROM_COWORKING_SPACE
-  SICK_LEAVE
-  ANNUAL_LEAVE
-  WELLBEING_LEAVE
-  CLIENT_OFFICE
-  VACATION
-  TRAVELING_FOR_WORK
-  NON_WORKING_DAY
+    WORKING_FROM_HOME
+    WORKING_FROM_OFFICE
+    WORKING_FROM_COWORKING_SPACE
+    SICK_LEAVE
+    ANNUAL_LEAVE
+    WELLBEING_LEAVE
+    CLIENT_OFFICE
+    VACATION
+    TRAVELING_FOR_WORK
+    NON_WORKING_DAY
 }
 
 enum BookingChannel {
-  PRIVATE
-  MARKETPLACE
+    PRIVATE
+    MARKETPLACE
 }
 
 enum BookingFrequency {
-  DAILY
-  WEEKLY
-  MONTHLY
+    DAILY
+    WEEKLY
+    MONTHLY
 }
 
 enum BookingOrderField {
-  FROM
-  TO
-  NOTES
-  CATEGORY
-  CHANNEL
+    FROM
+    TO
+    NOTES
+    CATEGORY
+    CHANNEL
 }
 
 enum Currency {
-  NZD
-  USD
+    NZD
+    USD
 }
 
 enum DayOfWeek {
-  SUNDAY
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
+    SUNDAY
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+}
+
+enum MarketplaceBookingSubscriptionCancellationMode {
+    IMMEDIATE
+    AT_PERIOD_END
 }
 
 enum MarketplaceBookingSubscriptionOrderField {
-  STARTED_AT
-  CANCELLED_AT
-  NEXT_RENEWAL_AT
-  STATUS
+    STARTED_AT
+    CANCELLED_AT
+    NEXT_RENEWAL_AT
+    STATUS
 }
 
 enum MarketplaceBookingSubscriptionStatus {
-  ACTIVE
-  CANCELLED
-  EXPIRED
-  RENEWAL_FAILED
-  PAUSED
+    ACTIVE
+    CANCELLED
+    EXPIRED
+    RENEWAL_FAILED
+    PAUSED
 }
 
 enum OrderDirection {
-  ASCENDING
-  DESCENDING
+    ASCENDING
+    DESCENDING
 }
 
 enum OrganizationTagType {
-  CUSTOM
-  ZONE
-  PRODUCT
-  RESOURCE_DESK
-  RESOURCE_ROOM
-  RESOURCE_PARKING
-  RESOURCE_OTHERS
-  LOCATION_SPACE_TYPE_CAR_PARK_SPACE
-  LOCATION_SPACE_TYPE_EVENT_SPACE
-  LOCATION_SPACE_TYPE_MEETING_SPACE
-  LOCATION_SPACE_TYPE_OFFICE_SPACE
-  LOCATION_SPACE_TYPE_RETAIL_SPACE
-  LOCATION_SPACE_TYPE_STORAGE_SPACE
-  LOCATION_SPACE_TYPE_STUDIO_SPACE
-  LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
-  LOCATION_SPACE_TYPE_SHOOT_LOCATION
-  LOCATION_SPACE_TYPE_OTHERS
-  AMENITY_HIGH_SPEED_WIFI
-  AMENITY_DEDICATED_VLAN
-  AMENITY_WIRED_ETHERNET
-  AMENITY_GUEST_NETWORK
-  AMENITY_VPN_SUPPORT
-  AMENITY_BACKUP_INTERNET
-  AMENITY_NETWORK_PRINTING
-  AMENITY_SECURE_SSID
-  AMENITY_PUBLIC_IP_OPTION
-  AMENITY_STANDARD_POWER_OUTLETS
-  AMENITY_USB_A_PORTS
-  AMENITY_USB_C_PORTS
-  AMENITY_WIRELESS_CHARGING
-  AMENITY_POWER_STRIPS
-  AMENITY_UPS_BACKED_POWER
-  AMENITY_MONITOR_DOCKING_STATION
-  AMENITY_LAPTOP_STAND_AVAILABILITY
-  AMENITY_ADJUSTABLE_DESK
-  AMENITY_STANDING_DESK
-  AMENITY_FIXED_DESK
-  AMENITY_ERGONOMIC_CHAIR
-  AMENITY_EXECUTIVE_CHAIR
-  AMENITY_DUAL_MONITOR_SETUP
-  AMENITY_PRIVACY_DESK_DIVIDER
-  AMENITY_LOCKABLE_PEDESTAL
-  AMENITY_WHITEBOARD_AT_DESK
-  AMENITY_TASK_LAMP
-  AMENITY_WHITEBOARD
-  AMENITY_GLASS_BOARD
-  AMENITY_FLIP_CHART
-  AMENITY_MARKERS_INCLUDED
-  AMENITY_PROJECTOR
-  AMENITY_LARGE_DISPLAY
-  AMENITY_HDMI_USB_C_CASTING
-  AMENITY_VIDEO_CONFERENCING_KIT
-  AMENITY_SPEAKERPHONE
-  AMENITY_ROOM_CAMERA
-  AMENITY_CONFERENCE_TABLE
-  AMENITY_BREAKOUT_AREA
-  AMENITY_ACOUSTIC_TREATMENT
-  AMENITY_SOUNDPROOF_ROOM
-  AMENITY_PHONE_BOOTH
-  AMENITY_QUIET_ZONE
-  AMENITY_FOCUS_ROOM
-  AMENITY_CONFIDENTIAL_MEETING_ROOM
-  AMENITY_NOISE_CANCELLING_PANELS
-  AMENITY_AIR_CONDITIONING
-  AMENITY_HEATING
-  AMENITY_FRESH_AIR_VENTILATION
-  AMENITY_OPERABLE_WINDOWS
-  AMENITY_NATURAL_LIGHT
-  AMENITY_BLACKOUT_BLINDS
-  AMENITY_AMBIENT_LIGHTING_CONTROLS
-  AMENITY_TEMPERATURE_CONTROLS
-  AMENITY_AIR_PURIFIER
-  AMENITY_HUMIDITY_CONTROL
-  AMENITY_COFFEE_MACHINE
-  AMENITY_TEA_STATION
-  AMENITY_FILTERED_WATER
-  AMENITY_SPARKLING_WATER
-  AMENITY_SNACK_BAR
-  AMENITY_KITCHENETTE
-  AMENITY_FULL_KITCHEN
-  AMENITY_REFRIGERATOR
-  AMENITY_MICROWAVE
-  AMENITY_DISHWASHER
-  AMENITY_CATERING_SUPPORT
-  AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
-  AMENITY_ELEVATOR_ACCESS
-  AMENITY_ACCESSIBLE_RESTROOM
-  AMENITY_ACCESSIBLE_DESK_HEIGHT
-  AMENITY_BRAILLE_SIGNAGE
-  AMENITY_HEARING_LOOP
-  AMENITY_STEP_FREE_PATH
-  AMENITY_WIDE_DOORWAYS
-  AMENITY_GENDER_NEUTRAL_RESTROOM
-  AMENITY_PRAYER_ROOM
-  AMENITY_ACCESS247
-  AMENITY_BUSINESS_HOURS_ACCESS
-  AMENITY_KEYCARD_ENTRY
-  AMENITY_BIOMETRIC_ENTRY
-  AMENITY_RECEPTION_DESK
-  AMENITY_VISITOR_MANAGEMENT
-  AMENITY_CCTV
-  AMENITY_ON_SITE_SECURITY
-  AMENITY_LOCKABLE_ROOM
-  AMENITY_LOCKER_STORAGE
-  AMENITY_ALARM_SYSTEM
-  AMENITY_RESTROOMS_NEARBY
-  AMENITY_SHOWER_FACILITIES
-  AMENITY_END_OF_TRIP_FACILITIES
-  AMENITY_BIKE_STORAGE
-  AMENITY_LOADING_DOCK_ACCESS
-  AMENITY_FREIGHT_ELEVATOR
-  AMENITY_MAIL_HANDLING
-  AMENITY_PACKAGE_RECEIVING
-  AMENITY_STORAGE_ROOM
-  AMENITY_WASTE_RECYCLING_STATION
-  AMENITY_ON_SITE_PARKING
-  AMENITY_RESERVED_PARKING
-  AMENITY_EV_CHARGING
-  AMENITY_STREET_PARKING_NEARBY
-  AMENITY_PUBLIC_TRANSIT_NEARBY
-  AMENITY_TAXI_RIDESHARE_ZONE
-  AMENITY_BICYCLE_FRIENDLY_ACCESS
-  AMENITY_GYM_ACCESS
-  AMENITY_WELLNESS_ROOM
-  AMENITY_NAP_POD_ROOM
-  AMENITY_OUTDOOR_TERRACE
-  AMENITY_GARDEN_PATIO
-  AMENITY_GAME_LOUNGE_AREA
-  AMENITY_STANDING_MEETING_ZONE
-  AMENITY_MEDITATION_ROOM
-  AMENITY_CHILDCARE_NEARBY
-  AMENITY_FAMILY_ROOM
-  AMENITY_LACTATION_ROOM
-  AMENITY_PET_FRIENDLY
-  AMENITY_SERVICE_ANIMAL_READY
-  AMENITY_IT_SUPPORT_ON_SITE
-  AMENITY_FRONT_DESK_SUPPORT
-  AMENITY_COMMUNITY_MANAGER
-  AMENITY_CLEANING_SERVICE
-  AMENITY_AFTER_HOURS_SUPPORT
-  AMENITY_FACILITIES_HELPDESK
-  AMENITY_ON_DEMAND_SETUP
-  AMENITY_HOURLY_BOOKABLE
-  AMENITY_DAILY_PASS
-  AMENITY_MONTHLY_MEMBERSHIP
-  AMENITY_MINIMUM_BOOKING_DURATION
-  AMENITY_MAX_CAPACITY
-  AMENITY_CANCELLATION_FLEXIBILITY
-  AMENITY_REFUNDABLE_BOOKING
-  AMENITY_DEPOSIT_REQUIRED
-  AMENITY_LEAD_TIME_REQUIREMENT
-  AMENITY_CHECK_IN_REQUIRED
-  AMENITY_HOST_APPROVAL_REQUIRED
-  AMENITY_DESK_PHONE
-  AMENITY_KEYBOARD_MOUSE_INCLUDED
-  AMENITY_MONITOR_ARM
-  AMENITY_BOARDROOM_LAYOUT
-  AMENITY_CLASSROOM_LAYOUT
-  AMENITY_HYBRID_READY
-  AMENITY_RECORDING_ENABLED
-  AMENITY_STAGE
-  AMENITY_PA_SYSTEM
-  AMENITY_LIGHTING_RIG
-  AMENITY_MOVABLE_SEATING
-  AMENITY_EVENT_STAFF_SUPPORT
-  AMENITY_SOUND_BOOTH
-  AMENITY_GREEN_SCREEN
-  AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
-  AMENITY_SAFETY_COMPLIANCE_KIT
+    CUSTOM
+    ZONE
+    PRODUCT
+    RESOURCE_DESK
+    RESOURCE_ROOM
+    RESOURCE_PARKING
+    RESOURCE_OTHERS
+    LOCATION_SPACE_TYPE_CAR_PARK_SPACE
+    LOCATION_SPACE_TYPE_EVENT_SPACE
+    LOCATION_SPACE_TYPE_MEETING_SPACE
+    LOCATION_SPACE_TYPE_OFFICE_SPACE
+    LOCATION_SPACE_TYPE_RETAIL_SPACE
+    LOCATION_SPACE_TYPE_STORAGE_SPACE
+    LOCATION_SPACE_TYPE_STUDIO_SPACE
+    LOCATION_SPACE_TYPE_COMMERCIAL_KITCHEN
+    LOCATION_SPACE_TYPE_SHOOT_LOCATION
+    LOCATION_SPACE_TYPE_OTHERS
+    AMENITY_HIGH_SPEED_WIFI
+    AMENITY_DEDICATED_VLAN
+    AMENITY_WIRED_ETHERNET
+    AMENITY_GUEST_NETWORK
+    AMENITY_VPN_SUPPORT
+    AMENITY_BACKUP_INTERNET
+    AMENITY_NETWORK_PRINTING
+    AMENITY_SECURE_SSID
+    AMENITY_PUBLIC_IP_OPTION
+    AMENITY_STANDARD_POWER_OUTLETS
+    AMENITY_USB_A_PORTS
+    AMENITY_USB_C_PORTS
+    AMENITY_WIRELESS_CHARGING
+    AMENITY_POWER_STRIPS
+    AMENITY_UPS_BACKED_POWER
+    AMENITY_MONITOR_DOCKING_STATION
+    AMENITY_LAPTOP_STAND_AVAILABILITY
+    AMENITY_ADJUSTABLE_DESK
+    AMENITY_STANDING_DESK
+    AMENITY_FIXED_DESK
+    AMENITY_ERGONOMIC_CHAIR
+    AMENITY_EXECUTIVE_CHAIR
+    AMENITY_DUAL_MONITOR_SETUP
+    AMENITY_PRIVACY_DESK_DIVIDER
+    AMENITY_LOCKABLE_PEDESTAL
+    AMENITY_WHITEBOARD_AT_DESK
+    AMENITY_TASK_LAMP
+    AMENITY_WHITEBOARD
+    AMENITY_GLASS_BOARD
+    AMENITY_FLIP_CHART
+    AMENITY_MARKERS_INCLUDED
+    AMENITY_PROJECTOR
+    AMENITY_LARGE_DISPLAY
+    AMENITY_HDMI_USB_C_CASTING
+    AMENITY_VIDEO_CONFERENCING_KIT
+    AMENITY_SPEAKERPHONE
+    AMENITY_ROOM_CAMERA
+    AMENITY_CONFERENCE_TABLE
+    AMENITY_BREAKOUT_AREA
+    AMENITY_ACOUSTIC_TREATMENT
+    AMENITY_SOUNDPROOF_ROOM
+    AMENITY_PHONE_BOOTH
+    AMENITY_QUIET_ZONE
+    AMENITY_FOCUS_ROOM
+    AMENITY_CONFIDENTIAL_MEETING_ROOM
+    AMENITY_NOISE_CANCELLING_PANELS
+    AMENITY_AIR_CONDITIONING
+    AMENITY_HEATING
+    AMENITY_FRESH_AIR_VENTILATION
+    AMENITY_OPERABLE_WINDOWS
+    AMENITY_NATURAL_LIGHT
+    AMENITY_BLACKOUT_BLINDS
+    AMENITY_AMBIENT_LIGHTING_CONTROLS
+    AMENITY_TEMPERATURE_CONTROLS
+    AMENITY_AIR_PURIFIER
+    AMENITY_HUMIDITY_CONTROL
+    AMENITY_COFFEE_MACHINE
+    AMENITY_TEA_STATION
+    AMENITY_FILTERED_WATER
+    AMENITY_SPARKLING_WATER
+    AMENITY_SNACK_BAR
+    AMENITY_KITCHENETTE
+    AMENITY_FULL_KITCHEN
+    AMENITY_REFRIGERATOR
+    AMENITY_MICROWAVE
+    AMENITY_DISHWASHER
+    AMENITY_CATERING_SUPPORT
+    AMENITY_WHEELCHAIR_ACCESSIBLE_ENTRANCE
+    AMENITY_ELEVATOR_ACCESS
+    AMENITY_ACCESSIBLE_RESTROOM
+    AMENITY_ACCESSIBLE_DESK_HEIGHT
+    AMENITY_BRAILLE_SIGNAGE
+    AMENITY_HEARING_LOOP
+    AMENITY_STEP_FREE_PATH
+    AMENITY_WIDE_DOORWAYS
+    AMENITY_GENDER_NEUTRAL_RESTROOM
+    AMENITY_PRAYER_ROOM
+    AMENITY_ACCESS247
+    AMENITY_BUSINESS_HOURS_ACCESS
+    AMENITY_KEYCARD_ENTRY
+    AMENITY_BIOMETRIC_ENTRY
+    AMENITY_RECEPTION_DESK
+    AMENITY_VISITOR_MANAGEMENT
+    AMENITY_CCTV
+    AMENITY_ON_SITE_SECURITY
+    AMENITY_LOCKABLE_ROOM
+    AMENITY_LOCKER_STORAGE
+    AMENITY_ALARM_SYSTEM
+    AMENITY_RESTROOMS_NEARBY
+    AMENITY_SHOWER_FACILITIES
+    AMENITY_END_OF_TRIP_FACILITIES
+    AMENITY_BIKE_STORAGE
+    AMENITY_LOADING_DOCK_ACCESS
+    AMENITY_FREIGHT_ELEVATOR
+    AMENITY_MAIL_HANDLING
+    AMENITY_PACKAGE_RECEIVING
+    AMENITY_STORAGE_ROOM
+    AMENITY_WASTE_RECYCLING_STATION
+    AMENITY_ON_SITE_PARKING
+    AMENITY_RESERVED_PARKING
+    AMENITY_EV_CHARGING
+    AMENITY_STREET_PARKING_NEARBY
+    AMENITY_PUBLIC_TRANSIT_NEARBY
+    AMENITY_TAXI_RIDESHARE_ZONE
+    AMENITY_BICYCLE_FRIENDLY_ACCESS
+    AMENITY_GYM_ACCESS
+    AMENITY_WELLNESS_ROOM
+    AMENITY_NAP_POD_ROOM
+    AMENITY_OUTDOOR_TERRACE
+    AMENITY_GARDEN_PATIO
+    AMENITY_GAME_LOUNGE_AREA
+    AMENITY_STANDING_MEETING_ZONE
+    AMENITY_MEDITATION_ROOM
+    AMENITY_CHILDCARE_NEARBY
+    AMENITY_FAMILY_ROOM
+    AMENITY_LACTATION_ROOM
+    AMENITY_PET_FRIENDLY
+    AMENITY_SERVICE_ANIMAL_READY
+    AMENITY_IT_SUPPORT_ON_SITE
+    AMENITY_FRONT_DESK_SUPPORT
+    AMENITY_COMMUNITY_MANAGER
+    AMENITY_CLEANING_SERVICE
+    AMENITY_AFTER_HOURS_SUPPORT
+    AMENITY_FACILITIES_HELPDESK
+    AMENITY_ON_DEMAND_SETUP
+    AMENITY_HOURLY_BOOKABLE
+    AMENITY_DAILY_PASS
+    AMENITY_MONTHLY_MEMBERSHIP
+    AMENITY_MINIMUM_BOOKING_DURATION
+    AMENITY_MAX_CAPACITY
+    AMENITY_CANCELLATION_FLEXIBILITY
+    AMENITY_REFUNDABLE_BOOKING
+    AMENITY_DEPOSIT_REQUIRED
+    AMENITY_LEAD_TIME_REQUIREMENT
+    AMENITY_CHECK_IN_REQUIRED
+    AMENITY_HOST_APPROVAL_REQUIRED
+    AMENITY_DESK_PHONE
+    AMENITY_KEYBOARD_MOUSE_INCLUDED
+    AMENITY_MONITOR_ARM
+    AMENITY_BOARDROOM_LAYOUT
+    AMENITY_CLASSROOM_LAYOUT
+    AMENITY_HYBRID_READY
+    AMENITY_RECORDING_ENABLED
+    AMENITY_STAGE
+    AMENITY_PA_SYSTEM
+    AMENITY_LIGHTING_RIG
+    AMENITY_MOVABLE_SEATING
+    AMENITY_EVENT_STAFF_SUPPORT
+    AMENITY_SOUND_BOOTH
+    AMENITY_GREEN_SCREEN
+    AMENITY_SPECIALIZED_TOOLS_EQUIPMENT
+    AMENITY_SAFETY_COMPLIANCE_KIT
 }
 
 enum PaymentMethod {
-  CARD
-  BANK_TRANSFER
+    CARD
+    BANK_TRANSFER
 }
 
 enum PaymentStatus {
-  NOT_SET
-  PENDING
-  REJECTED
-  CONFIRMED
-  EXPIRED
-  RECORD_NEVER_CREATED
-  NO_PAYMENT_REQUIRED
+    NOT_SET
+    PENDING
+    REJECTED
+    CONFIRMED
+    EXPIRED
+    RECORD_NEVER_CREATED
+    NO_PAYMENT_REQUIRED
 }
 
 enum ProductPricingBillingMode {
-  NOT_SET
-  UPFRONT
-  IN_ARREARS
+    NOT_SET
+    UPFRONT
+    IN_ARREARS
 }
 
 enum ProductPricingCadence {
-  NOT_SET
-  ONE_TIME
-  PER_MINUTE
-  PER_HOUR
-  DAILY
-  WEEKLY
-  MONTHLY
-  HALF_DAY
-  PER15_MINUTES
-  PER30_MINUTES
-  TWO_MONTHS
-  QUARTERLY
-  FOUR_MONTHS
-  FIVE_MONTHS
-  SIX_MONTHS
-  YEARLY
-  FORTNIGHTLY
+    NOT_SET
+    ONE_TIME
+    PER_MINUTE
+    PER_HOUR
+    DAILY
+    WEEKLY
+    MONTHLY
+    HALF_DAY
+    PER15_MINUTES
+    PER30_MINUTES
+    TWO_MONTHS
+    QUARTERLY
+    FOUR_MONTHS
+    FIVE_MONTHS
+    SIX_MONTHS
+    YEARLY
+    FORTNIGHTLY
 }
 
 enum ProductPricingCancellationPolicyType {
-  NOT_SET
-  NO_CANCELLATION
-  FULL_REFUND_BEFORE_CUTOFF
-  TIERED_REFUND
+    NOT_SET
+    NO_CANCELLATION
+    FULL_REFUND_BEFORE_CUTOFF
+    TIERED_REFUND
 }
 
 enum RecurringBookingEndType {
-  NEVER
-  UNTIL_DATE
-  AFTER_OCCURRENCES
+    NEVER
+    UNTIL_DATE
+    AFTER_OCCURRENCES
 }
 
 enum RecurringBookingOrderField {
-  FROM
-  TO
-  CATEGORY
-  CHANNEL
+    FROM
+    TO
+    CATEGORY
+    CHANNEL
 }
 
 "The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."

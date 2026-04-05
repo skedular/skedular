@@ -1586,7 +1586,9 @@ public class Mapper : IMapper
     }
 
     private static int NormalizeInvoiceDueInDays(int invoiceDueInDays) =>
-        invoiceDueInDays > 0 ? invoiceDueInDays : Shared.Models.OrganizationBillingDetails.DefaultInvoiceDueInDays;
+        invoiceDueInDays is >= 1 and <= 999
+            ? invoiceDueInDays
+            : Shared.Models.OrganizationBillingDetails.DefaultInvoiceDueInDays;
 
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);

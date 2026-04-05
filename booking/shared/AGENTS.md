@@ -110,12 +110,27 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   recurring export on standard invoices until an explicit migration path exists.
 - If a recurring cadence cannot be represented by Xero repeating invoices, fall back to the normal Xero invoice export
   path instead of inventing a new partial schedule shape.
-- Deleting a recurring booking currently stops future booking/resource orchestration locally, but it is not yet a full
-  invoice-cancellation workflow.
-- On the non-Xero/self-generated path, `GenerateAndSendRecurringInvoiceAsync(...)` will no-op if the recurring booking
-  is already deleted, so future invoice sends can stop. Already-generated or already-emailed invoices are not retracted.
-- On the Xero repeating path, deleting the recurring booking does not currently cancel/archive the live repeating
-  template in Xero. The template can keep generating invoices until an explicit Xero cancellation/archive flow exists.
+- On the non-Xero/self-generated path, recurring cancellation should stop future recurring invoice workflows/sends.
+  Already-generated or already-emailed invoices are not retracted.
+- One-time marketplace booking cancellation must use the same accounting invoice cancellation boundary as recurring
+  cancellation. Do not leave booking delete as a payment-workflow-only cleanup path.
+- On the Xero repeating path, marketplace subscription cancellation must also cancel the live repeating template in
+  Xero for the affected recurring booking instances instead of only freezing local export state.
+- Subscription cancellation is not complete if it only releases bookings/resources while recurring payment or recurring
+  invoice flows are still active.
+- `CancelAtPeriodEnd` should not soft-delete the subscription immediately. It should keep the current cycle alive,
+  disable renewal, and let the scheduler transition the subscription to `Cancelled` at the cycle boundary.
+- Cancellation mode should be an explicit command/input from the API layer. Booking shared should not infer “cancel now”
+  versus “cancel at period end” only from pre-existing entity state.
+- Timeout, expiry, or failed-payment cleanup for marketplace booking and recurring booking flows must also route through
+  the accounting invoice cancellation path, not only explicit user deletion.
+- If Xero invoice/template cancellation cannot be completed during local cancellation, keep the local cancellation
+  authoritative and mark the export as `TransitionRequired` for retry/manual follow-up.
+- Recurring booking cleanup must also mark the parent recurring marketplace booking payment status as terminal
+  (`Expired` or `RecordNeverCreated`) so subscription reconciliation does not restart payment workflows or recreate
+  future booking instances after cancellation/expiry cleanup.
+- Internal Skedular-hosted invoices need the same durable cancelled-accounting state as Xero-backed invoices. Do not
+  make invoice cancellation persistence depend only on Xero links existing first.
 - Xero webhook handling is raw-body -> Kafka -> processors -> shared reconciliation. Do not add a second direct mutation
   path beside the existing accounting link/payment-event flow.
 - Webhook processing should wake the existing per-invoice Temporal monitor workflow immediately through
@@ -125,6 +140,23 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   surfaces can point at the Xero-hosted invoice when available.
 - Xero email-send is best-effort. Export should not fail just because Xero email delivery fails after the invoice
   already exists.
+
+## Marketplace Subscription Auto-Renew
+
+- `BookMarketplaceBookingSubscriptionResources` is the owning workflow for marketplace subscription maintenance.
+- It runs reconciliation on a daily cadence, not on every resource-state change.
+- Daily reconciliation:
+  - ensures the current cycle recurring booking exists
+  - repairs required resources for existing generated marketplace bookings
+  - removes obsolete or duplicate future generated bookings
+  - materializes missing future booking days inside the current cycle
+- Auto-renew uses the subscription purchase cadence and `NextRenewalAt` to advance cycles.
+- Renewal reloads the current `ProductVersion` and re-matches pricing through product-version pricing selection; if no
+  compatible auto-renewable pricing remains, the subscription moves to renewal failed rather than renewing incorrectly.
+- Existing recurring instances with `HasRecurringInstanceOverrides == true` are intentionally excluded from automatic
+  removal/repair.
+- Known gap: `MarketplaceBookingService.AdjustRequiredResourcesAsync(...)` is still best-effort and does not yet assert
+  that the reassigned resource set fully satisfies the required resource count before persisting.
 
 ## Common Failure Modes
 
@@ -153,3 +185,11 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - Keep booking workflow ID unit tests under `Booking.Shared.UnitTests/Services/WorkflowIdServiceTests`.
 - Use one test class/file per workflow ID method, not one monolithic workflow ID test file.
 - In booking unit tests, keep frozen/injected constructor dependencies before `sut`, and keep random inputs after `sut`.
+
+## GraphQL Choice Pattern
+
+- If booking exposes a selectable enum-like option to GraphQL clients, follow the standard pattern:
+    - shared model/constants + name mapping
+    - GraphQL `...Details` type with `type` and `name`
+    - query field returning the available choices
+- Do not make UI choice lists depend only on raw enum literals or duplicated hardcoded labels.

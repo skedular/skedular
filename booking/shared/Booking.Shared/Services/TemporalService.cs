@@ -121,6 +121,14 @@ public interface ITemporalService
         string recurringBookingId,
         SetPaymentStatusArgs args,
         CancellationToken cancellationToken);
+
+    Task SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(
+        string recurringBookingId,
+        CancellationToken cancellationToken);
+
+    Task SignalPayRecurringBookingViaCardWorkflowDeleteRecurringBookingAsync(
+        string recurringBookingId,
+        CancellationToken cancellationToken);
 }
 
 /// <summary>
@@ -451,6 +459,40 @@ public class TemporalService(
                 workflow => workflow.SetPaymentStatusAsync(args),
                 new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } }
             );
+    }
+
+    public async Task SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(
+        string recurringBookingId,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = workflowIdService.PayRecurringBookingViaBankTransfer(recurringBookingId);
+        if (!await temporalHelperService.IsRunningAsync<PayRecurringBookingViaBankTransfer>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<PayRecurringBookingViaBankTransfer>(workflowId)
+            .SignalAsync(
+                workflow => workflow.DeleteRecurringBookingAsync(),
+                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
+    }
+
+    public async Task SignalPayRecurringBookingViaCardWorkflowDeleteRecurringBookingAsync(
+        string recurringBookingId,
+        CancellationToken cancellationToken)
+    {
+        var workflowId = workflowIdService.PayRecurringBookingViaCard(recurringBookingId);
+        if (!await temporalHelperService.IsRunningAsync<PayRecurringBookingViaCard>(workflowId, cancellationToken))
+        {
+            return;
+        }
+
+        await temporalClient
+            .GetWorkflowHandle<PayRecurringBookingViaCard>(workflowId)
+            .SignalAsync(
+                workflow => workflow.DeleteRecurringBookingAsync(),
+                new WorkflowSignalOptions { Rpc = new RpcOptions { CancellationToken = cancellationToken } });
     }
 
     private string ToOrganizationArrearsBillingWorkflowId(string organizationId) =>

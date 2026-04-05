@@ -247,7 +247,8 @@ public class InvoiceIntegrations(
             cancellationToken);
         if (accountingInvoiceLink is null ||
             string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId) ||
-            accountingInvoiceLink.ExternalStatus is AccountingStatusConstants.Paid or AccountingStatusConstants.Failed)
+            accountingInvoiceLink.ExternalStatus is AccountingStatusConstants.Paid or AccountingStatusConstants.Failed
+                or AccountingStatusConstants.Cancelled)
         {
             return new SyncAccountingInvoiceStateResult(true, null);
         }
@@ -891,6 +892,11 @@ public class InvoiceIntegrations(
     private static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
         recurringBooking.StartDate.UtcDateTime.Date;
 
+    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
+        string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
+        string.Equals(accountingInvoiceLink.ExportConfigurationState, AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
+            StringComparison.Ordinal);
+
     private async Task ApplyXeroInvoiceSyncAsync(
         string organizationId,
         AccountingInvoiceLink accountingInvoiceLink,
@@ -898,12 +904,17 @@ public class InvoiceIntegrations(
         XeroConnection xeroConnection,
         CancellationToken cancellationToken)
     {
+        var shouldPreserveTransitionState = ShouldPreserveStandardInvoiceTransitionState(accountingInvoiceLink);
         accountingInvoiceLink.ExternalInvoiceId = invoice.InvoiceID?.ToString();
         accountingInvoiceLink.ExternalInvoiceNumber = invoice.InvoiceNumber;
         accountingInvoiceLink.ExternalInvoiceUrl = await GetOnlineInvoiceUrlAsync(organizationId, xeroConnection, invoice, cancellationToken);
         accountingInvoiceLink.ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice;
-        accountingInvoiceLink.ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Active;
-        accountingInvoiceLink.ExportConfigurationMessage = null;
+        accountingInvoiceLink.ExportConfigurationState = shouldPreserveTransitionState
+            ? accountingInvoiceLink.ExportConfigurationState
+            : AccountingInvoiceExportConfigurationStateConstants.Active;
+        accountingInvoiceLink.ExportConfigurationMessage = shouldPreserveTransitionState
+            ? accountingInvoiceLink.ExportConfigurationMessage
+            : null;
         accountingInvoiceLink.RepeatingScheduleSource = null;
         accountingInvoiceLink.RepeatingScheduleUnit = null;
         accountingInvoiceLink.RepeatingSchedulePeriod = null;
@@ -1296,6 +1307,7 @@ public class InvoiceIntegrations(
         invoice.Status switch
         {
             RepeatingInvoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
+            RepeatingInvoice.StatusEnum.DELETED => AccountingStatusConstants.Cancelled,
             _ => AccountingStatusConstants.Exported
         };
 

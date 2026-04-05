@@ -156,6 +156,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,
+        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -186,7 +187,8 @@ public class MarketplaceBookingServiceShould
         // Assert
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
@@ -197,6 +199,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,
+        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -224,7 +227,8 @@ public class MarketplaceBookingServiceShould
 
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 

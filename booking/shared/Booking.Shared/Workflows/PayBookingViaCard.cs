@@ -117,6 +117,8 @@ public class PayBookingViaCard
                 (BookingIntegrations activity) => activity.ReleaseBookingResourcesAsync(
                     new ReleaseBookingResourcesInput(args.BookingId)),
                 new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
+
+            return;
         }
 
         await Workflow.ExecuteActivityAsync(

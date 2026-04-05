@@ -31,7 +31,8 @@ public class BookingIntegrations(
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService,
     IBookingOutboxPublisher bookingOutboxPublisher,
     ICachedBookingService cachedBookingService,
-    IGraphQlTopicEventSender graphQlTopicEventSender)
+    IGraphQlTopicEventSender graphQlTopicEventSender,
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService)
 {
     [Activity]
     public async Task CalculateBookingDifferentAmountsAsync(CalculateBookingDifferentAmountsInput args)
@@ -217,14 +218,17 @@ public class BookingIntegrations(
 
         booking.InvolvedResources.Clear();
         repositoryFactory.BookingRepository.Update(booking);
+        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
 
         bookingResourceSlotsHelperService.RemoveAllSlotsFromBooking(booking);
 
         bookingOutboxPublisher.PublishBookings([mapper.MapTo(booking)], repositoryFactory.UnitOfWork);
 
-        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await accountingInvoiceCancellationService.CancelBookingAsync(booking, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await cachedBookingService.UpdateByIdAsync(booking.Id, cancellationToken);
     }

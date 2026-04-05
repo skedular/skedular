@@ -27,7 +27,7 @@ public class RootMutation(IMapper mapper)
         [Service] IMarketplaceBookingSubscriptionService marketplaceBookingSubscriptionService,
         CancellationToken cancellationToken)
     {
-        var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(input.Id, cancellationToken);
+        var subscription = await marketplaceBookingSubscriptionService.DeleteAsync(input.Id, input.CancellationMode, cancellationToken);
         return new MarketplaceBookingSubscriptionPayload
         {
             ClientMutationId = input.ClientMutationId, MarketplaceBookingSubscription = mapper.MapTo(subscription)

@@ -26,6 +26,7 @@ public interface IMarketplaceBookingSubscriptionService
     Task<MarketplaceBookingSubscription> DeleteAsync(
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode,
         CancellationToken cancellationToken);
 }
 
@@ -143,22 +144,40 @@ public class MarketplaceBookingSubscriptionService(
     public async Task<MarketplaceBookingSubscription> DeleteAsync(
         Database.Entities.MarketplaceBookingSubscription existingSubscription,
         Customer? deletedByCustomer,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode,
         CancellationToken cancellationToken)
     {
         if (deletedByCustomer is not null)
         {
-            EnsureSubscriptionCanStillBeCancelled(existingSubscription);
+            EnsureSubscriptionCanStillBeCancelled(existingSubscription, cancellationMode);
         }
 
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
-        existingSubscription.DeletedByCustomer = deletedByCustomer;
-        existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
-        existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Remove(existingSubscription);
+        if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
+        {
+            existingSubscription.LastModifiedByCustomer = deletedByCustomer;
+            existingSubscription.CancelledAt = timeProvider.GetUtcNow();
+            existingSubscription.CancelAtPeriodEnd = true;
+            existingSubscription.AutoRenew = false;
+            existingSubscription.NextRenewalAt ??= ResolveNextRenewalAt(
+                existingSubscription.StartedAt,
+                existingSubscription.MarketplaceBooking.ProductPricing.PurchaseCadence);
+            existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
+        }
+        else
+        {
+            existingSubscription.LastModifiedByCustomer = deletedByCustomer;
+            existingSubscription.CancelledAt = timeProvider.GetUtcNow();
+            existingSubscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
+            existingSubscription.AutoRenew = false;
+            existingSubscription.CancelAtPeriodEnd = false;
+            existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
 
-        temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
-            existingSubscription.Id,
-            repositoryFactory.UnitOfWork);
+            temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
+                existingSubscription.Id,
+                repositoryFactory.UnitOfWork);
+        }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
@@ -227,10 +246,17 @@ public class MarketplaceBookingSubscriptionService(
         }
     }
 
-    private void EnsureSubscriptionCanStillBeCancelled(Database.Entities.MarketplaceBookingSubscription existingSubscription)
+    private void EnsureSubscriptionCanStillBeCancelled(
+        Database.Entities.MarketplaceBookingSubscription existingSubscription,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode)
     {
         var marketplaceBooking = existingSubscription.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
+
+        if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
+        {
+            return;
+        }
 
         var referenceTime = existingSubscription.NextRenewalAt ?? existingSubscription.StartedAt;
         if (!CanBeCancelled(marketplaceBooking.ProductPricing, referenceTime, timeProvider.GetUtcNow()))
@@ -255,4 +281,20 @@ public class MarketplaceBookingSubscriptionService(
 
         return applicableRule is not null;
     }
+
+    private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset startedAt, ProductPricingCadence cadence) =>
+        cadence switch
+        {
+            ProductPricingCadence.Daily => startedAt.AddDays(1),
+            ProductPricingCadence.Weekly => startedAt.AddDays(7),
+            ProductPricingCadence.Fortnightly => startedAt.AddDays(14),
+            ProductPricingCadence.Monthly => startedAt.AddMonths(1),
+            ProductPricingCadence.TwoMonths => startedAt.AddMonths(2),
+            ProductPricingCadence.Quarterly => startedAt.AddMonths(3),
+            ProductPricingCadence.FourMonths => startedAt.AddMonths(4),
+            ProductPricingCadence.FiveMonths => startedAt.AddMonths(5),
+            ProductPricingCadence.SixMonths => startedAt.AddMonths(6),
+            ProductPricingCadence.Yearly => startedAt.AddYears(1),
+            _ => throw new ArgumentOutOfRangeException(nameof(cadence), cadence, null)
+        };
 }

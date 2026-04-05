@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services;
 using Booking.Shared.Models;
@@ -14,6 +15,21 @@ namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
 [QueryType]
 public class RootQuery(IMapper mapper)
 {
+    [UseResolverScope]
+    public IEnumerable<MarketplaceBookingSubscriptionCancellationModeDetails> MarketplaceBookingSubscriptionCancellationModes() =>
+    [
+        new()
+        {
+            Type = MarketplaceBookingSubscriptionCancellationMode.Immediate,
+            Name = MarketplaceBookingSubscriptionCancellationMode.Immediate.ToMarketplaceBookingSubscriptionCancellationModeName()
+        },
+        new()
+        {
+            Type = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+            Name = MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd.ToMarketplaceBookingSubscriptionCancellationModeName()
+        }
+    ];
+
     [UseResolverScope]
     public async Task<MarketplaceBookingSubscriptionDetails?> MarketplaceBookingSubscriptionAsync(
         string id,

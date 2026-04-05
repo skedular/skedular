@@ -95,4 +95,26 @@ public class GetScheduleShould
         result.Cadence.ShouldBe(ProductPricingCadence.Weekly);
         result.InvoiceAmount.ShouldBe(23.0769m);
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Fall_Back_To_Product_Price_When_Marketplace_Booking_Total_Amounts_Are_Not_Populated(
+        string pricingId)
+    {
+        var sut = new RecurringInvoiceBillingScheduleService();
+        var recurringBooking = new RecurringBooking
+        {
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero), EndDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero)
+        };
+        var marketplaceBooking = new MarketplaceBooking
+        {
+            Quantity = 3, ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Daily, Price = 20m }
+        };
+
+        var result = sut.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycle.Monthly);
+
+        result.Source.ShouldBe(XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence);
+        result.Cadence.ShouldBe(ProductPricingCadence.Daily);
+        result.InvoiceAmount.ShouldBe(60m);
+    }
 }

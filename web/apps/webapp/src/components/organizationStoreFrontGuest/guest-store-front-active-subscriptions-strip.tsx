@@ -1,6 +1,7 @@
 import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
 import { PaymentStatusIcon, QuantityIcon } from '@/components/icons';
 import { getMarketplaceSubscriptionDetailsLink, getMarketplaceSubscriptionsLink } from '@/components/links';
+import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import type { guestStoreFrontActiveSubscriptionsStrip_query$key } from '@/queries/__generated__/guestStoreFrontActiveSubscriptionsStrip_query.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
@@ -95,8 +96,8 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
             <BodyIconTypography
               label={
                 subscriptions.length > 0
-                  ? 'Open your active plans to review the current cycle, payment status, and all recurring periods tied to that subscription.'
-                  : 'Any active plan you purchase here will appear in this section so you can reopen its billing and recurring schedule.'
+                  ? 'Open a plan to review billing, renewal, and cancellation. Stopping a plan ends future billing, but issued invoices stay on record.'
+                  : 'Any active plan you purchase here will appear in this section so you can reopen its billing, renewal, and cancellation details.'
               }
               sx={{ mt: 0.75, opacity: 0.82 }}
             />
@@ -126,6 +127,10 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
               const latestRecurringBooking = [...subscription.recurringBookings].sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())[0];
               const productTitle = subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription';
               const isConfirmed = subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED';
+              const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
+                autoRenew: subscription.autoRenew,
+                cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+              });
 
               return (
                 <Link
@@ -179,9 +184,13 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
                       <StackColumn spacing={0.35}>
                         <SmallIconTypography label="Next renewal" sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
                         <BodyIconTypography
-                          label={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : subscription.autoRenew ? 'Not scheduled yet' : 'Ends after this period'}
+                          label={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : lifecycleDisplay.nextRenewalFallbackLabel}
                           sx={{ opacity: 0.88 }}
                         />
+                      </StackColumn>
+                      <StackColumn spacing={0.35}>
+                        <SmallIconTypography label="Cancellation" sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
+                        <BodyIconTypography label={lifecycleDisplay.renewalLabel} sx={{ opacity: 0.88 }} />
                       </StackColumn>
                     </StackColumn>
 

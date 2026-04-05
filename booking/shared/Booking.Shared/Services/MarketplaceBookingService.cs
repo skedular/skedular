@@ -100,7 +100,8 @@ public class MarketplaceBookingService(
     IGraphQlTopicEventSender graphQlTopicEventSender,
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
-    IProductVersionHelperService productVersionHelperService) : IMarketplaceBookingService
+    IProductVersionHelperService productVersionHelperService,
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService) : IMarketplaceBookingService
 {
     /// <summary>
     ///     Adds a new marketplace booking.
@@ -544,6 +545,9 @@ public class MarketplaceBookingService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
 
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
 

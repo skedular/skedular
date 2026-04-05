@@ -65,4 +65,33 @@ public class MapToBillingDetailsShould
 
         result.InvoiceDueInDays.ShouldBe(OrganizationBillingDetails.DefaultInvoiceDueInDays);
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Normalize_Invoice_Due_Days_In_Grpc_Response_When_Value_Exceeds_Supported_Range(
+        Mapper sut,
+        string id,
+        string email,
+        string addressLine1,
+        string city,
+        string zipcode,
+        string country,
+        string countryCode)
+    {
+        var billingDetails = new OrganizationBillingDetails
+        {
+            Id = id,
+            Email = email,
+            AddressLine1 = addressLine1,
+            City = city,
+            Zipcode = zipcode,
+            Country = country,
+            CountryCode = countryCode,
+            InvoiceDueInDays = 1000
+        };
+
+        var result = sut.MapToGrpcResponse(billingDetails);
+
+        result.InvoiceDueInDays.ShouldBe(OrganizationBillingDetails.DefaultInvoiceDueInDays);
+    }
 }

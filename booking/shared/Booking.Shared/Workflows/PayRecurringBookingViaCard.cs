@@ -8,7 +8,7 @@ namespace Booking.Shared.Workflows;
 
 public record PayRecurringBookingViaCardInput(string RecurringBookingId, DateTimeOffset ExpiryDate, ICollection<string> InvoiceEmailList);
 
-public record PayRecurringBookingViaCardState(string? PaymentStatus);
+public record PayRecurringBookingViaCardState(string? PaymentStatus, bool RecurringBookingDeleted);
 
 [Workflow]
 public class PayRecurringBookingViaCard
@@ -18,7 +18,7 @@ public class PayRecurringBookingViaCard
     [WorkflowRun]
     public async Task ExecuteAsync(PayRecurringBookingViaCardInput args)
     {
-        _state = new PayRecurringBookingViaCardState(null);
+        _state = new PayRecurringBookingViaCardState(null, false);
 
         try
         {
@@ -101,13 +101,18 @@ public class PayRecurringBookingViaCard
                 return;
             }
 
-            if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null, GetDelayDuration(args)))
+            if (!await Workflow.WaitConditionAsync(() => _state.PaymentStatus is not null || _state.RecurringBookingDeleted, GetDelayDuration(args)))
             {
                 await Workflow.ExecuteActivityAsync(
                     (MarketplaceBookingSubscriptionIntegrations activity) => activity.ReleaseRecurringBookingResourcesAsync(
                         new ReleaseRecurringBookingResourcesInput(args.RecurringBookingId)),
                     new ActivityOptions { StartToCloseTimeout = TimeSpan.FromSeconds(30), TaskQueue = Workflow.Info.TaskQueue });
 
+                return;
+            }
+
+            if (_state.RecurringBookingDeleted)
+            {
                 return;
             }
 
@@ -132,6 +137,11 @@ public class PayRecurringBookingViaCard
             return;
         }
 
+        if (_state.RecurringBookingDeleted)
+        {
+            return;
+        }
+
         await Workflow.ExecuteActivityAsync(
             (InvoiceIntegrations activity) =>
                 activity.GenerateAndSendRecurringInvoiceAsync(
@@ -150,6 +160,16 @@ public class PayRecurringBookingViaCard
         ArgumentNullException.ThrowIfNull(_state);
 
         _state = _state with { PaymentStatus = args.PaymentStatus };
+
+        return Task.CompletedTask;
+    }
+
+    [WorkflowSignal]
+    public Task DeleteRecurringBookingAsync()
+    {
+        ArgumentNullException.ThrowIfNull(_state);
+
+        _state = _state with { RecurringBookingDeleted = true };
 
         return Task.CompletedTask;
     }

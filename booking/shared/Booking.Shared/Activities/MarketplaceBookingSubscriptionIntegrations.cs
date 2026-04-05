@@ -34,6 +34,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
     IProductVersionHelperService productVersionHelperService,
     ITemporalService temporalService,
     IGraphQlTopicEventSender graphQlTopicEventSender,
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
     IMapper mapper,
     IRandomHelper randomHelper)
 {
@@ -70,8 +71,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
             subscription.RecurringBookings.Add(currentCycleRecurringBooking);
         }
 
-        var now = timeProvider.GetUtcNow();
-        var from = new DateTimeOffset(now.UtcDateTime.Date, TimeSpan.Zero);
+        var from = timeProvider.GetUtcNow();
         var hasAnyMoreRequiredBookingDays = false;
 
         foreach (var recurringBooking in subscription.RecurringBookings)
@@ -97,11 +97,12 @@ public class MarketplaceBookingSubscriptionIntegrations(
             return;
         }
 
-        var now = timeProvider.GetUtcNow();
-        var from = new DateTimeOffset(now.UtcDateTime.Date, TimeSpan.Zero);
+        var from = timeProvider.GetUtcNow();
 
         foreach (var recurringBooking in subscription.RecurringBookings.Where(item => !item.IsDeleted()))
         {
+            await CancelRecurringBookingBillingAsync(recurringBooking, cancellationToken);
+
             var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
                 recurringBooking.Id,
                 from,
@@ -112,20 +113,29 @@ public class MarketplaceBookingSubscriptionIntegrations(
             {
                 await marketplaceBookingService.DeleteAsync(existingBooking, subscription.DeletedByCustomer, false, cancellationToken);
             }
+
+            recurringBooking.DeletedByCustomer = subscription.DeletedByCustomer;
+            repositoryFactory.RecurringBookingRepository.Update(recurringBooking);
+            repositoryFactory.RecurringBookingRepository.Remove(recurringBooking);
         }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     [Activity]
     public async Task ReleaseRecurringBookingResourcesAsync(ReleaseRecurringBookingResourcesInput args)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdUntrackedAsync(args.RecurringBookingId, cancellationToken);
+        var recurringBooking = await repositoryFactory.RecurringBookingRepository.GetByIdAsync(args.RecurringBookingId, cancellationToken);
         if (recurringBooking is null)
         {
             return;
         }
 
-        var from = recurringBooking.StartDate;
+        await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
+        MarkRecurringBookingPaymentAsTerminal(recurringBooking);
+
+        var from = timeProvider.GetUtcNow();
         var existingBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
             recurringBooking.Id,
             from,
@@ -136,6 +146,35 @@ public class MarketplaceBookingSubscriptionIntegrations(
         {
             await marketplaceBookingService.DeleteAsync(existingBooking, null, false, cancellationToken);
         }
+
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task CancelRecurringBookingBillingAsync(
+        RecurringBooking recurringBooking,
+        CancellationToken cancellationToken)
+    {
+        if (recurringBooking.MarketplaceBooking is null)
+        {
+            return;
+        }
+
+        if (recurringBooking.MarketplaceBooking.IsPaymentRequired)
+        {
+            switch (recurringBooking.MarketplaceBooking.PaymentMethod.ToPaymentMethod())
+            {
+                case PaymentMethod.Card:
+                    await temporalService.SignalPayRecurringBookingViaCardWorkflowDeleteRecurringBookingAsync(recurringBooking.Id, cancellationToken);
+                    break;
+
+                case PaymentMethod.BankTransfer:
+                    await temporalService.SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(recurringBooking.Id,
+                        cancellationToken);
+                    break;
+            }
+        }
+
+        await accountingInvoiceCancellationService.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
     }
 
     private async Task<bool> AdjustRecurringBookingAsync(
@@ -527,9 +566,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
         {
             if (!subscription.AutoRenew || !subscription.MarketplaceBooking.ProductPricing.SupportsSubscriptionAutoRenewal)
             {
-                if (subscription.Status.ToMarketplaceBookingSubscriptionStatus() != MarketplaceBookingSubscriptionStatus.Expired)
+                var terminalStatus = subscription.CancelAtPeriodEnd
+                    ? MarketplaceBookingSubscriptionStatus.Cancelled
+                    : MarketplaceBookingSubscriptionStatus.Expired;
+
+                if (subscription.Status.ToMarketplaceBookingSubscriptionStatus() != terminalStatus)
                 {
-                    subscription.Status = MarketplaceBookingSubscriptionStatus.Expired.ToMarketplaceBookingSubscriptionStatus();
+                    subscription.Status = terminalStatus.ToMarketplaceBookingSubscriptionStatus();
                     hasChanges = true;
                 }
 
@@ -622,16 +665,33 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
     private static bool ShouldStartRecurringBookingCardPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
         marketplaceBooking.IsPaymentRequired &&
+        !ShouldSkipResourceMaterializationForTerminalPaymentStatus(marketplaceBooking) &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.Card;
 
     private static bool ShouldStartRecurringBookingBankTransferPaymentWorkflow(MarketplaceBooking marketplaceBooking) =>
         marketplaceBooking.IsPaymentRequired &&
+        !ShouldSkipResourceMaterializationForTerminalPaymentStatus(marketplaceBooking) &&
         marketplaceBooking.PaymentMethod.ToPaymentMethod() == PaymentMethod.BankTransfer;
 
     private static bool ShouldSkipResourceMaterializationForTerminalPaymentStatus(MarketplaceBooking? marketplaceBooking) =>
         marketplaceBooking is not null &&
         marketplaceBooking.IsPaymentRequired &&
         marketplaceBooking.PaymentStatus.ToPaymentStatus() is PaymentStatus.Expired or PaymentStatus.Rejected or PaymentStatus.RecordNeverCreated;
+
+    private void MarkRecurringBookingPaymentAsTerminal(RecurringBooking recurringBooking)
+    {
+        var marketplaceBooking = recurringBooking.MarketplaceBooking;
+        if (marketplaceBooking is null || !marketplaceBooking.IsPaymentRequired)
+        {
+            return;
+        }
+
+        marketplaceBooking.PaymentStatus = string.IsNullOrWhiteSpace(marketplaceBooking.InvoiceUrl) &&
+                                           marketplaceBooking.StripeCheckoutSession is null
+            ? PaymentStatusConstants.RecordNeverCreated
+            : PaymentStatusConstants.Expired;
+        repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
+    }
 
     private static int GetBookingPaymentExpiryInMinutes(ProductPricing pricing, PaymentMethod paymentMethod) =>
         paymentMethod switch

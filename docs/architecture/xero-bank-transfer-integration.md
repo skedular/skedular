@@ -248,6 +248,27 @@ Current MVP rule:
 - if an existing recurring booking is already on standard Xero invoices when the org later enables
   `RepeatingInvoices`, Skedular keeps that recurring export on standard invoices until an explicit migration path is
   introduced
+- when a marketplace subscription is cancelled, Skedular must also stop active recurring payment/invoice workflows for
+  its recurring booking instances
+- when a marketplace subscription is marked `CancelAtPeriodEnd`, Skedular should keep the current cycle active, disable
+  renewal immediately, and only transition the subscription to `Cancelled` once the cycle boundary is reached
+- that cancellation mode should be chosen explicitly at the API boundary, not inferred only from persisted subscription
+  state
+- when a cancelled marketplace subscription has a live Xero repeating invoice template, Skedular must cancel that
+  repeating template in Xero instead of leaving it active
+- when a one-off marketplace booking is cancelled after an invoice export has been created, Skedular should route that
+  cancellation through the same accounting-invoice cancellation boundary instead of only stopping the payment workflow
+- timeout, expiry, and failed-payment cleanup should also route through that same accounting-invoice cancellation
+  boundary for both one-off and recurring booking flows
+- if Xero invoice/template cancellation cannot be completed during local cancellation, Skedular should keep the local
+  cancellation authoritative and mark the export as `TransitionRequired` for retry/manual follow-up instead of failing
+  the whole local cancellation flow
+- recurring booking cleanup should also mark the parent recurring marketplace booking payment status as terminal so the
+  subscription scheduler does not restart payment workflows or recreate future instances after cancellation/expiry
+- internal Skedular-hosted invoices should also persist durable cancelled-accounting state even when Xero is not the
+  provider for that invoice
+- already-generated or already-sent invoices are still historical records; cancellation stops future billing rather than
+  retracting past invoices
 
 ## Workflow Design
 

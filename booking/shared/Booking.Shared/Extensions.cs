@@ -37,6 +37,7 @@ public static class Extensions
                 .AddSingleton<ITemporalSignalOutboxExecutor>(sp => sp.GetRequiredService<ITemporalOutboxService>())
                 .AddSingleton<ITemporalService, TemporalService>()
                 .AddSingleton<IInvoicePaymentTermsService, InvoicePaymentTermsService>()
+                .AddScoped<IAccountingInvoiceCancellationService, AccountingInvoiceCancellationService>()
                 .AddSingleton<IRecurringInvoiceBillingScheduleService, RecurringInvoiceBillingScheduleService>()
                 .AddSingleton<IRecurringBookingScheduleService, RecurringBookingScheduleService>()
                 .AddSingleton<IXeroRepeatingInvoiceScheduleService, XeroRepeatingInvoiceScheduleService>()

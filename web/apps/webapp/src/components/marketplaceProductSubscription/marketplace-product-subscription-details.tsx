@@ -1,10 +1,29 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@/components/commons';
 import { ArrowLeftIcon, LocationIcon, PaymentStatusIcon, QuantityIcon, ResourceIcon } from '@/components/icons';
-import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink } from '@/components/links';
+import { getMarketplaceBookingDetailsLink, getMarketplaceProductLink, getOrganizationProductsBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
+import {
+  SupportedMarketplaceBookingSubscriptionCancellationMode,
+  SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
+  toSupportedMarketplaceBookingSubscriptionCancellationModeDetails,
+} from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
+import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
+import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { convertCalendarDayToStartOfDay, getCustomerFullName } from '@/libs/utils';
+import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
 import type { marketplaceProductSubscriptionDetails_rootQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
@@ -14,18 +33,33 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import Link from '@mui/material/Link';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { memo, ReactNode, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, useLazyLoadQuery, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
+import { graphql, PreloadedQuery, useLazyLoadQuery, useMutation, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
 
+type PendingCancellationConfirmation = {
+  type: SupportedMarketplaceBookingSubscriptionCancellationMode;
+  name: string;
+  productTitle: string;
+} | null;
+
 const RootQuery = graphql`
   query marketplaceProductSubscriptionDetails_rootQuery($subscriptionId: String!) {
+    marketplaceBookingSubscriptionCancellationModes {
+      type
+      name
+    }
     marketplaceBookingSubscription(id: $subscriptionId) {
       id
       startedAt
@@ -211,6 +245,22 @@ const MarketplaceProductSubscriptionDetails = ({
   queryReference: PreloadedQuery<marketplaceProductSubscriptionDetails_rootQuery, Record<string, unknown>>;
 }) => {
   const rootData = usePreloadedQuery<marketplaceProductSubscriptionDetails_rootQuery>(RootQuery, queryReference);
+  const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
+    useMutation<marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation>(graphql`
+      mutation marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
+        deleteMarketplaceBookingSubscription(input: $input) {
+          marketplaceBookingSubscription {
+            id
+            cancelAtPeriodEnd
+            nextRenewalAt
+            status {
+              type
+              name
+            }
+          }
+        }
+      }
+    `);
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const { isCustomDomain, organizationCustomDomain } = useKnownParams();
@@ -245,7 +295,95 @@ const MarketplaceProductSubscriptionDetails = ({
     [relatedBookingsData.bookings?.edges],
   );
   const currentMarketplaceBooking = currentCycle?.marketplaceBooking ?? null;
+  const lifecycleDisplay = subscription
+    ? toMarketplaceBookingSubscriptionLifecycleDisplay({
+        autoRenew: subscription.autoRenew,
+        cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+        isCancelled: subscription.status.type === 'CANCELLED',
+        fallbackActiveLabel: subscription.status.name,
+      })
+    : null;
   const productVersion = currentMarketplaceBooking?.productVersion ?? null;
+  const productTitle = productVersion?.listingMetadata.title ?? 'subscription';
+  const cancellationModes = rootData.marketplaceBookingSubscriptionCancellationModes;
+  const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    const mode = cancellationModes.find((item) => item.type === 'IMMEDIATE');
+
+    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
+  }, [cancellationModes]);
+  const atPeriodEndCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    const mode = cancellationModes.find((item) => item.type === 'AT_PERIOD_END');
+
+    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
+  }, [cancellationModes]);
+  const handleDeleteMarketplaceBookingSubscriptionClick = (cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode, cancellationModeName: string) => {
+    if (!subscription) {
+      return;
+    }
+
+    const toastId = toast(
+      <NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Scheduling' : 'Applying'} '${cancellationModeName.toLowerCase()}' for ${productTitle}...`} />,
+      infoNotificationOptions,
+    );
+
+    commitDeleteMarketplaceBookingSubscription({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: subscription.id,
+          cancellationMode: cancellationModeType,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(errors)}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: (
+            <NotificationContent content={cancellationModeType === 'AT_PERIOD_END' ? `${productTitle} will end at the end of the current period.` : `${productTitle} cancelled.`} />
+          ),
+        });
+
+        router.refresh();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update ${productTitle}. ${getRelayErrorMessage(error)}`} />,
+        });
+      },
+    });
+  };
+  const handleRequestImmediateCancellationClick = () => {
+    if (!immediateCancellationMode) {
+      return;
+    }
+
+    setPendingCancellationConfirmation({
+      type: immediateCancellationMode.type,
+      name: immediateCancellationMode.name,
+      productTitle,
+    });
+  };
+  const handleCancelImmediateCancellationClick = () => {
+    setPendingCancellationConfirmation(null);
+  };
+  const handleConfirmImmediateCancellationClick = () => {
+    if (!pendingCancellationConfirmation) {
+      return;
+    }
+
+    handleDeleteMarketplaceBookingSubscriptionClick(pendingCancellationConfirmation.type, pendingCancellationConfirmation.name);
+    setPendingCancellationConfirmation(null);
+  };
 
   return (
     <Box
@@ -298,14 +436,17 @@ const MarketplaceProductSubscriptionDetails = ({
                 />
 
                 <StackRow sx={{ mt: 2, rowGap: 1 }}>
-                  <Chip label={subscription.status.name} color={subscription.status.type === 'ACTIVE' ? 'success' : 'default'} />
+                  <Chip label={lifecycleDisplay?.statusLabel ?? subscription.status.name} color={lifecycleDisplay?.statusColor ?? 'default'} />
                 </StackRow>
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
-                  <DetailsRow label="Next renewal" value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : 'Not scheduled'} />
+                  <DetailsRow
+                    label="Next renewal"
+                    value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : (lifecycleDisplay?.nextRenewalFallbackLabel ?? 'Not scheduled')}
+                  />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
-                  <DetailsRow label="Renewal" value={subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period'} />
+                  <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
                 </StackColumn>
               </CardContent>
             </Card>
@@ -338,17 +479,33 @@ const MarketplaceProductSubscriptionDetails = ({
                 />
 
                 <StackRow sx={{ mt: 2, rowGap: 1 }}>
-                  <Chip label={subscription.status.name} color={subscription.status.type === 'ACTIVE' ? 'success' : 'default'} />
+                  <Chip label={lifecycleDisplay?.statusLabel ?? subscription.status.name} color={lifecycleDisplay?.statusColor ?? 'default'} />
                   <Chip label={currentMarketplaceBooking.paymentMethod.name} variant="outlined" />
                 </StackRow>
+
+                {subscription.status.type === 'ACTIVE' ? (
+                  <SubscriptionCancellationSection
+                    cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                    isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
+                    immediateCancellationMode={immediateCancellationMode}
+                    atPeriodEndCancellationMode={atPeriodEndCancellationMode}
+                    onImmediateCancellationClick={handleRequestImmediateCancellationClick}
+                    onAtPeriodEndCancellationClick={() =>
+                      atPeriodEndCancellationMode ? handleDeleteMarketplaceBookingSubscriptionClick(atPeriodEndCancellationMode.type, atPeriodEndCancellationMode.name) : undefined
+                    }
+                  />
+                ) : null}
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Current period" value={`${toStoredDate(currentCycle.startDate)} - ${toStoredDate(currentCycle.endDate)}`} />
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
-                  <DetailsRow label="Next renewal" value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : 'Not scheduled'} />
+                  <DetailsRow
+                    label="Next renewal"
+                    value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : (lifecycleDisplay?.nextRenewalFallbackLabel ?? 'Not scheduled')}
+                  />
                   <DetailsRow label="Quantity" value={`${currentMarketplaceBooking.quantity}`} />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
-                  <DetailsRow label="Renewal" value={subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period'} />
+                  <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
                   {productVersion ? (
                     <DetailsRow
                       label="Product"
@@ -557,6 +714,21 @@ const MarketplaceProductSubscriptionDetails = ({
           </Box>
         )}
       </Container>
+
+      <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
+        <DefaultDialogTitle title="Cancel Subscription Immediately" />
+        <DialogContent sx={{ mt: 2 }}>
+          <DialogContentText>
+            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+          </DialogContentText>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmImmediateCancellationClick}
+            onSecondaryClicked={handleCancelImmediateCancellationClick}
+            primaryLabel={pendingCancellationConfirmation?.name ?? 'Immediate'}
+            secondaryLabel="Keep Subscription"
+          />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

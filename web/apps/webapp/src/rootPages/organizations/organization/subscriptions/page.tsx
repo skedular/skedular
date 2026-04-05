@@ -1,11 +1,29 @@
-import { BodyIconTypography, LeadIconTypography, PushToRight, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import {
+  BodyIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  PushToRight,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
+import {
+  SupportedMarketplaceBookingSubscriptionCancellationMode,
+  SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
+  toSupportedMarketplaceBookingSubscriptionCancellationModeDetails,
+} from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-cancellation-mode';
+import { toMarketplaceBookingSubscriptionLifecycleDisplay } from '@/components/marketplaceProductSubscription/marketplace-booking-subscription-lifecycle';
+import SubscriptionCancellationSection from '@/components/marketplaceProductSubscription/subscription-cancellation-section';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { RootShell } from '@/components/rootShell';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
 import { getRelayErrorMessage } from '@/libs/utils';
+import type { pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation.graphql';
 import type { pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_makeRecurringBookingPaymentNotRequiredMutation.graphql';
 import type { pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation } from '@/queries/__generated__/pageOrganizationSubscriptions_rejectRecurringBookingPaymentMutation.graphql';
@@ -15,6 +33,9 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/system/Box';
 import { useRouter } from 'next/navigation';
@@ -26,6 +47,10 @@ import { v7 as uuid } from 'uuid';
 
 const RootQuery = graphql`
   query pageOrganizationSubscriptions_rootQuery($organizationCustomDomain: String!) {
+    marketplaceBookingSubscriptionCancellationModes {
+      type
+      name
+    }
     organization(customDomain: $organizationCustomDomain) {
       name
     }
@@ -33,11 +58,7 @@ const RootQuery = graphql`
       canViewBookings
       canModifyPaymentMethod
     }
-    marketplaceBookingSubscriptions(
-      first: 50
-      where: { organizationCustomDomain: $organizationCustomDomain, status: ACTIVE }
-      orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]
-    ) {
+    marketplaceBookingSubscriptions(first: 50, where: { organizationCustomDomain: $organizationCustomDomain }, orderBy: [{ field: NEXT_RENEWAL_AT, direction: ASCENDING }]) {
       totalCount
       edges {
         node {
@@ -46,6 +67,10 @@ const RootQuery = graphql`
           nextRenewalAt
           autoRenew
           cancelAtPeriodEnd
+          status {
+            type
+            name
+          }
           involvedCustomers {
             id
             name
@@ -93,6 +118,12 @@ const RootQuery = graphql`
   }
 `;
 
+type PendingCancellationConfirmation = {
+  subscriptionId: string;
+  productTitle: string;
+  mode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails;
+} | null;
+
 type Props = {
   queryReference: PreloadedQuery<pageOrganizationSubscriptions_rootQuery, Record<string, unknown>>;
   onReloadRequired: () => void;
@@ -108,6 +139,23 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
   const rootData = usePreloadedQuery<pageOrganizationSubscriptions_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
+  const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
+  const [commitDeleteMarketplaceBookingSubscription, isDeleteMarketplaceBookingSubscriptionInFlight] =
+    useMutation<pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation>(graphql`
+      mutation pageOrganizationSubscriptions_deleteMarketplaceBookingSubscriptionMutation($input: DeleteMarketplaceBookingSubscriptionInput!) {
+        deleteMarketplaceBookingSubscription(input: $input) {
+          marketplaceBookingSubscription {
+            id
+            cancelAtPeriodEnd
+            nextRenewalAt
+            status {
+              type
+              name
+            }
+          }
+        }
+      }
+    `);
   const [commitConfirmRecurringBookingPayment] = useMutation<pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation>(graphql`
     mutation pageOrganizationSubscriptions_confirmRecurringBookingPaymentMutation($input: ConfirmRecurringBookingPaymentInput!) @raw_response_type {
       confirmRecurringBookingPayment(input: $input) {
@@ -161,9 +209,99 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
     () => rootData.marketplaceBookingSubscriptions.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item),
     [rootData.marketplaceBookingSubscriptions.edges],
   );
+  const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'IMMEDIATE');
+
+    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
+  }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
+  const atPeriodEndCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    const mode = rootData.marketplaceBookingSubscriptionCancellationModes.find((item) => item.type === 'AT_PERIOD_END');
+
+    return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
+  }, [rootData.marketplaceBookingSubscriptionCancellationModes]);
 
   const handleBackClick = () => {
     router.push(getOrganizationBaseLink(integratedPlatrform, organizationCustomDomain));
+  };
+
+  const handleDeleteMarketplaceBookingSubscriptionClick = (
+    subscriptionId: string,
+    productTitle: string,
+    cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode,
+    cancellationModeName: string,
+  ) => {
+    const toastId = toast(
+      <NotificationContent content={`${cancellationModeType === 'AT_PERIOD_END' ? 'Scheduling' : 'Applying'} '${cancellationModeName.toLowerCase()}' for ${productTitle}...`} />,
+      infoNotificationOptions,
+    );
+
+    commitDeleteMarketplaceBookingSubscription({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: subscriptionId,
+          cancellationMode: cancellationModeType,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update ${productTitle}. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: (
+            <NotificationContent
+              content={
+                cancellationModeType === 'AT_PERIOD_END'
+                  ? `${productTitle} will end at the end of the current period. Future billing stops, but issued invoices stay on record.`
+                  : `${productTitle} cancelled. Future billing stops, but issued invoices stay on record.`
+              }
+            />
+          ),
+        });
+
+        onReloadRequired();
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update ${productTitle}. Error: ${error.message}.`} />,
+        });
+      },
+    });
+  };
+  const handleRequestImmediateCancellationClick = (
+    subscriptionId: string,
+    productTitle: string,
+    cancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
+  ) => {
+    setPendingCancellationConfirmation({
+      subscriptionId,
+      productTitle,
+      mode: cancellationMode,
+    });
+  };
+  const handleCancelImmediateCancellationClick = () => {
+    setPendingCancellationConfirmation(null);
+  };
+  const handleConfirmImmediateCancellationClick = () => {
+    if (!pendingCancellationConfirmation) {
+      return;
+    }
+
+    handleDeleteMarketplaceBookingSubscriptionClick(
+      pendingCancellationConfirmation.subscriptionId,
+      pendingCancellationConfirmation.productTitle,
+      pendingCancellationConfirmation.mode.type,
+      pendingCancellationConfirmation.mode.name,
+    );
+    setPendingCancellationConfirmation(null);
   };
 
   const handleConfirmRecurringBookingPaymentClick = (recurringBookingId: string, cycleLabel: string) => {
@@ -293,7 +431,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
       <Box sx={{ p: 2 }}>
         <StackColumn spacing={1}>
           <LeadIconTypography label="Marketplace subscriptions" />
-          <BodyIconTypography label="Review customer subscriptions and confirm payment on a specific recurring period when the customer has paid outside of hosted checkout." />
+          <BodyIconTypography label="Review customer subscriptions, confirm recurring payments, and stop future billing now or at period end. Issued invoices stay on record." />
         </StackColumn>
 
         {!rootData.organizationBookingPermissions.canModifyPaymentMethod && (
@@ -309,6 +447,12 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
             {subscriptions.length > 0 ? (
               subscriptions.map((subscription) => {
                 const sortedRecurringBookings = [...subscription.recurringBookings].sort((left, right) => new Date(left.startDate).getTime() - new Date(right.startDate).getTime());
+                const lifecycleDisplay = toMarketplaceBookingSubscriptionLifecycleDisplay({
+                  autoRenew: subscription.autoRenew,
+                  cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+                  isCancelled: subscription.status.type === 'CANCELLED',
+                  fallbackActiveLabel: subscription.status.name,
+                });
 
                 return (
                   <Grid key={subscription.id} size={{ xs: 12 }}>
@@ -327,14 +471,39 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                             />
                           </StackColumn>
                           <PushToRight />
-                          <Chip
-                            label={subscription.marketplaceBooking.paymentStatus.name}
-                            color={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'warning'}
-                            variant="outlined"
-                          />
+                          <Chip label={lifecycleDisplay.statusLabel} color={lifecycleDisplay.statusColor} variant="outlined" />
                         </StackRow>
 
+                        {subscription.status.type === 'ACTIVE' ? (
+                          <SubscriptionCancellationSection
+                            cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                            isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
+                            immediateCancellationMode={immediateCancellationMode}
+                            atPeriodEndCancellationMode={atPeriodEndCancellationMode}
+                            onImmediateCancellationClick={() =>
+                              immediateCancellationMode
+                                ? handleRequestImmediateCancellationClick(
+                                    subscription.id,
+                                    subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription',
+                                    immediateCancellationMode,
+                                  )
+                                : undefined
+                            }
+                            onAtPeriodEndCancellationClick={() =>
+                              atPeriodEndCancellationMode
+                                ? handleDeleteMarketplaceBookingSubscriptionClick(
+                                    subscription.id,
+                                    subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription',
+                                    atPeriodEndCancellationMode.type,
+                                    atPeriodEndCancellationMode.name,
+                                  )
+                                : undefined
+                            }
+                          />
+                        ) : null}
+
                         <StackColumn spacing={1} sx={{ mt: 2 }}>
+                          <SmallIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} sx={{ opacity: 0.72 }} />
                           {sortedRecurringBookings.length > 0 ? (
                             sortedRecurringBookings.map((recurringBooking) => {
                               const cycleLabel = `${new Date(recurringBooking.startDate).toLocaleDateString()} - ${
@@ -412,7 +581,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
               <Grid size={{ xs: 12 }}>
                 <Card>
                   <CardContent>
-                    <SmallIconTypography label="No active subscriptions found for this organization." sx={{ opacity: 0.78 }} />
+                    <SmallIconTypography label="No subscriptions found for this organization." sx={{ opacity: 0.78 }} />
                   </CardContent>
                 </Card>
               </Grid>
@@ -420,6 +589,21 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
           </Grid>
         )}
       </Box>
+
+      <Dialog open={!!pendingCancellationConfirmation} onClose={handleCancelImmediateCancellationClick}>
+        <DefaultDialogTitle title="Cancel Subscription Immediately" />
+        <DialogContent sx={{ mt: 2 }}>
+          <DialogContentText>
+            {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+          </DialogContentText>
+          <TwoButtonsDialogActions
+            onPrimaryClicked={handleConfirmImmediateCancellationClick}
+            onSecondaryClicked={handleCancelImmediateCancellationClick}
+            primaryLabel={pendingCancellationConfirmation?.mode.name ?? 'Immediate'}
+            secondaryLabel="Keep Subscription"
+          />
+        </DialogContent>
+      </Dialog>
     </RootShell>
   );
 };

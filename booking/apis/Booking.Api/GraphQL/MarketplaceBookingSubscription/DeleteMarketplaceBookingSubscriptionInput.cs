@@ -1,3 +1,4 @@
+using Api.Shared.Services.Models;
 using HotChocolate;
 
 namespace Booking.Api.GraphQL.MarketplaceBookingSubscription;
@@ -7,4 +8,8 @@ public class DeleteMarketplaceBookingSubscriptionInput
 {
     [GraphQLName("clientMutationId")] public string? ClientMutationId { get; set; }
     [GraphQLName("id")] public required string Id { get; set; }
+
+    [GraphQLName("cancellationMode")]
+    public MarketplaceBookingSubscriptionCancellationMode CancellationMode { get; set; } =
+        MarketplaceBookingSubscriptionCancellationMode.Immediate;
 }

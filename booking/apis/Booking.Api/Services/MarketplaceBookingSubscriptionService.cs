@@ -1,4 +1,5 @@
 using Api.Shared.Services;
+using Api.Shared.Services.Models;
 using Booking.Api.Mappers;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
@@ -28,7 +29,11 @@ public interface IMarketplaceBookingSubscriptionService
         CancellationToken cancellationToken);
 
     Task<MarketplaceBookingSubscription> AddAsync(MarketplaceBookingSubscription subscription, CancellationToken cancellationToken);
-    Task<MarketplaceBookingSubscription> DeleteAsync(string id, CancellationToken cancellationToken);
+
+    Task<MarketplaceBookingSubscription> DeleteAsync(
+        string id,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        CancellationToken cancellationToken);
 }
 
 public class MarketplaceBookingSubscriptionService(
@@ -235,7 +240,10 @@ public class MarketplaceBookingSubscriptionService(
         return await sharedMarketplaceBookingSubscriptionService.AddAsync(subscription, customer, organizations, teams, cancellationToken);
     }
 
-    public async Task<MarketplaceBookingSubscription> DeleteAsync(string id, CancellationToken cancellationToken)
+    public async Task<MarketplaceBookingSubscription> DeleteAsync(
+        string id,
+        MarketplaceBookingSubscriptionCancellationMode cancellationMode,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
@@ -279,7 +287,7 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
-        return await sharedMarketplaceBookingSubscriptionService.DeleteAsync(existingSubscription, customer, cancellationToken);
+        return await sharedMarketplaceBookingSubscriptionService.DeleteAsync(existingSubscription, customer, cancellationMode, cancellationToken);
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(

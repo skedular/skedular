@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02b05c08989583800fb20a9e95ad9c66>>
+ * @generated SignedSource<<0e3005fe09eec37b7cc1f051b761215a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,17 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
+export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 export type guestStoreFrontSubscriptions_rootQuery$variables = {
   organizationCustomDomain: string;
 };
 export type guestStoreFrontSubscriptions_rootQuery$data = {
+  readonly marketplaceBookingSubscriptionCancellationModes: ReadonlyArray<{
+    readonly name: string;
+    readonly type: MarketplaceBookingSubscriptionCancellationMode;
+  }>;
   readonly marketplaceBookingSubscriptions: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -43,6 +49,10 @@ export type guestStoreFrontSubscriptions_rootQuery$data = {
           readonly startDate: any;
         }>;
         readonly startedAt: any;
+        readonly status: {
+          readonly name: string;
+          readonly type: MarketplaceBookingSubscriptionStatus;
+        };
       };
     }>;
     readonly totalCount: number;
@@ -80,6 +90,26 @@ v2 = [
     "alias": null,
     "args": null,
     "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
+],
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MarketplaceBookingSubscriptionCancellationModeDetails",
+  "kind": "LinkedField",
+  "name": "marketplaceBookingSubscriptionCancellationModes",
+  "plural": true,
+  "selections": (v2/*: any*/),
+  "storageKey": null
+},
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
     "name": "title",
     "storageKey": null
   },
@@ -91,7 +121,7 @@ v2 = [
     "storageKey": null
   }
 ],
-v3 = {
+v5 = {
   "alias": null,
   "args": [
     {
@@ -113,13 +143,13 @@ v3 = {
       "kind": "LinkedField",
       "name": "marketplaceListingMetadata",
       "plural": false,
-      "selections": (v2/*: any*/),
+      "selections": (v4/*: any*/),
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v4 = [
+v6 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -146,86 +176,82 @@ v4 = [
         "kind": "Variable",
         "name": "organizationCustomDomain",
         "variableName": "organizationCustomDomain"
-      },
-      {
-        "kind": "Literal",
-        "name": "status",
-        "value": "ACTIVE"
       }
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v5 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v7 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "startedAt",
   "storageKey": null
 },
-v8 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "nextRenewalAt",
   "storageKey": null
 },
-v9 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "autoRenew",
   "storageKey": null
 },
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cancelAtPeriodEnd",
   "storageKey": null
 },
-v11 = {
+v13 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MarketplaceBookingSubscriptionStatusDetails",
+  "kind": "LinkedField",
+  "name": "status",
+  "plural": false,
+  "selections": (v2/*: any*/),
+  "storageKey": null
+},
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "quantity",
   "storageKey": null
 },
-v12 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentStatusDetails",
   "kind": "LinkedField",
   "name": "paymentStatus",
   "plural": false,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "type",
-      "storageKey": null
-    },
-    (v1/*: any*/)
-  ],
+  "selections": (v2/*: any*/),
   "storageKey": null
 },
-v13 = {
+v16 = {
   "alias": null,
   "args": null,
   "concreteType": "PaymentMethodTypeDetails",
@@ -237,17 +263,17 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v17 = {
   "alias": null,
   "args": null,
   "concreteType": "ListingMetadata",
   "kind": "LinkedField",
   "name": "listingMetadata",
   "plural": false,
-  "selections": (v2/*: any*/),
+  "selections": (v4/*: any*/),
   "storageKey": null
 },
-v15 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "RecurringBookingDetails",
@@ -255,7 +281,7 @@ v15 = {
   "name": "recurringBookings",
   "plural": true,
   "selections": [
-    (v6/*: any*/),
+    (v8/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -281,15 +307,16 @@ return {
     "name": "guestStoreFrontSubscriptions_rootQuery",
     "selections": [
       (v3/*: any*/),
+      (v5/*: any*/),
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscriptions",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -306,11 +333,12 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
+                  (v11/*: any*/),
+                  (v12/*: any*/),
+                  (v13/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -319,9 +347,9 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v11/*: any*/),
-                      (v12/*: any*/),
-                      (v13/*: any*/),
+                      (v14/*: any*/),
+                      (v15/*: any*/),
+                      (v16/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -330,14 +358,14 @@ return {
                         "name": "productVersion",
                         "plural": false,
                         "selections": [
-                          (v14/*: any*/)
+                          (v17/*: any*/)
                         ],
                         "storageKey": null
                       }
                     ],
                     "storageKey": null
                   },
-                  (v15/*: any*/)
+                  (v18/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -358,15 +386,16 @@ return {
     "name": "guestStoreFrontSubscriptions_rootQuery",
     "selections": [
       (v3/*: any*/),
+      (v5/*: any*/),
       {
         "alias": null,
-        "args": (v4/*: any*/),
+        "args": (v6/*: any*/),
         "concreteType": "ConnectionOfMarketplaceBookingSubscriptionEdge",
         "kind": "LinkedField",
         "name": "marketplaceBookingSubscriptions",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -383,11 +412,12 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v6/*: any*/),
-                  (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
                   (v10/*: any*/),
+                  (v11/*: any*/),
+                  (v12/*: any*/),
+                  (v13/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -396,9 +426,9 @@ return {
                     "name": "marketplaceBooking",
                     "plural": false,
                     "selections": [
-                      (v11/*: any*/),
-                      (v12/*: any*/),
-                      (v13/*: any*/),
+                      (v14/*: any*/),
+                      (v15/*: any*/),
+                      (v16/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -407,16 +437,16 @@ return {
                         "name": "productVersion",
                         "plural": false,
                         "selections": [
-                          (v14/*: any*/),
-                          (v6/*: any*/)
+                          (v17/*: any*/),
+                          (v8/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v6/*: any*/)
+                      (v8/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v15/*: any*/)
+                  (v18/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -429,16 +459,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "33ff4ae26d365e4be9ecdc9e576c4cd9",
+    "cacheID": "7c5ba93d0b23d17e6439632dde592802",
     "id": null,
     "metadata": {},
     "name": "guestStoreFrontSubscriptions_rootQuery",
     "operationKind": "query",
-    "text": "query guestStoreFrontSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  marketplaceBookingSubscriptions(first: 24, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain, status: ACTIVE}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query guestStoreFrontSubscriptions_rootQuery(\n  $organizationCustomDomain: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  organizationPublic(customDomain: $organizationCustomDomain) {\n    name\n    marketplaceListingMetadata {\n      title\n      subTitle\n    }\n  }\n  marketplaceBookingSubscriptions(first: 24, where: {includeMineOnly: true, organizationCustomDomain: $organizationCustomDomain}, orderBy: [{field: NEXT_RENEWAL_AT, direction: ASCENDING}]) {\n    totalCount\n    edges {\n      node {\n        id\n        startedAt\n        nextRenewalAt\n        autoRenew\n        cancelAtPeriodEnd\n        status {\n          type\n          name\n        }\n        marketplaceBooking {\n          quantity\n          paymentStatus {\n            type\n            name\n          }\n          paymentMethod {\n            name\n          }\n          productVersion {\n            listingMetadata {\n              title\n              subTitle\n            }\n            id\n          }\n          id\n        }\n        recurringBookings {\n          id\n          startDate\n          endDate\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f41261e2398996a9a313309f945547ec";
+(node as any).hash = "3a602b4267675a646c5e5afbdb4b87cb";
 
 export default node;

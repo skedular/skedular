@@ -54,4 +54,27 @@ public class MapToOrganizationBillingDetailsShould
 
         result.InvoiceDueInDays.ShouldBe(invoiceDueInDays);
     }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public void Use_Default_Invoice_Due_Days_When_Add_Input_Value_Exceeds_Supported_Range(
+        Mapper sut,
+        string email,
+        string addressLine1,
+        string zipcode,
+        string country)
+    {
+        var input = new AddOrganizationBillingDetailsInput
+        {
+            Email = email,
+            AddressLine1 = addressLine1,
+            Zipcode = zipcode,
+            Country = country,
+            InvoiceDueInDays = 1000
+        };
+
+        var result = sut.MapTo(input);
+
+        result.InvoiceDueInDays.ShouldBe(OrganizationBillingDetails.DefaultInvoiceDueInDays);
+    }
 }

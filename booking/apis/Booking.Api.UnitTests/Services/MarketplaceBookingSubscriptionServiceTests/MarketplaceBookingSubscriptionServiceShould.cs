@@ -6,9 +6,11 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
+using Enterprise.Shared.Context;
 using Enterprise.Shared.Pagination;
 using FakeItEasy;
 using Customer = Booking.Shared.Database.Entities.Customer;
+using IMarketplaceBookingSubscriptionService = Booking.Shared.Services.IMarketplaceBookingSubscriptionService;
 using MarketplaceBookingSubscription = Booking.Shared.Database.Entities.MarketplaceBookingSubscription;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;
@@ -154,6 +156,74 @@ public class MarketplaceBookingSubscriptionServiceShould
                 [],
                 false,
                 cancellationToken));
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Forwards_Immediate_Cancellation_Mode_To_Shared_Service(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] ICustomerRepository customerRepository,
+        [Frozen] IContext context,
+        [Frozen] IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
+        MarketplaceBookingSubscriptionService sut,
+        CancellationToken cancellationToken)
+    {
+        var customer = new Customer { Id = "customer-1" };
+        var existingSubscription = new MarketplaceBookingSubscription
+        {
+            Id = "subscription-1", InvolvedCustomers = [customer], InvolvedOrganizations = [], InvolvedTeams = []
+        };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+
+        A.CallTo(() => context.GetVerifiableToken()).Returns("token-1");
+        A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(A<string>._, true, cancellationToken)).Returns(customer);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
+        A.CallTo(() => sharedMarketplaceBookingSubscriptionService.DeleteAsync(
+                existingSubscription,
+                customer,
+                MarketplaceBookingSubscriptionCancellationMode.Immediate,
+                cancellationToken))
+            .Returns(deletedSubscription);
+
+        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.Immediate, cancellationToken);
+
+        result.ShouldBe(deletedSubscription);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Forwards_At_Period_End_Cancellation_Mode_To_Shared_Service(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] ICustomerRepository customerRepository,
+        [Frozen] IContext context,
+        [Frozen] IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService,
+        MarketplaceBookingSubscriptionService sut,
+        CancellationToken cancellationToken)
+    {
+        var customer = new Customer { Id = "customer-1" };
+        var existingSubscription = new MarketplaceBookingSubscription
+        {
+            Id = "subscription-1", InvolvedCustomers = [customer], InvolvedOrganizations = [], InvolvedTeams = []
+        };
+        var deletedSubscription = new Shared.Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
+
+        A.CallTo(() => context.GetVerifiableToken()).Returns("token-1");
+        A.CallTo(() => customerRepository.GetByVerifiableTokenAsync(A<string>._, true, cancellationToken)).Returns(customer);
+        A.CallTo(() => repositoryFactory.CustomerRepository).Returns(customerRepository);
+        A.CallTo(() => repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdAsync(existingSubscription.Id, cancellationToken))
+            .Returns(existingSubscription);
+        A.CallTo(() => sharedMarketplaceBookingSubscriptionService.DeleteAsync(
+                existingSubscription,
+                customer,
+                MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd,
+                cancellationToken))
+            .Returns(deletedSubscription);
+
+        var result = await sut.DeleteAsync(existingSubscription.Id, MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd, cancellationToken);
+
+        result.ShouldBe(deletedSubscription);
     }
 
     private static MarketplaceBookingSubscriptionSearchCriteria CreateSearchCriteria(

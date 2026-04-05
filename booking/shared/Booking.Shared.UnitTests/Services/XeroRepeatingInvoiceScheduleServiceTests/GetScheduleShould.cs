@@ -114,7 +114,7 @@ public class GetScheduleShould
 
     [Theory]
     [AutoFakeItEasyData]
-    public void Return_Product_Purchase_Cadence_When_Recurring_Booking_Is_Not_In_Arrears(
+    public void Split_To_Organization_Billing_Cycle_When_Non_Arrears_Recurring_Purchase_Cadence_Is_Longer(
         string pricingId)
     {
         var sut = new XeroRepeatingInvoiceScheduleService(new RecurringInvoiceBillingScheduleService());

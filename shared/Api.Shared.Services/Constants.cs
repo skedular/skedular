@@ -150,6 +150,7 @@ public static class Constants
 public static class AccountingProviderConstants
 {
     public const string Xero = "Xero";
+    public const string Skedular = "Skedular";
 }
 
 public static class AccountingEntityTypeConstants
@@ -168,4 +169,5 @@ public static class AccountingStatusConstants
     public const string Sent = "Sent";
     public const string Paid = "Paid";
     public const string Failed = "Failed";
+    public const string Cancelled = "Cancelled";
 }
