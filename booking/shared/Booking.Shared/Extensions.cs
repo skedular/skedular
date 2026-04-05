@@ -67,7 +67,9 @@ public static class Extensions
                 .AddScoped<IPrivateBookingService, PrivateBookingService>()
                 .AddScoped<IPrivateRecurringBookingService, PrivateRecurringBookingService>()
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
-                .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>();
+                .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
+                .AddScoped<ISkedularInvoiceService, SkedularInvoiceService>()
+                .AddScoped<IXeroInvoiceService, XeroInvoiceService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();

@@ -1,9 +1,9 @@
 using System.Reflection;
-using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
+using Booking.Shared.Services;
 
-namespace Booking.Shared.UnitTests.Activities.InvoiceIntegrationsTests;
+namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ShouldPreserveStandardInvoiceTransitionStateShould
@@ -45,7 +45,7 @@ public class ShouldPreserveStandardInvoiceTransitionStateShould
     }
 
     private static bool Invoke(AccountingInvoiceLink accountingInvoiceLink) =>
-        (bool)(typeof(InvoiceIntegrations)
+        (bool)(typeof(XeroInvoiceService)
             .GetMethod("ShouldPreserveStandardInvoiceTransitionState", BindingFlags.Static | BindingFlags.NonPublic)!
             .Invoke(null, [accountingInvoiceLink]) ?? false);
 }

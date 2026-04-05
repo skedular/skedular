@@ -1,8 +1,8 @@
 using System.Reflection;
-using Booking.Shared.Activities;
+using Booking.Shared.Services;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;
 
-namespace Booking.Shared.UnitTests.Activities.InvoiceIntegrationsTests;
+namespace Booking.Shared.UnitTests.Services.XeroInvoiceServiceTests;
 
 [Trait(CategoryNames.Key, CategoryNames.Unit)]
 public class ResolveRepeatingInvoiceStartDateShould
@@ -18,7 +18,7 @@ public class ResolveRepeatingInvoiceStartDateShould
     }
 
     private static DateTime Invoke(RecurringBookingEntity recurringBooking) =>
-        (DateTime)(typeof(InvoiceIntegrations)
+        (DateTime)(typeof(XeroInvoiceService)
             .GetMethod("ResolveRepeatingInvoiceStartDate", BindingFlags.Static | BindingFlags.NonPublic)!
             .Invoke(null, [recurringBooking]) ?? default(DateTime));
 }
