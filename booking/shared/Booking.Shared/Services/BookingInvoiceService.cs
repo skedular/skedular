@@ -43,6 +43,8 @@ public class BookingInvoiceService(
     IRepositoryFactory repositoryFactory,
     OrganizationConfiguration organizationConfiguration,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
+    IInvoicePaymentTermsService invoicePaymentTermsService,
+    IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
     IProductVersionHelperService productVersionHelperService,
     IMapper mapper,
     IOrganizationArrearsBillingPlannerService organizationArrearsBillingPlannerService) : IBookingInvoiceService
@@ -63,13 +65,14 @@ public class BookingInvoiceService(
         }
 
         var (organization, bankAccount) = await GetOrganizationAndBankAccountAsync(productVersion.Product.Organization.Id, cancellationToken);
+        var dueDate = invoicePaymentTermsService.GetDueDate(booking.CreatedAt, organization.BillingDetails?.InvoiceDueInDays);
 
         return new BookingInvoiceDocument(
             booking,
             bankAccount,
             organization,
             productVersion,
-            marketplaceBooking.PaymentExpiry,
+            dueDate,
             fullyPaid,
             productVersionHelperService);
     }
@@ -90,10 +93,16 @@ public class BookingInvoiceService(
         }
 
         var (organization, bankAccount) = await GetOrganizationAndBankAccountAsync(productVersion.Product.Organization.Id, cancellationToken);
+        var dueDate = invoicePaymentTermsService.GetDueDate(recurringBooking.CreatedAt, organization.BillingDetails?.InvoiceDueInDays);
+        var billingDefinition = recurringInvoiceBillingScheduleService.GetSchedule(
+            recurringBooking,
+            marketplaceBooking,
+            productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
 
         if (marketplaceBooking.BillingMode.ToProductPricingBillingMode() != ProductPricingBillingMode.InArrears)
         {
-            return new RecurringInvoiceDocument(recurringBooking, bankAccount, organization, productVersion, marketplaceBooking.PaymentExpiry,
+            return new RecurringInvoiceDocument(recurringBooking, bankAccount, organization, productVersion, dueDate,
+                billingDefinition,
                 fullyPaid);
         }
 
@@ -114,7 +123,8 @@ public class BookingInvoiceService(
             bankAccount,
             organization,
             productVersion,
-            marketplaceBooking.PaymentExpiry,
+            dueDate,
+            billingDefinition,
             fullyPaid,
             draft.Lines.FirstOrDefault());
     }
@@ -371,6 +381,7 @@ public class BookingInvoiceService(
         Organization organization,
         ProductVersion productVersion,
         DateTimeOffset dueDate,
+        RecurringInvoiceBillingDefinition billingDefinition,
         bool fullyPaid,
         ArrearsInvoiceDraftLine? initialArrearsLine = null)
         : InvoiceDocumentBase(bankAccount, organization, productVersion, dueDate, fullyPaid)
@@ -426,7 +437,7 @@ public class BookingInvoiceService(
                 return $"{unitPrice.ToRoundedPrice()} {billingCycleLabel}";
             }
 
-            return $"{unitPrice.ToRoundedPrice()} {marketplaceBooking.ProductPricing.PurchaseCadence.ToInvoicePriceUnitName()}";
+            return $"{unitPrice.ToRoundedPrice()} {billingDefinition.Cadence.ToInvoicePriceUnitName()}";
         }
 
         private (decimal TotalAmountExcludeTax, decimal TaxAmount, decimal TaxRatePercentage, decimal TotalAmount) CalculateRecurringAmounts()
@@ -444,7 +455,7 @@ public class BookingInvoiceService(
                     marketplaceBooking.TotalAmount.Value);
             }
 
-            var totalPrice = (marketplaceBooking.ProductPricing.Price * marketplaceBooking.Quantity).RoundedDecimal();
+            var totalPrice = billingDefinition.InvoiceAmount.RoundedDecimal();
             if (Organization.TaxDetails is null)
             {
                 return (totalPrice, 0.00m, 0.00m, totalPrice);

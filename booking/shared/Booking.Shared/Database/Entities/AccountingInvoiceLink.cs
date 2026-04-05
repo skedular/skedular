@@ -14,12 +14,19 @@ public class AccountingInvoiceLink : EntityBase
     public string? ExternalInvoiceId { get; set; }
     public string? ExternalInvoiceNumber { get; set; }
     public string? ExternalInvoiceUrl { get; set; }
+    public string? ExternalInvoiceMode { get; set; }
     public string ExternalStatus { get; set; }
+    public string? ExportConfigurationState { get; set; }
+    public string? ExportConfigurationMessage { get; set; }
+    public string? RepeatingScheduleSource { get; set; }
+    public string? RepeatingScheduleUnit { get; set; }
+    public int? RepeatingSchedulePeriod { get; set; }
     public DateTimeOffset? SentAt { get; set; }
     public DateTimeOffset? PaidAt { get; set; }
     public DateTimeOffset? LastSyncedAt { get; set; }
     public string? LastError { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 }
@@ -37,7 +44,12 @@ public class AccountingInvoiceLinkConfiguration : IEntityTypeConfiguration<Accou
         builder.Property(item => item.ExternalInvoiceId).HasMaxLength(Constants.MaxAccountingExternalIdLength);
         builder.Property(item => item.ExternalInvoiceNumber).HasMaxLength(Constants.MaxInvoiceNumberLength);
         builder.Property(item => item.ExternalInvoiceUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.ExternalInvoiceMode).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
         builder.Property(item => item.ExternalStatus).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.ExportConfigurationState).HasMaxLength(Constants.MaxAccountingStatusLength);
+        builder.Property(item => item.ExportConfigurationMessage).HasMaxLength(Constants.MaxAccountingErrorLength);
+        builder.Property(item => item.RepeatingScheduleSource).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
+        builder.Property(item => item.RepeatingScheduleUnit).HasMaxLength(Constants.MaxAccountingEntityTypeLength);
         builder.Property(item => item.LastError).HasMaxLength(Constants.MaxAccountingErrorLength);
 
         builder.HasOne(item => item.Organization).WithMany().HasForeignKey(item => item.OrganizationId);

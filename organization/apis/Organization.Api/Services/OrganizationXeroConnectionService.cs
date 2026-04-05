@@ -59,7 +59,8 @@ public class OrganizationXeroConnectionService(
     private static readonly HashSet<OrganizationXeroBillingMode> s_allowedBillingModes =
     [
         OrganizationXeroBillingMode.Disabled,
-        OrganizationXeroBillingMode.Enabled
+        OrganizationXeroBillingMode.Enabled,
+        OrganizationXeroBillingMode.RepeatingInvoices
     ];
 
     private static readonly Lazy<string> s_xeroOAuthCallbackBaseUrl = new(() =>
@@ -377,7 +378,7 @@ public class OrganizationXeroConnectionService(
     {
         if (!s_allowedBillingModes.Contains(billingMode))
         {
-            throw new UnsupportedXeroBillingModeException(billingMode.ToOrganizationXeroBillingMode());
+            throw new UnsupportedXeroBillingModeException(billingMode.ToString());
         }
     }
 

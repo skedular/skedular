@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03eeffce42c940455a0ed7a656e5a4b4>>
+ * @generated SignedSource<<a282d78012c0a93e46284ffd5f3978f1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "%future added value";
+export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "REPEATING_INVOICES" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type singleChoiceOrganizationXeroBillingMode_query$data = {
   readonly organizationXeroBillingModes: ReadonlyArray<{

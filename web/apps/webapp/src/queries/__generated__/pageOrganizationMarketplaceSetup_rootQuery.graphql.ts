@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92fec7a035b16c312baa66359a47810f>>
+ * @generated SignedSource<<b0b8d62b724ef3eb8dd2c4e314422f88>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -69,7 +69,21 @@ v6 = {
   "name": "id",
   "storageKey": null
 },
-v7 = [
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "companyName",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "country",
+  "storageKey": null
+},
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -79,7 +93,7 @@ v7 = [
   },
   (v5/*: any*/)
 ],
-v8 = {
+v10 = {
   "kind": "Literal",
   "name": "orderBy",
   "value": [
@@ -89,8 +103,8 @@ v8 = {
     }
   ]
 },
-v9 = [
-  (v8/*: any*/),
+v11 = [
+  (v10/*: any*/),
   {
     "fields": [
       {
@@ -103,28 +117,28 @@ v9 = [
     "name": "where"
   }
 ],
-v10 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "totalCount",
   "storageKey": null
 },
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v13 = {
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -149,7 +163,7 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = {
+v16 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -161,17 +175,17 @@ v14 = {
     }
   ]
 },
-v15 = [
+v17 = [
   "where",
   "orderBy"
 ],
-v16 = {
+v18 = {
   "kind": "Variable",
   "name": "organizationCustomDomain",
   "variableName": "organizationCustomDomain"
 },
-v17 = [
-  (v8/*: any*/),
+v19 = [
+  (v10/*: any*/),
   {
     "fields": [
       {
@@ -179,27 +193,20 @@ v17 = [
         "name": "nameContains",
         "variableName": "organizationStripeConnectAccountNameSearchText"
       },
-      (v16/*: any*/)
+      (v18/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
   }
 ],
-v18 = {
+v20 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "isDefault",
   "storageKey": null
 },
-v19 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "country",
-  "storageKey": null
-},
-v20 = {
+v21 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationDetails",
@@ -218,8 +225,8 @@ v20 = {
   ],
   "storageKey": null
 },
-v21 = [
-  (v8/*: any*/),
+v22 = [
+  (v10/*: any*/),
   {
     "fields": [
       {
@@ -227,7 +234,7 @@ v21 = [
         "name": "nameContains",
         "variableName": "organizationBankAccountNameSearchText"
       },
-      (v16/*: any*/)
+      (v18/*: any*/)
     ],
     "kind": "ObjectValue",
     "name": "where"
@@ -305,6 +312,125 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "OrganizationBillingDetails",
+            "kind": "LinkedField",
+            "name": "billingDetails",
+            "plural": false,
+            "selections": [
+              (v6/*: any*/),
+              (v7/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "email",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "invoiceDueInDays",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmType",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "osmId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "placeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "longitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "latitude",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "formattedAddress",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine1",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addressLine2",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "suburb",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "city",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "province",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "zipcode",
+                "storageKey": null
+              },
+              (v8/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "countryCode",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "ListingMetadata",
             "kind": "LinkedField",
             "name": "marketplaceListingMetadata",
@@ -348,7 +474,7 @@ return {
             "kind": "LinkedField",
             "name": "billingCycle",
             "plural": false,
-            "selections": (v7/*: any*/),
+            "selections": (v9/*: any*/),
             "storageKey": null
           },
           {
@@ -491,13 +617,13 @@ return {
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
+            "args": (v11/*: any*/),
             "concreteType": "ConnectionOfOrganizationTagEdge",
             "kind": "LinkedField",
             "name": "productTags",
             "plural": false,
             "selections": [
-              (v10/*: any*/),
+              (v12/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -530,23 +656,23 @@ return {
                         "name": "color",
                         "storageKey": null
                       },
-                      (v11/*: any*/)
+                      (v13/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v12/*: any*/)
+                  (v14/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v13/*: any*/),
-              (v14/*: any*/)
+              (v15/*: any*/),
+              (v16/*: any*/)
             ],
             "storageKey": null
           },
           {
             "alias": null,
-            "args": (v9/*: any*/),
-            "filters": (v15/*: any*/),
+            "args": (v11/*: any*/),
+            "filters": (v17/*: any*/),
             "handle": "connection",
             "key": "organizationMarketplaceSetup_productTags",
             "kind": "LinkedHandle",
@@ -562,7 +688,7 @@ return {
         "kind": "LinkedField",
         "name": "organizationBillingCycles",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       },
       {
@@ -572,18 +698,18 @@ return {
         "kind": "LinkedField",
         "name": "organizationXeroBillingModes",
         "plural": true,
-        "selections": (v7/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
+        "args": (v19/*: any*/),
         "concreteType": "ConnectionOfOrganizationStripeConnectAccountEdge",
         "kind": "LinkedField",
         "name": "organizationStripeConnectAccounts",
         "plural": false,
         "selections": [
-          (v10/*: any*/),
+          (v12/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -601,9 +727,9 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v18/*: any*/),
+                  (v20/*: any*/),
                   (v5/*: any*/),
-                  (v19/*: any*/),
+                  (v8/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -618,13 +744,7 @@ return {
                     "name": "businessType",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "companyName",
-                    "storageKey": null
-                  },
+                  (v7/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -695,24 +815,24 @@ return {
                     "name": "isOnboardingCompleted",
                     "storageKey": null
                   },
-                  (v20/*: any*/),
-                  (v11/*: any*/)
+                  (v21/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v13/*: any*/),
-          (v14/*: any*/)
+          (v15/*: any*/),
+          (v16/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v17/*: any*/),
-        "filters": (v15/*: any*/),
+        "args": (v19/*: any*/),
+        "filters": (v17/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_organizationStripeConnectAccounts",
         "kind": "LinkedHandle",
@@ -720,13 +840,13 @@ return {
       },
       {
         "alias": null,
-        "args": (v21/*: any*/),
+        "args": (v22/*: any*/),
         "concreteType": "ConnectionOfOrganizationBankAccountEdge",
         "kind": "LinkedField",
         "name": "organizationBankAccounts",
         "plural": false,
         "selections": [
-          (v10/*: any*/),
+          (v12/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -744,7 +864,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v6/*: any*/),
-                  (v18/*: any*/),
+                  (v20/*: any*/),
                   (v5/*: any*/),
                   {
                     "alias": null,
@@ -767,25 +887,25 @@ return {
                     "name": "accountNumber",
                     "storageKey": null
                   },
-                  (v19/*: any*/),
-                  (v20/*: any*/),
-                  (v11/*: any*/)
+                  (v8/*: any*/),
+                  (v21/*: any*/),
+                  (v13/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/)
+              (v14/*: any*/)
             ],
             "storageKey": null
           },
-          (v13/*: any*/),
-          (v14/*: any*/)
+          (v15/*: any*/),
+          (v16/*: any*/)
         ],
         "storageKey": null
       },
       {
         "alias": null,
-        "args": (v21/*: any*/),
-        "filters": (v15/*: any*/),
+        "args": (v22/*: any*/),
+        "filters": (v17/*: any*/),
         "handle": "connection",
         "key": "organizationMarketplaceSetup_organizationBankAccounts",
         "kind": "LinkedHandle",
@@ -794,12 +914,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "09c037ba9741dc1c07bfc80bb35c30e4",
+    "cacheID": "314287ee4f6044e397b855dba4bbd966",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationCustomDomain: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n    xeroConnection {\n      id\n      tenantId\n      tenantName\n      billingMode\n      scopes\n      isActive\n      sendInvoicesViaXero\n      autoReconcilePayments\n      defaultSalesAccountCode\n      defaultReceivablesAccountCode\n      defaultTrackingCategory1\n      defaultTrackingCategory2\n      defaultBrandingThemeId\n      defaultReferencePrefix\n      lastSuccessfulSyncAt\n      lastError\n      hasAccessToken\n      hasRefreshToken\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n  ...singleChoiceOrganizationXeroBillingMode_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationXeroBillingMode_query on Query {\n  organizationXeroBillingModes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationCustomDomain: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    billingDetails {\n      id\n      companyName\n      email\n      invoiceDueInDays\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n    xeroConnection {\n      id\n      tenantId\n      tenantName\n      billingMode\n      scopes\n      isActive\n      sendInvoicesViaXero\n      autoReconcilePayments\n      defaultSalesAccountCode\n      defaultReceivablesAccountCode\n      defaultTrackingCategory1\n      defaultTrackingCategory2\n      defaultBrandingThemeId\n      defaultReferencePrefix\n      lastSuccessfulSyncAt\n      lastError\n      hasAccessToken\n      hasRefreshToken\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n  ...singleChoiceOrganizationXeroBillingMode_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationXeroBillingMode_query on Query {\n  organizationXeroBillingModes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

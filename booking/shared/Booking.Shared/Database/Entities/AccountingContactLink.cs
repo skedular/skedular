@@ -16,6 +16,7 @@ public class AccountingContactLink : EntityBase
     public DateTimeOffset? LastSyncedAt { get; set; }
     public string? LastError { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 }

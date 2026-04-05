@@ -25,6 +25,7 @@ public class OrganizationBillingDetails : EntityBase
     public string Zipcode { get; set; }
     public string Country { get; set; }
     public string? CountryCode { get; set; }
+    public int InvoiceDueInDays { get; set; }
 
     // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
@@ -53,6 +54,7 @@ public class OrganizationBillingDetailsConfiguration : IEntityTypeConfiguration<
         builder.Property(item => item.Zipcode).HasMaxLength(Constants.MaxZipcodeLength);
         builder.Property(item => item.Country).HasMaxLength(Constants.MaxCountryLength);
         builder.Property(item => item.CountryCode).HasMaxLength(Constants.MaxCountryCodeLength);
+        builder.Property(item => item.InvoiceDueInDays).HasDefaultValue(7);
 
         builder
             .HasOne(item => item.Organization)

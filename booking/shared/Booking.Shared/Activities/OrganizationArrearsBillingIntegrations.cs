@@ -70,6 +70,7 @@ public class OrganizationArrearsBillingIntegrations(
     IGraphQlTopicEventSender graphQlTopicEventSender,
     IXeroTokenEncryptionService xeroTokenEncryptionService,
     IRandomHelper randomHelper,
+    IInvoicePaymentTermsService invoicePaymentTermsService,
     TimeProvider timeProvider)
 {
     [Activity]
@@ -395,10 +396,18 @@ public class OrganizationArrearsBillingIntegrations(
         return string.IsNullOrWhiteSpace(response.Id) ? null : response;
     }
 
+    private async Task<Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> GetOrganizationAsync(
+        string organizationId,
+        CancellationToken cancellationToken) =>
+        await organizationServiceClient.Admin_GetAsync(
+            new Admin_GetInput { Id = organizationId },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
     private static bool IsXeroManagedForArrears(XeroConnection? xeroConnection) =>
         xeroConnection is { IsActive: true, HasRefreshToken: true } &&
         !string.IsNullOrWhiteSpace(xeroConnection.TenantId) &&
-        xeroConnection.BillingMode == XeroBillingModeConstants.Enabled;
+        xeroConnection.BillingMode is XeroBillingModeConstants.Enabled or XeroBillingModeConstants.RepeatingInvoices;
 
     private async Task ExportOrganizationArrearsInvoiceToXeroAsync(
         string organizationId,
@@ -413,6 +422,7 @@ public class OrganizationArrearsBillingIntegrations(
                        throw new CustomerNotFound();
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection, cancellationToken);
         var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
+        var organization = await GetOrganizationAsync(organizationId, cancellationToken);
         var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
         if (string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
         {
@@ -453,7 +463,8 @@ public class OrganizationArrearsBillingIntegrations(
             contact,
             refreshedConnection,
             isTaxInclusive,
-            accountingInvoiceLink.ExternalInvoiceId);
+            accountingInvoiceLink.ExternalInvoiceId,
+            invoicePaymentTermsService.GetInvoiceDueInDays(organization.BillingDetails?.InvoiceDueInDays));
         var invoiceResponse = await accountingApi.CreateInvoicesAsync(
             accessToken,
             refreshedConnection.TenantId,
@@ -694,9 +705,11 @@ public class OrganizationArrearsBillingIntegrations(
         Contact contact,
         XeroConnection xeroConnection,
         bool isTaxInclusive,
-        string? externalInvoiceId)
+        string? externalInvoiceId,
+        int invoiceDueInDays)
     {
-        var dueDate = draft.BillingPeriod.EndExclusive.UtcDateTime.Date;
+        var invoiceDate = draft.BillingPeriod.EndExclusive.UtcDateTime.Date;
+        var dueDate = invoiceDate.AddDays(invoiceDueInDays);
 
         return new XeroInvoice
         {
@@ -707,7 +720,7 @@ public class OrganizationArrearsBillingIntegrations(
             Contact = contact,
             InvoiceNumber = organizationArrearsInvoice.InvoiceNumber,
             Reference = BuildReference(organizationArrearsInvoice, xeroConnection),
-            Date = dueDate,
+            Date = invoiceDate,
             DueDate = dueDate,
             LineItems = draft.Lines.Select(line => new LineItem
             {

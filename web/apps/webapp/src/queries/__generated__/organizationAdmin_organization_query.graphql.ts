@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17de800c73211454a71ff52241e02acb>>
+ * @generated SignedSource<<4472ff2586a20f4b434de84ddcea4759>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,6 +47,7 @@ export type organizationAdmin_organization_query$data = {
       readonly email: string;
       readonly formattedAddress: string | null | undefined;
       readonly id: string;
+      readonly invoiceDueInDays: number;
       readonly latitude: number | null | undefined;
       readonly longitude: number | null | undefined;
       readonly osmId: string | null | undefined;
@@ -691,6 +692,13 @@ return {
               "name": "email",
               "storageKey": null
             },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "invoiceDueInDays",
+              "storageKey": null
+            },
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
@@ -748,6 +756,6 @@ return {
 };
 })();
 
-(node as any).hash = "91a1d99582856303de49fa0b24b58eb7";
+(node as any).hash = "fdc2b1b31083109e97c90545d8f3dbdb";
 
 export default node;

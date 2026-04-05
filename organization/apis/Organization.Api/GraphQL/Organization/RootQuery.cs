@@ -36,7 +36,12 @@ public class RootQuery(IMapper mapper)
     public IEnumerable<OrganizationXeroBillingModeDetails> OrganizationXeroBillingModes() =>
     [
         new() { Type = OrganizationXeroBillingMode.Disabled, Name = OrganizationXeroBillingMode.Disabled.ToOrganizationXeroBillingModeName() },
-        new() { Type = OrganizationXeroBillingMode.Enabled, Name = OrganizationXeroBillingMode.Enabled.ToOrganizationXeroBillingModeName() }
+        new() { Type = OrganizationXeroBillingMode.Enabled, Name = OrganizationXeroBillingMode.Enabled.ToOrganizationXeroBillingModeName() },
+        new()
+        {
+            Type = OrganizationXeroBillingMode.RepeatingInvoices,
+            Name = OrganizationXeroBillingMode.RepeatingInvoices.ToOrganizationXeroBillingModeName()
+        }
     ];
 
     [UseResolverScope]

@@ -335,6 +335,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
+            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -493,6 +494,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
+            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -522,6 +524,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
+            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -1067,6 +1070,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
 
     const billingDetails = organization.billingDetails;
+    const invoiceDueInDays = billingDetails?.invoiceDueInDays ?? 7;
 
     if (billingDetails) {
       const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
@@ -1078,6 +1082,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id: billingDetails.id,
             companyName,
             email,
+            invoiceDueInDays,
             osmType: billingOsmType,
             osmId: billingOsmId,
             placeId: billingPlaceId,
@@ -1123,6 +1128,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 id: billingDetails.id,
                 companyName,
                 email,
+                invoiceDueInDays,
                 osmType: billingOsmType,
                 osmId: billingOsmId,
                 placeId: billingPlaceId,
@@ -1154,6 +1160,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id,
             companyName,
             email,
+            invoiceDueInDays,
             osmType: billingOsmType,
             osmId: billingOsmId,
             placeId: billingPlaceId,
@@ -1199,6 +1206,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 id,
                 companyName,
                 email,
+                invoiceDueInDays,
                 osmType: billingOsmType,
                 osmId: billingOsmId,
                 placeId: billingPlaceId,

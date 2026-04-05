@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cc5c88d140ae868f319cacbe00d52e5b>>
+ * @generated SignedSource<<30b09042e291b206475f762ce181b484>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
-export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "%future added value";
+export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "REPEATING_INVOICES" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type organizationMarketplaceSetup_query$data = {
   readonly organization: {
@@ -18,6 +18,26 @@ export type organizationMarketplaceSetup_query$data = {
       readonly name: string;
       readonly type: OrganizationBillingCycle;
     };
+    readonly billingDetails: {
+      readonly addressLine1: string;
+      readonly addressLine2: string | null | undefined;
+      readonly city: string | null | undefined;
+      readonly companyName: string | null | undefined;
+      readonly country: string;
+      readonly countryCode: string | null | undefined;
+      readonly email: string;
+      readonly formattedAddress: string | null | undefined;
+      readonly id: string;
+      readonly invoiceDueInDays: number;
+      readonly latitude: number | null | undefined;
+      readonly longitude: number | null | undefined;
+      readonly osmId: string | null | undefined;
+      readonly osmType: string | null | undefined;
+      readonly placeId: string | null | undefined;
+      readonly province: string | null | undefined;
+      readonly suburb: string | null | undefined;
+      readonly zipcode: string;
+    } | null | undefined;
     readonly id: string;
     readonly marketplaceListingMetadata: {
       readonly about: string | null | undefined;
@@ -97,6 +117,137 @@ return {
       "selections": [
         (v0/*: any*/),
         (v1/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "OrganizationBillingDetails",
+          "kind": "LinkedField",
+          "name": "billingDetails",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "companyName",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "email",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "invoiceDueInDays",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "osmType",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "osmId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "placeId",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "longitude",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "latitude",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "formattedAddress",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "addressLine1",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "addressLine2",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "suburb",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "city",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "province",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "zipcode",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "country",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "countryCode",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -310,6 +461,6 @@ return {
 };
 })();
 
-(node as any).hash = "486308d8e061143477aa96e56351bcec";
+(node as any).hash = "a1471049e44009a5cea421942c73722d";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62c070e7de811f36318c85837b55b412>>
+ * @generated SignedSource<<a64bf72a7d4a34e665658a19c9135809>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "%future added value";
+export type OrganizationXeroBillingMode = "DISABLED" | "ENABLED" | "REPEATING_INVOICES" | "%future added value";
 export type UpdateOrganizationXeroConnectionInput = {
   autoReconcilePayments: boolean;
   billingMode: OrganizationXeroBillingMode;

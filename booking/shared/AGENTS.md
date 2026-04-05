@@ -73,6 +73,49 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - Use `IXeroTokenEncryptionService` for Xero token values when booking needs to refresh or reuse encrypted Xero tokens.
 - When org Xero billing mode is `Enabled`, booking should treat Xero as the invoice/export/reconciliation provider for
   supported invoiceable flows.
+- When org Xero billing mode is `RepeatingInvoices`, only the recurring marketplace booking invoice path should switch
+  to Xero repeating invoice templates.
+- Keep the organization billing cycle and recurring purchase cadence separate in that mode. They are not interchangeable
+  inputs.
+- Keep invoice due days separate from both of them. Invoice due days are payment terms, not cadence.
+- Under `RepeatingInvoices`, booking must first calculate the effective invoice cadence before building a Xero repeating
+  template:
+    - if the product purchase cadence is shorter than or equal to the organization billing cycle, invoice on the
+      purchase cadence
+    - if the product purchase cadence is longer than the organization billing cycle, split the recurring charge down to
+      the organization billing cycle
+- That means short cadences like daily or weekly must not be coerced into a monthly repeating invoice just because the
+  organization billing cycle is monthly.
+- When booking splits a longer recurring cadence down to the organization billing cycle, the repeating invoice amount
+  must also be split to the per-installment amount instead of reusing the full recurring charge on every invoice.
+- Booking should read invoice due days from organization billing details and apply them consistently to:
+    - invoice PDFs
+    - normal Xero invoice exports
+    - Xero repeating invoice templates
+- In practice:
+    - the effective repeating cadence is the smaller of the purchase cadence and the organization billing cycle
+    - longer purchase cadences are split to organization-cycle installments before export
+- Supported effective recurring cadences for Xero repeating templates are `Weekly`, `Fortnightly`, `Monthly`,
+  `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, and `Yearly`.
+- If the effective recurring cadence is daily or otherwise not representable by Xero repeating invoices, fall back to
+  the normal Xero invoice export path instead of forcing an incompatible repeating template.
+- This effective recurring billing schedule is provider-agnostic. Internal recurring invoice PDFs and standard Xero
+  recurring invoice exports should use the same cadence and per-installment amount decision, not a separate rule.
+- Existing recurring exports are not auto-migrated when org billing mode or billing cycle changes.
+- Only live external Xero invoices/templates should be frozen for manual migration. Pending local invoice links with no
+  external Xero id should still follow the current org configuration.
+- If a recurring booking already has a Xero repeating template and the org configuration drifts, freeze that existing
+  template locally and mark the export as transition-required instead of silently rewriting the live Xero schedule.
+- If a recurring booking is already on standard Xero invoices when the org later enables `RepeatingInvoices`, keep that
+  recurring export on standard invoices until an explicit migration path exists.
+- If a recurring cadence cannot be represented by Xero repeating invoices, fall back to the normal Xero invoice export
+  path instead of inventing a new partial schedule shape.
+- Deleting a recurring booking currently stops future booking/resource orchestration locally, but it is not yet a full
+  invoice-cancellation workflow.
+- On the non-Xero/self-generated path, `GenerateAndSendRecurringInvoiceAsync(...)` will no-op if the recurring booking
+  is already deleted, so future invoice sends can stop. Already-generated or already-emailed invoices are not retracted.
+- On the Xero repeating path, deleting the recurring booking does not currently cancel/archive the live repeating
+  template in Xero. The template can keep generating invoices until an explicit Xero cancellation/archive flow exists.
 - Xero webhook handling is raw-body -> Kafka -> processors -> shared reconciliation. Do not add a second direct mutation
   path beside the existing accounting link/payment-event flow.
 - Webhook processing should wake the existing per-invoice Temporal monitor workflow immediately through

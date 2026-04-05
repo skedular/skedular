@@ -44,6 +44,16 @@ This file covers `organization/shared/`.
 - Keep `ICookieEncryptionService` reserved for cookie/SSO behavior.
 - `MaintainOrganizationXeroConnection` is the long-running org-owned maintenance loop for token refresh, not a booking
   concern.
+- `organization/shared/` should not decide how booking exports repeating invoices. It only persists and maintains the
+  org-level Xero connection/settings state, including the selected billing mode.
+- `organization/shared/` also owns the persisted org-level invoice payment-terms settings, including default invoice
+  due days.
+- `organization/shared/` also should not decide whether recurring repeating schedules use organization billing cycle or
+  recurring purchase cadence. That split belongs to booking-owned recurring invoice behavior.
+- `organization/shared/` should not treat invoice due days as a substitute for billing cycle or recurring cadence.
+  Booking consumes the org setting and applies it to generated invoices as payment terms.
+- `organization/shared/` should not try to auto-migrate existing recurring Xero exports when org billing mode or org
+  billing cycle changes. Booking owns the transition policy for live versus pending recurring exports.
 - Refresh failures that require reconnect should deactivate the org Xero connection and persist a reconnect-required
   error instead of silently continuing.
 

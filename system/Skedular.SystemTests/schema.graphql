@@ -769,6 +769,7 @@ type OrganizationBillingDetails {
   email: String!
   formattedAddress: String
   id: ID!
+  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   multilinesFormattedAddress: String
@@ -1679,6 +1680,7 @@ input AddOrganizationBillingDetailsInput {
   email: String!
   formattedAddress: String
   id: String
+  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   organizationCustomDomain: String
@@ -2737,6 +2739,7 @@ input UpdateOrganizationBillingDetailsInput {
   email: String!
   formattedAddress: String
   id: String!
+  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   osmId: String
@@ -3317,6 +3320,7 @@ enum OrganizationType {
 enum OrganizationXeroBillingMode {
   DISABLED
   ENABLED
+  REPEATING_INVOICES
 }
 
 enum PaymentMethod {

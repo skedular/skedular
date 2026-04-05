@@ -1012,6 +1012,7 @@ public class Mapper : IMapper
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
         dest.CountryCode = src.CountryCode;
+        dest.InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays);
         dest.Organization = organization;
         return dest;
     }
@@ -1044,6 +1045,7 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
+            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
             Organization = new Shared.Models.Organization
             {
                 Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
@@ -1068,7 +1070,8 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode
+            CountryCode = src.CountryCode,
+            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
         };
 
     public Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
@@ -1085,6 +1088,7 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
+            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1101,7 +1105,8 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode
+            CountryCode = src.CountryCode,
+            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
         };
 
     public BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src) =>
@@ -1124,7 +1129,8 @@ public class Mapper : IMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y },
+                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
             };
 
     public Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src) =>
@@ -1142,7 +1148,8 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
+                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
             };
 
     public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
@@ -1578,6 +1585,9 @@ public class Mapper : IMapper
         return dest;
     }
 
+    private static int NormalizeInvoiceDueInDays(int invoiceDueInDays) =>
+        invoiceDueInDays > 0 ? invoiceDueInDays : Shared.Models.OrganizationBillingDetails.DefaultInvoiceDueInDays;
+
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
@@ -1907,6 +1917,7 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 CountryCode = src.CountryCode,
+                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
                 Organization = organization
             };
 
@@ -1932,7 +1943,8 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode
+                CountryCode = src.CountryCode,
+                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
             };
 
     private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);

@@ -192,25 +192,62 @@ Suggested fields:
 
 This gives an auditable reconciliation trail without putting provider-specific event history into core booking records.
 
-## Integration Modes
+## Current Integration Modes
 
-Each organization should have an explicit Xero billing mode.
-
-Suggested enum:
+The current implementation keeps the billing-mode surface smaller than the earlier draft.
 
 - `Disabled`
-- `ArrearsOnly`
-- `BankTransferOnly`
-- `ArrearsAndBankTransfer`
-- `AccountingMirror`
+- `Enabled`
+- `RepeatingInvoices`
 
 Meaning:
 
-- `Disabled`: no Xero activity
-- `ArrearsOnly`: organization arrears invoices go to Xero
-- `BankTransferOnly`: bank-transfer marketplace and recurring invoices go to Xero
-- `ArrearsAndBankTransfer`: both flows
-- `AccountingMirror`: future mode for syncing Stripe-paid invoices too, without changing Stripe ownership
+- `Disabled`: no Xero invoice export
+- `Enabled`: supported one-off, recurring, and arrears invoice exports use normal Xero sales invoices
+- `RepeatingInvoices`: supported recurring booking exports create Xero repeating invoice templates instead of normal
+  Xero sales invoices
+
+Current MVP rule:
+
+- `RepeatingInvoices` only changes the recurring marketplace booking invoice path in
+  [InvoiceIntegrations.cs](booking/shared/Booking.Shared/Activities/InvoiceIntegrations.cs)
+- one-off marketplace booking invoices and scheduled organization arrears invoices still use the existing normal Xero
+  invoice export path
+- the current MVP creates a Xero repeating invoice template for supported recurring bookings; it does not model a
+  separate first normal invoice plus a second stored repeating-schedule object in Skedular
+- the organization billing cycle and the recurring product purchase cadence are separate inputs
+- for recurring invoice export, booking first calculates the effective invoice cadence:
+  - if purchase cadence is shorter than or equal to the organization billing cycle, invoice on the purchase cadence
+  - if purchase cadence is longer than the organization billing cycle, split the recurring charge down to the
+    organization billing cycle
+- this means short cadences such as a daily pass must not be coerced into a monthly repeating invoice template just
+  because the organization billing cycle is monthly
+- when booking splits a longer recurring cadence down to the organization billing cycle, the recurring invoice amount
+  is split to the per-installment amount before export
+- this recurring billing schedule decision is provider-agnostic:
+  - internal recurring invoice PDFs should use the same effective cadence and per-installment amount
+  - standard Xero recurring invoice exports should use the same effective cadence and per-installment amount
+  - Xero repeating templates are just one export mechanism that consumes that same booking-owned decision
+- invoice due days are a separate organization-level payment-terms setting and should be applied consistently to:
+  - invoice PDFs
+  - normal Xero invoice exports
+  - Xero repeating invoice templates
+- invoice due days do not replace organization billing cycle or recurring purchase cadence
+  (`Weekly`, `Fortnightly`, or `Monthly`)
+- supported effective recurring cadences for Xero repeating templates are `Weekly`, `Fortnightly`, `Monthly`,
+  `TwoMonths`, `Quarterly`, `FourMonths`, `FiveMonths`, `SixMonths`, and `Yearly`
+- if the effective recurring cadence is `Daily` or otherwise not representable by Xero repeating invoices, booking
+  falls back to the existing normal Xero invoice export path instead of failing the workflow
+- existing recurring exports are not auto-migrated when the org changes billing cycle or toggles between standard and
+  repeating Xero modes
+- the transition freeze only applies once a recurring export has already created a live external Xero invoice or
+  repeating template; pending local export links with no external Xero id still follow the current configuration
+- if an existing recurring booking already has a Xero repeating template and the current org configuration no longer
+  matches it, Skedular freezes that existing repeating template locally and marks the export as transition-required
+  instead of silently rewriting the live Xero schedule
+- if an existing recurring booking is already on standard Xero invoices when the org later enables
+  `RepeatingInvoices`, Skedular keeps that recurring export on standard invoices until an explicit migration path is
+  introduced
 
 ## Workflow Design
 

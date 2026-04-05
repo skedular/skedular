@@ -23,4 +23,5 @@ public class UpdateOrganizationBillingDetailsInput
     [GraphQLName("zipcode")] public string Zipcode { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
     [GraphQLName("countryCode")] public string? CountryCode { get; set; }
+    [GraphQLName("invoiceDueInDays")] public int InvoiceDueInDays { get; set; } = Shared.Models.OrganizationBillingDetails.DefaultInvoiceDueInDays;
 }

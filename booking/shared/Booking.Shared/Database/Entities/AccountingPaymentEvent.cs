@@ -16,6 +16,7 @@ public class AccountingPaymentEvent : EntityBase
     public string? PayloadJson { get; set; }
     public DateTimeOffset? ProcessedAt { get; set; }
 
+    // ReSharper disable once EntityFramework.ModelValidation.UnlimitedStringLength
     public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 }

@@ -40,6 +40,7 @@ import type { organizationMarketplaceSetup_query$key } from '@/queries/__generat
 import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation } from '@/queries/__generated__/organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation.graphql';
+import type { organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation.graphql';
 import type {
   OrganizationBillingCycle,
   organizationMarketplaceSetup_updateOrganizationBillingCycleMutation,
@@ -66,7 +67,7 @@ import { graphql, useFragment, useMutation, useRefetchableFragment } from 'react
 import { toast } from 'react-toastify';
 import { useDebounceCallback } from 'usehooks-ts';
 import { v7 as uuid } from 'uuid';
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 import OrganizationMarketplaceSetupLeftSideNavigationMenuContent from './organization-marketplace-setup-left-side-navigation-menu-content';
 
 type Props = {
@@ -126,6 +127,10 @@ type OrganizationBillingCycleDetails = {
   billingCycle: string;
 };
 
+type OrganizationInvoiceTermsDetails = {
+  invoiceDueInDays: number;
+};
+
 type OrganizationXeroConnectionDetails = {
   id?: string;
   tenantId: string;
@@ -152,8 +157,32 @@ type XeroTenantOption = {
   tenantName: string;
 };
 
+const xeroBillingModeLabels: Record<string, string> = {
+  DISABLED: 'Disabled',
+  ENABLED: 'Enabled',
+  REPEATING_INVOICES: 'Repeating Invoices',
+};
+
+const xeroBillingModeGuidance: Record<string, string> = {
+  DISABLED: 'Skedular stays on the local invoice flow and does not export invoices into Xero.',
+  ENABLED: 'Skedular exports supported invoices into Xero as normal invoices. Customers can still review and pay each invoice separately.',
+  REPEATING_INVOICES: 'Recurring bookings create a Xero repeating invoice template for supported cadences. Xero then manages the scheduled follow-up invoices from that template.',
+};
+
 const organizationBillingCycleSchema = object({
   billingCycle: string().required('Billing Cycle is required'),
+});
+
+const organizationInvoiceTermsSchema = object({
+  invoiceDueInDays: number()
+    .transform((value, originalValue) => {
+      return originalValue === '' || originalValue === null || originalValue === undefined ? NaN : Number(originalValue);
+    })
+    .typeError('Invoice due days is required')
+    .required('Invoice due days is required')
+    .integer('Invoice due days must be between 1 and 999.')
+    .min(1, 'Invoice due days must be between 1 and 999.')
+    .max(999, 'Invoice due days must be between 1 and 999.'),
 });
 
 const OrganizationMarketplaceSetup = ({
@@ -170,6 +199,26 @@ const OrganizationMarketplaceSetup = ({
         organization(customDomain: $organizationCustomDomain) {
           id
           name
+          billingDetails {
+            id
+            companyName
+            email
+            invoiceDueInDays
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+            countryCode
+          }
           marketplaceListingMetadata {
             about
             title
@@ -401,6 +450,36 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
+  const [commitUpdateOrganizationBillingDetails] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation($input: UpdateOrganizationBillingDetailsInput!) @raw_response_type {
+      updateOrganizationBillingDetails(input: $input) {
+        organization {
+          id
+          billingDetails {
+            id
+            companyName
+            email
+            invoiceDueInDays
+            osmType
+            osmId
+            placeId
+            longitude
+            latitude
+            formattedAddress
+            addressLine1
+            addressLine2
+            suburb
+            city
+            province
+            zipcode
+            country
+            countryCode
+          }
+        }
+      }
+    }
+  `);
+
   const [commitUpdateOrganizationXeroConnection] = useMutation<organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation>(graphql`
     mutation organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation($input: UpdateOrganizationXeroConnectionInput!) @raw_response_type {
       updateOrganizationXeroConnection(input: $input) {
@@ -467,9 +546,13 @@ const OrganizationMarketplaceSetup = ({
 
   const validateOrganizationBillingCycleDetails = makeValidate(organizationBillingCycleSchema);
   const requiredOrganizationBillingCycleDetailsFields = makeRequired(organizationBillingCycleSchema);
+  const validateOrganizationInvoiceTermsDetails = makeValidate(organizationInvoiceTermsSchema);
+  const requiredOrganizationInvoiceTermsDetailsFields = makeRequired(organizationInvoiceTermsSchema);
 
   const [organizationBillingCycle, setOrganizationBillingCycle] = useState(rootData.organization?.billingCycle.type ?? '');
   const debounceSetOrganizationBillingCycle = useDebounceCallback(setOrganizationBillingCycle, keyboardTextFieldDebounceTimeout);
+  const [organizationInvoiceDueInDays, setOrganizationInvoiceDueInDays] = useState<number>(rootData.organization?.billingDetails?.invoiceDueInDays ?? 7);
+  const debounceSetOrganizationInvoiceDueInDays = useDebounceCallback(setOrganizationInvoiceDueInDays, keyboardTextFieldDebounceTimeout);
   const organization = rootData.organization as
     | (NonNullable<typeof rootData.organization> & {
         xeroConnection?: OrganizationXeroConnectionDetails | null;
@@ -1616,8 +1699,83 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
+  const handleOrganizationInvoiceTermsUpdateClick = ({ invoiceDueInDays }: OrganizationInvoiceTermsDetails) => {
+    const organization = rootData.organization;
+    if (!organization) {
+      return;
+    }
+
+    const billingDetails = organization.billingDetails;
+    if (!billingDetails) {
+      return;
+    }
+
+    const normalizedInvoiceDueInDays = Number(invoiceDueInDays);
+
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' invoice terms...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationBillingDetails({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: billingDetails.id,
+          companyName: billingDetails.companyName,
+          email: billingDetails.email,
+          invoiceDueInDays: normalizedInvoiceDueInDays,
+          osmType: billingDetails.osmType,
+          osmId: billingDetails.osmId,
+          placeId: billingDetails.placeId,
+          longitude: billingDetails.longitude,
+          latitude: billingDetails.latitude,
+          formattedAddress: billingDetails.formattedAddress,
+          addressLine1: billingDetails.addressLine1,
+          addressLine2: billingDetails.addressLine2,
+          suburb: billingDetails.suburb,
+          city: billingDetails.city,
+          province: billingDetails.province,
+          zipcode: billingDetails.zipcode,
+          country: billingDetails.country,
+          countryCode: billingDetails.countryCode,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' invoice terms. Error: ${getRelayErrorMessage(errors)}.`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`Organization ${organization?.name} invoice terms updated.`} />,
+        });
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' invoice terms. Error: ${error.message}.`} />,
+        });
+      },
+      optimisticResponse: {
+        updateOrganizationBillingDetails: {
+          organization: {
+            id: organization.id,
+            billingDetails: {
+              ...billingDetails,
+              invoiceDueInDays: normalizedInvoiceDueInDays,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const xeroBillingModeLabel = xeroBillingModeLabels[existingXeroConnection?.billingMode ?? 'DISABLED'] ?? existingXeroConnection?.billingMode ?? 'Disabled';
   const xeroSummaryLabel = existingXeroConnection?.isActive
-    ? `Connected to ${existingXeroConnection.tenantName || existingXeroConnection.tenantId} in ${existingXeroConnection.billingMode} mode`
+    ? `Connected to ${existingXeroConnection.tenantName || existingXeroConnection.tenantId} in ${xeroBillingModeLabel} mode`
     : 'Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices.';
   const xeroAuthorizeUrl = organization ? `/api/v1/organization/xero/oauth/start?organizationId=${organization.id}` : undefined;
   const isTenantLocked = !!existingXeroConnection?.hasRefreshToken && !!existingXeroConnection?.tenantId;
@@ -1745,6 +1903,65 @@ const OrganizationMarketplaceSetup = ({
             />
 
             <Form
+              onSubmit={handleOrganizationInvoiceTermsUpdateClick}
+              initialValues={{
+                invoiceDueInDays: organizationInvoiceDueInDays,
+              }}
+              validate={validateOrganizationInvoiceTermsDetails}
+              render={({ handleSubmit, values }) => {
+                const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
+                if (!Number.isNaN(nextInvoiceDueInDays)) {
+                  debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
+                }
+
+                return (
+                  <FormStackColumn onSubmit={handleSubmit}>
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                      ref={(divElement) => {
+                        sectionRefs.current['invoice-terms'] = divElement;
+                      }}
+                    >
+                      <SectionIconTypography label="Organization Invoice Terms" />
+                      <BodyIconTypography label="Edit your organization default invoice payment terms" />
+                      <Divider />
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Invoice Due Days">
+                        <TextField
+                          name="invoiceDueInDays"
+                          type="number"
+                          required={requiredOrganizationInvoiceTermsDetailsFields.invoiceDueInDays}
+                          helperText="How many days customers have to pay marketplace invoices by default."
+                        />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn
+                      sx={{
+                        paddingLeft: defaultPadding,
+                        paddingRight: defaultPadding,
+                        paddingTop: defaultPadding,
+                      }}
+                    >
+                      <StackRow>
+                        <Button variant="contained" type="submit" sx={defaultButtonStyle} disabled={!organization?.billingDetails}>
+                          Update
+                        </Button>
+                      </StackRow>
+                      {!organization?.billingDetails && <SmallIconTypography label="Add billing details in organization admin first, then set invoice due days here." />}
+                    </StackColumn>
+                  </FormStackColumn>
+                );
+              }}
+            />
+
+            <Form
               key={`xero-form-${existingXeroConnection?.id ?? 'new'}-${xeroSuggestedTenantId}-${xeroSuggestedTenantName}`}
               onSubmit={handleUpdateOrganizationXeroConnectionClick}
               initialValues={{
@@ -1762,7 +1979,10 @@ const OrganizationMarketplaceSetup = ({
                 defaultBrandingThemeId: existingXeroConnection?.defaultBrandingThemeId ?? '',
                 defaultReferencePrefix: existingXeroConnection?.defaultReferencePrefix ?? '',
               }}
-              render={({ handleSubmit }) => {
+              render={({ handleSubmit, values }) => {
+                const selectedXeroBillingMode = values?.billingMode ?? existingXeroConnection?.billingMode ?? 'DISABLED';
+                const selectedXeroBillingModeGuidance = xeroBillingModeGuidance[selectedXeroBillingMode] ?? xeroBillingModeGuidance.DISABLED;
+
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
                     <StackColumn
@@ -1778,7 +1998,7 @@ const OrganizationMarketplaceSetup = ({
                       <GridContainer sx={{ justifyContent: 'space-between' }}>
                         <Grid>
                           <SectionIconTypography label="Xero" />
-                          <BodyIconTypography label="Configure how Skedular exports arrears and bank-transfer invoices into Xero." />
+                          <BodyIconTypography label="Configure how Skedular exports supported invoices into Xero, including recurring invoice behavior." />
                           <SmallIconTypography label={xeroSummaryLabel} />
                           <SmallIconTypography
                             label={
@@ -1837,6 +2057,14 @@ const OrganizationMarketplaceSetup = ({
                         <FormFieldLabel label="Billing Mode">
                           <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
                         </FormFieldLabel>
+                        <SmallIconTypography label={selectedXeroBillingModeGuidance} />
+                        {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
+                          <>
+                            <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
+                            <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
+                            <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
+                          </>
+                        )}
                       </Grid>
                       <Grid size={{ xs: 12, md: 6 }}>
                         <FormFieldLabel label="Scopes">
