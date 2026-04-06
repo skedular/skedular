@@ -6,50 +6,50 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Booking.Shared.Repositories;
 
-public interface IAccountingInvoiceLinkRepository : IRepository<AccountingInvoiceLink>
+public interface IAccountingInvoiceExportLinkRepository : IRepository<AccountingInvoiceExportLink>
 {
-    AccountingInvoiceLink Add(AccountingInvoiceLink accountingInvoiceLink);
-    AccountingInvoiceLink Update(AccountingInvoiceLink accountingInvoiceLink);
+    AccountingInvoiceExportLink Add(AccountingInvoiceExportLink accountingInvoiceLink);
+    AccountingInvoiceExportLink Update(AccountingInvoiceExportLink accountingInvoiceLink);
 
-    Task<AccountingInvoiceLink?> GetByProviderAndLocalEntityAsync(
+    Task<AccountingInvoiceExportLink?> GetByProviderAndLocalEntityAsync(
         string provider,
         string localEntityType,
         string localEntityId,
         CancellationToken cancellationToken);
 
-    Task<ICollection<AccountingInvoiceLink>> GetByProviderAndExternalInvoiceIdsAsync(
+    Task<ICollection<AccountingInvoiceExportLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
         ICollection<string> externalInvoiceIds,
         CancellationToken cancellationToken);
 }
 
-public class AccountingInvoiceLinkRepository(BookingDbContext dbContext, TimeProvider timeProvider)
-    : RepositoryBase<BookingDbContext, AccountingInvoiceLink>(dbContext, timeProvider), IAccountingInvoiceLinkRepository
+public class AccountingInvoiceExportLinkRepository(BookingDbContext dbContext, TimeProvider timeProvider)
+    : RepositoryBase<BookingDbContext, AccountingInvoiceExportLink>(dbContext, timeProvider), IAccountingInvoiceExportLinkRepository
 {
-    public AccountingInvoiceLink Add(AccountingInvoiceLink accountingInvoiceLink)
+    public AccountingInvoiceExportLink Add(AccountingInvoiceExportLink accountingInvoiceLink)
     {
         var now = TimeProvider.GetUtcNow();
         accountingInvoiceLink.CreatedAt = now;
-        return DbContext.AccountingInvoiceLink.Add(accountingInvoiceLink).Entity;
+        return DbContext.AccountingInvoiceExportLink.Add(accountingInvoiceLink).Entity;
     }
 
-    public AccountingInvoiceLink Update(AccountingInvoiceLink accountingInvoiceLink)
+    public AccountingInvoiceExportLink Update(AccountingInvoiceExportLink accountingInvoiceLink)
     {
         var now = TimeProvider.GetUtcNow();
         accountingInvoiceLink.ModifiedAt = now;
-        return DbContext.AccountingInvoiceLink.Update(accountingInvoiceLink).Entity;
+        return DbContext.AccountingInvoiceExportLink.Update(accountingInvoiceLink).Entity;
     }
 
-    public async Task<AccountingInvoiceLink?> GetByProviderAndLocalEntityAsync(
+    public async Task<AccountingInvoiceExportLink?> GetByProviderAndLocalEntityAsync(
         string provider,
         string localEntityType,
         string localEntityId,
         CancellationToken cancellationToken) =>
-        await DbContext.AccountingInvoiceLink.FirstOrDefaultAsync(
+        await DbContext.AccountingInvoiceExportLink.FirstOrDefaultAsync(
             query => query.Provider == provider && query.LocalEntityType == localEntityType && query.LocalEntityId == localEntityId,
             cancellationToken);
 
-    public async Task<ICollection<AccountingInvoiceLink>> GetByProviderAndExternalInvoiceIdsAsync(
+    public async Task<ICollection<AccountingInvoiceExportLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
         ICollection<string> externalInvoiceIds,
         CancellationToken cancellationToken)
@@ -59,7 +59,7 @@ public class AccountingInvoiceLinkRepository(BookingDbContext dbContext, TimePro
             return [];
         }
 
-        return await DbContext.AccountingInvoiceLink
+        return await DbContext.AccountingInvoiceExportLink
             .Where(query =>
                 query.Provider == provider &&
                 query.ExternalInvoiceId != null &&

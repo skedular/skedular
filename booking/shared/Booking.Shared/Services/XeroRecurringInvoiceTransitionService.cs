@@ -18,7 +18,7 @@ public record XeroRecurringInvoiceTransitionDecision(
 public interface IXeroRecurringInvoiceTransitionService
 {
     XeroRecurringInvoiceTransitionDecision Decide(
-        AccountingInvoiceLink? existingLink,
+        AccountingInvoiceExportLink? existingLink,
         bool useRepeatingInvoices,
         XeroRepeatingInvoiceScheduleDefinition? desiredSchedule);
 }
@@ -26,7 +26,7 @@ public interface IXeroRecurringInvoiceTransitionService
 public class XeroRecurringInvoiceTransitionService : IXeroRecurringInvoiceTransitionService
 {
     public XeroRecurringInvoiceTransitionDecision Decide(
-        AccountingInvoiceLink? existingLink,
+        AccountingInvoiceExportLink? existingLink,
         bool useRepeatingInvoices,
         XeroRepeatingInvoiceScheduleDefinition? desiredSchedule)
     {

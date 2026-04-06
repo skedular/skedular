@@ -104,7 +104,7 @@ public interface IMapper
     Models.MarketplaceBooking? MapTo(MarketplaceBooking? src);
 }
 
-public class Mapper : IMapper
+public class Mapper(TimeProvider timeProvider) : IMapper
 {
     public Api.Shared.Clients.Events.Skedular.Booking.V1.Value.Booking MapTo(Models.Booking src)
     {
@@ -297,16 +297,7 @@ public class Mapper : IMapper
     public MarketplaceBookingSubscription MapTo(Database.Entities.MarketplaceBookingSubscription src)
     {
         var marketplaceBooking = MapTo(src.MarketplaceBooking)!;
-        var latestRecurringMarketplaceBooking = ResolveLatestRecurringMarketplaceBooking(src.RecurringBookings);
-        if (latestRecurringMarketplaceBooking is not null)
-        {
-            // The subscription-level marketplace booking keeps the plan template details
-            // such as purchase cadence, while its payment-facing fields mirror the latest
-            // recurring cycle for this same subscription lineage.
-            marketplaceBooking = MapTo(marketplaceBooking, latestRecurringMarketplaceBooking);
-        }
-
-        return new MarketplaceBookingSubscription
+        var subscription = new MarketplaceBookingSubscription
         {
             Id = src.Id,
             CreatedAt = src.CreatedAt,
@@ -328,6 +319,19 @@ public class Mapper : IMapper
             DeletedByCustomer = MapTo(src.DeletedByCustomer),
             RecurringBookings = src.RecurringBookings.Select(MapToRecurringBookingWithoutSubscription).ToList()
         };
+
+        var currentBillingWindowProjection = subscription.ResolveCurrentBillingWindowPaymentProjection(timeProvider.GetUtcNow());
+        if (currentBillingWindowProjection is not null)
+        {
+            // The subscription-level marketplace booking keeps the plan template details while its
+            // payment-facing fields mirror the currently covered billing window.
+            subscription.MarketplaceBooking = MapTo(
+                subscription.MarketplaceBooking,
+                currentBillingWindowProjection.RepresentativeMarketplaceBooking,
+                currentBillingWindowProjection.PaymentStatus);
+        }
+
+        return subscription;
     }
 
     public Models.Booking MapTo(Database.Entities.RecurringBooking src, DateOnly date)
@@ -676,32 +680,28 @@ public class Mapper : IMapper
             MarketplaceBookingSubscription = null
         };
 
-    private static MarketplaceBooking? ResolveLatestRecurringMarketplaceBooking(ICollection<Database.Entities.RecurringBooking> recurringBookings) =>
-        recurringBookings
-            .Where(item => !item.DeletedAt.HasValue && item.MarketplaceBooking is not null)
-            .OrderByDescending(item => item.StartDate)
-            .Select(item => item.MarketplaceBooking)
-            .FirstOrDefault();
-
-    private static Models.MarketplaceBooking MapTo(Models.MarketplaceBooking src, MarketplaceBooking marketplaceBooking)
+    private static Models.MarketplaceBooking MapTo(
+        Models.MarketplaceBooking src,
+        Models.MarketplaceBooking marketplaceBooking,
+        PaymentStatus? paymentStatusOverride = null)
     {
-        src.PaymentStatus = marketplaceBooking.PaymentStatus.ToPaymentStatus();
+        src.PaymentStatus = paymentStatusOverride ?? marketplaceBooking.PaymentStatus;
         src.IsPaymentRequired = marketplaceBooking.IsPaymentRequired;
-        src.PaymentMethod = marketplaceBooking.PaymentMethod.ToPaymentMethod();
+        src.PaymentMethod = marketplaceBooking.PaymentMethod;
         src.PaymentExpiry = marketplaceBooking.PaymentExpiry;
         src.TotalAmountExcludeTax = marketplaceBooking.TotalAmountExcludeTax;
         src.TaxAmount = marketplaceBooking.TaxAmount;
         src.TaxRatePercentage = marketplaceBooking.TaxRatePercentage;
         src.TotalAmount = marketplaceBooking.TotalAmount;
-        src.Currency = marketplaceBooking.Currency.ToNullableCurrency();
+        src.Currency = marketplaceBooking.Currency;
         src.InvoiceUrl = marketplaceBooking.InvoiceUrl;
         src.InvoiceNumber = marketplaceBooking.InvoiceNumber;
         src.CheckoutReturnUrl = marketplaceBooking.CheckoutReturnUrl;
         src.InvoiceEmailList = marketplaceBooking.InvoiceEmailList.ToSafeCollection();
-        src.BillingMode = marketplaceBooking.BillingMode.ToProductPricingBillingMode();
-        src.PaidByCustomer = MapTo(marketplaceBooking.PaidByCustomer);
-        src.PaidByOrganization = MapTo(marketplaceBooking.PaidByOrganization);
-        src.StripeCheckoutSession = MapTo(marketplaceBooking.StripeCheckoutSession);
+        src.BillingMode = marketplaceBooking.BillingMode;
+        src.PaidByCustomer = marketplaceBooking.PaidByCustomer;
+        src.PaidByOrganization = marketplaceBooking.PaidByOrganization;
+        src.StripeCheckoutSession = marketplaceBooking.StripeCheckoutSession;
         return src;
     }
 

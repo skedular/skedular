@@ -76,29 +76,33 @@ public static class Extensions
 
         public IServiceCollection AddRepositories() =>
             services
-                .AddScoped<IRecurringBookingRepository, RecurringBookingRepository>()
-                .AddScoped<IMarketplaceBookingSubscriptionRepository, MarketplaceBookingSubscriptionRepository>()
+                .AddScoped<IAccountingContactLinkRepository, AccountingContactLinkRepository>()
+                .AddScoped<IAccountingInvoiceExportLinkRepository, AccountingInvoiceExportLinkRepository>()
+                .AddScoped<IAccountingInvoiceInstanceRepository, AccountingInvoiceInstanceRepository>()
+                .AddScoped<IAccountingPaymentEventRepository, AccountingPaymentEventRepository>()
                 .AddScoped<IBookingRepository, BookingRepository>()
-                .AddScoped<IMarketplaceBookingRepository, MarketplaceBookingRepository>()
                 .AddScoped<ICustomerRepository, CustomerRepository>()
                 .AddScoped<IIdentityRepository, IdentityRepository>()
-                .AddScoped<IOrganizationRepository, OrganizationRepository>()
-                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
-                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
                 .AddScoped<ILocationRepository, LocationRepository>()
-                .AddScoped<IResourceRepository, ResourceRepository>()
-                .AddScoped<IResourceBookingSlotRepository, ResourceBookingSlotRepository>()
-                .AddScoped<ITeamRepository, TeamRepository>()
-                .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
+                .AddScoped<IMarketplaceBookingRepository, MarketplaceBookingRepository>()
+                .AddScoped<IMarketplaceBookingSubscriptionRepository, MarketplaceBookingSubscriptionRepository>()
+                .AddScoped<IOrganizationArrearsInvoiceRepository, OrganizationArrearsInvoiceRepository>()
+                .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>()
+                .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()
+                .AddScoped<IOrganizationRepository, OrganizationRepository>()
+                .AddScoped<IOrganizationSsoSettingRepository, OrganizationSsoSettingRepository>()
                 .AddScoped<IOrganizationTagRepository, OrganizationTagRepository>()
                 .AddScoped<IProductRepository, ProductRepository>()
                 .AddScoped<IProductVersionRepository, ProductVersionRepository>()
-                .AddScoped<IStripeProductRepository, StripeProductRepository>()
-                .AddScoped<IStripePriceRepository, StripePriceRepository>()
-                .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
+                .AddScoped<IRecurringBookingRepository, RecurringBookingRepository>()
+                .AddScoped<IResourceBookingSlotRepository, ResourceBookingSlotRepository>()
+                .AddScoped<IResourceRepository, ResourceRepository>()
                 .AddScoped<IStripeCheckoutSessionRepository, StripeCheckoutSessionRepository>()
-                .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>()
-                .AddScoped<IOrganizationArrearsInvoiceRepository, OrganizationArrearsInvoiceRepository>();
+                .AddScoped<IStripeCustomerRepository, StripeCustomerRepository>()
+                .AddScoped<IStripePriceRepository, StripePriceRepository>()
+                .AddScoped<IStripeProductRepository, StripeProductRepository>()
+                .AddScoped<ITeamMemberRepository, TeamMemberRepository>()
+                .AddScoped<ITeamRepository, TeamRepository>();
 
         public IServiceCollection AddPublishers() =>
             services

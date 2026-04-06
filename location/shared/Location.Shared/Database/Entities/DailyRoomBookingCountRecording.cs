@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Location.Shared.Database.Entities;
 
-#pragma warning disable CS8618
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class DailyRoomBookingCountRecording : EntityBaseWithDeleted
 {
     public DateTimeOffset Date { get; set; }
@@ -12,7 +13,7 @@ public class DailyRoomBookingCountRecording : EntityBaseWithDeleted
 
     public virtual Location Location { get; set; }
 }
-#pragma warning restore CS8618
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class DailyRoomBookingCountRecordingConfiguration : IEntityTypeConfiguration<DailyRoomBookingCountRecording>
 {

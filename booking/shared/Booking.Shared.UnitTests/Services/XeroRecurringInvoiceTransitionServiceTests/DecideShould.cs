@@ -41,7 +41,7 @@ public class DecideShould
     public void Return_Standard_Invoice_Path_When_Repeating_Mode_Is_Selected_But_Existing_Recurring_Export_Is_Already_Standard()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceId = "invoice-1", ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice
         };
@@ -62,7 +62,7 @@ public class DecideShould
     public void Return_Repeating_Invoice_Path_When_Repeating_Mode_Is_Selected_And_Existing_Standard_Link_Has_Not_Been_Exported_Yet()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
+        var existingLink = new AccountingInvoiceExportLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
         var scheduleDefinition = new XeroRepeatingInvoiceScheduleDefinition(
             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
             Schedule.UnitEnum.WEEKLY,
@@ -81,7 +81,7 @@ public class DecideShould
         Return_Standard_Invoice_Path_When_Repeating_Mode_Is_Selected_But_Existing_Standard_Link_Has_Not_Been_Exported_Yet_And_The_Cadence_Is_Unsupported()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
+        var existingLink = new AccountingInvoiceExportLink { ExternalInvoiceMode = AccountingInvoiceExportModeConstants.StandardInvoice };
 
         var result = sut.Decide(existingLink, true, null);
 
@@ -111,7 +111,7 @@ public class DecideShould
     public void Freeze_Existing_Repeating_Invoice_When_Repeating_Mode_Is_Turned_Off()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceId = "repeating-1",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
@@ -131,7 +131,7 @@ public class DecideShould
     public void Return_Standard_Invoice_Path_When_Repeating_Mode_Is_Turned_Off_Before_An_Existing_Repeating_Link_Has_Been_Exported()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
@@ -150,7 +150,7 @@ public class DecideShould
     public void Freeze_Existing_Repeating_Invoice_When_Current_Cadence_Can_No_Longer_Be_Represented()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceId = "repeating-1",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
@@ -170,7 +170,7 @@ public class DecideShould
     public void Freeze_Existing_Repeating_Invoice_When_Desired_Schedule_Differs_From_The_Stored_Schedule()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceId = "repeating-1",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
@@ -195,7 +195,7 @@ public class DecideShould
     public void Return_Repeating_Invoice_Path_When_Existing_Repeating_Invoice_Already_Matches_The_Desired_Schedule()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceId = "repeating-1",
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
@@ -220,7 +220,7 @@ public class DecideShould
     public void Return_Repeating_Invoice_Path_When_Existing_Repeating_Link_Has_Not_Been_Exported_Yet_And_Desired_Schedule_Is_Still_Supported()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
@@ -244,7 +244,7 @@ public class DecideShould
     public void Return_Standard_Invoice_Path_When_Existing_Repeating_Link_Has_Not_Been_Exported_Yet_And_The_Current_Cadence_Is_No_Longer_Supported()
     {
         var sut = new XeroRecurringInvoiceTransitionService();
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice,
             RepeatingScheduleSource = XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,

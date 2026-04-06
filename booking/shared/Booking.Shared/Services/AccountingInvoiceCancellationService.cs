@@ -65,14 +65,14 @@ public class AccountingInvoiceCancellationService(
         string? localInvoiceUrl,
         CancellationToken cancellationToken)
     {
-        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             localEntityType,
             localEntityId,
             cancellationToken);
         if (accountingInvoiceLink is null)
         {
-            accountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+            accountingInvoiceLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Skedular,
                 localEntityType,
                 localEntityId,
@@ -84,8 +84,8 @@ public class AccountingInvoiceCancellationService(
                     return;
                 }
 
-                repositoryFactory.AccountingInvoiceLinkRepository.Add(
-                    new AccountingInvoiceLink
+                repositoryFactory.AccountingInvoiceExportLinkRepository.Add(
+                    new AccountingInvoiceExportLink
                     {
                         Provider = AccountingProviderConstants.Skedular,
                         LocalEntityType = localEntityType,
@@ -106,7 +106,7 @@ public class AccountingInvoiceCancellationService(
             string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal))
         {
             accountingInvoiceLink.LastError = null;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             return;
         }
 
@@ -116,7 +116,7 @@ public class AccountingInvoiceCancellationService(
             accountingInvoiceLink.ExportConfigurationMessage = cancelledMessage;
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Cancelled;
             accountingInvoiceLink.LastError = null;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             return;
         }
 
@@ -159,7 +159,7 @@ public class AccountingInvoiceCancellationService(
             accountingInvoiceLink.ExportConfigurationMessage = cancelledMessage;
             accountingInvoiceLink.LastSyncedAt = timeProvider.GetUtcNow();
             accountingInvoiceLink.LastError = null;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
         }
         catch (Exception exception)
         {
@@ -284,20 +284,20 @@ public class AccountingInvoiceCancellationService(
     }
 
     private void MarkTransitionRequired(
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         string message,
         string? lastError)
     {
         accountingInvoiceLink.ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired;
         accountingInvoiceLink.ExportConfigurationMessage = message;
         accountingInvoiceLink.LastError = lastError;
-        repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
     }
 
-    private static bool HasLiveExternalInvoice(AccountingInvoiceLink accountingInvoiceLink) =>
+    private static bool HasLiveExternalInvoice(AccountingInvoiceExportLink accountingInvoiceLink) =>
         !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId);
 
-    private static bool IsLiveRepeatingInvoice(AccountingInvoiceLink accountingInvoiceLink) =>
+    private static bool IsLiveRepeatingInvoice(AccountingInvoiceExportLink accountingInvoiceLink) =>
         accountingInvoiceLink.ExternalInvoiceMode == AccountingInvoiceExportModeConstants.RepeatingInvoice &&
         !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId);
 }

@@ -140,6 +140,16 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   surfaces can point at the Xero-hosted invoice when available.
 - Xero email-send is best-effort. Export should not fail just because Xero email delivery fails after the invoice
   already exists.
+- For Xero repeating invoice webhook reconciliation, keep the stored local recurring `AccountingInvoiceExportLink` keyed
+  by
+  the repeating template id. Generated recurring invoice webhooks arrive with a different concrete invoice id, so the
+  handler must resolve that concrete invoice from Xero, read `RepeatingInvoiceID`, and then correlate back to the
+  stored local link.
+- Xero may emit both the repeating-template invoice event and the concrete generated invoice event in the same or
+  subsequent webhook batches. Do not assume event ordering or that the first event is the payment-bearing invoice.
+- Future work: recurring payment confirmation must eventually become installment-aware. For recurring cadences split by
+  organization billing cycle, booking needs to map each paid generated Xero invoice back to the covered installment
+  window so only the matching portion of the future recurring booking instances is treated as paid.
 
 ## Marketplace Subscription Auto-Renew
 

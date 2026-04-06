@@ -43,6 +43,7 @@ public interface IOrganizationService
 
     Task<Shared.Models.Organization?> GetByIdOrCustomDomainPublicAsync(string? id, string? customDomain, CancellationToken cancellationToken);
     Task<Shared.Models.Organization?> GetByAzureTenantAsync(CancellationToken cancellationToken);
+    Task<Shared.Models.Organization?> GetByXeroTenantIdAsync(string tenantId, CancellationToken cancellationToken);
     Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken);
 
     Task<(PaginatedInfo, ICollection<Edge<Shared.Models.Organization>>, int)> GetPaginatedOrganizationsAsync(
@@ -318,6 +319,22 @@ public class OrganizationService(
 
         var customerId = await cachedCustomerService.GetNullableIdAsync(cancellationToken);
         return await EnrichOrganizationAsync(customerId, organization, false, cancellationToken);
+    }
+
+    public async Task<Shared.Models.Organization?> GetByXeroTenantIdAsync(string tenantId, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(tenantId))
+        {
+            return null;
+        }
+
+        var organization = await repositoryFactory.OrganizationRepository.GetByXeroTenantIdUntrackedAsync(tenantId, cancellationToken);
+        if (organization is null)
+        {
+            return null;
+        }
+
+        return mapper.MapTo(organization, organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(organization.Id));
     }
 
     public async Task<ICollection<Shared.Models.Organization>> GetMyOrganizationsAsync(CancellationToken cancellationToken)

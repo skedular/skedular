@@ -1,13 +1,21 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
+using Booking.Shared.Database.Entities;
+using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;
+using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Grpc;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Logging;
+using Xero.NetStandard.OAuth2.Api;
+using Xero.NetStandard.OAuth2.Model.Accounting;
+using Xero.NetStandard.OAuth2.Token;
+using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
 
 namespace Booking.Shared.Services;
 
@@ -22,7 +30,11 @@ public class XeroWebhookService(
     IRepositoryFactory repositoryFactory,
     ITemporalService temporalService,
     OrganizationService.OrganizationServiceClient organizationServiceClient,
-    OrganizationConfiguration organizationConfiguration) : IXeroWebhookService
+    OrganizationConfiguration organizationConfiguration,
+    IXeroSdkClientFactory xeroSdkClientFactory,
+    IXeroTokenEncryptionService xeroTokenEncryptionService,
+    TimeProvider timeProvider,
+    ILogger<XeroWebhookService> logger) : IXeroWebhookService
 {
     public bool IsSignatureValid(string payloadJson, string? xeroSignature)
     {
@@ -72,7 +84,8 @@ public class XeroWebhookService(
                         new MaintainAccountingInvoiceStateInput(
                             syncTarget.OrganizationId,
                             syncTarget.LocalEntityType,
-                            syncTarget.LocalEntityId),
+                            syncTarget.LocalEntityId,
+                            syncTarget.ExternalInvoiceIdHint),
                         cancellationToken);
                     break;
             }
@@ -94,13 +107,20 @@ public class XeroWebhookService(
             .Select(externalInvoiceId => externalInvoiceId!)
             .Distinct(StringComparer.Ordinal)
             .ToList();
-        var invoiceLinks = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
+        var invoiceLinks = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
+            AccountingProviderConstants.Xero,
+            externalInvoiceIds,
+            cancellationToken);
+        var invoiceInstances = await repositoryFactory.AccountingInvoiceInstanceRepository.GetByProviderAndExternalInvoiceIdsAsync(
             AccountingProviderConstants.Xero,
             externalInvoiceIds,
             cancellationToken);
         var invoiceLinkLookup = invoiceLinks
             .Where(invoiceLink => !string.IsNullOrWhiteSpace(invoiceLink.ExternalInvoiceId))
             .ToDictionary(invoiceLink => invoiceLink.ExternalInvoiceId!, StringComparer.Ordinal);
+        var invoiceInstanceLookup = invoiceInstances
+            .Where(invoiceInstance => !string.IsNullOrWhiteSpace(invoiceInstance.ExternalInvoiceId))
+            .ToDictionary(invoiceInstance => invoiceInstance.ExternalInvoiceId, StringComparer.Ordinal);
         var tenantCache = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
         var syncTargets = new Dictionary<string, XeroWebhookSyncTarget>(StringComparer.Ordinal);
 
@@ -112,6 +132,7 @@ public class XeroWebhookService(
             }
 
             var externalInvoiceId = GetOptionalString(eventElement, "resourceId");
+            var tenantId = GetOptionalString(eventElement, "tenantId");
             if (string.IsNullOrWhiteSpace(externalInvoiceId))
             {
                 continue;
@@ -119,23 +140,134 @@ public class XeroWebhookService(
 
             if (!invoiceLinkLookup.TryGetValue(externalInvoiceId, out var accountingInvoiceLink))
             {
-                continue;
+                if (invoiceInstanceLookup.TryGetValue(externalInvoiceId, out var accountingInvoiceInstance))
+                {
+                    accountingInvoiceLink = accountingInvoiceInstance.AccountingInvoiceExportLink;
+                }
+                else
+                {
+                    accountingInvoiceLink = await TryResolveRepeatingInvoiceLinkAsync(externalInvoiceId, tenantId, cancellationToken);
+                    if (accountingInvoiceLink is null)
+                    {
+                        continue;
+                    }
+                }
             }
 
-            var tenantId = GetOptionalString(eventElement, "tenantId");
             if (!await MatchesTenantAsync(accountingInvoiceLink.OrganizationId, tenantId, tenantCache, cancellationToken))
             {
                 continue;
             }
 
+            var externalInvoiceIdHint = ResolveExternalInvoiceIdHint(accountingInvoiceLink, externalInvoiceId);
+            if (string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.RepeatingInvoice,
+                    StringComparison.Ordinal) &&
+                string.IsNullOrWhiteSpace(externalInvoiceIdHint))
+            {
+                continue;
+            }
+
             var key = $"{accountingInvoiceLink.OrganizationId}:{accountingInvoiceLink.LocalEntityType}:{accountingInvoiceLink.LocalEntityId}";
-            syncTargets[key] = new XeroWebhookSyncTarget(
+            var candidateTarget = new XeroWebhookSyncTarget(
                 accountingInvoiceLink.OrganizationId,
                 accountingInvoiceLink.LocalEntityType,
-                accountingInvoiceLink.LocalEntityId);
+                accountingInvoiceLink.LocalEntityId,
+                externalInvoiceIdHint);
+
+            if (syncTargets.TryGetValue(key, out var existingTarget) &&
+                !string.IsNullOrWhiteSpace(existingTarget.ExternalInvoiceIdHint) &&
+                string.IsNullOrWhiteSpace(candidateTarget.ExternalInvoiceIdHint))
+            {
+                continue;
+            }
+
+            syncTargets[key] = candidateTarget;
         }
 
         return syncTargets.Values.ToList();
+    }
+
+    private static string? ResolveExternalInvoiceIdHint(AccountingInvoiceExportLink accountingInvoiceLink, string externalInvoiceId)
+    {
+        if (!string.Equals(
+                accountingInvoiceLink.ExternalInvoiceMode,
+                AccountingInvoiceExportModeConstants.RepeatingInvoice,
+                StringComparison.Ordinal))
+        {
+            return externalInvoiceId;
+        }
+
+        return string.Equals(accountingInvoiceLink.ExternalInvoiceId, externalInvoiceId, StringComparison.OrdinalIgnoreCase)
+            ? null
+            : externalInvoiceId;
+    }
+
+    private async Task<AccountingInvoiceExportLink?> ResolveRepeatingInvoiceLinkAsync(
+        string externalInvoiceId,
+        string? tenantId,
+        CancellationToken cancellationToken)
+    {
+        if (!Guid.TryParse(externalInvoiceId, out var invoiceId) || string.IsNullOrWhiteSpace(tenantId))
+        {
+            return null;
+        }
+
+        var organization = await organizationServiceClient.Admin_GetByXeroTenantIdAsync(
+            new Admin_GetByXeroTenantIdInput { TenantId = tenantId },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+        if (string.IsNullOrWhiteSpace(organization.Id))
+        {
+            return null;
+        }
+
+        var xeroConnection = await organizationServiceClient.Admin_GetXeroConnectionAsync(
+            new Admin_GetXeroConnectionInput { OrganizationId = organization.Id },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+        if (string.IsNullOrWhiteSpace(xeroConnection.Id) || string.IsNullOrWhiteSpace(xeroConnection.TenantId))
+        {
+            return null;
+        }
+
+        var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organization.Id, xeroConnection, cancellationToken);
+        var invoiceResponse = await GetInvoiceAsync(
+            xeroSdkClientFactory.CreateAccountingApi(),
+            accessToken,
+            refreshedConnection.TenantId,
+            invoiceId,
+            cancellationToken);
+        var repeatingTemplateId = invoiceResponse._Invoices?.FirstOrDefault()?.RepeatingInvoiceID?.ToString();
+        if (string.IsNullOrWhiteSpace(repeatingTemplateId))
+        {
+            return null;
+        }
+
+        var matchingLinks = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndExternalInvoiceIdsAsync(
+            AccountingProviderConstants.Xero,
+            [repeatingTemplateId],
+            cancellationToken);
+        return matchingLinks.FirstOrDefault();
+    }
+
+    private async Task<AccountingInvoiceExportLink?> TryResolveRepeatingInvoiceLinkAsync(
+        string externalInvoiceId,
+        string? tenantId,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await ResolveRepeatingInvoiceLinkAsync(externalInvoiceId, tenantId, cancellationToken);
+        }
+        catch (Exception exception)
+        {
+            logger.LogWarning(
+                exception,
+                "Failed to resolve repeating Xero invoice link for invoice {ExternalInvoiceId} and tenant {TenantId}",
+                externalInvoiceId,
+                tenantId);
+            return null;
+        }
     }
 
     private async Task<bool> MatchesTenantAsync(
@@ -180,5 +312,50 @@ public class XeroWebhookService(
             ? property.GetString()
             : null;
 
-    private sealed record XeroWebhookSyncTarget(string OrganizationId, string LocalEntityType, string LocalEntityId);
+    private async Task<(string AccessToken, XeroConnection Connection)> EnsureValidAccessTokenAsync(
+        string organizationId,
+        XeroConnection xeroConnection,
+        CancellationToken cancellationToken)
+    {
+        if (!string.IsNullOrWhiteSpace(xeroConnection.AccessTokenEncrypted) &&
+            xeroConnection.AccessTokenExpiresAt.ToDateTimeOffset() > timeProvider.GetUtcNow().AddMinutes(1))
+        {
+            return (xeroTokenEncryptionService.Decrypt(xeroConnection.AccessTokenEncrypted), xeroConnection);
+        }
+
+        if (string.IsNullOrWhiteSpace(xeroConnection.RefreshTokenEncrypted))
+        {
+            throw new MissingXeroRefreshTokenException();
+        }
+
+        var refreshedToken = (XeroOAuth2Token)await xeroSdkClientFactory.CreateClient().RefreshAccessTokenAsync(
+            new XeroOAuth2Token { RefreshToken = xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted) });
+        var now = timeProvider.GetUtcNow();
+        var refreshedConnection = await organizationServiceClient.Admin_RefreshXeroConnectionTokensAsync(
+            new Admin_RefreshXeroConnectionTokensInput
+            {
+                OrganizationId = organizationId,
+                AccessTokenEncrypted = xeroTokenEncryptionService.Encrypt(refreshedToken.AccessToken),
+                RefreshTokenEncrypted = xeroTokenEncryptionService.Encrypt(
+                    string.IsNullOrWhiteSpace(refreshedToken.RefreshToken)
+                        ? xeroTokenEncryptionService.Decrypt(xeroConnection.RefreshTokenEncrypted)
+                        : refreshedToken.RefreshToken),
+                AccessTokenExpiresAt = now.AddMinutes(30).ToTimestamp(),
+                RefreshTokenExpiresAt = now.AddDays(60).ToTimestamp()
+            },
+            organizationConfiguration.ApiKey.CreateMetadata(),
+            cancellationToken: cancellationToken);
+
+        return (refreshedToken.AccessToken, refreshedConnection);
+    }
+
+    protected virtual Task<Invoices> GetInvoiceAsync(
+        AccountingApi accountingApi,
+        string accessToken,
+        string tenantId,
+        Guid invoiceId,
+        CancellationToken cancellationToken) =>
+        accountingApi.GetInvoiceAsync(accessToken, tenantId, invoiceId, null, cancellationToken);
+
+    private sealed record XeroWebhookSyncTarget(string OrganizationId, string LocalEntityType, string LocalEntityId, string? ExternalInvoiceIdHint);
 }

@@ -123,7 +123,7 @@ This table owns:
 
 Add:
 
-- `AccountingInvoiceLink`
+- `AccountingInvoiceExportLink`
 
 Suggested fields:
 
@@ -417,7 +417,7 @@ For one-off bank transfer:
   - `organization-arrears:{invoiceId}`
   - `marketplace-booking:{bookingId}`
 - `recurring-booking:{recurringBookingId}:{billingCycleStart}`
-- Never create a new Xero invoice if an `AccountingInvoiceLink` already exists for the same local entity and provider
+- Never create a new Xero invoice if an `AccountingInvoiceExportLink` already exists for the same local entity and provider
 - Webhook processing must be idempotent by external event id plus invoice id
 - Token refresh must be serialized per organization connection
 
@@ -465,7 +465,7 @@ This protects booking/resource integrity.
 The first code slice should be:
 
 1. add `OrganizationXeroConnection`
-2. add `AccountingInvoiceLink`
+2. add `AccountingInvoiceExportLink`
 3. add `AccountingContactLink`
 4. add org GraphQL/API to connect and view status
 5. add `IXeroInvoiceService` as an abstraction only
@@ -478,7 +478,7 @@ That gives a safe draft implementation without destabilizing marketplace checkou
 
 - Default behavior: Xero should send and host the invoice unless commercial or feature constraints force Skedular to keep sending it.
 - Should Xero contact mapping be customer-only, or also support organization billing contacts explicitly?
-- Do we want `AccountingInvoiceLink` to support all planned local entity types from day one, or start with `OrganizationArrearsInvoice` only and extend it in Phase 2?
+- Do we want `AccountingInvoiceExportLink` to support all planned local entity types from day one, or start with `OrganizationArrearsInvoice` only and extend it in Phase 2?
 - Do we want webhook-first reconciliation immediately, or polling-first with webhooks added after?
 
 ## Recommended Next Step

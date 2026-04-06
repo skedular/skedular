@@ -30,7 +30,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
     public async Task Freeze_Existing_Live_Repeating_Invoice_When_Current_Cadence_Differs(
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         [Frozen] IUnitOfWork unitOfWork,
         IDbTransactionBuilder transactionBuilder,
         IGraphQlTopicEventSender graphQlTopicEventSender,
@@ -98,7 +98,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 }
             }
         };
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             Id = "link-1",
             Provider = AccountingProviderConstants.Xero,
@@ -129,7 +129,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
             "Existing recurring Xero repeating invoice schedule differs from the current settings and requires manual migration.");
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
@@ -167,7 +167,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         A.CallTo(() => xeroRepeatingInvoiceScheduleService.GetSchedule(recurringBooking, marketplaceBooking, OrganizationBillingCycleModel.Weekly))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => xeroRecurringInvoiceTransitionService.Decide(existingLink, true, desiredSchedule)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => accountingInvoiceLinkRepository.Update(A<AccountingInvoiceLink>.That.Matches(link =>
+        A.CallTo(() => accountingInvoiceLinkRepository.Update(A<AccountingInvoiceExportLink>.That.Matches(link =>
                 link.Id == existingLink.Id &&
                 link.ExportConfigurationState == AccountingInvoiceExportConfigurationStateConstants.TransitionRequired &&
                 !string.IsNullOrWhiteSpace(link.ExportConfigurationMessage))))
@@ -180,7 +180,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
     public async Task Freeze_Existing_Live_Repeating_Invoice_When_Repeating_Mode_Is_Turned_Off(
         [Frozen] OrganizationConfiguration organizationConfiguration,
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         [Frozen] IUnitOfWork unitOfWork,
         IDbTransactionBuilder transactionBuilder,
         IGraphQlTopicEventSender graphQlTopicEventSender,
@@ -248,7 +248,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 }
             }
         };
-        var existingLink = new AccountingInvoiceLink
+        var existingLink = new AccountingInvoiceExportLink
         {
             Id = "link-2",
             Provider = AccountingProviderConstants.Xero,
@@ -274,7 +274,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
             AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
             "Existing recurring Xero repeating invoice remains active until it is migrated manually.");
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
@@ -310,7 +310,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 A<OrganizationBillingCycleModel>._))
             .MustNotHaveHappened();
         A.CallTo(() => xeroRecurringInvoiceTransitionService.Decide(existingLink, false, null)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => accountingInvoiceLinkRepository.Update(A<AccountingInvoiceLink>.That.Matches(link =>
+        A.CallTo(() => accountingInvoiceLinkRepository.Update(A<AccountingInvoiceExportLink>.That.Matches(link =>
                 link.Id == existingLink.Id &&
                 link.ExportConfigurationState == AccountingInvoiceExportConfigurationStateConstants.TransitionRequired &&
                 !string.IsNullOrWhiteSpace(link.ExportConfigurationMessage))))

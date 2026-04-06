@@ -8,11 +8,13 @@ public record MaintainAccountingInvoiceStateInput(
     string OrganizationId,
     string LocalEntityType,
     string LocalEntityId,
+    string? ExternalInvoiceIdHint = null,
     DateTimeOffset? NotBefore = null);
 
 [Workflow]
 public class MaintainAccountingInvoiceState
 {
+    private string? _externalInvoiceIdHint;
     private bool _refreshRequested;
 
     [WorkflowRun]
@@ -30,7 +32,11 @@ public class MaintainAccountingInvoiceState
 
         var result = await Workflow.ExecuteActivityAsync(
             (InvoiceIntegrations activity) => activity.SyncAccountingInvoiceStateAsync(
-                new SyncAccountingInvoiceStateInput(input.OrganizationId, input.LocalEntityType, input.LocalEntityId)),
+                new SyncAccountingInvoiceStateInput(
+                    input.OrganizationId,
+                    input.LocalEntityType,
+                    input.LocalEntityId,
+                    _externalInvoiceIdHint ?? input.ExternalInvoiceIdHint)),
             new ActivityOptions
             {
                 StartToCloseTimeout = TimeSpan.FromMinutes(5),
@@ -49,13 +55,15 @@ public class MaintainAccountingInvoiceState
                     input.OrganizationId,
                     input.LocalEntityType,
                     input.LocalEntityId,
+                    _externalInvoiceIdHint ?? input.ExternalInvoiceIdHint,
                     result.NextSyncAt)));
     }
 
     [WorkflowSignal]
-    public Task RefreshNowAsync(MaintainAccountingInvoiceStateInput _)
+    public Task RefreshNowAsync(MaintainAccountingInvoiceStateInput input)
     {
         _refreshRequested = true;
+        _externalInvoiceIdHint = input.ExternalInvoiceIdHint;
         return Task.CompletedTask;
     }
 }

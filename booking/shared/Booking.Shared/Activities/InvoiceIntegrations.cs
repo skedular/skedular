@@ -13,7 +13,11 @@ public record GenerateAndSendInvoiceInput(string BookingId, ICollection<string> 
 
 public record GenerateAndSendRecurringInvoiceInput(string RecurringBookingId, ICollection<string> InvoiceEmailList);
 
-public record SyncAccountingInvoiceStateInput(string OrganizationId, string LocalEntityType, string LocalEntityId);
+public record SyncAccountingInvoiceStateInput(
+    string OrganizationId,
+    string LocalEntityType,
+    string LocalEntityId,
+    string? ExternalInvoiceIdHint = null);
 
 public record SyncAccountingInvoiceStateResult(bool IsTerminal, DateTimeOffset? NextSyncAt);
 

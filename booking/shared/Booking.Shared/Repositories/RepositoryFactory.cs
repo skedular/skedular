@@ -32,7 +32,8 @@ public interface IRepositoryFactory
     IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
-    IAccountingInvoiceLinkRepository AccountingInvoiceLinkRepository { get; }
+    IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
+    IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
     IAccountingPaymentEventRepository AccountingPaymentEventRepository { get; }
 }
@@ -66,7 +67,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
         OrganizationInvoiceCounterRepository = new OrganizationInvoiceCounterRepository(_dbContext, timeProvider);
         OrganizationArrearsInvoiceRepository = new OrganizationArrearsInvoiceRepository(_dbContext, timeProvider);
-        AccountingInvoiceLinkRepository = new AccountingInvoiceLinkRepository(_dbContext, timeProvider);
+        AccountingInvoiceExportLinkRepository = new AccountingInvoiceExportLinkRepository(_dbContext, timeProvider);
+        AccountingInvoiceInstanceRepository = new AccountingInvoiceInstanceRepository(_dbContext, timeProvider);
         AccountingContactLinkRepository = new AccountingContactLinkRepository(_dbContext, timeProvider);
         AccountingPaymentEventRepository = new AccountingPaymentEventRepository(_dbContext, timeProvider);
     }
@@ -94,7 +96,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     public IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     public IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
-    public IAccountingInvoiceLinkRepository AccountingInvoiceLinkRepository { get; }
+    public IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
+    public IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     public IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
     public IAccountingPaymentEventRepository AccountingPaymentEventRepository { get; }
 }

@@ -127,6 +127,18 @@ This file applies to the whole repository.
   payment expiry.
 - Internal/self-hosted invoices need durable cancellation state too. Do not make invoice-cancelled persistence depend
   only on Xero-specific accounting links.
+- For Xero repeating invoice webhooks, do not assume the webhook `resourceId` matches the stored local repeating link.
+  The stored local `AccountingInvoiceExportLink.ExternalInvoiceId` is the repeating template id, while webhook events
+  for
+  generated recurring invoices carry the concrete generated invoice id. Resolve the concrete invoice from Xero, read
+  its `RepeatingInvoiceID`, and correlate that back to the stored local link.
+- Xero can emit both the repeating-template invoice event and the concrete generated invoice event in the same or later
+  webhook batches. The concrete generated invoice event is the one that carries the payment-bearing invoice instance and
+  must be correlated back through `RepeatingInvoiceID`.
+- Future work: recurring payment reconciliation needs cadence-level allocation, not only template-level paid state.
+  For split recurring cadences such as a quarterly pass billed monthly, booking must eventually record which generated
+  installment invoices are paid and map that back to the covered booking window so only the paid portion of the future
+  resource bookings is treated as paid.
 
 ## Marketplace Subscription Auto-Renew
 

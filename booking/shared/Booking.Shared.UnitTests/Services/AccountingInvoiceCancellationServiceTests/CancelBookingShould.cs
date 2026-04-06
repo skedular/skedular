@@ -23,7 +23,7 @@ public class CancelBookingShould
     [AutoFakeItEasyData]
     public async Task Mark_Link_As_Cancelled_Without_Xero_Call_When_Live_Standard_Invoice_Does_Not_Exist(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         OrganizationConfiguration organizationConfiguration,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -53,7 +53,7 @@ public class CancelBookingShould
                 }
             }
         };
-        var accountingInvoiceLink = new AccountingInvoiceLink
+        var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
@@ -62,7 +62,7 @@ public class CancelBookingShould
             ExternalStatus = AccountingStatusConstants.Sent
         };
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.MarketplaceBooking,
@@ -81,7 +81,7 @@ public class CancelBookingShould
     [AutoFakeItEasyData]
     public async Task Create_Local_Cancelled_Link_When_Internal_Invoice_Exists_Without_External_Provider_Link(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         OrganizationConfiguration organizationConfiguration,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -116,23 +116,23 @@ public class CancelBookingShould
             }
         };
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.MarketplaceBooking,
                 marketplaceBookingId,
                 cancellationToken))
-            .Returns(Task.FromResult<AccountingInvoiceLink?>(null));
+            .Returns(Task.FromResult<AccountingInvoiceExportLink?>(null));
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Skedular,
                 AccountingEntityTypeConstants.MarketplaceBooking,
                 marketplaceBookingId,
                 cancellationToken))
-            .Returns(Task.FromResult<AccountingInvoiceLink?>(null));
+            .Returns(Task.FromResult<AccountingInvoiceExportLink?>(null));
 
         await sut.CancelBookingAsync(booking, cancellationToken);
 
-        A.CallTo(() => accountingInvoiceLinkRepository.Add(A<AccountingInvoiceLink>.That.Matches(link =>
+        A.CallTo(() => accountingInvoiceLinkRepository.Add(A<AccountingInvoiceExportLink>.That.Matches(link =>
                 link.Provider == AccountingProviderConstants.Skedular &&
                 link.LocalEntityType == AccountingEntityTypeConstants.MarketplaceBooking &&
                 link.LocalEntityId == marketplaceBookingId &&
@@ -148,7 +148,7 @@ public class CancelBookingShould
     [AutoFakeItEasyData]
     public async Task Cancel_Live_Standard_Invoice_In_Xero_When_Connection_Is_Ready(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         OrganizationConfiguration organizationConfiguration,
@@ -181,7 +181,7 @@ public class CancelBookingShould
             }
         };
         var externalInvoiceId = Guid.NewGuid().ToString();
-        var accountingInvoiceLink = new AccountingInvoiceLink
+        var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Id = Guid.NewGuid().ToString(),
             Provider = AccountingProviderConstants.Xero,
@@ -201,7 +201,7 @@ public class CancelBookingShould
             AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
         };
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.MarketplaceBooking,
@@ -228,7 +228,7 @@ public class CancelBookingShould
     [AutoFakeItEasyData]
     public async Task Preserve_Existing_Export_Configuration_When_Invoice_Is_Already_Paid(
         [Frozen] IRepositoryFactory repositoryFactory,
-        [Frozen] IAccountingInvoiceLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
         OrganizationConfiguration organizationConfiguration,
         IXeroSdkClientFactory xeroSdkClientFactory,
         IXeroTokenEncryptionService xeroTokenEncryptionService,
@@ -258,7 +258,7 @@ public class CancelBookingShould
                 }
             }
         };
-        var accountingInvoiceLink = new AccountingInvoiceLink
+        var accountingInvoiceLink = new AccountingInvoiceExportLink
         {
             Provider = AccountingProviderConstants.Xero,
             LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
@@ -269,7 +269,7 @@ public class CancelBookingShould
             ExportConfigurationMessage = "Existing configuration"
         };
 
-        A.CallTo(() => repositoryFactory.AccountingInvoiceLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.MarketplaceBooking,

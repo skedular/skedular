@@ -189,6 +189,16 @@ public class OrganizationGrpcService(
         return mapper.MapToGrpcResponse(organization.OrganizationXeroConnection) ?? new XeroConnection();
     }
 
+    public override async Task<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization> Admin_GetByXeroTenantId(
+        Admin_GetByXeroTenantIdInput request,
+        ServerCallContext context)
+    {
+        grpcAuthenticator.VerifyAndEnrich(organizationConfiguration.ApiKey);
+
+        var organization = await organizationService.GetByXeroTenantIdAsync(request.TenantId, context.CancellationToken);
+        return mapper.MapToGrpcResponse(organization ?? new Shared.Models.Organization());
+    }
+
     public override async Task<XeroConnection> Admin_RefreshXeroConnectionTokens(
         Admin_RefreshXeroConnectionTokensInput request,
         ServerCallContext context)

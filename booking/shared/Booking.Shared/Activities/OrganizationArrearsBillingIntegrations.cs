@@ -220,7 +220,7 @@ public class OrganizationArrearsBillingIntegrations(
         SyncOrganizationArrearsInvoiceAccountingStateInput input)
     {
         var cancellationToken = ActivityExecutionContext.Current.CancellationToken;
-        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             AccountingEntityTypeConstants.OrganizationArrearsInvoice,
             input.OrganizationArrearsInvoiceId,
@@ -237,7 +237,7 @@ public class OrganizationArrearsBillingIntegrations(
         {
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Failed;
             accountingInvoiceLink.LastError = xeroConnection?.LastError ?? "Xero connection is not active.";
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             return new SyncOrganizationArrearsInvoiceAccountingStateResult(true, null);
         }
@@ -255,7 +255,7 @@ public class OrganizationArrearsBillingIntegrations(
         {
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Failed;
             accountingInvoiceLink.LastError = "Xero invoice could not be loaded.";
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             return new SyncOrganizationArrearsInvoiceAccountingStateResult(true, null);
         }
@@ -417,29 +417,15 @@ public class OrganizationArrearsBillingIntegrations(
         List<string> bookingIds,
         CancellationToken cancellationToken)
     {
-        var accountingInvoiceLink = await UpsertPendingAccountingInvoiceLinkAsync(organizationId, organizationArrearsInvoice, cancellationToken);
+        var accountingInvoiceLink =
+            await UpsertPendingAccountingInvoiceExportLinkAsync(organizationId, organizationArrearsInvoice, cancellationToken);
         var customer = await repositoryFactory.CustomerRepository.GetByIdAsync(organizationArrearsInvoice.CustomerId, false, cancellationToken) ??
                        throw new CustomerNotFound();
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection, cancellationToken);
         var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
         var organization = await GetOrganizationAsync(organizationId, cancellationToken);
         var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
-        if (string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
-        {
-            var existingInvoice = await FindExistingInvoiceByInvoiceNumberAsync(
-                accountingApi,
-                accessToken,
-                refreshedConnection,
-                organizationArrearsInvoice.InvoiceNumber,
-                cancellationToken);
-            if (existingInvoice is not null)
-            {
-                await ApplyXeroInvoiceSyncAsync(organizationId, accountingInvoiceLink, existingInvoice, refreshedConnection, cancellationToken);
-                await UpdatePersistedInvoiceReferencesAsync(organizationArrearsInvoice, bookingIds, accountingInvoiceLink, cancellationToken);
-                return;
-            }
-        }
-        else
+        if (!string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
         {
             var existingInvoiceResponse = await accountingApi.GetInvoiceAsync(
                 accessToken,
@@ -501,12 +487,12 @@ public class OrganizationArrearsBillingIntegrations(
         }
     }
 
-    private async Task<AccountingInvoiceLink> UpsertPendingAccountingInvoiceLinkAsync(
+    private async Task<AccountingInvoiceExportLink> UpsertPendingAccountingInvoiceExportLinkAsync(
         string organizationId,
         OrganizationArrearsInvoice organizationArrearsInvoice,
         CancellationToken cancellationToken)
     {
-        var existingLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var existingLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             AccountingEntityTypeConstants.OrganizationArrearsInvoice,
             organizationArrearsInvoice.Id,
@@ -514,8 +500,8 @@ public class OrganizationArrearsBillingIntegrations(
 
         if (existingLink is null)
         {
-            existingLink = repositoryFactory.AccountingInvoiceLinkRepository.Add(
-                new AccountingInvoiceLink
+            existingLink = repositoryFactory.AccountingInvoiceExportLinkRepository.Add(
+                new AccountingInvoiceExportLink
                 {
                     Id = randomHelper.Generate(),
                     Provider = AccountingProviderConstants.Xero,
@@ -532,7 +518,7 @@ public class OrganizationArrearsBillingIntegrations(
         {
             existingLink.ExternalStatus = AccountingStatusConstants.PendingExport;
             existingLink.LastError = null;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(existingLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(existingLink);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -745,44 +731,9 @@ public class OrganizationArrearsBillingIntegrations(
         };
     }
 
-    private static async Task<XeroInvoice?> FindExistingInvoiceByInvoiceNumberAsync(
-        AccountingApi accountingApi,
-        string accessToken,
-        XeroConnection xeroConnection,
-        string? invoiceNumber,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(invoiceNumber))
-        {
-            return null;
-        }
-
-        var invoicesResponse = await accountingApi.GetInvoicesAsync(
-            accessToken,
-            xeroConnection.TenantId,
-            null,
-            null,
-            null,
-            null,
-            [invoiceNumber],
-            null,
-            null,
-            1,
-            false,
-            true,
-            null,
-            true,
-            100,
-            invoiceNumber,
-            cancellationToken);
-
-        return invoicesResponse._Invoices?.FirstOrDefault(item =>
-            string.Equals(item.InvoiceNumber, invoiceNumber, StringComparison.OrdinalIgnoreCase));
-    }
-
     private async Task ApplyXeroInvoiceSyncAsync(
         string organizationId,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         XeroInvoice invoice,
         XeroConnection xeroConnection,
         CancellationToken cancellationToken)
@@ -800,7 +751,7 @@ public class OrganizationArrearsBillingIntegrations(
             ? timeProvider.GetUtcNow()
             : accountingInvoiceLink.PaidAt;
 
-        repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
         await UpsertAccountingPaymentEventsAsync(accountingInvoiceLink, invoice, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
@@ -836,7 +787,7 @@ public class OrganizationArrearsBillingIntegrations(
         string accessToken,
         XeroConnection xeroConnection,
         Guid invoiceId,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
         try
@@ -852,12 +803,12 @@ public class OrganizationArrearsBillingIntegrations(
         catch (Exception ex)
         {
             accountingInvoiceLink.LastError = $"Xero invoice exported but email delivery failed: {ex.Message}";
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 
-    private async Task PropagateInvoiceReferencesAsync(AccountingInvoiceLink accountingInvoiceLink, CancellationToken cancellationToken)
+    private async Task PropagateInvoiceReferencesAsync(AccountingInvoiceExportLink accountingInvoiceLink, CancellationToken cancellationToken)
     {
         if (accountingInvoiceLink.LocalEntityType != AccountingEntityTypeConstants.OrganizationArrearsInvoice)
         {
@@ -887,7 +838,7 @@ public class OrganizationArrearsBillingIntegrations(
     }
 
     private async Task UpsertAccountingPaymentEventsAsync(
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         XeroInvoice invoice,
         CancellationToken cancellationToken)
     {
@@ -933,7 +884,7 @@ public class OrganizationArrearsBillingIntegrations(
     private async Task UpdatePersistedInvoiceReferencesAsync(
         OrganizationArrearsInvoice organizationArrearsInvoice,
         List<string> bookingIds,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceNumber))

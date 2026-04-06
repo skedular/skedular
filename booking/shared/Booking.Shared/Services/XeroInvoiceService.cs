@@ -21,7 +21,7 @@ using XeroOAuth2Token = Xero.NetStandard.OAuth2.Token.XeroOAuth2Token;
 using AccountingInvoiceExportConfigurationStateConstants = Booking.Shared.Models.AccountingInvoiceExportConfigurationStateConstants;
 using AccountingInvoiceExportModeConstants = Booking.Shared.Models.AccountingInvoiceExportModeConstants;
 using Constants = Booking.Shared.GraphQL.Constants;
-using AccountingInvoiceLink = Booking.Shared.Database.Entities.AccountingInvoiceLink;
+using AccountingInvoiceExportLink = Booking.Shared.Database.Entities.AccountingInvoiceExportLink;
 using AccountingContactLink = Booking.Shared.Database.Entities.AccountingContactLink;
 using AccountingPaymentEvent = Booking.Shared.Database.Entities.AccountingPaymentEvent;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
@@ -113,7 +113,7 @@ public class XeroInvoiceService(
         ArgumentNullException.ThrowIfNull(productVersion.Product.Organization);
 
         var organizationBillingCycle = productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle();
-        var existingAccountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var existingAccountingInvoiceExportLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             AccountingEntityTypeConstants.RecurringBooking,
             recurringBooking.Id,
@@ -123,11 +123,11 @@ public class XeroInvoiceService(
             ? xeroRepeatingInvoiceScheduleService.GetSchedule(recurringBooking, marketplaceBooking, organizationBillingCycle)
             : null;
         var transitionDecision = xeroRecurringInvoiceTransitionService.Decide(
-            existingAccountingInvoiceLink,
+            existingAccountingInvoiceExportLink,
             ShouldUseXeroRepeatingInvoices(xeroConnection),
             desiredRepeatingSchedule);
 
-        await ApplyRecurringInvoiceTransitionStateAsync(existingAccountingInvoiceLink, transitionDecision, cancellationToken);
+        await ApplyRecurringInvoiceTransitionStateAsync(existingAccountingInvoiceExportLink, transitionDecision, cancellationToken);
 
         if (transitionDecision.Path == XeroRecurringInvoiceExportPath.FreezeExistingRepeatingInvoice)
         {
@@ -168,7 +168,7 @@ public class XeroInvoiceService(
         SyncAccountingInvoiceStateInput input,
         CancellationToken cancellationToken)
     {
-        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             input.LocalEntityType,
             input.LocalEntityId,
@@ -188,37 +188,67 @@ public class XeroInvoiceService(
         {
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Failed;
             accountingInvoiceLink.LastError = xeroConnection?.LastError ?? "Xero connection is not active.";
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
             return new SyncAccountingInvoiceStateResult(true, null);
         }
 
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(input.OrganizationId, xeroConnection, cancellationToken);
-        var invoiceResponse = await xeroSdkClientFactory.CreateAccountingApi().GetInvoiceAsync(
+        var isRepeatingInvoice = string.Equals(
+            accountingInvoiceLink.ExternalInvoiceMode,
+            AccountingInvoiceExportModeConstants.RepeatingInvoice,
+            StringComparison.Ordinal);
+        if (isRepeatingInvoice && string.IsNullOrWhiteSpace(input.ExternalInvoiceIdHint))
+        {
+            return new SyncAccountingInvoiceStateResult(true, null);
+        }
+
+        var invoiceIdToLoad = isRepeatingInvoice ? input.ExternalInvoiceIdHint! : accountingInvoiceLink.ExternalInvoiceId;
+        var invoiceResponse = await GetInvoiceAsync(
+            xeroSdkClientFactory.CreateAccountingApi(),
             accessToken,
             refreshedConnection.TenantId,
-            Guid.Parse(accountingInvoiceLink.ExternalInvoiceId),
-            null,
+            Guid.Parse(invoiceIdToLoad),
             cancellationToken);
         var invoice = invoiceResponse?._Invoices?.FirstOrDefault();
         if (invoice is null)
         {
-            accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Failed;
             accountingInvoiceLink.LastError = "Xero invoice could not be loaded.";
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-            return new SyncAccountingInvoiceStateResult(true, null);
+            return new SyncAccountingInvoiceStateResult(
+                false,
+                isRepeatingInvoice ? timeProvider.GetUtcNow().AddHours(1) : null);
         }
 
-        await ApplyXeroInvoiceSyncAsync(input.OrganizationId, accountingInvoiceLink, invoice, refreshedConnection, cancellationToken);
-        await ProcessAccountingPaymentEventsAsync(accountingInvoiceLink, cancellationToken);
+        if (isRepeatingInvoice)
+        {
+            await ApplyXeroGeneratedRepeatingInvoiceSyncAsync(
+                input.OrganizationId,
+                accountingInvoiceLink,
+                invoice,
+                refreshedConnection,
+                cancellationToken);
+        }
+        else
+        {
+            await ApplyXeroInvoiceSyncAsync(input.OrganizationId, accountingInvoiceLink, invoice, refreshedConnection, cancellationToken);
+        }
+
+        var isConcreteInvoicePaid = string.Equals(GetAccountingStatus(invoice), AccountingStatusConstants.Paid, StringComparison.Ordinal);
+
+        await ProcessAccountingPaymentEventsAsync(
+            accountingInvoiceLink,
+            invoiceIdToLoad,
+            isConcreteInvoicePaid,
+            cancellationToken);
         await PropagateInvoiceReferencesAsync(
             accountingInvoiceLink.LocalEntityType,
             accountingInvoiceLink.LocalEntityId,
             accountingInvoiceLink,
             cancellationToken);
 
-        var isPaid = string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal);
+        var isPaid = isConcreteInvoicePaid;
         return new SyncAccountingInvoiceStateResult(isPaid, isPaid ? null : timeProvider.GetUtcNow().AddHours(12));
     }
 
@@ -229,7 +259,7 @@ public class XeroInvoiceService(
     private static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
         recurringBooking.StartDate.UtcDateTime.Date;
 
-    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
+    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceExportLink accountingInvoiceLink) =>
         string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
         string.Equals(accountingInvoiceLink.ExportConfigurationState, AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
             StringComparison.Ordinal);
@@ -245,7 +275,8 @@ public class XeroInvoiceService(
     {
         var localEntityType = booking is null ? AccountingEntityTypeConstants.RecurringBooking : AccountingEntityTypeConstants.MarketplaceBooking;
         var localEntityId = booking is null ? recurringBooking!.Id : marketplaceBooking.Id;
-        var accountingInvoiceLink = await UpsertPendingAccountingInvoiceLinkAsync(organizationId, localEntityType, localEntityId, cancellationToken);
+        var accountingInvoiceLink =
+            await UpsertPendingAccountingInvoiceExportLinkAsync(organizationId, localEntityType, localEntityId, cancellationToken);
         var customer = GetInvoiceCustomer(booking, recurringBooking, marketplaceBooking) ?? throw new CustomerNotFound();
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection, cancellationToken);
         var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
@@ -261,7 +292,11 @@ public class XeroInvoiceService(
             accessToken,
             cancellationToken);
 
-        await ProcessAccountingPaymentEventsAsync(accountingInvoiceLink, cancellationToken);
+        await ProcessAccountingPaymentEventsAsync(
+            accountingInvoiceLink,
+            accountingInvoiceLink.ExternalInvoiceId,
+            string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal),
+            cancellationToken);
         await UpdateMarketplaceInvoiceReferencesAsync(marketplaceBooking, accountingInvoiceLink, cancellationToken);
 
         if (refreshedConnection.AutoReconcilePayments &&
@@ -288,7 +323,7 @@ public class XeroInvoiceService(
             return false;
         }
 
-        var accountingInvoiceLink = await UpsertPendingAccountingInvoiceLinkAsync(
+        var accountingInvoiceLink = await UpsertPendingAccountingInvoiceExportLinkAsync(
             organizationId,
             AccountingEntityTypeConstants.RecurringBooking,
             recurringBooking.Id,
@@ -322,13 +357,13 @@ public class XeroInvoiceService(
         booking?.InvolvedCustomers.FirstOrDefault() ??
         recurringBooking?.InvolvedCustomers.FirstOrDefault();
 
-    private async Task<AccountingInvoiceLink> UpsertPendingAccountingInvoiceLinkAsync(
+    private async Task<AccountingInvoiceExportLink> UpsertPendingAccountingInvoiceExportLinkAsync(
         string organizationId,
         string localEntityType,
         string localEntityId,
         CancellationToken cancellationToken)
     {
-        var existingLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+        var existingLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
             localEntityType,
             localEntityId,
@@ -336,8 +371,8 @@ public class XeroInvoiceService(
 
         if (existingLink is null)
         {
-            existingLink = repositoryFactory.AccountingInvoiceLinkRepository.Add(
-                new AccountingInvoiceLink
+            existingLink = repositoryFactory.AccountingInvoiceExportLinkRepository.Add(
+                new AccountingInvoiceExportLink
                 {
                     Id = randomHelper.Generate(),
                     Provider = AccountingProviderConstants.Xero,
@@ -351,7 +386,7 @@ public class XeroInvoiceService(
         {
             existingLink.ExternalStatus = AccountingStatusConstants.PendingExport;
             existingLink.LastError = null;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(existingLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(existingLink);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -549,7 +584,7 @@ public class XeroInvoiceService(
         MarketplaceBooking marketplaceBooking,
         string organizationId,
         ProductVersion productVersion,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         Contact contact,
         XeroConnection xeroConnection,
         string accessToken,
@@ -565,21 +600,7 @@ public class XeroInvoiceService(
                 marketplaceBooking,
                 productVersion.Product.Organization.BillingCycle.ToOrganizationBillingCycle());
         var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
-        if (string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
-        {
-            var existingInvoice = await FindExistingInvoiceByInvoiceNumberAsync(
-                accountingApi,
-                accessToken,
-                xeroConnection,
-                marketplaceBooking.InvoiceNumber,
-                cancellationToken);
-            if (existingInvoice is not null)
-            {
-                await ApplyXeroInvoiceSyncAsync(organizationId, accountingInvoiceLink, existingInvoice, xeroConnection, cancellationToken);
-                return existingInvoice;
-            }
-        }
-        else
+        if (!string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
         {
             var existingInvoiceResponse = await accountingApi.GetInvoiceAsync(
                 accessToken,
@@ -645,7 +666,7 @@ public class XeroInvoiceService(
         RecurringBooking recurringBooking,
         MarketplaceBooking marketplaceBooking,
         ProductVersion productVersion,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         Contact contact,
         XeroConnection xeroConnection,
         string accessToken,
@@ -708,41 +729,6 @@ public class XeroInvoiceService(
         return invoiceResponse?._RepeatingInvoices?.FirstOrDefault() ?? throw new XeroInvoiceExportFailedException();
     }
 
-    private static async Task<XeroInvoice?> FindExistingInvoiceByInvoiceNumberAsync(
-        AccountingApi accountingApi,
-        string accessToken,
-        XeroConnection xeroConnection,
-        string? invoiceNumber,
-        CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(invoiceNumber))
-        {
-            return null;
-        }
-
-        var invoicesResponse = await accountingApi.GetInvoicesAsync(
-            accessToken,
-            xeroConnection.TenantId,
-            null,
-            null,
-            null,
-            null,
-            [invoiceNumber],
-            null,
-            null,
-            1,
-            false,
-            true,
-            null,
-            true,
-            100,
-            invoiceNumber,
-            cancellationToken);
-
-        return invoicesResponse._Invoices?.FirstOrDefault(item =>
-            string.Equals(item.InvoiceNumber, invoiceNumber, StringComparison.OrdinalIgnoreCase));
-    }
-
     private static string BuildInvoiceLineDescription(
         Database.Entities.Booking? booking,
         RecurringBooking? recurringBooking,
@@ -794,7 +780,7 @@ public class XeroInvoiceService(
 
     private async Task ApplyXeroInvoiceSyncAsync(
         string organizationId,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         XeroInvoice invoice,
         XeroConnection xeroConnection,
         CancellationToken cancellationToken)
@@ -823,13 +809,14 @@ public class XeroInvoiceService(
             ? timeProvider.GetUtcNow()
             : accountingInvoiceLink.PaidAt;
 
-        repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+        await UpsertAccountingInvoiceInstanceAsync(accountingInvoiceLink, invoice, accountingInvoiceLink.ExternalInvoiceUrl, cancellationToken);
         await UpsertAccountingPaymentEventsAsync(accountingInvoiceLink, invoice, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
     private async Task ApplyXeroRepeatingInvoiceSyncAsync(
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         RepeatingInvoice invoice,
         XeroRepeatingInvoiceScheduleDefinition scheduleDefinition,
         CancellationToken cancellationToken)
@@ -848,12 +835,88 @@ public class XeroInvoiceService(
             ? timeProvider.GetUtcNow()
             : null;
 
-        repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
+    private async Task ApplyXeroGeneratedRepeatingInvoiceSyncAsync(
+        string organizationId,
+        AccountingInvoiceExportLink accountingInvoiceLink,
+        XeroInvoice invoice,
+        XeroConnection xeroConnection,
+        CancellationToken cancellationToken)
+    {
+        var externalInvoiceUrl = await GetOnlineInvoiceUrlAsync(organizationId, xeroConnection, invoice, cancellationToken);
+        accountingInvoiceLink.ExternalInvoiceMode = AccountingInvoiceExportModeConstants.RepeatingInvoice;
+        accountingInvoiceLink.ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Active;
+        accountingInvoiceLink.ExportConfigurationMessage = null;
+        accountingInvoiceLink.LastSyncedAt = timeProvider.GetUtcNow();
+        accountingInvoiceLink.LastError = null;
+        accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Exported;
+
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+        await UpsertAccountingInvoiceInstanceAsync(accountingInvoiceLink, invoice, externalInvoiceUrl, cancellationToken);
+        await UpsertAccountingPaymentEventsAsync(accountingInvoiceLink, invoice, cancellationToken);
+        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task UpsertAccountingInvoiceInstanceAsync(
+        AccountingInvoiceExportLink accountingInvoiceLink,
+        XeroInvoice invoice,
+        string? externalInvoiceUrl,
+        CancellationToken cancellationToken)
+    {
+        var externalInvoiceId = invoice.InvoiceID?.ToString();
+        if (string.IsNullOrWhiteSpace(externalInvoiceId))
+        {
+            return;
+        }
+
+        var existingInvoiceInstance = await repositoryFactory.AccountingInvoiceInstanceRepository.GetByProviderAndExternalInvoiceIdAsync(
+            AccountingProviderConstants.Xero,
+            externalInvoiceId,
+            cancellationToken);
+        if (existingInvoiceInstance is null)
+        {
+            repositoryFactory.AccountingInvoiceInstanceRepository.Add(
+                new AccountingInvoiceInstance
+                {
+                    Id = randomHelper.Generate(),
+                    AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
+                    Provider = AccountingProviderConstants.Xero,
+                    ExternalInvoiceId = externalInvoiceId,
+                    ExternalInvoiceNumber = invoice.InvoiceNumber,
+                    ExternalInvoiceUrl = externalInvoiceUrl,
+                    ExternalStatus = GetAccountingStatus(invoice),
+                    SentAt = GetAccountingStatus(invoice) is AccountingStatusConstants.Sent or AccountingStatusConstants.Paid
+                        ? timeProvider.GetUtcNow()
+                        : null,
+                    PaidAt = GetAccountingStatus(invoice) == AccountingStatusConstants.Paid
+                        ? timeProvider.GetUtcNow()
+                        : null,
+                    LastSyncedAt = timeProvider.GetUtcNow(),
+                    OrganizationId = accountingInvoiceLink.OrganizationId
+                });
+            return;
+        }
+
+        existingInvoiceInstance.AccountingInvoiceExportLinkId = accountingInvoiceLink.Id;
+        existingInvoiceInstance.ExternalInvoiceNumber = invoice.InvoiceNumber;
+        existingInvoiceInstance.ExternalInvoiceUrl = externalInvoiceUrl;
+        existingInvoiceInstance.ExternalStatus = GetAccountingStatus(invoice);
+        existingInvoiceInstance.SentAt ??= existingInvoiceInstance.ExternalStatus is AccountingStatusConstants.Sent or AccountingStatusConstants.Paid
+            ? timeProvider.GetUtcNow()
+            : null;
+        existingInvoiceInstance.PaidAt = existingInvoiceInstance.ExternalStatus == AccountingStatusConstants.Paid
+            ? timeProvider.GetUtcNow()
+            : existingInvoiceInstance.PaidAt;
+        existingInvoiceInstance.LastSyncedAt = timeProvider.GetUtcNow();
+        existingInvoiceInstance.LastError = null;
+        repositoryFactory.AccountingInvoiceInstanceRepository.Update(existingInvoiceInstance);
+    }
+
     private async Task ApplyRecurringInvoiceTransitionStateAsync(
-        AccountingInvoiceLink? accountingInvoiceLink,
+        AccountingInvoiceExportLink? accountingInvoiceLink,
         XeroRecurringInvoiceTransitionDecision decision,
         CancellationToken cancellationToken)
     {
@@ -864,7 +927,7 @@ public class XeroInvoiceService(
 
         accountingInvoiceLink.ExportConfigurationState = decision.ConfigurationState;
         accountingInvoiceLink.ExportConfigurationMessage = decision.ConfigurationMessage;
-        repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+        repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
@@ -873,7 +936,7 @@ public class XeroInvoiceService(
         string accessToken,
         XeroConnection xeroConnection,
         Guid invoiceId,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
         try
@@ -889,7 +952,7 @@ public class XeroInvoiceService(
         catch (Exception exception)
         {
             accountingInvoiceLink.LastError = exception.Message;
-            repositoryFactory.AccountingInvoiceLinkRepository.Update(accountingInvoiceLink);
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
             await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
@@ -920,10 +983,16 @@ public class XeroInvoiceService(
     }
 
     private async Task UpsertAccountingPaymentEventsAsync(
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         XeroInvoice invoice,
         CancellationToken cancellationToken)
     {
+        var externalInvoiceId = invoice.InvoiceID?.ToString();
+        if (string.IsNullOrWhiteSpace(externalInvoiceId))
+        {
+            return;
+        }
+
         foreach (var payment in invoice.Payments ?? [])
         {
             var externalPaymentId = payment.PaymentID?.ToString();
@@ -943,6 +1012,7 @@ public class XeroInvoiceService(
                 existingPaymentEvent.OccurredAt = payment.Date ?? timeProvider.GetUtcNow();
                 existingPaymentEvent.PayloadJson = $"{{\"amount\":{payment.Amount?.ToString(CultureInfo.InvariantCulture) ?? "0"}}}";
                 existingPaymentEvent.ProcessedAt = null;
+                existingPaymentEvent.ExternalInvoiceId = externalInvoiceId;
                 repositoryFactory.AccountingPaymentEventRepository.Update(existingPaymentEvent);
                 continue;
             }
@@ -952,7 +1022,7 @@ public class XeroInvoiceService(
                 {
                     Id = randomHelper.Generate(),
                     Provider = AccountingProviderConstants.Xero,
-                    ExternalInvoiceId = accountingInvoiceLink.ExternalInvoiceId ?? string.Empty,
+                    ExternalInvoiceId = externalInvoiceId,
                     ExternalPaymentId = externalPaymentId,
                     ExternalStatus = payment.Status.ToString(),
                     OccurredAt = payment.Date ?? timeProvider.GetUtcNow(),
@@ -963,9 +1033,13 @@ public class XeroInvoiceService(
         }
     }
 
-    private async Task ProcessAccountingPaymentEventsAsync(AccountingInvoiceLink accountingInvoiceLink, CancellationToken cancellationToken)
+    private async Task ProcessAccountingPaymentEventsAsync(
+        AccountingInvoiceExportLink accountingInvoiceLink,
+        string? externalInvoiceId,
+        bool isInvoicePaid,
+        CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId))
+        if (string.IsNullOrWhiteSpace(externalInvoiceId))
         {
             return;
         }
@@ -973,11 +1047,11 @@ public class XeroInvoiceService(
         var unprocessedEvents = await repositoryFactory.AccountingPaymentEventRepository.GetUnprocessedByProviderAndExternalInvoiceIdAsync(
             accountingInvoiceLink.OrganizationId,
             accountingInvoiceLink.Provider,
-            accountingInvoiceLink.ExternalInvoiceId,
+            externalInvoiceId,
             cancellationToken);
         if (unprocessedEvents.Count == 0)
         {
-            if (string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal))
+            if (isInvoicePaid)
             {
                 await ConfirmAccountingInvoicePaymentAsync(accountingInvoiceLink, cancellationToken);
             }
@@ -985,7 +1059,7 @@ public class XeroInvoiceService(
             return;
         }
 
-        if (string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal))
+        if (isInvoicePaid)
         {
             await ConfirmAccountingInvoicePaymentAsync(accountingInvoiceLink, cancellationToken);
         }
@@ -999,7 +1073,7 @@ public class XeroInvoiceService(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task ConfirmAccountingInvoicePaymentAsync(AccountingInvoiceLink accountingInvoiceLink, CancellationToken cancellationToken)
+    private async Task ConfirmAccountingInvoicePaymentAsync(AccountingInvoiceExportLink accountingInvoiceLink, CancellationToken cancellationToken)
     {
         switch (accountingInvoiceLink.LocalEntityType)
         {
@@ -1101,17 +1175,23 @@ public class XeroInvoiceService(
 
     private async Task UpdateMarketplaceInvoiceReferencesAsync(
         MarketplaceBooking marketplaceBooking,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceNumber))
+        var accountingInvoiceInstance = await repositoryFactory.AccountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+            accountingInvoiceLink.Id,
+            cancellationToken);
+        var invoiceNumber = accountingInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceLink.ExternalInvoiceNumber;
+        var invoiceUrl = accountingInvoiceInstance?.ExternalInvoiceUrl ?? accountingInvoiceLink.ExternalInvoiceUrl;
+
+        if (!string.IsNullOrWhiteSpace(invoiceNumber))
         {
-            marketplaceBooking.InvoiceNumber = accountingInvoiceLink.ExternalInvoiceNumber;
+            marketplaceBooking.InvoiceNumber = invoiceNumber;
         }
 
-        if (!string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceUrl))
+        if (!string.IsNullOrWhiteSpace(invoiceUrl))
         {
-            marketplaceBooking.InvoiceUrl = accountingInvoiceLink.ExternalInvoiceUrl;
+            marketplaceBooking.InvoiceUrl = invoiceUrl;
         }
 
         repositoryFactory.MarketplaceBookingRepository.Update(marketplaceBooking);
@@ -1121,7 +1201,7 @@ public class XeroInvoiceService(
     private async Task PropagateInvoiceReferencesAsync(
         string localEntityType,
         string localEntityId,
-        AccountingInvoiceLink accountingInvoiceLink,
+        AccountingInvoiceExportLink accountingInvoiceLink,
         CancellationToken cancellationToken)
     {
         if (localEntityType == AccountingEntityTypeConstants.MarketplaceBooking)
@@ -1196,4 +1276,12 @@ public class XeroInvoiceService(
             RepeatingInvoice.StatusEnum.DELETED => AccountingStatusConstants.Cancelled,
             _ => AccountingStatusConstants.Exported
         };
+
+    protected virtual Task<Invoices> GetInvoiceAsync(
+        AccountingApi accountingApi,
+        string accessToken,
+        string tenantId,
+        Guid invoiceId,
+        CancellationToken cancellationToken) =>
+        accountingApi.GetInvoiceAsync(accessToken, tenantId, invoiceId, null, cancellationToken);
 }

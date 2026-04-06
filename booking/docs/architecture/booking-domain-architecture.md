@@ -29,26 +29,26 @@ It also references the external systems that the booking domain coordinates with
 ## Core Concepts
 
 - `Private booking`
-  - An internal/non-marketplace booking.
-  - Usually managed directly inside an organization context.
+    - An internal/non-marketplace booking.
+    - Usually managed directly inside an organization context.
 
 - `Marketplace booking`
-  - A one-time customer-facing booking for a marketplace product.
-  - Can require payment by card or bank transfer.
+    - A one-time customer-facing booking for a marketplace product.
+    - Can require payment by card or bank transfer.
 
 - `Recurring booking`
-  - The persisted recurring schedule template used to materialize future booking instances.
-  - Used for both private recurring bookings and marketplace recurring cycles.
+    - The persisted recurring schedule template used to materialize future booking instances.
+    - Used for both private recurring bookings and marketplace recurring cycles.
 
 - `Marketplace booking subscription`
-  - The customer-facing auto-renewable marketplace construct.
-  - Owns the current subscription state, renewal timing, and the recurring-booking instances created for each cycle.
+    - The customer-facing auto-renewable marketplace construct.
+    - Owns the current subscription state, renewal timing, and the recurring-booking instances created for each cycle.
 
 - `Organization arrears invoice`
-  - A billing-period invoice generated for in-arrears marketplace billing at the organization level.
+    - A billing-period invoice generated for in-arrears marketplace billing at the organization level.
 
 - `Accounting invoice link`
-  - The durable link between a local booking/invoice entity and external accounting state such as Xero.
+    - The durable link between a local booking/invoice entity and external accounting state such as Xero.
 
 ## System Context
 
@@ -170,7 +170,7 @@ flowchart TD
     RecurringBooking["RecurringBooking"]
     Subscription["MarketplaceBookingSubscription"]
     ArrearsInvoice["OrganizationArrearsInvoice"]
-    AccountingLink["AccountingInvoiceLink"]
+    AccountingLink["AccountingInvoiceExportLink"]
 
     Booking --> MarketplaceBooking
     Booking -->|may belong to| RecurringBooking
@@ -333,7 +333,8 @@ Important behavior:
 - the workflow wakes daily, not continuously
 - renewal is driven by `NextRenewalAt` and the product pricing cadence
 - the workflow creates a new recurring cycle only when the subscription is still eligible to continue
-- if matching pricing/product configuration can no longer be found, renewal fails instead of silently mutating to another product
+- if matching pricing/product configuration can no longer be found, renewal fails instead of silently mutating to
+  another product
 
 ## 5. Recurring cycle payment and invoicing
 
@@ -483,7 +484,8 @@ Cancel at period end:
 - prevents the next cycle from being materialized
 - shows the subscription as scheduled to stop
 
-Already-issued invoices remain historical records. Cancellation stops future billing; it does not imply refund or invoice reversal.
+Already-issued invoices remain historical records. Cancellation stops future billing; it does not imply refund or
+invoice reversal.
 
 ## Current high-level component map
 
@@ -548,13 +550,13 @@ flowchart LR
 If you want to drill deeper after this document:
 
 - customer/operator API entry points:
-  - `booking/apis/Booking.Api/Services`
+    - `booking/apis/Booking.Api/Services`
 - transactional domain logic:
-  - `booking/shared/Booking.Shared/Services`
+    - `booking/shared/Booking.Shared/Services`
 - long-running orchestration:
-  - `booking/shared/Booking.Shared/Workflows`
+    - `booking/shared/Booking.Shared/Workflows`
 - side effects and provider integrations:
-  - `booking/shared/Booking.Shared/Activities`
+    - `booking/shared/Booking.Shared/Activities`
 - test coverage for the most important behaviors:
-  - `booking/shared/Booking.Shared.UnitTests`
-  - `booking/apis/Booking.Api.UnitTests`
+    - `booking/shared/Booking.Shared.UnitTests`
+    - `booking/apis/Booking.Api.UnitTests`

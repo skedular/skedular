@@ -14,6 +14,7 @@ service OrganizationService {
   rpc Admin_GetStripeConnectAccounts (Admin_GetStripeConnectAccountsInput) returns (StripeConnectAccountConnection);
   rpc Admin_GetBankAccounts (Admin_GetBankAccountsInput) returns (BankAccountConnection);
   rpc Admin_GetXeroConnection (Admin_GetXeroConnectionInput) returns (XeroConnection);
+  rpc Admin_GetByXeroTenantId (Admin_GetByXeroTenantIdInput) returns (Organization);
   rpc Admin_RefreshXeroConnectionTokens (Admin_RefreshXeroConnectionTokensInput) returns (XeroConnection);
   rpc Admin_GetTag (Admin_GetTagInput) returns (Tag);
   rpc Admin_GetPaginatedTags (Admin_GetPaginatedTagsInput) returns (TagConnection);
@@ -189,6 +190,10 @@ message Admin_GetInput {
 message Admin_GetXeroConnectionInput {
   string organizationId           = 1;
   string organizationCustomDomain = 2;
+}
+
+message Admin_GetByXeroTenantIdInput {
+  string tenantId = 1;
 }
 
 message XeroConnection {
