@@ -30,6 +30,7 @@ import { getRelayErrorMessage, keyboardTextFieldDebounceTimeout } from '@/libs/u
 import type { organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationBankAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteOrganizationStripeConnectAccountsMutation.graphql';
 import type { organizationMarketplaceSetup_deleteProductTagsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_deleteProductTagsMutation.graphql';
+import type { organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation } from '@/queries/__generated__/organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation.graphql';
 import type { organizationMarketplaceSetup_organizationBankAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_query.graphql';
 import type { organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment } from '@/queries/__generated__/organizationMarketplaceSetup_organizationBankAccounts_refetchableFragment.graphql';
 import type { organizationMarketplaceSetup_organizationStripeConnectAccounts_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_organizationStripeConnectAccounts_query.graphql';
@@ -39,27 +40,27 @@ import type { organizationMarketplaceSetup_productTags_refetchableFragment } fro
 import type { organizationMarketplaceSetup_query$key } from '@/queries/__generated__/organizationMarketplaceSetup_query.graphql';
 import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMutation.graphql';
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
-import type { organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation } from '@/queries/__generated__/organizationMarketplaceSetup_disconnectOrganizationXeroConnectionMutation.graphql';
-import type { organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation.graphql';
 import type {
   OrganizationBillingCycle,
   organizationMarketplaceSetup_updateOrganizationBillingCycleMutation,
 } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingCycleMutation.graphql';
-import type {
-  OrganizationXeroBillingMode,
-  organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation,
-} from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation.graphql';
+import type { organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation.graphql';
 import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
+import type {
+  organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation,
+  OrganizationXeroBillingMode,
+} from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation.graphql';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
 import { getCountryData } from 'countries-list';
-import { makeRequired, makeValidate, Switches, TextField } from 'mui-rff';
+import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { Form } from 'react-final-form';
@@ -138,8 +139,6 @@ type OrganizationXeroConnectionDetails = {
   billingMode: OrganizationXeroBillingMode;
   scopes?: string | null;
   isActive: boolean;
-  sendInvoicesViaXero: boolean;
-  autoReconcilePayments: boolean;
   defaultSalesAccountCode?: string | null;
   defaultReceivablesAccountCode?: string | null;
   defaultTrackingCategory1?: string | null;
@@ -1021,9 +1020,9 @@ const OrganizationMarketplaceSetup = ({
           tenantName: values.tenantName ?? '',
           billingMode: values.billingMode ?? 'DISABLED',
           scopes: values.scopes ?? null,
-          isActive: values.isActive ?? false,
-          sendInvoicesViaXero: values.sendInvoicesViaXero ?? true,
-          autoReconcilePayments: values.autoReconcilePayments ?? true,
+          isActive: existingXeroConnection?.isActive ?? false,
+          sendInvoicesViaXero: true,
+          autoReconcilePayments: true,
           defaultSalesAccountCode: values.defaultSalesAccountCode ?? null,
           defaultReceivablesAccountCode: values.defaultReceivablesAccountCode ?? null,
           defaultTrackingCategory1: values.defaultTrackingCategory1 ?? null,
@@ -1774,9 +1773,8 @@ const OrganizationMarketplaceSetup = ({
   };
 
   const xeroBillingModeLabel = xeroBillingModeLabels[existingXeroConnection?.billingMode ?? 'DISABLED'] ?? existingXeroConnection?.billingMode ?? 'Disabled';
-  const xeroSummaryLabel = existingXeroConnection?.isActive
-    ? `Connected to ${existingXeroConnection.tenantName || existingXeroConnection.tenantId} in ${xeroBillingModeLabel} mode`
-    : 'Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices.';
+  const xeroSummaryTenantName = existingXeroConnection?.isActive ? existingXeroConnection.tenantName : '';
+  const xeroSummarySuffix = `in ${xeroBillingModeLabel} mode`;
   const xeroAuthorizeUrl = organization ? `/api/v1/organization/xero/oauth/start?organizationId=${organization.id}` : undefined;
   const isTenantLocked = !!existingXeroConnection?.hasRefreshToken && !!existingXeroConnection?.tenantId;
   const hasSuggestedTenant = !!xeroSuggestedTenantId;
@@ -1965,13 +1963,10 @@ const OrganizationMarketplaceSetup = ({
               key={`xero-form-${existingXeroConnection?.id ?? 'new'}-${xeroSuggestedTenantId}-${xeroSuggestedTenantName}`}
               onSubmit={handleUpdateOrganizationXeroConnectionClick}
               initialValues={{
-                tenantId: existingXeroConnection?.tenantId ?? xeroSuggestedTenantId,
                 tenantName: existingXeroConnection?.tenantName ?? xeroSuggestedTenantName,
                 billingMode: existingXeroConnection?.billingMode ?? 'DISABLED',
                 scopes: existingXeroConnection?.scopes ?? '',
                 isActive: existingXeroConnection?.isActive ?? false,
-                sendInvoicesViaXero: existingXeroConnection?.sendInvoicesViaXero ?? true,
-                autoReconcilePayments: existingXeroConnection?.autoReconcilePayments ?? true,
                 defaultSalesAccountCode: existingXeroConnection?.defaultSalesAccountCode ?? '',
                 defaultReceivablesAccountCode: existingXeroConnection?.defaultReceivablesAccountCode ?? '',
                 defaultTrackingCategory1: existingXeroConnection?.defaultTrackingCategory1 ?? '',
@@ -1999,7 +1994,19 @@ const OrganizationMarketplaceSetup = ({
                         <Grid>
                           <SectionIconTypography label="Xero" />
                           <BodyIconTypography label="Configure how Skedular exports supported invoices into Xero, including recurring invoice behavior." />
-                          <SmallIconTypography label={xeroSummaryLabel} />
+                          {existingXeroConnection?.isActive ? (
+                            <StackRow spacing={0.5}>
+                              <Typography variant="body2">Connected to</Typography>
+                              {xeroSummaryTenantName ? (
+                                <Typography variant="body2" fontWeight={700}>
+                                  {xeroSummaryTenantName}
+                                </Typography>
+                              ) : null}
+                              <Typography variant="body2">{xeroSummarySuffix}</Typography>
+                            </StackRow>
+                          ) : (
+                            <SmallIconTypography label="Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices." />
+                          )}
                           <SmallIconTypography
                             label={
                               xeroMessage ??
@@ -2034,89 +2041,49 @@ const OrganizationMarketplaceSetup = ({
                               sx={defaultButtonStyle}
                               onClick={() => handleApplySuggestedXeroTenantClick(tenantOption)}
                             >
-                              {tenantOption.tenantName || tenantOption.tenantId}
+                              {tenantOption.tenantName || 'Unnamed Xero tenant'}
                             </Button>
                           ))}
                         </StackRow>
-                        {hasSuggestedTenant && <SmallIconTypography label={`Selected tenant: ${xeroSuggestedTenantName || xeroSuggestedTenantId}`} />}
+                        {hasSuggestedTenant && <SmallIconTypography label={`Selected tenant: ${xeroSuggestedTenantName || 'Unnamed Xero tenant'}`} />}
                       </StackColumn>
                     )}
 
-                    <GridContainer sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Tenant ID">
-                          <TextField name="tenantId" helperText="The Xero tenant GUID for this organization connection." disabled={isTenantLocked} />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Tenant Name">
-                          <TextField name="tenantName" helperText="Friendly tenant name shown in setup and future sync logs." disabled={isTenantLocked} />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Billing Mode">
-                          <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
-                        </FormFieldLabel>
-                        <SmallIconTypography label={selectedXeroBillingModeGuidance} />
-                        {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
-                          <>
-                            <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
-                            <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
-                            <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
-                          </>
-                        )}
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Scopes">
-                          <TextField name="scopes" helperText="Space-separated granted Xero scopes for display and future token refresh checks." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Default Sales Account Code">
-                          <TextField name="defaultSalesAccountCode" helperText="Optional sales account code used when creating Xero invoices." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Default Receivables Account Code">
-                          <TextField name="defaultReceivablesAccountCode" helperText="Optional receivables account code for invoice posting." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Tracking Category 1">
-                          <TextField name="defaultTrackingCategory1" helperText="Optional tracking category for org-level reporting in Xero." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Tracking Category 2">
-                          <TextField name="defaultTrackingCategory2" helperText="Optional secondary tracking category." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Branding Theme ID">
-                          <TextField name="defaultBrandingThemeId" helperText="Optional Xero branding theme to apply when Xero sends the invoice." />
-                        </FormFieldLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 6 }}>
-                        <FormFieldLabel label="Reference Prefix">
-                          <TextField name="defaultReferencePrefix" helperText="Prefix added to references before export, for example SKED or MKT." />
-                        </FormFieldLabel>
-                      </Grid>
-                    </GridContainer>
-
-                    <GridContainer sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }} spacing={2}>
-                      <Grid size={{ xs: 12, md: 4 }}>
-                        <Switches name="isActive" data={{ label: 'Connection is active', value: 'isActive' }} />
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 4 }}>
-                        <Switches name="sendInvoicesViaXero" data={{ label: 'Let Xero send invoices', value: 'sendInvoicesViaXero' }} />
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 4 }}>
-                        <Switches name="autoReconcilePayments" data={{ label: 'Auto reconcile payments', value: 'autoReconcilePayments' }} />
-                      </Grid>
-                    </GridContainer>
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Billing Mode">
+                        <SingleChoiceOrganizationXeroBillingMode rootDataRelay={rootData} name="billingMode" required />
+                      </FormFieldLabel>
+                      <SmallIconTypography label={selectedXeroBillingModeGuidance} />
+                      {selectedXeroBillingMode === 'REPEATING_INVOICES' && (
+                        <>
+                          <SmallIconTypography label="Recurring in-arrears bookings use the organization billing cycle for the repeating schedule." />
+                          <SmallIconTypography label="Other recurring bookings use the product purchase cadence. If Xero cannot represent that cadence, Skedular falls back to a normal Xero invoice." />
+                          <SmallIconTypography label="Supported recurring purchase cadences for repeating templates are weekly, fortnightly, monthly, two to six months, and yearly." />
+                        </>
+                      )}
+                      <FormFieldLabel label="Default Sales Account Code">
+                        <TextField name="defaultSalesAccountCode" helperText="Optional sales account code used when creating Xero invoices." />
+                      </FormFieldLabel>
+                      <FormFieldLabel label="Default Receivables Account Code">
+                        <TextField name="defaultReceivablesAccountCode" helperText="Optional receivables account code for invoice posting." />
+                      </FormFieldLabel>
+                      <FormFieldLabel label="Tracking Category 1">
+                        <TextField name="defaultTrackingCategory1" helperText="Optional tracking category for org-level reporting in Xero." />
+                      </FormFieldLabel>
+                      <FormFieldLabel label="Tracking Category 2">
+                        <TextField name="defaultTrackingCategory2" helperText="Optional secondary tracking category." />
+                      </FormFieldLabel>
+                      <FormFieldLabel label="Branding Theme ID">
+                        <TextField name="defaultBrandingThemeId" helperText="Optional Xero branding theme to apply when Xero sends the invoice." />
+                      </FormFieldLabel>
+                      <FormFieldLabel label="Reference Prefix">
+                        <TextField name="defaultReferencePrefix" helperText="Prefix added to references before export, for example SKED or MKT." />
+                      </FormFieldLabel>
+                    </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <StackRow sx={{ alignItems: 'center', gap: 2 }}>
+                        <BodyIconTypography label={existingXeroConnection?.isActive ? 'Connection active' : 'Connection inactive'} />
                         <BodyIconTypography startElement={<BillingIcon />} label={existingXeroConnection?.hasAccessToken ? 'Access token present' : 'No access token stored yet'} />
                         <BodyIconTypography label={existingXeroConnection?.hasRefreshToken ? 'Refresh token present' : 'No refresh token stored yet'} />
                       </StackRow>
