@@ -343,7 +343,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
 
         foreach (var previousRecurringBooking in previousRecurringBookings)
         {
-            var previousBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
+            var previousBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 previousRecurringBooking.Id,
                 previousRecurringBooking.StartDate,
                 null,

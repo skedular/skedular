@@ -131,7 +131,7 @@ public class InvoiceIntegrations(
                 cancellationToken);
         }
 
-        var relatedBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdAsync(
+        var relatedBookings = await repositoryFactory.BookingRepository.GetByRecurringBookingIdUntrackedAsync(
             recurringBooking.Id,
             recurringBooking.StartDate,
             null,

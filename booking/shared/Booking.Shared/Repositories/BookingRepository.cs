@@ -25,6 +25,12 @@ public interface IBookingRepository : IRepository<Database.Entities.Booking>
         DateTimeOffset? until,
         CancellationToken cancellationToken);
 
+    Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
+        string recurringBookingId,
+        DateTimeOffset from,
+        DateTimeOffset? until,
+        CancellationToken cancellationToken);
+
     Task<ICollection<Database.Entities.Booking>> GetAllUntrackedAsync(CancellationToken cancellationToken);
 
     Task<ICollection<Database.Entities.Booking>> GetInArrearsByOrganizationBeforeAsync(
@@ -303,7 +309,17 @@ public class BookingRepository(BookingDbContext dbContext, TimeProvider timeProv
             .AddSingleBookingMinimumDependentObjects(false)
             .FirstOrDefaultAsync(query => query.Id == id, cancellationToken);
 
-    public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(
+    public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdAsync(string recurringBookingId, DateTimeOffset from,
+        DateTimeOffset? until, CancellationToken cancellationToken) =>
+        await DbContext.Booking
+            .Where(query => !query.DeletedAt.HasValue &&
+                            query.From >= from &&
+                            (!until.HasValue || query.Until <= until) &&
+                            query.RecurringBooking != null && query.RecurringBooking.Id == recurringBookingId)
+            .AddSingleBookingDependentObjects(true)
+            .ToListAsync(cancellationToken);
+
+    public async Task<ICollection<Database.Entities.Booking>> GetByRecurringBookingIdUntrackedAsync(
         string recurringBookingId,
         DateTimeOffset from,
         DateTimeOffset? until,

@@ -179,7 +179,8 @@ public class RecurringBookingPaymentServiceShould
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBooking.Id, cancellationToken)).Returns(recurringBooking);
         A.CallTo(() => organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customer.Id, cancellationToken)).Returns(true);
         A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
-        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(recurringBooking.Id, recurringBooking.StartDate, null, cancellationToken))
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(recurringBooking.Id, recurringBooking.StartDate, null,
+                cancellationToken))
             .Returns(relatedBookings);
         A.CallTo(() => mapper.MapTo(recurringBooking)).Returns(mappedRecurringBooking);
 

@@ -69,7 +69,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
             .Returns(recurringBooking);
         A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, environment.CancellationTokenSource.Token))
             .Returns(productVersion);
-        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 recurringBookingId,
                 recurringBooking.StartDate,
                 null,
@@ -157,7 +157,7 @@ public class GenerateAndSendRecurringInvoiceAsyncShould
             .Returns(recurringBooking);
         A.CallTo(() => productVersionRepository.GetByIdAsync(productVersionId, environment.CancellationTokenSource.Token))
             .Returns(productVersion);
-        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 recurringBookingId,
                 recurringBooking.StartDate,
                 null,

@@ -283,7 +283,7 @@ public class SyncAccountingInvoiceStateAsyncShould
                 cancellationToken))
             .Returns([]);
         A.CallTo(() => recurringBookingRepository.GetByIdAsync(recurringBookingId, cancellationToken)).Returns(recurringBooking);
-        A.CallTo(() => bookingRepository.GetByRecurringBookingIdAsync(
+        A.CallTo(() => bookingRepository.GetByRecurringBookingIdUntrackedAsync(
                 recurringBookingId,
                 recurringBooking.StartDate,
                 null,
