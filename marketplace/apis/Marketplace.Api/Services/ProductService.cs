@@ -461,6 +461,11 @@ public class ProductService(
 
             case ProductPricingCancellationPolicyType.FullRefundBeforeCutoff:
                 {
+                    if (pricing.CancellationRefundRules.Count == 0)
+                    {
+                        return;
+                    }
+
                     if (pricing.CancellationRefundRules.Count != 1)
                     {
                         throw new ProductPricingCancellationPolicyInvalid();

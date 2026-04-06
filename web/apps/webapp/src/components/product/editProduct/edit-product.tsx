@@ -81,10 +81,50 @@ type CancellationRefundRuleForm = {
   refundPercentage: string;
 };
 
+const cancellationRefundRuleSchema = object({
+  minutesBefore: string()
+    .required('Minutes before is required.')
+    .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
+  refundPercentage: string()
+    .required('Refund percentage is required.')
+    .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
+});
+
 const createCancellationRefundRule = (refundPercentage = '100'): CancellationRefundRuleForm => ({
   minutesBefore: '',
   refundPercentage,
 });
+
+const normalizeCancellationRefundRules = (
+  cancellationPolicyType: string,
+  cancellationRefundRules: readonly { readonly minutesBefore: string | number; readonly refundPercentage: string | number }[] | CancellationRefundRuleForm[] | null | undefined,
+): CancellationRefundRuleForm[] => {
+  const rules = (cancellationRefundRules ?? []).map((rule) => ({
+    minutesBefore: rule.minutesBefore.toString(),
+    refundPercentage: rule.refundPercentage.toString(),
+  }));
+
+  if (cancellationPolicyType === 'NO_CANCELLATION') {
+    return [];
+  }
+
+  if (cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF') {
+    return [
+      {
+        minutesBefore: rules[0]?.minutesBefore?.toString() ?? '',
+        refundPercentage: '100',
+      },
+    ];
+  }
+
+  if (cancellationPolicyType === 'TIERED_REFUND') {
+    return rules.length > 0 ? rules : [createCancellationRefundRule('100')];
+  }
+
+  return rules;
+};
 
 const createPricingOption = (defaultMaxAllowedResourcesLockTimePaidViaCard: number, defaultMaxAllowedResourcesLockTimePaidViaBankTransfer: number): PricingOptionForm => ({
   id: uuid(),
@@ -231,17 +271,8 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Cancellation policy is required.')
             .test('is-not-not-set', 'Cancellation policy is required.', (value) => value !== 'NOT_SET'),
           cancellationRefundRules: array()
-            .of(
-              object({
-                minutesBefore: string()
-                  .required('Minutes before is required.')
-                  .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-                  .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
-                refundPercentage: string()
-                  .required('Refund percentage is required.')
-                  .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-                  .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
-              }),
+            .when('cancellationPolicyType', ([cancellationPolicyType], schema) =>
+              cancellationPolicyType === 'NO_CANCELLATION' ? schema.of(object()) : schema.of(cancellationRefundRuleSchema),
             )
             .required()
             .test('matches-cancellation-policy', 'Cancellation refund rules do not match the selected cancellation policy.', function (value) {
@@ -253,7 +284,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
               }
 
               if (cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF') {
-                return rules.length === 1 && Number(rules[0]?.refundPercentage) === 100;
+                return true;
               }
 
               if (cancellationPolicyType === 'TIERED_REFUND') {
@@ -531,6 +562,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
       thumbnail: image.thumbnail ? { url: image.thumbnail.url, height: image.thumbnail.height, width: image.thumbnail.width } : null,
     }));
 
+    const normalizedPricingOptions = pricingOptions.map((pricingOption) => ({
+      ...pricingOption,
+      cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules),
+    }));
+
     commitUpdateProduct({
       variables: {
         input: {
@@ -549,7 +585,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
           currency: currency as Currency,
           tagIds: productTagIds.concat(amenityIds),
           featureImages: finalFeatureImages,
-          pricingOptions: pricingOptions.map((pricingOption, index) => ({
+          pricingOptions: normalizedPricingOptions.map((pricingOption, index) => ({
             id: pricingOption.id,
             index,
             listingMetadata: {
@@ -625,13 +661,11 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
             productTags: [],
             amenities: [],
             featureImages: finalFeatureImages,
-            pricingOptions: pricingOptions.map((pricingOption, index) => ({
+            pricingOptions: normalizedPricingOptions.map((pricingOption, index) => ({
               index,
               listingMetadata: {
-                about: '',
                 title: pricingOption.title ?? '',
                 subTitle: pricingOption.subTitle ?? '',
-                includedFeatures: [],
               },
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
@@ -648,7 +682,6 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
               maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
-              billingMode: pricingOption.billingMode as never,
               acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
             })),
           },
@@ -714,7 +747,7 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                       minDurationMinutes: pricingOption.minDurationMinutes ? pricingOption.minDurationMinutes.toString() : '',
                       maxDurationMinutes: pricingOption.maxDurationMinutes ? pricingOption.maxDurationMinutes.toString() : '',
                       cancellationPolicyType: pricingOption.cancellationPolicyType,
-                      cancellationRefundRules: pricingOption.cancellationRefundRules.map((item) => ({
+                      cancellationRefundRules: normalizeCancellationRefundRules(pricingOption.cancellationPolicyType, pricingOption.cancellationRefundRules).map((item) => ({
                         minutesBefore: item.minutesBefore.toString(),
                         refundPercentage: item.refundPercentage.toString(),
                       })),
@@ -910,11 +943,17 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                                     changeNestedField(`pricingOptions[${index}].cancellationPolicyType`, nextPolicy);
 
                                     if (nextPolicy === 'NO_CANCELLATION') {
-                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, []);
+                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, normalizeCancellationRefundRules(nextPolicy, []));
                                     } else if (nextPolicy === 'FULL_REFUND_BEFORE_CUTOFF') {
-                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
-                                    } else if (nextPolicy === 'TIERED_REFUND' && (pricingOption.cancellationRefundRules?.length ?? 0) === 0) {
-                                      changeNestedField(`pricingOptions[${index}].cancellationRefundRules`, [createCancellationRefundRule('100')]);
+                                      changeNestedField(
+                                        `pricingOptions[${index}].cancellationRefundRules`,
+                                        normalizeCancellationRefundRules(nextPolicy, pricingOption.cancellationRefundRules),
+                                      );
+                                    } else if (nextPolicy === 'TIERED_REFUND') {
+                                      changeNestedField(
+                                        `pricingOptions[${index}].cancellationRefundRules`,
+                                        normalizeCancellationRefundRules(nextPolicy, pricingOption.cancellationRefundRules),
+                                      );
                                     }
                                   },
                                 }}
@@ -974,6 +1013,10 @@ const EditProduct = ({ rootDataRelay, organizationCustomDomain }: Props) => {
                                   </Button>
                                 </StackRow>
                               </StackColumn>
+                            ) : null}
+
+                            {typeof errors?.pricingOptions?.[index]?.cancellationRefundRules === 'string' ? (
+                              <BodyIconTypography label={errors.pricingOptions[index].cancellationRefundRules} sx={{ color: 'error.main' }} />
                             ) : null}
 
                             <FormFieldLabel label="Maximum Permitted Resource Lock Duration Paid via Card (minutes)">

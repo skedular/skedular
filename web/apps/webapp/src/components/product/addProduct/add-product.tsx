@@ -103,6 +103,17 @@ type CancellationRefundRuleForm = {
   refundPercentage: string;
 };
 
+const cancellationRefundRuleSchema = object({
+  minutesBefore: string()
+    .required('Minutes before is required.')
+    .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
+  refundPercentage: string()
+    .required('Refund percentage is required.')
+    .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
+    .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
+});
+
 const createCancellationRefundRule = (refundPercentage = '100'): CancellationRefundRuleForm => ({
   minutesBefore: '',
   refundPercentage,
@@ -253,17 +264,8 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
             .required('Cancellation policy is required.')
             .test('is-not-not-set', 'Cancellation policy is required.', (value) => value !== 'NOT_SET'),
           cancellationRefundRules: array()
-            .of(
-              object({
-                minutesBefore: string()
-                  .required('Minutes before is required.')
-                  .test('is-number', 'Minutes before must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-                  .test('is-not-negative', 'Minutes before must be greater than or equal to 0.', (value) => Number(value) >= 0),
-                refundPercentage: string()
-                  .required('Refund percentage is required.')
-                  .test('is-number', 'Refund percentage must be a valid number.', (value) => value !== undefined && value.trim() !== '' && !isNaN(Number(value)))
-                  .test('is-range', 'Refund percentage must be between 0 and 100.', (value) => Number(value) >= 0 && Number(value) <= 100),
-              }),
+            .when('cancellationPolicyType', ([cancellationPolicyType], schema) =>
+              cancellationPolicyType === 'NO_CANCELLATION' ? schema.of(object()) : schema.of(cancellationRefundRuleSchema),
             )
             .required()
             .test('matches-cancellation-policy', 'Cancellation refund rules do not match the selected cancellation policy.', function (value) {
@@ -275,7 +277,7 @@ const productSchema = (bookingSlotSizeInMinutes: number) =>
               }
 
               if (cancellationPolicyType === 'FULL_REFUND_BEFORE_CUTOFF') {
-                return rules.length === 1 && Number(rules[0]?.refundPercentage) === 100;
+                return true;
               }
 
               if (cancellationPolicyType === 'TIERED_REFUND') {
@@ -544,10 +546,8 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
             pricingOptions: pricingOptions.map((pricingOption, index) => ({
               index,
               listingMetadata: {
-                about: '',
                 title: pricingOption.title ?? '',
                 subTitle: pricingOption.subTitle ?? '',
-                includedFeatures: [],
               },
               purchaseCadence: pricingOption.cadence as ProductPricingCadence,
               bookingCadence: pricingOption.cadence as ProductPricingCadence,
@@ -564,7 +564,6 @@ const AddProduct = ({ queryReference, onReloadRequired, organizationCustomDomain
               isTaxInclusive: pricingOption.isTaxInclusive,
               maxAllowedResourcesLockTimePaidViaCard: Number(pricingOption.maxAllowedResourcesLockTimePaidViaCard),
               maxAllowedResourcesLockTimePaidViaBankTransfer: Number(pricingOption.maxAllowedResourcesLockTimePaidViaBankTransfer) * 60 * 24,
-              billingMode: pricingOption.billingMode as never,
               acceptedPaymentMethods: pricingOption.acceptedPaymentMethods.map((type) => type as PaymentMethod),
             })),
           },

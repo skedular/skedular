@@ -806,6 +806,12 @@ public class MarketplaceBookingService(
             return false;
         }
 
+        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.FullRefundBeforeCutoff &&
+            pricing.CancellationRefundRules.Count == 0)
+        {
+            return cancelledAt <= referenceTime;
+        }
+
         var applicableRule = pricing.CancellationRefundRules
             .OrderByDescending(item => item.MinutesBefore)
             .FirstOrDefault(item => cancelledAt <= referenceTime.AddMinutes(-item.MinutesBefore));
