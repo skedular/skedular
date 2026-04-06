@@ -37,6 +37,7 @@ public class MarketplaceBookingSubscriptionService(
     IProductVersionHelperService productVersionHelperService,
     IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     ITemporalOutboxService temporalOutboxService,
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
     IRandomHelper randomHelper,
     TimeProvider timeProvider) : IMarketplaceBookingSubscriptionService
 {
@@ -181,6 +182,16 @@ public class MarketplaceBookingSubscriptionService(
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
+
+        if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
+        {
+            // End-of-period cancellation should stop future Xero billing immediately by removing
+            // the repeating template, while leaving the already-issued current invoice untouched.
+            foreach (var recurringBooking in existingSubscription.RecurringBookings.Where(item => !item.IsDeleted()))
+            {
+                await accountingInvoiceCancellationService.CancelRecurringBookingFutureBillingAsync(recurringBooking, cancellationToken);
+            }
+        }
 
         return mapper.MapTo(existingSubscription);
     }

@@ -20,6 +20,7 @@ public interface IAccountingInvoiceCancellationService
 {
     Task CancelBookingAsync(BookingEntity booking, CancellationToken cancellationToken);
     Task CancelRecurringBookingAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
+    Task CancelRecurringBookingFutureBillingAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken);
 }
 
 public class AccountingInvoiceCancellationService(
@@ -55,6 +56,18 @@ public class AccountingInvoiceCancellationService(
             recurringBooking.MarketplaceBooking?.InvoiceUrl,
             cancellationToken);
 
+    public async Task CancelRecurringBookingFutureBillingAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken) =>
+        await CancelAsync(
+            ResolveOrganizationId(recurringBooking),
+            AccountingEntityTypeConstants.RecurringBooking,
+            recurringBooking.Id,
+            "Recurring booking future billing was cancelled.",
+            "Recurring booking future billing was cancelled locally, but the live Xero repeating invoice template still requires cancellation.",
+            recurringBooking.MarketplaceBooking?.InvoiceNumber,
+            recurringBooking.MarketplaceBooking?.InvoiceUrl,
+            cancellationToken,
+            false);
+
     private async Task CancelAsync(
         string organizationId,
         string localEntityType,
@@ -63,7 +76,8 @@ public class AccountingInvoiceCancellationService(
         string transitionRequiredMessage,
         string? localInvoiceNumber,
         string? localInvoiceUrl,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        bool cancelConcreteInvoices = true)
     {
         var accountingInvoiceExportLink = await repositoryFactory.AccountingInvoiceExportLinkRepository.GetByProviderAndLocalEntityAsync(
             AccountingProviderConstants.Xero,
@@ -187,7 +201,8 @@ public class AccountingInvoiceCancellationService(
 
             if (isRepeatingInvoice)
             {
-                foreach (var concreteInvoiceInstance in accountingInvoiceInstances.Where(ShouldCancelConcreteInvoiceInstance))
+                foreach (var concreteInvoiceInstance in accountingInvoiceInstances.Where(item =>
+                             cancelConcreteInvoices && ShouldCancelConcreteInvoiceInstance(item)))
                 {
                     if (!Guid.TryParse(concreteInvoiceInstance.ExternalInvoiceId, out var concreteInvoiceId))
                     {
@@ -238,7 +253,7 @@ public class AccountingInvoiceCancellationService(
                 repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
             }
 
-            if (isRepeatingInvoice)
+            if (isRepeatingInvoice && cancelConcreteInvoices)
             {
                 foreach (var concreteInvoiceInstance in accountingInvoiceInstances)
                 {

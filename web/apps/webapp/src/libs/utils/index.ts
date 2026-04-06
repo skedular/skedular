@@ -158,6 +158,25 @@ const toHourAndMinute = (date?: Dayjs | string | null | undefined) => {
   return date ? dayjs(date).utc().format('h:mma') : '';
 };
 
+const isStoredFullDayRange = (from?: Dayjs | string | null, until?: Dayjs | string | null) => {
+  if (!from || !until) {
+    return false;
+  }
+
+  const utcFrom = dayjs.utc(from);
+  const utcUntil = dayjs.utc(until);
+
+  return utcFrom.isValid() && utcUntil.isValid() && utcFrom.hour() === 0 && utcFrom.minute() === 0 && utcUntil.hour() === 0 && utcUntil.minute() === 0;
+};
+
+const toStoredBookingTimeRange = (from?: Dayjs | string | null, until?: Dayjs | string | null) => {
+  if (!from || !until || isStoredFullDayRange(from, until)) {
+    return '';
+  }
+
+  return `${dayjs.utc(from).format('hh:mm a')} - ${dayjs.utc(until).format('hh:mm a')}`;
+};
+
 const encodeBase64 = (value: string) => {
   return isServer ? Buffer.from(value, 'utf-8').toString('base64') : btoa(value);
 };
@@ -469,6 +488,7 @@ export {
   isInSameMonth,
   isInSameWeek,
   isInSameYear,
+  isStoredFullDayRange,
   isMidnight,
   isTodayDate,
   isTomorrowDate,
@@ -492,6 +512,7 @@ export {
   toShortDateWithAdditionalDayInfo,
   toShortDateWithDayAndMonthOnly,
   toShortDateWithoutWeekDay,
+  toStoredBookingTimeRange,
   toShortTime,
   toShortWeekDay,
 };

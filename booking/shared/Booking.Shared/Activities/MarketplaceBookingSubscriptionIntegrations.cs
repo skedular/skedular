@@ -568,7 +568,10 @@ public class MarketplaceBookingSubscriptionIntegrations(
         // that state and skip any "active subscription" renewal logic so we do not accidentally
         // revive a cancelled subscription with stale data.
         if (persistedSubscription is not null &&
-            persistedSubscription.Status.ToMarketplaceBookingSubscriptionStatus() != MarketplaceBookingSubscriptionStatus.Active)
+            persistedSubscription.Status is MarketplaceBookingSubscriptionStatusConstants.Cancelled
+                or MarketplaceBookingSubscriptionStatusConstants.Expired
+                or MarketplaceBookingSubscriptionStatusConstants.RenewalFailed
+                or MarketplaceBookingSubscriptionStatusConstants.Paused)
         {
             return persistedSubscription;
         }

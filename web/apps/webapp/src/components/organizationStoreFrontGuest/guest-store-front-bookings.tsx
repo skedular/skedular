@@ -4,7 +4,7 @@ import { getMarketplaceBookingDetailsLink } from '@/components/links';
 import { Loading } from '@/components/loading';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { convertCalendarDayToStartOfDay } from '@/libs/utils';
+import { convertCalendarDayToStartOfDay, toStoredBookingTimeRange } from '@/libs/utils';
 import type { guestStoreFrontBookings_rootQuery } from '@/queries/__generated__/guestStoreFrontBookings_rootQuery.graphql';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Button from '@mui/material/Button';
@@ -239,7 +239,9 @@ const BookingsSection = ({
                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
                   <Box>
                     <SmallIconTypography label={toStoredBookingDate(booking.from)} sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
-                    <SubtitleIconTypography label={toStoredBookingTimeRange(booking.from, booking.until)} sx={{ mt: 0.4 }} />
+                    {toStoredBookingTimeRange(booking.from, booking.until) ? (
+                      <SubtitleIconTypography label={toStoredBookingTimeRange(booking.from, booking.until)} sx={{ mt: 0.4 }} />
+                    ) : null}
                   </Box>
                   <Chip
                     size="small"
@@ -285,8 +287,6 @@ const BookingsSection = ({
 );
 
 const toStoredBookingDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
-const toStoredBookingTime = (date?: string | null) => (date ? dayjs.utc(date).format('hh:mm a') : '');
-const toStoredBookingTimeRange = (from?: string | null, until?: string | null) => `${toStoredBookingTime(from)} - ${toStoredBookingTime(until)}`;
 
 const MemoGuestStoreFrontBookings = memo(GuestStoreFrontBookings);
 

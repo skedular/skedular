@@ -22,7 +22,7 @@ import SubscriptionCancellationSection from '@/components/marketplaceProductSubs
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { convertCalendarDayToStartOfDay, getCustomerFullName, getRelayErrorMessage, toStoredBookingTimeRange } from '@/libs/utils';
 import type { marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_deleteMarketplaceBookingSubscriptionMutation.graphql';
 import type { marketplaceProductSubscriptionDetails_relatedBookingsQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_relatedBookingsQuery.graphql';
 import type { marketplaceProductSubscriptionDetails_rootQuery } from '@/queries/__generated__/marketplaceProductSubscriptionDetails_rootQuery.graphql';
@@ -651,7 +651,9 @@ const MarketplaceProductSubscriptionDetails = ({
                                 <StackRow sx={{ justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'nowrap' }}>
                                   <Box>
                                     <SmallIconTypography label={toStoredDate(booking.from)} sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
-                                    <SubtitleIconTypography label={toStoredTimeRange(booking.from, booking.until)} sx={{ mt: 0.35 }} />
+                                    {toStoredBookingTimeRange(booking.from, booking.until) ? (
+                                      <SubtitleIconTypography label={toStoredBookingTimeRange(booking.from, booking.until)} sx={{ mt: 0.35 }} />
+                                    ) : null}
                                   </Box>
                                   <StackColumn spacing={0.75} sx={{ alignItems: 'flex-end' }}>
                                     {isTodayBooking ? <Chip size="small" label="Today" color="primary" /> : null}
@@ -745,8 +747,6 @@ const DetailsRow = ({ label, value }: { label: string; value: ReactNode }) => (
 );
 
 const toStoredDate = (date?: string | null) => (date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '');
-const toStoredTime = (date?: string | null) => (date ? dayjs.utc(date).format('hh:mm a') : '');
-const toStoredTimeRange = (from?: string | null, until?: string | null) => `${toStoredTime(from)} - ${toStoredTime(until)}`;
 
 const MemoMarketplaceProductSubscriptionDetails = memo(MarketplaceProductSubscriptionDetails);
 

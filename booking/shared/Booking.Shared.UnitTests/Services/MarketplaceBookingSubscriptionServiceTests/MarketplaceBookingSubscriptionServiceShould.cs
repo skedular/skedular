@@ -176,6 +176,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             nextRenewalAt,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(120, 100)]);
+        existingSubscription.AutoRenew = true;
         var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -226,6 +227,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             null,
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(120, 100)]);
+        existingSubscription.AutoRenew = true;
         existingSubscription.MarketplaceBooking.ProductPricing = existingSubscription.MarketplaceBooking.ProductPricing with
         {
             PurchaseCadence = ProductPricingCadence.Monthly
@@ -268,6 +270,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             now.AddMinutes(20),
             ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
             [new ProductPricingCancellationRefundRule(30, 100)]);
+        existingSubscription.AutoRenew = true;
         var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
@@ -309,6 +312,7 @@ public class MarketplaceBookingSubscriptionServiceShould
             now.AddDays(7),
             ProductPricingCancellationPolicyType.NoCancellation,
             []);
+        existingSubscription.AutoRenew = true;
         var updatedSubscription = new Models.MarketplaceBookingSubscription { Id = existingSubscription.Id };
 
         A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);

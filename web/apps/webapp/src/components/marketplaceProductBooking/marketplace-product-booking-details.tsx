@@ -15,7 +15,7 @@ import { Loading } from '@/components/loading';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage, isStoredFullDayRange, toStoredBookingTimeRange } from '@/libs/utils';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -317,7 +317,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Booking date" value={toStoredBookingDate(booking.from)} />
-                  <DetailsRow label="Booking time" value={`${toStoredBookingTime(booking.from)} - ${toStoredBookingTime(booking.until)}`} />
+                  {!isStoredFullDayRange(booking.from, booking.until) ? <DetailsRow label="Booking time" value={toStoredBookingTimeRange(booking.from, booking.until)} /> : null}
                   {marketplaceBooking.productVersion?.type.type !== 'EVENT' ? <DetailsRow label="Quantity" value={`${marketplaceBooking.quantity}`} /> : null}
                   <DetailsRow label="Booked for" value={booking.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow
@@ -407,11 +407,6 @@ const DetailsRow = ({ label, value }: { label: string; value: ReactNode }) => (
 const toStoredBookingDate = (date?: string | null) => {
   // Marketplace scheduler timestamps are stored as timezone-free wall-clock values in UTC.
   return date ? dayjs.utc(date).format('dddd, Do MMM YYYY') : '';
-};
-
-const toStoredBookingTime = (date?: string | null) => {
-  // Keep the exact stored time instead of converting it to the browser timezone.
-  return date ? dayjs.utc(date).format('hh:mm a') : '';
 };
 
 const toMarketplaceBookingCancellationErrorMessage = (message: string) => {
