@@ -7,10 +7,12 @@ using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Pagination;
 using Enterprise.Shared.Random;
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
+using Constants = Booking.Shared.GraphQL.Constants;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 using Team = Booking.Shared.Database.Entities.Team;
 
@@ -44,6 +46,7 @@ public class MarketplaceBookingSubscriptionService(
     IContext context,
     ICachedCustomerService cachedCustomerService,
     ICachedMarketplaceBookingSubscriptionService cachedMarketplaceBookingSubscriptionService,
+    IGraphQlTopicEventSender graphQlTopicEventSender,
     IMapper mapper,
     Shared.Mappers.IMapper sharedMapper,
     Shared.Services.IMarketplaceBookingSubscriptionService sharedMarketplaceBookingSubscriptionService)
@@ -135,11 +138,7 @@ public class MarketplaceBookingSubscriptionService(
 
             foreach (var team in teams)
             {
-                if (organizationIds is null)
-                {
-                    organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-                }
-
+                organizationIds ??= await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
                 if (team.Organization is null || !organizationIds.Contains(team.Organization.Id))
                 {
                     throw new UnauthorizedAccessException();
@@ -164,11 +163,7 @@ public class MarketplaceBookingSubscriptionService(
             string.IsNullOrWhiteSpace(searchCriteria.OrganizationCustomDomain) &&
             searchCriteria.TeamIds.Count == 0)
         {
-            if (organizationIds is null)
-            {
-                organizationIds = await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
-            }
-
+            organizationIds ??= await GetCustomerOrganizationIdsAsync(customerId, cancellationToken);
             teamIds ??= await GetCustomerTeamIdsAsync(customerId, cancellationToken);
 
             if (organizationIds.Count == 0 && teamIds.Count == 0)
@@ -287,7 +282,16 @@ public class MarketplaceBookingSubscriptionService(
             }
         }
 
-        return await sharedMarketplaceBookingSubscriptionService.DeleteAsync(existingSubscription, customer, cancellationMode, cancellationToken);
+        var subscription = await sharedMarketplaceBookingSubscriptionService.DeleteAsync(
+            existingSubscription,
+            customer,
+            cancellationMode,
+            cancellationToken);
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+            Constants.MarketplaceBookingSubscriptionTopicName,
+            subscription.Id,
+            cancellationToken);
+        return subscription;
     }
 
     private async Task<List<string>> GetCustomerOrganizationIdsAsync(

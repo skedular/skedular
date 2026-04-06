@@ -255,6 +255,11 @@ public class MarketplaceBookingSubscriptionService(
 
         if (cancellationMode == MarketplaceBookingSubscriptionCancellationMode.AtPeriodEnd)
         {
+            if (!existingSubscription.AutoRenew)
+            {
+                throw new MarketplaceBookingSubscriptionCancellationNotAllowed();
+            }
+
             return;
         }
 

@@ -98,6 +98,16 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         var from = timeProvider.GetUtcNow();
+        // Immediate cancellation already marks the subscription as cancelled in the API service,
+        // but the daily adjustment loop may still be finishing work from a previously loaded
+        // active snapshot. Re-stamp the terminal state here, in the same path that releases
+        // resources and cancels Xero invoices, so the final persisted subscription state matches
+        // the cleanup that just happened.
+        subscription.CancelledAt ??= from;
+        subscription.Status = MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus();
+        subscription.AutoRenew = false;
+        subscription.CancelAtPeriodEnd = false;
+        repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(subscription);
 
         foreach (var recurringBooking in subscription.RecurringBookings.Where(item => !item.IsDeleted()))
         {
@@ -120,6 +130,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        // Cleanup happens asynchronously after the original delete mutation returns, so publish the
+        // subscription topic again once release is complete. This lets the UI move from the
+        // optimistic/local cancelled state to the fully persisted post-cleanup subscription state.
+        await graphQlTopicEventSender.RaiseGraphqlChangeAsync(
+            Constants.MarketplaceBookingSubscriptionTopicName,
+            subscription.Id,
+            cancellationToken);
     }
 
     [Activity]
@@ -543,6 +560,19 @@ public class MarketplaceBookingSubscriptionIntegrations(
         MarketplaceBookingSubscription subscription,
         CancellationToken cancellationToken)
     {
+        var persistedSubscription = await repositoryFactory.MarketplaceBookingSubscriptionRepository.GetByIdUntrackedAsync(
+            subscription.Id,
+            cancellationToken);
+        // The adjustment loop may be holding an older tracked snapshot while an immediate-cancel
+        // request is processed elsewhere. If the current persisted row is already terminal, prefer
+        // that state and skip any "active subscription" renewal logic so we do not accidentally
+        // revive a cancelled subscription with stale data.
+        if (persistedSubscription is not null &&
+            persistedSubscription.Status.ToMarketplaceBookingSubscriptionStatus() != MarketplaceBookingSubscriptionStatus.Active)
+        {
+            return persistedSubscription;
+        }
+
         var now = timeProvider.GetUtcNow();
         var subscriptionStatus = subscription.Status.ToMarketplaceBookingSubscriptionStatus();
         var nextRenewalAt = subscription.NextRenewalAt ??

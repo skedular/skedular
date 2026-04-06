@@ -360,7 +360,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                             cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                             isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
                             immediateCancellationMode={immediateCancellationMode}
-                            atPeriodEndCancellationMode={atPeriodEndCancellationMode}
+                            atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
                             onImmediateCancellationClick={() =>
                               immediateCancellationMode
                                 ? handleRequestImmediateCancellationClick(

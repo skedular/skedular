@@ -313,10 +313,14 @@ const MarketplaceProductSubscriptionDetails = ({
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
   }, [cancellationModes]);
   const atPeriodEndCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
+    if (!subscription?.autoRenew) {
+      return null;
+    }
+
     const mode = cancellationModes.find((item) => item.type === 'AT_PERIOD_END');
 
     return mode ? toSupportedMarketplaceBookingSubscriptionCancellationModeDetails(mode.type, mode.name) : null;
-  }, [cancellationModes]);
+  }, [cancellationModes, subscription?.autoRenew]);
   const handleDeleteMarketplaceBookingSubscriptionClick = (cancellationModeType: SupportedMarketplaceBookingSubscriptionCancellationMode, cancellationModeName: string) => {
     if (!subscription) {
       return;

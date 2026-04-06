@@ -479,7 +479,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                             cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
                             isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
                             immediateCancellationMode={immediateCancellationMode}
-                            atPeriodEndCancellationMode={atPeriodEndCancellationMode}
+                            atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
                             onImmediateCancellationClick={() =>
                               immediateCancellationMode
                                 ? handleRequestImmediateCancellationClick(
