@@ -1,9 +1,7 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
-using FakeItEasy;
 using Temporalio.Testing;
 
 namespace Booking.Shared.UnitTests.Activities.OrganizationArrearsBillingIntegrationsTests;

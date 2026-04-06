@@ -1,10 +1,8 @@
-using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using Stripe;
 using Customer = Booking.Shared.Database.Entities.Customer;
 

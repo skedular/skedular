@@ -1,7 +1,5 @@
 ﻿using System.Diagnostics;
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Telemetry;
-using FakeItEasy;
 using OpenTelemetry.Context.Propagation;
 
 namespace Enterprise.Shared.UnitTests.Telemetry.PropagationContextGetterTests;

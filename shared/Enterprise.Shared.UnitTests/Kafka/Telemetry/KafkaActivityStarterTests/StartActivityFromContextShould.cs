@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Kafka.Telemetry;
 using Enterprise.Shared.Telemetry;
-using FakeItEasy;
 
 // using FluentAssertions;
 // using FluentAssertions.Execution;

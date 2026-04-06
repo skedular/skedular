@@ -1,12 +1,10 @@
 using System.Linq.Expressions;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Temporal;
 using Enterprise.Shared.Temporal.Configurations;
-using FakeItEasy;
 using Temporalio.Api.Enums.V1;
 using Temporalio.Client;
 

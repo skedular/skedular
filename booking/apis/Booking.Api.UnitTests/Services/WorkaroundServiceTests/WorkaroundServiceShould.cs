@@ -1,11 +1,9 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
-using FakeItEasy;
 using Organization = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.UnitTests.Services.WorkaroundServiceTests;

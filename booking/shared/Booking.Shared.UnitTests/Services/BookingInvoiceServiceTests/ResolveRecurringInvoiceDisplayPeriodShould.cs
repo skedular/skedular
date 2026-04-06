@@ -1,6 +1,4 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
-using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
 using MarketplaceBookingEntity = Booking.Shared.Database.Entities.MarketplaceBooking;

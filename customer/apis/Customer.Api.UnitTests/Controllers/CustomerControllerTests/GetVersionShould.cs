@@ -1,7 +1,5 @@
-using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Enterprise.Shared.Version;
-using FakeItEasy;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;
 

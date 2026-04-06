@@ -1,12 +1,10 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
-using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using ProductVersion = Booking.Shared.Models.ProductVersion;

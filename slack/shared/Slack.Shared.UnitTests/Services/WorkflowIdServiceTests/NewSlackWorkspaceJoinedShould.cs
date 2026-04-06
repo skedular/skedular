@@ -1,6 +1,4 @@
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Temporal;
-using FakeItEasy;
 using Slack.Shared.Services;
 using WorkflowConstants = Slack.Shared.Workflows.Constants;
 

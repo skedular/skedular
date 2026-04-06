@@ -5,8 +5,6 @@ using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Accounting;
-using Enterprise.Shared.Database;
-using FakeItEasy;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;

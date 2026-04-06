@@ -1,4 +1,3 @@
-using FakeItEasy;
 using Organization.Shared.Activities;
 using Organization.Shared.UnitTests.Fixtures;
 using Organization.Shared.Workflows;

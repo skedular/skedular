@@ -1,8 +1,6 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Models;
 using Booking.Shared.Services;
-using FakeItEasy;
 
 namespace Booking.Shared.UnitTests.Services.OrganizationArrearsBillingPlannerServiceTests;
 

@@ -1,8 +1,6 @@
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Shared.GraphQL;
 using Booking.Shared.Services.Cache;
-using FakeItEasy;
 using HotChocolate.Subscriptions;
 
 namespace Booking.Api.UnitTests.Services.GraphQlTopicEventSenderTests;

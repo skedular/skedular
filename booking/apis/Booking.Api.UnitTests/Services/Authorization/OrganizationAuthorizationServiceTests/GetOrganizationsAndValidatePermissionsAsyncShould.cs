@@ -1,10 +1,8 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
-using FakeItEasy;
 using OrganizationEntity = Booking.Shared.Database.Entities.Organization;
 
 namespace Booking.Api.UnitTests.Services.Authorization.OrganizationAuthorizationServiceTests;

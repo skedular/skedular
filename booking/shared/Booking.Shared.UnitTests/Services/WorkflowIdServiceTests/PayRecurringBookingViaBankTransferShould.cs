@@ -1,8 +1,6 @@
-using AutoFixture.Xunit3;
 using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Temporal;
-using FakeItEasy;
 
 namespace Booking.Shared.UnitTests.Services.WorkflowIdServiceTests;
 

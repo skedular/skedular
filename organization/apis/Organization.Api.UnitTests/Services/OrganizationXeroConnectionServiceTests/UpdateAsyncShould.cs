@@ -1,12 +1,10 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
 using Organization.Api.Mappers;
 using Organization.Api.Services;

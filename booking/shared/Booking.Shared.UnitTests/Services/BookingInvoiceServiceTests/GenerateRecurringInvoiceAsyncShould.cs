@@ -1,12 +1,10 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Mappers;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Grpc;
-using FakeItEasy;
 using Grpc.Core;
 using QuestPDF.Infrastructure;
 using ProductVersionEntity = Booking.Shared.Database.Entities.ProductVersion;

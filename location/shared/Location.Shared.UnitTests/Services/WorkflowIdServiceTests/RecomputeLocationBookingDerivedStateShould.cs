@@ -1,6 +1,4 @@
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Temporal;
-using FakeItEasy;
 using Location.Shared.Services;
 using Location.Shared.Workflows;
 

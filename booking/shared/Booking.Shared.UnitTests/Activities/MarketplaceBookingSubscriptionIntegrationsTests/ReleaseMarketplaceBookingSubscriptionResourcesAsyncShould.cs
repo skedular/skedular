@@ -1,11 +1,9 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
-using FakeItEasy;
 using Temporalio.Testing;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;
 using RecurringBookingEntity = Booking.Shared.Database.Entities.RecurringBooking;

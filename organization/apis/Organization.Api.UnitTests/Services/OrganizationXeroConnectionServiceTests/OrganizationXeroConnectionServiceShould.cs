@@ -1,11 +1,9 @@
 using System.Web;
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Accounting.Configurations;
 using Enterprise.Shared.Configurations;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using Organization.Api.Mappers;
 using Organization.Api.Services;
 using Organization.Api.Services.Authorization;

@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
@@ -7,7 +6,6 @@ using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Pagination;
-using FakeItEasy;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationMember = Booking.Shared.Database.Entities.OrganizationMember;

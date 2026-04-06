@@ -1,7 +1,5 @@
-using AutoFixture.Xunit3;
 using Customer.Api.Controllers;
 using Customer.Api.Services;
-using FakeItEasy;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Customer.Api.UnitTests.Controllers.CustomerControllerTests;

@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using FakeItEasy;
 using Organization.Api.GraphQL.Organization;
 using Organization.Api.Mappers;
 

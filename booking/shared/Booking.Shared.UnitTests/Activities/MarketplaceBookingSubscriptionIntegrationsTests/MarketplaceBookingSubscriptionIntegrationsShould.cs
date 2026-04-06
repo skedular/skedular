@@ -1,6 +1,5 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
@@ -9,7 +8,6 @@ using Booking.Shared.Services;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using Temporalio.Testing;
 
 namespace Booking.Shared.UnitTests.Activities.MarketplaceBookingSubscriptionIntegrationsTests;

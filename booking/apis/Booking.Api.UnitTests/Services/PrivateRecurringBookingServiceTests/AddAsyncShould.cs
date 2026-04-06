@@ -1,11 +1,9 @@
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Models;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 using IPrivateRecurringBookingService = Booking.Shared.Services.IPrivateRecurringBookingService;
 using Organization = Booking.Shared.Database.Entities.Organization;

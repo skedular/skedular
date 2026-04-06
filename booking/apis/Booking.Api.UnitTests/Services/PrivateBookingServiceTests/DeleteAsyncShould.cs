@@ -1,10 +1,8 @@
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Enterprise.Shared.Context;
-using FakeItEasy;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
 
 namespace Booking.Api.UnitTests.Services.PrivateBookingServiceTests;

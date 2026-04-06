@@ -1,6 +1,4 @@
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Temporal;
-using FakeItEasy;
 using Team.Shared.Services;
 
 namespace Team.Shared.UnitTests.Services.WorkflowIdServiceTests;

@@ -1,8 +1,6 @@
-using AutoFixture.Xunit3;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services;
 using Enterprise.Shared.Time;
-using FakeItEasy;
 
 namespace Booking.Shared.UnitTests.Services.LocationResourceBookingSlotsHelperServiceTests;
 

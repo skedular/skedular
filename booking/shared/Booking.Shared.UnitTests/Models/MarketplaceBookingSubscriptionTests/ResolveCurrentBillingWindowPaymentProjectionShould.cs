@@ -1,4 +1,3 @@
-using Api.Shared.Services;
 using Api.Shared.Services.Models;
 using Booking.Shared.Models;
 
@@ -11,9 +10,8 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
     public void Aggregate_Current_Billing_Window_Bookings_When_Cadence_Is_Shorter_Than_Billing_Cycle()
     {
         var subscription = CreateSubscription(
-            startedAt: new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            organizationBillingCycle: OrganizationBillingCycle.Monthly,
-            recurringBookings:
+            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            OrganizationBillingCycle.Monthly,
             [
                 CreateRecurringBooking(
                     "recurring-booking-previous",
@@ -49,9 +47,8 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
     public void Ignore_Bookings_Outside_The_Current_Billing_Window()
     {
         var subscription = CreateSubscription(
-            startedAt: new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            organizationBillingCycle: OrganizationBillingCycle.Monthly,
-            recurringBookings:
+            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            OrganizationBillingCycle.Monthly,
             [
                 CreateRecurringBooking(
                     "recurring-booking-april",
@@ -87,9 +84,8 @@ public class ResolveCurrentBillingWindowPaymentProjectionShould
     public void Include_Long_Cadence_Bookings_That_Intersect_The_Current_Billing_Window()
     {
         var subscription = CreateSubscription(
-            startedAt: new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
-            organizationBillingCycle: OrganizationBillingCycle.Monthly,
-            recurringBookings:
+            new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            OrganizationBillingCycle.Monthly,
             [
                 CreateRecurringBooking(
                     "recurring-booking-quarterly",

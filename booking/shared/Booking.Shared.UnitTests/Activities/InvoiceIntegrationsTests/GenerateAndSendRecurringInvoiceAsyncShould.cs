@@ -1,12 +1,10 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
 using Booking.Shared.Services;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
-using FakeItEasy;
 using Temporalio.Testing;
 using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;

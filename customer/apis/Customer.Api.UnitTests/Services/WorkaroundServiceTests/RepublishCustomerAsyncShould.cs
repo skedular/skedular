@@ -1,9 +1,7 @@
-using AutoFixture.Xunit3;
 using Customer.Api.Mappers;
 using Customer.Api.Services;
 using Customer.Shared.Publishers;
 using Customer.Shared.Repositories;
-using FakeItEasy;
 
 namespace Customer.Api.UnitTests.Services.WorkaroundServiceTests;
 

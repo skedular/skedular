@@ -1,9 +1,7 @@
 using Api.Shared.Clients.Configurations.Grpc;
 using Api.Shared.Services.Grpc.Skedular.Booking.V1;
-using AutoFixture.Xunit3;
 using Booking.Jobs.Services;
 using Enterprise.Shared.Grpc;
-using FakeItEasy;
 using Grpc.Core;
 
 namespace Booking.Jobs.UnitTests.Services.GraphQlTopicEventSenderTests;

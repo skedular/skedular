@@ -1,7 +1,6 @@
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Key;
 using Api.Shared.Clients.Events.Skedular.Organization.V1.Value;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Processors.Mappers;
 using Booking.Processors.Subscribers;
 using Booking.Shared.Models;
@@ -10,7 +9,6 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Kafka.Consume;
-using FakeItEasy;
 using Organization = Booking.Shared.Database.Entities.Organization;
 using OrganizationBillingCycleModel = Api.Shared.Services.Models.OrganizationBillingCycle;
 using OrganizationTypeModel = Api.Shared.Services.Models.OrganizationType;

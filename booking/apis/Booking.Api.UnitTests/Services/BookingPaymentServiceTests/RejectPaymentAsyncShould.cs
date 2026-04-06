@@ -1,5 +1,4 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Api.Services;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Mappers;
@@ -10,7 +9,6 @@ using Booking.Shared.Services.Cache;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
-using FakeItEasy;
 using Microsoft.EntityFrameworkCore.Storage;
 using Constants = Booking.Shared.GraphQL.Constants;
 using BookingEntity = Booking.Shared.Database.Entities.Booking;

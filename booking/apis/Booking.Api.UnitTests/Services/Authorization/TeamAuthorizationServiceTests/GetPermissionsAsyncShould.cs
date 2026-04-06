@@ -1,8 +1,6 @@
-using AutoFixture.Xunit3;
 using Booking.Api.Services.Authorization;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Services.Cache;
-using FakeItEasy;
 
 namespace Booking.Api.UnitTests.Services.Authorization.TeamAuthorizationServiceTests;
 

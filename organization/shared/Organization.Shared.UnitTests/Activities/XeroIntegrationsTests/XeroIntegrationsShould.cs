@@ -1,8 +1,6 @@
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
-using FakeItEasy;
 using Organization.Shared.Activities;
 using Organization.Shared.Database.Entities;
 using Organization.Shared.Repositories;

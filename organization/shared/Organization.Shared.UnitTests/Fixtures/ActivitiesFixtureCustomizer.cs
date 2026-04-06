@@ -1,5 +1,4 @@
 using AutoFixture;
-using FakeItEasy;
 using Organization.Shared.Activities;
 
 namespace Organization.Shared.UnitTests.Fixtures;

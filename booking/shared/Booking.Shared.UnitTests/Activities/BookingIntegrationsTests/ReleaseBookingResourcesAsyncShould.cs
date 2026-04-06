@@ -1,6 +1,5 @@
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
@@ -10,7 +9,6 @@ using Booking.Shared.Services;
 using Booking.Shared.Services.Cache;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
-using FakeItEasy;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore.Storage;
 using Temporalio.Testing;

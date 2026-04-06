@@ -1,7 +1,6 @@
 using Api.Shared.Services;
 using Api.Shared.Services.Grpc.Skedular.Organization.V1;
 using Api.Shared.Services.Models;
-using AutoFixture.Xunit3;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
@@ -13,7 +12,6 @@ using Enterprise.Shared.Accounting;
 using Enterprise.Shared.Database;
 using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
-using FakeItEasy;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore.Storage;
