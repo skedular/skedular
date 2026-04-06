@@ -1,6 +1,7 @@
 using Api.Shared.Services;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Repositories;
+using Enterprise.Shared.Random;
 
 namespace Booking.Shared.Services;
 
@@ -23,7 +24,7 @@ public interface IOrganizationInvoiceCounterService
 /// <summary>
 ///     Implementation of the organization invoice counter service.
 /// </summary>
-public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFactory) : IOrganizationInvoiceCounterService
+public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFactory, IRandomHelper randomHelper) : IOrganizationInvoiceCounterService
 {
     /// <summary>
     ///     Generates the next invoice number ID for the specified organization.
@@ -49,7 +50,7 @@ public class OrganizationInvoiceCounterService(IRepositoryFactory repositoryFact
         {
             organizationInvoiceCounter = repositoryFactory.OrganizationInvoiceCounterRepository.Add(new OrganizationInvoiceCounter
             {
-                InvoiceNumber = 1, Organization = organization
+                Id = randomHelper.Generate(), InvoiceNumber = 1, Organization = organization
             });
         }
         else

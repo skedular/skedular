@@ -17,18 +17,9 @@ public interface IAccountingInvoiceLinkRepository : IRepository<AccountingInvoic
         string localEntityId,
         CancellationToken cancellationToken);
 
-    Task<AccountingInvoiceLink?> GetByProviderAndExternalInvoiceIdAsync(
-        string provider,
-        string externalInvoiceId,
-        CancellationToken cancellationToken);
-
     Task<ICollection<AccountingInvoiceLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
         ICollection<string> externalInvoiceIds,
-        CancellationToken cancellationToken);
-
-    Task<ICollection<AccountingInvoiceLink>> GetByOrganizationIdUntrackedAsync(
-        string organizationId,
         CancellationToken cancellationToken);
 }
 
@@ -58,14 +49,6 @@ public class AccountingInvoiceLinkRepository(BookingDbContext dbContext, TimePro
             query => query.Provider == provider && query.LocalEntityType == localEntityType && query.LocalEntityId == localEntityId,
             cancellationToken);
 
-    public async Task<AccountingInvoiceLink?> GetByProviderAndExternalInvoiceIdAsync(
-        string provider,
-        string externalInvoiceId,
-        CancellationToken cancellationToken) =>
-        await DbContext.AccountingInvoiceLink.FirstOrDefaultAsync(
-            query => query.Provider == provider && query.ExternalInvoiceId == externalInvoiceId,
-            cancellationToken);
-
     public async Task<ICollection<AccountingInvoiceLink>> GetByProviderAndExternalInvoiceIdsAsync(
         string provider,
         ICollection<string> externalInvoiceIds,
@@ -83,13 +66,4 @@ public class AccountingInvoiceLinkRepository(BookingDbContext dbContext, TimePro
                 externalInvoiceIds.Contains(query.ExternalInvoiceId))
             .ToListAsync(cancellationToken);
     }
-
-    public async Task<ICollection<AccountingInvoiceLink>> GetByOrganizationIdUntrackedAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
-        await DbContext.AccountingInvoiceLink
-            .AsNoTracking()
-            .Where(query => query.OrganizationId == organizationId)
-            .OrderBy(query => query.CreatedAt)
-            .ToListAsync(cancellationToken);
 }

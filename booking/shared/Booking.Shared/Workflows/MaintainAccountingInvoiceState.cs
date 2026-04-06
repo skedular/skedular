@@ -10,8 +10,6 @@ public record MaintainAccountingInvoiceStateInput(
     string LocalEntityId,
     DateTimeOffset? NotBefore = null);
 
-public record MaintainAccountingInvoiceStateResult(bool IsTerminal, DateTimeOffset? NextSyncAt);
-
 [Workflow]
 public class MaintainAccountingInvoiceState
 {

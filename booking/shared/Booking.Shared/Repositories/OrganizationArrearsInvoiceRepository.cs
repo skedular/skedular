@@ -10,7 +10,6 @@ public interface IOrganizationArrearsInvoiceRepository : IRepository<Organizatio
 {
     OrganizationArrearsInvoice Add(OrganizationArrearsInvoice organizationArrearsInvoice);
     Task<ICollection<OrganizationArrearsInvoice>> GetByBookingIdUntrackedAsync(string bookingId, CancellationToken cancellationToken);
-    Task<ICollection<OrganizationArrearsInvoice>> GetByOrganizationIdUntrackedAsync(string organizationId, CancellationToken cancellationToken);
 
     Task<ICollection<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
         string marketplaceBookingSubscriptionId,
@@ -53,19 +52,6 @@ public class OrganizationArrearsInvoiceRepository(BookingDbContext dbContext, Ti
             .Include(query => query.Customer)
             .Where(query => query.Lines.Any(line => line.Booking.Id == bookingId))
             .OrderByDescending(query => query.CreatedAt)
-            .ToListAsync(cancellationToken);
-
-    public async Task<ICollection<OrganizationArrearsInvoice>> GetByOrganizationIdUntrackedAsync(
-        string organizationId,
-        CancellationToken cancellationToken) =>
-        await DbContext.OrganizationArrearsInvoice
-            .AsNoTracking()
-            .Include(query => query.Organization)
-            .Include(query => query.Customer)
-            .Include(query => query.Lines)
-            .ThenInclude(query => query.Booking)
-            .Where(query => query.OrganizationId == organizationId)
-            .OrderBy(query => query.CreatedAt)
             .ToListAsync(cancellationToken);
 
     public async Task<ICollection<OrganizationArrearsInvoice>> GetByMarketplaceBookingSubscriptionIdUntrackedAsync(
