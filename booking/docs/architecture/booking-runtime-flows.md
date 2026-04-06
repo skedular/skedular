@@ -1,6 +1,7 @@
 # Booking Runtime Flows
 
-This document is the visual companion to [booking-domain-architecture.md](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/domain/docs/architecture/booking-domain-architecture.md).
+This document is the visual companion
+to [booking-domain-architecture.md](/Users/morteza/projects/github.com/unityhubio/unityhubio/booking/domain/docs/architecture/booking-domain-architecture.md).
 
 It is intentionally diagram-first and focuses on how the booking domain behaves at runtime.
 
@@ -204,22 +205,25 @@ flowchart TD
     A["Recurring cycle needs invoice"] --> B["InvoiceIntegrations.GenerateAndSendRecurringInvoiceAsync"]
     B --> C["Load org Xero connection"]
     C --> D["Build provider-agnostic billing definition"]
-    D --> E["Build desired Xero repeating schedule if allowed"]
-    E --> F["XeroRecurringInvoiceTransitionService"]
+    D --> E["Create first concrete invoice immediately"]
+    E --> F["Build desired Xero repeating schedule if later cycles need Xero automation"]
+    F --> G["Only keep template when auto-renew is on or billing-cycle splitting is required"]
+    G --> H["When used, start repeating template from the next billing boundary"]
+    H --> I["XeroRecurringInvoiceTransitionService"]
 
-    F --> G{"Freeze existing repeating invoice?"}
-    G -->|Yes| H["Stop here; keep local state transition-required"]
-    G -->|No| I{"Org uses Xero for recurring invoicing?"}
+    I --> J{"Freeze existing repeating invoice?"}
+    J -->|Yes| K["Stop here; keep local state transition-required"]
+    J -->|No| L{"Org uses Xero for recurring invoicing?"}
 
-    I -->|No| J["Generate local invoice PDF/email"]
-    I -->|Yes| K{"Can export as Xero repeating template?"}
-    K -->|Yes| L["Create or reuse Xero repeating invoice template"]
-    K -->|No| M["Export standard Xero invoice for this cycle"]
+    L -->|No| M["Generate local invoice PDF/email"]
+    L -->|Yes| N{"Can export as Xero repeating template?"}
+    N -->|Yes| O["Create or reuse Xero repeating invoice template for later cycles"]
+    N -->|No| P["Only keep the immediate concrete invoice"]
 
-    L --> N{"SendInvoicesViaXero?"}
-    M --> N
-    N -->|Yes| O["Only publish state change locally"]
-    N -->|No| P["Also render/upload/send local invoice copy"]
+    O --> Q{"SendInvoicesViaXero?"}
+    P --> Q
+    Q -->|Yes| R["Only publish state change locally"]
+    Q -->|No| S["Also render/upload/send local invoice copy"]
 ```
 
 ## 9. Organization In-Arrears Billing

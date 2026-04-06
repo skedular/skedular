@@ -50,6 +50,13 @@ It also references the external systems that the booking domain coordinates with
 - `Accounting invoice link`
     - The durable link between a local booking/invoice entity and external accounting state such as Xero.
 
+Recurring Xero note:
+
+- recurring marketplace billing always emits the first concrete invoice immediately
+- Xero repeating templates are only used for later cycles when auto-renew is enabled or when the purchase cadence must
+  be split by the organization billing cycle
+- when a repeating template exists, it starts from the next billing boundary rather than the first billed cycle
+
 ## System Context
 
 ```mermaid

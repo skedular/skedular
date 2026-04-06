@@ -5,6 +5,7 @@ using Api.Shared.Services.Models;
 using Booking.Shared.Activities;
 using Booking.Shared.Database.Entities;
 using Booking.Shared.Mappers;
+using Booking.Shared.Models;
 using Booking.Shared.Publishers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;
@@ -25,8 +26,11 @@ using AccountingInvoiceExportLink = Booking.Shared.Database.Entities.AccountingI
 using AccountingContactLink = Booking.Shared.Database.Entities.AccountingContactLink;
 using AccountingPaymentEvent = Booking.Shared.Database.Entities.AccountingPaymentEvent;
 using CustomerEntity = Booking.Shared.Database.Entities.Customer;
+using MarketplaceBooking = Booking.Shared.Database.Entities.MarketplaceBooking;
 using Organization = Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization;
 using OrganizationConfiguration = Api.Shared.Clients.Configurations.Grpc.OrganizationConfiguration;
+using ProductVersion = Booking.Shared.Database.Entities.ProductVersion;
+using RecurringBooking = Booking.Shared.Database.Entities.RecurringBooking;
 using XeroInvoice = Xero.NetStandard.OAuth2.Model.Accounting.Invoice;
 
 namespace Booking.Shared.Services;
@@ -119,8 +123,11 @@ public class XeroInvoiceService(
             recurringBooking.Id,
             cancellationToken);
         var xeroConnection = await GetOrganizationXeroConnectionAsync(organizationId, cancellationToken);
-        var desiredRepeatingSchedule = ShouldUseXeroRepeatingInvoices(xeroConnection)
+        var baseRepeatingSchedule = ShouldUseXeroRepeatingInvoices(xeroConnection)
             ? xeroRepeatingInvoiceScheduleService.GetSchedule(recurringBooking, marketplaceBooking, organizationBillingCycle)
+            : null;
+        var desiredRepeatingSchedule = ShouldUseRepeatingInvoiceTemplate(recurringBooking, baseRepeatingSchedule)
+            ? baseRepeatingSchedule
             : null;
         var transitionDecision = xeroRecurringInvoiceTransitionService.Decide(
             existingAccountingInvoiceExportLink,
@@ -261,16 +268,23 @@ public class XeroInvoiceService(
 
     private static DateTime ResolveRepeatingInvoiceStartDate(
         RecurringBooking recurringBooking,
-        XeroRepeatingInvoiceScheduleDefinition scheduleDefinition,
-        bool shouldCreateInitialInvoiceImmediately) =>
-        !shouldCreateInitialInvoiceImmediately
-            ? ResolveRepeatingInvoiceStartDate(recurringBooking)
-            : scheduleDefinition.Unit switch
-            {
-                Schedule.UnitEnum.WEEKLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddDays(7 * scheduleDefinition.Period),
-                Schedule.UnitEnum.MONTHLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddMonths(scheduleDefinition.Period),
-                _ => throw new ArgumentOutOfRangeException(nameof(scheduleDefinition))
-            };
+        XeroRepeatingInvoiceScheduleDefinition scheduleDefinition) =>
+        scheduleDefinition.Unit switch
+        {
+            Schedule.UnitEnum.WEEKLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddDays(7 * scheduleDefinition.Period),
+            Schedule.UnitEnum.MONTHLY => ResolveRepeatingInvoiceStartDate(recurringBooking).AddMonths(scheduleDefinition.Period),
+            _ => throw new ArgumentOutOfRangeException(nameof(scheduleDefinition))
+        };
+
+    private static bool ShouldUseRepeatingInvoiceTemplate(
+        RecurringBooking recurringBooking,
+        XeroRepeatingInvoiceScheduleDefinition? scheduleDefinition) =>
+        scheduleDefinition is not null &&
+        (recurringBooking.MarketplaceBookingSubscription?.AutoRenew == true ||
+         string.Equals(
+             scheduleDefinition.Source,
+             XeroRepeatingInvoiceScheduleSourceConstants.OrganizationBillingCycle,
+             StringComparison.Ordinal));
 
     private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceExportLink accountingInvoiceLink) =>
         string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
@@ -344,27 +358,23 @@ public class XeroInvoiceService(
         var customer = GetInvoiceCustomer(null, recurringBooking, marketplaceBooking) ?? throw new CustomerNotFound();
         var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection, cancellationToken);
         var contact = await UpsertXeroContactAsync(organizationId, customer, refreshedConnection, accessToken, cancellationToken);
-        var shouldCreateInitialInvoiceImmediately = ShouldCreateInitialRecurringInvoiceImmediately(recurringBooking);
+        var existingInvoiceInstances = await repositoryFactory.AccountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
+            accountingInvoiceLink.Id,
+            cancellationToken);
         XeroInvoice? initialInvoice = null;
-        if (shouldCreateInitialInvoiceImmediately)
+        if (existingInvoiceInstances.Count == 0)
         {
-            var existingInvoiceInstances = await repositoryFactory.AccountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
-                accountingInvoiceLink.Id,
+            initialInvoice = await ExportInitialRecurringInvoiceAsync(
+                organizationId,
+                recurringBooking,
+                marketplaceBooking,
+                productVersion,
+                accountingInvoiceLink,
+                contact,
+                refreshedConnection,
+                accessToken,
+                scheduleDefinition,
                 cancellationToken);
-            if (existingInvoiceInstances.Count == 0)
-            {
-                initialInvoice = await ExportInitialRecurringInvoiceAsync(
-                    organizationId,
-                    recurringBooking,
-                    marketplaceBooking,
-                    productVersion,
-                    accountingInvoiceLink,
-                    contact,
-                    refreshedConnection,
-                    accessToken,
-                    scheduleDefinition,
-                    cancellationToken);
-            }
         }
 
         var repeatingInvoice = await ExportRepeatingInvoiceAsync(
@@ -376,7 +386,6 @@ public class XeroInvoiceService(
             refreshedConnection,
             accessToken,
             scheduleDefinition,
-            shouldCreateInitialInvoiceImmediately,
             cancellationToken);
 
         await ApplyXeroRepeatingInvoiceSyncAsync(accountingInvoiceLink, repeatingInvoice, scheduleDefinition, cancellationToken);
@@ -398,9 +407,6 @@ public class XeroInvoiceService(
         return true;
     }
 
-    private bool ShouldCreateInitialRecurringInvoiceImmediately(RecurringBooking recurringBooking) =>
-        recurringBooking.StartDate.UtcDateTime.Date > timeProvider.GetUtcNow().UtcDateTime.Date;
-
     private async Task<XeroInvoice> ExportInitialRecurringInvoiceAsync(
         string organizationId,
         RecurringBooking recurringBooking,
@@ -419,8 +425,8 @@ public class XeroInvoiceService(
         var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
         var invoiceRequest = new XeroInvoice
         {
-            Type = Invoice.TypeEnum.ACCREC,
-            Status = xeroConnection.SendInvoicesViaXero ? Invoice.StatusEnum.AUTHORISED : Invoice.StatusEnum.DRAFT,
+            Type = XeroInvoice.TypeEnum.ACCREC,
+            Status = xeroConnection.SendInvoicesViaXero ? XeroInvoice.StatusEnum.AUTHORISED : XeroInvoice.StatusEnum.DRAFT,
             LineAmountTypes = marketplaceBooking.ProductPricing.IsTaxInclusive ? LineAmountTypes.Inclusive : LineAmountTypes.Exclusive,
             Contact = contact,
             InvoiceNumber = marketplaceBooking.InvoiceNumber,
@@ -740,8 +746,8 @@ public class XeroInvoiceService(
         var invoiceRequest = new XeroInvoice
         {
             InvoiceID = Guid.TryParse(accountingInvoiceLink.ExternalInvoiceId, out var invoiceId) ? invoiceId : null,
-            Type = Invoice.TypeEnum.ACCREC,
-            Status = xeroConnection.SendInvoicesViaXero ? Invoice.StatusEnum.AUTHORISED : Invoice.StatusEnum.DRAFT,
+            Type = XeroInvoice.TypeEnum.ACCREC,
+            Status = xeroConnection.SendInvoicesViaXero ? XeroInvoice.StatusEnum.AUTHORISED : XeroInvoice.StatusEnum.DRAFT,
             LineAmountTypes = marketplaceBooking.ProductPricing.IsTaxInclusive ? LineAmountTypes.Inclusive : LineAmountTypes.Exclusive,
             Contact = contact,
             InvoiceNumber = marketplaceBooking.InvoiceNumber,
@@ -792,7 +798,6 @@ public class XeroInvoiceService(
         XeroConnection xeroConnection,
         string accessToken,
         XeroRepeatingInvoiceScheduleDefinition scheduleDefinition,
-        bool shouldCreateInitialInvoiceImmediately,
         CancellationToken cancellationToken)
     {
         var organization = await GetOrganizationAsync(productVersion.Product.Organization.Id, cancellationToken);
@@ -827,7 +832,7 @@ public class XeroInvoiceService(
                 Period = scheduleDefinition.Period,
                 DueDateType = Schedule.DueDateTypeEnum.DAYSAFTERBILLDATE,
                 DueDate = invoiceDueInDays,
-                StartDate = ResolveRepeatingInvoiceStartDate(recurringBooking, scheduleDefinition, shouldCreateInitialInvoiceImmediately)
+                StartDate = ResolveRepeatingInvoiceStartDate(recurringBooking, scheduleDefinition)
             },
             LineItems =
             [
@@ -1378,15 +1383,15 @@ public class XeroInvoiceService(
 
     private static string GetAccountingStatus(XeroInvoice invoice)
     {
-        if (invoice.Status == Invoice.StatusEnum.PAID || (invoice.AmountPaid ?? 0) >= (invoice.AmountDue ?? decimal.MaxValue))
+        if (invoice.Status == XeroInvoice.StatusEnum.PAID || (invoice.AmountPaid ?? 0) >= (invoice.AmountDue ?? decimal.MaxValue))
         {
             return AccountingStatusConstants.Paid;
         }
 
         return invoice.Status switch
         {
-            Invoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
-            Invoice.StatusEnum.SUBMITTED => AccountingStatusConstants.Sent,
+            XeroInvoice.StatusEnum.AUTHORISED => AccountingStatusConstants.Sent,
+            XeroInvoice.StatusEnum.SUBMITTED => AccountingStatusConstants.Sent,
             _ => AccountingStatusConstants.Exported
         };
     }

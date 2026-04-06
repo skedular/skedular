@@ -88,6 +88,12 @@ Relevant code:
   collapsing down to just the product name.
 - Tax-inclusive vs tax-exclusive pricing must be preserved when exporting Xero invoice lines. Do not send an inclusive
   amount as an exclusive line.
+- For recurring marketplace bookings sent through Xero:
+    - always create the first concrete invoice immediately
+    - only create a repeating template when the subscription is auto-renewing or when the purchase cadence is being
+      split by the organization billing cycle
+    - when a repeating template is used, it must start from the next billing boundary so it never duplicates the
+      immediately-created first invoice
 
 ## Invoice Template Rules
 

@@ -78,6 +78,7 @@ public class HandleRecurringBookingInvoiceAsyncShould
         {
             Id = recurringBookingId,
             StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { AutoRenew = true },
             MarketplaceBooking = new MarketplaceBooking
             {
                 InvoiceNumber = "INV-001",
@@ -173,6 +174,134 @@ public class HandleRecurringBookingInvoiceAsyncShould
                 !string.IsNullOrWhiteSpace(link.ExportConfigurationMessage))))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Avoid_Repeating_Template_When_Subscription_Is_Not_Auto_Renew_And_Schedule_Comes_From_Purchase_Cadence(
+        [Frozen] OrganizationConfiguration organizationConfiguration,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IUnitOfWork unitOfWork,
+        IDbTransactionBuilder transactionBuilder,
+        IGraphQlTopicEventSender graphQlTopicEventSender,
+        IXeroSdkClientFactory xeroSdkClientFactory,
+        IXeroTokenEncryptionService xeroTokenEncryptionService,
+        ITemporalService temporalService,
+        ITemporalOutboxService temporalOutboxService,
+        IBookingOutboxPublisher bookingOutboxPublisher,
+        IMapper mapper,
+        IRandomHelper randomHelper,
+        IRecurringInvoiceBillingScheduleService recurringInvoiceBillingScheduleService,
+        IXeroRepeatingInvoiceScheduleService xeroRepeatingInvoiceScheduleService,
+        IXeroRecurringInvoiceTransitionService xeroRecurringInvoiceTransitionService,
+        IInvoicePaymentTermsService invoicePaymentTermsService,
+        TimeProvider timeProvider,
+        CallInvoker callInvoker,
+        string recurringBookingId,
+        string productVersionId,
+        string pricingId,
+        string organizationId)
+    {
+        organizationConfiguration.ApiKey = "api-key";
+        var sut = new XeroInvoiceService(
+            organizationConfiguration,
+            new OrganizationService.OrganizationServiceClient(callInvoker),
+            repositoryFactory,
+            transactionBuilder,
+            graphQlTopicEventSender,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            temporalService,
+            temporalOutboxService,
+            bookingOutboxPublisher,
+            mapper,
+            randomHelper,
+            recurringInvoiceBillingScheduleService,
+            xeroRepeatingInvoiceScheduleService,
+            xeroRecurringInvoiceTransitionService,
+            invoicePaymentTermsService,
+            timeProvider);
+
+        var cancellationToken = TestContext.Current.CancellationToken;
+        var recurringBooking = new RecurringBooking
+        {
+            Id = recurringBookingId,
+            StartDate = new DateTimeOffset(2026, 4, 1, 0, 0, 0, TimeSpan.Zero),
+            MarketplaceBookingSubscription = new MarketplaceBookingSubscription { AutoRenew = false },
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                InvoiceNumber = "INV-001",
+                BillingMode = ProductPricingBillingMode.Upfront.ToProductPricingBillingMode(),
+                ProductPricing = ProductPricing.Empty(pricingId) with { PurchaseCadence = ProductPricingCadence.Monthly },
+                ProductVersion = new ProductVersion { Id = productVersionId }
+            }
+        };
+        var marketplaceBooking = recurringBooking.MarketplaceBooking;
+        var productVersion = new ProductVersion
+        {
+            Id = productVersionId,
+            Product = new Product
+            {
+                Organization = new OrganizationEntity
+                {
+                    Id = organizationId, BillingCycle = OrganizationBillingCycleModel.Monthly.ToOrganizationBillingCycle()
+                }
+            }
+        };
+        var xeroConnection = new XeroConnection
+        {
+            Id = "xero-3",
+            IsActive = true,
+            HasRefreshToken = true,
+            TenantId = "tenant-3",
+            BillingMode = XeroBillingModeConstants.RepeatingInvoices
+        };
+        var desiredSchedule = new XeroRepeatingInvoiceScheduleDefinition(
+            Models.XeroRepeatingInvoiceScheduleSourceConstants.PurchaseCadence,
+            Schedule.UnitEnum.MONTHLY,
+            1,
+            100m);
+        var transitionDecision = new XeroRecurringInvoiceTransitionDecision(
+            XeroRecurringInvoiceExportPath.FreezeExistingRepeatingInvoice,
+            AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
+            "Purchase cadence without auto-renew should not keep a Xero repeating template.");
+
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.RecurringBooking,
+                recurringBookingId,
+                cancellationToken))
+            .Returns((AccountingInvoiceExportLink?)null);
+        A.CallTo(() => xeroRepeatingInvoiceScheduleService.GetSchedule(
+                recurringBooking,
+                marketplaceBooking,
+                OrganizationBillingCycleModel.Monthly))
+            .Returns(desiredSchedule);
+        A.CallTo(() => xeroRecurringInvoiceTransitionService.Decide(null, true, null))
+            .Returns(transitionDecision);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>.That.Matches(options =>
+                    options.CancellationToken == cancellationToken &&
+                    options.Headers != null &&
+                    options.Headers.Any(item =>
+                        item.Key == Enterprise.Shared.Grpc.Constants.ApiKey && item.Value == organizationConfiguration.ApiKey)),
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == organizationId)))
+            .Returns(CreateResponse(xeroConnection));
+
+        var result = await sut.HandleRecurringBookingInvoiceAsync(
+            organizationId,
+            recurringBooking,
+            marketplaceBooking,
+            productVersion,
+            cancellationToken);
+
+        result.ShouldBe(RecurringInvoiceHandlingDisposition.StopAndPublish);
+        A.CallTo(() => xeroRecurringInvoiceTransitionService.Decide(null, true, null)).MustHaveHappenedOnceExactly();
     }
 
     [Theory]

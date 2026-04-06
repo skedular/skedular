@@ -30,7 +30,7 @@ public class ResolveRepeatingInvoiceStartDateShould
             1,
             100m);
 
-        Invoke(recurringBooking, scheduleDefinition, true).ShouldBe(startDate.UtcDateTime.Date.AddMonths(1));
+        Invoke(recurringBooking, scheduleDefinition).ShouldBe(startDate.UtcDateTime.Date.AddMonths(1));
     }
 
     private static DateTime Invoke(RecurringBookingEntity recurringBooking) =>
@@ -45,14 +45,13 @@ public class ResolveRepeatingInvoiceStartDateShould
 
     private static DateTime Invoke(
         RecurringBookingEntity recurringBooking,
-        XeroRepeatingInvoiceScheduleDefinition scheduleDefinition,
-        bool shouldCreateInitialInvoiceImmediately) =>
+        XeroRepeatingInvoiceScheduleDefinition scheduleDefinition) =>
         (DateTime)(typeof(XeroInvoiceService)
             .GetMethod(
                 "ResolveRepeatingInvoiceStartDate",
                 BindingFlags.Static | BindingFlags.NonPublic,
                 null,
-                [typeof(RecurringBookingEntity), typeof(XeroRepeatingInvoiceScheduleDefinition), typeof(bool)],
+                [typeof(RecurringBookingEntity), typeof(XeroRepeatingInvoiceScheduleDefinition)],
                 null)!
-            .Invoke(null, [recurringBooking, scheduleDefinition, shouldCreateInitialInvoiceImmediately]) ?? default(DateTime));
+            .Invoke(null, [recurringBooking, scheduleDefinition]) ?? default(DateTime));
 }
