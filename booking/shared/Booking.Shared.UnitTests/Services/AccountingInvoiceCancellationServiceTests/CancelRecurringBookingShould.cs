@@ -520,6 +520,7 @@ public class CancelRecurringBookingShould
         secondAccountingInvoiceInstance.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
         sut.CancelLiveRepeatingInvoiceCalls.ShouldBe(1);
         sut.CancelLiveStandardInvoiceCalls.ShouldBe(2);
+        sut.CancelledRepeatingInvoiceIds.ShouldBe([Guid.Parse(accountingInvoiceLink.ExternalInvoiceId)]);
         sut.CancelledStandardInvoiceIds.ShouldContain(Guid.Parse(accountingInvoiceInstance.ExternalInvoiceId));
         sut.CancelledStandardInvoiceIds.ShouldContain(Guid.Parse(secondAccountingInvoiceInstance.ExternalInvoiceId));
     }
@@ -608,6 +609,7 @@ public class CancelRecurringBookingShould
     {
         public int CancelLiveRepeatingInvoiceCalls { get; private set; }
         public int CancelLiveStandardInvoiceCalls { get; private set; }
+        public List<Guid> CancelledRepeatingInvoiceIds { get; } = [];
         public List<Guid> CancelledStandardInvoiceIds { get; } = [];
 
         protected override Task CancelLiveRepeatingInvoiceAsync(
@@ -619,6 +621,7 @@ public class CancelRecurringBookingShould
             CancellationToken cancellationToken)
         {
             CancelLiveRepeatingInvoiceCalls++;
+            CancelledRepeatingInvoiceIds.Add(externalInvoiceId);
             return Task.CompletedTask;
         }
 
