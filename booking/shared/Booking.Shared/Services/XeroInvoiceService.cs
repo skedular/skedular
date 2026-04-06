@@ -164,24 +164,8 @@ public class XeroInvoiceService(
             : RecurringInvoiceHandlingDisposition.ContinueToSkedular;
     }
 
-    public Task<SyncAccountingInvoiceStateResult> SyncAccountingInvoiceStateAsync(
+    public async Task<SyncAccountingInvoiceStateResult> SyncAccountingInvoiceStateAsync(
         SyncAccountingInvoiceStateInput input,
-        CancellationToken cancellationToken) =>
-        SyncAccountingInvoiceStateInternalAsync(input, cancellationToken);
-
-    private static bool IsXeroManagedForStandardInvoicing(XeroConnection? xeroConnection) =>
-        IsXeroConnectionReady(xeroConnection) &&
-        xeroConnection!.BillingMode is XeroBillingModeConstants.Enabled or XeroBillingModeConstants.RepeatingInvoices;
-
-    private static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
-        recurringBooking.StartDate.UtcDateTime.Date;
-
-    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
-        string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
-        string.Equals(accountingInvoiceLink.ExportConfigurationState, AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
-            StringComparison.Ordinal);
-
-    private async Task<SyncAccountingInvoiceStateResult> SyncAccountingInvoiceStateInternalAsync(SyncAccountingInvoiceStateInput input,
         CancellationToken cancellationToken)
     {
         var accountingInvoiceLink = await repositoryFactory.AccountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
@@ -191,7 +175,9 @@ public class XeroInvoiceService(
             cancellationToken);
         if (accountingInvoiceLink is null ||
             string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId) ||
-            accountingInvoiceLink.ExternalStatus is AccountingStatusConstants.Paid or AccountingStatusConstants.Failed
+            accountingInvoiceLink.ExternalStatus is
+                AccountingStatusConstants.Paid
+                or AccountingStatusConstants.Failed
                 or AccountingStatusConstants.Cancelled)
         {
             return new SyncAccountingInvoiceStateResult(true, null);
@@ -226,12 +212,27 @@ public class XeroInvoiceService(
 
         await ApplyXeroInvoiceSyncAsync(input.OrganizationId, accountingInvoiceLink, invoice, refreshedConnection, cancellationToken);
         await ProcessAccountingPaymentEventsAsync(accountingInvoiceLink, cancellationToken);
-        await PropagateInvoiceReferencesAsync(accountingInvoiceLink.LocalEntityType, accountingInvoiceLink.LocalEntityId, accountingInvoiceLink,
+        await PropagateInvoiceReferencesAsync(
+            accountingInvoiceLink.LocalEntityType,
+            accountingInvoiceLink.LocalEntityId,
+            accountingInvoiceLink,
             cancellationToken);
 
         var isPaid = string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal);
         return new SyncAccountingInvoiceStateResult(isPaid, isPaid ? null : timeProvider.GetUtcNow().AddHours(12));
     }
+
+    private static bool IsXeroManagedForStandardInvoicing(XeroConnection? xeroConnection) =>
+        IsXeroConnectionReady(xeroConnection) &&
+        xeroConnection!.BillingMode is XeroBillingModeConstants.Enabled or XeroBillingModeConstants.RepeatingInvoices;
+
+    private static DateTime ResolveRepeatingInvoiceStartDate(RecurringBooking recurringBooking) =>
+        recurringBooking.StartDate.UtcDateTime.Date;
+
+    private static bool ShouldPreserveStandardInvoiceTransitionState(AccountingInvoiceLink accountingInvoiceLink) =>
+        string.Equals(accountingInvoiceLink.ExternalInvoiceMode, AccountingInvoiceExportModeConstants.StandardInvoice, StringComparison.Ordinal) &&
+        string.Equals(accountingInvoiceLink.ExportConfigurationState, AccountingInvoiceExportConfigurationStateConstants.TransitionRequired,
+            StringComparison.Ordinal);
 
     private async Task ExportMarketplaceBookingInvoiceToXeroAsync(
         string organizationId,
