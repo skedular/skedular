@@ -102,18 +102,34 @@ public class AccountingInvoiceCancellationService(
             }
         }
 
-        var accountingInvoiceInstance = !IsLiveRepeatingInvoice(accountingInvoiceLink)
-            ? await repositoryFactory.AccountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+        var isRepeatingInvoice = IsLiveRepeatingInvoice(accountingInvoiceLink);
+        var accountingInvoiceInstances = isRepeatingInvoice
+            ? await repositoryFactory.AccountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
                 accountingInvoiceLink.Id,
                 cancellationToken)
-            : null;
+            : [];
+        var accountingInvoiceInstance = isRepeatingInvoice
+            ? accountingInvoiceInstances.FirstOrDefault()
+            : await repositoryFactory.AccountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken);
         var effectiveExternalStatus = accountingInvoiceInstance?.ExternalStatus ?? accountingInvoiceLink.ExternalStatus;
         var effectiveExternalInvoiceId = accountingInvoiceInstance?.ExternalInvoiceId ?? accountingInvoiceLink.ExternalInvoiceId;
         var effectiveInvoiceUrl = accountingInvoiceInstance?.ExternalInvoiceUrl ?? accountingInvoiceLink.ExternalInvoiceUrl;
         var effectiveInvoiceNumber = accountingInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceLink.ExternalInvoiceNumber;
 
-        if (string.Equals(effectiveExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal) ||
-            string.Equals(effectiveExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal))
+        if (isRepeatingInvoice &&
+            string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal) &&
+            !accountingInvoiceInstances.Any(ShouldCancelConcreteInvoiceInstance))
+        {
+            accountingInvoiceLink.LastError = null;
+            repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+            return;
+        }
+
+        if (!isRepeatingInvoice &&
+            (string.Equals(effectiveExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal) ||
+             string.Equals(effectiveExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal)))
         {
             accountingInvoiceLink.LastError = null;
 
@@ -166,8 +182,24 @@ public class AccountingInvoiceCancellationService(
             var (accessToken, refreshedConnection) = await EnsureValidAccessTokenAsync(organizationId, xeroConnection!, cancellationToken);
             var accountingApi = xeroSdkClientFactory.CreateAccountingApi();
 
-            if (IsLiveRepeatingInvoice(accountingInvoiceLink))
+            if (isRepeatingInvoice)
             {
+                foreach (var concreteInvoiceInstance in accountingInvoiceInstances.Where(ShouldCancelConcreteInvoiceInstance))
+                {
+                    if (!Guid.TryParse(concreteInvoiceInstance.ExternalInvoiceId, out var concreteInvoiceId))
+                    {
+                        continue;
+                    }
+
+                    await CancelLiveStandardInvoiceAsync(
+                        accountingApi,
+                        accessToken,
+                        refreshedConnection.TenantId,
+                        concreteInvoiceId,
+                        BuildCancellationIdempotencyKey(concreteInvoiceInstance.Id, false),
+                        cancellationToken);
+                }
+
                 await CancelLiveRepeatingInvoiceAsync(
                     accountingApi,
                     accessToken,
@@ -195,22 +227,42 @@ public class AccountingInvoiceCancellationService(
 
             repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
 
-            if (accountingInvoiceInstance is not null)
+            if (!isRepeatingInvoice && accountingInvoiceInstance is not null)
             {
                 accountingInvoiceInstance.ExternalStatus = AccountingStatusConstants.Cancelled;
                 accountingInvoiceInstance.LastSyncedAt = accountingInvoiceLink.LastSyncedAt;
                 accountingInvoiceInstance.LastError = null;
                 repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
             }
+
+            if (isRepeatingInvoice)
+            {
+                foreach (var concreteInvoiceInstance in accountingInvoiceInstances)
+                {
+                    concreteInvoiceInstance.ExternalStatus = AccountingStatusConstants.Cancelled;
+                    concreteInvoiceInstance.LastSyncedAt = accountingInvoiceLink.LastSyncedAt;
+                    concreteInvoiceInstance.LastError = null;
+                    repositoryFactory.AccountingInvoiceInstanceRepository.Update(concreteInvoiceInstance);
+                }
+            }
         }
         catch (Exception exception)
         {
             MarkTransitionRequired(accountingInvoiceLink, transitionRequiredMessage, exception.Message);
 
-            if (accountingInvoiceInstance is not null)
+            if (!isRepeatingInvoice && accountingInvoiceInstance is not null)
             {
                 accountingInvoiceInstance.LastError = exception.Message;
                 repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
+            }
+
+            if (isRepeatingInvoice)
+            {
+                foreach (var concreteInvoiceInstance in accountingInvoiceInstances)
+                {
+                    concreteInvoiceInstance.LastError = exception.Message;
+                    repositoryFactory.AccountingInvoiceInstanceRepository.Update(concreteInvoiceInstance);
+                }
             }
         }
     }
@@ -339,6 +391,12 @@ public class AccountingInvoiceCancellationService(
     private static bool IsLiveRepeatingInvoice(AccountingInvoiceExportLink accountingInvoiceLink) =>
         accountingInvoiceLink.ExternalInvoiceMode == AccountingInvoiceExportModeConstants.RepeatingInvoice &&
         !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId);
+
+    private static bool ShouldCancelConcreteInvoiceInstance(AccountingInvoiceInstance? accountingInvoiceInstance) =>
+        accountingInvoiceInstance is not null &&
+        !string.IsNullOrWhiteSpace(accountingInvoiceInstance.ExternalInvoiceId) &&
+        !string.Equals(accountingInvoiceInstance.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal) &&
+        !string.Equals(accountingInvoiceInstance.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal);
 
     private static string BuildCancellationIdempotencyKey(string accountingInvoiceExportLinkId, bool isRepeatingInvoice) =>
         isRepeatingInvoice

@@ -155,7 +155,6 @@ public static class AccountingProviderConstants
 
 public static class AccountingEntityTypeConstants
 {
-    public const string Organization = "Organization";
     public const string Customer = "Customer";
     public const string MarketplaceBooking = "MarketplaceBooking";
     public const string RecurringBooking = "RecurringBooking";

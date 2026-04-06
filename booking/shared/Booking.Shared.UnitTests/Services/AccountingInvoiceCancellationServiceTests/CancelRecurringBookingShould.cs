@@ -340,6 +340,7 @@ public class CancelRecurringBookingShould
     public async Task Cancel_Live_Repeating_Invoice_Template_In_Xero_When_Connection_Is_Ready(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         OrganizationConfiguration organizationConfiguration,
@@ -391,6 +392,11 @@ public class CancelRecurringBookingShould
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken))
+            .Returns([]);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.RecurringBooking,
@@ -411,6 +417,111 @@ public class CancelRecurringBookingShould
         accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
         accountingInvoiceLink.ExportConfigurationState.ShouldBe(Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
         sut.CancelLiveRepeatingInvoiceCalls.ShouldBe(1);
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Cancel_Live_Repeating_Template_And_All_Concrete_Invoices_When_They_Exist(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        OrganizationConfiguration organizationConfiguration,
+        TimeProvider timeProvider,
+        CallInvoker callInvoker,
+        string recurringBookingId,
+        string organizationId,
+        string accessTokenEncrypted,
+        CancellationToken cancellationToken)
+    {
+        var accountingApi = A.Fake<AccountingApi>();
+        var sut = new TestAccountingInvoiceCancellationService(
+            organizationConfiguration,
+            new OrganizationService.OrganizationServiceClient(callInvoker),
+            repositoryFactory,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            timeProvider);
+        var recurringBooking = new RecurringBookingEntity
+        {
+            Id = recurringBookingId,
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                ProductVersion = new ProductVersion
+                {
+                    Product = new Product { Organization = new OrganizationEntity { Id = organizationId } }
+                }
+            }
+        };
+        var accountingInvoiceLink = new AccountingInvoiceExportLink
+        {
+            Id = Guid.NewGuid().ToString(),
+            Provider = AccountingProviderConstants.Xero,
+            LocalEntityType = AccountingEntityTypeConstants.RecurringBooking,
+            LocalEntityId = recurringBookingId,
+            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.RepeatingInvoice,
+            ExternalStatus = AccountingStatusConstants.Sent
+        };
+        var accountingInvoiceInstance = new AccountingInvoiceInstance
+        {
+            Id = Guid.NewGuid().ToString(),
+            Provider = AccountingProviderConstants.Xero,
+            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalStatus = AccountingStatusConstants.Sent,
+            AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
+            OrganizationId = organizationId
+        };
+        var secondAccountingInvoiceInstance = new AccountingInvoiceInstance
+        {
+            Id = Guid.NewGuid().ToString(),
+            Provider = AccountingProviderConstants.Xero,
+            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalStatus = AccountingStatusConstants.Exported,
+            AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
+            OrganizationId = organizationId
+        };
+        var xeroConnection = new XeroConnection
+        {
+            Id = "xero-1",
+            IsActive = true,
+            HasRefreshToken = true,
+            TenantId = Guid.NewGuid().ToString(),
+            AccessTokenEncrypted = accessTokenEncrypted,
+            AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
+        };
+
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
+        A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.RecurringBooking,
+                recurringBookingId,
+                cancellationToken))
+            .Returns(accountingInvoiceLink);
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken))
+            .Returns([accountingInvoiceInstance, secondAccountingInvoiceInstance]);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == organizationId)))
+            .Returns(CreateResponse(xeroConnection));
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt(accessTokenEncrypted)).Returns("access-token");
+
+        await sut.CancelRecurringBookingAsync(recurringBooking, cancellationToken);
+
+        accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
+        accountingInvoiceInstance.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
+        secondAccountingInvoiceInstance.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
+        sut.CancelLiveRepeatingInvoiceCalls.ShouldBe(1);
+        sut.CancelLiveStandardInvoiceCalls.ShouldBe(2);
+        sut.CancelledStandardInvoiceIds.ShouldContain(Guid.Parse(accountingInvoiceInstance.ExternalInvoiceId));
+        sut.CancelledStandardInvoiceIds.ShouldContain(Guid.Parse(secondAccountingInvoiceInstance.ExternalInvoiceId));
     }
 
     [Theory]
@@ -496,6 +607,8 @@ public class CancelRecurringBookingShould
             timeProvider)
     {
         public int CancelLiveRepeatingInvoiceCalls { get; private set; }
+        public int CancelLiveStandardInvoiceCalls { get; private set; }
+        public List<Guid> CancelledStandardInvoiceIds { get; } = [];
 
         protected override Task CancelLiveRepeatingInvoiceAsync(
             AccountingApi accountingApi,
@@ -506,6 +619,19 @@ public class CancelRecurringBookingShould
             CancellationToken cancellationToken)
         {
             CancelLiveRepeatingInvoiceCalls++;
+            return Task.CompletedTask;
+        }
+
+        protected override Task CancelLiveStandardInvoiceAsync(
+            AccountingApi accountingApi,
+            string accessToken,
+            string tenantId,
+            Guid externalInvoiceId,
+            string idempotencyKey,
+            CancellationToken cancellationToken)
+        {
+            CancelLiveStandardInvoiceCalls++;
+            CancelledStandardInvoiceIds.Add(externalInvoiceId);
             return Task.CompletedTask;
         }
     }

@@ -510,7 +510,7 @@ public class TemporalOutboxService(
             }
             else
             {
-                _ = await temporalClient.StartWorkflowAsync(
+                var workflowHandle = await temporalClient.StartWorkflowAsync(
                     (BookPrivateRecurringResources workflow) =>
                         workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
                     new WorkflowOptions
@@ -521,6 +521,10 @@ public class TemporalOutboxService(
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                         IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
                     });
+
+                await workflowHandle.SignalAsync(
+                    workflow => workflow.RecurringBookingUpdatedAsync(input),
+                    workflowSignalOptions);
             }
         }
         else if (signalType == s_bookPrivateRecurringResourcesRecurringBookingDeletedAsync)
@@ -537,7 +541,7 @@ public class TemporalOutboxService(
             }
             else
             {
-                _ = await temporalClient.StartWorkflowAsync(
+                var workflowHandle = await temporalClient.StartWorkflowAsync(
                     (BookPrivateRecurringResources workflow) =>
                         workflow.ExecuteAsync(new BookPrivateRecurringResourcesInput(input.RecurringBookingId)),
                     new WorkflowOptions
@@ -548,6 +552,10 @@ public class TemporalOutboxService(
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                         IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
                     });
+
+                await workflowHandle.SignalAsync(
+                    workflow => workflow.RecurringBookingDeletedAsync(input),
+                    workflowSignalOptions);
             }
         }
         else if (signalType == s_bookMarketplaceBookingSubscriptionResourcesMarketplaceBookingSubscriptionDeletedAsync)
@@ -566,7 +574,7 @@ public class TemporalOutboxService(
             }
             else
             {
-                _ = await temporalClient.StartWorkflowAsync(
+                var workflowHandle = await temporalClient.StartWorkflowAsync(
                     (BookMarketplaceBookingSubscriptionResources workflow) =>
                         workflow.ExecuteAsync(new BookMarketplaceBookingSubscriptionResourcesInput(input.MarketplaceBookingSubscriptionId)),
                     new WorkflowOptions
@@ -577,6 +585,10 @@ public class TemporalOutboxService(
                         IdReusePolicy = WorkflowIdReusePolicy.AllowDuplicate,
                         IdConflictPolicy = WorkflowIdConflictPolicy.TerminateExisting
                     });
+
+                await workflowHandle.SignalAsync(
+                    workflow => workflow.MarketplaceBookingSubscriptionDeletedAsync(input),
+                    workflowSignalOptions);
             }
         }
     }

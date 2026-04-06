@@ -150,9 +150,7 @@ public class MarketplaceBookingSubscriptionIntegrations(
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task CancelRecurringBookingBillingAsync(
-        RecurringBooking recurringBooking,
-        CancellationToken cancellationToken)
+    private async Task CancelRecurringBookingBillingAsync(RecurringBooking recurringBooking, CancellationToken cancellationToken)
     {
         if (recurringBooking.MarketplaceBooking is null)
         {

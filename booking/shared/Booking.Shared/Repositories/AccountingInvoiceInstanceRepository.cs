@@ -24,6 +24,10 @@ public interface IAccountingInvoiceInstanceRepository : IRepository<AccountingIn
     Task<AccountingInvoiceInstance?> GetLatestByAccountingInvoiceExportLinkIdAsync(
         string accountingInvoiceExportLinkId,
         CancellationToken cancellationToken);
+
+    Task<ICollection<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
+        string accountingInvoiceExportLinkId,
+        CancellationToken cancellationToken);
 }
 
 public class AccountingInvoiceInstanceRepository(BookingDbContext dbContext, TimeProvider timeProvider)
@@ -78,4 +82,12 @@ public class AccountingInvoiceInstanceRepository(BookingDbContext dbContext, Tim
             .Where(query => query.AccountingInvoiceExportLinkId == accountingInvoiceExportLinkId)
             .OrderByDescending(query => query.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
+
+    public async Task<ICollection<AccountingInvoiceInstance>> GetByAccountingInvoiceExportLinkIdAsync(
+        string accountingInvoiceExportLinkId,
+        CancellationToken cancellationToken) =>
+        await DbContext.AccountingInvoiceInstance
+            .Where(query => query.AccountingInvoiceExportLinkId == accountingInvoiceExportLinkId)
+            .OrderByDescending(query => query.CreatedAt)
+            .ToListAsync(cancellationToken);
 }
