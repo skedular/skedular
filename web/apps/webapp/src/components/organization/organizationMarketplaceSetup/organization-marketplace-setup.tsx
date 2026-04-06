@@ -42,9 +42,8 @@ import type { organizationMarketplaceSetup_setOrganizationBankAccountAsDefaultMu
 import type { organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation } from '@/queries/__generated__/organizationMarketplaceSetup_setOrganizationStripeConnectAccountAsDefaultMutation.graphql';
 import type {
   OrganizationBillingCycle,
-  organizationMarketplaceSetup_updateOrganizationBillingCycleMutation,
-} from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingCycleMutation.graphql';
-import type { organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation.graphql';
+  organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation,
+} from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation.graphql';
 import type { organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation } from '@/queries/__generated__/organizationMarketplaceSetup_updateOrganizationMarketplaceListingMetadataMutation.graphql';
 import type {
   organizationMarketplaceSetup_updateOrganizationXeroConnectionMutation,
@@ -124,11 +123,8 @@ const organizationMarketplaceListingMetadataSchema = object({
   ...listingMetadataSchemaShape,
 });
 
-type OrganizationBillingCycleDetails = {
+type OrganizationBillingSettingsDetails = {
   billingCycle: string;
-};
-
-type OrganizationInvoiceTermsDetails = {
   invoiceDueInDays: number;
 };
 
@@ -168,11 +164,8 @@ const xeroBillingModeGuidance: Record<string, string> = {
   REPEATING_INVOICES: 'Recurring bookings create a Xero repeating invoice template for supported cadences. Xero then manages the scheduled follow-up invoices from that template.',
 };
 
-const organizationBillingCycleSchema = object({
-  billingCycle: string().required('Billing Cycle is required'),
-});
-
-const organizationInvoiceTermsSchema = object({
+const organizationBillingSettingsSchema = object({
+  billingCycle: string().required('Billing cycle is required'),
   invoiceDueInDays: number()
     .transform((value, originalValue) => {
       return originalValue === '' || originalValue === null || originalValue === undefined ? NaN : Number(originalValue);
@@ -202,7 +195,6 @@ const OrganizationMarketplaceSetup = ({
             id
             companyName
             email
-            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -228,6 +220,7 @@ const OrganizationMarketplaceSetup = ({
             type
             name
           }
+          invoiceDueInDays
           xeroConnection {
             id
             tenantId
@@ -435,45 +428,16 @@ const OrganizationMarketplaceSetup = ({
     }
   `);
 
-  const [commitUpdateOrganizationBillingCycle] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingCycleMutation>(graphql`
-    mutation organizationMarketplaceSetup_updateOrganizationBillingCycleMutation($input: UpdateOrganizationBillingCycleInput!) @raw_response_type {
-      updateOrganizationBillingCycle(input: $input) {
+  const [commitUpdateOrganizationBillingSettings] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation>(graphql`
+    mutation organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation($input: UpdateOrganizationBillingSettingsInput!) @raw_response_type {
+      updateOrganizationBillingSettings(input: $input) {
         organization {
           id
           billingCycle {
             type
             name
           }
-        }
-      }
-    }
-  `);
-
-  const [commitUpdateOrganizationBillingDetails] = useMutation<organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation>(graphql`
-    mutation organizationMarketplaceSetup_updateOrganizationBillingDetailsMutation($input: UpdateOrganizationBillingDetailsInput!) @raw_response_type {
-      updateOrganizationBillingDetails(input: $input) {
-        organization {
-          id
-          billingDetails {
-            id
-            companyName
-            email
-            invoiceDueInDays
-            osmType
-            osmId
-            placeId
-            longitude
-            latitude
-            formattedAddress
-            addressLine1
-            addressLine2
-            suburb
-            city
-            province
-            zipcode
-            country
-            countryCode
-          }
+          invoiceDueInDays
         }
       }
     }
@@ -543,14 +507,12 @@ const OrganizationMarketplaceSetup = ({
   const [organizationSubTitle, setOrganizationSubTitle] = useState(rootData.organization?.marketplaceListingMetadata.subTitle ?? null);
   const debounceSetOrganizationSubTitle = useDebounceCallback(setOrganizationSubTitle, keyboardTextFieldDebounceTimeout);
 
-  const validateOrganizationBillingCycleDetails = makeValidate(organizationBillingCycleSchema);
-  const requiredOrganizationBillingCycleDetailsFields = makeRequired(organizationBillingCycleSchema);
-  const validateOrganizationInvoiceTermsDetails = makeValidate(organizationInvoiceTermsSchema);
-  const requiredOrganizationInvoiceTermsDetailsFields = makeRequired(organizationInvoiceTermsSchema);
+  const validateOrganizationBillingSettingsDetails = makeValidate(organizationBillingSettingsSchema);
+  const requiredOrganizationBillingSettingsDetailsFields = makeRequired(organizationBillingSettingsSchema);
 
   const [organizationBillingCycle, setOrganizationBillingCycle] = useState(rootData.organization?.billingCycle.type ?? '');
   const debounceSetOrganizationBillingCycle = useDebounceCallback(setOrganizationBillingCycle, keyboardTextFieldDebounceTimeout);
-  const [organizationInvoiceDueInDays, setOrganizationInvoiceDueInDays] = useState<number>(rootData.organization?.billingDetails?.invoiceDueInDays ?? 7);
+  const [organizationInvoiceDueInDays, setOrganizationInvoiceDueInDays] = useState<number>(rootData.organization?.invoiceDueInDays ?? 7);
   const debounceSetOrganizationInvoiceDueInDays = useDebounceCallback(setOrganizationInvoiceDueInDays, keyboardTextFieldDebounceTimeout);
   const organization = rootData.organization as
     | (NonNullable<typeof rootData.organization> & {
@@ -1647,27 +1609,30 @@ const OrganizationMarketplaceSetup = ({
     });
   };
 
-  const handleOrganizationBillingCycleDetailUpdateClick = ({ billingCycle }: OrganizationBillingCycleDetails) => {
+  const handleOrganizationBillingSettingsUpdateClick = ({ billingCycle, invoiceDueInDays }: OrganizationBillingSettingsDetails) => {
     const organization = rootData.organization;
     if (!organization) {
       return;
     }
 
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing cycle...`} />, infoNotificationOptions);
+    const normalizedInvoiceDueInDays = Number(invoiceDueInDays);
 
-    commitUpdateOrganizationBillingCycle({
+    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing settings...`} />, infoNotificationOptions);
+
+    commitUpdateOrganizationBillingSettings({
       variables: {
         input: {
           clientMutationId: uuid(),
           id: organization.id,
           billingCycle: billingCycle as OrganizationBillingCycle,
+          invoiceDueInDays: normalizedInvoiceDueInDays,
         },
       },
       onCompleted: (_, errors) => {
         if (errors && errors.length > 0) {
           toast.update(toastId, {
             ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${getRelayErrorMessage(errors)}.`} />,
+            render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${getRelayErrorMessage(errors)}.`} />,
           });
 
           return;
@@ -1675,97 +1640,24 @@ const OrganizationMarketplaceSetup = ({
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${organization?.name} billing cycle updated.`} />,
+          render: <NotificationContent content={`Organization ${organization?.name} billing settings updated.`} />,
         });
       },
       onError: (error) => {
         toast.update(toastId, {
           ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing cycle. Error: ${error.message}.`} />,
+          render: <NotificationContent content={`Failed to update organization '${organization?.name}' billing settings. Error: ${error.message}.`} />,
         });
       },
       optimisticResponse: {
-        updateOrganizationBillingCycle: {
+        updateOrganizationBillingSettings: {
           organization: {
             id: organization.id,
             billingCycle: {
               type: billingCycle as OrganizationBillingCycle,
               name: '',
             },
-          },
-        },
-      },
-    });
-  };
-
-  const handleOrganizationInvoiceTermsUpdateClick = ({ invoiceDueInDays }: OrganizationInvoiceTermsDetails) => {
-    const organization = rootData.organization;
-    if (!organization) {
-      return;
-    }
-
-    const billingDetails = organization.billingDetails;
-    if (!billingDetails) {
-      return;
-    }
-
-    const normalizedInvoiceDueInDays = Number(invoiceDueInDays);
-
-    const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' invoice terms...`} />, infoNotificationOptions);
-
-    commitUpdateOrganizationBillingDetails({
-      variables: {
-        input: {
-          clientMutationId: uuid(),
-          id: billingDetails.id,
-          companyName: billingDetails.companyName,
-          email: billingDetails.email,
-          invoiceDueInDays: normalizedInvoiceDueInDays,
-          osmType: billingDetails.osmType,
-          osmId: billingDetails.osmId,
-          placeId: billingDetails.placeId,
-          longitude: billingDetails.longitude,
-          latitude: billingDetails.latitude,
-          formattedAddress: billingDetails.formattedAddress,
-          addressLine1: billingDetails.addressLine1,
-          addressLine2: billingDetails.addressLine2,
-          suburb: billingDetails.suburb,
-          city: billingDetails.city,
-          province: billingDetails.province,
-          zipcode: billingDetails.zipcode,
-          country: billingDetails.country,
-          countryCode: billingDetails.countryCode,
-        },
-      },
-      onCompleted: (_, errors) => {
-        if (errors && errors.length > 0) {
-          toast.update(toastId, {
-            ...errorNotificationOptions,
-            render: <NotificationContent content={`Failed to update organization '${organization?.name}' invoice terms. Error: ${getRelayErrorMessage(errors)}.`} />,
-          });
-
-          return;
-        }
-
-        toast.update(toastId, {
-          ...successNotificationOptions,
-          render: <NotificationContent content={`Organization ${organization?.name} invoice terms updated.`} />,
-        });
-      },
-      onError: (error) => {
-        toast.update(toastId, {
-          ...errorNotificationOptions,
-          render: <NotificationContent content={`Failed to update organization '${organization?.name}' invoice terms. Error: ${error.message}.`} />,
-        });
-      },
-      optimisticResponse: {
-        updateOrganizationBillingDetails: {
-          organization: {
-            id: organization.id,
-            billingDetails: {
-              ...billingDetails,
-              invoiceDueInDays: normalizedInvoiceDueInDays,
-            },
+            invoiceDueInDays: normalizedInvoiceDueInDays,
           },
         },
       },
@@ -1851,13 +1743,18 @@ const OrganizationMarketplaceSetup = ({
             />
 
             <Form
-              onSubmit={handleOrganizationBillingCycleDetailUpdateClick}
+              onSubmit={handleOrganizationBillingSettingsUpdateClick}
               initialValues={{
                 billingCycle: organizationBillingCycle,
+                invoiceDueInDays: organizationInvoiceDueInDays,
               }}
-              validate={validateOrganizationBillingCycleDetails}
+              validate={validateOrganizationBillingSettingsDetails}
               render={({ handleSubmit, values }) => {
                 debounceSetOrganizationBillingCycle(values!.billingCycle);
+                const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
+                if (!Number.isNaN(nextInvoiceDueInDays)) {
+                  debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
+                }
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -1871,14 +1768,29 @@ const OrganizationMarketplaceSetup = ({
                         sectionRefs.current['billing-cycle'] = divElement;
                       }}
                     >
-                      <SectionIconTypography label="Organization Billing Cycle Setup" />
-                      <BodyIconTypography label="Edit your organization billing cycle details" />
+                      <SectionIconTypography label="Organization Billing Settings" />
+                      <BodyIconTypography label="Edit your organization billing cycle and default invoice payment terms." />
                       <Divider />
                     </StackColumn>
 
                     <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
                       <FormFieldLabel label="Billing Cycle">
-                        <SingleChoiceOrganizationBillingCycle rootDataRelay={rootData} name="billingCycle" required={requiredOrganizationBillingCycleDetailsFields.billingCycle} />
+                        <SingleChoiceOrganizationBillingCycle
+                          rootDataRelay={rootData}
+                          name="billingCycle"
+                          required={requiredOrganizationBillingSettingsDetailsFields.billingCycle}
+                        />
+                      </FormFieldLabel>
+                    </StackColumn>
+
+                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
+                      <FormFieldLabel label="Invoice Due Days">
+                        <TextField
+                          name="invoiceDueInDays"
+                          type="number"
+                          required={requiredOrganizationBillingSettingsDetailsFields.invoiceDueInDays}
+                          helperText="How many days customers have to pay marketplace invoices by default."
+                        />
                       </FormFieldLabel>
                     </StackColumn>
 
@@ -1894,65 +1806,7 @@ const OrganizationMarketplaceSetup = ({
                           Update
                         </Button>
                       </StackRow>
-                    </StackColumn>
-                  </FormStackColumn>
-                );
-              }}
-            />
-
-            <Form
-              onSubmit={handleOrganizationInvoiceTermsUpdateClick}
-              initialValues={{
-                invoiceDueInDays: organizationInvoiceDueInDays,
-              }}
-              validate={validateOrganizationInvoiceTermsDetails}
-              render={({ handleSubmit, values }) => {
-                const nextInvoiceDueInDays = typeof values?.invoiceDueInDays === 'number' ? values.invoiceDueInDays : Number(values?.invoiceDueInDays ?? NaN);
-                if (!Number.isNaN(nextInvoiceDueInDays)) {
-                  debounceSetOrganizationInvoiceDueInDays(nextInvoiceDueInDays);
-                }
-
-                return (
-                  <FormStackColumn onSubmit={handleSubmit}>
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                      ref={(divElement) => {
-                        sectionRefs.current['invoice-terms'] = divElement;
-                      }}
-                    >
-                      <SectionIconTypography label="Organization Invoice Terms" />
-                      <BodyIconTypography label="Edit your organization default invoice payment terms" />
-                      <Divider />
-                    </StackColumn>
-
-                    <StackColumn sx={{ paddingLeft: defaultPadding, paddingRight: defaultPadding, paddingTop: defaultPadding }}>
-                      <FormFieldLabel label="Invoice Due Days">
-                        <TextField
-                          name="invoiceDueInDays"
-                          type="number"
-                          required={requiredOrganizationInvoiceTermsDetailsFields.invoiceDueInDays}
-                          helperText="How many days customers have to pay marketplace invoices by default."
-                        />
-                      </FormFieldLabel>
-                    </StackColumn>
-
-                    <StackColumn
-                      sx={{
-                        paddingLeft: defaultPadding,
-                        paddingRight: defaultPadding,
-                        paddingTop: defaultPadding,
-                      }}
-                    >
-                      <StackRow>
-                        <Button variant="contained" type="submit" sx={defaultButtonStyle} disabled={!organization?.billingDetails}>
-                          Update
-                        </Button>
-                      </StackRow>
-                      {!organization?.billingDetails && <SmallIconTypography label="Add billing details in organization admin first, then set invoice due days here." />}
+                      {!organization?.billingDetails && <SmallIconTypography label="Add billing details in organization admin first, then update billing settings here." />}
                     </StackColumn>
                   </FormStackColumn>
                 );

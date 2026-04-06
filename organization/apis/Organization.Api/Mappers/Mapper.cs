@@ -260,6 +260,7 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
             BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
+            InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
@@ -332,6 +333,7 @@ public class Mapper : IMapper
             LogoUrl = src.LogoUrl,
             Type = src.Type.ToOrganizationType(),
             BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
+            InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified,
@@ -356,6 +358,7 @@ public class Mapper : IMapper
         dest.LogoUrl = src.LogoUrl;
         dest.Type = src.Type.ToOrganizationType();
         dest.BillingCycle = src.BillingCycle.ToOrganizationBillingCycle();
+        dest.InvoiceDueInDays = src.InvoiceDueInDays;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
@@ -452,8 +455,6 @@ public class Mapper : IMapper
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             LogoUrl = src.LogoUrl,
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
-            BillingCycle =
-                new OrganizationBillingCycleDetails { Type = src.BillingCycle, Name = src.BillingCycle.ToOrganizationBillingCycleName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
@@ -483,7 +484,9 @@ public class Mapper : IMapper
                 .Select(item => MapTo(item)!),
             SsoSettings = MapTo(src.OrganizationSsoSettings),
             TaxDetails = MapTo(src.OrganizationTaxDetails),
-            XeroConnection = MapTo(src.OrganizationXeroConnection)
+            XeroConnection = MapTo(src.OrganizationXeroConnection),
+            BillingCycle = new OrganizationBillingCycleDetails { Type = src.BillingCycle, Name = src.BillingCycle.ToOrganizationBillingCycleName() },
+            InvoiceDueInDays = src.InvoiceDueInDays
         };
     }
 
@@ -549,6 +552,7 @@ public class Mapper : IMapper
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             Type = src.Type,
             BillingCycle = src.BillingCycle,
+            InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -568,6 +572,7 @@ public class Mapper : IMapper
             Website = src.Website,
             CustomerFacingTermsAndConditionsUrl = src.CustomerFacingTermsAndConditionsUrl,
             BillingCycle = src.BillingCycle,
+            InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
@@ -594,6 +599,13 @@ public class Mapper : IMapper
                 OrganizationType.Individual => global::Api.Shared.Services.Models.OrganizationType.Individual,
                 _ => throw new ArgumentOutOfRangeException()
             },
+            ContactEmail = src.ContactEmail,
+            ContactPhone = src.ContactPhone,
+            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
+            TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
+            LogoUrl = src.LogoUrl,
+            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
+            FeatureImages = MapTo(src.FeatureImages).ToList(),
             BillingCycle = src.BillingCycle switch
             {
                 OrganizationBillingCycle.Weekly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Weekly,
@@ -601,13 +613,7 @@ public class Mapper : IMapper
                 OrganizationBillingCycle.Monthly => global::Api.Shared.Services.Models.OrganizationBillingCycle.Monthly,
                 _ => throw new ArgumentOutOfRangeException()
             },
-            ContactEmail = src.ContactEmail,
-            ContactPhone = src.ContactPhone,
-            AgreedToTermsOfUse = src.AgreedToTermsOfUse,
-            TermsOfUse = string.IsNullOrWhiteSpace(src.TermsOfUseId) ? null : new Shared.Models.TermsOfUse { Id = src.TermsOfUseId },
-            LogoUrl = src.LogoUrl,
-            IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
-            FeatureImages = MapTo(src.FeatureImages).ToList()
+            InvoiceDueInDays = src.InvoiceDueInDays
         };
 
     public global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Organization MapToGrpcResponse(Shared.Models.Organization src)
@@ -1012,7 +1018,6 @@ public class Mapper : IMapper
         dest.Zipcode = src.Zipcode;
         dest.Country = src.Country;
         dest.CountryCode = src.CountryCode;
-        dest.InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays);
         dest.Organization = organization;
         return dest;
     }
@@ -1045,7 +1050,6 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
             Organization = new Shared.Models.Organization
             {
                 Id = src.OrganizationId.ToSafeString(), CustomDomain = src.OrganizationCustomDomain.ToSafeString()
@@ -1070,8 +1074,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
-            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
+            CountryCode = src.CountryCode
         };
 
     public Shared.Models.OrganizationBillingDetails MapTo(AddBillingDetailsInput src) =>
@@ -1088,7 +1091,6 @@ public class Mapper : IMapper
             Zipcode = src.Zipcode,
             Country = src.Country,
             CountryCode = src.CountryCode,
-            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
             Organization = new Shared.Models.Organization { Id = src.OrganizationId }
         };
 
@@ -1105,8 +1107,7 @@ public class Mapper : IMapper
             Province = src.Province,
             Zipcode = src.Zipcode,
             Country = src.Country,
-            CountryCode = src.CountryCode,
-            InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
+            CountryCode = src.CountryCode
         };
 
     public BillingDetails MapToGrpcResponse(Shared.Models.OrganizationBillingDetails? src) =>
@@ -1129,8 +1130,7 @@ public class Mapper : IMapper
                 OsmType = src.OsmType.ToSafeString(),
                 OsmId = src.OsmId.ToSafeString(),
                 PlaceId = src.PlaceId.ToSafeString(),
-                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y },
-                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
+                Coordinates = src.Coordinates is null ? null : new Coordinates { Longitude = src.Coordinates.X, Latitude = src.Coordinates.Y }
             };
 
     public Shared.Models.OrganizationBillingDetails? MapTo(OrganizationBillingDetails? src) =>
@@ -1148,8 +1148,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
-                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
+                CountryCode = src.CountryCode
             };
 
     public AccountCreateOptions MapToStripeAccountRequest(Shared.Database.Entities.Organization src) =>
@@ -1585,11 +1584,6 @@ public class Mapper : IMapper
         return dest;
     }
 
-    private static int NormalizeInvoiceDueInDays(int invoiceDueInDays) =>
-        invoiceDueInDays is >= 1 and <= 999
-            ? invoiceDueInDays
-            : Shared.Models.OrganizationBillingDetails.DefaultInvoiceDueInDays;
-
     private static IEnumerable<global::Api.Shared.Services.Grpc.Skedular.Organization.V1.Tag> MapToGrpcResponse(IEnumerable<Tag> src) =>
         src.Select(MapToGrpcResponse);
 
@@ -1919,7 +1913,6 @@ public class Mapper : IMapper
                 Zipcode = src.Zipcode,
                 Country = src.Country,
                 CountryCode = src.CountryCode,
-                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays),
                 Organization = organization
             };
 
@@ -1945,8 +1938,7 @@ public class Mapper : IMapper
                 Province = src.Province,
                 Zipcode = src.Zipcode,
                 Country = src.Country,
-                CountryCode = src.CountryCode,
-                InvoiceDueInDays = NormalizeInvoiceDueInDays(src.InvoiceDueInDays)
+                CountryCode = src.CountryCode
             };
 
     private static IEnumerable<OrganizationPaymentMethod> MapTo(IEnumerable<OrganizationStripePaymentMethod> src) => src.Select(MapTo);

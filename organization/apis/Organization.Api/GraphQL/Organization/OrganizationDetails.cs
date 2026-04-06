@@ -31,7 +31,6 @@ public class OrganizationDetails : Node
 
     [GraphQLName("logoUrl")] public string? LogoUrl { get; set; }
     [GraphQLName("type")] public OrganizationTypeDetails Type { get; set; } = new();
-    [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
     [GraphQLName("agreedToTermsOfUse")] public bool AgreedToTermsOfUse { get; set; }
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
@@ -67,6 +66,9 @@ public class OrganizationDetails : Node
 
     [GraphQLName("marketplaceListingMetadata")]
     public ListingMetadata MarketplaceListingMetadata { get; set; } = ListingMetadata.Empty;
+
+    [GraphQLName("billingCycle")] public OrganizationBillingCycleDetails BillingCycle { get; set; } = new();
+    [GraphQLName("invoiceDueInDays")] public int InvoiceDueInDays { get; set; }
 
     [UseResolverScope]
     public async Task<Connection<OrganizationMemberEdge>> MembersAsync(

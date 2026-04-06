@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<30b09042e291b206475f762ce181b484>>
+ * @generated SignedSource<<56a8d9f7043923a577659234eea61b5f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -28,7 +28,6 @@ export type organizationMarketplaceSetup_query$data = {
       readonly email: string;
       readonly formattedAddress: string | null | undefined;
       readonly id: string;
-      readonly invoiceDueInDays: number;
       readonly latitude: number | null | undefined;
       readonly longitude: number | null | undefined;
       readonly osmId: string | null | undefined;
@@ -39,6 +38,7 @@ export type organizationMarketplaceSetup_query$data = {
       readonly zipcode: string;
     } | null | undefined;
     readonly id: string;
+    readonly invoiceDueInDays: number;
     readonly marketplaceListingMetadata: {
       readonly about: string | null | undefined;
       readonly includedFeatures: ReadonlyArray<string> | null | undefined;
@@ -138,13 +138,6 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "email",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "invoiceDueInDays",
               "storageKey": null
             },
             {
@@ -309,6 +302,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "invoiceDueInDays",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "OrganizationXeroConnection",
           "kind": "LinkedField",
           "name": "xeroConnection",
@@ -461,6 +461,6 @@ return {
 };
 })();
 
-(node as any).hash = "a1471049e44009a5cea421942c73722d";
+(node as any).hash = "8fd0d19ff38568e0d52c31b54da5e62f";
 
 export default node;

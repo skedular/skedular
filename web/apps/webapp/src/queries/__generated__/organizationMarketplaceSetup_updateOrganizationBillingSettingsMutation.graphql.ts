@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8291404eed18c00492a34b2dcaf4fed>>
+ * @generated SignedSource<<cb2b6a3dd27e119ef6d3da1b5fed9198>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,41 +10,44 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 export type OrganizationBillingCycle = "FORTNIGHTLY" | "MONTHLY" | "WEEKLY" | "%future added value";
-export type UpdateOrganizationBillingCycleInput = {
+export type UpdateOrganizationBillingSettingsInput = {
   billingCycle: OrganizationBillingCycle;
   clientMutationId?: string | null | undefined;
   customDomain?: string | null | undefined;
   id?: string | null | undefined;
+  invoiceDueInDays: number;
 };
-export type organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$variables = {
-  input: UpdateOrganizationBillingCycleInput;
+export type organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$variables = {
+  input: UpdateOrganizationBillingSettingsInput;
 };
-export type organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$data = {
-  readonly updateOrganizationBillingCycle: {
+export type organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$data = {
+  readonly updateOrganizationBillingSettings: {
     readonly organization: {
       readonly billingCycle: {
         readonly name: string;
         readonly type: OrganizationBillingCycle;
       };
       readonly id: string;
+      readonly invoiceDueInDays: number;
     };
   };
 };
-export type organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$rawResponse = {
-  readonly updateOrganizationBillingCycle: {
+export type organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$rawResponse = {
+  readonly updateOrganizationBillingSettings: {
     readonly organization: {
       readonly billingCycle: {
         readonly name: string;
         readonly type: OrganizationBillingCycle;
       };
       readonly id: string;
+      readonly invoiceDueInDays: number;
     };
   };
 };
-export type organizationMarketplaceSetup_updateOrganizationBillingCycleMutation = {
-  rawResponse: organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$rawResponse;
-  response: organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$data;
-  variables: organizationMarketplaceSetup_updateOrganizationBillingCycleMutation$variables;
+export type organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation = {
+  rawResponse: organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$rawResponse;
+  response: organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$data;
+  variables: organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -67,7 +70,7 @@ v1 = [
     ],
     "concreteType": "OrganizationPayload",
     "kind": "LinkedField",
-    "name": "updateOrganizationBillingCycle",
+    "name": "updateOrganizationBillingSettings",
     "plural": false,
     "selections": [
       {
@@ -109,6 +112,13 @@ v1 = [
               }
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "invoiceDueInDays",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -122,7 +132,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "organizationMarketplaceSetup_updateOrganizationBillingCycleMutation",
+    "name": "organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation",
     "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -131,20 +141,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "organizationMarketplaceSetup_updateOrganizationBillingCycleMutation",
+    "name": "organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "cacheID": "630b4b52ce4bddd1eaca93e2d69aeed3",
+    "cacheID": "5faaa7bfd254504ce993a44719844018",
     "id": null,
     "metadata": {},
-    "name": "organizationMarketplaceSetup_updateOrganizationBillingCycleMutation",
+    "name": "organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationMarketplaceSetup_updateOrganizationBillingCycleMutation(\n  $input: UpdateOrganizationBillingCycleInput!\n) {\n  updateOrganizationBillingCycle(input: $input) {\n    organization {\n      id\n      billingCycle {\n        type\n        name\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationMarketplaceSetup_updateOrganizationBillingSettingsMutation(\n  $input: UpdateOrganizationBillingSettingsInput!\n) {\n  updateOrganizationBillingSettings(input: $input) {\n    organization {\n      id\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "64ccbb0d74d0a9c1e57a1c7728194d4c";
+(node as any).hash = "1bfcb77a6f11d64e3f341a4501419d52";
 
 export default node;

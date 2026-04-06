@@ -173,6 +173,13 @@ The code paths are separate enough that it is easy to fix one and leave the othe
 - If you are validating real API + Temporal + DB effects, use system tests instead of inventing fakes in booking-local
   integration tests.
 
+## GraphQL Regeneration
+
+- If booking-side work depends on backend GraphQL schema changes, regenerate schemas via
+  `scripts/generate-graphql.sh`.
+- Do not run direct `dotnet run -- schema export ...` commands against individual APIs as a substitute for the repo
+  script.
+
 ## Workflow ID Rule
 
 - Booking workflow IDs belong in `booking/shared/Booking.Shared/Services/WorkflowIdService.cs`.

@@ -110,8 +110,9 @@ message Admin_AddInput {
   string                   contactPhone                        = 13;
   repeated CdnImageFile    featureImages                       = 14;
   ListingMetadata          marketplaceListingMetadata          = 15;
-  OrganizationBillingCycle billingCycle                        = 16;
-  string                   customerFacingTermsAndConditionsUrl = 17;
+  string                   customerFacingTermsAndConditionsUrl = 16;
+  OrganizationBillingCycle billingCycle                        = 17;
+  int32                    invoiceDueInDays                    = 18;
 }
 
 enum OrganizationType {

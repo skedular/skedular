@@ -648,8 +648,8 @@ type Mutation {
   updateMyCustomerDetails(input: UpdateMyCustomerDetailsInput!): CustomerPayload! @cost(weight: "10")
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBankAccount(input: UpdateOrganizationBankAccountInput!): OrganizationBankAccountPayload! @cost(weight: "10")
-  updateOrganizationBillingCycle(input: UpdateOrganizationBillingCycleInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationBillingDetails(input: UpdateOrganizationBillingDetailsInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingSettings(input: UpdateOrganizationBillingSettingsInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationOffering(input: UpdateOrganizationOfferingInput!): UpdateOrganizationOfferingPayload! @cost(weight: "10")
   updateOrganizationPhysicalAddress(input: UpdateOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
@@ -774,7 +774,6 @@ type OrganizationBillingDetails {
   email: String!
   formattedAddress: String
   id: ID!
-  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   multilinesFormattedAddress: String
@@ -820,6 +819,7 @@ type OrganizationDetails {
   hasAttachedPaymentMethod: Boolean!
   id: ID!
   industrySubCategories: [OrganizationIndustrySubCategoryReferenceDetails!]!
+  invoiceDueInDays: Int!
   isMyOnboardingDone: Boolean!
   isOwnershipVerified: Boolean!
   isSsoTokenValid: Boolean! @cost(weight: "10")
@@ -1686,7 +1686,6 @@ input AddOrganizationBillingDetailsInput {
   email: String!
   formattedAddress: String
   id: String
-  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   organizationCustomDomain: String
@@ -1710,6 +1709,7 @@ input AddOrganizationInput {
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
+  invoiceDueInDays: Int!
   listingMetadata: ListingMetadataInput
   marketplaceListingMetadata: ListingMetadataInput
   name: String!
@@ -2728,13 +2728,6 @@ input UpdateOrganizationBankAccountInput {
   name: String!
 }
 
-input UpdateOrganizationBillingCycleInput {
-  billingCycle: OrganizationBillingCycle!
-  clientMutationId: String
-  customDomain: String
-  id: String
-}
-
 input UpdateOrganizationBillingDetailsInput {
   addressLine1: String!
   addressLine2: String
@@ -2746,7 +2739,6 @@ input UpdateOrganizationBillingDetailsInput {
   email: String!
   formattedAddress: String
   id: String!
-  invoiceDueInDays: Int!
   latitude: Float
   longitude: Float
   osmId: String
@@ -2755,6 +2747,14 @@ input UpdateOrganizationBillingDetailsInput {
   province: String
   suburb: String
   zipcode: String!
+}
+
+input UpdateOrganizationBillingSettingsInput {
+  billingCycle: OrganizationBillingCycle!
+  clientMutationId: String
+  customDomain: String
+  id: String
+  invoiceDueInDays: Int!
 }
 
 input UpdateOrganizationInput {
@@ -2767,6 +2767,7 @@ input UpdateOrganizationInput {
   featureImages: [CdnImageFileInput!]
   id: String
   industrySubCategoryIds: [String!]!
+  invoiceDueInDays: Int!
   listingMetadata: ListingMetadataInput
   marketplaceListingMetadata: ListingMetadataInput
   name: String!

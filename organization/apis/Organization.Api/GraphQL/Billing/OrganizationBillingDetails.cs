@@ -1,5 +1,6 @@
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
+using Organization.Api.GraphQL.Organization;
 
 namespace Organization.Api.GraphQL.Billing;
 
@@ -26,5 +27,4 @@ public class OrganizationBillingDetails : Node
     [GraphQLName("zipcode")] public string Zipcode { get; set; } = string.Empty;
     [GraphQLName("country")] public string Country { get; set; } = string.Empty;
     [GraphQLName("countryCode")] public string? CountryCode { get; set; }
-    [GraphQLName("invoiceDueInDays")] public int InvoiceDueInDays { get; set; }
 }

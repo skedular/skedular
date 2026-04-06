@@ -57,10 +57,11 @@ public interface IOrganizationService
         ListingMetadata marketplaceListingMetadata,
         CancellationToken cancellationToken);
 
-    Task<Shared.Models.Organization> UpdateOrganizationBillingCycleAsync(
+    Task<Shared.Models.Organization> UpdateOrganizationBillingSettingsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         OrganizationBillingCycle billingCycle,
+        int invoiceDueInDays,
         CancellationToken cancellationToken);
 }
 
@@ -398,12 +399,18 @@ public class OrganizationService(
         return organization;
     }
 
-    public async Task<Shared.Models.Organization> UpdateOrganizationBillingCycleAsync(
+    public async Task<Shared.Models.Organization> UpdateOrganizationBillingSettingsAsync(
         string? organizationId,
         string? organizationCustomDomain,
         OrganizationBillingCycle billingCycle,
+        int invoiceDueInDays,
         CancellationToken cancellationToken)
     {
+        if (invoiceDueInDays is < 1 or > 999)
+        {
+            throw new InvoiceDueInDaysMustBeBetween1And999();
+        }
+
         var (customer, _) = await customerService.GetCustomerAsync(cancellationToken);
         var existingOrganization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
                                        organizationId,
@@ -419,9 +426,12 @@ public class OrganizationService(
         await using var transaction = await transactionBuilder.BeginTransactionAsync(repositoryFactory.UnitOfWork, cancellationToken);
 
         existingOrganization.BillingCycle = billingCycle.ToOrganizationBillingCycle();
+        existingOrganization.InvoiceDueInDays = invoiceDueInDays;
+
+        repositoryFactory.OrganizationRepository.Update(existingOrganization);
 
         var organization = mapper.MapTo(
-            repositoryFactory.OrganizationRepository.Update(existingOrganization),
+            existingOrganization,
             organizationStripeConnectAccountService.GetStripeAuthorizeExistingConnectAccountUrl(existingOrganization.Id));
 
         organizationOutboxPublisher.PublishOrganizations([organization], repositoryFactory.UnitOfWork);

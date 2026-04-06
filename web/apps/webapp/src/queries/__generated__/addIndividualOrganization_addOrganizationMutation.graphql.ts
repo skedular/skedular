@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<956e782b4183e283b39c439d4e7caf27>>
+ * @generated SignedSource<<c7a7cd22981127f8ebabe378f1cbc5c5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -22,6 +22,7 @@ export type AddOrganizationInput = {
   featureImages?: ReadonlyArray<CdnImageFileInput> | null | undefined;
   id?: string | null | undefined;
   industrySubCategoryIds: ReadonlyArray<string>;
+  invoiceDueInDays: number;
   listingMetadata?: ListingMetadataInput | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;

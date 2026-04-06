@@ -58,18 +58,19 @@ public class RootMutation(IMapper mapper)
         };
 
     [UseResolverScope]
-    public async Task<OrganizationPayload> UpdateOrganizationBillingCycleAsync(
-        UpdateOrganizationBillingCycleInput input,
+    public async Task<OrganizationPayload> UpdateOrganizationBillingSettingsAsync(
+        UpdateOrganizationBillingSettingsInput input,
         [Service] IOrganizationService organizationService,
         CancellationToken cancellationToken) =>
         new()
         {
             ClientMutationId = input.ClientMutationId,
             Organization = mapper.MapTo(
-                await organizationService.UpdateOrganizationBillingCycleAsync(
+                await organizationService.UpdateOrganizationBillingSettingsAsync(
                     input.Id,
                     input.CustomDomain,
                     input.BillingCycle,
+                    input.InvoiceDueInDays,
                     cancellationToken))!
         };
 }

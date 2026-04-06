@@ -113,7 +113,7 @@ type Mutation {
   updateOrganization(input: UpdateOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   deleteOrganization(input: DeleteOrganizationInput!): OrganizationPayload! @cost(weight: "10")
   updateOrganizationMarketplaceListingMetadata(input: UpdateOrganizationMarketplaceListingMetadataInput!): OrganizationPayload! @cost(weight: "10")
-  updateOrganizationBillingCycle(input: UpdateOrganizationBillingCycleInput!): OrganizationPayload! @cost(weight: "10")
+  updateOrganizationBillingSettings(input: UpdateOrganizationBillingSettingsInput!): OrganizationPayload! @cost(weight: "10")
   addOrganizationPaymentMethodIntent(input: AddOrganizationPaymentMethodIntentInput!): AddOrganizationPaymentMethodIntentPayload! @cost(weight: "10")
   removeOrganizationPaymentMethod(input: RemoveOrganizationPaymentMethodInput!): RemoveOrganizationPaymentMethodPayload! @cost(weight: "10")
   addOrganizationPhysicalAddress(input: AddOrganizationPhysicalAddressInput!): OrganizationPayload! @cost(weight: "10")
@@ -227,7 +227,6 @@ type OrganizationBillingDetails {
   zipcode: String!
   country: String!
   countryCode: String
-  invoiceDueInDays: Int!
   id: ID!
 }
 
@@ -250,7 +249,6 @@ type OrganizationDetails {
   customerFacingTermsAndConditionsUrl: String
   logoUrl: String
   type: OrganizationTypeDetails!
-  billingCycle: OrganizationBillingCycleDetails!
   agreedToTermsOfUse: Boolean!
   termsOfUse: OrganizationTermsOfUse
   contactEmail: String
@@ -278,6 +276,8 @@ type OrganizationDetails {
   stripeAuthorizeExistingConnectAccountUrl: String!
   hasAttachedPaymentMethod: Boolean!
   marketplaceListingMetadata: ListingMetadata!
+  billingCycle: OrganizationBillingCycleDetails!
+  invoiceDueInDays: Int!
   id: ID!
 }
 
@@ -644,7 +644,6 @@ input AddOrganizationBillingDetailsInput {
   zipcode: String!
   country: String!
   countryCode: String
-  invoiceDueInDays: Int!
 }
 
 input AddOrganizationInput {
@@ -656,6 +655,7 @@ input AddOrganizationInput {
   customerFacingTermsAndConditionsUrl: String
   type: OrganizationType!
   billingCycle: OrganizationBillingCycle!
+  invoiceDueInDays: Int!
   contactEmail: String
   contactPhone: String
   agreedToTermsOfUse: Boolean!
@@ -959,13 +959,6 @@ input UpdateOrganizationBankAccountInput {
   countryCode: String
 }
 
-input UpdateOrganizationBillingCycleInput {
-  clientMutationId: String
-  id: String
-  customDomain: String
-  billingCycle: OrganizationBillingCycle!
-}
-
 input UpdateOrganizationBillingDetailsInput {
   clientMutationId: String
   id: String!
@@ -985,6 +978,13 @@ input UpdateOrganizationBillingDetailsInput {
   zipcode: String!
   country: String!
   countryCode: String
+}
+
+input UpdateOrganizationBillingSettingsInput {
+  clientMutationId: String
+  id: String
+  customDomain: String
+  billingCycle: OrganizationBillingCycle!
   invoiceDueInDays: Int!
 }
 
@@ -996,6 +996,7 @@ input UpdateOrganizationInput {
   website: String
   customerFacingTermsAndConditionsUrl: String
   billingCycle: OrganizationBillingCycle!
+  invoiceDueInDays: Int!
   contactEmail: String
   contactPhone: String
   industrySubCategoryIds: [String!]!

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4472ff2586a20f4b434de84ddcea4759>>
+ * @generated SignedSource<<e267385f369fc5cd33de9fd7f19cdfd2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -47,7 +47,6 @@ export type organizationAdmin_organization_query$data = {
       readonly email: string;
       readonly formattedAddress: string | null | undefined;
       readonly id: string;
-      readonly invoiceDueInDays: number;
       readonly latitude: number | null | undefined;
       readonly longitude: number | null | undefined;
       readonly osmId: string | null | undefined;
@@ -80,6 +79,7 @@ export type organizationAdmin_organization_query$data = {
       readonly id: string;
       readonly name: string;
     }>;
+    readonly invoiceDueInDays: number;
     readonly listingMetadata: {
       readonly about: string | null | undefined;
       readonly includedFeatures: ReadonlyArray<string> | null | undefined;
@@ -404,6 +404,13 @@ return {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "invoiceDueInDays",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "logoUrl",
           "storageKey": null
         },
@@ -692,13 +699,6 @@ return {
               "name": "email",
               "storageKey": null
             },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "invoiceDueInDays",
-              "storageKey": null
-            },
             (v3/*: any*/),
             (v4/*: any*/),
             (v5/*: any*/),
@@ -756,6 +756,6 @@ return {
 };
 })();
 
-(node as any).hash = "fdc2b1b31083109e97c90545d8f3dbdb";
+(node as any).hash = "980fbe9e61a07dbb99ff29f9ab5cff57";
 
 export default node;

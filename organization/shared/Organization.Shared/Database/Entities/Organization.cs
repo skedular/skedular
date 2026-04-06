@@ -17,13 +17,14 @@ public class Organization : EntityBaseWithDeleted
     public bool AgreedToTermsOfUse { get; set; }
     public string? LogoUrl { get; set; }
     public string Type { get; set; }
-    public string BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
     public bool? IsOwnershipVerified { get; set; }
     public ICollection<CdnImageFile>? FeatureImages { get; set; }
     public ListingMetadata? ListingMetadata { get; set; }
     public ListingMetadata? MarketplaceListingMetadata { get; set; }
+    public string BillingCycle { get; set; }
+    public int InvoiceDueInDays { get; set; }
 
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];
     public virtual TermsOfUse? TermsOfUse { get; set; }
@@ -57,15 +58,16 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Website).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.LogoUrl).HasMaxLength(Constants.MaxUrlLength);
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
-        builder.Property(item => item.BillingCycle)
-            .HasMaxLength(Constants.MaxOrganizationBillingCycleLength)
-            .HasDefaultValue(OrganizationBillingCycleConstants.Monthly);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
         builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
         builder.Property(item => item.ListingMetadata).HasColumnType("jsonb");
         builder.Property(item => item.MarketplaceListingMetadata).HasColumnType("jsonb");
         builder.Property(item => item.CustomerFacingTermsAndConditionsUrl).HasMaxLength(Constants.MaxUrlLength);
+        builder.Property(item => item.BillingCycle)
+            .HasMaxLength(Constants.MaxOrganizationBillingCycleLength)
+            .HasDefaultValue(OrganizationBillingCycleConstants.Monthly);
+        builder.Property(item => item.InvoiceDueInDays).HasDefaultValue(7);
 
         builder.HasOne(item => item.TermsOfUse).WithMany(item => item.Organizations);
         builder.HasMany(item => item.IndustrySubCategories).WithMany(item => item.Organizations);
@@ -75,7 +77,8 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.HasIndex(item => item.Name);
         builder.HasIndex(item => item.Website);
         builder.HasIndex(item => item.Type);
-        builder.HasIndex(item => item.BillingCycle);
         builder.HasIndex(item => item.IsOwnershipVerified);
+        builder.HasIndex(item => item.BillingCycle);
+        builder.HasIndex(item => item.InvoiceDueInDays);
     }
 }

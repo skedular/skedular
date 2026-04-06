@@ -143,6 +143,7 @@ const AddMarketplaceOrganization = ({ rootDataRelay, onReloadRequired, onAdded, 
           industrySubCategoryIds: [],
           featureImages: finalFeatureImages,
           billingCycle: 'MONTHLY',
+          invoiceDueInDays: 7,
         },
       },
       onCompleted: (response, errors) => {

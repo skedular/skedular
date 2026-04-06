@@ -206,3 +206,5 @@ public class OrganizationLookupRequiresIdOrCustomDomainException()
 
 public class OrganizationLookupRequiresIdsOrCustomDomainsException()
     : InvalidOperationException("Either ids or customDomains must be provided.");
+
+public class InvoiceDueInDaysMustBeBetween1And999() : ArgumentException("Invoice due in days must be between 1 and 999.");

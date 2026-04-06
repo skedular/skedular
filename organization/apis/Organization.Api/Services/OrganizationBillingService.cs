@@ -11,11 +11,7 @@ namespace Organization.Api.Services;
 
 public interface IOrganizationBillingService
 {
-    Task<OrganizationBillingDetails?> GetAsync(
-        string? organizationId,
-        string? organizationCustomDomain,
-        CancellationToken cancellationToken);
-
+    Task<OrganizationBillingDetails?> GetAsync(string? organizationId, string? organizationCustomDomain, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> AddAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken);
     Task<Shared.Models.Organization> UpdateAsync(OrganizationBillingDetails organizationBillingDetails, CancellationToken cancellationToken);
 }

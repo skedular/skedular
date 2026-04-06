@@ -51,7 +51,9 @@ public class OrganizationService(
                     Name = organization.Name.ToSafeString(),
                     AgreedToTermsOfUse = true,
                     TermsOfUseId = activeTermsOfUse.Id,
-                    Type = OrganizationType.Private
+                    Type = OrganizationType.Private,
+                    BillingCycle = OrganizationBillingCycle.Monthly,
+                    InvoiceDueInDays = 7
                 },
                 organizationConfiguration.ApiKey.CreateMetadata(),
                 cancellationToken: cancellationToken));

@@ -140,6 +140,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           industrySubCategoryIds: [],
           featureImages: finalFeatureImages,
           billingCycle: 'MONTHLY',
+          invoiceDueInDays: 7,
         },
       },
       onCompleted: (response, errors) => {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0b8d62b724ef3eb8dd2c4e314422f88>>
+ * @generated SignedSource<<bca664944d7f2f05406be65fc69ab15d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -330,13 +330,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "invoiceDueInDays",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "osmType",
                 "storageKey": null
               },
@@ -475,6 +468,13 @@ return {
             "name": "billingCycle",
             "plural": false,
             "selections": (v9/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "invoiceDueInDays",
             "storageKey": null
           },
           {
@@ -914,12 +914,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "314287ee4f6044e397b855dba4bbd966",
+    "cacheID": "b7bd58fce6ff5fb3da93d9de6e1600cf",
     "id": null,
     "metadata": {},
     "name": "pageOrganizationMarketplaceSetup_rootQuery",
     "operationKind": "query",
-    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationCustomDomain: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    billingDetails {\n      id\n      companyName\n      email\n      invoiceDueInDays\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n    xeroConnection {\n      id\n      tenantId\n      tenantName\n      billingMode\n      scopes\n      isActive\n      sendInvoicesViaXero\n      autoReconcilePayments\n      defaultSalesAccountCode\n      defaultReceivablesAccountCode\n      defaultTrackingCategory1\n      defaultTrackingCategory2\n      defaultBrandingThemeId\n      defaultReferencePrefix\n      lastSuccessfulSyncAt\n      lastError\n      hasAccessToken\n      hasRefreshToken\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n  ...singleChoiceOrganizationXeroBillingMode_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationXeroBillingMode_query on Query {\n  organizationXeroBillingModes {\n    type\n    name\n  }\n}\n"
+    "text": "query pageOrganizationMarketplaceSetup_rootQuery(\n  $organizationCustomDomain: String!\n  $productTagNameSearchText: String\n  $organizationStripeConnectAccountNameSearchText: String\n  $organizationBankAccountNameSearchText: String\n) {\n  organization(customDomain: $organizationCustomDomain) {\n    name\n    id\n  }\n  ...organizationMarketplaceSetup_query\n  ...organizationMarketplaceSetup_productTags_query\n  ...organizationMarketplaceSetup_organizationStripeConnectAccounts_query\n  ...organizationMarketplaceSetup_organizationBankAccounts_query\n}\n\nfragment existingStripeConnectAccountButton_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    stripeAuthorizeExistingConnectAccountUrl\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationBankAccounts_query on Query {\n  organizationBankAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationBankAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        bankName\n        accountHolderName\n        accountNumber\n        country\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_organizationStripeConnectAccounts_query on Query {\n  organizationStripeConnectAccounts(where: {organizationCustomDomain: $organizationCustomDomain, nameContains: $organizationStripeConnectAccountNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n    totalCount\n    edges {\n      node {\n        id\n        isDefault\n        name\n        country\n        defaultCurrency\n        businessType\n        companyName\n        url\n        supportUrl\n        contactEmail\n        contactPhone\n        onboardingUrl\n        chargesEnabled\n        payoutsEnabled\n        detailsSubmitted\n        isAuthorized\n        isOnboardingCompleted\n        organization {\n          customDomain\n          id\n        }\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment organizationMarketplaceSetup_productTags_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    productTags(where: {nameContains: $productTagNameSearchText}, orderBy: [{direction: ASCENDING, field: NAME}]) {\n      totalCount\n      edges {\n        node {\n          id\n          name\n          description\n          color\n          __typename\n        }\n        cursor\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n    }\n    id\n  }\n}\n\nfragment organizationMarketplaceSetup_query on Query {\n  organization(customDomain: $organizationCustomDomain) {\n    id\n    name\n    billingDetails {\n      id\n      companyName\n      email\n      osmType\n      osmId\n      placeId\n      longitude\n      latitude\n      formattedAddress\n      addressLine1\n      addressLine2\n      suburb\n      city\n      province\n      zipcode\n      country\n      countryCode\n    }\n    marketplaceListingMetadata {\n      about\n      title\n      subTitle\n      includedFeatures\n    }\n    billingCycle {\n      type\n      name\n    }\n    invoiceDueInDays\n    xeroConnection {\n      id\n      tenantId\n      tenantName\n      billingMode\n      scopes\n      isActive\n      sendInvoicesViaXero\n      autoReconcilePayments\n      defaultSalesAccountCode\n      defaultReceivablesAccountCode\n      defaultTrackingCategory1\n      defaultTrackingCategory2\n      defaultBrandingThemeId\n      defaultReferencePrefix\n      lastSuccessfulSyncAt\n      lastError\n      hasAccessToken\n      hasRefreshToken\n    }\n  }\n  ...existingStripeConnectAccountButton_query\n  ...singleChoiceOrganizationBillingCycle_query\n  ...singleChoiceOrganizationXeroBillingMode_query\n}\n\nfragment singleChoiceOrganizationBillingCycle_query on Query {\n  organizationBillingCycles {\n    type\n    name\n  }\n}\n\nfragment singleChoiceOrganizationXeroBillingMode_query on Query {\n  organizationXeroBillingModes {\n    type\n    name\n  }\n}\n"
   }
 };
 })();

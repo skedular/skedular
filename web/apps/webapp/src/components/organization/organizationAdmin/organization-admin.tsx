@@ -253,6 +253,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             type
             name
           }
+          invoiceDueInDays
           logoUrl
           listingMetadata {
             about
@@ -335,7 +336,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
-            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -429,6 +429,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             type
             name
           }
+          invoiceDueInDays
           listingMetadata {
             about
             title
@@ -494,7 +495,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
-            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -524,7 +524,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id
             companyName
             email
-            invoiceDueInDays
             osmType
             osmId
             placeId
@@ -989,6 +988,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           contactPhone,
           featureImages: finalFeatureImages,
           billingCycle: organization.billingCycle.type,
+          invoiceDueInDays: organization.invoiceDueInDays,
         },
       },
       onCompleted: (_, errors) => {
@@ -1034,6 +1034,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             contactPhone,
             featureImages: finalFeatureImages,
             billingCycle: organization.billingCycle,
+            invoiceDueInDays: organization.invoiceDueInDays,
           },
         },
       },
@@ -1070,7 +1071,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
 
     const billingDetails = organization.billingDetails;
-    const invoiceDueInDays = billingDetails?.invoiceDueInDays ?? 7;
 
     if (billingDetails) {
       const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}' billing...`} />, infoNotificationOptions);
@@ -1082,7 +1082,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id: billingDetails.id,
             companyName,
             email,
-            invoiceDueInDays,
             osmType: billingOsmType,
             osmId: billingOsmId,
             placeId: billingPlaceId,
@@ -1128,7 +1127,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 id: billingDetails.id,
                 companyName,
                 email,
-                invoiceDueInDays,
                 osmType: billingOsmType,
                 osmId: billingOsmId,
                 placeId: billingPlaceId,
@@ -1160,7 +1158,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
             id,
             companyName,
             email,
-            invoiceDueInDays,
             osmType: billingOsmType,
             osmId: billingOsmId,
             placeId: billingPlaceId,
@@ -1206,7 +1203,6 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 id,
                 companyName,
                 email,
-                invoiceDueInDays,
                 osmType: billingOsmType,
                 osmId: billingOsmId,
                 placeId: billingPlaceId,

@@ -16,6 +16,7 @@ public class UpdateOrganizationInput
     public string? CustomerFacingTermsAndConditionsUrl { get; set; }
 
     [GraphQLName("billingCycle")] public OrganizationBillingCycle BillingCycle { get; set; }
+    [GraphQLName("invoiceDueInDays")] public int InvoiceDueInDays { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
