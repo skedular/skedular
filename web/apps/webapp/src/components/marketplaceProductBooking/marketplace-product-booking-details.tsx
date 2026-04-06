@@ -1,10 +1,21 @@
-import { BodyIconTypography, CaptionIconTypography, LeadIconTypography, SmallIconTypography, StackColumn, StackRow, SubtitleIconTypography } from '@/components/commons';
+import {
+  BodyIconTypography,
+  CaptionIconTypography,
+  DefaultDialogTitle,
+  LeadIconTypography,
+  SmallIconTypography,
+  StackColumn,
+  StackRow,
+  SubtitleIconTypography,
+  TwoButtonsDialogActions,
+} from '@/components/commons';
 import { ArrowLeftIcon } from '@/components/icons';
 import { getMarketplaceLocationLink } from '@/components/links';
 import { Loading } from '@/components/loading';
+import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { RelayError, toRootError } from '@/components/relayError';
 import { useIntegratedPlatrform, useKnownParams } from '@/libs/providers';
-import { getCustomerFullName } from '@/libs/utils';
+import { getCustomerFullName, getRelayErrorMessage } from '@/libs/utils';
 import type { marketplaceProductBookingDetails_rootQuery } from '@/queries/__generated__/marketplaceProductBookingDetails_rootQuery.graphql';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -13,13 +24,18 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import Link from '@mui/material/Link';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
-import { memo, ReactNode, useEffect } from 'react';
+import { memo, ReactNode, useEffect, useMemo, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { graphql, PreloadedQuery, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
+import { graphql, PreloadedQuery, useMutation, usePreloadedQuery, useQueryLoader, useSubscription } from 'react-relay';
+import { toast } from 'react-toastify';
+import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
 
@@ -29,6 +45,9 @@ const RootQuery = graphql`
       id
       from
       until
+      deletedByCustomer {
+        id
+      }
       involvedCustomers {
         id
         name
@@ -95,6 +114,9 @@ const RootQuery = graphql`
 const BookingSubscription = graphql`
   subscription marketplaceProductBookingDetails_booking_Subscription($bookingId: String!) {
     booking(id: $bookingId) {
+      deletedByCustomer {
+        id
+      }
       marketplaceBooking {
         id
         invoiceUrl
@@ -119,12 +141,88 @@ const BookingSubscription = graphql`
   }
 `;
 
+const DeleteMarketplaceBookingMutation = graphql`
+  mutation marketplaceProductBookingDetails_deleteMarketplaceBookingMutation($input: DeleteMarketplaceBookingInput!) {
+    deleteMarketplaceBooking(input: $input) {
+      booking {
+        id
+        deletedByCustomer {
+          id
+        }
+      }
+    }
+  }
+`;
+
 const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: PreloadedQuery<marketplaceProductBookingDetails_rootQuery, Record<string, unknown>> }) => {
   const rootData = usePreloadedQuery<marketplaceProductBookingDetails_rootQuery>(RootQuery, queryReference);
   const router = useRouter();
   const { integratedPlatrform } = useIntegratedPlatrform();
   const booking = rootData.booking;
   const marketplaceBooking = booking?.marketplaceBooking;
+  const [hasCancelledLocally, setHasCancelledLocally] = useState(false);
+  const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState(false);
+  const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] = useMutation(DeleteMarketplaceBookingMutation);
+  const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
+  const canRequestCancellation = useMemo(() => {
+    if (!booking || !marketplaceBooking || isCancelled) {
+      return false;
+    }
+
+    return dayjs.utc(booking.from).isAfter(dayjs.utc());
+  }, [booking, isCancelled, marketplaceBooking]);
+  const productTitle = marketplaceBooking?.productVersion?.listingMetadata.title ?? 'this booking';
+  const handleRequestCancellationClick = () => {
+    setPendingCancellationConfirmation(true);
+  };
+  const handleCancelCancellationClick = () => {
+    setPendingCancellationConfirmation(false);
+  };
+  const handleConfirmCancellationClick = () => {
+    if (!booking) {
+      return;
+    }
+
+    let bookingDetailsInfo = productTitle;
+    if (booking.involvedLocations.length > 0) {
+      bookingDetailsInfo += ` at ${booking.involvedLocations[0]!.name}`;
+    }
+
+    const toastId = toast(<NotificationContent content={`Cancelling ${bookingDetailsInfo}...`} />, infoNotificationOptions);
+
+    commitDeleteMarketplaceBooking({
+      variables: {
+        input: {
+          clientMutationId: uuid(),
+          id: booking.id,
+        },
+      },
+      onCompleted: (_, errors) => {
+        if (errors && errors.length > 0) {
+          toast.update(toastId, {
+            ...errorNotificationOptions,
+            render: <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(errors))}`} />,
+          });
+
+          return;
+        }
+
+        toast.update(toastId, {
+          ...successNotificationOptions,
+          render: <NotificationContent content={`${bookingDetailsInfo} cancelled.`} />,
+        });
+        setHasCancelledLocally(true);
+      },
+      onError: (error) => {
+        toast.update(toastId, {
+          ...errorNotificationOptions,
+          render: <NotificationContent content={`Failed to cancel ${bookingDetailsInfo}. ${toMarketplaceBookingCancellationErrorMessage(getRelayErrorMessage(error))}`} />,
+        });
+      },
+    });
+
+    setPendingCancellationConfirmation(false);
+  };
 
   useSubscription({
     variables: { bookingId: booking?.id ?? '' },
@@ -177,14 +275,45 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                 <CaptionIconTypography label="Booking details" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                 <LeadIconTypography label="Review your booking and payment status" sx={{ mt: 1 }} />
                 <BodyIconTypography
-                  label="This page stays in sync while checkout is being prepared, and it remains the place to return to after payment."
+                  label={
+                    isCancelled
+                      ? 'This booking has been cancelled. You can keep this page as your confirmation and review the original booking details here.'
+                      : 'This page stays in sync while checkout is being prepared, and it remains the place to return to after payment.'
+                  }
                   sx={{ mt: 1, opacity: 0.82 }}
                 />
 
                 <StackRow sx={{ mt: 2, rowGap: 1 }}>
-                  <Chip label={marketplaceBooking.paymentStatus.name} color={marketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'} />
+                  <Chip
+                    label={isCancelled ? 'Cancelled' : marketplaceBooking.paymentStatus.name}
+                    color={isCancelled || marketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'}
+                  />
                   <Chip label={marketplaceBooking.paymentMethod.name} variant="outlined" />
                 </StackRow>
+
+                {isCancelled ? (
+                  <Alert severity="success" sx={{ mt: 3, borderRadius: 3 }}>
+                    This booking has been cancelled.
+                  </Alert>
+                ) : null}
+
+                {canRequestCancellation ? (
+                  <Card sx={{ mt: 3, borderRadius: 3, border: 1, borderColor: (theme) => theme.palette.divider, boxShadow: 'none' }}>
+                    <CardContent sx={{ p: 2.5 }}>
+                      <CaptionIconTypography label="Booking actions" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
+                      <SubtitleIconTypography label="Cancel booking" sx={{ mt: 1 }} />
+                      <BodyIconTypography
+                        label="If this booking is still within its cancellation window, you can cancel it here. If the cancellation window has already passed, this booking can no longer be cancelled."
+                        sx={{ mt: 1, opacity: 0.82 }}
+                      />
+                      <StackRow sx={{ mt: 2 }}>
+                        <Button color="error" variant="outlined" onClick={handleRequestCancellationClick} disabled={isDeleteMarketplaceBookingInFlight}>
+                          Cancel booking
+                        </Button>
+                      </StackRow>
+                    </CardContent>
+                  </Card>
+                ) : null}
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
                   <DetailsRow label="Booking date" value={toStoredBookingDate(booking.from)} />
@@ -234,20 +363,36 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
               </CardContent>
             </Card>
 
-            <MarketplaceProductBookingPaymentPanel
-              checkoutUrl={marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
-              entityLabel="booking"
-              invoices={booking.arrearsInvoices ?? []}
-              invoiceUrl={marketplaceBooking.invoiceUrl ?? null}
-              isPaymentRequired={marketplaceBooking.isPaymentRequired}
-              paymentExpiry={marketplaceBooking.paymentExpiry}
-              paymentMethodType={marketplaceBooking.paymentMethod.type}
-              paymentStatusLabel={marketplaceBooking.paymentStatus.name}
-              paymentStatusType={marketplaceBooking.paymentStatus.type}
-            />
+            {!isCancelled ? (
+              <MarketplaceProductBookingPaymentPanel
+                checkoutUrl={marketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
+                entityLabel="booking"
+                invoices={booking.arrearsInvoices ?? []}
+                invoiceUrl={marketplaceBooking.invoiceUrl ?? null}
+                isPaymentRequired={marketplaceBooking.isPaymentRequired}
+                paymentExpiry={marketplaceBooking.paymentExpiry}
+                paymentMethodType={marketplaceBooking.paymentMethod.type}
+                paymentStatusLabel={marketplaceBooking.paymentStatus.name}
+                paymentStatusType={marketplaceBooking.paymentStatus.type}
+              />
+            ) : null}
           </Box>
         )}
       </Container>
+
+      <Dialog open={pendingCancellationConfirmation} onClose={handleCancelCancellationClick}>
+        <DefaultDialogTitle title="Cancel Booking" />
+        <DialogContent sx={{ mt: 2 }}>
+          <DialogContentText>{`Cancel ${productTitle} now? If this booking is still within its cancellation window, it will be cancelled immediately.`}</DialogContentText>
+          <TwoButtonsDialogActions
+            primaryDisabled={isDeleteMarketplaceBookingInFlight}
+            onPrimaryClicked={handleConfirmCancellationClick}
+            onSecondaryClicked={handleCancelCancellationClick}
+            primaryLabel="Cancel booking"
+            secondaryLabel="Keep booking"
+          />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
@@ -267,6 +412,15 @@ const toStoredBookingDate = (date?: string | null) => {
 const toStoredBookingTime = (date?: string | null) => {
   // Keep the exact stored time instead of converting it to the browser timezone.
   return date ? dayjs.utc(date).format('hh:mm a') : '';
+};
+
+const toMarketplaceBookingCancellationErrorMessage = (message: string) => {
+  const normalizedMessage = message.toLowerCase();
+  if (normalizedMessage.includes('marketplacebookingcancellationnotallowed') || (normalizedMessage.includes('cancellation') && normalizedMessage.includes('not allowed'))) {
+    return 'This booking can no longer be cancelled because it is outside the allowed cancellation window.';
+  }
+
+  return message;
 };
 
 const MemoMarketplaceProductBookingDetails = memo(MarketplaceProductBookingDetails);

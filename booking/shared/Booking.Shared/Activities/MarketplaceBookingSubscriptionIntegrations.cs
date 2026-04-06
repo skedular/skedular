@@ -168,9 +168,13 @@ public class MarketplaceBookingSubscriptionIntegrations(
                     break;
 
                 case PaymentMethod.BankTransfer:
-                    await temporalService.SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(recurringBooking.Id,
+                    await temporalService.SignalPayRecurringBookingViaBankTransferWorkflowDeleteRecurringBookingAsync(
+                        recurringBooking.Id,
                         cancellationToken);
                     break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

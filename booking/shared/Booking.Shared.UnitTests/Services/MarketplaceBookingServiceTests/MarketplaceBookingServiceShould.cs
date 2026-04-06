@@ -188,7 +188,7 @@ public class MarketplaceBookingServiceShould
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 
@@ -228,7 +228,7 @@ public class MarketplaceBookingServiceShould
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
-        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedTwiceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
     }
 

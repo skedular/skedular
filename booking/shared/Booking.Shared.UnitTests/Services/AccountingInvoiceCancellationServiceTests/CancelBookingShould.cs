@@ -149,6 +149,7 @@ public class CancelBookingShould
     public async Task Cancel_Live_Standard_Invoice_In_Xero_When_Connection_Is_Ready(
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
         [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
         [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
         OrganizationConfiguration organizationConfiguration,
@@ -202,12 +203,17 @@ public class CancelBookingShould
         };
 
         A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
         A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
                 AccountingProviderConstants.Xero,
                 AccountingEntityTypeConstants.MarketplaceBooking,
                 marketplaceBookingId,
                 cancellationToken))
             .Returns(accountingInvoiceLink);
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken))
+            .Returns(Task.FromResult<AccountingInvoiceInstance?>(null));
         A.CallTo(() => callInvoker.AsyncUnaryCall(
                 A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
                 A<string?>._,
@@ -222,6 +228,102 @@ public class CancelBookingShould
         accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
         accountingInvoiceLink.ExportConfigurationState.ShouldBe(Models.AccountingInvoiceExportConfigurationStateConstants.Cancelled);
         sut.CancelLiveStandardInvoiceCalls.ShouldBe(1);
+        sut.CancelledStandardInvoiceIdempotencyKeys.ShouldContain($"{accountingInvoiceLink.Id}:cancel-standard");
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task Cancel_Live_Standard_Invoice_In_Xero_Using_Latest_Invoice_Instance_When_Available(
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IAccountingInvoiceExportLinkRepository accountingInvoiceLinkRepository,
+        [Frozen] IAccountingInvoiceInstanceRepository accountingInvoiceInstanceRepository,
+        [Frozen] IXeroSdkClientFactory xeroSdkClientFactory,
+        [Frozen] IXeroTokenEncryptionService xeroTokenEncryptionService,
+        OrganizationConfiguration organizationConfiguration,
+        TimeProvider timeProvider,
+        CallInvoker callInvoker,
+        string bookingId,
+        string marketplaceBookingId,
+        string organizationId,
+        string accessTokenEncrypted,
+        CancellationToken cancellationToken)
+    {
+        var accountingApi = A.Fake<AccountingApi>();
+        var sut = new TestAccountingInvoiceCancellationService(
+            organizationConfiguration,
+            new OrganizationService.OrganizationServiceClient(callInvoker),
+            repositoryFactory,
+            xeroSdkClientFactory,
+            xeroTokenEncryptionService,
+            timeProvider);
+        var booking = new BookingEntity
+        {
+            Id = bookingId,
+            MarketplaceBooking = new MarketplaceBooking
+            {
+                Id = marketplaceBookingId,
+                ProductVersion = new ProductVersion
+                {
+                    Product = new Product { Organization = new OrganizationEntity { Id = organizationId } }
+                }
+            }
+        };
+        var accountingInvoiceLink = new AccountingInvoiceExportLink
+        {
+            Id = Guid.NewGuid().ToString(),
+            Provider = AccountingProviderConstants.Xero,
+            LocalEntityType = AccountingEntityTypeConstants.MarketplaceBooking,
+            LocalEntityId = marketplaceBookingId,
+            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalInvoiceMode = Models.AccountingInvoiceExportModeConstants.StandardInvoice,
+            ExternalStatus = AccountingStatusConstants.PendingExport
+        };
+        var accountingInvoiceInstance = new AccountingInvoiceInstance
+        {
+            Id = Guid.NewGuid().ToString(),
+            Provider = AccountingProviderConstants.Xero,
+            ExternalInvoiceId = Guid.NewGuid().ToString(),
+            ExternalStatus = AccountingStatusConstants.Sent,
+            AccountingInvoiceExportLinkId = accountingInvoiceLink.Id,
+            OrganizationId = organizationId
+        };
+        var xeroConnection = new XeroConnection
+        {
+            Id = "xero-1",
+            IsActive = true,
+            HasRefreshToken = true,
+            TenantId = Guid.NewGuid().ToString(),
+            AccessTokenEncrypted = accessTokenEncrypted,
+            AccessTokenExpiresAt = DateTimeOffset.UtcNow.AddHours(1).ToTimestamp()
+        };
+
+        A.CallTo(() => repositoryFactory.AccountingInvoiceExportLinkRepository).Returns(accountingInvoiceLinkRepository);
+        A.CallTo(() => repositoryFactory.AccountingInvoiceInstanceRepository).Returns(accountingInvoiceInstanceRepository);
+        A.CallTo(() => accountingInvoiceLinkRepository.GetByProviderAndLocalEntityAsync(
+                AccountingProviderConstants.Xero,
+                AccountingEntityTypeConstants.MarketplaceBooking,
+                marketplaceBookingId,
+                cancellationToken))
+            .Returns(accountingInvoiceLink);
+        A.CallTo(() => accountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken))
+            .Returns(accountingInvoiceInstance);
+        A.CallTo(() => callInvoker.AsyncUnaryCall(
+                A<Method<Admin_GetXeroConnectionInput, XeroConnection>>._,
+                A<string?>._,
+                A<CallOptions>._,
+                A<Admin_GetXeroConnectionInput>.That.Matches(input => input.OrganizationId == organizationId)))
+            .Returns(CreateResponse(xeroConnection));
+        A.CallTo(() => xeroSdkClientFactory.CreateAccountingApi()).Returns(accountingApi);
+        A.CallTo(() => xeroTokenEncryptionService.Decrypt(accessTokenEncrypted)).Returns("access-token");
+
+        await sut.CancelBookingAsync(booking, cancellationToken);
+
+        accountingInvoiceLink.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
+        accountingInvoiceInstance.ExternalStatus.ShouldBe(AccountingStatusConstants.Cancelled);
+        sut.CancelledStandardInvoiceIds.ShouldContain(Guid.Parse(accountingInvoiceInstance.ExternalInvoiceId));
+        sut.CancelledStandardInvoiceIdempotencyKeys.ShouldContain($"{accountingInvoiceLink.Id}:cancel-standard");
     }
 
     [Theory]
@@ -309,6 +411,8 @@ public class CancelBookingShould
             timeProvider)
     {
         public int CancelLiveStandardInvoiceCalls { get; private set; }
+        public List<Guid> CancelledStandardInvoiceIds { get; } = [];
+        public List<string> CancelledStandardInvoiceIdempotencyKeys { get; } = [];
 
         protected override Task CancelLiveStandardInvoiceAsync(
             AccountingApi accountingApi,
@@ -319,6 +423,8 @@ public class CancelBookingShould
             CancellationToken cancellationToken)
         {
             CancelLiveStandardInvoiceCalls++;
+            CancelledStandardInvoiceIds.Add(externalInvoiceId);
+            CancelledStandardInvoiceIdempotencyKeys.Add(idempotencyKey);
             return Task.CompletedTask;
         }
     }

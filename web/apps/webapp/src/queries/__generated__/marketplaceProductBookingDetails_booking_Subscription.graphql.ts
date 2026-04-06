@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cdc705805ef5c63c4e9ed0c88268b3c0>>
+ * @generated SignedSource<<29d1adb7202e9863ffdc7c7988a44c6b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -21,6 +21,9 @@ export type marketplaceProductBookingDetails_booking_Subscription$data = {
       readonly invoiceNumber: string;
       readonly invoiceUrl: string;
     }>;
+    readonly deletedByCustomer: {
+      readonly id: string;
+    } | null | undefined;
     readonly marketplaceBooking: {
       readonly bookingCheckoutSession: {
         readonly checkoutUrl: string;
@@ -67,18 +70,30 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "invoiceUrl",
+  "concreteType": "CustomerDetails",
+  "kind": "LinkedField",
+  "name": "deletedByCustomer",
+  "plural": false,
+  "selections": [
+    (v2/*: any*/)
+  ],
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "invoiceNumber",
+  "name": "invoiceUrl",
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "invoiceNumber",
+  "storageKey": null
+},
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "MarketplaceBookingDetails",
@@ -87,8 +102,8 @@ v5 = {
   "plural": false,
   "selections": [
     (v2/*: any*/),
-    (v3/*: any*/),
     (v4/*: any*/),
+    (v5/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -149,7 +164,7 @@ v5 = {
   ],
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "concreteType": "OrganizationArrearsInvoiceDetails",
@@ -157,8 +172,8 @@ v6 = {
   "name": "arrearsInvoices",
   "plural": true,
   "selections": [
+    (v5/*: any*/),
     (v4/*: any*/),
-    (v3/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -191,8 +206,9 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/)
+          (v3/*: any*/),
+          (v6/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
@@ -214,8 +230,9 @@ return {
         "name": "booking",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
+          (v3/*: any*/),
           (v6/*: any*/),
+          (v7/*: any*/),
           (v2/*: any*/)
         ],
         "storageKey": null
@@ -223,16 +240,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "33a251aca04654369887fda49bfc4237",
+    "cacheID": "dec40e6d7e9e42e78d4e1ad81c1f68ea",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductBookingDetails_booking_Subscription",
     "operationKind": "subscription",
-    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    marketplaceBooking {\n      id\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
+    "text": "subscription marketplaceProductBookingDetails_booking_Subscription(\n  $bookingId: String!\n) {\n  booking(id: $bookingId) {\n    deletedByCustomer {\n      id\n    }\n    marketplaceBooking {\n      id\n      invoiceUrl\n      invoiceNumber\n      isPaymentRequired\n      paymentExpiry\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d0e29160c32882937088fd2d14d71793";
+(node as any).hash = "eb9532418e0663bf3e34d02a8ed7bd13";
 
 export default node;

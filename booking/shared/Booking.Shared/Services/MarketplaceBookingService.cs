@@ -543,11 +543,9 @@ public class MarketplaceBookingService(
             }
         }
 
-        await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
-        await transaction.CommitAsync(cancellationToken);
-
         await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+        await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
 

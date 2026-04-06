@@ -102,31 +102,64 @@ public class AccountingInvoiceCancellationService(
             }
         }
 
-        if (string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal) ||
-            string.Equals(accountingInvoiceLink.ExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal))
+        var accountingInvoiceInstance = !IsLiveRepeatingInvoice(accountingInvoiceLink)
+            ? await repositoryFactory.AccountingInvoiceInstanceRepository.GetLatestByAccountingInvoiceExportLinkIdAsync(
+                accountingInvoiceLink.Id,
+                cancellationToken)
+            : null;
+        var effectiveExternalStatus = accountingInvoiceInstance?.ExternalStatus ?? accountingInvoiceLink.ExternalStatus;
+        var effectiveExternalInvoiceId = accountingInvoiceInstance?.ExternalInvoiceId ?? accountingInvoiceLink.ExternalInvoiceId;
+        var effectiveInvoiceUrl = accountingInvoiceInstance?.ExternalInvoiceUrl ?? accountingInvoiceLink.ExternalInvoiceUrl;
+        var effectiveInvoiceNumber = accountingInvoiceInstance?.ExternalInvoiceNumber ?? accountingInvoiceLink.ExternalInvoiceNumber;
+
+        if (string.Equals(effectiveExternalStatus, AccountingStatusConstants.Paid, StringComparison.Ordinal) ||
+            string.Equals(effectiveExternalStatus, AccountingStatusConstants.Cancelled, StringComparison.Ordinal))
         {
             accountingInvoiceLink.LastError = null;
+
             repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+
+            if (accountingInvoiceInstance is null)
+            {
+                return;
+            }
+
+            accountingInvoiceInstance.LastError = null;
+            repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
+
             return;
         }
 
-        if (!HasLiveExternalInvoice(accountingInvoiceLink))
+        if (string.IsNullOrWhiteSpace(effectiveExternalInvoiceId))
         {
             accountingInvoiceLink.ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.Cancelled;
             accountingInvoiceLink.ExportConfigurationMessage = cancelledMessage;
             accountingInvoiceLink.ExternalStatus = AccountingStatusConstants.Cancelled;
+            accountingInvoiceLink.ExternalInvoiceNumber ??= effectiveInvoiceNumber;
+            accountingInvoiceLink.ExternalInvoiceUrl ??= effectiveInvoiceUrl;
             accountingInvoiceLink.LastError = null;
+
             repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+
+            if (accountingInvoiceInstance is null)
+            {
+                return;
+            }
+
+            accountingInvoiceInstance.ExternalStatus = AccountingStatusConstants.Cancelled;
+            accountingInvoiceInstance.LastError = null;
+            repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
+
             return;
         }
 
         try
         {
             var xeroConnection = await GetOrganizationXeroConnectionAsync(organizationId, cancellationToken);
-            if (!IsXeroConnectionReady(xeroConnection) ||
-                !Guid.TryParse(accountingInvoiceLink.ExternalInvoiceId, out var externalInvoiceId))
+            if (!IsXeroConnectionReady(xeroConnection) || !Guid.TryParse(effectiveExternalInvoiceId, out var externalInvoiceId))
             {
                 MarkTransitionRequired(accountingInvoiceLink, transitionRequiredMessage, null);
+
                 return;
             }
 
@@ -140,7 +173,7 @@ public class AccountingInvoiceCancellationService(
                     accessToken,
                     refreshedConnection.TenantId,
                     externalInvoiceId,
-                    accountingInvoiceLink.Id,
+                    BuildCancellationIdempotencyKey(accountingInvoiceLink.Id, true),
                     cancellationToken);
             }
             else
@@ -150,7 +183,7 @@ public class AccountingInvoiceCancellationService(
                     accessToken,
                     refreshedConnection.TenantId,
                     externalInvoiceId,
-                    accountingInvoiceLink.Id,
+                    BuildCancellationIdempotencyKey(accountingInvoiceLink.Id, false),
                     cancellationToken);
             }
 
@@ -159,11 +192,26 @@ public class AccountingInvoiceCancellationService(
             accountingInvoiceLink.ExportConfigurationMessage = cancelledMessage;
             accountingInvoiceLink.LastSyncedAt = timeProvider.GetUtcNow();
             accountingInvoiceLink.LastError = null;
+
             repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
+
+            if (accountingInvoiceInstance is not null)
+            {
+                accountingInvoiceInstance.ExternalStatus = AccountingStatusConstants.Cancelled;
+                accountingInvoiceInstance.LastSyncedAt = accountingInvoiceLink.LastSyncedAt;
+                accountingInvoiceInstance.LastError = null;
+                repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
+            }
         }
         catch (Exception exception)
         {
             MarkTransitionRequired(accountingInvoiceLink, transitionRequiredMessage, exception.Message);
+
+            if (accountingInvoiceInstance is not null)
+            {
+                accountingInvoiceInstance.LastError = exception.Message;
+                repositoryFactory.AccountingInvoiceInstanceRepository.Update(accountingInvoiceInstance);
+            }
         }
     }
 
@@ -220,11 +268,8 @@ public class AccountingInvoiceCancellationService(
             idempotencyKey,
             cancellationToken);
 
-    private static bool IsXeroConnectionReady(XeroConnection? xeroConnection) =>
-        xeroConnection is not null &&
-        xeroConnection.IsActive &&
-        xeroConnection.HasRefreshToken &&
-        !string.IsNullOrWhiteSpace(xeroConnection.TenantId);
+    private static bool IsXeroConnectionReady(XeroConnection? xeroConnection) => xeroConnection is { IsActive: true, HasRefreshToken: true } &&
+                                                                                 !string.IsNullOrWhiteSpace(xeroConnection.TenantId);
 
     private async Task<(string AccessToken, XeroConnection Connection)> EnsureValidAccessTokenAsync(
         string organizationId,
@@ -283,10 +328,7 @@ public class AccountingInvoiceCancellationService(
         return booking.MarketplaceBooking.ProductVersion.Product.Organization.Id;
     }
 
-    private void MarkTransitionRequired(
-        AccountingInvoiceExportLink accountingInvoiceLink,
-        string message,
-        string? lastError)
+    private void MarkTransitionRequired(AccountingInvoiceExportLink accountingInvoiceLink, string message, string? lastError)
     {
         accountingInvoiceLink.ExportConfigurationState = AccountingInvoiceExportConfigurationStateConstants.TransitionRequired;
         accountingInvoiceLink.ExportConfigurationMessage = message;
@@ -294,10 +336,12 @@ public class AccountingInvoiceCancellationService(
         repositoryFactory.AccountingInvoiceExportLinkRepository.Update(accountingInvoiceLink);
     }
 
-    private static bool HasLiveExternalInvoice(AccountingInvoiceExportLink accountingInvoiceLink) =>
-        !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId);
-
     private static bool IsLiveRepeatingInvoice(AccountingInvoiceExportLink accountingInvoiceLink) =>
         accountingInvoiceLink.ExternalInvoiceMode == AccountingInvoiceExportModeConstants.RepeatingInvoice &&
         !string.IsNullOrWhiteSpace(accountingInvoiceLink.ExternalInvoiceId);
+
+    private static string BuildCancellationIdempotencyKey(string accountingInvoiceExportLinkId, bool isRepeatingInvoice) =>
+        isRepeatingInvoice
+            ? $"{accountingInvoiceExportLinkId}:cancel-repeating"
+            : $"{accountingInvoiceExportLinkId}:cancel-standard";
 }
