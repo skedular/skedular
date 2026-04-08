@@ -35,6 +35,10 @@ public class OrganizationDetails : Node
     [GraphQLName("termsOfUse")] public OrganizationTermsOfUse? TermsOfUse { get; set; }
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
+
+    [GraphQLName("refundNotificationEmails")]
+    public IEnumerable<string> RefundNotificationEmails { get; set; } = [];
+
     [GraphQLName("isOwnershipVerified")] public bool IsOwnershipVerified { get; set; }
     [GraphQLName("physicalAddress")] public OrganizationPhysicalAddressDetails? PhysicalAddress { get; set; }
     [GraphQLName("billingDetails")] public OrganizationBillingDetails? BillingDetails { get; set; }

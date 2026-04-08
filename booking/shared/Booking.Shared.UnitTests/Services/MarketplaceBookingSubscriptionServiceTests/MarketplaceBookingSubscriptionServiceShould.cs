@@ -104,6 +104,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
@@ -143,6 +144,8 @@ public class MarketplaceBookingSubscriptionServiceShould
         existingSubscription.Status.ShouldBe(MarketplaceBookingSubscriptionStatus.Cancelled.ToMarketplaceBookingSubscriptionStatus());
         existingSubscription.AutoRenew.ShouldBeFalse();
         existingSubscription.CancelAtPeriodEnd.ShouldBeFalse();
+        A.CallTo(() => marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(existingSubscription, deletedByCustomer,
+            cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
@@ -159,6 +162,7 @@ public class MarketplaceBookingSubscriptionServiceShould
         [Frozen] IDbTransactionBuilder transactionBuilder,
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IMarketplaceBookingSubscriptionRepository marketplaceBookingSubscriptionRepository,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] ITemporalOutboxService temporalOutboxService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
@@ -196,6 +200,11 @@ public class MarketplaceBookingSubscriptionServiceShould
         existingSubscription.AutoRenew.ShouldBeFalse();
         existingSubscription.DeletedByCustomer.ShouldBeNull();
         existingSubscription.LastModifiedByCustomer.ShouldBe(deletedByCustomer);
+        A.CallTo(() => marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(
+                existingSubscription,
+                deletedByCustomer,
+                cancellationToken))
+            .MustNotHaveHappened();
         A.CallTo(() => marketplaceBookingSubscriptionRepository.Remove(existingSubscription)).MustNotHaveHappened();
         A.CallTo(() => temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,

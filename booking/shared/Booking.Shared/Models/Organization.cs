@@ -13,6 +13,7 @@ public class Organization : ReplicatedModelBaseWithDeleted
     public OrganizationBillingCycle BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public ICollection<string> RefundNotificationEmails { get; set; } = [];
     public bool? IsOwnershipVerified { get; set; }
     public ICollection<OrganizationTag> Tags { get; set; } = [];
     public ICollection<OrganizationMember> OrganizationMembers { get; set; } = [];

@@ -2142,6 +2142,9 @@ namespace Organization.Shared.Database.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.PrimitiveCollection<string>("RefundNotificationEmails")
+                        .HasColumnType("jsonb");
+
                     b.Property<string>("TermsOfUseId")
                         .HasColumnType("character varying(100)");
 

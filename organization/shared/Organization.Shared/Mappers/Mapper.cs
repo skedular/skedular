@@ -80,6 +80,7 @@ public class Mapper : IMapper
             },
             ContactEmail = src.ContactEmail.ToSafeString(),
             ContactPhone = src.ContactPhone.ToSafeString(),
+            RefundNotificationEmails = { src.RefundNotificationEmails },
             Offering = new Offering
             {
                 Id = organizationOffering.Id,
@@ -172,6 +173,7 @@ public class Mapper : IMapper
             BillingCycle = src.BillingCycle.ToOrganizationBillingCycle(),
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             TermsOfUse = MapTo(src.TermsOfUse),

@@ -69,4 +69,10 @@ public static partial class MarketplaceBookingSubscriptionDetailsType
 
     public static IEnumerable<TeamDetails> GetInvolvedTeams([Parent] MarketplaceBookingSubscriptionDetails item) =>
         item.InvolvedTeamIds.Select(id => new TeamDetails(id));
+
+    public static Task<MarketplaceRefundDetails?> GetRefund(
+        [Parent] MarketplaceBookingSubscriptionDetails item,
+        [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
+        CancellationToken cancellationToken) =>
+        marketplaceRefundReadService.GetByMarketplaceBookingSubscriptionIdAsync(item.Id, cancellationToken);
 }

@@ -56,6 +56,7 @@ message Organization {
   ListingMetadata             marketplaceListingMetadata          = 21;
   OrganizationBillingCycle    billingCycle                        = 22;
   string                      customerFacingTermsAndConditionsUrl = 23;
+  repeated string             refundNotificationEmails            = 24;
 }
 
 enum OrganizationType {

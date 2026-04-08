@@ -89,7 +89,7 @@ const GuestStoreFrontActiveSubscriptionsStrip = ({ rootDataRelay }: Props) => {
       }}
     >
       <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
-        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'center' }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', md: 'center' } }}>
           <Box sx={{ maxWidth: 720 }}>
             <CaptionIconTypography label="Your plans" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
             <LeadIconTypography label="Active subscriptions" sx={{ mt: 0.75 }} />

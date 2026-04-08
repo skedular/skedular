@@ -68,7 +68,7 @@ public class ReleaseRecurringBookingResourcesAsyncShould
                 null,
                 environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
-        A.CallTo(() => marketplaceBookingService.DeleteAsync(existingBooking, null, false, environment.CancellationTokenSource.Token))
+        A.CallTo(() => marketplaceBookingService.DeleteAsync(existingBooking, null, false, false, environment.CancellationTokenSource.Token))
             .MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(environment.CancellationTokenSource.Token)).MustHaveHappenedOnceExactly();
     }

@@ -5,6 +5,7 @@ using Booking.Api.GraphQL.Booking;
 using Booking.Api.GraphQL.MarketplaceBookingSubscription;
 using Booking.Api.GraphQL.Payment;
 using Booking.Api.GraphQL.RecurringBooking;
+using Booking.Shared.Database.Entities;
 using Booking.Shared.Models;
 using Enterprise.Shared;
 using Enterprise.Shared.Sanitization;
@@ -17,16 +18,25 @@ using BookingSchedule = Api.Shared.Services.Models.BookingSchedule;
 using Customer = Booking.Shared.Models.Customer;
 using Location = Booking.Shared.Database.Entities.Location;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
+using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
+using Organization = Booking.Shared.Models.Organization;
+using OrganizationArrearsInvoice = Booking.Shared.Models.OrganizationArrearsInvoice;
 using OrganizationTag = Booking.Shared.Models.OrganizationTag;
 using PaymentMethod = Api.Shared.Services.Models.PaymentMethod;
 using PaymentStatus = Api.Shared.Services.Models.PaymentStatus;
+using ProductVersion = Booking.Shared.Models.ProductVersion;
+using RecurringBooking = Booking.Shared.Models.RecurringBooking;
 using Resource = Booking.Shared.Models.Resource;
+using StripeCheckoutSession = Booking.Shared.Models.StripeCheckoutSession;
+using Team = Booking.Shared.Models.Team;
 
 namespace Booking.Api.Mappers;
 
 public interface IMapper
 {
     BookingDetails MapTo(Shared.Models.Booking src);
+    MarketplaceRefundDetails MapTo(MarketplaceRefund src);
+    MarketplaceRefundEventDetails MapTo(MarketplaceRefundEvent src);
     OrganizationArrearsInvoiceDetails MapTo(OrganizationArrearsInvoice src);
     RecurringBookingDetails? MapTo(RecurringBooking? src);
     MarketplaceBookingSubscriptionDetails MapTo(MarketplaceBookingSubscription src);
@@ -88,6 +98,54 @@ public class Mapper(Shared.Mappers.IMapper sharedMapper) : IMapper
             TotalAmountToDisplay = src.TotalAmount.ToRoundedPrice().ToPriceToDisplay(src.Currency),
             CreatedAt = src.CreatedAt
         };
+
+    public MarketplaceRefundDetails MapTo(MarketplaceRefund src)
+    {
+        var currency = src.Currency.ToNullableCurrency();
+
+        return new MarketplaceRefundDetails
+        {
+            Id = src.Id,
+            LocalEntityType = src.LocalEntityType,
+            LocalEntityId = src.LocalEntityId,
+            Status = new MarketplaceRefundStatusDetails { Type = src.Status, Name = src.Status.ToMarketplaceRefundStatusName() },
+            RequestedAt = src.RequestedAt,
+            ReferenceTime = src.ReferenceTime,
+            RefundPercentage = src.RefundPercentage,
+            AppliedRuleMinutesBefore = src.AppliedRuleMinutesBefore,
+            BaseAmount = src.BaseAmount,
+            RefundAmount = src.RefundAmount,
+            Currency = currency is null ? null : new CurrencyDetails { Type = currency.Value, Name = currency.Value.ToCurrencyName() },
+            CurrencyToDisplay = currency is null ? "N/A" : currency.Value.ToCurrencyName(),
+            Reason = src.Reason,
+            AccountingProvider = src.AccountingProvider,
+            ExternalRefundId = src.ExternalRefundId,
+            ExternalRefundNumber = src.ExternalRefundNumber,
+            LastProcessedAt = src.LastProcessedAt,
+            LastError = src.LastError,
+            RequestedByCustomerId = src.RequestedByCustomerId
+        };
+    }
+
+    public MarketplaceRefundEventDetails MapTo(MarketplaceRefundEvent src)
+    {
+        var currency = src.MarketplaceRefund.Currency.ToNullableCurrency();
+
+        return new MarketplaceRefundEventDetails
+        {
+            Id = src.Id,
+            EventType = new MarketplaceRefundEventTypeDetails { Type = src.EventType, Name = src.EventType.ToMarketplaceRefundEventTypeName() },
+            OccurredAt = src.OccurredAt,
+            RefundAmount = src.RefundAmount,
+            CurrencyToDisplay = currency is null ? "N/A" : currency.Value.ToCurrencyName(),
+            Reason = src.Reason,
+            AccountingProvider = src.AccountingProvider,
+            ExternalRefundId = src.ExternalRefundId,
+            ExternalRefundNumber = src.ExternalRefundNumber,
+            LastError = src.LastError,
+            ActorCustomerId = src.ActorCustomerId
+        };
+    }
 
     public RecurringBookingDetails? MapTo(RecurringBooking? src) =>
         src is null

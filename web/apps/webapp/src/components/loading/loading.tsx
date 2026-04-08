@@ -16,7 +16,7 @@ const Loading = ({ message }: Props) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       <CircularProgress size={indicatorSize} />
       {message && <LeadIconTypography label={message} />}
     </Box>

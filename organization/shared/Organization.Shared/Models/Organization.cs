@@ -16,6 +16,7 @@ public class Organization : ModelBaseWithDeleted
     public bool HasAttachedPaymentMethod => OrganizationStripePaymentMethods.Count != 0;
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public ICollection<string> RefundNotificationEmails { get; set; } = [];
     public bool? IsOwnershipVerified { get; set; }
     public Uri StripeAuthorizeExistingConnectAccountUrl { get; set; } = Constants.EmptyUri;
     public ICollection<CdnImageFile> FeatureImages { get; set; } = [];

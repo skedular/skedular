@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c7a7cd22981127f8ebabe378f1cbc5c5>>
+ * @generated SignedSource<<a1dc81df7a6c4c52907fbefe62460a0b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,6 +26,7 @@ export type AddOrganizationInput = {
   listingMetadata?: ListingMetadataInput | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
+  refundNotificationEmails: ReadonlyArray<string>;
   termsOfUseId: string;
   type: OrganizationType;
   website?: string | null | undefined;

@@ -358,6 +358,7 @@ const GuestStoreFrontSubscriptions = ({ queryReference, onReloadRequired }: Prop
                         <Box sx={{ mt: 2 }} onClick={(event) => event.preventDefault()}>
                           <SubscriptionCancellationSection
                             cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                            hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
                             isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
                             immediateCancellationMode={immediateCancellationMode}
                             atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ae9f73112e5e040dd4b73441dee92792>>
+ * @generated SignedSource<<546251bcdf37dbd8ecd5ef052b5d9e97>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type BookingCategory = "ANNUAL_LEAVE" | "CLIENT_OFFICE" | "NON_WORKING_DAY" | "SICK_LEAVE" | "TRAVELING_FOR_WORK" | "VACATION" | "WELLBEING_LEAVE" | "WORKING_FROM_COWORKING_SPACE" | "WORKING_FROM_HOME" | "WORKING_FROM_OFFICE" | "%future added value";
 export type BookingChannel = "MARKETPLACE" | "PRIVATE" | "%future added value";
+export type Currency = "NZD" | "USD" | "%future added value";
 export type PaymentStatus = "CONFIRMED" | "EXPIRED" | "NOT_SET" | "NO_PAYMENT_REQUIRED" | "PENDING" | "RECORD_NEVER_CREATED" | "REJECTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type bookingCard_BookingDetails$data = {
@@ -61,12 +62,35 @@ export type bookingCard_BookingDetails$data = {
     readonly name: string;
   }>;
   readonly marketplaceBooking: {
+    readonly id: string;
     readonly invoiceUrl: string | null | undefined;
     readonly isPaymentRequired: boolean;
     readonly paymentStatus: {
       readonly name: string;
       readonly type: PaymentStatus;
     };
+    readonly refund: {
+      readonly canProcessInXero: boolean;
+      readonly currency: {
+        readonly name: string;
+        readonly type: Currency;
+      } | null | undefined;
+      readonly currencyToDisplay: string;
+      readonly externalRefundNumber: string | null | undefined;
+      readonly id: string;
+      readonly lastError: string | null | undefined;
+      readonly lastProcessedAt: any | null | undefined;
+      readonly reason: string | null | undefined;
+      readonly refundAmount: any | null | undefined;
+      readonly refundPercentage: number;
+      readonly requestedAt: any;
+      readonly requestedByCustomerName: string | null | undefined;
+      readonly status: {
+        readonly name: string;
+        readonly type: string;
+      };
+      readonly xeroProcessingBlockedReason: string | null | undefined;
+    } | null | undefined;
   } | null | undefined;
   readonly notes: string | null | undefined;
   readonly until: any;
@@ -103,6 +127,16 @@ v3 = [
   (v0/*: any*/),
   (v1/*: any*/),
   (v2/*: any*/)
+],
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "type",
+    "storageKey": null
+  },
+  (v1/*: any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -308,6 +342,7 @@ return {
       "name": "marketplaceBooking",
       "plural": false,
       "selections": [
+        (v0/*: any*/),
         {
           "alias": null,
           "args": null,
@@ -322,16 +357,7 @@ return {
           "kind": "LinkedField",
           "name": "paymentStatus",
           "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "type",
-              "storageKey": null
-            },
-            (v1/*: any*/)
-          ],
+          "selections": (v4/*: any*/),
           "storageKey": null
         },
         {
@@ -339,6 +365,115 @@ return {
           "args": null,
           "kind": "ScalarField",
           "name": "invoiceUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "MarketplaceRefundDetails",
+          "kind": "LinkedField",
+          "name": "refund",
+          "plural": false,
+          "selections": [
+            (v0/*: any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CurrencyDetails",
+              "kind": "LinkedField",
+              "name": "currency",
+              "plural": false,
+              "selections": (v4/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "MarketplaceRefundStatusDetails",
+              "kind": "LinkedField",
+              "name": "status",
+              "plural": false,
+              "selections": (v4/*: any*/),
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "requestedAt",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "lastProcessedAt",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "refundAmount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "refundPercentage",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "currencyToDisplay",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "reason",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "lastError",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "externalRefundNumber",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "requestedByCustomerName",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "canProcessInXero",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "xeroProcessingBlockedReason",
+              "storageKey": null
+            }
+          ],
           "storageKey": null
         }
       ],
@@ -350,6 +485,6 @@ return {
 };
 })();
 
-(node as any).hash = "4eb33e0b786994a868c87623ce956a9a";
+(node as any).hash = "ac7e61b25990cd496c493ea0a521cd67";
 
 export default node;

@@ -293,7 +293,90 @@ sequenceDiagram
     end
 ```
 
-## 12. Resource Repair and Known Gap
+## 12. Refund Decision And Xero Projection
+
+```mermaid
+flowchart TD
+    A["Cancellation or refund request"] --> B["Load booking/subscription + marketplace pricing"]
+    B --> C["Evaluate cancellation policy against request time"]
+    C --> D{"Refund amount > 0?"}
+
+    D -->|No| E["Persist cancellation only"]
+    D -->|Yes| F["Create local refund record"]
+    F --> G{"Admin review or override required?"}
+
+    G -->|Yes| H["Persist approved or adjusted refund amount"]
+    G -->|No| I["Use policy-derived refund amount"]
+
+    H --> J{"Original Xero invoice already live/paid?"}
+    I --> J
+
+    J -->|No| K["Cancel or void invoice path when appropriate"]
+    J -->|Yes| L["Create Xero credit note / accounting adjustment"]
+
+    K --> M["Persist local refund accounting outcome"]
+    L --> M
+    M --> N{"Provider call failed?"}
+    N -->|No| O["Mark refund projected to Xero"]
+    N -->|Yes| P["Mark refund manual-required / retriable"]
+```
+
+Key notes:
+
+- local refund state is created before Xero projection
+- refund state is distinct from booking deletion state
+- Xero credit-note projection is for accounting representation, not refund-policy ownership
+- current automated Xero projection is limited to one-time marketplace bookings with an existing standard Xero invoice
+  link; subscription refunds still need explicit recurring/generated invoice correlation
+- admin review currently happens by previewing the policy result first and then moving the refund to
+  `PendingAccounting` with the approved amount, which may be reduced from the policy amount but not increased above it
+- refund timeline/audit views should be backed by persisted refund events such as `Requested`, `PendingAccounting`,
+  `SentToXero`, `Completed`, and `Failed`
+- manual operator handling should stay on the same path via `ManualRequired` and `ManualCompleted` states/events, rather
+  than introducing a separate refund tracker
+
+## 13. Admin Refund Review Path
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant UI as Admin UI
+    participant API as Booking API
+    participant Shared as Booking shared services
+    participant Refund as Local refund state
+    participant Xero as Xero
+
+    Admin->>UI: Open booking/subscription refund panel
+    UI->>API: Get refund preview
+    API->>Shared: calculate policy preview
+    Shared-->>UI: refundable amount + policy explanation + invoice refs
+
+    Admin->>UI: Approve, reduce, or reject refund
+    UI->>API: Submit refund decision with reason
+    API->>Shared: persist decision + actor
+    Shared->>Refund: save final refund state
+
+    opt Xero-backed accounting projection
+        Shared->>Xero: create credit note / adjustment
+        Xero-->>Shared: provider status
+        Shared->>Refund: update provider outcome
+    end
+```
+
+## 14. Refund Lifecycle Visibility
+
+```mermaid
+flowchart TD
+    A["Cancellation or admin refund action"] --> B["Booking-owned refund aggregate updated"]
+    B --> C["Refund state shown separately from booking/subscription cancellation"]
+    C --> D["Customer pages show refund status and timeline"]
+    C --> E["Admin pages show refund status, timeline, and actions"]
+    E --> F{"API says canProcessInXero?"}
+    F -->|Yes| G["Allow Send to Xero"]
+    F -->|No| H["Show blocked reason from API"]
+```
+
+## 15. Resource Repair and Known Gap
 
 ```mermaid
 flowchart TD
@@ -309,7 +392,7 @@ Current known gap:
 
 - resource repair still does not hard-fail when the full required resource count cannot be reassigned
 
-## 13. Runtime Ownership Summary
+## 16. Runtime Ownership Summary
 
 ```mermaid
 flowchart LR

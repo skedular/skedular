@@ -853,6 +853,7 @@ public class Mapper(TimeProvider timeProvider) : IMapper
                 Name = src.Name,
                 ContactEmail = src.ContactEmail,
                 ContactPhone = src.ContactPhone,
+                RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
                 IsOwnershipVerified = src.IsOwnershipVerified,
                 LogoUrl = src.LogoUrl,
                 Offering = src.Offering,

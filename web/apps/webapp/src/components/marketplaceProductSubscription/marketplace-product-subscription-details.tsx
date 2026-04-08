@@ -47,6 +47,7 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from '../marketplaceProductBooking/marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from '../marketplaceProductBooking/marketplace-product-booking-payment-panel';
+import MarketplaceRefundStatusCard from '../marketplaceProductBooking/marketplace-refund-status-card';
 
 type PendingCancellationConfirmation = {
   type: SupportedMarketplaceBookingSubscriptionCancellationMode;
@@ -66,6 +67,74 @@ const RootQuery = graphql`
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      marketplaceBooking {
+        id
+        quantity
+        invoiceUrl
+        isPaymentRequired
+        paymentExpiry
+        productVersion {
+          id
+          listingMetadata {
+            title
+            subTitle
+            about
+            includedFeatures
+          }
+          featureImages {
+            original {
+              url
+            }
+          }
+          organization {
+            customerFacingTermsAndConditionsUrl
+          }
+        }
+        bookingCheckoutSession {
+          checkoutUrl
+        }
+        paymentMethod {
+          type
+          name
+        }
+        paymentStatus {
+          type
+          name
+        }
+      }
+      refund {
+        currency {
+          type
+          name
+        }
+        status {
+          type
+          name
+        }
+        requestedAt
+        lastProcessedAt
+        refundAmount
+        refundPercentage
+        currencyToDisplay
+        reason
+        lastError
+        externalRefundNumber
+        requestedByCustomerName
+        events {
+          id
+          eventType {
+            type
+            name
+          }
+          occurredAt
+          refundAmount
+          currencyToDisplay
+          reason
+          lastError
+          externalRefundNumber
+          actorName
+        }
+      }
       status {
         type
         name
@@ -178,6 +247,74 @@ const SubscriptionUpdates = graphql`
       nextRenewalAt
       autoRenew
       cancelAtPeriodEnd
+      marketplaceBooking {
+        id
+        quantity
+        invoiceUrl
+        isPaymentRequired
+        paymentExpiry
+        productVersion {
+          id
+          listingMetadata {
+            title
+            subTitle
+            about
+            includedFeatures
+          }
+          featureImages {
+            original {
+              url
+            }
+          }
+          organization {
+            customerFacingTermsAndConditionsUrl
+          }
+        }
+        bookingCheckoutSession {
+          checkoutUrl
+        }
+        paymentMethod {
+          type
+          name
+        }
+        paymentStatus {
+          type
+          name
+        }
+      }
+      refund {
+        currency {
+          type
+          name
+        }
+        status {
+          type
+          name
+        }
+        requestedAt
+        lastProcessedAt
+        refundAmount
+        refundPercentage
+        currencyToDisplay
+        reason
+        lastError
+        externalRefundNumber
+        requestedByCustomerName
+        events {
+          id
+          eventType {
+            type
+            name
+          }
+          occurredAt
+          refundAmount
+          currencyToDisplay
+          reason
+          lastError
+          externalRefundNumber
+          actorName
+        }
+      }
       status {
         type
         name
@@ -294,7 +431,7 @@ const MarketplaceProductSubscriptionDetails = ({
     () => relatedBookingsData.bookings?.edges.map((edge) => edge.node).filter((item): item is NonNullable<typeof item> => !!item) ?? [],
     [relatedBookingsData.bookings?.edges],
   );
-  const currentMarketplaceBooking = currentCycle?.marketplaceBooking ?? null;
+  const displayMarketplaceBooking = currentCycle?.marketplaceBooking ?? subscription?.marketplaceBooking ?? null;
   const lifecycleDisplay = subscription
     ? toMarketplaceBookingSubscriptionLifecycleDisplay({
         autoRenew: subscription.autoRenew,
@@ -303,8 +440,9 @@ const MarketplaceProductSubscriptionDetails = ({
         fallbackActiveLabel: subscription.status.name,
       })
     : null;
-  const productVersion = currentMarketplaceBooking?.productVersion ?? null;
+  const productVersion = displayMarketplaceBooking?.productVersion ?? null;
   const productTitle = productVersion?.listingMetadata.title ?? 'subscription';
+  const hasConfirmedCurrentCyclePayment = displayMarketplaceBooking?.paymentStatus.type === 'CONFIRMED';
   const cancellationModes = rootData.marketplaceBookingSubscriptionCancellationModes;
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState<PendingCancellationConfirmation>(null);
   const immediateCancellationMode = useMemo((): SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null => {
@@ -352,7 +490,15 @@ const MarketplaceProductSubscriptionDetails = ({
         toast.update(toastId, {
           ...successNotificationOptions,
           render: (
-            <NotificationContent content={cancellationModeType === 'AT_PERIOD_END' ? `${productTitle} will end at the end of the current period.` : `${productTitle} cancelled.`} />
+            <NotificationContent
+              content={
+                cancellationModeType === 'AT_PERIOD_END'
+                  ? `${productTitle} will end at the end of the current period. The current period stays active, so no refund is expected from this change alone.`
+                  : hasConfirmedCurrentCyclePayment
+                    ? `${productTitle} cancelled. Any eligible refund for the current period will be reviewed separately.`
+                    : `${productTitle} cancelled. No refund is expected because payment for the current period was not confirmed.`
+              }
+            />
           ),
         });
 
@@ -420,7 +566,7 @@ const MarketplaceProductSubscriptionDetails = ({
           <Alert severity="info" sx={{ mt: 2, borderRadius: 3 }}>
             We couldn&apos;t find this subscription anymore.
           </Alert>
-        ) : !currentCycle || !currentMarketplaceBooking ? (
+        ) : !displayMarketplaceBooking ? (
           <Box
             sx={{
               mt: 1,
@@ -433,11 +579,8 @@ const MarketplaceProductSubscriptionDetails = ({
             <Card sx={{ borderRadius: 4, border: 1, borderColor: (theme) => theme.palette.divider }}>
               <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
                 <CaptionIconTypography label="Subscription details" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
-                <LeadIconTypography label="Preparing your current subscription period" sx={{ mt: 1 }} />
-                <BodyIconTypography
-                  label="Your subscription was created successfully. We’re still preparing the current cycle details and payment state for this period."
-                  sx={{ mt: 1, opacity: 0.82 }}
-                />
+                <LeadIconTypography label="Preparing subscription details" sx={{ mt: 1 }} />
+                <BodyIconTypography label="We’re still preparing the current cycle details and payment state for this subscription." sx={{ mt: 1, opacity: 0.82 }} />
 
                 <StackRow sx={{ mt: 2, rowGap: 1 }}>
                   <Chip label={lifecycleDisplay?.statusLabel ?? subscription.status.name} color={lifecycleDisplay?.statusColor ?? 'default'} />
@@ -478,18 +621,35 @@ const MarketplaceProductSubscriptionDetails = ({
                 <CaptionIconTypography label="Subscription details" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.66 }} />
                 <LeadIconTypography label="Review this subscription period and payment status" sx={{ mt: 1 }} />
                 <BodyIconTypography
-                  label="This page stays in sync while the current cycle payment is being prepared, and it remains the place to return to after payment."
+                  label={
+                    subscription.status.type === 'CANCELLED'
+                      ? 'This subscription has been cancelled. You can keep this page as your record of the subscription details and any refund outcome.'
+                      : 'This page stays in sync while the current cycle payment is being prepared, and it remains the place to return to after payment.'
+                  }
                   sx={{ mt: 1, opacity: 0.82 }}
                 />
 
                 <StackRow sx={{ mt: 2, rowGap: 1 }}>
                   <Chip label={lifecycleDisplay?.statusLabel ?? subscription.status.name} color={lifecycleDisplay?.statusColor ?? 'default'} />
-                  <Chip label={currentMarketplaceBooking.paymentMethod.name} variant="outlined" />
+                  <Chip label={displayMarketplaceBooking.paymentMethod.name} variant="outlined" />
                 </StackRow>
+
+                {subscription.refund ? (
+                  <MarketplaceRefundStatusCard
+                    entityLabel="subscription"
+                    hasInvoice={Boolean(displayMarketplaceBooking.invoiceUrl) || (subscription.arrearsInvoices?.length ?? 0) > 0}
+                    isCancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                    isCancelled={subscription.status.type === 'CANCELLED'}
+                    isPaymentRequired={displayMarketplaceBooking.isPaymentRequired}
+                    paymentStatusType={displayMarketplaceBooking.paymentStatus.type}
+                    refund={subscription.refund}
+                  />
+                ) : null}
 
                 {subscription.status.type === 'ACTIVE' ? (
                   <SubscriptionCancellationSection
                     cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                    hasConfirmedPayment={hasConfirmedCurrentCyclePayment}
                     isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
                     immediateCancellationMode={immediateCancellationMode}
                     atPeriodEndCancellationMode={atPeriodEndCancellationMode}
@@ -501,13 +661,13 @@ const MarketplaceProductSubscriptionDetails = ({
                 ) : null}
 
                 <StackColumn spacing={2} sx={{ mt: 3 }}>
-                  <DetailsRow label="Current period" value={`${toStoredDate(currentCycle.startDate)} - ${toStoredDate(currentCycle.endDate)}`} />
+                  {currentCycle ? <DetailsRow label="Current period" value={`${toStoredDate(currentCycle.startDate)} - ${toStoredDate(currentCycle.endDate)}`} /> : null}
                   <DetailsRow label="Started" value={toStoredDate(subscription.startedAt)} />
                   <DetailsRow
                     label="Next renewal"
                     value={subscription.nextRenewalAt ? toStoredDate(subscription.nextRenewalAt) : (lifecycleDisplay?.nextRenewalFallbackLabel ?? 'Not scheduled')}
                   />
-                  <DetailsRow label="Quantity" value={`${currentMarketplaceBooking.quantity}`} />
+                  <DetailsRow label="Quantity" value={`${displayMarketplaceBooking.quantity}`} />
                   <DetailsRow label="Booked for" value={subscription.involvedCustomers.map((item) => getCustomerFullName(item)).join(', ') || 'Not available'} />
                   <DetailsRow label="Renewal" value={lifecycleDisplay?.renewalLabel ?? (subscription.autoRenew ? 'Auto-renew on' : 'Ends after this period')} />
                   {productVersion ? (
@@ -567,7 +727,7 @@ const MarketplaceProductSubscriptionDetails = ({
                     {[...subscription.recurringBookings]
                       .sort((left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime())
                       .map((recurringBooking) => {
-                        const isCurrentCycle = recurringBooking.id === currentCycle.id;
+                        const isCurrentCycle = recurringBooking.id === currentCycle?.id;
 
                         return (
                           <Card key={recurringBooking.id} sx={{ borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
@@ -583,9 +743,9 @@ const MarketplaceProductSubscriptionDetails = ({
                                 <Chip
                                   size="small"
                                   icon={<PaymentStatusIcon />}
-                                  label={isCurrentCycle ? currentMarketplaceBooking.paymentStatus.name : (recurringBooking.marketplaceBooking?.paymentStatus.name ?? 'Preparing')}
-                                  color={isCurrentCycle && currentMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'}
-                                  variant={isCurrentCycle && currentMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
+                                  label={isCurrentCycle ? displayMarketplaceBooking.paymentStatus.name : (recurringBooking.marketplaceBooking?.paymentStatus.name ?? 'Preparing')}
+                                  color={isCurrentCycle && displayMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'success' : 'default'}
+                                  variant={isCurrentCycle && displayMarketplaceBooking.paymentStatus.type === 'CONFIRMED' ? 'filled' : 'outlined'}
                                 />
                               </StackRow>
                               {recurringBooking.marketplaceBooking?.invoiceUrl ? (
@@ -660,7 +820,7 @@ const MarketplaceProductSubscriptionDetails = ({
                                     <Chip
                                       size="small"
                                       icon={<PaymentStatusIcon />}
-                                      label={booking.marketplaceBooking?.paymentStatus.name ?? currentMarketplaceBooking.paymentStatus.name}
+                                      label={booking.marketplaceBooking?.paymentStatus.name ?? displayMarketplaceBooking.paymentStatus.name}
                                       color={isConfirmed ? 'success' : 'default'}
                                       variant={isConfirmed ? 'filled' : 'outlined'}
                                     />
@@ -674,7 +834,7 @@ const MarketplaceProductSubscriptionDetails = ({
                                   </StackRow>
                                   <StackRow sx={{ flexWrap: 'nowrap' }}>
                                     <QuantityIcon fontSize="small" />
-                                    <BodyIconTypography label={`Quantity ${booking.marketplaceBooking?.quantity ?? currentMarketplaceBooking.quantity}`} sx={{ opacity: 0.88 }} />
+                                    <BodyIconTypography label={`Quantity ${booking.marketplaceBooking?.quantity ?? displayMarketplaceBooking.quantity}`} sx={{ opacity: 0.88 }} />
                                   </StackRow>
                                   <StackRow sx={{ flexWrap: 'nowrap' }}>
                                     <ResourceIcon fontSize="small" />
@@ -696,7 +856,14 @@ const MarketplaceProductSubscriptionDetails = ({
                   ) : (
                     <Card sx={{ mt: 2, borderRadius: 3, border: 1, borderColor: 'divider', boxShadow: 'none' }}>
                       <CardContent sx={{ p: 2.5 }}>
-                        <BodyIconTypography label="No booking instances have been created for this subscription yet." sx={{ opacity: 0.8 }} />
+                        <BodyIconTypography
+                          label={
+                            subscription.status.type === 'CANCELLED'
+                              ? 'No upcoming booking instances remain for this cancelled subscription. Any past booking instances that were already created stay on record in their own booking history.'
+                              : 'No upcoming booking instances have been created for this subscription yet.'
+                          }
+                          sx={{ opacity: 0.8 }}
+                        />
                       </CardContent>
                     </Card>
                   )}
@@ -704,19 +871,21 @@ const MarketplaceProductSubscriptionDetails = ({
               </CardContent>
             </Card>
 
-            <MarketplaceProductBookingPaymentPanel
-              checkoutUrl={currentMarketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
-              ctaLabel="Pay for plan"
-              entityLabel="subscription"
-              invoices={subscription.arrearsInvoices ?? []}
-              invoiceUrl={currentMarketplaceBooking.invoiceUrl ?? null}
-              isPaymentRequired={currentMarketplaceBooking.isPaymentRequired}
-              pendingStatusMessage="Payment status: Pending. The first invoice for this subscription period is ready here now and can be paid using the selected payment method."
-              paymentExpiry={currentMarketplaceBooking.paymentExpiry}
-              paymentMethodType={currentMarketplaceBooking.paymentMethod.type}
-              paymentStatusLabel={currentMarketplaceBooking.paymentStatus.name}
-              paymentStatusType={currentMarketplaceBooking.paymentStatus.type}
-            />
+            {subscription.status.type !== 'CANCELLED' ? (
+              <MarketplaceProductBookingPaymentPanel
+                checkoutUrl={displayMarketplaceBooking.bookingCheckoutSession?.checkoutUrl ?? null}
+                ctaLabel="Pay for plan"
+                entityLabel="subscription"
+                invoices={subscription.arrearsInvoices ?? []}
+                invoiceUrl={displayMarketplaceBooking.invoiceUrl ?? null}
+                isPaymentRequired={displayMarketplaceBooking.isPaymentRequired}
+                pendingStatusMessage="Payment status: Pending. The first invoice for this subscription period is ready here now and can be paid using the selected payment method."
+                paymentExpiry={displayMarketplaceBooking.paymentExpiry}
+                paymentMethodType={displayMarketplaceBooking.paymentMethod.type}
+                paymentStatusLabel={displayMarketplaceBooking.paymentStatus.name}
+                paymentStatusType={displayMarketplaceBooking.paymentStatus.type}
+              />
+            ) : null}
           </Box>
         )}
       </Container>
@@ -726,6 +895,11 @@ const MarketplaceProductSubscriptionDetails = ({
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>
             {`Cancel ${pendingCancellationConfirmation?.productTitle ?? 'this subscription'} now? Future billing stops immediately. Issued invoices stay on record.`}
+          </DialogContentText>
+          <DialogContentText sx={{ mt: 1.5 }}>
+            {hasConfirmedCurrentCyclePayment
+              ? 'If the current period has already been billed, any refund is still reviewed separately against the cancellation policy and accounting status.'
+              : 'If payment for the current period was never confirmed, this cancellation stops future billing without creating a refund.'}
           </DialogContentText>
           <TwoButtonsDialogActions
             onPrimaryClicked={handleConfirmImmediateCancellationClick}

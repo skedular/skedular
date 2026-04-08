@@ -5,7 +5,9 @@ using Booking.Shared.Mappers;
 using Booking.Shared.Repositories;
 using Booking.Shared.Workflows;
 using Enterprise.Shared.Database;
+using Enterprise.Shared.GraphQL;
 using Enterprise.Shared.Random;
+using Constants = Booking.Shared.GraphQL.Constants;
 using Customer = Booking.Shared.Database.Entities.Customer;
 using MarketplaceBooking = Booking.Shared.Models.MarketplaceBooking;
 using MarketplaceBookingSubscription = Booking.Shared.Models.MarketplaceBookingSubscription;
@@ -38,8 +40,13 @@ public class MarketplaceBookingSubscriptionService(
     IMarketplaceBookingOpeningHoursService marketplaceBookingOpeningHoursService,
     ITemporalOutboxService temporalOutboxService,
     IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+    IGraphQlTopicEventSender graphQlTopicEventSender,
     IRandomHelper randomHelper,
-    TimeProvider timeProvider) : IMarketplaceBookingSubscriptionService
+    TimeProvider timeProvider,
+    MarketplaceRefundPolicyService marketplaceRefundPolicyService,
+    IMarketplaceRefundService marketplaceRefundService,
+    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
+    IMarketplaceRefundNotificationService marketplaceRefundNotificationService) : IMarketplaceBookingSubscriptionService
 {
     public async Task<MarketplaceBookingSubscription> AddAsync(
         MarketplaceBookingSubscription subscription,
@@ -84,6 +91,7 @@ public class MarketplaceBookingSubscriptionService(
         marketplaceBooking.ProductPricing =
             productVersionHelperService.FindMatchingPricing(productVersion.PricingOptions, marketplaceBooking.ProductPricing) ??
             throw new ProductPricingNotFound();
+        marketplaceBooking.Currency ??= productVersion.Currency.ToNullableCurrency();
         await EnsureRequestedResourceCanBeBookedAsync(subscription, productVersion, marketplaceBooking, marketplaceBookingOpeningHoursService,
             cancellationToken);
         // Subscription checkout also happens asynchronously later in Temporal, so the initial
@@ -175,9 +183,27 @@ public class MarketplaceBookingSubscriptionService(
             existingSubscription.CancelAtPeriodEnd = false;
             existingSubscription = repositoryFactory.MarketplaceBookingSubscriptionRepository.Update(existingSubscription);
 
+            var refund = await marketplaceRefundService.CreateImmediateSubscriptionCancellationRefundAsync(
+                existingSubscription,
+                deletedByCustomer,
+                cancellationToken);
             temporalOutboxService.SignalWorkflowBookMarketplaceBookingSubscriptionResourcesDeleted(
                 existingSubscription.Id,
                 repositoryFactory.UnitOfWork);
+
+            await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            if (refund is not null)
+            {
+                refund = await marketplaceRefundAutomationService.ProcessAfterRequestAsync(refund, deletedByCustomer?.Id, cancellationToken);
+                await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.MarketplaceBookingSubscriptionTopicName,
+                    existingSubscription.Id,
+                    cancellationToken);
+                await marketplaceRefundNotificationService.NotifyStatusChangedAsync(refund, cancellationToken);
+            }
+
+            return mapper.MapTo(existingSubscription);
         }
 
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
@@ -275,33 +301,11 @@ public class MarketplaceBookingSubscriptionService(
         }
 
         var referenceTime = existingSubscription.NextRenewalAt ?? existingSubscription.StartedAt;
-        if (!CanBeCancelled(marketplaceBooking.ProductPricing, referenceTime, timeProvider.GetUtcNow()))
+        var quote = marketplaceRefundPolicyService.GetQuote(marketplaceBooking.ProductPricing, referenceTime, timeProvider.GetUtcNow());
+        if (!quote.CanCancel)
         {
             throw new MarketplaceBookingSubscriptionCancellationNotAllowed();
         }
-    }
-
-    private static bool CanBeCancelled(
-        ProductPricing pricing,
-        DateTimeOffset referenceTime,
-        DateTimeOffset cancelledAt)
-    {
-        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.NoCancellation)
-        {
-            return false;
-        }
-
-        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.FullRefundBeforeCutoff &&
-            pricing.CancellationRefundRules.Count == 0)
-        {
-            return cancelledAt <= referenceTime;
-        }
-
-        var applicableRule = pricing.CancellationRefundRules
-            .OrderByDescending(item => item.MinutesBefore)
-            .FirstOrDefault(item => cancelledAt <= referenceTime.AddMinutes(-item.MinutesBefore));
-
-        return applicableRule is not null;
     }
 
     private static DateTimeOffset ResolveNextRenewalAt(DateTimeOffset startedAt, ProductPricingCadence cadence) =>

@@ -7,7 +7,6 @@ import type { newFeedbackDialog_query$key } from '@/queries/__generated__/newFee
 import type { newFeedbackDialog_submitCustomerFeedbackMutation } from '@/queries/__generated__/newFeedbackDialog_submitCustomerFeedbackMutation.graphql';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import Typography from '@mui/material/Typography';
 import { makeRequired, makeValidate, TextField } from 'mui-rff';
 import { memo, useContext } from 'react';
 import { Form } from 'react-final-form';
@@ -111,10 +110,15 @@ const NewFeedbackDialog = ({ rootDataRelay, isDialogOpen, onSendClicked, onCance
           validate={validate}
           render={({ handleSubmit }) => (
             <FormStackColumn onSubmit={handleSubmit}>
-              <Typography>
-                Hi
-                <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>, what feedback would you like to share with us?
-              </Typography>
+              <BodyIconTypography
+                label={
+                  <span>
+                    Hi
+                    <span style={{ fontWeight: 'bold' }}>{' ' + getCustomerShortName(rootData.me)}</span>
+                    {`, what feedback would you like to share with us?`}
+                  </span>
+                }
+              />
 
               <TextField label="Feedback" name="feedback" required={requiredFields.feedback} multiline rows={10} />
               <BodyIconTypography label="A note from the team:" sx={{ fontStyle: 'italic' }} />

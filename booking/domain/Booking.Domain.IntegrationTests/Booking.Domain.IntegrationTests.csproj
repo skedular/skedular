@@ -31,7 +31,7 @@
 
     <ItemGroup>
         <PackageReference Include="Grpc.Net.Client" Version="2.76.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0"/>
         <PackageReference Include="StrawberryShake.Server" Version="15.1.13"/>
         <PackageReference Include="coverlet.collector" Version="8.0.1">
             <PrivateAssets>all</PrivateAssets>

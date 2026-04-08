@@ -76,12 +76,12 @@ const RelayError = ({ error }: Props) => {
 
   return (
     <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      padding={{ xs: 2, sm: 4 }}
       sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        p: { xs: 2, sm: 4 },
         background: 'linear-gradient(180deg, rgba(18,52,88,0.04) 0%, rgba(18,52,88,0.08) 100%)',
       }}
     >
@@ -98,7 +98,7 @@ const RelayError = ({ error }: Props) => {
       >
         <CardContent sx={{ padding: { xs: 3, sm: 5 } }}>
           <Stack spacing={3}>
-            <Stack spacing={2} alignItems="flex-start">
+            <Stack spacing={2} sx={{ alignItems: 'flex-start' }}>
               <Chip icon={<ErrorIcon color="error" />} label="Error" color="error" variant="outlined" sx={{ borderRadius: 2 }} />
               <MediumHeadingIconTypography label="Something went wrong" />
               <BodyIconTypography label={DEFAULT_ERROR_MESSAGE} sx={{ maxWidth: 560 }} />

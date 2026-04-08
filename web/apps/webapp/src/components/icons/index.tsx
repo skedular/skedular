@@ -86,7 +86,7 @@ export { default as SsoSigninIcon } from '@mui/icons-material/Security';
 export { default as SystemModeIcon } from '@mui/icons-material/SettingsBrightness';
 export { default as ShareIcon } from '@mui/icons-material/Share';
 export { default as PreferredIcon } from '@mui/icons-material/Star';
-export { default as NotPreferredIcon } from '@mui/icons-material/StarOutline';
+export { default as NotPreferredIcon } from '@mui/icons-material/StarBorder';
 export { default as MarketplaceIcon } from '@mui/icons-material/Store';
 export { default as SetupMarketplaceIcon } from '@mui/icons-material/Storefront';
 export { default as SubscriptionsIcon } from '@mui/icons-material/Subscriptions';

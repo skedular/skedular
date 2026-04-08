@@ -32,6 +32,8 @@ public interface IRepositoryFactory
     IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
+    IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
+    IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
     IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     IAccountingContactLinkRepository AccountingContactLinkRepository { get; }
@@ -67,6 +69,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
         StripeCheckoutSessionRepository = new StripeCheckoutSessionRepository(_dbContext, timeProvider);
         OrganizationInvoiceCounterRepository = new OrganizationInvoiceCounterRepository(_dbContext, timeProvider);
         OrganizationArrearsInvoiceRepository = new OrganizationArrearsInvoiceRepository(_dbContext, timeProvider);
+        MarketplaceRefundRepository = new MarketplaceRefundRepository(_dbContext, timeProvider);
+        MarketplaceRefundEventRepository = new MarketplaceRefundEventRepository(_dbContext, timeProvider);
         AccountingInvoiceExportLinkRepository = new AccountingInvoiceExportLinkRepository(_dbContext, timeProvider);
         AccountingInvoiceInstanceRepository = new AccountingInvoiceInstanceRepository(_dbContext, timeProvider);
         AccountingContactLinkRepository = new AccountingContactLinkRepository(_dbContext, timeProvider);
@@ -96,6 +100,8 @@ public class RepositoryFactory : RepositoryFactoryBase<BookingDbContext>, IRepos
     public IStripeCheckoutSessionRepository StripeCheckoutSessionRepository { get; }
     public IOrganizationInvoiceCounterRepository OrganizationInvoiceCounterRepository { get; }
     public IOrganizationArrearsInvoiceRepository OrganizationArrearsInvoiceRepository { get; }
+    public IMarketplaceRefundRepository MarketplaceRefundRepository { get; }
+    public IMarketplaceRefundEventRepository MarketplaceRefundEventRepository { get; }
     public IAccountingInvoiceExportLinkRepository AccountingInvoiceExportLinkRepository { get; }
     public IAccountingInvoiceInstanceRepository AccountingInvoiceInstanceRepository { get; }
     public IAccountingContactLinkRepository AccountingContactLinkRepository { get; }

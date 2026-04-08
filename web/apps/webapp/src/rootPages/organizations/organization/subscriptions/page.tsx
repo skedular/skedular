@@ -11,6 +11,7 @@ import {
 } from '@/components/commons';
 import { getOrganizationBaseLink } from '@/components/links';
 import { Loading } from '@/components/loading';
+import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import {
   SupportedMarketplaceBookingSubscriptionCancellationMode,
   SupportedMarketplaceBookingSubscriptionCancellationModeDetails,
@@ -67,6 +68,42 @@ const RootQuery = graphql`
           nextRenewalAt
           autoRenew
           cancelAtPeriodEnd
+          refund {
+            id
+            currency {
+              type
+              name
+            }
+            status {
+              type
+              name
+            }
+            requestedAt
+            lastProcessedAt
+            refundAmount
+            refundPercentage
+            currencyToDisplay
+            reason
+            lastError
+            externalRefundNumber
+            requestedByCustomerName
+            canProcessInXero
+            xeroProcessingBlockedReason
+            events {
+              id
+              eventType {
+                type
+                name
+              }
+              occurredAt
+              refundAmount
+              currencyToDisplay
+              reason
+              lastError
+              externalRefundNumber
+              actorName
+            }
+          }
           status {
             type
             name
@@ -477,6 +514,7 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                         {subscription.status.type === 'ACTIVE' ? (
                           <SubscriptionCancellationSection
                             cancelAtPeriodEnd={subscription.cancelAtPeriodEnd}
+                            hasConfirmedPayment={subscription.marketplaceBooking.paymentStatus.type === 'CONFIRMED'}
                             isInFlight={isDeleteMarketplaceBookingSubscriptionInFlight}
                             immediateCancellationMode={immediateCancellationMode}
                             atPeriodEndCancellationMode={subscription.autoRenew ? atPeriodEndCancellationMode : null}
@@ -503,6 +541,14 @@ const RootPage = ({ queryReference, onReloadRequired, organizationCustomDomain }
                         ) : null}
 
                         <StackColumn spacing={1} sx={{ mt: 2 }}>
+                          {subscription.refund ? (
+                            <MarketplaceRefundAdminPanel
+                              entityLabel={`${subscription.marketplaceBooking.productVersion.listingMetadata.title ?? 'Subscription'} for ${
+                                subscription.involvedCustomers.length > 0 ? getCustomerDisplayName(subscription.involvedCustomers[0]) : 'customer'
+                              }`}
+                              refund={subscription.refund}
+                            />
+                          ) : null}
                           <SmallIconTypography label={`Renewal: ${lifecycleDisplay.renewalLabel}`} sx={{ opacity: 0.72 }} />
                           {sortedRecurringBookings.length > 0 ? (
                             sortedRecurringBookings.map((recurringBooking) => {

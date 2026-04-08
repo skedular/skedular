@@ -139,9 +139,9 @@ const RootShell = ({
 
   if (reloadCount === maxRetryAttemptsToReload) {
     return (
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
         <SmallHeadingIconTypography label="There was an issue activating your account. Kindly sign out and then sign back in to resolve the problem." />
-        <Button variant="contained" startIcon={<SignOutIcon />} onClick={async () => await handleSignOutClick}>
+        <Button variant="contained" startIcon={<SignOutIcon />} onClick={handleSignOutClick}>
           Sign out
         </Button>
       </Box>

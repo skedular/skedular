@@ -3,6 +3,7 @@ import { LeadIconTypography, PushToRight, SmallIconTypography, StackRow } from '
 import { CustomTags } from '@/components/customTag';
 import { CalendarIcon, EllipseMenuIcon, JoinIcon, LocationIcon, NotesIcon, PaymentStatusIcon, PdfIcon, TeamIcon } from '@/components/icons';
 import { getOrganizationBookingBaseLink } from '@/components/links';
+import MarketplaceRefundAdminPanel from '@/components/marketplaceRefund/marketplace-refund-admin-panel';
 import { MoreActionsMenu, moreActionsMenuAllOptions, MoreActionsMenuItemType, MoreActionsMenuOptionType } from '@/components/moreActionsMenu';
 import { errorNotificationOptions, infoNotificationOptions, NotificationContent, successNotificationOptions } from '@/components/notification';
 import { Resources } from '@/components/resource';
@@ -24,6 +25,7 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/system/Box';
 import dayjs from 'dayjs';
 import NextLink from 'next/link';
@@ -130,12 +132,35 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           }
         }
         marketplaceBooking {
+          id
           isPaymentRequired
           paymentStatus {
             type
             name
           }
           invoiceUrl
+          refund {
+            id
+            currency {
+              type
+              name
+            }
+            status {
+              type
+              name
+            }
+            requestedAt
+            lastProcessedAt
+            refundAmount
+            refundPercentage
+            currencyToDisplay
+            reason
+            lastError
+            externalRefundNumber
+            requestedByCustomerName
+            canProcessInXero
+            xeroProcessingBlockedReason
+          }
         }
       }
     `,
@@ -262,7 +287,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       }
     }
   `);
-
   const { integratedPlatrform } = useIntegratedPlatrform();
   const router = useRouter();
   const paletteMode = useContext(PaletteModeContext);
@@ -270,6 +294,15 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
   const [moreActionsAnchorEl, setMoreActionsAnchorEl] = useState<null | HTMLElement>(null);
   const moreActionsMenuOpen = Boolean(moreActionsAnchorEl);
   const shortDateFormatFrom = toShortDate(bookingDetails.from);
+  const showRefundFollowUpHint =
+    rootData.organizationBookingPermissions.canModifyPaymentMethod &&
+    bookingDetails.channel.channel === 'MARKETPLACE' &&
+    !!bookingDetails.marketplaceBooking &&
+    bookingDetails.marketplaceBooking.paymentStatus.type === 'CONFIRMED';
+  const refund = bookingDetails.marketplaceBooking?.refund;
+  const primaryCustomer = bookingDetails.involvedCustomers[0];
+  const refundEntityLabel = `booking ${primaryCustomer ? getCustomerFullName(primaryCustomer) : 'customer'} on ${shortDateFormatFrom}`;
+  const canManageRefund = rootData.organizationBookingPermissions.canModifyPaymentMethod && !!refund;
 
   const moreActionsOption: MoreActionsMenuItemType[] = [
     moreActionsMenuAllOptions[MoreActionsMenuOptionType.EditBooking],
@@ -656,7 +689,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
       },
     });
   };
-
   const customTags = bookingDetails.bookingResources
     .flatMap(({ resource }) => resource.customTags)
     .reduce((acc: CustomTagDetails[], customTag) => {
@@ -722,6 +754,20 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
               <Divider />
             </>
           )}
+          {showRefundFollowUpHint && !refund && (
+            <>
+              <Alert severity="info" sx={{ mb: 1, borderRadius: 2 }}>
+                Payment managers: marketplace cancellations can still need separate refund and accounting follow-up after the booking state changes.
+              </Alert>
+              <Divider />
+            </>
+          )}
+          {canManageRefund && refund && (
+            <>
+              <MarketplaceRefundAdminPanel entityLabel={refundEntityLabel} refund={refund} />
+              <Divider />
+            </>
+          )}
           <SmallIconTypography
             startElement={<CalendarIcon />}
             label={dateRangeToShortDateWithAdditionalDayInfo(dayjs(bookingDetails.from), dayjs(bookingDetails.until))}
@@ -773,7 +819,6 @@ const BookingCard = ({ rootDataRelay, bookingDetailsRelay, organizationCustomDom
           <SmallIconTypography startElement={<NotesIcon />} label={bookingDetails.notes ? bookingDetails.notes : 'N/A'} sx={{ paddingTop: 1, paddingBottom: 1 }} />
         </CardContent>
       </Card>
-
       <MoreActionsMenu anchorEl={moreActionsAnchorEl} open={moreActionsMenuOpen} onMenuItemClick={handleMoreActionsMenuItemClick} options={moreActionsOption} />
     </>
   );

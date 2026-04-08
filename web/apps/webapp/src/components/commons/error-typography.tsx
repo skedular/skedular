@@ -12,7 +12,7 @@ const ErrorTypography = ({ errorMessage, fontWeight }: Props) => {
   }
 
   return (
-    <Typography variant="caption" color="error.main" fontWeight={fontWeight}>
+    <Typography variant="caption" color="error.main" sx={{ fontWeight }}>
       {errorMessage}
     </Typography>
   );

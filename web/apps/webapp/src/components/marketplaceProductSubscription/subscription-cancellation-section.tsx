@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 type Props = {
   cancelAtPeriodEnd: boolean;
   isInFlight: boolean;
+  hasConfirmedPayment: boolean;
   immediateCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
   atPeriodEndCancellationMode: SupportedMarketplaceBookingSubscriptionCancellationModeDetails | null;
   onImmediateCancellationClick: () => void;
@@ -16,6 +17,7 @@ type Props = {
 const SubscriptionCancellationSection = ({
   cancelAtPeriodEnd,
   isInFlight,
+  hasConfirmedPayment,
   immediateCancellationMode,
   atPeriodEndCancellationMode,
   onImmediateCancellationClick,
@@ -36,7 +38,11 @@ const SubscriptionCancellationSection = ({
         <SmallIconTypography label="Subscription actions" sx={{ opacity: 0.62, textTransform: 'uppercase', letterSpacing: '0.06em' }} />
         <SubtitleIconTypography label="Cancel subscription" sx={{ mt: 0.35 }} />
         <BodyIconTypography
-          label="Choose how to stop future renewals. Ending at period end keeps the current period active. Immediate cancellation stops future billing now. Issued invoices stay on record."
+          label={
+            hasConfirmedPayment
+              ? 'Choose how to stop future renewals. Ending at period end keeps the current period active. Immediate cancellation stops future billing now. Issued invoices stay on record, and any refund review is handled separately.'
+              : 'Choose how to stop future renewals. Ending at period end keeps the current period active. Immediate cancellation stops future billing now. If payment for the current period was never confirmed, cancellation does not create a refund.'
+          }
           sx={{ mt: 0.75, opacity: 0.82 }}
         />
       </Box>

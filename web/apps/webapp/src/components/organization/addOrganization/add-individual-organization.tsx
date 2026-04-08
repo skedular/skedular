@@ -114,6 +114,7 @@ const AddIndividualOrganization = ({ rootDataRelay, onReloadRequired, onAdded, o
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
+          refundNotificationEmails: [],
           billingCycle: 'MONTHLY',
           invoiceDueInDays: 7,
         },

@@ -54,7 +54,6 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import type { GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type { TCountryCode } from 'countries-list';
@@ -1850,13 +1849,9 @@ const OrganizationMarketplaceSetup = ({
                           <BodyIconTypography label="Configure how Skedular exports supported invoices into Xero, including recurring invoice behavior." />
                           {existingXeroConnection?.isActive ? (
                             <StackRow spacing={0.5}>
-                              <Typography variant="body2">Connected to</Typography>
-                              {xeroSummaryTenantName ? (
-                                <Typography variant="body2" fontWeight={700}>
-                                  {xeroSummaryTenantName}
-                                </Typography>
-                              ) : null}
-                              <Typography variant="body2">{xeroSummarySuffix}</Typography>
+                              <SmallIconTypography label="Connected to" />
+                              {xeroSummaryTenantName ? <SmallIconTypography label={xeroSummaryTenantName} fontWeight={700} /> : null}
+                              <SmallIconTypography label={xeroSummarySuffix} />
                             </StackRow>
                           ) : (
                             <SmallIconTypography label="Not connected. Connect Xero first, then fine-tune how Skedular exports and reconciles invoices." />

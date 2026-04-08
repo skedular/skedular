@@ -1,0 +1,162 @@
+using Api.Shared.Services;
+using Api.Shared.Services.Models;
+using Booking.Api.GraphQL.Booking;
+using Booking.Api.Mappers;
+using Booking.Api.Services.Authorization;
+using Booking.Shared.Database.Entities;
+using Booking.Shared.Models;
+using Booking.Shared.Repositories;
+using Booking.Shared.Services;
+using Booking.Shared.Services.Cache;
+
+namespace Booking.Api.Services;
+
+public interface IMarketplaceRefundReadService
+{
+    Task<MarketplaceRefundDetails?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task<MarketplaceRefundDetails?> GetByMarketplaceBookingIdAsync(string marketplaceBookingId, CancellationToken cancellationToken);
+
+    Task<ICollection<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(string organizationCustomDomain, ICollection<string>? statuses,
+        CancellationToken cancellationToken);
+
+    Task<MarketplaceRefundDetails?> GetByMarketplaceBookingSubscriptionIdAsync(string marketplaceBookingSubscriptionId,
+        CancellationToken cancellationToken);
+}
+
+public class MarketplaceRefundReadService(
+    IRepositoryFactory repositoryFactory,
+    IMapper mapper,
+    IXeroRefundService xeroRefundService,
+    IOrganizationAuthorizationService organizationAuthorizationService,
+    ICachedCustomerService cachedCustomerService) : IMarketplaceRefundReadService
+{
+    public async Task<MarketplaceRefundDetails?> GetByIdAsync(string id, CancellationToken cancellationToken)
+    {
+        var refund = await repositoryFactory.MarketplaceRefundRepository.GetByIdAsync(id, cancellationToken);
+        if (refund is null)
+        {
+            return null;
+        }
+
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(refund.OrganizationId, customerId, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        return await MapWithAvailabilityAsync(refund, cancellationToken);
+    }
+
+    public async Task<MarketplaceRefundDetails?> GetByMarketplaceBookingIdAsync(
+        string marketplaceBookingId,
+        CancellationToken cancellationToken)
+    {
+        var refund = await repositoryFactory.MarketplaceRefundRepository.GetByLocalEntityAsync(
+            MarketplaceRefundEntityTypeConstants.MarketplaceBooking,
+            marketplaceBookingId,
+            cancellationToken);
+
+        return refund is null ? null : await MapWithAccessControlAsync(refund, cancellationToken);
+    }
+
+    public async Task<MarketplaceRefundDetails?> GetByMarketplaceBookingSubscriptionIdAsync(
+        string marketplaceBookingSubscriptionId,
+        CancellationToken cancellationToken)
+    {
+        var refund = await repositoryFactory.MarketplaceRefundRepository.GetByLocalEntityAsync(
+            MarketplaceRefundEntityTypeConstants.MarketplaceBookingSubscription,
+            marketplaceBookingSubscriptionId,
+            cancellationToken);
+
+        return refund is null ? null : await MapWithAccessControlAsync(refund, cancellationToken);
+    }
+
+    public async Task<ICollection<MarketplaceRefundDetails>> GetByOrganizationCustomDomainAsync(
+        string organizationCustomDomain,
+        ICollection<string>? statuses,
+        CancellationToken cancellationToken)
+    {
+        var organization = await repositoryFactory.OrganizationRepository.GetByIdOrCustomDomainAsync(
+            null,
+            organizationCustomDomain,
+            false,
+            false,
+            cancellationToken) ?? throw new OrganizationNotFound();
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        if (!await organizationAuthorizationService.CanModifyPaymentMethodAsync(organization.Id, customerId, cancellationToken))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        var refunds = await repositoryFactory.MarketplaceRefundRepository.GetByOrganizationIdAsync(organization.Id, statuses, cancellationToken);
+        var results = new List<MarketplaceRefundDetails>(refunds.Count);
+        foreach (var refund in refunds)
+        {
+            results.Add(await MapWithAvailabilityAsync(refund, cancellationToken));
+        }
+
+        return results;
+    }
+
+    private async Task<MarketplaceRefundDetails> MapWithAvailabilityAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
+    {
+        var result = mapper.MapTo(refund);
+        var refundEvents = await repositoryFactory.MarketplaceRefundEventRepository.GetByMarketplaceRefundIdAsync(refund.Id, cancellationToken);
+        var actorIds = refundEvents
+            .Select(item => item.ActorCustomerId)
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Distinct()
+            .Cast<string>()
+            .ToList();
+        if (!string.IsNullOrWhiteSpace(refund.RequestedByCustomerId) && !actorIds.Contains(refund.RequestedByCustomerId))
+        {
+            actorIds.Add(refund.RequestedByCustomerId);
+        }
+
+        var actorsById = actorIds.Count == 0
+            ? new Dictionary<string, string>()
+            : (await repositoryFactory.CustomerRepository.GetByIdsAsync(actorIds, true, cancellationToken))
+            .ToDictionary(item => item.Id, item => item.ToDisplayableName().Trim());
+
+        foreach (var refundEvent in refundEvents)
+        {
+            refundEvent.MarketplaceRefund = refund;
+        }
+
+        result.Events = refundEvents.Select(item =>
+        {
+            var mappedEvent = mapper.MapTo(item);
+            mappedEvent.ActorName = item.ActorCustomerId is not null && actorsById.TryGetValue(item.ActorCustomerId, out var actorName)
+                ? actorName
+                : null;
+            return mappedEvent;
+        }).ToList();
+        result.RequestedByCustomerName = refund.RequestedByCustomerId is not null &&
+                                         actorsById.TryGetValue(refund.RequestedByCustomerId, out var requestedByCustomerName)
+            ? requestedByCustomerName
+            : null;
+        var availability = await xeroRefundService.GetProcessingAvailabilityAsync(refund, cancellationToken);
+        result.CanProcessInXero = availability.CanProcessInXero;
+        result.XeroProcessingBlockedReason = availability.BlockedReason;
+        return result;
+    }
+
+    private async Task<MarketplaceRefundDetails> MapWithAccessControlAsync(MarketplaceRefund refund, CancellationToken cancellationToken)
+    {
+        var customerId = await cachedCustomerService.GetIdAsync(cancellationToken);
+        var canManageRefund =
+            await organizationAuthorizationService.CanModifyPaymentMethodAsync(refund.OrganizationId, customerId, cancellationToken);
+        if (canManageRefund)
+        {
+            return await MapWithAvailabilityAsync(refund, cancellationToken);
+        }
+
+        var result = mapper.MapTo(refund);
+        result.Events = [];
+        result.RequestedByCustomerName = null;
+        result.LastError = null;
+        result.CanProcessInXero = false;
+        result.XeroProcessingBlockedReason = null;
+        return result;
+    }
+}

@@ -138,6 +138,7 @@ const AddPrivateOrganization = ({ rootDataRelay, onReloadRequired, onAdded, onCa
           agreedToTermsOfUse: true,
           termsOfUseId: rootData.activeOrganizationTermsOfUse.id,
           industrySubCategoryIds: [],
+          refundNotificationEmails: [],
           featureImages: finalFeatureImages,
           billingCycle: 'MONTHLY',
           invoiceDueInDays: 7,

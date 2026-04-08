@@ -9,6 +9,7 @@ It is intentionally C4-style rather than implementation-complete. The goal is to
 - how Temporal workflows drive payment, reconciliation, renewal, and cleanup
 - how Stripe and Xero fit into the booking lifecycle
 - how invoice generation, export, and cancellation work at a high level
+- how refund decisions and Xero refund projection should fit into the model
 
 ## Scope
 
@@ -49,6 +50,20 @@ It also references the external systems that the booking domain coordinates with
 
 - `Accounting invoice link`
     - The durable link between a local booking/invoice entity and external accounting state such as Xero.
+
+- `Refund`
+    - A booking-owned financial reversal decision.
+    - Captures local refund intent, policy-derived amount, approval/override details, and downstream provider state.
+
+- `Refund event`
+    - A durable audit record for a refund lifecycle step such as requested, approved, sent to Xero, completed, or
+      failed.
+    - Snapshots the amount, reason, actor, and provider/error metadata shown in timeline and notification surfaces.
+    - Also covers manual follow-up and manual completion steps so those actions remain inside the same refund model.
+
+- `Accounting credit note / adjustment link`
+    - The durable link between a local refund and the downstream accounting artifact used to represent that refund in
+      Xero.
 
 Recurring Xero note:
 
@@ -145,6 +160,7 @@ It is not the main owner of orchestration logic.
 - invoice rendering
 - invoice payment terms
 - Xero export policy and accounting-link state
+- refund eligibility, refund amount calculation, and refund state initiation
 
 ### Temporal Workflows
 
@@ -178,6 +194,8 @@ flowchart TD
     Subscription["MarketplaceBookingSubscription"]
     ArrearsInvoice["OrganizationArrearsInvoice"]
     AccountingLink["AccountingInvoiceExportLink"]
+    Refund["Refund"]
+    CreditNoteLink["AccountingCreditNoteLink / adjustment link"]
 
     Booking --> MarketplaceBooking
     Booking -->|may belong to| RecurringBooking
@@ -187,7 +205,46 @@ flowchart TD
     Booking --> AccountingLink
     RecurringBooking --> AccountingLink
     ArrearsInvoice --> AccountingLink
+    Booking --> Refund
+    RecurringBooking --> Refund
+    Subscription --> Refund
+    Refund --> CreditNoteLink
 ```
+
+## Refund Ownership
+
+- Booking is the source of truth for refundability and refund amount.
+- Product pricing cancellation policy decides the policy-derived refund preview.
+- Payment confirmation is a separate prerequisite from refund policy. A policy-eligible cancellation must not create or
+  advance a refund unless the relevant marketplace payment for that booking or billing window has actually been
+  confirmed.
+- Admin actions may approve, reduce, or reject a refund, but that override must be stored locally with actor and
+  reason.
+- Xero is the downstream accounting representation of the refund decision.
+- A refund is not the same thing as a booking delete, subscription end, invoice cancellation, or payment-status change.
+- Refund state should therefore not be collapsed into:
+    - `MarketplaceBooking.PaymentStatus`
+    - `AccountingInvoiceExportLink`
+    - invoice-instance sync state
+- Refund history should also not be reconstructed only from the latest aggregate timestamps/fields. Timeline/audit
+  views should read from persisted refund events.
+- Manual payouts or finance-team handling should be represented as first-class refund statuses/events, not free-form
+  notes attached to `Failed`.
+
+## Xero Refund Position
+
+- Xero is treated here as an accounting system, not the booking or payment authority.
+- The booking domain should decide one of these local outcomes first:
+    - no refund
+    - partial refund
+    - full refund
+    - manual review required
+- Only after that decision should booking project the refund into Xero.
+- If payment was never confirmed, booking should not create a refund record at all. The local outcome is cancellation of
+  payment or invoice workflow state, not refund lifecycle entry.
+- For paid/live Xero invoices, the preferred accounting projection is a credit-note path.
+- For draft/unpaid invoices, the accounting outcome may instead be invoice cancellation/void, but the local refund
+  decision still needs to be recorded as a first-class domain event/state.
 
 ## Main Runtime Flows
 
@@ -463,12 +520,14 @@ The booking domain uses Xero for:
 - organization arrears invoice export
 - payment status/accounting-state sync
 - cancellation of live exported invoices/templates when bookings or recurring cycles are cancelled
+- downstream accounting projection of approved refund decisions
 
 Important constraints:
 
 - Xero repeating invoices are only used when the recurring schedule can be represented safely
 - unsupported recurring shapes fall back to standard per-cycle invoices
 - local booking/subscription cancellation is authoritative even if Xero cleanup later requires retry or manual attention
+- refundability is decided locally before any Xero credit-note or invoice-adjustment call is made
 
 ## Cancellation model
 
@@ -493,6 +552,58 @@ Cancel at period end:
 
 Already-issued invoices remain historical records. Cancellation stops future billing; it does not imply refund or
 invoice reversal.
+
+## Refund model
+
+Refund support should be added as a separate booking-owned model, not as an extension of invoice-export state.
+
+Booking owns:
+
+- deciding whether a booking/subscription cycle is refundable
+- calculating the policy-derived refundable amount
+- storing admin overrides and approval reasons
+- tracking local refund status
+
+Xero owns only the downstream accounting representation of that local refund decision.
+
+In practice:
+
+- draft or unpaid invoices may be handled by invoice cancellation/void
+- paid/live invoices should generally be reversed through a credit-note path
+- local refund records must survive Xero failure and remain retriable/manual
+- current implementation now treats subscription refund projection as a two-step correlation problem:
+    - resolve the current billing-window recurring booking for the refunded subscription cycle
+    - resolve that recurring booking to a concrete generated Xero invoice instance before creating the credit note
+- subscription refunds must fail closed when only the repeating-template link is known; the template id is not a safe
+  credit-note target
+- admin/API review should expose a preview of the policy-derived amount first and only persist a reduced approved amount
+  when the refund is moved into accounting processing
+
+## Intended Refund Flow
+
+```mermaid
+sequenceDiagram
+    participant User as Customer or admin
+    participant API as Booking API
+    participant Shared as Booking shared services
+    participant Refund as Local refund aggregate
+    participant Xero as Xero
+
+    User->>API: Request cancellation / refund
+    API->>Shared: validate auth + load booking/subscription
+    Shared->>Shared: evaluate cancellation policy and refundable amount
+    Shared->>Refund: persist refund request/decision
+
+    alt no refund due
+        Shared-->>API: cancellation only
+    else refund requires Xero accounting projection
+        Shared->>Xero: create credit note or equivalent accounting adjustment
+        Xero-->>Shared: external credit note state
+        Shared->>Refund: persist provider link + status
+    else refund needs manual follow-up
+        Shared->>Refund: mark manual required / pending
+    end
+```
 
 ## Current high-level component map
 

@@ -263,6 +263,7 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             StripeAuthorizeExistingConnectAccountUrl = stripeAuthorizeExistingConnectAccountUrl,
@@ -336,6 +337,7 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails,
             IsOwnershipVerified = src.IsOwnershipVerified,
             FeatureImages = src.FeatureImages,
             TermsOfUse = termsOfUse,
@@ -361,6 +363,7 @@ public class Mapper : IMapper
         dest.InvoiceDueInDays = src.InvoiceDueInDays;
         dest.ContactEmail = src.ContactEmail;
         dest.ContactPhone = src.ContactPhone;
+        dest.RefundNotificationEmails = src.RefundNotificationEmails;
         dest.IsOwnershipVerified = src.IsOwnershipVerified;
         dest.FeatureImages = src.FeatureImages;
         dest.IndustrySubCategories = industrySubCategories;
@@ -457,6 +460,7 @@ public class Mapper : IMapper
             Type = new OrganizationTypeDetails { Type = src.Type, Name = src.Type.ToOrganizationTypeName() },
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails,
             IsOwnershipVerified = src.IsOwnershipVerified ?? false,
             FeatureImages = src.FeatureImages,
             StripeAuthorizeExistingConnectAccountUrl = src.StripeAuthorizeExistingConnectAccountUrl.ToString(),
@@ -555,6 +559,7 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             AgreedToTermsOfUse = src.AgreedToTermsOfUse,
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList(),
@@ -575,6 +580,7 @@ public class Mapper : IMapper
             InvoiceDueInDays = src.InvoiceDueInDays,
             ContactEmail = src.ContactEmail,
             ContactPhone = src.ContactPhone,
+            RefundNotificationEmails = src.RefundNotificationEmails.ToSafeCollection(),
             FeatureImages = src.FeatureImages.ToSafeCollection(),
             IndustrySubCategories = src.IndustrySubCategoryIds.Select(item => new IndustrySubCategory { Id = item }).ToList()
         };

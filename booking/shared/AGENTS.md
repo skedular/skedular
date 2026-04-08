@@ -151,6 +151,85 @@ The code paths are separate enough that it is easy to fix one and leave the othe
   organization billing cycle, booking needs to map each paid generated Xero invoice back to the covered installment
   window so only the matching portion of the future recurring booking instances is treated as paid.
 
+## Refund Rules
+
+- Refund decisions are booking-owned domain decisions. They should be derived from booking/subscription state,
+  cancellation policy, cancellation mode, and the current time before any provider-specific accounting call is made.
+- Xero refund handling should be modeled as downstream accounting adjustment state, typically via credit notes, not as a
+  replacement for local refund records.
+- Do not store refund state only by changing `MarketplaceBooking.PaymentStatus`. Refund state needs its own durable
+  aggregate because bookings can be confirmed and later partially refunded.
+- Do not fold refund persistence into `AccountingInvoiceExportLink` or `AccountingInvoiceInstance`. Those tables are for
+  invoice export/sync and generated invoice instances, not refund intent/approval history.
+- A booking refund flow should preserve both:
+    - the policy-calculated refund preview at request time
+    - the final approved refund amount and downstream accounting outcome
+- When the original Xero invoice is still draft/unpaid, booking may choose invoice cancellation/void as the accounting
+  outcome instead of a credit note, but that must still be represented locally as a refund/cancellation decision rather
+  than treated as “nothing happened”.
+- When value has already been recognized on a live Xero invoice, prefer a Xero credit-note path for the accounting
+  reversal instead of rewriting historical invoice meaning.
+- Current implementation boundary: one-time marketplace booking refunds can project directly from the booking-level Xero
+  invoice link.
+- Subscription refunds must not project from the subscription root record itself. They need an explicit
+  current-billing-window resolution step:
+    - resolve the billed recurring booking that represents the active/refunded subscription window
+    - resolve that recurring booking's Xero export link
+    - if the export link is a repeating template, correlate to the concrete generated invoice instance before creating a
+      credit note
+- Fail closed when that recurring/generated invoice correlation is missing or ambiguous. Do not create subscription
+  credit notes against the repeating template id itself.
+- API/UI surfaces should consume the booking-owned Xero processing readiness signal for each refund instead of
+  hardcoding assumptions such as “subscriptions can never process in Xero”.
+- Refund notifications should follow committed local refund state changes, not speculative provider attempts. Trigger
+  them after the refund save/commit boundary for `Requested`, `PendingAccounting`, `Completed`, and `Failed`.
+- Immediate customer-facing cancellation should auto-attempt the happy-path refund projection when possible:
+    - create the local refund record
+    - auto-promote it into accounting processing
+    - attempt Xero credit-note projection immediately when availability/correlation is deterministic
+    - fall back to `ManualRequired` only when automation is blocked or fails
+- Do not require a separate operator approval click for the normal eligible-refund path unless the product explicitly
+  wants manual approval. The default flow should be automatic, with admin follow-up reserved for exceptions.
+- Refund notification routing should dedupe identical customer/internal email addresses so one state change does not
+  produce duplicate messages to the same inbox.
+- Internal refund notifications should target the same active owner/administrator audience that can modify payment
+  methods, with `Organization.ContactEmail` included as an additional internal recipient when present.
+- Organization-managed refund notification emails are the source of truth for extra internal recipients. Per-
+  organization routing belongs on organization settings and should arrive in booking through the replicated
+  organization model.
+- Refund notification copy should distinguish provider-confirmed completion from local/manual states, and failed
+  notifications should explicitly call out manual follow-up when downstream accounting is blocked.
+- `CancelAtPeriodEnd` should usually stop future billing without automatically creating a refund for the active cycle.
+  Immediate cancellation is the path that may need refund evaluation for already-billed value.
+- Refund preview, refund creation, and admin refund progression all require confirmed payment first.
+- For one-time marketplace bookings, require `MarketplaceBooking.PaymentStatus == Confirmed` before a refund can exist.
+- For subscriptions, resolve the billed recurring booking that represents the active cycle and require that recurring
+  booking's payment status to be `Confirmed`. Do not treat the subscription root marketplace payment status as the
+  refund authority.
+- If payment was never confirmed, cancellation can still proceed locally, but the outcome should be payment/invoice
+  cancellation rather than a refund aggregate.
+- Admin/customer UI should show refund status separately from booking/subscription cancellation status.
+- Refund timeline/audit UI should read from durable refund events, not infer history only from the latest aggregate
+  fields.
+- Persist refund events for at least:
+    - `Requested`
+    - `PendingAccounting`
+    - `SentToXero`
+    - `Completed`
+    - `Failed`
+- Refund events should snapshot the amount, note/reason, actor, and provider reference/error state visible at that
+  step.
+- Manual refund handling should remain inside the same aggregate and event stream:
+    - `ManualRequired` means provider-side automation is blocked and operator follow-up is required
+    - `ManualCompleted` means the operator completed the refund outside provider automation but still inside the local
+      refund lifecycle
+- If finance/support need a cross-entity queue, prefer an organization-scoped refund operations view backed by a refund
+  query rather than duplicating refund controls into unrelated booking lists.
+- Extra internal refund recipients from organization settings should still dedupe against customer and discovered
+  owner/administrator recipients.
+- If Xero credit-note creation or follow-up settlement fails, keep the local refund in a retriable/manual-required
+  state. Do not roll back the local cancellation decision just because downstream accounting failed.
+
 ## Marketplace Subscription Auto-Renew
 
 - `BookMarketplaceBookingSubscriptionResources` is the owning workflow for marketplace subscription maintenance.

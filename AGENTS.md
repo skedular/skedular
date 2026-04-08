@@ -140,6 +140,51 @@ This file applies to the whole repository.
   installment invoices are paid and map that back to the covered booking window so only the paid portion of the future
   resource bookings is treated as paid.
 
+## Refund Ownership
+
+- Refund eligibility and refund amount calculation belong to booking, using the product pricing cancellation policy and
+  the actual cancellation/refund request time.
+- Xero is an accounting projection of a refund decision, not the source of truth for whether a booking or subscription
+  is refundable.
+- Do not infer refundability from Xero invoice state alone. First decide the local refund outcome, then mirror it to
+  Xero.
+- Do not overload booking payment confirmation state as refund state. A paid booking may later have zero, partial, or
+  full refund activity.
+- Refund persistence should be separate from `AccountingInvoiceExportLink`. Invoice-export links track invoice state;
+  refund/credit-note state should have its own durable local record.
+- For Xero-backed refunds, prefer credit-note based accounting adjustment flows rather than mutating historical invoice
+  meaning in place.
+- Cancellation and refund are related but different:
+    - cancellation stops future service/resource entitlement
+    - refund records the financial reversal decision and downstream accounting action
+- Immediate cancellation does not automatically imply a refund, and a refund can require admin review or downstream
+  settlement even when cancellation already succeeded locally.
+- Current implementation direction: if cancellation creates an eligible confirmed-payment refund and the Xero path is
+  deterministic, booking should auto-attempt the Xero credit-note projection immediately after the local refund record
+  is created. Operator involvement is the fallback for blocked, ambiguous, or failed downstream accounting paths.
+- Refund policy alone is not enough to enter the refund lifecycle. Refund preview, refund creation, and refund
+  progression require confirmed payment first.
+- If payment is still pending, rejected, expired, not-set, or otherwise unconfirmed, the correct local outcome is
+  cancellation of payment/invoice workflow state rather than a refund record.
+- Subscription refund payment checks must use the billed recurring booking for the active cycle, not the subscription
+  root `MarketplaceBooking.PaymentStatus`.
+- When a higher-level recurring/subscription cancellation deletes many generated child bookings, do not create or notify
+  separate booking-level refunds for each child instance. Treat the top-level cancellation as the single customer-facing
+  refund boundary.
+- Admin override of a refund should preserve:
+    - the policy-derived refund preview
+    - the final approved refund amount
+    - the actor and reason for the override
+- Refund timeline/audit surfaces should be backed by durable refund events such as requested, approved, sent-to-Xero,
+  completed, and failed, not only by the latest aggregate timestamps.
+- Manual refund handling should stay inside the same refund aggregate rather than becoming a parallel workflow. Model
+  manual follow-up/completion as explicit refund statuses/events and expose them through the same admin/customer
+  surfaces.
+- Organization-managed refund notification recipients should be stored on organization settings and replicated into
+  booking. That organization setting is the source of truth for refund-routing audiences.
+- If Xero refund projection fails, local refund intent/state should remain authoritative and be retriable/manual rather
+  than lost.
+
 ## Marketplace Subscription Auto-Renew
 
 - Marketplace auto-renewable subscriptions are maintained by the Temporal workflow
@@ -205,3 +250,12 @@ This file applies to the whole repository.
     3. query field returning the available choices for the UI
 - Prefer driving UI choice controls from those queryable details types instead of hardcoded labels or duplicated enum
   lists.
+
+## Web Typography Rule
+
+- In `web/apps/webapp`, do not import `@mui/material/Typography` directly in feature/page components.
+- Use the existing Skedular typography wrappers exported from `@/components/commons` instead, for example
+  `BodyIconTypography`, `SmallIconTypography`, `CaptionIconTypography`, `LeadIconTypography`, and the heading
+  wrappers.
+- The only exception is inside the shared typography wrapper implementation files themselves under
+  `web/apps/webapp/src/components/commons`, where direct MUI `Typography` is allowed as the low-level primitive.

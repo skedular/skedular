@@ -20,6 +20,9 @@ public class UpdateOrganizationInput
     [GraphQLName("contactEmail")] public string? ContactEmail { get; set; }
     [GraphQLName("contactPhone")] public string? ContactPhone { get; set; }
 
+    [GraphQLName("refundNotificationEmails")]
+    public IEnumerable<string> RefundNotificationEmails { get; set; } = [];
+
     [GraphQLName("industrySubCategoryIds")]
     public IEnumerable<string> IndustrySubCategoryIds { get; set; } = [];
 

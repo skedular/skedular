@@ -896,6 +896,181 @@ namespace Booking.Shared.Database.Migrations
                     b.ToTable("MarketplaceBookingSubscription");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AccountingProvider")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<int?>("AppliedRuleMinutesBefore")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("BaseAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("ExternalRefundId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ExternalRefundNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<DateTimeOffset?>("LastProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LocalEntityId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("LocalEntityType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrganizationId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<DateTimeOffset>("ReferenceTime")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal?>("RefundAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.Property<int>("RefundPercentage")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("RequestedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("RequestedByCustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("RequestedByCustomerId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("AccountingProvider", "ExternalRefundId")
+                        .IsUnique();
+
+                    b.HasIndex("OrganizationId", "LocalEntityType", "LocalEntityId")
+                        .IsUnique();
+
+                    b.ToTable("MarketplaceRefund");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundEvent", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("AccountingProvider")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("ActorCustomerId")
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<uint>("EntityFrameworkVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.Property<string>("EventType")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ExternalRefundId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("ExternalRefundNumber")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("MarketplaceRefundId")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset?>("ModifiedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("OccurredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(100000)
+                        .HasColumnType("character varying(100000)");
+
+                    b.Property<decimal?>("RefundAmount")
+                        .HasColumnType("DECIMAL(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorCustomerId");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("ModifiedAt");
+
+                    b.HasIndex("MarketplaceRefundId", "OccurredAt", "CreatedAt");
+
+                    b.ToTable("MarketplaceRefundEvent");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>
                 {
                     b.Property<string>("Id")
@@ -951,6 +1126,9 @@ namespace Booking.Shared.Database.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<Offering>("Offering")
+                        .HasColumnType("jsonb");
+
+                    b.PrimitiveCollection<string>("RefundNotificationEmails")
                         .HasColumnType("jsonb");
 
                     b.Property<string>("Type")
@@ -2634,6 +2812,40 @@ namespace Booking.Shared.Database.Migrations
                     b.Navigation("ProductVersion");
                 });
 
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "RequestedByCustomer")
+                        .WithMany()
+                        .HasForeignKey("RequestedByCustomerId");
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("RequestedByCustomer");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefundEvent", b =>
+                {
+                    b.HasOne("Booking.Shared.Database.Entities.Customer", "ActorCustomer")
+                        .WithMany()
+                        .HasForeignKey("ActorCustomerId");
+
+                    b.HasOne("Booking.Shared.Database.Entities.MarketplaceRefund", "MarketplaceRefund")
+                        .WithMany("Events")
+                        .HasForeignKey("MarketplaceRefundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActorCustomer");
+
+                    b.Navigation("MarketplaceRefund");
+                });
+
             modelBuilder.Entity("Booking.Shared.Database.Entities.OrganizationArrearsInvoice", b =>
                 {
                     b.HasOne("Booking.Shared.Database.Entities.Customer", "Customer")
@@ -3246,6 +3458,11 @@ namespace Booking.Shared.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("RecurringBookings");
+                });
+
+            modelBuilder.Entity("Booking.Shared.Database.Entities.MarketplaceRefund", b =>
+                {
+                    b.Navigation("Events");
                 });
 
             modelBuilder.Entity("Booking.Shared.Database.Entities.Organization", b =>

@@ -108,6 +108,7 @@ type OrganizationDetails = {
   industrySubCategoryIds: string[];
   contactEmail: string;
   contactPhone: string | null;
+  refundNotificationEmailsText: string | null;
 };
 
 const organizationSchema = object({
@@ -121,7 +122,18 @@ const organizationSchema = object({
     .email(({ value }) => `${value} is not a valid email`)
     .required('Contact email is required'),
   contactPhone: string().nullable(),
+  refundNotificationEmailsText: string()
+    .nullable()
+    .test('refund-notification-emails', 'Each refund notification email must be a valid email address.', (value) =>
+      splitNotificationEmails(value).every((item) => string().email().isValidSync(item)),
+    ),
 });
+
+const splitNotificationEmails = (value: string | null | undefined) =>
+  (value ?? '')
+    .split(/[\n,;]/)
+    .map((item) => item.trim())
+    .filter((item) => item.length !== 0);
 
 type PhysicalAddress = {
   addressLine1: string;
@@ -136,8 +148,8 @@ type PhysicalAddress = {
 const physicalAddressSchema = object({
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
-  suburb: string(),
-  city: string(),
+  suburb: string().nullable(),
+  city: string().nullable(),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
   countryCode: string().required('Country is required'),
@@ -162,8 +174,8 @@ const billingSchema = object({
     .required('Email is required'),
   addressLine1: string().required('Address line 1 is required'),
   addressLine2: string().nullable(),
-  suburb: string(),
-  city: string(),
+  suburb: string().nullable(),
+  city: string().nullable(),
   province: string().nullable(),
   zipcode: string().required('Zipcode is required'),
   countryCode: string().required('Country is required'),
@@ -276,6 +288,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           }
           contactEmail
           contactPhone
+          refundNotificationEmails
           physicalAddress {
             id
             osmType
@@ -449,6 +462,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           }
           contactEmail
           contactPhone
+          refundNotificationEmails
           featureImages {
             original {
               url
@@ -757,6 +771,10 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
   const debounceSetOrganizationContactEmail = useDebounceCallback(setOrganizationContactEmail, keyboardTextFieldDebounceTimeout);
   const [organizationContactPhone, setOrganizationContactPhone] = useState(rootDataOrganization.organization?.contactPhone);
   const debounceSetOrganizationContactPhone = useDebounceCallback(setOrganizationContactPhone, keyboardTextFieldDebounceTimeout);
+  const [organizationRefundNotificationEmailsText, setOrganizationRefundNotificationEmailsText] = useState<string>(
+    rootDataOrganization.organization?.refundNotificationEmails?.join('\n') ?? '',
+  );
+  const debounceSetOrganizationRefundNotificationEmailsText = useDebounceCallback(setOrganizationRefundNotificationEmailsText, keyboardTextFieldDebounceTimeout);
 
   const [featureImages, setFeatureImages] = useState<FileUploadResponse[]>(
     rootDataOrganization.organization
@@ -955,6 +973,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     industrySubCategoryIds,
     contactEmail,
     contactPhone,
+    refundNotificationEmailsText,
   }: OrganizationDetails) => {
     const organization = rootDataOrganization.organization;
     if (!organization) {
@@ -962,6 +981,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
     }
 
     const selectedIndustrySubCategoryIds = industrySubCategoryIds ?? [];
+    const refundNotificationEmails = splitNotificationEmails(refundNotificationEmailsText);
     const toastId = themedToast(<NotificationContent content={`Updating organization '${organization.name}'...`} />, infoNotificationOptions);
     const finalFeatureImages = featureImages.map((image) => ({
       original: image.original ? { url: image.original.url, height: image.original.height, width: image.original.width } : null,
@@ -986,6 +1006,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
           industrySubCategoryIds: selectedIndustrySubCategoryIds,
           contactEmail,
           contactPhone,
+          refundNotificationEmails,
           featureImages: finalFeatureImages,
           billingCycle: organization.billingCycle.type,
           invoiceDueInDays: organization.invoiceDueInDays,
@@ -1032,6 +1053,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
               .map(({ id, name }) => ({ id, name })),
             contactEmail,
             contactPhone,
+            refundNotificationEmails,
             featureImages: finalFeatureImages,
             billingCycle: organization.billingCycle,
             invoiceDueInDays: organization.invoiceDueInDays,
@@ -2388,6 +2410,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 industrySubCategoryIds: organizationIndustrySubCategoryIds,
                 contactEmail: organizationContactEmail,
                 contactPhone: organizationContactPhone,
+                refundNotificationEmailsText: organizationRefundNotificationEmailsText,
               }}
               validate={validateOrganizationDetails}
               render={({ handleSubmit, values }) => {
@@ -2398,6 +2421,7 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
                 debounceSetOrganizationIndustrySubCategoryIds(values!.industrySubCategoryIds);
                 debounceSetOrganizationContactEmail(values!.contactEmail);
                 debounceSetOrganizationContactPhone(values!.contactPhone);
+                debounceSetOrganizationRefundNotificationEmailsText(values!.refundNotificationEmailsText ?? '');
 
                 return (
                   <FormStackColumn onSubmit={handleSubmit}>
@@ -2512,6 +2536,13 @@ const OrganizationAdmin = ({ rootDataRelay, rootDataOrganizationRelay, rootDataZ
 
                       <FormFieldLabel label="Phone Number">
                         <TextField name="contactPhone" required={requiredOrganizationDetailsFields.contactPhone} />
+                      </FormFieldLabel>
+
+                      <FormFieldLabel label="Refund Notification Emails">
+                        <StackColumn>
+                          <TextField name="refundNotificationEmailsText" required={requiredOrganizationDetailsFields.refundNotificationEmailsText} multiline minRows={3} />
+                          <HelperText text="Optional. One email per line, or separate multiple emails with commas. These addresses receive internal refund status updates." />
+                        </StackColumn>
                       </FormFieldLabel>
                     </StackColumn>
 

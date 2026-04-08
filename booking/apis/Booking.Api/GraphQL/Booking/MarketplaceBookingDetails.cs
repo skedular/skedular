@@ -1,5 +1,6 @@
 using Api.Shared.Services.Models;
 using Booking.Api.GraphQL.Payment;
+using Booking.Api.Services;
 using Enterprise.Shared;
 using Enterprise.Shared.GraphQL.Types;
 using HotChocolate;
@@ -70,4 +71,10 @@ public static partial class MarketplaceBookingDetailsType
             : new OrganizationDetails(item.PaidByOrganizationId, item.PaidByOrganizationUniqueCustomDomain.ToSafeString());
 
     public static ProductVersionDetails GetProductVersion([Parent] MarketplaceBookingDetails item) => new(item.ProductVersionId);
+
+    public static Task<MarketplaceRefundDetails?> GetRefund(
+        [Parent] MarketplaceBookingDetails item,
+        [Service] IMarketplaceRefundReadService marketplaceRefundReadService,
+        CancellationToken cancellationToken) =>
+        marketplaceRefundReadService.GetByMarketplaceBookingIdAsync(item.Id, cancellationToken);
 }

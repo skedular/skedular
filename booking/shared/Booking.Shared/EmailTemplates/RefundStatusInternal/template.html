@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Refund update</title>
+</head>
+<body style="background:#f5f6fa; margin:0; padding:0; font-family: Helvetica, Arial, sans-serif;">
+<table cellpadding="0" cellspacing="0"
+       style="background:#f5f6fa; padding:40px 0; font-family: Helvetica, Arial, sans-serif;"
+       width="100%">
+    <tr>
+        <td align="center">
+            <table cellpadding="0" cellspacing="0"
+                   style="background:#fff; border-radius:8px; box-shadow:0 2px 8px #e0e0e0; font-family: Helvetica, Arial, sans-serif;">
+                <tr>
+                    <td style="padding:0 32px; font-family: Helvetica, Arial, sans-serif;">
+                        <p style="color:#222; margin:32px 0 0 0; font-family: Helvetica, Arial, sans-serif;">
+                            Hi {{RECIPIENT_NAME}},<br><br>
+                            {{SUMMARY}}<br><br>
+
+                            Refund type:<br>
+                            {{ENTITY_LABEL}}<br><br>
+
+                            Status:<br>
+                            {{STATUS}}<br><br>
+
+                            Amount:<br>
+                            {{AMOUNT}}<br><br>
+
+                            Reference:<br>
+                            {{REFERENCE}}<br><br>
+
+                            Note:<br>
+                            {{NOTE}}<br><br>
+
+                            Error:<br>
+                            {{ERROR}}<br><br>
+
+                            {{INTERNAL_CONTEXT}}<br><br>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:24px 32px; text-align:center; color:#bbb; font-size:0.9em; font-family: Helvetica, Arial, sans-serif;">
+                        Powered by Skedular
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

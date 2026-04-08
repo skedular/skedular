@@ -253,6 +253,7 @@ type OrganizationDetails {
   termsOfUse: OrganizationTermsOfUse
   contactEmail: String
   contactPhone: String
+  refundNotificationEmails: [String!]!
   isOwnershipVerified: Boolean!
   physicalAddress: OrganizationPhysicalAddressDetails
   billingDetails: OrganizationBillingDetails
@@ -658,6 +659,7 @@ input AddOrganizationInput {
   invoiceDueInDays: Int!
   contactEmail: String
   contactPhone: String
+  refundNotificationEmails: [String!]!
   agreedToTermsOfUse: Boolean!
   termsOfUseId: String!
   industrySubCategoryIds: [String!]!
@@ -999,6 +1001,7 @@ input UpdateOrganizationInput {
   invoiceDueInDays: Int!
   contactEmail: String
   contactPhone: String
+  refundNotificationEmails: [String!]!
   industrySubCategoryIds: [String!]!
   featureImages: [CdnImageFileInput!]
   listingMetadata: ListingMetadataInput

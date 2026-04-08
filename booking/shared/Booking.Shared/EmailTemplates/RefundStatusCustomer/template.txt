@@ -1,0 +1,24 @@
+Hi {{RECIPIENT_NAME}},
+
+{{SUMMARY}}
+
+Refund type:
+{{ENTITY_LABEL}}
+
+Status:
+{{STATUS}}
+
+Amount:
+{{AMOUNT}}
+
+Reference:
+{{REFERENCE}}
+
+Note:
+{{NOTE}}
+
+Error:
+{{ERROR}}
+
+—
+Powered by Skedular

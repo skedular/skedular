@@ -40,6 +40,7 @@ public static class Extensions
                 .AddScoped<IAccountingInvoiceCancellationService, AccountingInvoiceCancellationService>()
                 .AddSingleton<IRecurringInvoiceBillingScheduleService, RecurringInvoiceBillingScheduleService>()
                 .AddSingleton<IRecurringBookingScheduleService, RecurringBookingScheduleService>()
+                .AddSingleton<MarketplaceRefundPolicyService>()
                 .AddSingleton<IXeroRepeatingInvoiceScheduleService, XeroRepeatingInvoiceScheduleService>()
                 .AddSingleton<IXeroRecurringInvoiceTransitionService, XeroRecurringInvoiceTransitionService>()
                 .AddSingleton<IProductVersionHelperService, ProductVersionHelperService>()
@@ -55,6 +56,10 @@ public static class Extensions
                 .AddScoped<ICachedMarketplaceBookingSubscriptionService, CachedMarketplaceBookingSubscriptionService>()
                 .AddScoped<ILocationResourceBookingSlotsHelperService, LocationResourceBookingSlotsHelperService>()
                 .AddScoped<IBookingResourceSlotsHelperService, BookingResourceSlotsHelperService>()
+                .AddScoped<IMarketplaceRefundEventService, MarketplaceRefundEventService>()
+                .AddScoped<IMarketplaceRefundService, MarketplaceRefundService>()
+                .AddScoped<IMarketplaceRefundAutomationService, MarketplaceRefundAutomationService>()
+                .AddScoped<IMarketplaceRefundNotificationService, MarketplaceRefundNotificationService>()
                 .AddScoped<IStripeProductPricingService, StripeProductPricingService>()
                 .AddScoped<IStripeCustomerService, StripeCustomerService>()
                 .AddScoped<IXeroWebhookService, XeroWebhookService>()
@@ -69,7 +74,8 @@ public static class Extensions
                 .AddScoped<IMarketplaceBookingSubscriptionService, MarketplaceBookingSubscriptionService>()
                 .AddScoped<IMarketplaceBookingService, MarketplaceBookingService>()
                 .AddScoped<ISkedularInvoiceService, SkedularInvoiceService>()
-                .AddScoped<IXeroInvoiceService, XeroInvoiceService>();
+                .AddScoped<IXeroInvoiceService, XeroInvoiceService>()
+                .AddScoped<IXeroRefundService, XeroRefundService>();
 
         public IServiceCollection AddRepositoryFactory() =>
             services.AddScoped<IRepositoryFactory, RepositoryFactory>();
@@ -86,6 +92,8 @@ public static class Extensions
                 .AddScoped<ILocationRepository, LocationRepository>()
                 .AddScoped<IMarketplaceBookingRepository, MarketplaceBookingRepository>()
                 .AddScoped<IMarketplaceBookingSubscriptionRepository, MarketplaceBookingSubscriptionRepository>()
+                .AddScoped<IMarketplaceRefundEventRepository, MarketplaceRefundEventRepository>()
+                .AddScoped<IMarketplaceRefundRepository, MarketplaceRefundRepository>()
                 .AddScoped<IOrganizationArrearsInvoiceRepository, OrganizationArrearsInvoiceRepository>()
                 .AddScoped<IOrganizationInvoiceCounterRepository, OrganizationInvoiceCounterRepository>()
                 .AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>()

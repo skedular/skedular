@@ -38,6 +38,7 @@ import { toast } from 'react-toastify';
 import { v7 as uuid } from 'uuid';
 import MarketplaceProductBookingDetailsHero from './marketplace-product-booking-details-hero';
 import MarketplaceProductBookingPaymentPanel from './marketplace-product-booking-payment-panel';
+import MarketplaceRefundStatusCard from './marketplace-refund-status-card';
 
 const RootQuery = graphql`
   query marketplaceProductBookingDetails_rootQuery($bookingId: String!) {
@@ -68,6 +69,39 @@ const RootQuery = graphql`
       marketplaceBooking {
         id
         quantity
+        refund {
+          currency {
+            type
+            name
+          }
+          status {
+            type
+            name
+          }
+          requestedAt
+          lastProcessedAt
+          refundAmount
+          refundPercentage
+          currencyToDisplay
+          reason
+          lastError
+          externalRefundNumber
+          requestedByCustomerName
+          events {
+            id
+            eventType {
+              type
+              name
+            }
+            occurredAt
+            refundAmount
+            currencyToDisplay
+            reason
+            lastError
+            externalRefundNumber
+            actorName
+          }
+        }
         invoiceUrl
         invoiceNumber
         isPaymentRequired
@@ -119,6 +153,39 @@ const BookingSubscription = graphql`
       }
       marketplaceBooking {
         id
+        refund {
+          currency {
+            type
+            name
+          }
+          status {
+            type
+            name
+          }
+          requestedAt
+          lastProcessedAt
+          refundAmount
+          refundPercentage
+          currencyToDisplay
+          reason
+          lastError
+          externalRefundNumber
+          requestedByCustomerName
+          events {
+            id
+            eventType {
+              type
+              name
+            }
+            occurredAt
+            refundAmount
+            currencyToDisplay
+            reason
+            lastError
+            externalRefundNumber
+            actorName
+          }
+        }
         invoiceUrl
         invoiceNumber
         isPaymentRequired
@@ -164,6 +231,7 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
   const [pendingCancellationConfirmation, setPendingCancellationConfirmation] = useState(false);
   const [commitDeleteMarketplaceBooking, isDeleteMarketplaceBookingInFlight] = useMutation(DeleteMarketplaceBookingMutation);
   const isCancelled = hasCancelledLocally || !!booking?.deletedByCustomer?.id;
+  const hasConfirmedPayment = marketplaceBooking?.paymentStatus.type === 'CONFIRMED';
   const canRequestCancellation = useMemo(() => {
     if (!booking || !marketplaceBooking || isCancelled) {
       return false;
@@ -209,7 +277,15 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
 
         toast.update(toastId, {
           ...successNotificationOptions,
-          render: <NotificationContent content={`${bookingDetailsInfo} cancelled.`} />,
+          render: (
+            <NotificationContent
+              content={
+                hasConfirmedPayment
+                  ? `${bookingDetailsInfo} cancelled. Any eligible refund will be reviewed separately.`
+                  : `${bookingDetailsInfo} cancelled. No refund is expected because payment was not confirmed.`
+              }
+            />
+          ),
         });
         setHasCancelledLocally(true);
       },
@@ -293,8 +369,21 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
 
                 {isCancelled ? (
                   <Alert severity="success" sx={{ mt: 3, borderRadius: 3 }}>
-                    This booking has been cancelled.
+                    {hasConfirmedPayment
+                      ? 'This booking has been cancelled. Refund processing, if applicable, continues separately after cancellation.'
+                      : 'This booking has been cancelled. No refund is expected because payment was not confirmed.'}
                   </Alert>
+                ) : null}
+
+                {marketplaceBooking.refund ? (
+                  <MarketplaceRefundStatusCard
+                    entityLabel="booking"
+                    hasInvoice={Boolean(marketplaceBooking.invoiceUrl) || (booking.arrearsInvoices?.length ?? 0) > 0}
+                    isCancelled={isCancelled}
+                    isPaymentRequired={marketplaceBooking.isPaymentRequired}
+                    paymentStatusType={marketplaceBooking.paymentStatus.type}
+                    refund={marketplaceBooking.refund}
+                  />
                 ) : null}
 
                 {canRequestCancellation ? (
@@ -303,7 +392,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
                       <CaptionIconTypography label="Booking actions" sx={{ letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.68 }} />
                       <SubtitleIconTypography label="Cancel booking" sx={{ mt: 1 }} />
                       <BodyIconTypography
-                        label="If this booking is still within its cancellation window, you can cancel it here. If the cancellation window has already passed, this booking can no longer be cancelled."
+                        label={
+                          hasConfirmedPayment
+                            ? 'If this booking is still within its cancellation window, you can cancel it here. If payment has already been recorded, any eligible refund is reviewed separately after the cancellation is accepted.'
+                            : 'If this booking is still within its cancellation window, you can cancel it here. If payment was never confirmed, cancellation stops the booking without creating a refund.'
+                        }
                         sx={{ mt: 1, opacity: 0.82 }}
                       />
                       <StackRow sx={{ mt: 2 }}>
@@ -384,6 +477,11 @@ const MarketplaceProductBookingDetails = ({ queryReference }: { queryReference: 
         <DefaultDialogTitle title="Cancel Booking" />
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText>{`Cancel ${productTitle} now? If this booking is still within its cancellation window, it will be cancelled immediately.`}</DialogContentText>
+          <DialogContentText sx={{ mt: 1.5 }}>
+            {hasConfirmedPayment
+              ? 'If payment has already been recorded, any refund still depends on the cancellation policy and may be processed after the cancellation is confirmed.'
+              : 'If payment was never confirmed, this cancellation will not create a refund.'}
+          </DialogContentText>
           <TwoButtonsDialogActions
             primaryDisabled={isDeleteMarketplaceBookingInFlight}
             onPrimaryClicked={handleConfirmCancellationClick}

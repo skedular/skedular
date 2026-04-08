@@ -83,15 +83,17 @@ const GoogleAddressLookup = ({ onSelect }: Props) => {
           label="Start typing to search for an address"
           autoComplete="new-password"
           slotProps={{
+            inputLabel: params.slotProps.inputLabel,
             input: {
-              ...params.InputProps,
+              ...params.slotProps.input,
               endAdornment: (
                 <>
                   {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
+                  {params.slotProps.input.endAdornment}
                 </>
               ),
             },
+            htmlInput: params.slotProps.htmlInput,
           }}
         />
       )}

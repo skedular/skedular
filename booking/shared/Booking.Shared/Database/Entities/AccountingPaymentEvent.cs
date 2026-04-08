@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Booking.Shared.Database.Entities;
 
-#pragma warning disable CS8618
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class AccountingPaymentEvent : EntityBase
 {
     public string Provider { get; set; }
@@ -20,7 +21,7 @@ public class AccountingPaymentEvent : EntityBase
     public string OrganizationId { get; set; }
     public virtual Organization Organization { get; set; }
 }
-#pragma warning restore CS8618
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
 public class AccountingPaymentEventConfiguration : IEntityTypeConfiguration<AccountingPaymentEvent>
 {

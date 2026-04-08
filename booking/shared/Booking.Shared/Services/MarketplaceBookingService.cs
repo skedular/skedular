@@ -73,6 +73,7 @@ public interface IMarketplaceBookingService
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         bool ignoreCancellationPolicy,
+        bool createRefund,
         CancellationToken cancellationToken);
 
     /// <summary>
@@ -101,7 +102,11 @@ public class MarketplaceBookingService(
     TimeProvider timeProvider,
     IRandomHelper randomHelper,
     IProductVersionHelperService productVersionHelperService,
-    IAccountingInvoiceCancellationService accountingInvoiceCancellationService) : IMarketplaceBookingService
+    IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+    MarketplaceRefundPolicyService marketplaceRefundPolicyService,
+    IMarketplaceRefundService marketplaceRefundService,
+    IMarketplaceRefundAutomationService marketplaceRefundAutomationService,
+    IMarketplaceRefundNotificationService marketplaceRefundNotificationService) : IMarketplaceBookingService
 {
     /// <summary>
     ///     Adds a new marketplace booking.
@@ -165,6 +170,7 @@ public class MarketplaceBookingService(
         organizations = MergeOrganizationsWithProductOwner(organizations, productVersion);
 
         marketplaceBooking.BillingMode = marketplaceBooking.ProductPricing.BillingMode;
+        marketplaceBooking.Currency ??= productVersion.Currency.ToNullableCurrency();
 
         ValidateMarketplaceCadenceForBookingFlow(marketplaceBooking.ProductPricing.BookingCadence, recurringBooking);
 
@@ -501,6 +507,7 @@ public class MarketplaceBookingService(
         Database.Entities.Booking existingBooking,
         Customer? deletedByCustomer,
         bool ignoreCancellationPolicy,
+        bool createRefund,
         CancellationToken cancellationToken)
     {
         if (existingBooking.Channel.ToBookingChannel() != BookingChannel.Marketplace)
@@ -543,11 +550,20 @@ public class MarketplaceBookingService(
             }
         }
 
+        var refund = createRefund
+            ? await marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken)
+            : null;
         await accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken);
         await repositoryFactory.UnitOfWork.SaveChangesAsync(cancellationToken);
         await transaction.CommitAsync(cancellationToken);
 
         await cachedBookingService.RemoveByIdAsync(deletedBooking.Id, cancellationToken);
+        if (refund is not null)
+        {
+            refund = await marketplaceRefundAutomationService.ProcessAfterRequestAsync(refund, deletedByCustomer?.Id, cancellationToken);
+            await graphQlTopicEventSender.RaiseGraphqlChangeAsync(Constants.BookingTopicName, deletedBooking.Id, cancellationToken);
+            await marketplaceRefundNotificationService.NotifyStatusChangedAsync(refund, cancellationToken);
+        }
 
         return deletedBooking;
     }
@@ -788,33 +804,11 @@ public class MarketplaceBookingService(
         var marketplaceBooking = existingBooking.MarketplaceBooking;
         ArgumentNullException.ThrowIfNull(marketplaceBooking);
 
-        if (!CanBeCancelled(marketplaceBooking.ProductPricing, existingBooking.From, timeProvider.GetUtcNow()))
+        var quote = marketplaceRefundPolicyService.GetQuote(marketplaceBooking.ProductPricing, existingBooking.From, timeProvider.GetUtcNow());
+        if (!quote.CanCancel)
         {
             throw new MarketplaceBookingCancellationNotAllowed();
         }
-    }
-
-    private static bool CanBeCancelled(
-        ProductPricing pricing,
-        DateTimeOffset referenceTime,
-        DateTimeOffset cancelledAt)
-    {
-        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.NoCancellation)
-        {
-            return false;
-        }
-
-        if (pricing.CancellationPolicyType == ProductPricingCancellationPolicyType.FullRefundBeforeCutoff &&
-            pricing.CancellationRefundRules.Count == 0)
-        {
-            return cancelledAt <= referenceTime;
-        }
-
-        var applicableRule = pricing.CancellationRefundRules
-            .OrderByDescending(item => item.MinutesBefore)
-            .FirstOrDefault(item => cancelledAt <= referenceTime.AddMinutes(-item.MinutesBefore));
-
-        return applicableRule is not null;
     }
 
     /// <summary>

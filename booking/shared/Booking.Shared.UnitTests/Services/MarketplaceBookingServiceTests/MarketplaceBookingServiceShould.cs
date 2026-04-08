@@ -100,7 +100,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<BookingIsNotMarketplace>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
     }
 
     [Theory]
@@ -122,7 +122,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
     }
 
     [Theory]
@@ -144,7 +144,7 @@ public class MarketplaceBookingServiceShould
 
         // Act & Assert
         await Should.ThrowAsync<MarketplaceBookingCancellationNotAllowed>(() =>
-            sut.DeleteAsync(existingBooking, deletedByCustomer, false, cancellationToken));
+            sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken));
     }
 
     [Theory]
@@ -155,6 +155,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -180,11 +181,13 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
 
         // Act
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, true, cancellationToken);
 
         // Assert
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+            .MustHaveHappenedOnceExactly();
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
@@ -198,6 +201,7 @@ public class MarketplaceBookingServiceShould
         [Frozen] IRepositoryFactory repositoryFactory,
         [Frozen] IBookingRepository bookingRepository,
         [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
         [Frozen] IMapper mapper,
         [Frozen] IUnitOfWork unitOfWork,
         [Frozen] IDbContextTransaction transaction,
@@ -221,10 +225,55 @@ public class MarketplaceBookingServiceShould
         A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
         A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
 
-        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, cancellationToken);
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, true, true, cancellationToken);
 
         result.ShouldBe(deletedBooking);
         existingBooking.DeletedByCustomer.ShouldBe(deletedByCustomer);
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+            .MustHaveHappenedOnceExactly();
+        A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+        A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();
+    }
+
+    [Theory]
+    [AutoFakeItEasyData]
+    public async Task DeleteAsync_Does_Not_Create_Refund_When_Recurring_Cleanup_Disables_Refund_Creation(
+        [Frozen] TimeProvider timeProvider,
+        [Frozen] IDbTransactionBuilder transactionBuilder,
+        [Frozen] IRepositoryFactory repositoryFactory,
+        [Frozen] IBookingRepository bookingRepository,
+        [Frozen] IAccountingInvoiceCancellationService accountingInvoiceCancellationService,
+        [Frozen] IMarketplaceRefundService marketplaceRefundService,
+        [Frozen] IMapper mapper,
+        [Frozen] IUnitOfWork unitOfWork,
+        [Frozen] IDbContextTransaction transaction,
+        MarketplaceBookingService sut,
+        CancellationToken cancellationToken)
+    {
+        var deletedByCustomer = new Customer();
+        var now = new DateTimeOffset(2026, 3, 18, 8, 0, 0, TimeSpan.Zero);
+        var existingBooking = CreateMarketplaceBooking(
+            now.AddHours(4),
+            false,
+            ProductPricingCancellationPolicyType.FullRefundBeforeCutoff,
+            [new ProductPricingCancellationRefundRule(180, 100)]);
+        existingBooking.RecurringBooking = new RecurringBooking { Id = "recurring-1" };
+        var deletedBooking = new Models.Booking { Id = existingBooking.Id };
+
+        A.CallTo(() => timeProvider.GetUtcNow()).Returns(now);
+        A.CallTo(() => repositoryFactory.UnitOfWork).Returns(unitOfWork);
+        A.CallTo(() => repositoryFactory.BookingRepository).Returns(bookingRepository);
+        A.CallTo(() => transactionBuilder.BeginTransactionAsync(unitOfWork, cancellationToken)).Returns(transaction);
+        A.CallTo(() => bookingRepository.Update(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => bookingRepository.Remove(existingBooking)).Returns(existingBooking);
+        A.CallTo(() => mapper.MapTo(existingBooking)).Returns(deletedBooking);
+
+        var result = await sut.DeleteAsync(existingBooking, deletedByCustomer, false, false, cancellationToken);
+
+        result.ShouldBe(deletedBooking);
+        A.CallTo(() => marketplaceRefundService.CreateBookingCancellationRefundAsync(existingBooking, deletedByCustomer, cancellationToken))
+            .MustNotHaveHappened();
         A.CallTo(() => accountingInvoiceCancellationService.CancelBookingAsync(existingBooking, cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => unitOfWork.SaveChangesAsync(cancellationToken)).MustHaveHappenedOnceExactly();
         A.CallTo(() => transaction.CommitAsync(cancellationToken)).MustHaveHappenedOnceExactly();

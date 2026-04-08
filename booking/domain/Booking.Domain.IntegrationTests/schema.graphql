@@ -114,6 +114,7 @@ type MarketplaceBookingDetails {
   paidByCustomer: CustomerDetails
   paidByOrganization: OrganizationDetails
   productVersion: ProductVersionDetails!
+  refund: MarketplaceRefundDetails @cost(weight: "10")
   quantity: Int!
   productPricing: ProductPricing!
   paymentMethod: PaymentMethodTypeDetails!
@@ -150,6 +151,7 @@ type MarketplaceBookingSubscriptionDetails {
   deletedByCustomer: CustomerDetails
   involvedOrganizations: [OrganizationDetails!]!
   involvedTeams: [TeamDetails!]!
+  refund: MarketplaceRefundDetails @cost(weight: "10")
   arrearsInvoices: [OrganizationArrearsInvoiceDetails!]! @cost(weight: "10")
   startedAt: DateTime!
   cancelledAt: DateTime
@@ -177,7 +179,83 @@ type MarketplaceBookingSubscriptionStatusDetails {
   name: String!
 }
 
+type MarketplaceRefundDetails {
+  id: String!
+  localEntityType: String!
+  localEntityId: String!
+  status: MarketplaceRefundStatusDetails!
+  requestedAt: DateTime!
+  referenceTime: DateTime!
+  refundPercentage: Int!
+  appliedRuleMinutesBefore: Int
+  baseAmount: Decimal
+  refundAmount: Decimal
+  currency: CurrencyDetails
+  currencyToDisplay: String!
+  reason: String
+  accountingProvider: String
+  externalRefundId: String
+  externalRefundNumber: String
+  lastProcessedAt: DateTime
+  lastError: String
+  canProcessInXero: Boolean!
+  events: [MarketplaceRefundEventDetails!]!
+  requestedByCustomerId: String
+  requestedByCustomerName: String
+  xeroProcessingBlockedReason: String
+}
+
+type MarketplaceRefundEventDetails {
+  id: String!
+  eventType: MarketplaceRefundEventTypeDetails!
+  occurredAt: DateTime!
+  refundAmount: Decimal
+  currencyToDisplay: String!
+  reason: String
+  accountingProvider: String
+  externalRefundId: String
+  externalRefundNumber: String
+  lastError: String
+  actorCustomerId: String
+  actorName: String
+}
+
+type MarketplaceRefundEventTypeDetails {
+  type: String!
+  name: String!
+}
+
+type MarketplaceRefundPayload {
+  clientMutationId: String
+  marketplaceRefund: MarketplaceRefundDetails!
+}
+
+type MarketplaceRefundPreviewDetails {
+  localEntityType: String!
+  localEntityId: String!
+  requestedAt: DateTime!
+  referenceTime: DateTime!
+  isRefundable: Boolean!
+  refundPercentage: Int!
+  appliedRuleMinutesBefore: Int
+  baseAmount: Decimal
+  refundAmount: Decimal
+  currency: CurrencyDetails
+  currencyToDisplay: String!
+}
+
+type MarketplaceRefundStatusDetails {
+  type: String!
+  name: String!
+}
+
 type Mutation {
+  markMarketplaceRefundPendingAccounting(input: MarkMarketplaceRefundPendingAccountingInput!): MarketplaceRefundPayload! @cost(weight: "10")
+  completeMarketplaceRefund(input: CompleteMarketplaceRefundInput!): MarketplaceRefundPayload! @cost(weight: "10")
+  markMarketplaceRefundManualRequired(input: MarkMarketplaceRefundManualRequiredInput!): MarketplaceRefundPayload! @cost(weight: "10")
+  markMarketplaceRefundManualCompleted(input: MarkMarketplaceRefundManualCompletedInput!): MarketplaceRefundPayload! @cost(weight: "10")
+  failMarketplaceRefund(input: FailMarketplaceRefundInput!): MarketplaceRefundPayload! @cost(weight: "10")
+  processMarketplaceRefundInXero(input: ProcessMarketplaceRefundInXeroInput!): MarketplaceRefundPayload! @cost(weight: "10")
   addPrivateBooking(input: AddPrivateBookingInput!): BookingPayload! @cost(weight: "10")
   updatePrivateBooking(input: UpdatePrivateBookingInput!): BookingPayload! @cost(weight: "10")
   deletePrivateBooking(input: DeletePrivateBookingInput!): BookingPayload! @cost(weight: "10")
@@ -280,6 +358,11 @@ type ProductVersionDetails {
 }
 
 type Query {
+  marketplaceBookingRefundPreview(bookingId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
+  marketplaceBookingSubscriptionRefundPreview(subscriptionId: String!): MarketplaceRefundPreviewDetails! @cost(weight: "10")
+  marketplaceRefund(id: String!): MarketplaceRefundDetails @cost(weight: "10")
+  marketplaceRefunds(organizationCustomDomain: String! statuses: [String!]): [MarketplaceRefundDetails!]! @cost(weight: "10")
+  marketplaceRefundStatuses: [MarketplaceRefundStatusDetails!]!
   bookingCategories: [BookingCategoryDetails!]!
   marketplaceBookingCategories: [BookingCategoryDetails!]!
   booking(id: String!): BookingDetails @cost(weight: "10")
@@ -506,6 +589,12 @@ input BookingWhereInput {
   includeFutureBookingsOnly: Boolean
 }
 
+input CompleteMarketplaceRefundInput {
+  id: String!
+  reason: String
+  clientMutationId: String
+}
+
 input ConfirmBookingPaymentInput {
   clientMutationId: String
   id: String!
@@ -537,6 +626,12 @@ input DeletePrivateRecurringBookingInput {
   id: String!
 }
 
+input FailMarketplaceRefundInput {
+  id: String!
+  reason: String
+  clientMutationId: String
+}
+
 input MakeBookingPaymentNotRequiredInput {
   clientMutationId: String
   id: String!
@@ -544,6 +639,25 @@ input MakeBookingPaymentNotRequiredInput {
 
 input MakeRecurringBookingPaymentNotRequiredInput {
   id: String!
+  clientMutationId: String
+}
+
+input MarkMarketplaceRefundManualCompletedInput {
+  clientMutationId: String
+  id: String!
+  reason: String
+}
+
+input MarkMarketplaceRefundManualRequiredInput {
+  clientMutationId: String
+  id: String!
+  reason: String
+}
+
+input MarkMarketplaceRefundPendingAccountingInput {
+  id: String!
+  refundAmount: Decimal
+  reason: String
   clientMutationId: String
 }
 
@@ -579,6 +693,11 @@ input OrganizationAvailableResourcesWhereInput {
   organizationCustomDomain: String
   from: DateTime!
   until: DateTime!
+}
+
+input ProcessMarketplaceRefundInXeroInput {
+  id: String!
+  clientMutationId: String
 }
 
 input RecurringBookingOrderInput {

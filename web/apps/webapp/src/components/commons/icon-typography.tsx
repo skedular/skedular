@@ -4,15 +4,15 @@ import type { CSSProperties, TypographyVariant } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { SxProps, Theme } from '@mui/system';
 import { ResponsiveStyleValue } from '@mui/system';
-import { useContext, type JSX } from 'react';
+import { useContext, type ReactNode } from 'react';
 import StackColumn from './stack-column';
 import StackRow from './stack-row';
 
 type Props = {
-  startElement?: React.ReactNode | JSX.Element;
-  endElement?: React.ReactNode | JSX.Element;
+  startElement?: ReactNode;
+  endElement?: ReactNode;
   stackMode?: 'row' | 'column';
-  label?: string | null | undefined;
+  label?: ReactNode;
   noWrap?: boolean;
   variant?: TypographyVariant;
   sx?: SxProps<Theme>;
@@ -25,6 +25,7 @@ type Props = {
 const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, variant, sx, spacing, color, invertDefaultColor, fontWeight }: Props) => {
   const paletteMode = useContext(PaletteModeContext);
   const finalColor = invertDefaultColor ? (paletteMode === 'dark' ? coal : sandstone) : color;
+  const typographySx = fontWeight === undefined ? sx : Array.isArray(sx) ? [{ fontWeight }, ...sx] : sx ? [{ fontWeight }, sx] : [{ fontWeight }];
 
   if (!startElement && !label && !endElement) {
     return null;
@@ -32,7 +33,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
 
   if (!startElement && !endElement) {
     return (
-      <Typography variant={variant} sx={sx} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
+      <Typography variant={variant} sx={typographySx} color={finalColor} noWrap={noWrap}>
         {label}
       </Typography>
     );
@@ -43,7 +44,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
       <StackColumn sx={sx} spacing={spacing}>
         {startElement}
         {label && (
-          <Typography variant={variant} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
+          <Typography variant={variant} color={finalColor} noWrap={noWrap} sx={{ fontWeight }}>
             {label}
           </Typography>
         )}
@@ -56,7 +57,7 @@ const IconTypography = ({ startElement, endElement, stackMode, label, noWrap, va
     <StackRow sx={sx} spacing={spacing} color={finalColor}>
       {startElement}
       {label && (
-        <Typography variant={variant} color={finalColor} noWrap={noWrap} fontWeight={fontWeight}>
+        <Typography variant={variant} color={finalColor} noWrap={noWrap} sx={{ fontWeight }}>
           {label}
         </Typography>
       )}

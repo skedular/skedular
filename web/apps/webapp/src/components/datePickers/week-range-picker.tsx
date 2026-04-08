@@ -6,16 +6,16 @@ import Divider from '@mui/material/Divider';
 import Popover from '@mui/material/Popover';
 import { styled } from '@mui/material/styles';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { PickersDay, PickersDayProps } from '@mui/x-date-pickers/PickersDay';
+import { PickerDay, PickerDayProps } from '@mui/x-date-pickers/PickerDay';
 import { Dayjs } from 'dayjs';
 import { memo, useState } from 'react';
 
-interface CustomPickerDayProps extends PickersDayProps {
+interface CustomPickerDayProps extends PickerDayProps {
   isSelected: boolean;
   isHovered: boolean;
 }
 
-const CustomPickersDay = styled(PickersDay, {
+const CustomPickersDay = styled(PickerDay, {
   shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
   borderRadius: 0,
@@ -49,16 +49,14 @@ const CustomPickersDay = styled(PickersDay, {
 })) as React.ComponentType<CustomPickerDayProps>;
 
 const Day = (
-  props: PickersDayProps & {
+  props: PickerDayProps & {
     selectedDay?: Dayjs | null;
     hoveredDay?: Dayjs | null;
   },
 ) => {
   const { day, selectedDay, hoveredDay, ...other } = props;
 
-  return (
-    <CustomPickersDay {...other} day={day} sx={{ px: 2.5 }} disableMargin selected={false} isSelected={isInSameWeek(day, selectedDay)} isHovered={isInSameWeek(day, hoveredDay)} />
-  );
+  return <CustomPickersDay {...other} day={day} sx={{ px: 2.5 }} selected={false} isSelected={isInSameWeek(day, selectedDay)} isHovered={isInSameWeek(day, hoveredDay)} />;
 };
 
 type Props = {

@@ -55,5 +55,9 @@
         <EmbeddedResource Include="EmailTemplates/BookingInvoice/template.txt"/>
         <EmbeddedResource Include="EmailTemplates/OrganizationArrearsInvoice/template.html"/>
         <EmbeddedResource Include="EmailTemplates/OrganizationArrearsInvoice/template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/RefundStatusCustomer/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/RefundStatusCustomer/template.txt"/>
+        <EmbeddedResource Include="EmailTemplates/RefundStatusInternal/template.html"/>
+        <EmbeddedResource Include="EmailTemplates/RefundStatusInternal/template.txt"/>
     </ItemGroup>
 </Project>

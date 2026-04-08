@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e267385f369fc5cd33de9fd7f19cdfd2>>
+ * @generated SignedSource<<6b479259927a8c3a7a46873b29062bc2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -118,6 +118,7 @@ export type organizationAdmin_organization_query$data = {
       readonly suburb: string | null | undefined;
       readonly zipcode: string;
     } | null | undefined;
+    readonly refundNotificationEmails: ReadonlyArray<string>;
     readonly ssoSettings: {
       readonly appFederationMetadataUrl: string;
       readonly entityId: string;
@@ -485,6 +486,13 @@ return {
         {
           "alias": null,
           "args": null,
+          "kind": "ScalarField",
+          "name": "refundNotificationEmails",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
           "concreteType": "OrganizationPhysicalAddressDetails",
           "kind": "LinkedField",
           "name": "physicalAddress",
@@ -756,6 +764,6 @@ return {
 };
 })();
 
-(node as any).hash = "980fbe9e61a07dbb99ff29f9ab5cff57";
+(node as any).hash = "e2fefb9e8998d558d46dc80707d02284";
 
 export default node;

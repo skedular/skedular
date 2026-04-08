@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02badecabfad2c76600159fec21bbdc5>>
+ * @generated SignedSource<<a9f54b34d606e679178dd25dc983feb1>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
+export type Currency = "NZD" | "USD" | "%future added value";
 export type MarketplaceBookingSubscriptionCancellationMode = "AT_PERIOD_END" | "IMMEDIATE" | "%future added value";
 export type MarketplaceBookingSubscriptionStatus = "ACTIVE" | "CANCELLED" | "EXPIRED" | "PAUSED" | "RENEWAL_FAILED" | "%future added value";
 export type PaymentMethod = "BANK_TRANSFER" | "CARD" | "%future added value";
@@ -34,6 +35,41 @@ export type marketplaceProductSubscriptionDetails_rootQuery$data = {
       readonly middleName: string | null | undefined;
       readonly name: string | null | undefined;
     }>;
+    readonly marketplaceBooking: {
+      readonly bookingCheckoutSession: {
+        readonly checkoutUrl: string;
+      } | null | undefined;
+      readonly id: string;
+      readonly invoiceUrl: string | null | undefined;
+      readonly isPaymentRequired: boolean;
+      readonly paymentExpiry: any;
+      readonly paymentMethod: {
+        readonly name: string;
+        readonly type: PaymentMethod;
+      };
+      readonly paymentStatus: {
+        readonly name: string;
+        readonly type: PaymentStatus;
+      };
+      readonly productVersion: {
+        readonly featureImages: ReadonlyArray<{
+          readonly original: {
+            readonly url: string;
+          } | null | undefined;
+        }>;
+        readonly id: string;
+        readonly listingMetadata: {
+          readonly about: string | null | undefined;
+          readonly includedFeatures: ReadonlyArray<string> | null | undefined;
+          readonly subTitle: string | null | undefined;
+          readonly title: string | null | undefined;
+        };
+        readonly organization: {
+          readonly customerFacingTermsAndConditionsUrl: string | null | undefined;
+        };
+      };
+      readonly quantity: number;
+    };
     readonly nextRenewalAt: any | null | undefined;
     readonly recurringBookings: ReadonlyArray<{
       readonly endDate: any | null | undefined;
@@ -75,6 +111,39 @@ export type marketplaceProductSubscriptionDetails_rootQuery$data = {
       } | null | undefined;
       readonly startDate: any;
     }>;
+    readonly refund: {
+      readonly currency: {
+        readonly name: string;
+        readonly type: Currency;
+      } | null | undefined;
+      readonly currencyToDisplay: string;
+      readonly events: ReadonlyArray<{
+        readonly actorName: string | null | undefined;
+        readonly currencyToDisplay: string;
+        readonly eventType: {
+          readonly name: string;
+          readonly type: string;
+        };
+        readonly externalRefundNumber: string | null | undefined;
+        readonly id: string;
+        readonly lastError: string | null | undefined;
+        readonly occurredAt: any;
+        readonly reason: string | null | undefined;
+        readonly refundAmount: any | null | undefined;
+      }>;
+      readonly externalRefundNumber: string | null | undefined;
+      readonly lastError: string | null | undefined;
+      readonly lastProcessedAt: any | null | undefined;
+      readonly reason: string | null | undefined;
+      readonly refundAmount: any | null | undefined;
+      readonly refundPercentage: number;
+      readonly requestedAt: any;
+      readonly requestedByCustomerName: string | null | undefined;
+      readonly status: {
+        readonly name: string;
+        readonly type: string;
+      };
+    } | null | undefined;
     readonly startedAt: any;
     readonly status: {
       readonly name: string;
@@ -130,7 +199,212 @@ v4 = {
   "name": "invoiceUrl",
   "storageKey": null
 },
-v5 = [
+v5 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "MarketplaceBookingDetails",
+  "kind": "LinkedField",
+  "name": "marketplaceBooking",
+  "plural": false,
+  "selections": [
+    (v3/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "quantity",
+      "storageKey": null
+    },
+    (v4/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isPaymentRequired",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "paymentExpiry",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ProductVersionDetails",
+      "kind": "LinkedField",
+      "name": "productVersion",
+      "plural": false,
+      "selections": [
+        (v3/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "ListingMetadata",
+          "kind": "LinkedField",
+          "name": "listingMetadata",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "title",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "subTitle",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "about",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "includedFeatures",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CdnImageFile",
+          "kind": "LinkedField",
+          "name": "featureImages",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "CdnFile",
+              "kind": "LinkedField",
+              "name": "original",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "url",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Marketplace_OrganizationDetails",
+          "kind": "LinkedField",
+          "name": "organization",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "customerFacingTermsAndConditionsUrl",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "BookingCheckoutSessionDetails",
+      "kind": "LinkedField",
+      "name": "bookingCheckoutSession",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "checkoutUrl",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentMethodTypeDetails",
+      "kind": "LinkedField",
+      "name": "paymentMethod",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PaymentStatusDetails",
+      "kind": "LinkedField",
+      "name": "paymentStatus",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "refundAmount",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "currencyToDisplay",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reason",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "lastError",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "externalRefundNumber",
+  "storageKey": null
+},
+v11 = [
   {
     "alias": null,
     "args": null,
@@ -182,6 +456,112 @@ v5 = [
         "args": null,
         "kind": "ScalarField",
         "name": "cancelAtPeriodEnd",
+        "storageKey": null
+      },
+      (v5/*: any*/),
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "MarketplaceRefundDetails",
+        "kind": "LinkedField",
+        "name": "refund",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CurrencyDetails",
+            "kind": "LinkedField",
+            "name": "currency",
+            "plural": false,
+            "selections": (v2/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplaceRefundStatusDetails",
+            "kind": "LinkedField",
+            "name": "status",
+            "plural": false,
+            "selections": (v2/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "requestedAt",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "lastProcessedAt",
+            "storageKey": null
+          },
+          (v6/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "refundPercentage",
+            "storageKey": null
+          },
+          (v7/*: any*/),
+          (v8/*: any*/),
+          (v9/*: any*/),
+          (v10/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "requestedByCustomerName",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MarketplaceRefundEventDetails",
+            "kind": "LinkedField",
+            "name": "events",
+            "plural": true,
+            "selections": [
+              (v3/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MarketplaceRefundEventTypeDetails",
+                "kind": "LinkedField",
+                "name": "eventType",
+                "plural": false,
+                "selections": (v2/*: any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "occurredAt",
+                "storageKey": null
+              },
+              (v6/*: any*/),
+              (v7/*: any*/),
+              (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "actorName",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
@@ -251,176 +631,7 @@ v5 = [
             "name": "endDate",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "MarketplaceBookingDetails",
-            "kind": "LinkedField",
-            "name": "marketplaceBooking",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "quantity",
-                "storageKey": null
-              },
-              (v4/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isPaymentRequired",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "paymentExpiry",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ProductVersionDetails",
-                "kind": "LinkedField",
-                "name": "productVersion",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ListingMetadata",
-                    "kind": "LinkedField",
-                    "name": "listingMetadata",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "title",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "subTitle",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "about",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "includedFeatures",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "CdnImageFile",
-                    "kind": "LinkedField",
-                    "name": "featureImages",
-                    "plural": true,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "CdnFile",
-                        "kind": "LinkedField",
-                        "name": "original",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "url",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Marketplace_OrganizationDetails",
-                    "kind": "LinkedField",
-                    "name": "organization",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "customerFacingTermsAndConditionsUrl",
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "BookingCheckoutSessionDetails",
-                "kind": "LinkedField",
-                "name": "bookingCheckoutSession",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "checkoutUrl",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PaymentMethodTypeDetails",
-                "kind": "LinkedField",
-                "name": "paymentMethod",
-                "plural": false,
-                "selections": (v2/*: any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PaymentStatusDetails",
-                "kind": "LinkedField",
-                "name": "paymentStatus",
-                "plural": false,
-                "selections": (v2/*: any*/),
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
+          (v5/*: any*/)
         ],
         "storageKey": null
       },
@@ -467,7 +678,7 @@ return {
     "kind": "Fragment",
     "metadata": null,
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v5/*: any*/),
+    "selections": (v11/*: any*/),
     "type": "Query",
     "abstractKey": null
   },
@@ -476,19 +687,19 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
-    "selections": (v5/*: any*/)
+    "selections": (v11/*: any*/)
   },
   "params": {
-    "cacheID": "d6ce380e7c5cdb53c6b3d66d1b82f2c6",
+    "cacheID": "e1bb635ca75dbee6362577108b092126",
     "id": null,
     "metadata": {},
     "name": "marketplaceProductSubscriptionDetails_rootQuery",
     "operationKind": "query",
-    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
+    "text": "query marketplaceProductSubscriptionDetails_rootQuery(\n  $subscriptionId: String!\n) {\n  marketplaceBookingSubscriptionCancellationModes {\n    type\n    name\n  }\n  marketplaceBookingSubscription(id: $subscriptionId) {\n    id\n    startedAt\n    nextRenewalAt\n    autoRenew\n    cancelAtPeriodEnd\n    marketplaceBooking {\n      id\n      quantity\n      invoiceUrl\n      isPaymentRequired\n      paymentExpiry\n      productVersion {\n        id\n        listingMetadata {\n          title\n          subTitle\n          about\n          includedFeatures\n        }\n        featureImages {\n          original {\n            url\n          }\n        }\n        organization {\n          customerFacingTermsAndConditionsUrl\n        }\n      }\n      bookingCheckoutSession {\n        checkoutUrl\n      }\n      paymentMethod {\n        type\n        name\n      }\n      paymentStatus {\n        type\n        name\n      }\n    }\n    refund {\n      currency {\n        type\n        name\n      }\n      status {\n        type\n        name\n      }\n      requestedAt\n      lastProcessedAt\n      refundAmount\n      refundPercentage\n      currencyToDisplay\n      reason\n      lastError\n      externalRefundNumber\n      requestedByCustomerName\n      events {\n        id\n        eventType {\n          type\n          name\n        }\n        occurredAt\n        refundAmount\n        currencyToDisplay\n        reason\n        lastError\n        externalRefundNumber\n        actorName\n      }\n    }\n    status {\n      type\n      name\n    }\n    involvedCustomers {\n      id\n      name\n      givenName\n      middleName\n      familyName\n    }\n    recurringBookings {\n      id\n      startDate\n      endDate\n      marketplaceBooking {\n        id\n        quantity\n        invoiceUrl\n        isPaymentRequired\n        paymentExpiry\n        productVersion {\n          id\n          listingMetadata {\n            title\n            subTitle\n            about\n            includedFeatures\n          }\n          featureImages {\n            original {\n              url\n            }\n          }\n          organization {\n            customerFacingTermsAndConditionsUrl\n          }\n        }\n        bookingCheckoutSession {\n          checkoutUrl\n        }\n        paymentMethod {\n          type\n          name\n        }\n        paymentStatus {\n          type\n          name\n        }\n      }\n    }\n    arrearsInvoices {\n      invoiceNumber\n      invoiceUrl\n      billingPeriodStartInclusive\n      billingPeriodEndExclusive\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8062e7691773260850aa6fb9024e51fa";
+(node as any).hash = "040d13c8697863df44f6e514c5701280";
 
 export default node;

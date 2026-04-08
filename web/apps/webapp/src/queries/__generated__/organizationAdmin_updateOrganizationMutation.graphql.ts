@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2582e84765821f20cbee447ad393047f>>
+ * @generated SignedSource<<36ba63ec36d87d91d3d438ac1353ee66>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -24,6 +24,7 @@ export type UpdateOrganizationInput = {
   listingMetadata?: ListingMetadataInput | null | undefined;
   marketplaceListingMetadata?: ListingMetadataInput | null | undefined;
   name: string;
+  refundNotificationEmails: ReadonlyArray<string>;
   website?: string | null | undefined;
 };
 export type CdnImageFileInput = {
@@ -85,6 +86,7 @@ export type organizationAdmin_updateOrganizationMutation$data = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
+      readonly refundNotificationEmails: ReadonlyArray<string>;
       readonly website: string | null | undefined;
     };
   };
@@ -130,6 +132,7 @@ export type organizationAdmin_updateOrganizationMutation$rawResponse = {
         readonly title: string | null | undefined;
       };
       readonly name: string;
+      readonly refundNotificationEmails: ReadonlyArray<string>;
       readonly website: string | null | undefined;
     };
   };
@@ -343,6 +346,13 @@ v7 = [
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "refundNotificationEmails",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "CdnImageFile",
             "kind": "LinkedField",
             "name": "featureImages",
@@ -396,16 +406,16 @@ return {
     "selections": (v7/*: any*/)
   },
   "params": {
-    "cacheID": "b023684a53b09ed6e52c0bcdd8ab5554",
+    "cacheID": "589795926883138b0e55c279b62b822d",
     "id": null,
     "metadata": {},
     "name": "organizationAdmin_updateOrganizationMutation",
     "operationKind": "mutation",
-    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation organizationAdmin_updateOrganizationMutation(\n  $input: UpdateOrganizationInput!\n) {\n  updateOrganization(input: $input) {\n    organization {\n      id\n      customDomain\n      name\n      billingCycle {\n        type\n        name\n      }\n      invoiceDueInDays\n      listingMetadata {\n        about\n        title\n        subTitle\n      }\n      marketplaceListingMetadata {\n        about\n        title\n        subTitle\n        includedFeatures\n      }\n      website\n      customerFacingTermsAndConditionsUrl\n      industrySubCategories {\n        id\n        name\n      }\n      contactEmail\n      contactPhone\n      refundNotificationEmails\n      featureImages {\n        original {\n          url\n          height\n          width\n        }\n        thumbnail {\n          url\n          height\n          width\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e3d2d8df2e484600fd17609cbc062d9b";
+(node as any).hash = "1195f2e12aeb12614f0fa4a992367230";
 
 export default node;

@@ -18,6 +18,7 @@ public class Organization : ReplicatedEntityBaseWithDeleted
     public string BillingCycle { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public ICollection<string>? RefundNotificationEmails { get; set; }
     public bool? IsOwnershipVerified { get; set; }
 
     public virtual ICollection<OrganizationTag> Tags { get; set; } = [];
@@ -53,6 +54,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
             .HasDefaultValue(OrganizationBillingCycleConstants.Monthly);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.RefundNotificationEmails).HasColumnType("jsonb");
 
         builder.HasIndex(item => item.CustomDomain).IsUnique();
         builder.HasIndex(item => item.Type);

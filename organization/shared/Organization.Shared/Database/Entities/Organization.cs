@@ -19,6 +19,7 @@ public class Organization : EntityBaseWithDeleted
     public string Type { get; set; }
     public string? ContactEmail { get; set; }
     public string? ContactPhone { get; set; }
+    public ICollection<string>? RefundNotificationEmails { get; set; }
     public bool? IsOwnershipVerified { get; set; }
     public ICollection<CdnImageFile>? FeatureImages { get; set; }
     public ListingMetadata? ListingMetadata { get; set; }
@@ -60,6 +61,7 @@ public class OrganizationConfiguration : IEntityTypeConfiguration<Organization>
         builder.Property(item => item.Type).HasMaxLength(Constants.MaxOrganizationTypeLength).HasDefaultValue(OrganizationTypeConstants.Private);
         builder.Property(item => item.ContactEmail).HasMaxLength(Constants.MaxEmailLength);
         builder.Property(item => item.ContactPhone).HasMaxLength(Constants.MaxPhoneNumberLength);
+        builder.Property(item => item.RefundNotificationEmails).HasColumnType("jsonb");
         builder.Property(item => item.FeatureImages).HasColumnType("jsonb");
         builder.Property(item => item.ListingMetadata).HasColumnType("jsonb");
         builder.Property(item => item.MarketplaceListingMetadata).HasColumnType("jsonb");

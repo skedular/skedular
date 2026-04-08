@@ -537,6 +537,7 @@ public class OrganizationService(
                 organization.Website = null;
                 organization.ContactEmail = null;
                 organization.ContactPhone = null;
+                organization.RefundNotificationEmails = [];
                 organization.OrganizationMembers = [];
                 organization.TermsOfUse = null;
                 organization.OrganizationOfferings = [];

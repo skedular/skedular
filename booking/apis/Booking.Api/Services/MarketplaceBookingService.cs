@@ -148,7 +148,7 @@ public class MarketplaceBookingService(
         var ignoreCancellationPolicy =
             await organizationAuthorizationService.CanDeleteBookingAsync(productOwnerOrganizationId, customer.Id, cancellationToken);
 
-        return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, ignoreCancellationPolicy, cancellationToken);
+        return await sharedMarketplaceBookingService.DeleteAsync(existingBooking, customer, ignoreCancellationPolicy, true, cancellationToken);
     }
 
     private async Task<Shared.Models.Booking> UpdateInternalAsync(

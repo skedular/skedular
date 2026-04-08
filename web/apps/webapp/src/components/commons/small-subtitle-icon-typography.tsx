@@ -1,13 +1,13 @@
 import type { CSSProperties } from '@mui/material/styles';
 import type { ResponsiveStyleValue, SxProps, Theme } from '@mui/system';
-import type { JSX } from 'react';
+import type { ReactNode } from 'react';
 import IconTypography from './icon-typography';
 
 type Props = {
-  startElement?: React.ReactNode | JSX.Element;
-  endElement?: React.ReactNode | JSX.Element;
+  startElement?: ReactNode;
+  endElement?: ReactNode;
   stackMode?: 'row' | 'column';
-  label?: string | null | undefined;
+  label?: ReactNode;
   noWrap?: boolean;
   sx?: SxProps<Theme>;
   spacing?: ResponsiveStyleValue<number | string>;
